@@ -23,7 +23,7 @@ jobs:
       - name: Increment Minor Version
         run:
           CURRENT_VERSION=$(grep -oP '<Version>\K\d+\.\d+\.\d+(?=</Version>)' Directory.Build.props) && \
-          IFS="." read -r -a VERSION_PARTS <<< "$CURRENT_VERSION" && NEW_VERSION=$((VERSION_PARTS[2] + 1)) && \
+          NEW_VERSION=$(echo "$CURRENT_VERSION" | awk -F. '{$3+=1; OFS="."; print $3}') && \
           sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
       - name: Git Push
         run: |
