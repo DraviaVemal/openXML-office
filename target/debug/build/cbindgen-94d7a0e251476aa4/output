@@ -1,0 +1,2 @@
+cargo:rerun-if-changed=/home/draviavemal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cbindgen-0.27.0/tests/rust
+cargo:rerun-if-changed=/home/draviavemal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cbindgen-0.27.0/tests/depfile

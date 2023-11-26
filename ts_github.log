@@ -1,0 +1,106 @@
+import subprocess
+import random
+from datetime import datetime, timedelta
+
+def run_git_command(command, capture_output=False):
+    """Run a Git command and return the result."""
+    result = subprocess.run(
+        command, text=True, check=True, capture_output=capture_output
+    )
+    return result.stdout.strip() if capture_output else None
+
+def get_commits():
+    """Retrieve the list of commits with their hashes, dates, and messages."""
+    result = run_git_command(
+        ["git", "log", "--reverse", "--pretty=format:%H %ct %s"], capture_output=True
+    )
+    commits = []
+    for line in result.splitlines():
+        commit_hash, commit_date, *message = line.split(" ", 2)
+        commits.append((commit_hash, int(commit_date), " ".join(message)))
+    return commits
+
+def adjust_date_to_weekend(commit_datetime):
+    """Adjust a date to the nearest weekend."""
+    day_of_week = commit_datetime.weekday()  # Monday = 0, Sunday = 6
+    if day_of_week in {3, 4, 5}:  # Wednesday, Thursday, Friday -> Saturday
+        days_to_add = 5 - day_of_week
+    elif day_of_week in {0, 1}:  # Monday, Tuesday -> Previous Sunday
+        days_to_add = -1 - day_of_week
+    else:  # Already on Saturday or Sunday
+        days_to_add = 0
+
+    return commit_datetime + timedelta(days=days_to_add)
+
+def create_orphan_branch(new_branch_name):
+    """Create a new orphan branch with no history."""
+    print(f"Creating new orphan branch '{new_branch_name}'...")
+    run_git_command(["git", "checkout", "--orphan", new_branch_name])
+    run_git_command(["git", "reset", "--hard"])  # Clear any files
+
+def is_working_tree_clean():
+    """Check if the working tree is clean."""
+    status = run_git_command(["git", "status", "--porcelain"], capture_output=True)
+    return not bool(status.strip())
+
+def recreate_commits(commits, new_branch_name):
+    """Recreate commits on the new branch with adjusted dates."""
+    last_commit_time = None
+
+    for commit_hash, commit_timestamp, commit_message in commits:
+        original_datetime = datetime.fromtimestamp(commit_timestamp)
+
+        # Adjust to weekend
+        adjusted_datetime = adjust_date_to_weekend(original_datetime)
+
+        # Add random time offset (5 to 30 minutes)
+        random_minutes = random.randint(5, 30)
+        if last_commit_time and adjusted_datetime <= last_commit_time:
+            adjusted_datetime = last_commit_time + timedelta(minutes=random_minutes)
+        else:
+            adjusted_datetime += timedelta(minutes=random_minutes)
+
+        formatted_date = adjusted_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+        last_commit_time = adjusted_datetime
+        print(f"Processing commit {commit_hash} with message: {commit_message}")
+
+        # Extract files from the commit
+        run_git_command(["git", "checkout", commit_hash, "--", "."])
+
+        # Skip if no changes are made (empty commit)
+        if is_working_tree_clean():
+            print(f"Skipping empty commit: {commit_message}")
+            continue
+
+        # Stage files and create a new commit
+        run_git_command(["git", "add", "."])
+        run_git_command(["git", "commit", "-m", commit_message, f"--date={formatted_date}"])
+
+def main():
+    base_branch = "organize"  # Branch to reorganize
+    new_branch_name = "organized-weekend-commits"
+
+    # Ensure we are in a Git repository
+    try:
+        run_git_command(["git", "rev-parse", "--is-inside-work-tree"])
+    except subprocess.CalledProcessError:
+        print("This script must be run inside a Git repository.")
+        return
+
+    # Get the list of commits from the base branch
+    print(f"Switching to branch '{base_branch}'...")
+    run_git_command(["git", "checkout", base_branch])
+    commits = get_commits()
+    print(f"Found {len(commits)} commits to reorganize.")
+
+    # Create a new orphan branch
+    create_orphan_branch(new_branch_name)
+
+    # Recreate commits on the new branch
+    recreate_commits(commits, new_branch_name)
+
+    print(f"All commits have been recreated on the new branch '{new_branch_name}'.")
+    print(f"To push the changes, run: git push origin {new_branch_name}")
+
+if __name__ == "__main__":
+    main()
