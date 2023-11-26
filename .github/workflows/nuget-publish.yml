@@ -25,7 +25,9 @@ jobs:
       - name: Increment Minor Version
         run: |
           VERSION=$(dotnet-gitversion /showvariable Patch)
+          echo "Current VERSION: $VERSION"
           NEW_VERSION=$((VERSION + 1))
+          echo "New VERSION: $NEW_VERSION"
           sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
       - name: Git Push
         run: |
