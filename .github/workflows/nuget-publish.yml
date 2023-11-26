@@ -25,9 +25,11 @@ jobs:
           dotnet tool install -g GitVersion.Tool
           VERSION=$(dotnet-gitversion /showvariable Patch)
           NEW_VERSION=$((VERSION + 1))
+          sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
+      - name: Git Push
+        run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
           git commit -am "Incremented version to 0.0.$NEW_VERSION"
           git push
       - name: Build
