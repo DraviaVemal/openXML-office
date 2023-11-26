@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Global\Global.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>OpenXMLOffice.Document</PackageId>
+    <RootNamespace>OpenXMLOffice.Document</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageDescription>OpenXML Word Processor is a versatile .NET library that streamlines the
+      creation and manipulation of Word documents using the OpenXML SDK. Designed for ease of use,
+      it offers developers an extensive range of features for generating text, applying styles and
+      formatting, creating tables, and managing images. Whether you're automating document creation,
+      generating dynamic reports, or processing large volumes of text, this library provides the
+      tools needed for precise and efficient Word document handling. Embrace the power of
+      programmatic document creation with OpenXML Word Processor, and elevate your application's
+      document processing functionality.</PackageDescription>
+    <PackageTags>OpenXML;Document;Word</PackageTags>
+  </PropertyGroup>
+
+</Project>
