@@ -20,18 +20,6 @@ jobs:
           dotnet-version: "7.0"
       - name: Restore dependencies
         run: dotnet restore
-      - name: Increment Minor Version
-        run:
-          CURRENT_VERSION=$(grep -oP '<Version>\K\d+\.\d+\.\d+(?=</Version>)' Directory.Build.props) &&
-          NEW_VERSION=$(echo "$CURRENT_VERSION" | awk -F. '{$3+=1; OFS="."; print $3}') &&
-          sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
-      - name: Git Push
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -am "Incremented version to $(grep -oP '<Version>\K\d+\.\d+\.\d+(?=</Version>)' Directory.Build.props)"
-          git remote set-url origin https://${{ secrets.TOKEN_GITHUB }}@github.com/DraviaVemal/OpenXMLOffice.git
-          git push origin main
       - name: Build
         run: dotnet build --no-restore -c Release
       - name: Pack Excel Project
@@ -40,12 +28,6 @@ jobs:
         run: dotnet pack ./Document/Document.csproj --no-build -c Release -o nupkgs
       - name: Pack Presentation Project
         run: dotnet pack ./Presentation/Presentation.csproj --no-build -c Release -o nupkgs
-      - name: Extract Version from Directory.Build.props
-        id: get_version
-        run: |
-          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" Directory.Build.props)
-          echo "Version: $VERSION"
-          echo "::set-output name=version::$VERSION"
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -64,11 +46,3 @@ jobs:
           path: nupkgs
       - name: Publish to NuGet
         run: dotnet nuget push "nupkgs/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ needs.build.outputs.version }}
-          release_name: Release ${{ needs.build.outputs.version }}
-          draft: false
-          prerelease: false
-          body: "Auto Release By Actions"
