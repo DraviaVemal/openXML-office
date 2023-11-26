@@ -3,6 +3,13 @@ namespace OpenXMLOffice.Excel;
 // Define a simple model class
 public static class ConverterUtils
 {
+    /// <summary>
+    /// This function converts a pair of row and column indices (non zero-based) into an Excel-style cell reference (e.g., "A1" for row 1, column 1)
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="column"></param>
+    /// <returns>Excel Cell Name</returns>
+    /// <exception cref="ArgumentException"></exception>
     public static string ConvertToExcelCellReference(int row, int column)
     {
         if (row < 1 || column < 1)
@@ -17,6 +24,12 @@ public static class ConverterUtils
         }
         return columnName + row;
     }
+    /// <summary>
+    /// This function converts an Excel-style cell reference (e.g., "A1") into row and column indices (non zero-based) to identify the corresponding cell within a worksheet
+    /// </summary>
+    /// <param name="cellReference"></param>
+    /// <returns>(int,int) row, col</returns>
+    /// <exception cref="ArgumentException"></exception>
     public static (int, int) ConvertFromExcelCellReference(string cellReference)
     {
         if (string.IsNullOrEmpty(cellReference))
@@ -41,7 +54,7 @@ public static class ConverterUtils
         }
         for (int i = 0; i < columnName.Length; i++)
         {
-            columnIndex = columnIndex * 26 + (columnName[i] - 'A' + 1);
+            columnIndex = columnIndex * 26 + columnName[i] - 'A' + 1;
         }
         if (rowIndex < 1 || columnIndex < 1)
         {

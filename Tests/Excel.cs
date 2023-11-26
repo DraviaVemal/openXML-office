@@ -5,7 +5,7 @@ namespace OpenXMLOffice.Tests;
 [TestClass]
 public class Excel
 {
-    private static Spreadsheet spreadsheet;
+    private static Spreadsheet spreadsheet = new(new MemoryStream());
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
@@ -41,7 +41,7 @@ public class Excel
     {
         Worksheet worksheet = spreadsheet.AddSheet();
         Assert.IsNotNull(worksheet);
-        Assert.AreEqual("Sheet1", worksheet.sheetName);
+        Assert.AreEqual("Sheet1", worksheet.GetSheetName());
     }
 
 

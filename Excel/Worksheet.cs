@@ -14,34 +14,57 @@ public class Worksheet
         sheet = _sheet;
     }
 
+    /// <summary>
+    /// Gets the CellValues enumeration corresponding to the specified cell data type.
+    /// </summary>
+    /// <param name="cellDataType">The data type of the cell.</param>
+    /// <returns>The CellValues enumeration representing the cell data type.</returns>
     private CellValues GetCellValues(CellDataType cellDataType)
     {
-        switch (cellDataType)
+        return cellDataType switch
         {
-            case CellDataType.DATE:
-                return CellValues.Date;
-            case CellDataType.NUMBER:
-                return CellValues.Number;
-            default:
-                return CellValues.String;
-        }
+            CellDataType.DATE => CellValues.Date,
+            CellDataType.NUMBER => CellValues.Number,
+            _ => CellValues.String,
+        };
     }
 
+    /// <summary>
+    /// Return Sheet ID of current Worksheet
+    /// </summary>
+    /// <returns></returns>
     public int GetSheetId()
     {
         return int.Parse(sheet.Id!.Value!);
     }
 
+    /// <summary>
+    /// Returb Sheet Name of Current Worksheet
+    /// </summary>
+    /// <returns></returns>
     public string GetSheetName()
     {
         return sheet.Name!;
     }
 
+    /// <summary>
+    /// Sets the data and properties for a specific row and its cells in a worksheet.
+    /// </summary>
+    /// <param name="row">The row index (non zero-based) where the data and properties will be applied.</param>
+    /// <param name="col">The starting column index (non zero-based) for adding data cells.</param>
+    /// <param name="dataCells">An array of data cells to be added to the row.</param>
+    /// <param name="rowProperties">Optional row properties to be applied to the row (e.g., height, custom formatting).</param>
     public void SetRow(int row, int col, DataCell[] dataCells, RowProperties? rowProperties = null)
     {
         SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), dataCells, rowProperties);
     }
 
+    /// <summary>
+    /// Sets the data and properties for a row based on a starting cell ID and its data cells in a worksheet.
+    /// </summary>
+    /// <param name="cellId">The cell ID (e.g., "A1") from which the row will be determined.</param>
+    /// <param name="dataCells">An array of data cells to be added to the row.</param>
+    /// <param name="rowProperties">Optional row properties to be applied to the row (e.g., height, custom formatting).</param>
     public void SetRow(string cellId, DataCell[] dataCells, RowProperties? rowProperties = null)
     {
         SheetData sheetData = openXMLworksheet.Elements<SheetData>().First();
@@ -89,13 +112,22 @@ public class Worksheet
         }
         openXMLworksheet.Save();
     }
-
+    /// <summary>
+    /// Sets the properties for a column based on a starting cell ID in a worksheet.
+    /// </summary>
+    /// <param name="cellId">The cell ID (e.g., "A1") in the desired column.</param>
+    /// <param name="columnProperties">Optional column properties to be applied (e.g., width, hidden).</param>
     public void SetColumn(string cellId, ColumnProperties? columnProperties = null)
     {
         (int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
         SetColumn(colIndex, columnProperties);
     }
 
+    /// <summary>
+    /// Sets the properties for a column at the specified column index in a worksheet.
+    /// </summary>
+    /// <param name="col">The zero-based column index where properties will be applied.</param>
+    /// <param name="columnProperties">Optional column properties to be applied (e.g., width, hidden).</param>
     public void SetColumn(int col, ColumnProperties? columnProperties = null)
     {
         Columns? columns = openXMLworksheet.GetFirstChild<Columns>();
