@@ -30,7 +30,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -am "Incremented version to $(grep -oP '<Version>\K\d+\.\d+\.\d+(?=</Version>)' Directory.Build.props)"
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/DraviaVemal/OpenXMLOffice.git
+          git remote set-url origin https://${{ secrets.TOKEN_GITHUB }}@github.com/DraviaVemal/OpenXMLOffice.git
           git push origin main
       - name: Build
         run: dotnet build --no-restore -c Release
