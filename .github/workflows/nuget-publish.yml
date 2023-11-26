@@ -15,15 +15,13 @@ jobs:
           dotnet-version: "7.0"
       - name: Restore dependencies
         run: dotnet restore
-      - name: Bump Minor Version
+      - name: Increment Minor Version
         run: |
-          dotnet tool install --global dotnet-bump
-          dotnet bump minor -p [./Excel/Excel.csproj]
-          dotnet bump minor -p [./Document/Document.csproj]
-          dotnet bump minor -p [./Presentation/Presentation.csproj]
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'contact@draviavemal.com'
-          git commit -am "Bump minor version"
+          VERSION=$(dotnet-gitversion /showvariable MinorVersion)
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          sed -i "s/<Version>.*<\/Version>/<Version>0.$VERSION.0<\/Version>/" Directory.Build.props
+          git commit -am "Incremented version to 0.$VERSION.0"
           git push
       - name: Build
         run: dotnet build --no-restore -c Release

@@ -1,5 +1,10 @@
 name: C# Doc Build And Publish
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 on:
   push:
     branches: [main]
