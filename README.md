@@ -13,7 +13,7 @@ OpenXMLOffice is a .NET library utilizing OpenXML SDK 3.0 to provide an intuitiv
 The library is available on NuGet. You can install it using the following command:
 
 ```shell
-Install-Package OpenXMLOffice -Version 0.0.1
+Install-Package OpenXMLOffice
 ```
 
 ## Version History

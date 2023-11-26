@@ -3,6 +3,7 @@
 .vs/
 bin/
 obj/
+docs/
 
 # Ignore NuGet package directories
 packages/
