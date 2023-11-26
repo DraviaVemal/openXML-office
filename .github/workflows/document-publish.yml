@@ -1,0 +1,39 @@
+name: C# Doc Build And Publish
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+      - name: Build Docs
+        run: doxygen Doxyfile.conf
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: docs
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: docs
+          path: docs
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: "./docs"
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
