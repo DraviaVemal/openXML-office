@@ -21,8 +21,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Increment Minor Version
-        run: CURRENT_VERSION=$(grep -oP '<Version>\K\d+\.\d+\.\d+(?=</Version>)' Directory.Build.props) && \
-          IFS='.' read -r -a VERSION_PARTS <<< "$CURRENT_VERSION" && NEW_VERSION=$((VERSION_PARTS[2] + 1)) && \
+        run:
+          CURRENT_VERSION=$(grep -oP '<Version>\K\d+\.\d+\.\d+(?=</Version>)' Directory.Build.props) && \
+          IFS="." read -r -a VERSION_PARTS <<< "$CURRENT_VERSION" && NEW_VERSION=$((VERSION_PARTS[2] + 1)) && \
           sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
       - name: Git Push
         run: |
