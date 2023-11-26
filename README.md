@@ -16,10 +16,16 @@ The library is available on NuGet. You can install it using the following comman
 Install-Package OpenXMLOffice
 ```
 
+## Documentation [Link](https://draviavemal.github.io/OpenXMLOffice)
+
+All the documentation for this project is published on our GitHub Pages. You can access it by visiting the [link](https://draviavemal.github.io/OpenXMLOffice). Project documentation is automatically generated using Doxygen
+
 ## Version History
 
 - **v0.0.1**: Initial release with basic setup and dependencies.
-- **v1.0.0 (Roadmap)**: Planned release with three separate DLLs for Excel, Presentation, and Word, covering all major functionalities.
+- **v0.1.0**: Cover Spreadsheet data loading and saving.
+- Follow project roadmap to get upto date info
+- **v1.0.0**: Planned release with three separate DLLs for Excel, Presentation, and Word, covering all major functionalities.
 
 ## License
 
