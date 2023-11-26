@@ -1,5 +1,10 @@
 name: .NET 7 Build and Publish to NuGet
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 on:
   push:
     branches: [main]
@@ -17,11 +22,13 @@ jobs:
         run: dotnet restore
       - name: Increment Minor Version
         run: |
-          VERSION=$(dotnet-gitversion /showvariable MinorVersion)
+          dotnet tool install -g GitVersion.Tool
+          VERSION=$(dotnet-gitversion /showvariable Patch)
+          NEW_VERSION=$((VERSION + 1))
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          sed -i "s/<Version>.*<\/Version>/<Version>0.$VERSION.0<\/Version>/" Directory.Build.props
-          git commit -am "Incremented version to 0.$VERSION.0"
+          sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
+          git commit -am "Incremented version to 0.0.$NEW_VERSION"
           git push
       - name: Build
         run: dotnet build --no-restore -c Release
@@ -57,8 +64,6 @@ jobs:
         run: dotnet nuget push "nupkgs/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
       - name: Create GitHub Release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
           tag_name: ${{ needs.build.outputs.version }}
           release_name: Release ${{ needs.build.outputs.version }}

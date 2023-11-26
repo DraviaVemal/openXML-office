@@ -6,11 +6,13 @@ permissions:
   id-token: write
 
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: [".NET 7 Build and Publish to NuGet"]
+    types:
+      - completed
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,22 +20,6 @@ jobs:
         run: sudo apt-get install -y doxygen
       - name: Build Docs
         run: doxygen Doxyfile.conf
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: docs
-          path: docs
-
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: docs
-          path: docs
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
