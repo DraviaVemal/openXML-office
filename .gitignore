@@ -13,6 +13,9 @@ packages/
 *.user
 *.userprefs
 *.sln.docstates
+*.xlsx
+*.pptx
+*.docx
 
 # Ignore build and publish web output
 wwwroot/

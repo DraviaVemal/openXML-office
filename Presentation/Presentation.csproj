@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Global\Global.csproj" />
+    <ProjectReference Include="..\Excel\Excel.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

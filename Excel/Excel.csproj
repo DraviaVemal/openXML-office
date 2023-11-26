@@ -4,6 +4,11 @@
     <ProjectReference Include="..\Global\Global.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models/" />
+    <Folder Include="Utils/" />
+  </ItemGroup>
+
   <PropertyGroup>
     <PackageId>OpenXMLOffice.Excel</PackageId>
     <RootNamespace>OpenXMLOffice.Excel</RootNamespace>

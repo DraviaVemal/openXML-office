@@ -22,12 +22,8 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore -c Release
-      - name: Pack Excel Project
-        run: dotnet pack ./Excel/Excel.csproj --no-build -c Release -o nupkgs
-      - name: Pack Document Project
-        run: dotnet pack ./Document/Document.csproj --no-build -c Release -o nupkgs
-      - name: Pack Presentation Project
-        run: dotnet pack ./Presentation/Presentation.csproj --no-build -c Release -o nupkgs
+      - name: Pack Project DLL
+        run: dotnet pack -c Release -o nupkgs
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
