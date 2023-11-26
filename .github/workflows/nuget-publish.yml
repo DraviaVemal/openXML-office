@@ -15,6 +15,8 @@ jobs:
           dotnet-version: "7.0"
       - name: Install Doxygen
         run: sudo apt-get install doxygen
+      - name: Build Docs
+        run: doxygen Doxyfile.conf
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
