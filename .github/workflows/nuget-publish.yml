@@ -20,9 +20,10 @@ jobs:
           dotnet-version: "7.0"
       - name: Restore dependencies
         run: dotnet restore
+      - name: Install dotnet-gitversion
+        run: dotnet tool install -g GitVersion.Tool
       - name: Increment Minor Version
         run: |
-          dotnet tool install -g GitVersion.Tool
           VERSION=$(dotnet-gitversion /showvariable Patch)
           NEW_VERSION=$((VERSION + 1))
           sed -i "s/<Version>.*<\/Version>/<Version>0.0.$NEW_VERSION<\/Version>/" Directory.Build.props
