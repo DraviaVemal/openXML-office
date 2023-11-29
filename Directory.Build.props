@@ -1,9 +1,12 @@
 <Project>
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <PackageProjectUrl>https://draviavemal.github.io/OpenXMLOffice/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/DraviaVemal/OpenXMLOffice</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <TargetFramework>net6.0</TargetFramework>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>0.0.2</Version>
+        <Version>0.0.2-alpha</Version>
         <Company>DraviaVemal</Company>
         <Copyright>Copyright (c) 2023 DraviaVemal
 
@@ -30,5 +33,8 @@
             OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         </Copyright>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 </Project>
   
