@@ -17,7 +17,7 @@ public static class PresentationConstants
     {
         return value switch
         {
-            _ => "BLANK",
+            _ => "Blank",
         };
     }
 }

@@ -9,6 +9,10 @@ public class PowerPoint
     {
         presentation = new(filePath, powerPointProperties);
     }
+    public PowerPoint(string filePath, bool isEditable, PowerPointProperties? powerPointProperties = null)
+    {
+        presentation = new(filePath, isEditable, powerPointProperties);
+    }
 
     public PowerPoint(string filePath, PowerPointProperties? powerPointProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation)
     {

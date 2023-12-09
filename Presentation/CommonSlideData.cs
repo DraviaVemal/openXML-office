@@ -28,7 +28,7 @@ internal class CommonSlideData
         {
             BackgroundStyleReference = new BackgroundStyleReference(new A.SchemeColor()
             {
-                Val = A.SchemeColorValues.PhColor
+                Val = A.SchemeColorValues.Background1
             })
             {
                 Index = 1001

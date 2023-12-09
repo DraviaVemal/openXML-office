@@ -36,4 +36,20 @@ public class Presentation
         powerPoint.Save();
         Assert.IsTrue(true);
     }
+
+    [TestMethod]
+    public void OpenExistingPresentationNonEdit()
+    {
+        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\presentation_ref_default_bar_chart.pptx", false);
+        powerPoint1.Save();
+        Assert.IsTrue(true);
+    }
+
+    [TestMethod]
+    public void OpenExistingPresentationEdit()
+    {
+        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\presentation_ref_default_bar_chart.pptx", true);
+        powerPoint1.Save();
+        Assert.IsTrue(true);
+    }
 }

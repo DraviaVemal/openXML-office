@@ -284,7 +284,7 @@ internal class Theme
             FormatScheme = GenerateFormatScheme(),
             ColorScheme = new A.ColorScheme(
                new A.Dark1Color(new A.SystemColor() { Val = A.SystemColorValues.WindowText, LastColor = powerPointTheme?.Dark1 ?? "000000" }),
-               new A.Light1Color(new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = powerPointTheme?.Dark1 ?? "FFFFFF" }),
+               new A.Light1Color(new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = powerPointTheme?.Light1 ?? "FFFFFF" }),
                new A.Dark2Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Dark2 ?? "44546A" }),
                new A.Light2Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Light2 ?? "E7E6E6" }),
                new A.Accent1Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Accent1 ?? "4472C4" }),
