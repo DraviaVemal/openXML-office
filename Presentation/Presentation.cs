@@ -53,17 +53,14 @@ namespace OpenXMLOffice.Presentation
                 Kerning = 1200,
                 FontSize = 1800
             };
-
             A.SolidFill solidFill = new();
             A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.Text1 };
             solidFill.Append(schemeColor);
             levelRunProperties.Append(solidFill);
-
             A.LatinFont latinTypeface = new() { Typeface = "+mn-lt" };
             A.EastAsianFont eastAsianTypeface = new() { Typeface = "+mn-ea" };
             A.ComplexScriptFont complexScriptTypeface = new() { Typeface = "+mn-cs" };
             levelRunProperties.Append(latinTypeface, eastAsianTypeface, complexScriptTypeface);
-
             levelParagraphProperties.Append(levelRunProperties);
             defaultTextStyle.Append(levelParagraphProperties);
             return defaultTextStyle;
@@ -99,18 +96,32 @@ namespace OpenXMLOffice.Presentation
             {
                 presentationPart.Presentation.AppendChild(CreateDefaultTextStyle());
             }
-            if (presentationPart.PresentationPropertiesPart == null)
-            {
-                PresentationPropertiesPart presentationPropertiesPart = presentationPart.AddNewPart<PresentationPropertiesPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
-                presentationPropertiesPart.PresentationProperties ??= new P.PresentationProperties();
-                presentationPropertiesPart.PresentationProperties.Save();
-            }
             if (presentationPart.ViewPropertiesPart == null)
             {
                 ViewProperties viewProperties = new();
                 ViewPropertiesPart viewPropertiesPart = presentationPart.AddNewPart<ViewPropertiesPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
                 viewPropertiesPart.ViewProperties = viewProperties.GetViewProperties();
                 viewPropertiesPart.ViewProperties.Save();
+            }
+            if (presentationPart.PresentationPropertiesPart == null)
+            {
+                PresentationPropertiesPart presentationPropertiesPart = presentationPart.AddNewPart<PresentationPropertiesPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
+                presentationPropertiesPart.PresentationProperties ??= new P.PresentationProperties();
+                presentationPropertiesPart.PresentationProperties.Save();
+            }
+            if (!presentationPart.SlideMasterParts.Any())
+            {
+                slideMasterPart = presentationPart.AddNewPart<SlideMasterPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
+                slideMasterPart.SlideMaster = slideMaster.GetSlideMaster();
+                P.SlideMasterIdList slideMasterIdList = presentationPart.Presentation.SlideMasterIdList!;
+                P.SlideMasterId slideMasterId = new() { Id = (uint)(2147483647 + slideMasterIdList.Count() + 1), RelationshipId = presentationPart.GetIdOfPart(slideMasterPart) };
+                slideMasterIdList.Append(slideMasterId);
+                slideLayoutPart = slideMasterPart.AddNewPart<SlideLayoutPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
+                slideMaster.AddSlideLayoutIdToList(slideMasterPart.GetIdOfPart(slideLayoutPart));
+                slideLayoutPart.SlideLayout = slideLayout.GetSlideLayout();
+                slideLayout.UpdateRelationship(slideMasterPart, presentationPart.GetIdOfPart(slideMasterPart));
+                slideLayoutPart.SlideLayout.Save();
+                slideMasterPart.SlideMaster.Save();
             }
             if (presentationDocument.ExtendedFilePropertiesPart == null)
             {
@@ -127,20 +138,6 @@ namespace OpenXMLOffice.Presentation
                 };
                 tableStylesPart.TableStyleList.Save();
             }
-            if (!presentationPart.SlideMasterParts.Any())
-            {
-                slideMasterPart = presentationPart.AddNewPart<SlideMasterPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
-                slideMasterPart.SlideMaster = slideMaster.GetSlideMaster();
-                P.SlideMasterIdList slideMasterIdList = presentationPart.Presentation.SlideMasterIdList!;
-                P.SlideMasterId slideMasterId = new() { Id = (uint)(2147483647 + slideMasterIdList.Count() + 1), RelationshipId = presentationPart.GetIdOfPart(slideMasterPart) };
-                slideMasterIdList.Append(slideMasterId);
-                slideLayoutPart = slideMasterPart.AddNewPart<SlideLayoutPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
-                slideMaster.AddSlideLayoutIdToList(slideMasterPart.GetIdOfPart(slideLayoutPart));
-                slideLayoutPart.SlideLayout = slideLayout.GetSlideLayout();
-                slideLayout.UpdateRelationship(slideMasterPart, presentationPart.GetIdOfPart(slideMasterPart));
-                slideLayoutPart.SlideLayout.Save();
-                slideMasterPart.SlideMaster.Save();
-            }
             if (presentationPart.ThemePart == null)
             {
                 presentationPart.AddNewPart<ThemePart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
@@ -154,9 +151,10 @@ namespace OpenXMLOffice.Presentation
 
         public void AddBlankSlide()
         {
-            Slide slide = new();
             SlidePart slidePart = presentationPart!.AddNewPart<SlidePart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
+            Slide slide = new();
             slidePart.Slide = slide.GetSlide();
+            slidePart.AddPart(slideLayoutPart!);
             P.SlideIdList slideIdList = presentationPart.Presentation.SlideIdList!;
             P.SlideId slideId = new() { Id = (uint)(255 + slideIdList.Count() + 1), RelationshipId = presentationPart.GetIdOfPart(slidePart) };
             slideIdList.Append(slideId);

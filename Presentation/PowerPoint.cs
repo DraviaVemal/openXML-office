@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml;
-using OpenXMLOffice.Global;
 
 namespace OpenXMLOffice.Presentation;
 public class PowerPoint
@@ -21,7 +20,7 @@ public class PowerPoint
         presentation = new(stream, powerPointProperties, presentationDocumentType);
     }
 
-    public void AddSlide(Constants.SlideLayoutType slideLayoutType)
+    public void AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
     {
         switch (slideLayoutType)
         {

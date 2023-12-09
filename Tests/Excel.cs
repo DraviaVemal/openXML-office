@@ -24,6 +24,7 @@ public class Excel
     {
         Spreadsheet spreadsheet1 = new("../try.xlsx", DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
         Assert.IsNotNull(spreadsheet1);
+        spreadsheet1.Save();
         File.Delete("../try.xlsx");
     }
 

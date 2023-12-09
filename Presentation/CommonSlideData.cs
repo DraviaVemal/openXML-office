@@ -2,15 +2,18 @@
 using P = DocumentFormat.OpenXml.Presentation;
 using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Presentation;
-using OpenXMLOffice.Global;
 
 namespace OpenXMLOffice.Presentation;
 internal class CommonSlideData
 {
-    private readonly P.CommonSlideData OpenXMLCommonSlideData = new();
+    private P.CommonSlideData OpenXMLCommonSlideData;
 
-    public CommonSlideData(Constants.CommonSlideDataType commonSlideDataType)
+    public CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
     {
+        OpenXMLCommonSlideData = new()
+        {
+            Name = PresentationConstants.GetSlideLayoutType(layoutType)
+        };
         CreateCommonSlideData(commonSlideDataType);
     }
     // Return OpenXML CommonSlideData Object
@@ -19,7 +22,7 @@ internal class CommonSlideData
         return OpenXMLCommonSlideData;
     }
 
-    private void CreateCommonSlideData(Constants.CommonSlideDataType commonSlideDataType)
+    private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
     {
         Background background = new()
         {
@@ -68,11 +71,11 @@ internal class CommonSlideData
 
         switch (commonSlideDataType)
         {
-            case Constants.CommonSlideDataType.SLIDE_MASTER:
+            case PresentationConstants.CommonSlideDataType.SLIDE_MASTER:
                 OpenXMLCommonSlideData.AppendChild(background);
                 OpenXMLCommonSlideData.AppendChild(shapeTree);
                 break;
-            case Constants.CommonSlideDataType.SLIDE_LAYOUT:
+            case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
                 shapeTree.AppendChild(CreateShape1());
                 shapeTree.AppendChild(CreateShape2());
                 OpenXMLCommonSlideData.AppendChild(shapeTree);

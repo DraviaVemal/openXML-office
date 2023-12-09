@@ -14,21 +14,23 @@ internal class Theme
         return OpenXMLTheme;
     }
     // TODO : Understand the purpose and migrate it to right place
-    private int[][] gsLst1 = new int[][]{
-        new int[] { 0,110000, 105000, 67000 },
-        new int[] {50000, 105000, 103000, 73000 },
-        new int[] { 100000,105000, 109000, 81000 }
+    // Postition, sat, lum, shade, tint
+    private readonly int?[][] gsLst1 = new int?[][]{
+        new int?[]{0,105000,110000,null, 67000},
+        new int?[]{50000, 103000,105000,null, 73000},
+        new int?[]{100000,109000,105000,null, 81000}
     };
 
-    private int[][] gsLst2 = new int[][]{
-        new int[] { 0,103000, 102000, 94000 },
-        new int[] { 50000,110000, 100000, 100000 },
-        new int[] { 100000,99000, 120000, 78000 }
-    };
+    private readonly int?[][] gsLst2 = new int?[][]{
+        new int?[]{0, 103000,102000,null, 94000},
+        new int?[]{50000,110000, 100000, 100000,null},
+       new int?[]{100000,120000,99000, 78000,null}
+       };
 
-    private int[][] gsLst3 = new int[][]{
-        new int[] { 0,93000, 150000, 98000,102000 },
-        new int[] { 50000,98000, 130000, 90000 ,103000}
+    private readonly int?[][] gsLst3 = new int?[][]{
+        new int?[]{0,150000,102000, 98000,93000},
+        new int?[]{50000, 130000 ,103000,90000,98000},
+        new int?[]{100000, 120000 ,null,63000,null}
     };
 
     private A.FontScheme GenerateFontScheme()
@@ -176,26 +178,8 @@ internal class Theme
                 }),
             BackgroundFillStyleList = GenerateBackgroundFillStyleList()
         };
-        A.GradientFill GetGradientFill(int[][] gsLst)
+        A.GradientFill GetGradientFill(int?[][] gsLst)
         {
-            A.GradientStop GetGradientStop(int position, int luminanceModulation, int saturationModulation, int tint)
-            {
-                return new()
-                {
-                    Position = position,
-                    SchemeColor = new(new A.LuminanceModulation()
-                    {
-                        Val = luminanceModulation
-                    }, new A.SaturationModulation()
-                    {
-                        Val = saturationModulation
-                    }, new A.Tint()
-                    {
-                        Val = tint
-                    })
-                    { Val = A.SchemeColorValues.PhColor }
-                }; ;
-            }
             A.GradientFill gradientFill = new(new A.LinearGradientFill()
             {
                 Angle = 5400000,
@@ -204,53 +188,51 @@ internal class Theme
             {
                 RotateWithShape = true,
                 GradientStopList = new A.GradientStopList(
-                    gsLst.Select(v => GetGradientStop(v[0], v[1], v[2], v[3])).ToList()
+                    gsLst.Select(v => GetGradientStop(v[0], v[1], v[2], v[3], v[4])).ToList()
                 )
             };
             return gradientFill;
         }
     }
-
+    private A.GradientStop GetGradientStop(int? position, int? saturationModulation, int? luminanceModulation, int? shade, int? tint)
+    {
+        A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.PhColor };
+        if (luminanceModulation != null)
+        {
+            schemeColor.AppendChild(new A.LuminanceModulation()
+            {
+                Val = luminanceModulation
+            });
+        }
+        if (saturationModulation != null)
+        {
+            schemeColor.AppendChild(new A.SaturationModulation()
+            {
+                Val = saturationModulation
+            });
+        }
+        if (shade != null)
+        {
+            schemeColor.AppendChild(new A.Shade()
+            {
+                Val = shade
+            });
+        }
+        if (tint != null)
+        {
+            schemeColor.AppendChild(new A.Tint()
+            {
+                Val = tint
+            });
+        }
+        return new()
+        {
+            Position = position,
+            SchemeColor = schemeColor
+        };
+    }
     private A.BackgroundFillStyleList GenerateBackgroundFillStyleList()
     {
-        A.GradientStop GetGradientStop(int position, int tint, int saturationModulation, int shade, int luminanceModulation)
-        {
-            return new()
-            {
-                Position = position,
-                SchemeColor = new(new A.Tint()
-                {
-                    Val = tint
-                }, new A.SaturationModulation()
-                {
-                    Val = saturationModulation
-                }, new A.Shade()
-                {
-                    Val = shade
-                }, new A.LuminanceModulation()
-                {
-                    Val = luminanceModulation
-                })
-                { Val = A.SchemeColorValues.PhColor }
-            };
-        };
-        A.GradientStopList gradientStopList = new(gsLst3.Select(v => GetGradientStop(v[0], v[1], v[2], v[3], v[4])).ToList());
-        gradientStopList.AppendChild(new A.GradientStop(new A.SchemeColor(
-            new A.Shade()
-            {
-                Val = 63000
-            },
-            new A.SaturationModulation()
-            {
-                Val = 120000
-            }
-        )
-        {
-            Val = A.SchemeColorValues.PhColor
-        })
-        {
-            Position = 100000
-        });
         A.BackgroundFillStyleList backgroundFillStyleList = new(new A.SolidFill()
         {
             SchemeColor = new A.SchemeColor() { Val = A.SchemeColorValues.PhColor }
@@ -258,7 +240,7 @@ internal class Theme
         {
             SchemeColor = new(new A.Tint() { Val = 95000 }, new A.SaturationModulation() { Val = 170000 }) { Val = A.SchemeColorValues.PhColor }
         }, new A.GradientFill(
-            gradientStopList,
+            new A.GradientStopList(gsLst3.Select(v => GetGradientStop(v[0], v[1], v[2], v[3], v[4])).ToList()),
             new A.LinearGradientFill()
             {
                 Angle = 5400000,

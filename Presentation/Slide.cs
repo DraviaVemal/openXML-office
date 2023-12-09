@@ -5,7 +5,7 @@ namespace OpenXMLOffice.Presentation;
 internal class Slide
 {
     private readonly P.Slide OpenXMLSlide = new();
-    private readonly CommonSlideData commonSlideData = new(Global.Constants.CommonSlideDataType.SLIDE);
+    private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE, PresentationConstants.SlideLayoutType.BLANK);
     public Slide()
     {
         OpenXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();

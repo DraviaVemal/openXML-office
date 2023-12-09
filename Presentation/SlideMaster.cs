@@ -7,7 +7,7 @@ internal class SlideMaster
 {
     protected P.SlideLayoutIdList? slideLayoutIdList;
     protected P.SlideMaster OpenXMLSlideMaster = new();
-    private readonly CommonSlideData commonSlideData = new(Global.Constants.CommonSlideDataType.SLIDE_MASTER);
+    private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_MASTER, PresentationConstants.SlideLayoutType.BLANK);
     public SlideMaster()
     {
         CreateSlideMaster();

@@ -24,14 +24,16 @@ public class Presentation
     {
         PowerPoint powerPoint1 = new("../try.pptx", null);
         Assert.IsNotNull(powerPoint1);
+        powerPoint1.Save();
         File.Delete("../try.pptx");
     }
 
     [TestMethod]
     public void AddBlankSlide()
     {
-        powerPoint.AddSlide(Global.Constants.SlideLayoutType.BLANK);
-        powerPoint.AddSlide(Global.Constants.SlideLayoutType.BLANK);
+        powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+        powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+        powerPoint.Save();
         Assert.IsTrue(true);
     }
 }

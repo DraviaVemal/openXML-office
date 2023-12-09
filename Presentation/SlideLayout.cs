@@ -5,7 +5,7 @@ using DocumentFormat.OpenXml.Packaging;
 namespace OpenXMLOffice.Presentation;
 internal class SlideLayout
 {
-    private readonly CommonSlideData commonSlideData = new(Global.Constants.CommonSlideDataType.SLIDE_LAYOUT);
+    private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT, PresentationConstants.SlideLayoutType.BLANK);
 
     private readonly P.SlideLayout OpenXMLSlideLayout = new()
     {
