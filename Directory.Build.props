@@ -3,10 +3,10 @@
         <PackageProjectUrl>https://draviavemal.github.io/OpenXMLOffice/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DraviaVemal/OpenXMLOffice</RepositoryUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>0.0.3-alpha</Version>
+        <Version>0.0.4-alpha</Version>
         <Company>DraviaVemal</Company>
         <Copyright>Copyright (c) 2023 DraviaVemal
 
