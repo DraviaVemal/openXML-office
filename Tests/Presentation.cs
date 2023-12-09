@@ -26,4 +26,11 @@ public class Presentation
         Assert.IsNotNull(powerPoint1);
         File.Delete("../try.pptx");
     }
+
+    [TestMethod]
+    public void AddBlankSlide()
+    {
+        powerPoint.AddBlankSlide();
+        Assert.IsTrue(true);
+    }
 }
