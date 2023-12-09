@@ -5,9 +5,19 @@ using A = DocumentFormat.OpenXml.Drawing;
 namespace OpenXMLOffice.Presentation;
 public class Global
 {
-    protected CommonSlideData CreateCommonSlideData()
+    protected CommonSlideData CreateCommonSlideData(bool isAddBackground = false)
     {
-        return new CommonSlideData(new ShapeTree()
+        Background background = new()
+        {
+            BackgroundStyleReference = new BackgroundStyleReference(new A.SchemeColor()
+            {
+                Val = A.SchemeColorValues.PhColor
+            })
+            {
+                Index = 1001
+            }
+        };
+        ShapeTree shapeTree = new()
         {
             GroupShapeProperties = new GroupShapeProperties()
             {
@@ -40,6 +50,14 @@ public class Global
                             new NonVisualGroupShapeDrawingProperties(),
                             new ApplicationNonVisualDrawingProperties()
                         )
-        });
+        };
+        if (isAddBackground)
+        {
+            return new CommonSlideData(background, shapeTree);
+        }
+        else
+        {
+            return new CommonSlideData(shapeTree);
+        }
     }
 }

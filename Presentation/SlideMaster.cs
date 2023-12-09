@@ -1,14 +1,16 @@
 using P = DocumentFormat.OpenXml.Presentation;
 using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace OpenXMLOffice.Presentation;
 public class SlideMaster : Theme
 {
     protected SlideLayoutIdList? slideLayoutIdList;
+    protected P.SlideMaster? slideMaster;
     protected P.SlideMaster CreateSlideMaster()
     {
-        P.SlideMaster slideMaster = new(CreateCommonSlideData());
+        slideMaster = new(CreateCommonSlideData(true));
         slideMaster.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
         slideMaster.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
         slideMaster.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
@@ -39,5 +41,10 @@ public class SlideMaster : Theme
             Id = (uint)(2147483649 + slideLayoutIdList.Count() + 1),
             RelationshipId = relationshipId
         });
+    }
+
+    protected string UpdateRelationship(OpenXmlPart openXmlPart)
+    {
+        return slideMaster!.SlideMasterPart!.CreateRelationshipToPart(openXmlPart);
     }
 }

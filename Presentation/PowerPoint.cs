@@ -64,15 +64,6 @@ public class PowerPoint : SlideLayout
         {
             presentationPart.Presentation.AppendChild(new NotesSize() { Cx = 6858000, Cy = 9144000 });
         }
-        if (presentationPart.ThemePart == null)
-        {
-            ThemePart themePart = presentationPart.AddNewPart<ThemePart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
-            themePart.Theme = CreateTheme(powerPointProperties?.Theme);
-        }
-        else
-        {
-            presentationPart.ThemePart.Theme = CreateTheme(powerPointProperties?.Theme);
-        }
         if (presentationPart.PresentationPropertiesPart == null)
         {
             PresentationPropertiesPart presentationPropertiesPart = presentationPart.AddNewPart<PresentationPropertiesPart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
@@ -112,6 +103,16 @@ public class PowerPoint : SlideLayout
             slideLayoutPart.SlideLayout = CreateSlideLayout();
             slideLayoutPart.SlideLayout.Save();
             slideMasterPart.SlideMaster.Save();
+        }
+        if (presentationPart.ThemePart == null)
+        {
+            ThemePart themePart = presentationPart.AddNewPart<ThemePart>(string.Format("rId{0}", presentationPart.Parts.Count() + 1));
+            themePart.Theme = CreateTheme(powerPointProperties?.Theme);
+            UpdateRelationship(themePart);
+        }
+        else
+        {
+            presentationPart.ThemePart.Theme = CreateTheme(powerPointProperties?.Theme);
         }
         presentationPart.Presentation.Save();
     }
