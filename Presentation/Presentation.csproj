@@ -6,7 +6,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>OpenXMLOffice.Presentation</PackageId>
+    <PackageId>DraviaVemal.OpenXMLOffice.Presentation</PackageId>
     <RootNamespace>OpenXMLOffice.Presentation</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -19,7 +19,7 @@
       error-prone. Perfect for applications requiring on-the-fly PowerPoint document generation or
       manipulation. Get started with ease and enhance your application's document handling
       capabilities.</PackageDescription>
-    <PackageTags>OpenXML;Power Point;Presentation</PackageTags>
+    <PackageTags>OpenXML;Power Point;Presentation;Office;ppt;pptx</PackageTags>
   </PropertyGroup>
 
 </Project>

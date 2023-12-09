@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>OpenXMLOffice.Excel</PackageId>
+    <PackageId>DraviaVemal.OpenXMLOffice.Excel</PackageId>
     <RootNamespace>OpenXMLOffice.Excel</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -22,7 +22,7 @@
       creation and editing. From automated report generation to data-driven spreadsheet creation,
       the OpenXML Excel Integrator offers a streamlined approach to handle Excel documents
       efficiently and accurately, enhancing your application's data management capabilities.</PackageDescription>
-    <PackageTags>OpenXML;Excel;Spread Sheet</PackageTags>
+    <PackageTags>OpenXML;Excel;Spread Sheet;Office;xls;xlsx</PackageTags>
   </PropertyGroup>
 
 </Project>

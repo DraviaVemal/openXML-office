@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>OpenXMLOffice.Document</PackageId>
+    <PackageId>DraviaVemal.OpenXMLOffice.Document</PackageId>
     <RootNamespace>OpenXMLOffice.Document</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -17,7 +17,7 @@
       tools needed for precise and efficient Word document handling. Embrace the power of
       programmatic document creation with OpenXML Word Processor, and elevate your application's
       document processing functionality.</PackageDescription>
-    <PackageTags>OpenXML;Document;Word</PackageTags>
+    <PackageTags>OpenXML;Document;Word;Office</PackageTags>
   </PropertyGroup>
 
 </Project>
