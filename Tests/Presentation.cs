@@ -10,7 +10,7 @@ public class Presentation
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
-        powerPoint = new(string.Format("../../test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), DocumentFormat.OpenXml.PresentationDocumentType.Presentation);
+        powerPoint = new(string.Format("../../test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), null);
     }
 
     [ClassCleanup]
@@ -22,7 +22,7 @@ public class Presentation
     [TestMethod]
     public void SheetConstructorFile()
     {
-        PowerPoint powerPoint1 = new("../try.pptx", DocumentFormat.OpenXml.PresentationDocumentType.Presentation);
+        PowerPoint powerPoint1 = new("../try.pptx", null);
         Assert.IsNotNull(powerPoint1);
         File.Delete("../try.pptx");
     }
@@ -30,7 +30,8 @@ public class Presentation
     [TestMethod]
     public void AddBlankSlide()
     {
-        powerPoint.AddBlankSlide();
+        powerPoint.AddSlide(Global.Constants.SlideLayoutType.BLANK);
+        powerPoint.AddSlide(Global.Constants.SlideLayoutType.BLANK);
         Assert.IsTrue(true);
     }
 }
