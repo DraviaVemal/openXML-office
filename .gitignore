@@ -65,3 +65,6 @@ desktop.ini
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+
+# skip dir
+!**/TestFiles/**
