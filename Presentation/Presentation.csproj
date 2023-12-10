@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>DraviaVemal.OpenXMLOffice.Presentation</PackageId>
+    <PackageId>OpenXMLOffice.Presentation</PackageId>
     <RootNamespace>OpenXMLOffice.Presentation</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>DraviaVemal.OpenXMLOffice.Excel</PackageId>
+    <PackageId>OpenXMLOffice.Excel</PackageId>
     <RootNamespace>OpenXMLOffice.Excel</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

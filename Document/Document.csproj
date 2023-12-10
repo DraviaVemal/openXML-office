@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>DraviaVemal.OpenXMLOffice.Document</PackageId>
+    <PackageId>OpenXMLOffice.Document</PackageId>
     <RootNamespace>OpenXMLOffice.Document</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
