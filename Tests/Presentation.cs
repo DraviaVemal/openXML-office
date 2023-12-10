@@ -51,7 +51,12 @@ public class Presentation
         powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
         powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
         Slide slide = powerPoint1.GetSlideByIndex(0);
-        slide.FindShapeByText("");
+        List<Shape> shapes = slide.FindShapeByText("Slide_1_Shape_1").ToList();
+        TextBox textBox = new()
+        {
+            Text = "Dravia Vemal"
+        };
+        textBox.UpdateTextInShape(shapes[0]);
         powerPoint1.MoveSlideByIndex(4, 0);
         powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         Assert.IsTrue(true);

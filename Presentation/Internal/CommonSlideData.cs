@@ -90,9 +90,9 @@ public class CommonSlideData
         }
     }
 
-    private Shape CreateShape1()
+    private P.Shape CreateShape1()
     {
-        Shape shape = new();
+        P.Shape shape = new();
         NonVisualShapeProperties nonVisualShapeProperties = new(
             new NonVisualDrawingProperties() { Id = 2, Name = "Title 1" },
             new NonVisualShapeDrawingProperties(new A.ShapeLocks() { NoGrouping = true }),
@@ -122,26 +122,23 @@ public class CommonSlideData
         return shape;
     }
 
-    private Shape CreateShape2()
+    private P.Shape CreateShape2()
     {
-        var shape = new Shape();
-
-        var nonVisualShapeProperties = new NonVisualShapeProperties(
+        P.Shape shape = new();
+        NonVisualShapeProperties nonVisualShapeProperties = new(
             new NonVisualDrawingProperties() { Id = 3U, Name = "Text Placeholder 2" },
             new NonVisualShapeDrawingProperties(new A.ShapeLocks() { NoGrouping = true }),
             new ApplicationNonVisualDrawingProperties(
                 new PlaceholderShape() { Index = 1U, Type = PlaceholderValues.Body })
         );
-
-        var shapeProperties = new ShapeProperties(
+        ShapeProperties shapeProperties = new(
             new A.Transform2D(
                 new A.Offset() { X = 838200L, Y = 1825625L },
                 new A.Extents() { Cx = 10515600L, Cy = 4351338L }
             ),
             new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
         );
-
-        var textBody = new TextBody(
+        TextBody textBody = new(
             new A.BodyProperties(),
             new A.ListStyle(),
             new A.Paragraph(
@@ -184,11 +181,9 @@ public class CommonSlideData
                 }
             )
         );
-
         shape.Append(nonVisualShapeProperties);
         shape.Append(shapeProperties);
         shape.Append(textBody);
-
         return shape;
     }
 }

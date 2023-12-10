@@ -11,7 +11,10 @@ public class Shape
             OpenXMLShape = shape;
         }
     }
-
+    public void RemoveShape()
+    {
+        OpenXMLShape.Remove();
+    }
     internal P.Shape GetShape()
     {
         return OpenXMLShape;
