@@ -5,6 +5,11 @@
     <ProjectReference Include="..\Excel\Excel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="internal/" />
+    <Folder Include="public/" />
+  </ItemGroup>
+
   <PropertyGroup>
     <PackageId>DraviaVemal.OpenXMLOffice.Presentation</PackageId>
     <RootNamespace>OpenXMLOffice.Presentation</RootNamespace>

@@ -40,7 +40,7 @@ public class Presentation
     [TestMethod]
     public void OpenExistingPresentationNonEdit()
     {
-        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\1.pptx", false);
+        PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false);
         powerPoint1.Save();
         Assert.IsTrue(true);
     }
@@ -48,9 +48,9 @@ public class Presentation
     [TestMethod]
     public void OpenExistingPresentationEdit()
     {
-        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\1.pptx", true);
+        PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
         powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-        powerPoint1.Save();
+        powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         Assert.IsTrue(true);
     }
 }

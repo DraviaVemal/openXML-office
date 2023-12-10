@@ -2,7 +2,18 @@ namespace OpenXMLOffice.Presentation;
 public class PresentationProperties
 {
     public PresentationTheme Theme = new();
-    public PresentationSettings settings = new();
+    public PresentationSettings Settings = new();
+    /// <summary>
+    /// TODO : Multi Theme Slide Master Support
+    /// </summary>
+    public Dictionary<string, PresentationSlideMaster>? SlideMasters;
+}
+/// <summary>
+/// TODO : Multi Theme Slide Master Support
+/// </summary>
+public class PresentationSlideMaster
+{
+    public PresentationTheme Theme = new();
 }
 
 public class PresentationTheme
@@ -23,8 +34,8 @@ public class PresentationTheme
 
 public class PresentationSettings
 {
-    public bool IsMultiSlideMasterPart = false;
-    public bool IsMultiThemePart = false;
+    public bool IsMultiSlideMasterPartPresentation = false;
+    public bool IsMultiThemePresentation = false;
 }
 
 internal class PresentationInfo
