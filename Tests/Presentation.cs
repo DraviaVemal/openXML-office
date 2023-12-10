@@ -40,7 +40,7 @@ public class Presentation
     [TestMethod]
     public void OpenExistingPresentationNonEdit()
     {
-        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\presentation_ref_default_bar_chart.pptx", false);
+        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\1.pptx", false);
         powerPoint1.Save();
         Assert.IsTrue(true);
     }
@@ -48,7 +48,8 @@ public class Presentation
     [TestMethod]
     public void OpenExistingPresentationEdit()
     {
-        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\presentation_ref_default_bar_chart.pptx", true);
+        PowerPoint powerPoint1 = new("C:\\Users\\draviavemal\\Projects\\OpenXMLOffice\\1.pptx", true);
+        powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
         powerPoint1.Save();
         Assert.IsTrue(true);
     }

@@ -5,11 +5,11 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
-    internal class Presentation
+    internal class Presentation : PresentationCore
     {
         private readonly PresentationProperties presentationProperties;
         private readonly PresentationDocument presentationDocument;
-        private PresentationInfo presentationInfo = new();
+        private readonly PresentationInfo presentationInfo = new();
         private ExtendedFilePropertiesPart? extendedFilePropertiesPart;
         private PresentationPart? presentationPart;
         private SlideMasterPart? slideMasterPart;
