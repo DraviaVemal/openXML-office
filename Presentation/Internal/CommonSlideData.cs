@@ -4,11 +4,11 @@ using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation;
-internal class CommonSlideData
+public class CommonSlideData
 {
     private P.CommonSlideData OpenXMLCommonSlideData;
 
-    public CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
+    internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
     {
         OpenXMLCommonSlideData = new()
         {
@@ -16,8 +16,12 @@ internal class CommonSlideData
         };
         CreateCommonSlideData(commonSlideDataType);
     }
+    internal CommonSlideData(P.CommonSlideData commonSlideData)
+    {
+        OpenXMLCommonSlideData = commonSlideData;
+    }
     // Return OpenXML CommonSlideData Object
-    public P.CommonSlideData GetCommonSlideData()
+    internal P.CommonSlideData GetCommonSlideData()
     {
         return OpenXMLCommonSlideData;
     }
@@ -118,7 +122,7 @@ internal class CommonSlideData
         return shape;
     }
 
-    public Shape CreateShape2()
+    private Shape CreateShape2()
     {
         var shape = new Shape();
 

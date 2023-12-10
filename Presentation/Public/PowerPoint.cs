@@ -43,9 +43,24 @@ public class PowerPoint
         presentation = new(stream, powerPointProperties, presentationDocumentType);
     }
 
-    public void AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
+    public Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
     {
-        presentation.AddSlide(slideLayoutType);
+        return presentation.AddSlide(slideLayoutType);
+    }
+
+    public void MoveSlideByIndex(int SourceIndex, int TargetIndex)
+    {
+        presentation.MoveSlideByIndex(SourceIndex, TargetIndex);
+    }
+
+    public void RemoveSlideByIndex(int SlideIndex)
+    {
+        presentation.RemoveSlideByIndex(SlideIndex);
+    }
+
+    public Slide GetSlideByIndex(int SlideIndex)
+    {
+        return presentation.GetSlideByIndex(SlideIndex);
     }
 
     public void Save()

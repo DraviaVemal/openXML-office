@@ -32,7 +32,6 @@ public class Presentation
     public void AddBlankSlide()
     {
         powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-        powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
         powerPoint.Save();
         Assert.IsTrue(true);
     }
@@ -50,6 +49,10 @@ public class Presentation
     {
         PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
         powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+        powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+        Slide slide = powerPoint1.GetSlideByIndex(0);
+        slide.FindShapeByText("");
+        powerPoint1.MoveSlideByIndex(4, 0);
         powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         Assert.IsTrue(true);
     }

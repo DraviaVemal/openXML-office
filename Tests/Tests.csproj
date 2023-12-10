@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="cp -r &quot;$(ProjectDir)TestFiles&quot; &quot;$(TargetDir)TestFiles&quot;" />
+    <Exec Command="cp -ru &quot;$(ProjectDir)TestFiles&quot; &quot;$(TargetDir)TestFiles&quot;" />
   </Target>
 
   <ItemGroup>
