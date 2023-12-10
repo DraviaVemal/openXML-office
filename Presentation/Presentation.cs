@@ -7,29 +7,47 @@ namespace OpenXMLOffice.Presentation
 {
     internal class Presentation
     {
+        private readonly PresentationProperties presentationProperties;
         private readonly PresentationDocument presentationDocument;
+        private PresentationInfo presentationInfo = new();
         private ExtendedFilePropertiesPart? extendedFilePropertiesPart;
         private PresentationPart? presentationPart;
         private SlideMasterPart? slideMasterPart;
         private SlideLayoutPart? slideLayoutPart;
-        public Presentation(string filePath, bool isEditable, PowerPointProperties? powerPointProperties = null, bool autosave = true)
+        public Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
         {
-            presentationDocument = PresentationDocument.Open(filePath, isEditable, new OpenSettings()
+            presentationInfo.FilePath = filePath;
+            this.presentationProperties = presentationProperties ?? new();
+            FileStream reader = new(filePath, FileMode.Open);
+            MemoryStream memoryStream = new();
+            reader.CopyTo(memoryStream);
+            reader.Close();
+            presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
             {
                 AutoSave = autosave
             });
-            PreparePresentation(powerPointProperties);
+            if (isEditable)
+            {
+                presentationInfo.IsExistingFile = true;
+            }
+            else
+            {
+                presentationInfo.IsEditable = false;
+            }
         }
-        public Presentation(string filePath, PowerPointProperties? powerPointProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
+        public Presentation(string filePath, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
         {
+            presentationInfo.FilePath = filePath;
+            this.presentationProperties = presentationProperties ?? new();
             presentationDocument = PresentationDocument.Create(filePath, presentationDocumentType, autosave);
-            PreparePresentation(powerPointProperties);
+            PreparePresentation(this.presentationProperties);
         }
 
-        public Presentation(Stream stream, PowerPointProperties? powerPointProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
+        public Presentation(Stream stream, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
         {
+            this.presentationProperties = presentationProperties ?? new();
             presentationDocument = PresentationDocument.Create(stream, presentationDocumentType, autosave);
-            PreparePresentation(powerPointProperties);
+            PreparePresentation(this.presentationProperties);
         }
 
         private P.DefaultTextStyle CreateDefaultTextStyle()
@@ -66,7 +84,7 @@ namespace OpenXMLOffice.Presentation
             return defaultTextStyle;
         }
 
-        private void PreparePresentation(PowerPointProperties? powerPointProperties)
+        private void PreparePresentation(PresentationProperties? powerPointProperties)
         {
             SlideMaster slideMaster = new();
             SlideLayout slideLayout = new();
@@ -162,13 +180,21 @@ namespace OpenXMLOffice.Presentation
 
         public void Save()
         {
-            presentationDocument.Save();
+            if (presentationInfo.FilePath == null)
+            {
+                throw new FieldAccessException("Data Is in File Stream Use SaveAs to Target save file");
+            }
+            if (presentationInfo.IsEditable)
+            {
+                presentationDocument.Clone(presentationInfo.FilePath).Dispose();
+            }
             presentationDocument.Dispose();
         }
 
         public void SaveAs(string filePath)
         {
             presentationDocument.Clone(filePath).Dispose();
+            presentationDocument.Dispose();
         }
     }
 }

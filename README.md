@@ -8,12 +8,16 @@ OpenXMLOffice is a .NET library utilizing OpenXML SDK 3.0 to provide an intuitiv
 - **OpenXML SDK 3.0**: Built on the robust foundation of the OpenXML SDK.
 - **Modular Architecture**: Dedicated modules for each Office application for better manageability.
 
-## Getting Started
+## Getting Started [Link](https://www.nuget.org/packages?q=OpenXMLOffice)
 
 The library is available on NuGet. You can install it using the following command:
 
 ```shell
 Install-Package OpenXMLOffice
+```
+
+```shell
+dotnet add package OpenXMLOffice.Presentation --version 0.0.4-alpha
 ```
 
 ## Documentation [Link](https://draviavemal.github.io/OpenXMLOffice)
@@ -24,7 +28,7 @@ All the documentation for this project is published on our GitHub Pages. You can
 
 - **v0.0.1**: Initial release with basic setup and dependencies.
 - **v0.1.0**: Cover Spreadsheet data loading and saving.
-- Follow project roadmap to get upto date info
+- Follow project roadmap to get upto date info [Link](https://github.com/users/DraviaVemal/projects/2)
 - **v1.0.0**: Planned release with three separate DLLs for Excel, Presentation, and Word, covering all major functionalities.
 
 ## License

@@ -5,9 +5,9 @@ internal class Theme
 {
 
     private readonly A.Theme OpenXMLTheme = new();
-    public Theme(PowerPointTheme? powerPointTheme = null)
+    public Theme(PresentationTheme? presentationTheme = null)
     {
-        CreateTheme(powerPointTheme);
+        CreateTheme(presentationTheme);
     }
     public A.Theme GetTheme()
     {
@@ -149,7 +149,7 @@ internal class Theme
     {
         return new A.FormatScheme()
         {
-            Name = "OpenXMLOffice Formats",
+            Name = "Office",
             FillStyleList = new A.FillStyleList(
             new A.SolidFill()
             {
@@ -274,30 +274,30 @@ internal class Theme
             AppendNodes(19050)};
     }
 
-    private void CreateTheme(PowerPointTheme? powerPointTheme)
+    private void CreateTheme(PresentationTheme? presentationTheme)
     {
-        OpenXMLTheme.Name = "OpenXMLOffice Theme";
+        OpenXMLTheme.Name = "Office Theme";
         OpenXMLTheme.ObjectDefaults = new();
         OpenXMLTheme.ThemeElements = new A.ThemeElements()
         {
             FontScheme = GenerateFontScheme(),
             FormatScheme = GenerateFormatScheme(),
             ColorScheme = new A.ColorScheme(
-               new A.Dark1Color(new A.SystemColor() { Val = A.SystemColorValues.WindowText, LastColor = powerPointTheme?.Dark1 ?? "000000" }),
-               new A.Light1Color(new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = powerPointTheme?.Light1 ?? "FFFFFF" }),
-               new A.Dark2Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Dark2 ?? "44546A" }),
-               new A.Light2Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Light2 ?? "E7E6E6" }),
-               new A.Accent1Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Accent1 ?? "4472C4" }),
-               new A.Accent2Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Accent2 ?? "ED7D31" }),
-               new A.Accent3Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Accent3 ?? "A5A5A5" }),
-               new A.Accent4Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Accent4 ?? "FFC000" }),
-               new A.Accent5Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Accent5 ?? "5B9BD5" }),
-               new A.Accent6Color(new A.RgbColorModelHex() { Val = powerPointTheme?.Accent6 ?? "70AD47" }),
-               new A.Hyperlink(new A.RgbColorModelHex() { Val = powerPointTheme?.Hyperlink ?? "0563C1" }),
-               new A.FollowedHyperlinkColor(new A.RgbColorModelHex() { Val = powerPointTheme?.FollowedHyperlink ?? "954F72" })
+               new A.Dark1Color(new A.SystemColor() { Val = A.SystemColorValues.WindowText, LastColor = presentationTheme?.Dark1 }),
+               new A.Light1Color(new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = presentationTheme?.Light1 }),
+               new A.Dark2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Dark2 }),
+               new A.Light2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Light2 }),
+               new A.Accent1Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent1 }),
+               new A.Accent2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent2 }),
+               new A.Accent3Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent3 }),
+               new A.Accent4Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent4 }),
+               new A.Accent5Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent5 }),
+               new A.Accent6Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent6 }),
+               new A.Hyperlink(new A.RgbColorModelHex() { Val = presentationTheme?.Hyperlink }),
+               new A.FollowedHyperlinkColor(new A.RgbColorModelHex() { Val = presentationTheme?.FollowedHyperlink })
                )
             {
-                Name = "OpenXMLOffice Color Scheme"
+                Name = "Office"
             }
         };
     }
