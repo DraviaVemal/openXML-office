@@ -52,11 +52,25 @@ public class Presentation
         powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
         Slide slide = powerPoint1.GetSlideByIndex(0);
         List<Shape> shapes = slide.FindShapeByText("Slide_1_Shape_1").ToList();
-        TextBox textBox = new()
+        List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
+        List<Shape> shapes2 = slide.FindShapeByText("Test Update").ToList();
+        shapes[0].ReplaceShape(new TextBox()
         {
-            Text = "Dravia Vemal"
-        };
-        textBox.UpdateTextInShape(shapes[0]);
+            Text = "Dravia Vemal",
+            FontFamily = "Bernard MT Condensed"
+        }.CreateTextBox());
+        shapes1[0].ReplaceShape(new TextBox()
+        {
+            Text = "Vemal Dravia",
+            TextBackground = "777777"
+        }.CreateTextBox());
+        shapes2[0].ReplaceShape(new TextBox()
+        {
+            Text = "This is text box",
+            FontSize = 22,
+            IsBold = true,
+            TextColor = "AAAAAA"
+        }.CreateTextBox());
         powerPoint1.MoveSlideByIndex(4, 0);
         powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         Assert.IsTrue(true);
