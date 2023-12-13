@@ -6,18 +6,52 @@ namespace OpenXMLOffice.Presentation
 {
     internal class SlideMaster
     {
-        protected P.SlideLayoutIdList? slideLayoutIdList;
+        #region Protected Fields
+
         protected P.SlideMaster OpenXMLSlideMaster = new();
+        protected P.SlideLayoutIdList? slideLayoutIdList;
+
+        #endregion Protected Fields
+
+        #region Private Fields
+
         private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_MASTER, PresentationConstants.SlideLayoutType.BLANK);
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public SlideMaster()
         {
             CreateSlideMaster();
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void AddSlideLayoutIdToList(string relationshipId)
+        {
+            slideLayoutIdList!.AppendChild(new P.SlideLayoutId()
+            {
+                Id = (uint)(2147483649 + slideLayoutIdList.Count() + 1),
+                RelationshipId = relationshipId
+            });
         }
 
         public P.SlideMaster GetSlideMaster()
         {
             return OpenXMLSlideMaster;
         }
+
+        public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
+        {
+            return OpenXMLSlideMaster.SlideMasterPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void CreateSlideMaster()
         {
@@ -43,20 +77,6 @@ namespace OpenXMLOffice.Presentation
             });
             OpenXMLSlideMaster.AppendChild(slideLayoutIdList);
             OpenXMLSlideMaster.AppendChild(CreateTextStyles());
-        }
-
-        public void AddSlideLayoutIdToList(string relationshipId)
-        {
-            slideLayoutIdList!.AppendChild(new P.SlideLayoutId()
-            {
-                Id = (uint)(2147483649 + slideLayoutIdList.Count() + 1),
-                RelationshipId = relationshipId
-            });
-        }
-
-        public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
-        {
-            return OpenXMLSlideMaster.SlideMasterPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
         }
 
         private P.TextStyles CreateTextStyles()
@@ -159,5 +179,7 @@ namespace OpenXMLOffice.Presentation
             textStyles.Append(titleStyle, bodyStyle, otherStyle);
             return textStyles;
         }
+
+        #endregion Private Methods
     }
 }

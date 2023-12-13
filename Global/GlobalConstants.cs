@@ -2,6 +2,8 @@ namespace OpenXMLOffice.Global
 {
     public static class GlobalConstants
     {
+        #region Public Enums
+
         public enum ChartTypes
         {
             COLUMN,
@@ -22,5 +24,6 @@ namespace OpenXMLOffice.Global
             FUNNEL
         }
 
+        #endregion Public Enums
     }
 }

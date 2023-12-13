@@ -1,13 +1,19 @@
-
 using DocumentFormat.OpenXml.Presentation;
 using A = DocumentFormat.OpenXml.Drawing;
+
 using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
     public class CommonSlideData
     {
+        #region Private Fields
+
         private P.CommonSlideData OpenXMLCommonSlideData;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
         {
@@ -17,15 +23,25 @@ namespace OpenXMLOffice.Presentation
             };
             CreateCommonSlideData(commonSlideDataType);
         }
+
         internal CommonSlideData(P.CommonSlideData commonSlideData)
         {
             OpenXMLCommonSlideData = commonSlideData;
         }
+
+        #endregion Internal Constructors
+
+        #region Internal Methods
+
         // Return OpenXML CommonSlideData Object
         internal P.CommonSlideData GetCommonSlideData()
         {
             return OpenXMLCommonSlideData;
         }
+
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
         {
@@ -80,11 +96,13 @@ namespace OpenXMLOffice.Presentation
                     OpenXMLCommonSlideData.AppendChild(background);
                     OpenXMLCommonSlideData.AppendChild(shapeTree);
                     break;
+
                 case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
                     shapeTree.AppendChild(CreateShape1());
                     shapeTree.AppendChild(CreateShape2());
                     OpenXMLCommonSlideData.AppendChild(shapeTree);
                     break;
+
                 default: // slide
                     OpenXMLCommonSlideData.AppendChild(shapeTree);
                     break;
@@ -187,5 +205,7 @@ namespace OpenXMLOffice.Presentation
             shape.Append(textBody);
             return shape;
         }
+
+        #endregion Private Methods
     }
 }

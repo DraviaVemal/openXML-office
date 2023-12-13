@@ -6,7 +6,14 @@ namespace OpenXMLOffice.Presentation
 {
     public class Slide
     {
+        #region Private Fields
+
         private readonly P.Slide OpenXMLSlide = new();
+
+        #endregion Private Fields
+
+        #region Internal Constructors
+
         internal Slide(P.Slide? OpenXMLSlide = null)
         {
             if (OpenXMLSlide != null)
@@ -25,18 +32,16 @@ namespace OpenXMLOffice.Presentation
                 this.OpenXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             }
         }
-        private P.CommonSlideData GetCommonSlideData()
+
+        #endregion Internal Constructors
+
+        #region Public Methods
+
+        public Chart AddChart()
         {
-            return OpenXMLSlide.CommonSlideData!;
+            return new Chart(this);
         }
-        internal SlidePart GetSlidePart()
-        {
-            return OpenXMLSlide.SlidePart!;
-        }
-        internal string GetNextSlideRelationId()
-        {
-            return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
-        }
+
         public IEnumerable<Shape> FindShapeByText(string searchText)
         {
             IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape =>
@@ -48,13 +53,35 @@ namespace OpenXMLOffice.Presentation
                 return new Shape(shape);
             });
         }
-        public Chart AddChart()
+
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal string GetNextSlideRelationId()
         {
-            return new Chart(this);
+            return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
         }
+
         internal P.Slide GetSlide()
         {
             return OpenXMLSlide;
         }
+
+        internal SlidePart GetSlidePart()
+        {
+            return OpenXMLSlide.SlidePart!;
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private P.CommonSlideData GetCommonSlideData()
+        {
+            return OpenXMLSlide.CommonSlideData!;
+        }
+
+        #endregion Private Methods
     }
 }

@@ -4,18 +4,9 @@ namespace OpenXMLOffice.Presentation
 {
     internal class Theme
     {
+        #region Private Fields
 
-        private readonly A.Theme OpenXMLTheme = new();
-        public Theme(PresentationTheme? presentationTheme = null)
-        {
-            CreateTheme(presentationTheme);
-        }
-        public A.Theme GetTheme()
-        {
-            return OpenXMLTheme;
-        }
-        // TODO : Understand the purpose and migrate it to right place
-        // Postition, sat, lum, shade, tint
+        // TODO : Understand the purpose and migrate it to right place Postition, sat, lum, shade, tint
         private readonly int?[][] gsLst1 = new int?[][]{
             new int?[]{0,105000,110000,null, 67000},
             new int?[]{50000, 103000,105000,null, 73000},
@@ -33,6 +24,101 @@ namespace OpenXMLOffice.Presentation
             new int?[]{50000, 130000 ,103000,90000,98000},
             new int?[]{100000, 120000 ,null,63000,null}
         };
+
+        private readonly A.Theme OpenXMLTheme = new();
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public Theme(PresentationTheme? presentationTheme = null)
+        {
+            CreateTheme(presentationTheme);
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public A.Theme GetTheme()
+        {
+            return OpenXMLTheme;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private static A.Outline[] GenerateOutlines()
+        {
+            A.Outline AppendNodes(int width)
+            {
+                A.Outline outline = new(
+                    new A.SolidFill(new A.SchemeColor() { Val = A.SchemeColorValues.PhColor }),
+                    new A.PresetDash() { Val = A.PresetLineDashValues.Solid },
+                    new A.Miter() { Limit = 800000 })
+                {
+                    Width = width,
+                    CapType = A.LineCapValues.Flat,
+                    CompoundLineType = A.CompoundLineValues.Single,
+                    Alignment = A.PenAlignmentValues.Center
+                };
+                return outline;
+            }
+            return new A.Outline[]{
+                AppendNodes(6350),
+                AppendNodes(12700),
+                AppendNodes(19050)};
+        }
+
+        private void CreateTheme(PresentationTheme? presentationTheme)
+        {
+            OpenXMLTheme.Name = "Office Theme";
+            OpenXMLTheme.ObjectDefaults = new();
+            OpenXMLTheme.ThemeElements = new A.ThemeElements()
+            {
+                FontScheme = GenerateFontScheme(),
+                FormatScheme = GenerateFormatScheme(),
+                ColorScheme = new A.ColorScheme(
+                   new A.Dark1Color(new A.SystemColor() { Val = A.SystemColorValues.WindowText, LastColor = presentationTheme?.Dark1 }),
+                   new A.Light1Color(new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = presentationTheme?.Light1 }),
+                   new A.Dark2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Dark2 }),
+                   new A.Light2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Light2 }),
+                   new A.Accent1Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent1 }),
+                   new A.Accent2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent2 }),
+                   new A.Accent3Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent3 }),
+                   new A.Accent4Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent4 }),
+                   new A.Accent5Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent5 }),
+                   new A.Accent6Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent6 }),
+                   new A.Hyperlink(new A.RgbColorModelHex() { Val = presentationTheme?.Hyperlink }),
+                   new A.FollowedHyperlinkColor(new A.RgbColorModelHex() { Val = presentationTheme?.FollowedHyperlink })
+                   )
+                {
+                    Name = "Office"
+                }
+            };
+        }
+
+        private A.BackgroundFillStyleList GenerateBackgroundFillStyleList()
+        {
+            A.BackgroundFillStyleList backgroundFillStyleList = new(new A.SolidFill()
+            {
+                SchemeColor = new A.SchemeColor() { Val = A.SchemeColorValues.PhColor }
+            }, new A.SolidFill()
+            {
+                SchemeColor = new(new A.Tint() { Val = 95000 }, new A.SaturationModulation() { Val = 170000 }) { Val = A.SchemeColorValues.PhColor }
+            }, new A.GradientFill(
+                new A.GradientStopList(gsLst3.Select(v => GetGradientStop(v[0], v[1], v[2], v[3], v[4])).ToList()),
+                new A.LinearGradientFill()
+                {
+                    Angle = 5400000,
+                    Scaled = false
+                })
+            {
+                RotateWithShape = true,
+            });
+            return backgroundFillStyleList;
+        }
 
         private A.FontScheme GenerateFontScheme()
         {
@@ -195,6 +281,7 @@ namespace OpenXMLOffice.Presentation
                 return gradientFill;
             }
         }
+
         private A.GradientStop GetGradientStop(int? position, int? saturationModulation, int? luminanceModulation, int? shade, int? tint)
         {
             A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.PhColor };
@@ -232,75 +319,7 @@ namespace OpenXMLOffice.Presentation
                 SchemeColor = schemeColor
             };
         }
-        private A.BackgroundFillStyleList GenerateBackgroundFillStyleList()
-        {
-            A.BackgroundFillStyleList backgroundFillStyleList = new(new A.SolidFill()
-            {
-                SchemeColor = new A.SchemeColor() { Val = A.SchemeColorValues.PhColor }
-            }, new A.SolidFill()
-            {
-                SchemeColor = new(new A.Tint() { Val = 95000 }, new A.SaturationModulation() { Val = 170000 }) { Val = A.SchemeColorValues.PhColor }
-            }, new A.GradientFill(
-                new A.GradientStopList(gsLst3.Select(v => GetGradientStop(v[0], v[1], v[2], v[3], v[4])).ToList()),
-                new A.LinearGradientFill()
-                {
-                    Angle = 5400000,
-                    Scaled = false
-                })
-            {
-                RotateWithShape = true,
-            });
-            return backgroundFillStyleList;
-        }
 
-        private static A.Outline[] GenerateOutlines()
-        {
-            A.Outline AppendNodes(int width)
-            {
-                A.Outline outline = new(
-                    new A.SolidFill(new A.SchemeColor() { Val = A.SchemeColorValues.PhColor }),
-                    new A.PresetDash() { Val = A.PresetLineDashValues.Solid },
-                    new A.Miter() { Limit = 800000 })
-                {
-                    Width = width,
-                    CapType = A.LineCapValues.Flat,
-                    CompoundLineType = A.CompoundLineValues.Single,
-                    Alignment = A.PenAlignmentValues.Center
-                };
-                return outline;
-            }
-            return new A.Outline[]{
-                AppendNodes(6350),
-                AppendNodes(12700),
-                AppendNodes(19050)};
-        }
-
-        private void CreateTheme(PresentationTheme? presentationTheme)
-        {
-            OpenXMLTheme.Name = "Office Theme";
-            OpenXMLTheme.ObjectDefaults = new();
-            OpenXMLTheme.ThemeElements = new A.ThemeElements()
-            {
-                FontScheme = GenerateFontScheme(),
-                FormatScheme = GenerateFormatScheme(),
-                ColorScheme = new A.ColorScheme(
-                   new A.Dark1Color(new A.SystemColor() { Val = A.SystemColorValues.WindowText, LastColor = presentationTheme?.Dark1 }),
-                   new A.Light1Color(new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = presentationTheme?.Light1 }),
-                   new A.Dark2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Dark2 }),
-                   new A.Light2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Light2 }),
-                   new A.Accent1Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent1 }),
-                   new A.Accent2Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent2 }),
-                   new A.Accent3Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent3 }),
-                   new A.Accent4Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent4 }),
-                   new A.Accent5Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent5 }),
-                   new A.Accent6Color(new A.RgbColorModelHex() { Val = presentationTheme?.Accent6 }),
-                   new A.Hyperlink(new A.RgbColorModelHex() { Val = presentationTheme?.Hyperlink }),
-                   new A.FollowedHyperlinkColor(new A.RgbColorModelHex() { Val = presentationTheme?.FollowedHyperlink })
-                   )
-                {
-                    Name = "Office"
-                }
-            };
-        }
+        #endregion Private Methods
     }
 }

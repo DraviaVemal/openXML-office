@@ -7,25 +7,36 @@ namespace OpenXMLOffice.Excel
         STRING
     }
 
+    public class ColumnProperties
+    {
+        #region Public Fields
+
+        public bool BestFit;
+        public bool Hidden;
+        public double? Width;
+
+        #endregion Public Fields
+    }
+
     public class DataCell
     {
+        #region Public Fields
+
         public string? CellValue;
         public CellDataType DataType;
         public string? numberFormatting;
         public int? styleId;
+
+        #endregion Public Fields
     }
 
     public class RowProperties
     {
+        #region Public Fields
+
         public double? height;
         public bool Hidden;
-    }
 
-    public class ColumnProperties
-    {
-        public double? Width;
-        public bool Hidden;
-        public bool BestFit;
+        #endregion Public Fields
     }
-
 }

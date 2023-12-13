@@ -6,6 +6,8 @@ namespace OpenXMLOffice.Presentation
 {
     internal class SlideLayout
     {
+        #region Private Fields
+
         private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT, PresentationConstants.SlideLayoutType.BLANK);
 
         private readonly P.SlideLayout OpenXMLSlideLayout = new()
@@ -13,10 +15,32 @@ namespace OpenXMLOffice.Presentation
             Type = P.SlideLayoutValues.Text
         };
 
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public SlideLayout()
         {
             CreateSlideLayout();
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public P.SlideLayout GetSlideLayout()
+        {
+            return OpenXMLSlideLayout;
+        }
+
+        public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
+        {
+            return OpenXMLSlideLayout.SlideLayoutPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void CreateSlideLayout()
         {
@@ -30,15 +54,6 @@ namespace OpenXMLOffice.Presentation
             });
         }
 
-        public P.SlideLayout GetSlideLayout()
-        {
-            return OpenXMLSlideLayout;
-        }
-
-        public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
-        {
-            return OpenXMLSlideLayout.SlideLayoutPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
-        }
-
+        #endregion Private Methods
     }
 }

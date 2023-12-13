@@ -10,12 +10,24 @@ namespace OpenXMLOffice.Presentation
 {
     public class Chart
     {
-        private readonly ChartPart OpenXMLChartPart;
-        private readonly Slide CurrentSlide;
-        public int X = 0;
-        public int Y = 0;
+        #region Public Fields
+
         public int Height = 100;
         public int Width = 100;
+        public int X = 0;
+        public int Y = 0;
+
+        #endregion Public Fields
+
+        #region Private Fields
+
+        private readonly Slide CurrentSlide;
+        private readonly ChartPart OpenXMLChartPart;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public Chart(Slide Slide)
         {
             CurrentSlide = Slide;
@@ -23,34 +35,15 @@ namespace OpenXMLOffice.Presentation
             InitialiseChartParts();
         }
 
-        private void InitialiseChartParts()
-        {
-            GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
-            GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
-            GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
-        }
-        private ChartPart GetChartPart()
-        {
-            return OpenXMLChartPart;
-        }
-
-        private ChartStylePart GetChartStylePart()
-        {
-            return OpenXMLChartPart.ChartStyleParts.FirstOrDefault()!;
-        }
-        private ChartColorStylePart GetChartColorStylePart()
-        {
-            return OpenXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
-        }
-        internal string GetNextChartRelationId()
-        {
-            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
-        }
         public Chart(Slide Slide, ChartPart ChartPart)
         {
             OpenXMLChartPart = ChartPart;
             CurrentSlide = Slide;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public P.GraphicFrame CreateChart(GlobalConstants.ChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
         {
@@ -114,5 +107,41 @@ namespace OpenXMLOffice.Presentation
             CurrentSlide.GetSlidePart().Slide.Save();
         }
 
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal string GetNextChartRelationId()
+        {
+            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private ChartColorStylePart GetChartColorStylePart()
+        {
+            return OpenXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
+        }
+
+        private ChartPart GetChartPart()
+        {
+            return OpenXMLChartPart;
+        }
+
+        private ChartStylePart GetChartStylePart()
+        {
+            return OpenXMLChartPart.ChartStyleParts.FirstOrDefault()!;
+        }
+
+        private void InitialiseChartParts()
+        {
+            GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
+            GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
+            GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
+        }
+
+        #endregion Private Methods
     }
 }

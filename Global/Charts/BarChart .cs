@@ -5,6 +5,8 @@ namespace OpenXMLOffice.Global
 {
     public class BarChart : BarFamilyChart
     {
+        #region Public Methods
+
         public ChartSpace GetChartSpace()
         {
             return CreateChartSpace();
@@ -14,9 +16,12 @@ namespace OpenXMLOffice.Global
         {
             return CreateChartStyles();
         }
+
         public ColorStyle GetColorStyle()
         {
             return CreateColorStyles();
         }
+
+        #endregion Public Methods
     }
 }

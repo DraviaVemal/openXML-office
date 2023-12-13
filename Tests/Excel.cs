@@ -5,13 +5,13 @@ namespace OpenXMLOffice.Tests
     [TestClass]
     public class Excel
     {
+        #region Private Fields
+
         private static Spreadsheet spreadsheet = new(new MemoryStream(), true);
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            spreadsheet = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
-        }
+        #endregion Private Fields
+
+        #region Public Methods
 
         [ClassCleanup]
         public static void ClassCleanup()
@@ -19,23 +19,11 @@ namespace OpenXMLOffice.Tests
             spreadsheet.Save();
         }
 
-        [TestMethod]
-        public void SheetConstructorFile()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
         {
-            Spreadsheet spreadsheet1 = new("../try.xlsx", DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
-            Assert.IsNotNull(spreadsheet1);
-            spreadsheet1.Save();
-            File.Delete("../try.xlsx");
+            spreadsheet = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
         }
-
-        [TestMethod]
-        public void SheetConstructorStream()
-        {
-            MemoryStream memoryStream = new();
-            Spreadsheet spreadsheet1 = new(memoryStream, true);
-            Assert.IsNotNull(spreadsheet1);
-        }
-
 
         [TestMethod]
         public void AddSheet()
@@ -45,7 +33,6 @@ namespace OpenXMLOffice.Tests
             Assert.AreEqual("Sheet1", worksheet.GetSheetName());
         }
 
-
         [TestMethod]
         public void RenameSheet()
         {
@@ -54,6 +41,26 @@ namespace OpenXMLOffice.Tests
             Assert.IsTrue(spreadsheet.RenameSheet("Sheet11", "Data1"));
         }
 
+        [TestMethod]
+        public void SetColumn()
+        {
+            Worksheet worksheet = spreadsheet.AddSheet("Data3");
+            Assert.IsNotNull(worksheet);
+            worksheet.SetColumn("A1", new ColumnProperties()
+            {
+                Width = 30
+            });
+            worksheet.SetColumn("C4", new ColumnProperties()
+            {
+                Width = 30,
+                BestFit = true
+            });
+            worksheet.SetColumn("G7", new ColumnProperties()
+            {
+                Hidden = true
+            });
+            Assert.IsTrue(true);
+        }
 
         [TestMethod]
         public void SetRow()
@@ -98,25 +105,22 @@ namespace OpenXMLOffice.Tests
         }
 
         [TestMethod]
-        public void SetColumn()
+        public void SheetConstructorFile()
         {
-            Worksheet worksheet = spreadsheet.AddSheet("Data3");
-            Assert.IsNotNull(worksheet);
-            worksheet.SetColumn("A1", new ColumnProperties()
-            {
-                Width = 30
-            });
-            worksheet.SetColumn("C4", new ColumnProperties()
-            {
-                Width = 30,
-                BestFit = true
-            });
-            worksheet.SetColumn("G7", new ColumnProperties()
-            {
-                Hidden = true
-            });
-            Assert.IsTrue(true);
+            Spreadsheet spreadsheet1 = new("../try.xlsx", DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
+            Assert.IsNotNull(spreadsheet1);
+            spreadsheet1.Save();
+            File.Delete("../try.xlsx");
         }
 
+        [TestMethod]
+        public void SheetConstructorStream()
+        {
+            MemoryStream memoryStream = new();
+            Spreadsheet spreadsheet1 = new(memoryStream, true);
+            Assert.IsNotNull(spreadsheet1);
+        }
+
+        #endregion Public Methods
     }
 }

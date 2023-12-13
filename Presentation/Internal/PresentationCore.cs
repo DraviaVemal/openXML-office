@@ -8,14 +8,30 @@ namespace OpenXMLOffice.Presentation
 {
     internal class PresentationCore
     {
-        //#### Presentation Constants ####//
-        private uint SlideIdStart = 255;
-        private uint SlideMasterIdStart = 2147483647;
+        #region Protected Fields
+
+        protected readonly PresentationDocument presentationDocument;
+
         //################################//
         protected readonly PresentationInfo presentationInfo = new();
+
         protected readonly PresentationProperties presentationProperties;
-        protected readonly PresentationDocument presentationDocument;
+
         protected ExtendedFilePropertiesPart? extendedFilePropertiesPart;
+
+        #endregion Protected Fields
+
+        #region Private Fields
+
+        //#### Presentation Constants ####//
+        private uint SlideIdStart = 255;
+
+        private uint SlideMasterIdStart = 2147483647;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public PresentationCore(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
         {
             presentationInfo.FilePath = filePath;
@@ -37,6 +53,7 @@ namespace OpenXMLOffice.Presentation
                 presentationInfo.IsEditable = false;
             }
         }
+
         public PresentationCore(string filePath, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
         {
             presentationInfo.FilePath = filePath;
@@ -53,37 +70,84 @@ namespace OpenXMLOffice.Presentation
             InitialisePresentation(this.presentationProperties);
         }
 
+        #endregion Public Constructors
+
+        #region Protected Methods
+
+        protected string GetNextPresentationRelationId()
+        {
+            return string.Format("rId{0}", GetPresentationPart().Parts.Count() + 1);
+        }
+
+        protected uint GetNextSlideId()
+        {
+            return (uint)(SlideIdStart + GetSlideIdList().Count() + 1);
+        }
+
+        protected uint GetNextSlideMasterId()
+        {
+            return (uint)(SlideMasterIdStart + GetSlideMasterIdList().Count() + 1);
+        }
+
         protected PresentationPart GetPresentationPart()
         {
             return presentationDocument.PresentationPart!;
         }
 
-        protected P.SlideMasterIdList GetSlideMasterIdList()
-        {
-            return GetPresentationPart().Presentation.SlideMasterIdList!;
-        }
-        protected uint GetNextSlideMasterId()
-        {
-            return (uint)(SlideMasterIdStart + GetSlideMasterIdList().Count() + 1);
-        }
         protected P.SlideIdList GetSlideIdList()
         {
             return GetPresentationPart().Presentation.SlideIdList!;
         }
-        protected uint GetNextSlideId()
-        {
-            return (uint)(SlideIdStart + GetSlideIdList().Count() + 1);
-        }
-        protected string GetNextPresentationRelationId()
-        {
-            return string.Format("rId{0}", GetPresentationPart().Parts.Count() + 1);
-        }
+
         protected SlideLayoutPart GetSlideLayoutPart(PresentationConstants.SlideLayoutType slideLayoutType)
         {
             // TODO: Multi Slide Master Use
             SlideMasterPart slideMasterPart = GetPresentationPart().SlideMasterParts.FirstOrDefault()!;
             return slideMasterPart.SlideLayoutParts
                    .FirstOrDefault(sl => sl.SlideLayout.CommonSlideData!.Name == PresentationConstants.GetSlideLayoutType(slideLayoutType))!;
+        }
+
+        protected P.SlideMasterIdList GetSlideMasterIdList()
+        {
+            return GetPresentationPart().Presentation.SlideMasterIdList!;
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private P.DefaultTextStyle CreateDefaultTextStyle()
+        {
+            P.DefaultTextStyle defaultTextStyle = new();
+            A.DefaultParagraphProperties defaultParagraphProperties = new();
+            A.DefaultRunProperties defaultRunProperties = new() { Language = "en-US" };
+            defaultParagraphProperties.Append(defaultRunProperties);
+            defaultTextStyle.Append(defaultParagraphProperties);
+            A.Level1ParagraphProperties levelParagraphProperties = new()
+            {
+                Alignment = A.TextAlignmentTypeValues.Left,
+                DefaultTabSize = 914400,
+                EastAsianLineBreak = true,
+                LatinLineBreak = false,
+                LeftMargin = 457200,
+                RightToLeft = false
+            };
+            A.DefaultRunProperties levelRunProperties = new()
+            {
+                Kerning = 1200,
+                FontSize = 1800
+            };
+            A.SolidFill solidFill = new();
+            A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.Text1 };
+            solidFill.Append(schemeColor);
+            levelRunProperties.Append(solidFill);
+            A.LatinFont latinTypeface = new() { Typeface = "+mn-lt" };
+            A.EastAsianFont eastAsianTypeface = new() { Typeface = "+mn-ea" };
+            A.ComplexScriptFont complexScriptTypeface = new() { Typeface = "+mn-cs" };
+            levelRunProperties.Append(latinTypeface, eastAsianTypeface, complexScriptTypeface);
+            levelParagraphProperties.Append(levelRunProperties);
+            defaultTextStyle.Append(levelParagraphProperties);
+            return defaultTextStyle;
         }
 
         private void InitialisePresentation(PresentationProperties? powerPointProperties)
@@ -159,7 +223,6 @@ namespace OpenXMLOffice.Presentation
             if (presentationPart.ThemePart == null)
             {
                 presentationPart.AddNewPart<ThemePart>(GetNextPresentationRelationId());
-
             }
             Theme theme = new(powerPointProperties?.Theme);
             presentationPart.ThemePart!.Theme = theme.GetTheme();
@@ -167,39 +230,6 @@ namespace OpenXMLOffice.Presentation
             presentationPart.Presentation.Save();
         }
 
-        private P.DefaultTextStyle CreateDefaultTextStyle()
-        {
-            P.DefaultTextStyle defaultTextStyle = new();
-            A.DefaultParagraphProperties defaultParagraphProperties = new();
-            A.DefaultRunProperties defaultRunProperties = new() { Language = "en-US" };
-            defaultParagraphProperties.Append(defaultRunProperties);
-            defaultTextStyle.Append(defaultParagraphProperties);
-            A.Level1ParagraphProperties levelParagraphProperties = new()
-            {
-                Alignment = A.TextAlignmentTypeValues.Left,
-                DefaultTabSize = 914400,
-                EastAsianLineBreak = true,
-                LatinLineBreak = false,
-                LeftMargin = 457200,
-                RightToLeft = false
-            };
-            A.DefaultRunProperties levelRunProperties = new()
-            {
-                Kerning = 1200,
-                FontSize = 1800
-            };
-            A.SolidFill solidFill = new();
-            A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.Text1 };
-            solidFill.Append(schemeColor);
-            levelRunProperties.Append(solidFill);
-            A.LatinFont latinTypeface = new() { Typeface = "+mn-lt" };
-            A.EastAsianFont eastAsianTypeface = new() { Typeface = "+mn-ea" };
-            A.ComplexScriptFont complexScriptTypeface = new() { Typeface = "+mn-cs" };
-            levelRunProperties.Append(latinTypeface, eastAsianTypeface, complexScriptTypeface);
-            levelParagraphProperties.Append(levelRunProperties);
-            defaultTextStyle.Append(levelParagraphProperties);
-            return defaultTextStyle;
-        }
-
+        #endregion Private Methods
     }
 }

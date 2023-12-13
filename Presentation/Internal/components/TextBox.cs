@@ -5,19 +5,25 @@ namespace OpenXMLOffice.Presentation
 {
     public class TextBox
     {
-        public string Text = "Text Box";
+        #region Public Fields
+
+        public string FontFamily = "Calibri (Body)";
         public int FontSize = 18;
+        public int Height = 100;
         public bool IsBold = false;
         public bool IsItalic = false;
         public bool IsUnderline = false;
-        public string TextColor = "000000";
-        public string TextBackground = "FFFFFF";
         public string ShapeBackground = "FFFFFF";
-        public string FontFamily = "Calibri (Body)";
+        public string Text = "Text Box";
+        public string TextBackground = "FFFFFF";
+        public string TextColor = "000000";
+        public int Width = 100;
         public int X = 0;
         public int Y = 0;
-        public int Height = 100;
-        public int Width = 100;
+
+        #endregion Public Fields
+
+        #region Public Methods
 
         public P.Shape CreateTextBox(uint Id = 100, string Name = "Text Box")
         {
@@ -55,5 +61,7 @@ namespace OpenXMLOffice.Presentation
                         new A.Paragraph(new A.Run(runProperties, new A.Text(Text))))
             };
         }
+
+        #endregion Public Methods
     }
 }

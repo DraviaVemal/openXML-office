@@ -3,33 +3,19 @@ namespace OpenXMLOffice.Excel
     // Define a simple model class
     public static class ConverterUtils
     {
+        #region Public Methods
+
         /// <summary>
-        /// This function converts a pair of row and column indices (non zero-based) into an Excel-style cell reference (e.g., "A1" for row 1, column 1)
+        /// This function converts an Excel-style cell reference (e.g., "A1") into row and column
+        /// indices (non zero-based) to identify the corresponding cell within a worksheet
         /// </summary>
-        /// <param name="row"></param>
-        /// <param name="column"></param>
-        /// <returns>Excel Cell Name</returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static string ConvertToExcelCellReference(int row, int column)
-        {
-            if (row < 1 || column < 1)
-                throw new ArgumentException("Row and column indices must be positive integers.");
-            int dividend = column;
-            string columnName = string.Empty;
-            while (dividend > 0)
-            {
-                int modulo = (dividend - 1) % 26;
-                columnName = Convert.ToChar(65 + modulo) + columnName;
-                dividend = (dividend - modulo) / 26;
-            }
-            return columnName + row;
-        }
-        /// <summary>
-        /// This function converts an Excel-style cell reference (e.g., "A1") into row and column indices (non zero-based) to identify the corresponding cell within a worksheet
-        /// </summary>
-        /// <param name="cellReference"></param>
-        /// <returns>(int,int) row, col</returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="cellReference">
+        /// </param>
+        /// <returns>
+        /// (int,int) row, col
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public static (int, int) ConvertFromExcelCellReference(string cellReference)
         {
             if (string.IsNullOrEmpty(cellReference))
@@ -62,5 +48,35 @@ namespace OpenXMLOffice.Excel
             }
             return (rowIndex, columnIndex);
         }
+
+        /// <summary>
+        /// This function converts a pair of row and column indices (non zero-based) into an
+        /// Excel-style cell reference (e.g., "A1" for row 1, column 1)
+        /// </summary>
+        /// <param name="row">
+        /// </param>
+        /// <param name="column">
+        /// </param>
+        /// <returns>
+        /// Excel Cell Name
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        public static string ConvertToExcelCellReference(int row, int column)
+        {
+            if (row < 1 || column < 1)
+                throw new ArgumentException("Row and column indices must be positive integers.");
+            int dividend = column;
+            string columnName = string.Empty;
+            while (dividend > 0)
+            {
+                int modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo) + columnName;
+                dividend = (dividend - modulo) / 26;
+            }
+            return columnName + row;
+        }
+
+        #endregion Public Methods
     }
 }

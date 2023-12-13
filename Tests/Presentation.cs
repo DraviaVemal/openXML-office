@@ -6,13 +6,13 @@ namespace OpenXMLOffice.Tests
     [TestClass]
     public class Presentation
     {
+        #region Private Fields
+
         private static PowerPoint powerPoint = new(new MemoryStream(), DocumentFormat.OpenXml.PresentationDocumentType.Presentation);
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            powerPoint = new(string.Format("../../test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), null);
-        }
+        #endregion Private Fields
+
+        #region Public Methods
 
         [ClassCleanup]
         public static void ClassCleanup()
@@ -20,13 +20,10 @@ namespace OpenXMLOffice.Tests
             powerPoint.Save();
         }
 
-        [TestMethod]
-        public void SheetConstructorFile()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
         {
-            PowerPoint powerPoint1 = new("../try.pptx", null);
-            Assert.IsNotNull(powerPoint1);
-            powerPoint1.Save();
-            File.Delete("../try.pptx");
+            powerPoint = new(string.Format("../../test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), null);
         }
 
         [TestMethod]
@@ -34,14 +31,6 @@ namespace OpenXMLOffice.Tests
         {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
             powerPoint.Save();
-            Assert.IsTrue(true);
-        }
-
-        [TestMethod]
-        public void OpenExistingPresentationNonEdit()
-        {
-            PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false);
-            powerPoint1.Save();
             Assert.IsTrue(true);
         }
 
@@ -88,6 +77,27 @@ namespace OpenXMLOffice.Tests
             Assert.IsTrue(true);
         }
 
+        [TestMethod]
+        public void OpenExistingPresentationNonEdit()
+        {
+            PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false);
+            powerPoint1.Save();
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void SheetConstructorFile()
+        {
+            PowerPoint powerPoint1 = new("../try.pptx", null);
+            Assert.IsNotNull(powerPoint1);
+            powerPoint1.Save();
+            File.Delete("../try.pptx");
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private DataCell[][] CreateDataPayload()
         {
             Random random = new();
@@ -117,5 +127,7 @@ namespace OpenXMLOffice.Tests
             }
             return data;
         }
+
+        #endregion Private Methods
     }
 }

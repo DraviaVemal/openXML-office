@@ -5,7 +5,14 @@ namespace OpenXMLOffice.Presentation
 {
     public class Shape
     {
+        #region Private Fields
+
         private readonly P.Shape OpenXMLShape = new();
+
+        #endregion Private Fields
+
+        #region Internal Constructors
+
         internal Shape(P.Shape? shape = null)
         {
             if (shape != null)
@@ -13,14 +20,16 @@ namespace OpenXMLOffice.Presentation
                 OpenXMLShape = shape;
             }
         }
+
+        #endregion Internal Constructors
+
+        #region Public Methods
+
         public void RemoveShape()
         {
             OpenXMLShape.Remove();
         }
-        internal P.Shape GetShape()
-        {
-            return OpenXMLShape;
-        }
+
         public void ReplaceShape(P.Shape Shape)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
@@ -37,6 +46,7 @@ namespace OpenXMLOffice.Presentation
             parent.InsertBefore(Shape, OpenXMLShape);
             OpenXMLShape.Remove();
         }
+
         public void ReplaceShape(P.GraphicFrame GraphicFrame)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
@@ -52,5 +62,16 @@ namespace OpenXMLOffice.Presentation
             parent.InsertBefore(GraphicFrame, OpenXMLShape);
             OpenXMLShape.Remove();
         }
+
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal P.Shape GetShape()
+        {
+            return OpenXMLShape;
+        }
+
+        #endregion Internal Methods
     }
 }

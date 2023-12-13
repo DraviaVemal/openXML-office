@@ -5,7 +5,14 @@ namespace OpenXMLOffice.Presentation
 {
     public class ViewProperties
     {
+        #region Private Fields
+
         private readonly P.ViewProperties OpenXMLViewProperties = new();
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public ViewProperties()
         {
             OpenXMLViewProperties.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
@@ -21,9 +28,41 @@ namespace OpenXMLOffice.Presentation
             });
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public P.ViewProperties GetViewProperties()
         {
             return OpenXMLViewProperties;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private static P.NotesTextViewProperties CreateNotesTextViewProperties()
+        {
+            P.NotesTextViewProperties notesTextViewProperties = new(
+                new P.CommonViewProperties
+                {
+                    ScaleFactor = new P.ScaleFactor(new A.ScaleX()
+                    {
+                        Denominator = 1,
+                        Numerator = 1
+                    }, new A.ScaleY()
+                    {
+                        Denominator = 1,
+                        Numerator = 1
+                    }),
+                    Origin = new P.Origin()
+                    {
+                        X = 0,
+                        Y = 0,
+                    },
+                }
+            );
+            return notesTextViewProperties;
         }
 
         private P.NormalViewProperties CreateNormalViewProperties()
@@ -36,6 +75,7 @@ namespace OpenXMLOffice.Presentation
             };
             return normalViewProperties;
         }
+
         private P.SlideViewProperties CreateSlideViewProperties()
         {
             var slideViewProperties = new P.SlideViewProperties(
@@ -66,28 +106,7 @@ namespace OpenXMLOffice.Presentation
             );
             return slideViewProperties;
         }
-        private static P.NotesTextViewProperties CreateNotesTextViewProperties()
-        {
-            P.NotesTextViewProperties notesTextViewProperties = new(
-                new P.CommonViewProperties
-                {
-                    ScaleFactor = new P.ScaleFactor(new A.ScaleX()
-                    {
-                        Denominator = 1,
-                        Numerator = 1
-                    }, new A.ScaleY()
-                    {
-                        Denominator = 1,
-                        Numerator = 1
-                    }),
-                    Origin = new P.Origin()
-                    {
-                        X = 0,
-                        Y = 0,
-                    },
-                }
-            );
-            return notesTextViewProperties;
-        }
+
+        #endregion Private Methods
     }
 }

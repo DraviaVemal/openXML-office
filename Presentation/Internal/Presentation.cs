@@ -6,13 +6,20 @@ namespace OpenXMLOffice.Presentation
 {
     internal class Presentation : PresentationCore
     {
+        #region Public Constructors
+
         public Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
         : base(filePath, isEditable, presentationProperties, autosave) { }
+
         public Presentation(string filePath, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
         : base(filePath, presentationProperties, presentationDocumentType, autosave) { }
 
         public Presentation(Stream stream, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
         : base(stream, presentationProperties, presentationDocumentType) { }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
         {
@@ -24,6 +31,20 @@ namespace OpenXMLOffice.Presentation
             P.SlideId slideId = new() { Id = GetNextSlideId(), RelationshipId = GetPresentationPart().GetIdOfPart(slidePart) };
             slideIdList.Append(slideId);
             return slide;
+        }
+
+        public Slide GetSlideByIndex(int SlideIndex)
+        {
+            if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
+            {
+                P.SlideId SlideId = (P.SlideId)GetSlideIdList().ElementAt(SlideIndex);
+                SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId!.Value!);
+                return new Slide(SlidePart.Slide);
+            }
+            else
+            {
+                throw new IndexOutOfRangeException("The specified slide index is out of range.");
+            }
         }
 
         public void MoveSlideByIndex(int SourceIndex, int TargetIndex)
@@ -52,21 +73,6 @@ namespace OpenXMLOffice.Presentation
                 GetSlideIdList().RemoveChild(SlideId);
                 GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value!);
                 GetPresentationPart().DeletePart(SlidePart);
-
-            }
-            else
-            {
-                throw new IndexOutOfRangeException("The specified slide index is out of range.");
-            }
-        }
-
-        public Slide GetSlideByIndex(int SlideIndex)
-        {
-            if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
-            {
-                P.SlideId SlideId = (P.SlideId)GetSlideIdList().ElementAt(SlideIndex);
-                SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId!.Value!);
-                return new Slide(SlidePart.Slide);
             }
             else
             {
@@ -92,5 +98,7 @@ namespace OpenXMLOffice.Presentation
             presentationDocument.Clone(filePath).Dispose();
             presentationDocument.Dispose();
         }
+
+        #endregion Public Methods
     }
 }
