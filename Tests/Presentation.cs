@@ -75,4 +75,15 @@ public class Presentation
         powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         Assert.IsTrue(true);
     }
+
+    [TestMethod]
+    public void OpenExistingPresentationEditBarChart()
+    {
+        PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
+        Slide Slide = powerPoint1.GetSlideByIndex(0);
+        List<Shape> shapes = Slide.FindShapeByText("Slide_1_Shape_1").ToList();
+        shapes[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ChartTypes.BAR));
+        powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+        Assert.IsTrue(true);
+    }
 }

@@ -1,5 +1,6 @@
 using P = DocumentFormat.OpenXml.Presentation;
 using A = DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace OpenXMLOffice.Presentation;
 public class Slide
@@ -27,6 +28,14 @@ public class Slide
     {
         return OpenXMLSlide.CommonSlideData!;
     }
+    internal SlidePart GetSlidePart()
+    {
+        return OpenXMLSlide.SlidePart!;
+    }
+    internal string GetNextSlideRelationId()
+    {
+        return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
+    }
     public IEnumerable<Shape> FindShapeByText(string searchText)
     {
         IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape =>
@@ -38,7 +47,10 @@ public class Slide
             return new Shape(shape);
         });
     }
-
+    public Chart AddChart()
+    {
+        return new Chart(this);
+    }
     internal P.Slide GetSlide()
     {
         return OpenXMLSlide;

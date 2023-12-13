@@ -1,4 +1,4 @@
-namespace OpenXMLOffice.Globals;
+namespace OpenXMLOffice.Global;
 public class BarChart : BarFamilyChart
 {
 

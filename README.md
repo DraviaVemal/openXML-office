@@ -17,7 +17,7 @@ Install-Package OpenXMLOffice
 ```
 
 ```shell
-dotnet add package OpenXMLOffice.Presentation --version 0.0.4-alpha
+dotnet add package OpenXMLOffice.Presentation
 ```
 
 ## Documentation [Link](https://draviavemal.github.io/OpenXMLOffice)

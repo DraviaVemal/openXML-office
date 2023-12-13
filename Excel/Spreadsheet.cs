@@ -37,19 +37,6 @@ public class Spreadsheet
     }
 
     /// <summary>
-    /// This public constructor method initializes a new instance of the Spreadsheet class, allowing you to work with Excel spreadsheet 
-    /// It accepts a Stream object and a SpreadsheetDocumentType enumeration value as parameters and creates a corresponding SpreadsheetDocument.
-    /// </summary>
-    /// <param name="stream">Memory stream to use</param>
-    /// <param name="spreadsheetDocumentType">Excel File Type</param>
-    /// <param name="autoSave">Defaults to true. The source document gets updated automatically</param>
-    public Spreadsheet(Stream stream, SpreadsheetDocumentType spreadsheetDocumentType = SpreadsheetDocumentType.Workbook, bool autoSave = true)
-    {
-        spreadsheetDocument = SpreadsheetDocument.Create(stream, spreadsheetDocumentType, autoSave);
-        PrepareSpreadsheet();
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="filePath"></param>
@@ -72,6 +59,33 @@ public class Spreadsheet
             AutoSave = autoSave
         });
         PrepareSpreadsheet();
+    }
+
+    /// <summary>
+    /// This public constructor method initializes a new instance of the Spreadsheet class, allowing you to work with Excel spreadsheet 
+    /// It accepts a Stream object and a SpreadsheetDocumentType enumeration value as parameters and creates a corresponding SpreadsheetDocument.
+    /// </summary>
+    /// <param name="stream">Memory stream to use</param>
+    /// <param name="spreadsheetDocumentType">Excel File Type</param>
+    /// <param name="autoSave">Defaults to true. The source document gets updated automatically</param>
+    public Spreadsheet(Stream stream, SpreadsheetDocumentType spreadsheetDocumentType = SpreadsheetDocumentType.Workbook, bool autoSave = true)
+    {
+        spreadsheetDocument = SpreadsheetDocument.Create(stream, spreadsheetDocumentType, autoSave);
+        PrepareSpreadsheet();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream">Memory stream to use</param>
+    /// <param name="isEditable"></param>
+    /// <param name="autoSave"></param>
+    public Spreadsheet(Stream stream, bool isEditable = true, bool autoSave = true)
+    {
+        spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings()
+        {
+            AutoSave = autoSave
+        });
     }
     /// <summary>
     /// Common Spreadsheet perparation process used by all constructor

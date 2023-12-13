@@ -36,4 +36,19 @@ public class Shape
         parent.InsertBefore(Shape, OpenXMLShape);
         OpenXMLShape.Remove();
     }
+    public void ReplaceShape(P.GraphicFrame GraphicFrame)
+    {
+        DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
+        if (OpenXMLShape.ShapeProperties?.Transform2D != null)
+        {
+            A.Transform2D oldTransform = OpenXMLShape.ShapeProperties.Transform2D;
+            GraphicFrame.Transform = new P.Transform
+            {
+                Offset = new A.Offset { X = oldTransform.Offset!.X, Y = oldTransform.Offset.Y },
+                Extents = new A.Extents { Cx = oldTransform.Extents!.Cx, Cy = oldTransform.Extents.Cy }
+            };
+        }
+        parent.InsertBefore(GraphicFrame, OpenXMLShape);
+        OpenXMLShape.Remove();
+    }
 }

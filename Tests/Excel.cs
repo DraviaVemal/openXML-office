@@ -5,7 +5,7 @@ namespace OpenXMLOffice.Tests;
 [TestClass]
 public class Excel
 {
-    private static Spreadsheet spreadsheet = new(new MemoryStream());
+    private static Spreadsheet spreadsheet = new(new MemoryStream(), true);
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
@@ -32,7 +32,7 @@ public class Excel
     public void SheetConstructorStream()
     {
         MemoryStream memoryStream = new();
-        Spreadsheet spreadsheet1 = new(memoryStream);
+        Spreadsheet spreadsheet1 = new(memoryStream, true);
         Assert.IsNotNull(spreadsheet1);
     }
 
