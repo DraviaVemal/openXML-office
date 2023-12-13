@@ -1,3 +1,4 @@
+using OpenXMLOffice.Excel;
 using OpenXMLOffice.Presentation;
 
 namespace OpenXMLOffice.Tests;
@@ -82,8 +83,38 @@ public class Presentation
         PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
         Slide Slide = powerPoint1.GetSlideByIndex(0);
         List<Shape> shapes = Slide.FindShapeByText("Slide_1_Shape_1").ToList();
-        shapes[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ChartTypes.BAR));
+        shapes[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ChartTypes.BAR, CreateDataPayload()));
         powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         Assert.IsTrue(true);
+    }
+
+    private DataCell[][] CreateDataPayload()
+    {
+        Random random = new();
+        DataCell[][] data = new DataCell[5][];
+        data[0] = new DataCell[5];
+        for (int col = 0; col < 5; col++)
+        {
+            data[0][col] = new DataCell
+            {
+                CellValue = $"Heading {col + 1}",
+                DataType = CellDataType.STRING
+            };
+        }
+        for (int row = 1; row < 5; row++)
+        {
+            data[row] = new DataCell[5];
+            for (int col = 0; col < 5; col++)
+            {
+                data[row][col] = new DataCell
+                {
+                    CellValue = random.Next(1, 100).ToString(),
+                    DataType = CellDataType.NUMBER,
+                    numberFormatting = "General",
+                    styleId = 1
+                };
+            }
+        }
+        return data;
     }
 }

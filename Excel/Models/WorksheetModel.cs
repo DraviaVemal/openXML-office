@@ -7,7 +7,6 @@ public enum CellDataType
     STRING
 }
 
-// Define a simple model class
 public class DataCell
 {
     public string? CellValue;
