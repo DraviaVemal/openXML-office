@@ -1,54 +1,60 @@
-using P = DocumentFormat.OpenXml.Presentation;
-using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
+using A = DocumentFormat.OpenXml.Drawing;
+using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation;
-public class Slide
+namespace OpenXMLOffice.Presentation
 {
-    private readonly P.Slide OpenXMLSlide = new();
-    internal Slide(P.Slide? OpenXMLSlide = null)
+    public class Slide
     {
-        if (OpenXMLSlide != null)
+        private readonly P.Slide OpenXMLSlide = new();
+        internal Slide(P.Slide? OpenXMLSlide = null)
         {
-            this.OpenXMLSlide = OpenXMLSlide;
-        }
-        else
-        {
-            CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE, PresentationConstants.SlideLayoutType.BLANK);
-            this.OpenXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
-            this.OpenXMLSlide.ColorMapOverride = new P.ColorMapOverride()
+            if (OpenXMLSlide != null)
             {
-                MasterColorMapping = new A.MasterColorMapping()
-            };
-            this.OpenXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-            this.OpenXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                this.OpenXMLSlide = OpenXMLSlide;
+            }
+            else
+            {
+                CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE, PresentationConstants.SlideLayoutType.BLANK);
+                this.OpenXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
+                this.OpenXMLSlide.ColorMapOverride = new P.ColorMapOverride()
+                {
+                    MasterColorMapping = new A.MasterColorMapping()
+                };
+                this.OpenXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+                this.OpenXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            }
         }
-    }
-    private P.CommonSlideData GetCommonSlideData()
-    {
-        return OpenXMLSlide.CommonSlideData!;
-    }
-    internal SlidePart GetSlidePart()
-    {
-        return OpenXMLSlide.SlidePart!;
-    }
-    internal string GetNextSlideRelationId()
-    {
-        return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
-    }
-    public IEnumerable<Shape> FindShapeByText(string searchText)
-    {
-        IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape =>
+        private P.CommonSlideData GetCommonSlideData()
         {
-            return shape.InnerText == searchText;
-        });
-        return searchResults.Select(shape =>
+            return OpenXMLSlide.CommonSlideData!;
+        }
+        internal SlidePart GetSlidePart()
         {
-            return new Shape(shape);
-        });
-    }
-    internal P.Slide GetSlide()
-    {
-        return OpenXMLSlide;
+            return OpenXMLSlide.SlidePart!;
+        }
+        internal string GetNextSlideRelationId()
+        {
+            return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
+        }
+        public IEnumerable<Shape> FindShapeByText(string searchText)
+        {
+            IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape =>
+            {
+                return shape.InnerText == searchText;
+            });
+            return searchResults.Select(shape =>
+            {
+                return new Shape(shape);
+            });
+        }
+        public Chart AddChart()
+        {
+            return new Chart(this);
+        }
+        internal P.Slide GetSlide()
+        {
+            return OpenXMLSlide;
+        }
     }
 }

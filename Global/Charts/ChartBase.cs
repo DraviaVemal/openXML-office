@@ -1,7 +1,7 @@
+using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using DocumentFormat.OpenXml;
 
 namespace OpenXMLOffice.Global;
 public class ChartBase

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RootNamespace>OpenXMLOffice.Tests</RootNamespace>
@@ -6,10 +6,6 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="cp -ru &quot;$(ProjectDir)TestFiles&quot; &quot;$(TargetDir)TestFiles&quot;" />
-  </Target>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
@@ -20,5 +16,9 @@
     <ProjectReference Include="../Presentation/Presentation.csproj" />
     <ProjectReference Include="../Document/Document.csproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /y $(ProjectDir)TestFiles $(TargetDir)TestFiles" />
+  </Target>
 
 </Project>

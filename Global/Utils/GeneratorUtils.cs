@@ -1,11 +1,12 @@
-namespace OpenXMLOffice.Global;
-
-public static class GeneratorUtils
+namespace OpenXMLOffice.Global
 {
-
-    public static string GenerateNewGUID()
+    public static class GeneratorUtils
     {
-        return string.Format("{{{0}}}", Guid.NewGuid().ToString("D").ToUpper());
-    }
 
+        public static string GenerateNewGUID()
+        {
+            return string.Format("{{{0}}}", Guid.NewGuid().ToString("D").ToUpper());
+        }
+
+    }
 }

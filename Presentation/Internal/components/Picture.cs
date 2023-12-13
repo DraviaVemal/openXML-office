@@ -1,4 +1,6 @@
-namespace OpenXMLOffice.Presentation;
-public class Picture
+namespace OpenXMLOffice.Presentation
 {
+    public class Picture
+    {
+    }
 }

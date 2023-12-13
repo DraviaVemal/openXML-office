@@ -1,23 +1,25 @@
-namespace OpenXMLOffice.Presentation;
-public static class PresentationConstants
+namespace OpenXMLOffice.Presentation
 {
-    public enum SlideLayoutType
+    public static class PresentationConstants
     {
-        BLANK
-    }
-
-    public enum CommonSlideDataType
-    {
-        SLIDE_MASTER,
-        SLIDE_LAYOUT,
-        SLIDE
-    }
-
-    public static string GetSlideLayoutType(SlideLayoutType value)
-    {
-        return value switch
+        public enum SlideLayoutType
         {
-            _ => "Blank",
-        };
+            BLANK
+        }
+
+        public enum CommonSlideDataType
+        {
+            SLIDE_MASTER,
+            SLIDE_LAYOUT,
+            SLIDE
+        }
+
+        public static string GetSlideLayoutType(SlideLayoutType value)
+        {
+            return value switch
+            {
+                _ => "Blank",
+            };
+        }
     }
 }

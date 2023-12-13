@@ -1,68 +1,70 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Drawing.Charts;
 
-namespace OpenXMLOffice.Global;
-public class BarFamilyChart : ChartBase
+namespace OpenXMLOffice.Global
 {
-    protected StringCache AddStringCacheValue(List<ChartData> Cells)
+    public class BarFamilyChart : ChartBase
     {
-        try
+        protected StringCache AddStringCacheValue(List<ChartData> Cells)
         {
-            StringCache StringCache = new()
+            try
             {
-                PointCount = new PointCount()
+                StringCache StringCache = new()
                 {
-                    Val = (UInt32Value)(uint)Cells.Count
-                },
-            };
-            int count = 0;
-            foreach (ChartData Cell in Cells)
-            {
-                StringPoint StringPoint = new()
-                {
-                    Index = (UInt32Value)(uint)count
+                    PointCount = new PointCount()
+                    {
+                        Val = (UInt32Value)(uint)Cells.Count
+                    },
                 };
-                StringPoint.AppendChild(new NumericValue(Cell.Value ?? ""));
-                StringCache.AppendChild(StringPoint);
-                ++count;
+                int count = 0;
+                foreach (ChartData Cell in Cells)
+                {
+                    StringPoint StringPoint = new()
+                    {
+                        Index = (UInt32Value)(uint)count
+                    };
+                    StringPoint.AppendChild(new NumericValue(Cell.Value ?? ""));
+                    StringCache.AppendChild(StringPoint);
+                    ++count;
+                }
+                return StringCache;
             }
-            return StringCache;
-        }
-        catch
-        {
-            throw new Exception("Chart. String Ref Error");
+            catch
+            {
+                throw new Exception("Chart. String Ref Error");
+            }
+
         }
 
-    }
-
-    protected NumberingCache AddNumberCacheValue(List<ChartData> Cells, ChartSeriesSetting? ChartSeriesSetting)
-    {
-        try
+        protected NumberingCache AddNumberCacheValue(List<ChartData> Cells, ChartSeriesSetting? ChartSeriesSetting)
         {
-            NumberingCache NumberingCache = new()
+            try
             {
-                FormatCode = new FormatCode(ChartSeriesSetting?.NumberFormat ?? "General"),
-                PointCount = new PointCount()
+                NumberingCache NumberingCache = new()
                 {
-                    Val = (UInt32Value)(uint)Cells.Count
-                },
-            };
-            int count = 0;
-            foreach (ChartData Cell in Cells)
-            {
-                StringPoint StringPoint = new()
-                {
-                    Index = (UInt32Value)(uint)count
+                    FormatCode = new FormatCode(ChartSeriesSetting?.NumberFormat ?? "General"),
+                    PointCount = new PointCount()
+                    {
+                        Val = (UInt32Value)(uint)Cells.Count
+                    },
                 };
-                StringPoint.AppendChild(new NumericValue(Cell.Value ?? ""));
-                NumberingCache.AppendChild(StringPoint);
-                ++count;
+                int count = 0;
+                foreach (ChartData Cell in Cells)
+                {
+                    StringPoint StringPoint = new()
+                    {
+                        Index = (UInt32Value)(uint)count
+                    };
+                    StringPoint.AppendChild(new NumericValue(Cell.Value ?? ""));
+                    NumberingCache.AppendChild(StringPoint);
+                    ++count;
+                }
+                return NumberingCache;
             }
-            return NumberingCache;
-        }
-        catch
-        {
-            throw new Exception("Chart. Numeric Ref Error");
+            catch
+            {
+                throw new Exception("Chart. Numeric Ref Error");
+            }
         }
     }
 }

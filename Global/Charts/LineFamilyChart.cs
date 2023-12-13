@@ -1,5 +1,7 @@
-namespace OpenXMLOffice.Global;
-public class LineFamilyChart : ChartBase
+namespace OpenXMLOffice.Global
 {
+    public class LineFamilyChart : ChartBase
+    {
 
+    }
 }

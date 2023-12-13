@@ -1,20 +1,22 @@
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
-namespace OpenXMLOffice.Global;
-public class BarChart : BarFamilyChart
+namespace OpenXMLOffice.Global
 {
-    public ChartSpace GetChartSpace()
+    public class BarChart : BarFamilyChart
     {
-        return CreateChartSpace();
-    }
+        public ChartSpace GetChartSpace()
+        {
+            return CreateChartSpace();
+        }
 
-    public ChartStyle GetChartStyle()
-    {
-        return CreateChartStyles();
-    }
-    public ColorStyle GetColorStyle()
-    {
-        return CreateColorStyles();
+        public ChartStyle GetChartStyle()
+        {
+            return CreateChartStyles();
+        }
+        public ColorStyle GetColorStyle()
+        {
+            return CreateColorStyles();
+        }
     }
 }
