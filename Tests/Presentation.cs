@@ -11,56 +11,6 @@ namespace OpenXMLOffice.Tests
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-<<<<<<< Updated upstream
-            Text = "Dravia Vemal",
-            FontFamily = "Bernard MT Condensed"
-        }.private CreateTextBox());
-        shapes1[0].private ReplaceShape(private new TextBox()
-        {
-            Text = "Vemal Dravia",
-            TextBackground = "777777"
-        }.private CreateTextBox());
-        shapes2[0].private ReplaceShape(private new TextBox()
-        {
-            Text = "This is text box",
-            FontSize = 22,
-            IsBold = true,
-            TextColor = "AAAAAA"
-        }.private CreateTextBox());
-        powerPoint1.MoveSlideByIndex(4, 0);
-        powerPoint1.SaveAs(string.private Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
-        Assert.IsTrue(true);
-    }
-
-    [TestMethod]
-    public void OpenExistingPresentationEditBarChart()
-    {
-        PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
-        Slide Slide = powerPoint1.GetSlideByIndex(0);
-        List<Shape> shapes = Slide.FindShapeByText("Slide_1_Shape_1").ToList();
-        shapes[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ChartTypes.BAR, CreateDataPayload()));
-        powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
-        Assert.IsTrue(true);
-    }
-
-    private DataCell[][] CreateDataPayload()
-    {
-        Random random = new();
-        DataCell[][] data = new DataCell[4][];
-        data[0] = new DataCell[4];
-        for (int col = 0; col < 4; col++)
-        {
-            data[0][col] = new DataCell
-            {
-                CellValue = $"Series {col}",
-                DataType = CellDataType.STRING
-            };
-        }
-        for (int row = 1; row < 4; row++)
-        {
-            data[row] = new DataCell[4];
-            for (int col = 0; col < 4; col++)
-=======
             powerPoint = new(string.Format("../../test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), null);
         }
 
@@ -144,7 +94,6 @@ namespace OpenXMLOffice.Tests
             DataCell[][] data = new DataCell[5][];
             data[0] = new DataCell[5];
             for (int col = 0; col < 5; col++)
->>>>>>> Stashed changes
             {
                 data[0][col] = new DataCell
                 {
