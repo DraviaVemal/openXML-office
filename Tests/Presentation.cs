@@ -91,20 +91,20 @@ public class Presentation
     private DataCell[][] CreateDataPayload()
     {
         Random random = new();
-        DataCell[][] data = new DataCell[5][];
-        data[0] = new DataCell[5];
-        for (int col = 0; col < 5; col++)
+        DataCell[][] data = new DataCell[4][];
+        data[0] = new DataCell[4];
+        for (int col = 0; col < 4; col++)
         {
             data[0][col] = new DataCell
             {
-                CellValue = $"Heading {col + 1}",
+                CellValue = $"Series {col}",
                 DataType = CellDataType.STRING
             };
         }
-        for (int row = 1; row < 5; row++)
+        for (int row = 1; row < 4; row++)
         {
-            data[row] = new DataCell[5];
-            for (int col = 0; col < 5; col++)
+            data[row] = new DataCell[4];
+            for (int col = 0; col < 4; col++)
             {
                 data[row][col] = new DataCell
                 {

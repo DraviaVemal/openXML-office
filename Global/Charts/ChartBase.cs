@@ -9,37 +9,226 @@ public class ChartBase
     protected C.ChartSpace CreateChartSpace()
     {
         C.ChartSpace ChartSpace = new();
+        ChartSpace.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+        ChartSpace.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
+        ChartSpace.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
         C.Chart Chart = CreateChart();
-        C.Title Title = CreateTitle();
-        C.PlotArea PlotArea = CreateChartPlotArea();
-        C.Layout Layout = CreateChartLayout();
-        C.Legend Legend = CreateChartLegend();
-        Chart.Append(Title);
-        PlotArea.Append(Layout);
-        Chart.Append(PlotArea);
-        Chart.Append(Legend);
         ChartSpace.Append(Chart);
         return ChartSpace;
     }
 
     private C.Chart CreateChart()
     {
-        return new();
+        C.Chart Chart = new()
+        {
+            Title = CreateTitle(),
+            PlotArea = CreateChartPlotArea(),
+            Legend = CreateChartLegend(),
+        };
+        C.Layout Layout = CreateChartLayout();
+        Chart.AppendChild(Layout);
+        return Chart;
     }
 
     private C.Title CreateTitle()
     {
-        return new();
+        C.Title title = new();
+        title.Append(new C.Overlay() { Val = false });
+        C.ShapeProperties spPr = new();
+        spPr.Append(new A.NoFill());
+        A.Outline ln = new();
+        ln.Append(new A.NoFill());
+        spPr.Append(ln);
+        spPr.Append(new A.EffectList());
+        title.Append(spPr);
+        C.TextProperties txPr = new();
+        txPr.Append(new A.BodyProperties()
+        {
+            Rotation = 0,
+            UseParagraphSpacing = true,
+            VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
+            Vertical = A.TextVerticalValues.Horizontal,
+            Wrap = A.TextWrappingValues.Square,
+            Anchor = A.TextAnchoringTypeValues.Center,
+            AnchorCenter = true
+        });
+        txPr.Append(new A.ListStyle());
+        A.Paragraph paragraph = new();
+        A.ParagraphProperties paragraphProperties = new();
+        A.DefaultRunProperties defaultRunProperties = new()
+        {
+            FontSize = 1862,
+            Bold = false,
+            Italic = false,
+            Underline = A.TextUnderlineValues.None,
+            Strike = A.TextStrikeValues.NoStrike,
+            Kerning = 1200,
+            Spacing = 0,
+            Baseline = 0
+        };
+        defaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(
+        new A.LuminanceModulation() { Val = 65000 },
+        new A.LuminanceOffset() { Val = 35000 })
+        {
+            Val = A.SchemeColorValues.Text1
+        }));
+        defaultRunProperties.Append(new A.LatinFont() { Typeface = "+mn-lt" });
+        defaultRunProperties.Append(new A.EastAsianFont() { Typeface = "+mn-ea" });
+        defaultRunProperties.Append(new A.ComplexScriptFont() { Typeface = "+mn-cs" });
+        paragraphProperties.Append(defaultRunProperties);
+        paragraph.Append(paragraphProperties);
+        paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-US" });
+        txPr.Append(paragraph);
+        title.Append(txPr);
+        return title;
     }
 
     private C.PlotArea CreateChartPlotArea()
     {
-        return new();
+        C.PlotArea plotArea = new();
+        plotArea.Append(new C.Layout());
+        C.BarChart barChart = new(
+            new C.BarDirection() { Val = C.BarDirectionValues.Column },
+            new C.BarGrouping() { Val = C.BarGroupingValues.Clustered },
+            new C.VaryColors() { Val = false });
+        barChart.Append(CreateBarChartSeries(0, "Sheet1!$B$1", "Sheet1!$A$2:$A$5", "Sheet1!$B$2:$B$5", "accent1"));
+        barChart.Append(CreateBarChartSeries(1, "Sheet1!$C$1", "Sheet1!$A$2:$A$5", "Sheet1!$C$2:$C$5", "accent2"));
+        C.DataLabels dLbls = new(
+            new C.ShowLegendKey() { Val = false },
+            new C.ShowValue() { Val = false },
+            new C.ShowCategoryName() { Val = false },
+            new C.ShowSeriesName() { Val = false },
+            new C.ShowPercent() { Val = false },
+            new C.ShowBubbleSize() { Val = false });
+        barChart.Append(dLbls);
+        barChart.Append(new C.GapWidth() { Val = 219 });
+        barChart.Append(new C.Overlap() { Val = -27 });
+        barChart.Append(new C.AxisId() { Val = 1362418656 });
+        barChart.Append(new C.AxisId() { Val = 1358349936 });
+        plotArea.Append(barChart);
+        plotArea.Append(CreateCategoryAxis(1362418656, "Sheet1!$A$2:$A$5"));
+        plotArea.Append(CreateValueAxis(1358349936));
+        C.ShapeProperties spPr = new();
+        spPr.Append(new A.NoFill());
+        spPr.Append(new A.Outline(new A.NoFill()));
+        spPr.Append(new A.EffectList());
+        plotArea.Append(spPr);
+        return plotArea;
+    }
+    private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, string categoryFormula, string valueFormula, string accent)
+    {
+        C.BarChartSeries series = new(
+            new C.Index() { Val = new UInt32Value((uint)seriesIndex) },
+            new C.Order() { Val = new UInt32Value((uint)seriesIndex) },
+            new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula))),
+            new C.InvertIfNegative() { Val = false });
+        C.ShapeProperties spPr = new();
+        spPr.Append(new A.SolidFill(new A.SchemeColor() { Val = A.SchemeColorValues.Accent1 }));
+        spPr.Append(new A.Outline(new A.NoFill()));
+        spPr.Append(new A.EffectList());
+        series.Append(spPr);
+        series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula))));
+        series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula))));
+        return series;
+    }
+    private C.CategoryAxis CreateCategoryAxis(UInt32Value axisId, string formula)
+    {
+        C.CategoryAxis catAx = new(
+            new C.AxisId() { Val = axisId },
+            new C.Scaling(new C.Orientation() { Val = C.OrientationValues.MinMax }),
+            new C.Delete() { Val = false },
+            new C.AxisPosition() { Val = C.AxisPositionValues.Bottom },
+            new C.MajorTickMark() { Val = C.TickMarkValues.None },
+            new C.MinorTickMark() { Val = C.TickMarkValues.None },
+            new C.TickLabelPosition() { Val = C.TickLabelPositionValues.NextTo },
+            new C.CrossingAxis() { Val = axisId },
+            new C.Crosses() { Val = C.CrossesValues.AutoZero },
+            new C.AutoLabeled() { Val = true },
+            new C.LabelAlignment() { Val = C.LabelAlignmentValues.Center },
+            new C.LabelOffset() { Val = 100 },
+            new C.NoMultiLevelLabels() { Val = false });
+        C.ShapeProperties spPr = new();
+        spPr.Append(new A.NoFill());
+        spPr.Append(new A.Outline(new A.NoFill()));
+        spPr.Append(new A.EffectList());
+        catAx.Append(spPr);
+        return catAx;
     }
 
+    private C.ValueAxis CreateValueAxis(UInt32Value axisId)
+    {
+        C.ValueAxis valAx = new(
+            new C.AxisId() { Val = axisId },
+            new C.Scaling(new C.Orientation() { Val = C.OrientationValues.MinMax }),
+            new C.Delete() { Val = false },
+            new C.AxisPosition() { Val = C.AxisPositionValues.Left },
+            new C.MajorGridlines(),
+            new C.NumberingFormat() { FormatCode = "General", SourceLinked = true },
+            new C.MajorTickMark() { Val = C.TickMarkValues.None },
+            new C.MinorTickMark() { Val = C.TickMarkValues.None },
+            new C.TickLabelPosition() { Val = C.TickLabelPositionValues.NextTo },
+            new C.CrossingAxis() { Val = axisId },
+            new C.Crosses() { Val = C.CrossesValues.AutoZero },
+            new C.CrossBetween() { Val = C.CrossBetweenValues.Between });
+        C.ShapeProperties spPr = new();
+        spPr.Append(new A.NoFill());
+        spPr.Append(new A.Outline(new A.NoFill()));
+        spPr.Append(new A.EffectList());
+        valAx.Append(spPr);
+        return valAx;
+    }
     private C.Legend CreateChartLegend()
     {
-        return new();
+        C.Legend legend = new();
+        legend.Append(new C.LegendPosition() { Val = C.LegendPositionValues.Bottom });
+        legend.Append(new C.Overlay() { Val = false });
+        C.ShapeProperties spPr = new();
+        spPr.Append(new A.NoFill());
+        A.Outline ln = new();
+        ln.Append(new A.NoFill());
+        spPr.Append(ln);
+        spPr.Append(new A.EffectList());
+        legend.Append(spPr);
+        C.TextProperties txPr = new();
+        txPr.Append(new A.BodyProperties()
+        {
+            Rotation = 0,
+            UseParagraphSpacing = true,
+            VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
+            Vertical = A.TextVerticalValues.Horizontal,
+            Wrap = A.TextWrappingValues.Square,
+            Anchor = A.TextAnchoringTypeValues.Center,
+            AnchorCenter = true
+        });
+        txPr.Append(new A.ListStyle());
+        A.Paragraph paragraph = new();
+        A.ParagraphProperties paragraphProperties = new();
+        A.DefaultRunProperties defaultRunProperties = new()
+        {
+            FontSize = 1197,
+            Bold = false,
+            Italic = false,
+            Underline = A.TextUnderlineValues.None,
+            Strike = A.TextStrikeValues.NoStrike,
+            Kerning = 1200,
+            Baseline = 0
+        };
+        defaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(
+        new A.LuminanceModulation() { Val = 65000 },
+        new A.LuminanceOffset() { Val = 35000 }
+        )
+        {
+            Val = A.SchemeColorValues.Text1
+        }));
+        defaultRunProperties.Append(new A.LatinFont() { Typeface = "+mn-lt" });
+        defaultRunProperties.Append(new A.EastAsianFont() { Typeface = "+mn-ea" });
+        defaultRunProperties.Append(new A.ComplexScriptFont() { Typeface = "+mn-cs" });
+        paragraphProperties.Append(defaultRunProperties);
+        paragraph.Append(paragraphProperties);
+        paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-US" });
+        txPr.Append(paragraph);
+        legend.Append(txPr);
+        return legend;
     }
 
     private C.Layout CreateChartLayout()
@@ -49,7 +238,7 @@ public class ChartBase
 
     protected CS.ChartStyle CreateChartStyles()
     {
-        return new CS.ChartStyle
+        CS.ChartStyle ChartStyle = new()
         {
             AxisTitle = CreateAxisTitle(),
             CategoryAxis = CreateCategoryAxis(),
@@ -81,6 +270,8 @@ public class ChartBase
             ValueAxis = CreateValueAxis(),
             Wall = CreateWall()
         };
+        ChartStyle.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+        return ChartStyle;
     }
     private CS.AxisTitle CreateAxisTitle()
     {
@@ -96,7 +287,6 @@ public class ChartBase
         axisTitle.Append(fontRef);
         CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1330, Kerning = 1200 };
         axisTitle.Append(defRPr);
-
         return axisTitle;
     }
 
@@ -125,7 +315,6 @@ public class ChartBase
         categoryAxis.Append(spPr);
         CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1197, Kerning = 1200 };
         categoryAxis.Append(defRPr);
-
         return categoryAxis;
     }
 
@@ -288,7 +477,6 @@ public class ChartBase
         ln.Append(solidFill);
         spPr.Append(ln);
         dataPointMarker.Append(spPr);
-
         return dataPointMarker;
     }
 

@@ -24,9 +24,9 @@ public class Chart
 
     private void InitialiseChartParts()
     {
+        GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
         GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
         GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
-        GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
     }
     private ChartPart GetChartPart()
     {
@@ -73,7 +73,6 @@ public class Chart
             ++RowIndex;
         }
         spreadsheet.Save();
-        // Load Chart Part To Graphics Frame For Export
         string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
         P.NonVisualGraphicFrameProperties NonVisualProperties = new()
         {

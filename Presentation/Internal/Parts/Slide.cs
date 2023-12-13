@@ -47,10 +47,6 @@ public class Slide
             return new Shape(shape);
         });
     }
-    public Chart AddChart()
-    {
-        return new Chart(this);
-    }
     internal P.Slide GetSlide()
     {
         return OpenXMLSlide;
