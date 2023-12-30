@@ -50,16 +50,11 @@ namespace OpenXMLOffice.Presentation
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
-               col.Select(cell => new ChartData { Value = cell.CellValue }).ToArray()).ToArray();
-            switch (ChartTypes)
-            {
-                case GlobalConstants.BarChartTypes.CLUSTERED:
-                    BarChart BarChart = new();
-                    GetChartPart().ChartSpace = BarChart.GetChartSpace(ChartData, chartSetting);
-                    GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
-                    GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
-                    break;
-            }
+               col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+            BarChart BarChart = new();
+            GetChartPart().ChartSpace = BarChart.GetChartSpace(ChartData, ChartTypes, chartSetting);
+            GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
 
@@ -69,15 +64,10 @@ namespace OpenXMLOffice.Presentation
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
-            switch (ChartTypes)
-            {
-                case GlobalConstants.ColumnChartTypes.CLUSTERED:
-                    ColumnChart ColumnChart = new();
-                    GetChartPart().ChartSpace = ColumnChart.GetChartSpace(ChartData, chartSetting);
-                    GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
-                    GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
-                    break;
-            }
+            ColumnChart ColumnChart = new();
+            GetChartPart().ChartSpace = ColumnChart.GetChartSpace(ChartData, ChartTypes, chartSetting);
+            GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
 

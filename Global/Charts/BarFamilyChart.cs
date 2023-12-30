@@ -8,13 +8,13 @@ namespace OpenXMLOffice.Global
     {
         #region Protected Methods
 
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.BarDirectionValues barDirectionValue, C.BarGroupingValues barGroupingValue)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
             C.BarChart BarChart = new(
-                new C.BarDirection() { Val = C.BarDirectionValues.Bar },
-                new C.BarGrouping() { Val = C.BarGroupingValues.Clustered },
+                new C.BarDirection() { Val = barDirectionValue },
+                new C.BarGrouping() { Val = barGroupingValue },
                 new C.VaryColors() { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Global
                     DataCols[0].Skip(1).ToArray(),
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
                     col.Skip(1).ToArray(),
-                    "accent1"
+                    $"accent{(seriesIndex % 6) + 1}"
                 ));
             }
             C.DataLabels DataLabels = new(
@@ -64,7 +64,7 @@ namespace OpenXMLOffice.Global
                 new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
                 new C.InvertIfNegative() { Val = false });
             C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.SolidFill(new A.SchemeColor() { Val = A.SchemeColorValues.Accent1 }));
+            ShapeProperties.Append(new A.SolidFill(new A.SchemeColor() { Val = new A.SchemeColorValues(accent) }));
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
             series.Append(ShapeProperties);

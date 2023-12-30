@@ -71,8 +71,10 @@ namespace OpenXMLOffice.Tests
         {
             PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
             Slide Slide = powerPoint1.GetSlideByIndex(0);
-            List<Shape> shapes = Slide.FindShapeByText("Slide_1_Shape_1").ToList();
-            shapes[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ColumnChartTypes.CLUSTERED, CreateDataPayload()));
+            List<Shape> shape1 = Slide.FindShapeByText("Slide_1_Shape_1").ToList();
+            List<Shape> shape2 = Slide.FindShapeByText("Slide_1_Shape_2").ToList();
+            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ColumnChartTypes.CLUSTERED, CreateDataPayload()));
+            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload()));
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }
