@@ -7,9 +7,9 @@ namespace OpenXMLOffice.Global
     {
         #region Public Methods
 
-        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, GlobalConstants.LineChartTypes LineChartType, ChartSetting? chartSetting = null)
+        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, GlobalConstants.LineChartTypes LineChartType, LineChartSetting chartSetting)
         {
-            C.Chart Chart = CreateChart();
+            C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = LineChartType switch
             {
                 GlobalConstants.LineChartTypes.CLUSTERED_MARKET => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, true),

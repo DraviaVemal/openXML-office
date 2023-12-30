@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Linq;
 using OpenXMLOffice.Excel;
 using OpenXMLOffice.Presentation;
 
@@ -77,9 +78,31 @@ namespace OpenXMLOffice.Tests
             List<Shape> shape4 = Slide.FindShapeByText("Slide_1_Shape_4").ToList();
             List<Shape> shape5 = Slide.FindShapeByText("Slide_1_Shape_5").ToList();
             List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
-            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ColumnChartTypes.PERCENT_STACKED, CreateDataPayload()));
-            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload()));
-            shape3[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload()));
+            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ColumnChartTypes.PERCENT_STACKED, CreateDataPayload(),
+            new Global.ColumnChartSetting()
+            {
+                Title = "Title",
+                ChartLegendOptions = new Global.ChartLegendOptions()
+                {
+                    IsEnableLegend = false
+                }
+
+            }));
+            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload(),
+            new Global.BarChartSetting()
+            {
+                ChartLegendOptions = new Global.ChartLegendOptions()
+                {
+                    legendPosition = Global.ChartLegendOptions.eLegendPosition.RIGHT
+                }
+            }));
+            shape3[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload(), new Global.LineChartSetting()
+            {
+                ChartAxesOptions = new Global.ChartAxesOptions()
+                {
+                    IsHorizontalAxesEnabled = false
+                }
+            }));
             shape4[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED_MARKET, CreateDataPayload()));
             shape5[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.AreaChartTypes.CLUSTERED, CreateDataPayload()));
             shape6[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.PieChartTypes.DOUGHNUT, CreateDataPayload()));

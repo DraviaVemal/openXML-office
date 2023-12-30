@@ -1,6 +1,6 @@
 # OpenXMLOffice
 
-OpenXMLOffice is a .NET library utilizing OpenXML SDK 3.0 to provide an intuitive and efficient way of creating and manipulating Office documents, specifically Excel, Word, and PowerPoint files. Our goal is to simplify the document creation process, offering developers user-friendly namespaces, classes, and utilities.
+OpenXMLOffice is an advanced .NET library that leverages the power of OpenXML SDK 3.0 to streamline the creation and manipulation of Office documents, with a primary focus on Excel, Word, and PowerPoint files. Our mission is to enhance the document creation experience for developers by providing intuitive namespaces, classes, and utilities. The library is designed to offer maximum efficiency and ease of use, ensuring a seamless workflow. Please note that a minimum Microsoft Office support version of 2013 is required for optimal compatibility.
 
 ## Features
 
@@ -27,7 +27,8 @@ All the documentation for this project is published on our GitHub Pages. You can
 ## Version History
 
 - **v0.0.1**: Initial release with basic setup and dependencies.
-- **v0.1.0**: Cover Spreadsheet data loading and saving.
+- **v0.1.0**: Cover Spreadsheet data loading, formatting and saving.
+- **v0.2.0**: Power Point Exisitng File Shape Based Manipulation of Tables, Text, Charts (Primary)
 - Follow project roadmap to get upto date info [Link](https://github.com/users/DraviaVemal/projects/2)
 - **v1.0.0**: Planned release with three separate DLLs for Excel, Presentation, and Word, covering all major functionalities.
 

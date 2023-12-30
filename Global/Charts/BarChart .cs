@@ -7,9 +7,9 @@ namespace OpenXMLOffice.Global
     {
         #region Public Methods
 
-        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, GlobalConstants.BarChartTypes barChartType, ChartSetting? chartSetting = null)
+        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, GlobalConstants.BarChartTypes barChartType, BarChartSetting chartSetting)
         {
-            C.Chart Chart = CreateChart();
+            C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = barChartType switch
             {
                 GlobalConstants.BarChartTypes.STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.Stacked),
