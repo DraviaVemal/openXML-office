@@ -57,6 +57,7 @@ namespace OpenXMLOffice.Presentation
             GetChartColorStylePart().ColorStyle = AreaChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
+
         public P.GraphicFrame CreateChart(GlobalConstants.BarChartTypes ChartTypes, DataCell[][] DataRows, BarChartSetting? chartSetting = null)
         {
             LoadDataToExcel(DataRows);

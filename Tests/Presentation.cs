@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Linq;
 using OpenXMLOffice.Excel;
 using OpenXMLOffice.Presentation;
 
@@ -86,7 +85,6 @@ namespace OpenXMLOffice.Tests
                 {
                     IsEnableLegend = false
                 }
-
             }));
             shape2[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload(),
             new Global.BarChartSetting()

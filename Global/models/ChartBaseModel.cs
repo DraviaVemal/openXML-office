@@ -1,6 +1,5 @@
 namespace OpenXMLOffice.Global
 {
-
     public class ChartSeriesSetting
     {
         #region Public Fields
@@ -22,6 +21,7 @@ namespace OpenXMLOffice.Global
             RIGHT,
             TOP_RIGHT
         }
+
         public bool IsEnableLegend = true;
         public eLegendPosition legendPosition = eLegendPosition.BOTTOM;
         public bool IsLegendChartOverLap = false;
@@ -49,8 +49,11 @@ namespace OpenXMLOffice.Global
 
     public class ChartSetting
     {
-        internal ChartSetting() { }
+        internal ChartSetting()
+        { }
+
         #region Public Fields
+
         public string? Title;
         public ChartLegendOptions ChartLegendOptions = new();
         public List<ChartSeriesSetting>? SeriesSettings;

@@ -9,10 +9,7 @@ namespace OpenXMLOffice.Global
             CLUSTERED,
             STACKED,
             PERCENT_STACKED,
-            // CLUSTERED_3D,
-            // STACKED_3D,
-            // PERCENT_STACKED_3D,
-            // COLUMN_3D
+            // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D, COLUMN_3D
         }
 
         public enum BarChartTypes
@@ -20,9 +17,7 @@ namespace OpenXMLOffice.Global
             CLUSTERED,
             STACKED,
             PERCENT_STACKED,
-            // CLUSTERED_3D,
-            // STACKED_3D,
-            // PERCENT_STACKED_3D,
+            // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D,
         }
 
         public enum LineChartTypes
@@ -41,17 +36,14 @@ namespace OpenXMLOffice.Global
             CLUSTERED,
             STACKED,
             PERCENT_STACKED,
-            // CLUSTERED_3D,
-            // STACKED_3D,
-            // PERCENT_STACKED_3D
+            // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
         }
 
         public enum PieChartTypes
         {
             PIE,
-            // PIE_3D,
-            // PIE_PIE,
-            // PIE_BAR,
+
+            // PIE_3D, PIE_PIE, PIE_BAR,
             DOUGHNUT
         }
 

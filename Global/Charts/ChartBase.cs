@@ -21,7 +21,9 @@ public class ChartBase
     }
 
     #endregion Protected Constructors
+
     protected ChartGridLinesOptions ChartGridLinesOptions = new();
+
     #region Protected Methods
 
     protected C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting? ChartSeriesSetting)
@@ -129,6 +131,7 @@ public class ChartBase
     {
         return OpenXMLChartSpace;
     }
+
     protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId)
     {
         C.CategoryAxis CategoryAxis = new(
@@ -193,6 +196,7 @@ public class ChartBase
         ValueAxis.Append(ShapeProperties);
         return ValueAxis;
     }
+
     #endregion Protected Methods
 
     #region Private Methods

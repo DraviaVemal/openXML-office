@@ -45,6 +45,7 @@ namespace OpenXMLOffice.Global
             plotArea.Append(ShapeProperties);
             return plotArea;
         }
+
         protected C.PlotArea CreatePieChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
