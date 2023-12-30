@@ -12,6 +12,8 @@
   <PropertyGroup>
     <PackageId>OpenXMLOffice.Excel</PackageId>
     <RootNamespace>OpenXMLOffice.Excel</RootNamespace>
+    <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+    <CosturaOutputType>SingleFile</CosturaOutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageDescription>OpenXML Excel Integrator is a robust .NET library tailored for managing and

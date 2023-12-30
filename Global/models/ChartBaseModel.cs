@@ -14,6 +14,8 @@ namespace OpenXMLOffice.Global
         #region Public Fields
 
         public string? NumberFormat;
+        public string? FillColor;
+        public string? BorderColor;
 
         #endregion Public Fields
     }

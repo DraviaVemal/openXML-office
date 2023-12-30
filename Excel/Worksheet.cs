@@ -176,7 +176,7 @@ namespace OpenXMLOffice.Excel
                 string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, colIndex);
                 colIndex++;
                 Cell? cell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference?.Value == currentCellId);
-                if (string.IsNullOrEmpty(dataCell.CellValue))
+                if (string.IsNullOrEmpty(dataCell?.CellValue))
                 {
                     cell?.Remove();
                 }

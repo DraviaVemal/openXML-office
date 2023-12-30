@@ -45,28 +45,43 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
-        public P.GraphicFrame CreateChart(GlobalConstants.ChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
+        public P.GraphicFrame CreateChart(GlobalConstants.BarChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
         {
+            LoadDataToExcel(DataRows);
+            // Prepare Excel Data for PPT Cache
+            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+               col.Select(cell => new ChartData { Value = cell.CellValue }).ToArray()).ToArray();
             switch (ChartTypes)
             {
-                case GlobalConstants.ChartTypes.BAR:
+                case GlobalConstants.BarChartTypes.CLUSTERED:
                     BarChart BarChart = new();
-                    GetChartPart().ChartSpace = BarChart.GetChartSpace();
+                    GetChartPart().ChartSpace = BarChart.GetChartSpace(ChartData, chartSetting);
                     GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
                     GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
                     break;
             }
-            // Load Data To Embeded Sheet
-            Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-            Spreadsheet spreadsheet = new(stream, SpreadsheetDocumentType.Workbook);
-            Worksheet Worksheet = spreadsheet.AddSheet();
-            int RowIndex = 1;
-            foreach (DataCell[] DataCells in DataRows)
+            return GetChartGraphicFrame();
+        }
+        public P.GraphicFrame CreateChart(GlobalConstants.ColumnChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
+        {
+            LoadDataToExcel(DataRows);
+            // Prepare Excel Data for PPT Cache
+            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+            switch (ChartTypes)
             {
-                Worksheet.SetRow(RowIndex, 1, DataCells);
-                ++RowIndex;
+                case GlobalConstants.ColumnChartTypes.CLUSTERED:
+                    ColumnChart ColumnChart = new();
+                    GetChartPart().ChartSpace = ColumnChart.GetChartSpace(ChartData, chartSetting);
+                    GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
+                    GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
+                    break;
             }
-            spreadsheet.Save();
+            return GetChartGraphicFrame();
+        }
+
+        private P.GraphicFrame GetChartGraphicFrame()
+        {
             // Load Chart Part To Graphics Frame For Export
             string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
             P.NonVisualGraphicFrameProperties NonVisualProperties = new()
@@ -100,6 +115,21 @@ namespace OpenXMLOffice.Presentation
             GetChartStylePart().ChartStyle.Save();
             GetChartColorStylePart().ColorStyle.Save();
             return GraphicFrame;
+        }
+
+        private void LoadDataToExcel(DataCell[][] DataRows)
+        {
+            // Load Data To Embeded Sheet
+            Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
+            Spreadsheet spreadsheet = new(stream, SpreadsheetDocumentType.Workbook);
+            Worksheet Worksheet = spreadsheet.AddSheet();
+            int RowIndex = 1;
+            foreach (DataCell[] DataCells in DataRows)
+            {
+                Worksheet.SetRow(RowIndex, 1, DataCells);
+                ++RowIndex;
+            }
+            spreadsheet.Save();
         }
 
         public void Save()

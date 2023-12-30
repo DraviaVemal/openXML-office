@@ -3,7 +3,7 @@ using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global
 {
-    public class BarChart : BarFamilyChart
+    public class ColumnChart : BarFamilyChart
     {
         #region Public Methods
 

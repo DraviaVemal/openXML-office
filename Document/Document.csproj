@@ -7,6 +7,8 @@
   <PropertyGroup>
     <PackageId>OpenXMLOffice.Document</PackageId>
     <RootNamespace>OpenXMLOffice.Document</RootNamespace>
+    <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+    <CosturaOutputType>SingleFile</CosturaOutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageDescription>OpenXML Word Processor is a versatile .NET library that streamlines the

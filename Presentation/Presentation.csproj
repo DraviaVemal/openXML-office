@@ -13,6 +13,8 @@
   <PropertyGroup>
     <PackageId>OpenXMLOffice.Presentation</PackageId>
     <RootNamespace>OpenXMLOffice.Presentation</RootNamespace>
+    <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+    <CosturaOutputType>SingleFile</CosturaOutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageDescription>OpenXML PowerPoint Builder is a comprehensive .NET library designed to

@@ -4,24 +4,25 @@ namespace OpenXMLOffice.Global
     {
         #region Public Enums
 
-        public enum ChartTypes
+        public enum ColumnChartTypes
         {
-            COLUMN,
-            LINE,
-            PIE,
-            BAR,
-            AREA,
-            X_Y_SCATTER,
-            MAP,
-            STOCK,
-            SURFACE,
-            RADAR,
-            TREEMAP,
-            SUNBURST,
-            HISTOGRAM,
-            BOX_WHISKER,
-            WATERFALL,
-            FUNNEL
+            CLUSTERED,
+            STACKED,
+            CENT_STACKED,
+            CLUSTERED_3D,
+            STACKED_3D,
+            CENT_STACKED_3D,
+            COLUMN_3D
+        }
+
+        public enum BarChartTypes
+        {
+            CLUSTERED,
+            STACKED,
+            CENT_STACKED,
+            CLUSTERED_3D,
+            STACKED_3D,
+            CENT_STACKED_3D,
         }
 
         #endregion Public Enums

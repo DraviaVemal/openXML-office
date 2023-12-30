@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <RootNamespace>OpenXMLOffice.Global</RootNamespace>
+    <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+    <CosturaOutputType>SingleFile</CosturaOutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
