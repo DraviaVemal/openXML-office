@@ -2,6 +2,8 @@ namespace OpenXMLOffice.Presentation;
 
 public class CommonTools
 {
+    #region Public Methods
+
     public static T[][] TransposeArray<T>(T[][] array)
     {
         int vec1 = array.Length;
@@ -18,4 +20,6 @@ public class CommonTools
         }
         return transposedArray;
     }
+
+    #endregion Public Methods
 }

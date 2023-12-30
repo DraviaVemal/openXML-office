@@ -5,6 +5,8 @@ namespace OpenXMLOffice.Global;
 
 internal class ChartColor
 {
+    #region Public Methods
+
     public CS.ColorStyle CreateColorStyles()
     {
         CS.ColorStyle colorStyle = new() { Method = "cycle", Id = 10 };
@@ -77,4 +79,5 @@ internal class ChartColor
         return colorStyle;
     }
 
+    #endregion Public Methods
 }

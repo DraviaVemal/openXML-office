@@ -7,6 +7,8 @@ namespace OpenXMLOffice.Global;
 
 internal class ChartStyle
 {
+    #region Public Methods
+
     public CS.ChartStyle CreateChartStyles()
     {
         CS.ChartStyle ChartStyle = new()
@@ -47,7 +49,9 @@ internal class ChartStyle
         return ChartStyle;
     }
 
+    #endregion Public Methods
 
+    #region Private Methods
 
     private CS.AxisTitle CreateAxisTitle()
     {
@@ -126,6 +130,7 @@ internal class ChartStyle
     {
         return new();
     }
+
     private CS.DataLabel CreateDataLabel()
     {
         CS.DataLabel dataLabel = new();
@@ -258,15 +263,6 @@ internal class ChartStyle
         spPr.Append(ln);
         dataPointMarker.Append(spPr);
         return dataPointMarker;
-    }
-
-    private CS.MarkerLayoutProperties CreateMarkerLayoutProperties()
-    {
-        return new CS.MarkerLayoutProperties()
-        {
-            Size = 5,
-            Symbol = CS.MarkerStyle.Circle
-        };
     }
 
     private CS.DataPointWireframe CreateDataPointWireframe()
@@ -541,6 +537,15 @@ internal class ChartStyle
         return legendStyle;
     }
 
+    private CS.MarkerLayoutProperties CreateMarkerLayoutProperties()
+    {
+        return new CS.MarkerLayoutProperties()
+        {
+            Size = 5,
+            Symbol = CS.MarkerStyle.Circle
+        };
+    }
+
     private CS.PlotArea CreatePlotArea()
     {
         CS.PlotArea plotAreaStyle = new();
@@ -611,6 +616,7 @@ internal class ChartStyle
         seriesLineStyle.Append(spPr);
         return seriesLineStyle;
     }
+
     private CS.TitleStyle CreateTitleStyle()
     {
         CS.TitleStyle titleStyle = new();
@@ -699,6 +705,7 @@ internal class ChartStyle
         upBarStyle.Append(spPr);
         return upBarStyle;
     }
+
     private CS.ValueAxis CreateValueAxis()
     {
         CS.ValueAxis valueAxisStyle = new();
@@ -737,4 +744,6 @@ internal class ChartStyle
         wallStyle.Append(spPr);
         return wallStyle;
     }
+
+    #endregion Private Methods
 }

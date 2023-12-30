@@ -62,6 +62,7 @@ namespace OpenXMLOffice.Presentation
             }
             return GetChartGraphicFrame();
         }
+
         public P.GraphicFrame CreateChart(GlobalConstants.ColumnChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
         {
             LoadDataToExcel(DataRows);
@@ -78,6 +79,29 @@ namespace OpenXMLOffice.Presentation
                     break;
             }
             return GetChartGraphicFrame();
+        }
+
+        public void Save()
+        {
+            CurrentSlide.GetSlidePart().Slide.Save();
+        }
+
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal string GetNextChartRelationId()
+        {
+            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private ChartColorStylePart GetChartColorStylePart()
+        {
+            return OpenXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
         }
 
         private P.GraphicFrame GetChartGraphicFrame()
@@ -117,44 +141,6 @@ namespace OpenXMLOffice.Presentation
             return GraphicFrame;
         }
 
-        private void LoadDataToExcel(DataCell[][] DataRows)
-        {
-            // Load Data To Embeded Sheet
-            Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-            Spreadsheet spreadsheet = new(stream, SpreadsheetDocumentType.Workbook);
-            Worksheet Worksheet = spreadsheet.AddSheet();
-            int RowIndex = 1;
-            foreach (DataCell[] DataCells in DataRows)
-            {
-                Worksheet.SetRow(RowIndex, 1, DataCells);
-                ++RowIndex;
-            }
-            spreadsheet.Save();
-        }
-
-        public void Save()
-        {
-            CurrentSlide.GetSlidePart().Slide.Save();
-        }
-
-        #endregion Public Methods
-
-        #region Internal Methods
-
-        internal string GetNextChartRelationId()
-        {
-            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private ChartColorStylePart GetChartColorStylePart()
-        {
-            return OpenXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
-        }
-
         private ChartPart GetChartPart()
         {
             return OpenXMLChartPart;
@@ -170,6 +156,21 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
             GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
             GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
+        }
+
+        private void LoadDataToExcel(DataCell[][] DataRows)
+        {
+            // Load Data To Embeded Sheet
+            Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
+            Spreadsheet spreadsheet = new(stream, SpreadsheetDocumentType.Workbook);
+            Worksheet Worksheet = spreadsheet.AddSheet();
+            int RowIndex = 1;
+            foreach (DataCell[] DataCells in DataRows)
+            {
+                Worksheet.SetRow(RowIndex, 1, DataCells);
+                ++RowIndex;
+            }
+            spreadsheet.Save();
         }
 
         #endregion Private Methods

@@ -1,6 +1,7 @@
-using OpenXMLOffice.Global;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
+using OpenXMLOffice.Global;
+
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace OpenXMLOffice.Excel
