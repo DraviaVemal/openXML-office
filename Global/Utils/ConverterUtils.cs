@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace OpenXMLOffice.Global
 {
     // Define a simple model class
@@ -20,14 +22,14 @@ namespace OpenXMLOffice.Global
         {
             if (string.IsNullOrEmpty(cellReference))
                 throw new ArgumentException("Cell reference cannot be empty.");
-            string columnName = string.Empty;
+            StringBuilder columnName = new();
             int rowIndex = 0;
             int columnIndex = 0;
             foreach (char c in cellReference)
             {
                 if (char.IsLetter(c))
                 {
-                    columnName += c;
+                    columnName.Append(c);
                 }
                 else if (char.IsDigit(c))
                 {
