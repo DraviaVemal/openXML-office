@@ -71,7 +71,7 @@ namespace OpenXMLOffice.Excel
         /// </param>
         public Spreadsheet(string filePath, bool isEditable = true, bool autoSave = true)
         {
-            spreadsheetDocument = SpreadsheetDocument.Open(filePath, isEditable, new OpenSettings()
+            spreadsheetDocument = SpreadsheetDocument.Open(filePath, isEditable, new OpenSettings
             {
                 AutoSave = autoSave
             });
@@ -109,7 +109,7 @@ namespace OpenXMLOffice.Excel
         /// </param>
         public Spreadsheet(Stream stream, bool isEditable = true, bool autoSave = true)
         {
-            spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings()
+            spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings
             {
                 AutoSave = autoSave
             });

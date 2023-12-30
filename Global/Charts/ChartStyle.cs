@@ -56,16 +56,16 @@ internal class ChartStyle
     private CS.AxisTitle CreateAxisTitle()
     {
         CS.AxisTitle axisTitle = new();
-        axisTitle.Append(new CS.LineReference() { Index = (UInt32Value)0 });
-        axisTitle.Append(new CS.FillReference() { Index = (UInt32Value)0 });
-        axisTitle.Append(new CS.EffectReference() { Index = (UInt32Value)0 });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 35000 });
+        axisTitle.Append(new CS.LineReference { Index = (UInt32Value)0 });
+        axisTitle.Append(new CS.FillReference { Index = (UInt32Value)0 });
+        axisTitle.Append(new CS.EffectReference { Index = (UInt32Value)0 });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Text1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClr);
         axisTitle.Append(fontRef);
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1330, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1330, Kerning = 1200 };
         axisTitle.Append(defRPr);
         return axisTitle;
     }
@@ -73,27 +73,27 @@ internal class ChartStyle
     private CS.CategoryAxis CreateCategoryAxis()
     {
         CS.CategoryAxis categoryAxis = new();
-        categoryAxis.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        categoryAxis.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        categoryAxis.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClrFont = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClrFont.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClrFont.Append(new A.LuminanceOffset() { Val = 35000 });
+        categoryAxis.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        categoryAxis.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        categoryAxis.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClrFont = new { Val = A.SchemeColorValues.Text1 };
+        schemeClrFont.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClrFont.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClrFont);
         categoryAxis.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill solidFill = new();
-        A.SchemeColor schemeClrLn = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClrLn.Append(new A.LuminanceModulation() { Val = 15000 });
-        schemeClrLn.Append(new A.LuminanceOffset() { Val = 85000 });
+        A.SchemeColor schemeClrLn = new { Val = A.SchemeColorValues.Text1 };
+        schemeClrLn.Append(new A.LuminanceModulation { Val = 15000 });
+        schemeClrLn.Append(new A.LuminanceOffset { Val = 85000 });
         solidFill.Append(schemeClrLn);
         ln.Append(solidFill);
         ln.Append(new A.Round());
         spPr.Append(ln);
         categoryAxis.Append(spPr);
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1197, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1197, Kerning = 1200 };
         categoryAxis.Append(defRPr);
         return categoryAxis;
     }
@@ -101,27 +101,27 @@ internal class ChartStyle
     private CS.ChartArea CreateChartArea()
     {
         CS.ChartArea chartArea = new();
-        chartArea.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        chartArea.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        chartArea.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        chartArea.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        chartArea.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        chartArea.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         chartArea.Append(fontRef);
         CS.ShapeProperties spPr = new();
         A.SolidFill solidFill = new();
-        solidFill.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Background1 });
+        solidFill.Append(new A.SchemeColor { Val = A.SchemeColorValues.Background1 });
         spPr.Append(solidFill);
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill lnSolidFill = new();
-        A.SchemeColor lnSchemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        lnSchemeClr.Append(new A.LuminanceModulation() { Val = 15000 });
-        lnSchemeClr.Append(new A.LuminanceOffset() { Val = 85000 });
+        A.SchemeColor lnSchemeClr = new { Val = A.SchemeColorValues.Text1 };
+        lnSchemeClr.Append(new A.LuminanceModulation { Val = 15000 });
+        lnSchemeClr.Append(new A.LuminanceOffset { Val = 85000 });
         lnSolidFill.Append(lnSchemeClr);
         ln.Append(lnSolidFill);
         ln.Append(new A.Round());
         spPr.Append(ln);
         chartArea.Append(spPr);
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1330, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1330, Kerning = 1200 };
         chartArea.Append(defRPr);
         return chartArea;
     }
@@ -134,16 +134,16 @@ internal class ChartStyle
     private CS.DataLabel CreateDataLabel()
     {
         CS.DataLabel dataLabel = new();
-        dataLabel.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        dataLabel.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        dataLabel.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 75000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 25000 });
+        dataLabel.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        dataLabel.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        dataLabel.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Text1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 75000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 25000 });
         fontRef.Append(schemeClr);
         dataLabel.Append(fontRef);
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1197, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1197, Kerning = 1200 };
         dataLabel.Append(defRPr);
         return dataLabel;
     }
@@ -151,28 +151,28 @@ internal class ChartStyle
     private CS.DataLabelCallout CreateDataLabelCallout()
     {
         CS.DataLabelCallout dataLabelCallout = new();
-        dataLabelCallout.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        dataLabelCallout.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        dataLabelCallout.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Dark1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 35000 });
+        dataLabelCallout.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        dataLabelCallout.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        dataLabelCallout.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Dark1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClr);
         dataLabelCallout.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.SolidFill solidFill = new(new A.SchemeColor() { Val = A.SchemeColorValues.Light1 });
+        A.SolidFill solidFill = new(new A.SchemeColor { Val = A.SchemeColorValues.Light1 });
         spPr.Append(solidFill);
         A.Outline ln = new();
         A.SolidFill lnSolidFill = new();
-        A.SchemeColor lnSchemeClr = new() { Val = A.SchemeColorValues.Dark1 };
-        lnSchemeClr.Append(new A.LuminanceModulation() { Val = 25000 });
-        lnSchemeClr.Append(new A.LuminanceOffset() { Val = 75000 });
+        A.SchemeColor lnSchemeClr = new { Val = A.SchemeColorValues.Dark1 };
+        lnSchemeClr.Append(new A.LuminanceModulation { Val = 25000 });
+        lnSchemeClr.Append(new A.LuminanceOffset { Val = 75000 });
         lnSolidFill.Append(lnSchemeClr);
         ln.Append(lnSolidFill);
         spPr.Append(ln);
         dataLabelCallout.Append(spPr);
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1197, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1197, Kerning = 1200 };
         dataLabelCallout.Append(defRPr);
         CS.TextBodyProperties bodyPr = new()
         {
@@ -197,13 +197,13 @@ internal class ChartStyle
     private CS.DataPoint CreateDataPoint()
     {
         CS.DataPoint dataPoint = new();
-        dataPoint.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        CS.FillReference fillRef = new() { Index = (UInt32Value)1U };
-        fillRef.Append(new CS.StyleColor() { Val = "auto" });
+        dataPoint.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        CS.FillReference fillRef = new { Index = (UInt32Value)1U };
+        fillRef.Append(new CS.StyleColor { Val = "auto" });
         dataPoint.Append(fillRef);
-        dataPoint.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        dataPoint.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         dataPoint.Append(fontRef);
         return dataPoint;
     }
@@ -211,13 +211,13 @@ internal class ChartStyle
     private CS.DataPoint3D CreateDataPoint3D()
     {
         CS.DataPoint3D dataPoint3D = new();
-        dataPoint3D.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        CS.FillReference fillRef = new() { Index = (UInt32Value)1U };
-        fillRef.Append(new CS.StyleColor() { Val = "auto" });
+        dataPoint3D.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        CS.FillReference fillRef = new { Index = (UInt32Value)1U };
+        fillRef.Append(new CS.StyleColor { Val = "auto" });
         dataPoint3D.Append(fillRef);
-        dataPoint3D.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        dataPoint3D.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         dataPoint3D.Append(fontRef);
         return dataPoint3D;
     }
@@ -225,17 +225,17 @@ internal class ChartStyle
     private CS.DataPointLine CreateDataPointLine()
     {
         CS.DataPointLine dataPointLine = new();
-        CS.LineReference lnRef = new() { Index = (UInt32Value)0U };
-        lnRef.Append(new CS.StyleColor() { Val = "auto" });
+        CS.LineReference lnRef = new { Index = (UInt32Value)0U };
+        lnRef.Append(new CS.StyleColor { Val = "auto" });
         dataPointLine.Append(lnRef);
-        dataPointLine.Append(new CS.FillReference() { Index = (UInt32Value)1U });
-        dataPointLine.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        dataPointLine.Append(new CS.FillReference { Index = (UInt32Value)1U });
+        dataPointLine.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         dataPointLine.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 28575, CapType = A.LineCapValues.Round };
-        A.SolidFill solidFill = new(new A.SchemeColor() { Val = A.SchemeColorValues.PhColor });
+        A.Outline ln = new { Width = 28575, CapType = A.LineCapValues.Round };
+        A.SolidFill solidFill = new(new A.SchemeColor { Val = A.SchemeColorValues.PhColor });
         ln.Append(solidFill);
         ln.Append(new A.Round());
         spPr.Append(ln);
@@ -246,19 +246,19 @@ internal class ChartStyle
     private CS.DataPointMarker CreateDataPointMarker()
     {
         CS.DataPointMarker dataPointMarker = new();
-        CS.LineReference lnRef = new() { Index = (UInt32Value)0U };
-        lnRef.Append(new CS.StyleColor() { Val = "auto" });
+        CS.LineReference lnRef = new { Index = (UInt32Value)0U };
+        lnRef.Append(new CS.StyleColor { Val = "auto" });
         dataPointMarker.Append(lnRef);
-        CS.FillReference fillRef = new() { Index = (UInt32Value)1U };
-        fillRef.Append(new CS.StyleColor() { Val = "auto" });
+        CS.FillReference fillRef = new { Index = (UInt32Value)1U };
+        fillRef.Append(new CS.StyleColor { Val = "auto" });
         dataPointMarker.Append(fillRef);
-        dataPointMarker.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        dataPointMarker.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         dataPointMarker.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525 };
-        A.SolidFill solidFill = new(new A.SchemeColor() { Val = A.SchemeColorValues.PhColor });
+        A.Outline ln = new { Width = 9525 };
+        A.SolidFill solidFill = new(new A.SchemeColor { Val = A.SchemeColorValues.PhColor });
         ln.Append(solidFill);
         spPr.Append(ln);
         dataPointMarker.Append(spPr);
@@ -305,28 +305,28 @@ internal class ChartStyle
     private CS.DataTableStyle CreateDataTableStyle()
     {
         CS.DataTableStyle dataTableStyle = new();
-        dataTableStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        dataTableStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        dataTableStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClrFont = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClrFont.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClrFont.Append(new A.LuminanceOffset() { Val = 35000 });
+        dataTableStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        dataTableStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        dataTableStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClrFont = new { Val = A.SchemeColorValues.Text1 };
+        schemeClrFont.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClrFont.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClrFont);
         dataTableStyle.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill lnSolidFill = new();
-        A.SchemeColor lnSchemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        lnSchemeClr.Append(new A.LuminanceModulation() { Val = 15000 });
-        lnSchemeClr.Append(new A.LuminanceOffset() { Val = 85000 });
+        A.SchemeColor lnSchemeClr = new { Val = A.SchemeColorValues.Text1 };
+        lnSchemeClr.Append(new A.LuminanceModulation { Val = 15000 });
+        lnSchemeClr.Append(new A.LuminanceOffset { Val = 85000 });
         lnSolidFill.Append(lnSchemeClr);
         ln.Append(lnSolidFill);
         ln.Append(new A.Round());
         spPr.Append(new A.NoFill());
         spPr.Append(ln);
         dataTableStyle.Append(spPr);
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1197, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1197, Kerning = 1200 };
         dataTableStyle.Append(defRPr);
         return dataTableStyle;
     }
@@ -335,27 +335,27 @@ internal class ChartStyle
     {
         CS.DownBar downBar = new();
 
-        downBar.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        downBar.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        downBar.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
+        downBar.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        downBar.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        downBar.Append(new CS.EffectReference { Index = (UInt32Value)0U });
 
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Dark1 });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Dark1 });
         downBar.Append(fontRef);
 
         CS.ShapeProperties spPr = new();
         A.SolidFill solidFill = new(new A.SchemeColor(
-            new A.LuminanceModulation() { Val = 65000 },
-            new A.LuminanceOffset() { Val = 35000 })
+            new A.LuminanceModulation { Val = 65000 },
+            new A.LuminanceOffset { Val = 35000 })
         {
             Val = A.SchemeColorValues.Dark1
         });
         spPr.Append(solidFill);
 
-        A.Outline ln = new() { Width = 9525 };
+        A.Outline ln = new { Width = 9525 };
         A.SolidFill lnSolidFill = new(new A.SchemeColor(
-            new A.LuminanceModulation() { Val = 65000 },
-            new A.LuminanceOffset() { Val = 35000 })
+            new A.LuminanceModulation { Val = 65000 },
+            new A.LuminanceOffset { Val = 35000 })
         {
             Val = A.SchemeColorValues.Text1
         });
@@ -370,17 +370,17 @@ internal class ChartStyle
     private CS.DropLine CreateDropLine()
     {
         CS.DropLine dropLine = new();
-        dropLine.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        dropLine.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        dropLine.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        dropLine.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        dropLine.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        dropLine.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         dropLine.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill lnSolidFill = new(new A.SchemeColor(
-            new A.LuminanceModulation() { Val = 35000 },
-            new A.LuminanceOffset() { Val = 65000 })
+            new A.LuminanceModulation { Val = 35000 },
+            new A.LuminanceOffset { Val = 65000 })
         {
             Val = A.SchemeColorValues.Text1
         });
@@ -394,17 +394,17 @@ internal class ChartStyle
     private CS.ErrorBar CreateErrorBar()
     {
         CS.ErrorBar errorBar = new();
-        errorBar.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        errorBar.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        errorBar.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        errorBar.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        errorBar.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        errorBar.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         errorBar.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill lnSolidFill = new(new A.SchemeColor(
-            new A.LuminanceModulation() { Val = 65000 },
-            new A.LuminanceOffset() { Val = 35000 })
+            new A.LuminanceModulation { Val = 65000 },
+            new A.LuminanceOffset { Val = 35000 })
         {
             Val = A.SchemeColorValues.Text1
         });
@@ -418,11 +418,11 @@ internal class ChartStyle
     private CS.Floor CreateFloor()
     {
         CS.Floor floor = new();
-        floor.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        floor.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        floor.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        floor.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        floor.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        floor.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         floor.Append(fontRef);
         CS.ShapeProperties spPr = new();
         spPr.Append(new A.NoFill());
@@ -436,17 +436,17 @@ internal class ChartStyle
     private CS.GridlineMajor CreateGridlineMajor()
     {
         CS.GridlineMajor gridlineMajor = new();
-        gridlineMajor.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        gridlineMajor.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        gridlineMajor.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        gridlineMajor.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        gridlineMajor.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        gridlineMajor.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         gridlineMajor.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill lnSolidFill = new(new A.SchemeColor(
-            new A.LuminanceModulation() { Val = 15000 },
-            new A.LuminanceOffset() { Val = 85000 })
+            new A.LuminanceModulation { Val = 15000 },
+            new A.LuminanceOffset { Val = 85000 })
         { Val = A.SchemeColorValues.Text1 });
         ln.Append(lnSolidFill);
         ln.Append(new A.Round());
@@ -458,17 +458,17 @@ internal class ChartStyle
     private CS.GridlineMinor CreateGridlineMinor()
     {
         CS.GridlineMinor gridlineMinor = new();
-        gridlineMinor.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        gridlineMinor.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        gridlineMinor.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        gridlineMinor.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        gridlineMinor.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        gridlineMinor.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         gridlineMinor.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill lnSolidFill = new(new A.SchemeColor(
-            new A.LuminanceModulation() { Val = 5000 },
-            new A.LuminanceOffset() { Val = 95000 })
+            new A.LuminanceModulation { Val = 5000 },
+            new A.LuminanceOffset { Val = 95000 })
         { Val = A.SchemeColorValues.Text1 });
         ln.Append(lnSolidFill);
         ln.Append(new A.Round());
@@ -480,17 +480,17 @@ internal class ChartStyle
     private CS.HiLoLine CreateHiLoLine()
     {
         CS.HiLoLine hiLoLine = new();
-        hiLoLine.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        hiLoLine.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        hiLoLine.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        hiLoLine.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        hiLoLine.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        hiLoLine.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         hiLoLine.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
         A.SolidFill lnSolidFill = new(
-            new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 },
-            new A.LuminanceOffset() { Val = 25000 })
+            new A.SchemeColor(new A.LuminanceModulation { Val = 75000 },
+            new A.LuminanceOffset { Val = 25000 })
             { Val = A.SchemeColorValues.Text1 });
         ln.Append(lnSolidFill);
         ln.Append(new A.Round());
@@ -502,16 +502,16 @@ internal class ChartStyle
     private CS.LeaderLine CreateLeaderLine()
     {
         CS.LeaderLine leaderLine = new();
-        leaderLine.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        leaderLine.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        leaderLine.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        leaderLine.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        leaderLine.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        leaderLine.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         leaderLine.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
-        A.SolidFill lnSolidFill = new(new A.SchemeColor(new A.LuminanceModulation() { Val = 35000 },
-        new A.LuminanceOffset() { Val = 65000 })
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.SolidFill lnSolidFill = new(new A.SchemeColor(new A.LuminanceModulation { Val = 35000 },
+        new A.LuminanceOffset { Val = 65000 })
         { Val = A.SchemeColorValues.Text1 });
         ln.Append(lnSolidFill);
         ln.Append(new A.Round());
@@ -523,16 +523,16 @@ internal class ChartStyle
     private CS.LegendStyle CreateLegendStyle()
     {
         CS.LegendStyle legendStyle = new();
-        legendStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        legendStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        legendStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 35000 });
+        legendStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        legendStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        legendStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Text1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClr);
         legendStyle.Append(fontRef);
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1197, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1197, Kerning = 1200 };
         legendStyle.Append(defRPr);
         return legendStyle;
     }
@@ -549,12 +549,12 @@ internal class ChartStyle
     private CS.PlotArea CreatePlotArea()
     {
         CS.PlotArea plotAreaStyle = new();
-        plotAreaStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        plotAreaStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        plotAreaStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
+        plotAreaStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        plotAreaStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        plotAreaStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
 
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         plotAreaStyle.Append(fontRef);
 
         return plotAreaStyle;
@@ -563,11 +563,11 @@ internal class ChartStyle
     private CS.PlotArea3D CreatePlotArea3D()
     {
         CS.PlotArea3D plotArea3DStyle = new();
-        plotArea3DStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        plotArea3DStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        plotArea3DStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        plotArea3DStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        plotArea3DStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        plotArea3DStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         plotArea3DStyle.Append(fontRef);
 
         return plotArea3DStyle;
@@ -577,18 +577,18 @@ internal class ChartStyle
     {
         CS.SeriesAxis seriesAxisStyle = new();
 
-        seriesAxisStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        seriesAxisStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        seriesAxisStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
+        seriesAxisStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        seriesAxisStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        seriesAxisStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
 
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 35000 });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Text1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClr);
         seriesAxisStyle.Append(fontRef);
 
-        CS.TextCharacterPropertiesType defRPr = new() { FontSize = 1197, Kerning = 1200 };
+        CS.TextCharacterPropertiesType defRPr = new { FontSize = 1197, Kerning = 1200 };
         seriesAxisStyle.Append(defRPr);
 
         return seriesAxisStyle;
@@ -597,16 +597,16 @@ internal class ChartStyle
     private CS.SeriesLine CreateSeriesLine()
     {
         CS.SeriesLine seriesLineStyle = new();
-        seriesLineStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        seriesLineStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        seriesLineStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        seriesLineStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        seriesLineStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        seriesLineStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         seriesLineStyle.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
-        A.SolidFill lnSolidFill = new(new A.SchemeColor(new A.LuminanceModulation() { Val = 35000 },
-        new A.LuminanceOffset() { Val = 65000 })
+        A.Outline ln = new { Width = 9525, CapType = A.LineCapValues.Flat, CompoundLineType = A.CompoundLineValues.Single, Alignment = A.PenAlignmentValues.Center };
+        A.SolidFill lnSolidFill = new(new A.SchemeColor(new A.LuminanceModulation { Val = 35000 },
+        new A.LuminanceOffset { Val = 65000 })
         {
             Val = A.SchemeColorValues.Text1
         });
@@ -620,13 +620,13 @@ internal class ChartStyle
     private CS.TitleStyle CreateTitleStyle()
     {
         CS.TitleStyle titleStyle = new();
-        titleStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        titleStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        titleStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 35000 });
+        titleStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        titleStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        titleStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Text1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClr);
         titleStyle.Append(fontRef);
         CS.TextCharacterPropertiesType defRPr = new()
@@ -644,13 +644,13 @@ internal class ChartStyle
     private CS.TrendlineLabel CreateTrendlineLabel()
     {
         CS.TrendlineLabel trendlineLabelStyle = new();
-        trendlineLabelStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        trendlineLabelStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        trendlineLabelStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 35000 });
+        trendlineLabelStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        trendlineLabelStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        trendlineLabelStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Text1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClr);
         trendlineLabelStyle.Append(fontRef);
         CS.TextCharacterPropertiesType defRPr = new()
@@ -665,19 +665,19 @@ internal class ChartStyle
     private CS.TrendlineStyle CreateTrendlineStyle()
     {
         CS.TrendlineStyle trendlineStyle = new();
-        CS.LineReference lnRef = new() { Index = (UInt32Value)0U };
-        lnRef.Append(new CS.StyleColor() { Val = "auto" });
+        CS.LineReference lnRef = new { Index = (UInt32Value)0U };
+        lnRef.Append(new CS.StyleColor { Val = "auto" });
         trendlineStyle.Append(lnRef);
-        trendlineStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        trendlineStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        trendlineStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        trendlineStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         trendlineStyle.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.Outline ln = new() { Width = 19050, CapType = A.LineCapValues.Round };
-        A.SolidFill lnSolidFill = new(new A.SchemeColor() { Val = A.SchemeColorValues.PhColor });
+        A.Outline ln = new { Width = 19050, CapType = A.LineCapValues.Round };
+        A.SolidFill lnSolidFill = new(new A.SchemeColor { Val = A.SchemeColorValues.PhColor });
         ln.Append(lnSolidFill);
-        ln.Append(new A.PresetDash() { Val = A.PresetLineDashValues.SystemDot });
+        ln.Append(new A.PresetDash { Val = A.PresetLineDashValues.SystemDot });
         spPr.Append(ln);
         trendlineStyle.Append(spPr);
         return trendlineStyle;
@@ -686,19 +686,19 @@ internal class ChartStyle
     private CS.UpBar CreateUpBar()
     {
         CS.UpBar upBarStyle = new();
-        upBarStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        upBarStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        upBarStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Dark1 });
+        upBarStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        upBarStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        upBarStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Dark1 });
         upBarStyle.Append(fontRef);
         CS.ShapeProperties spPr = new();
-        A.SolidFill solidFill = new(new A.SchemeColor() { Val = A.SchemeColorValues.Light1 });
+        A.SolidFill solidFill = new(new A.SchemeColor { Val = A.SchemeColorValues.Light1 });
         spPr.Append(solidFill);
-        A.Outline ln = new() { Width = 9525 };
+        A.Outline ln = new { Width = 9525 };
         A.SolidFill lnSolidFill = new(new A.SchemeColor(
-            new A.LuminanceModulation() { Val = 15000 },
-            new A.LuminanceOffset() { Val = 85000 })
+            new A.LuminanceModulation { Val = 15000 },
+            new A.LuminanceOffset { Val = 85000 })
         { Val = A.SchemeColorValues.Text1 });
         ln.Append(lnSolidFill);
         spPr.Append(ln);
@@ -709,13 +709,13 @@ internal class ChartStyle
     private CS.ValueAxis CreateValueAxis()
     {
         CS.ValueAxis valueAxisStyle = new();
-        valueAxisStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        valueAxisStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        valueAxisStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        A.SchemeColor schemeClr = new() { Val = A.SchemeColorValues.Text1 };
-        schemeClr.Append(new A.LuminanceModulation() { Val = 65000 });
-        schemeClr.Append(new A.LuminanceOffset() { Val = 35000 });
+        valueAxisStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        valueAxisStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        valueAxisStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        A.SchemeColor schemeClr = new { Val = A.SchemeColorValues.Text1 };
+        schemeClr.Append(new A.LuminanceModulation { Val = 65000 });
+        schemeClr.Append(new A.LuminanceOffset { Val = 35000 });
         fontRef.Append(schemeClr);
         valueAxisStyle.Append(fontRef);
         CS.TextCharacterPropertiesType defRPr = new()
@@ -730,11 +730,11 @@ internal class ChartStyle
     private CS.Wall CreateWall()
     {
         CS.Wall wallStyle = new();
-        wallStyle.Append(new CS.LineReference() { Index = (UInt32Value)0U });
-        wallStyle.Append(new CS.FillReference() { Index = (UInt32Value)0U });
-        wallStyle.Append(new CS.EffectReference() { Index = (UInt32Value)0U });
-        CS.FontReference fontRef = new() { Index = A.FontCollectionIndexValues.Minor };
-        fontRef.Append(new A.SchemeColor() { Val = A.SchemeColorValues.Text1 });
+        wallStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
+        wallStyle.Append(new CS.FillReference { Index = (UInt32Value)0U });
+        wallStyle.Append(new CS.EffectReference { Index = (UInt32Value)0U });
+        CS.FontReference fontRef = new { Index = A.FontCollectionIndexValues.Minor };
+        fontRef.Append(new A.SchemeColor { Val = A.SchemeColorValues.Text1 });
         wallStyle.Append(fontRef);
         CS.ShapeProperties spPr = new();
         spPr.Append(new A.NoFill());

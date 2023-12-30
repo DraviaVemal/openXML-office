@@ -70,8 +70,8 @@ namespace OpenXMLOffice.Presentation
             P.NormalViewProperties normalViewProperties = new()
             {
                 HorizontalBarState = P.SplitterBarStateValues.Maximized,
-                RestoredLeft = new P.RestoredLeft() { AutoAdjust = false, Size = 16014 },
-                RestoredTop = new P.RestoredTop() { Size = 94660 }
+                RestoredLeft = new P.RestoredLeft { AutoAdjust = false, Size = 16014 },
+                RestoredTop = new P.RestoredTop { Size = 94660 }
             };
             return normalViewProperties;
         }

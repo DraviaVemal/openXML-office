@@ -120,7 +120,7 @@ namespace OpenXMLOffice.Presentation
         {
             P.DefaultTextStyle defaultTextStyle = new();
             A.DefaultParagraphProperties defaultParagraphProperties = new();
-            A.DefaultRunProperties defaultRunProperties = new() { Language = "en-US" };
+            A.DefaultRunProperties defaultRunProperties = new { Language = "en-US" };
             defaultParagraphProperties.Append(defaultRunProperties);
             defaultTextStyle.Append(defaultParagraphProperties);
             A.Level1ParagraphProperties levelParagraphProperties = new()
@@ -138,12 +138,12 @@ namespace OpenXMLOffice.Presentation
                 FontSize = 1800
             };
             A.SolidFill solidFill = new();
-            A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.Text1 };
+            A.SchemeColor schemeColor = new { Val = A.SchemeColorValues.Text1 };
             solidFill.Append(schemeColor);
             levelRunProperties.Append(solidFill);
-            A.LatinFont latinTypeface = new() { Typeface = "+mn-lt" };
-            A.EastAsianFont eastAsianTypeface = new() { Typeface = "+mn-ea" };
-            A.ComplexScriptFont complexScriptTypeface = new() { Typeface = "+mn-cs" };
+            A.LatinFont latinTypeface = new { Typeface = "+mn-lt" };
+            A.EastAsianFont eastAsianTypeface = new { Typeface = "+mn-ea" };
+            A.ComplexScriptFont complexScriptTypeface = new { Typeface = "+mn-cs" };
             levelRunProperties.Append(latinTypeface, eastAsianTypeface, complexScriptTypeface);
             levelParagraphProperties.Append(levelRunProperties);
             defaultTextStyle.Append(levelParagraphProperties);
@@ -169,11 +169,11 @@ namespace OpenXMLOffice.Presentation
             }
             if (presentationPart.Presentation.GetFirstChild<P.SlideSize>() == null)
             {
-                presentationPart.Presentation.AppendChild(new P.SlideSize() { Cx = 12192000, Cy = 6858000 });
+                presentationPart.Presentation.AppendChild(new P.SlideSize { Cx = 12192000, Cy = 6858000 });
             }
             if (presentationPart.Presentation.GetFirstChild<P.NotesSize>() == null)
             {
-                presentationPart.Presentation.AppendChild(new P.NotesSize() { Cx = 6858000, Cy = 9144000 });
+                presentationPart.Presentation.AppendChild(new P.NotesSize { Cx = 6858000, Cy = 9144000 });
             }
             if (presentationPart.Presentation.GetFirstChild<P.DefaultTextStyle>() == null)
             {
@@ -196,7 +196,7 @@ namespace OpenXMLOffice.Presentation
             {
                 SlideMasterPart slideMasterPart = presentationPart.AddNewPart<SlideMasterPart>(GetNextPresentationRelationId());
                 slideMasterPart.SlideMaster = slideMaster.GetSlideMaster();
-                P.SlideMasterId slideMasterId = new() { Id = GetNextSlideMasterId(), RelationshipId = presentationPart.GetIdOfPart(slideMasterPart) };
+                P.SlideMasterId slideMasterId = new { Id = GetNextSlideMasterId(), RelationshipId = presentationPart.GetIdOfPart(slideMasterPart) };
                 GetSlideMasterIdList().Append(slideMasterId);
                 SlideLayoutPart slideLayoutPart = slideMasterPart.AddNewPart<SlideLayoutPart>(GetNextPresentationRelationId());
                 slideMaster.AddSlideLayoutIdToList(slideMasterPart.GetIdOfPart(slideLayoutPart));

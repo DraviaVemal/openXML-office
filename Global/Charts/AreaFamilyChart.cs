@@ -13,8 +13,8 @@ namespace OpenXMLOffice.Global
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
             C.AreaChart AreaChart = new(
-                new C.Grouping() { Val = groupingValue },
-                new C.VaryColors() { Val = false });
+                new C.Grouping { Val = groupingValue },
+                new C.VaryColors { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
@@ -29,15 +29,15 @@ namespace OpenXMLOffice.Global
                 ));
             }
             C.DataLabels DataLabels = new(
-                new C.ShowLegendKey() { Val = false },
-                new C.ShowValue() { Val = false },
-                new C.ShowCategoryName() { Val = false },
-                new C.ShowSeriesName() { Val = false },
-                new C.ShowPercent() { Val = false },
-                new C.ShowBubbleSize() { Val = false });
+                new C.ShowLegendKey { Val = false },
+                new C.ShowValue { Val = false },
+                new C.ShowCategoryName { Val = false },
+                new C.ShowSeriesName { Val = false },
+                new C.ShowPercent { Val = false },
+                new C.ShowBubbleSize { Val = false });
             AreaChart.Append(DataLabels);
-            AreaChart.Append(new C.AxisId() { Val = 1362418656 });
-            AreaChart.Append(new C.AxisId() { Val = 1358349936 });
+            AreaChart.Append(new C.AxisId { Val = 1362418656 });
+            AreaChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(AreaChart);
             plotArea.Append(CreateCategoryAxis(1362418656));
             plotArea.Append(CreateValueAxis(1358349936));
@@ -56,11 +56,11 @@ namespace OpenXMLOffice.Global
         private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent)
         {
             C.AreaChartSeries series = new(
-                new C.Index() { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order() { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
             C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor() { Val = new A.SchemeColorValues(accent) }), new A.Outline(new A.NoFill())));
+            ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }), new A.Outline(new A.NoFill())));
             ShapeProperties.Append(new A.EffectList());
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));

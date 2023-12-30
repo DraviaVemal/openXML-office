@@ -28,7 +28,7 @@ namespace OpenXMLOffice.Presentation
             slidePart.Slide = slide.GetSlide();
             slidePart.AddPart(GetSlideLayoutPart(slideLayoutType));
             P.SlideIdList slideIdList = GetSlideIdList();
-            P.SlideId slideId = new() { Id = GetNextSlideId(), RelationshipId = GetPresentationPart().GetIdOfPart(slidePart) };
+            P.SlideId slideId = new { Id = GetNextSlideId(), RelationshipId = GetPresentationPart().GetIdOfPart(slidePart) };
             slideIdList.Append(slideId);
             return slide;
         }

@@ -135,19 +135,19 @@ public class ChartBase
     protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId)
     {
         C.CategoryAxis CategoryAxis = new(
-            new C.AxisId() { Val = axisId },
-            new C.Scaling(new C.Orientation() { Val = C.OrientationValues.MinMax }),
-            new C.Delete() { Val = false },
-            new C.AxisPosition() { Val = C.AxisPositionValues.Bottom },
-            new C.MajorTickMark() { Val = C.TickMarkValues.None },
-            new C.MinorTickMark() { Val = C.TickMarkValues.None },
-            new C.TickLabelPosition() { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis() { Val = axisId },
-            new C.Crosses() { Val = C.CrossesValues.AutoZero },
-            new C.AutoLabeled() { Val = true },
-            new C.LabelAlignment() { Val = C.LabelAlignmentValues.Center },
-            new C.LabelOffset() { Val = 100 },
-            new C.NoMultiLevelLabels() { Val = false });
+            new C.AxisId { Val = axisId },
+            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
+            new C.Delete { Val = false },
+            new C.AxisPosition { Val = C.AxisPositionValues.Bottom },
+            new C.MajorTickMark { Val = C.TickMarkValues.None },
+            new C.MinorTickMark { Val = C.TickMarkValues.None },
+            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
+            new C.CrossingAxis { Val = axisId },
+            new C.Crosses { Val = C.CrossesValues.AutoZero },
+            new C.AutoLabeled { Val = true },
+            new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
+            new C.LabelOffset { Val = 100 },
+            new C.NoMultiLevelLabels { Val = false });
         C.ShapeProperties ShapeProperties = new();
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
@@ -159,17 +159,17 @@ public class ChartBase
     protected C.ValueAxis CreateValueAxis(UInt32Value axisId)
     {
         C.ValueAxis ValueAxis = new(
-            new C.AxisId() { Val = axisId },
-            new C.Scaling(new C.Orientation() { Val = C.OrientationValues.MinMax }),
-            new C.Delete() { Val = false },
-            new C.AxisPosition() { Val = C.AxisPositionValues.Left },
+            new C.AxisId { Val = axisId },
+            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
+            new C.Delete { Val = false },
+            new C.AxisPosition { Val = C.AxisPositionValues.Left },
             new C.MajorGridlines(
                 new C.ShapeProperties(
                     new A.Outline(
                         new A.SolidFill(
                             new A.SchemeColor(
-                                new A.LuminanceModulation() { Val = 15000 },
-                                new A.LuminanceOffset() { Val = 85000 })
+                                new A.LuminanceModulation { Val = 15000 },
+                                new A.LuminanceOffset { Val = 85000 })
                             { Val = A.SchemeColorValues.Text1 }
                         )
                     )
@@ -182,13 +182,13 @@ public class ChartBase
                     new A.Round()
                 )
             ),
-            new C.NumberingFormat() { FormatCode = "General", SourceLinked = true },
-            new C.MajorTickMark() { Val = C.TickMarkValues.None },
-            new C.MinorTickMark() { Val = C.TickMarkValues.None },
-            new C.TickLabelPosition() { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis() { Val = axisId },
-            new C.Crosses() { Val = C.CrossesValues.AutoZero },
-            new C.CrossBetween() { Val = C.CrossBetweenValues.Between });
+            new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
+            new C.MajorTickMark { Val = C.TickMarkValues.None },
+            new C.MinorTickMark { Val = C.TickMarkValues.None },
+            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
+            new C.CrossingAxis { Val = axisId },
+            new C.Crosses { Val = C.CrossesValues.AutoZero },
+            new C.CrossBetween { Val = C.CrossBetweenValues.Between });
         C.ShapeProperties ShapeProperties = new();
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
@@ -216,7 +216,7 @@ public class ChartBase
                 _ => C.LegendPositionValues.Bottom
             }
         });
-        legend.Append(new C.Overlay() { Val = false });
+        legend.Append(new C.Overlay { Val = false });
         C.ShapeProperties ShapeProperties = new();
         ShapeProperties.Append(new A.NoFill());
         A.Outline ln = new();
@@ -249,15 +249,15 @@ public class ChartBase
             Baseline = 0
         };
         defaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(
-        new A.LuminanceModulation() { Val = 65000 },
-        new A.LuminanceOffset() { Val = 35000 })
+        new A.LuminanceModulation { Val = 65000 },
+        new A.LuminanceOffset { Val = 35000 })
         { Val = A.SchemeColorValues.Text1 }));
-        defaultRunProperties.Append(new A.LatinFont() { Typeface = "+mn-lt" });
-        defaultRunProperties.Append(new A.EastAsianFont() { Typeface = "+mn-ea" });
-        defaultRunProperties.Append(new A.ComplexScriptFont() { Typeface = "+mn-cs" });
+        defaultRunProperties.Append(new A.LatinFont { Typeface = "+mn-lt" });
+        defaultRunProperties.Append(new A.EastAsianFont { Typeface = "+mn-ea" });
+        defaultRunProperties.Append(new A.ComplexScriptFont { Typeface = "+mn-cs" });
         paragraphProperties.Append(defaultRunProperties);
         paragraph.Append(paragraphProperties);
-        paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-US" });
+        paragraph.Append(new A.EndParagraphRunProperties { Language = "en-US" });
         TextProperties.Append(paragraph);
         legend.Append(TextProperties);
         return legend;
@@ -299,15 +299,15 @@ public class ChartBase
         });
         RichText.Append(new A.ListStyle());
         A.DefaultRunProperties DefaultRunProperties = new();
-        DefaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 65000 }, new A.LuminanceOffset() { Val = 35000 }) { Val = A.SchemeColorValues.Text1 }));
-        DefaultRunProperties.Append(new A.LatinFont() { Typeface = "+mn-lt" });
-        DefaultRunProperties.Append(new A.EastAsianFont() { Typeface = "+mn-ea" });
-        DefaultRunProperties.Append(new A.ComplexScriptFont() { Typeface = "+mn-cs" });
+        DefaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation { Val = 65000 }, new A.LuminanceOffset { Val = 35000 }) { Val = A.SchemeColorValues.Text1 }));
+        DefaultRunProperties.Append(new A.LatinFont { Typeface = "+mn-lt" });
+        DefaultRunProperties.Append(new A.EastAsianFont { Typeface = "+mn-ea" });
+        DefaultRunProperties.Append(new A.ComplexScriptFont { Typeface = "+mn-cs" });
         RichText.Append(
             new A.Paragraph(new A.ParagraphProperties(DefaultRunProperties),
-            new A.Run(new A.RunProperties() { Dirty = false, Language = "en-IN" }, new A.Text(strTitle ?? "Chart Title"))));
+            new A.Run(new A.RunProperties { Dirty = false, Language = "en-IN" }, new A.Text(strTitle ?? "Chart Title"))));
         C.Title title = new(new C.ChartText(RichText));
-        title.Append(new C.Overlay() { Val = false });
+        title.Append(new C.Overlay { Val = false });
         C.ShapeProperties ShapeProperties = new();
         ShapeProperties.Append(new A.NoFill());
         A.Outline ln = new();
