@@ -113,12 +113,12 @@ namespace OpenXMLOffice.Presentation
                 FontSize = 4400
             };
             A.SolidFill solidFill = new();
-            A.SchemeColor schemeColor = new { Val = A.SchemeColorValues.Text1 };
+            A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.Text1 };
             solidFill.Append(schemeColor);
             titleRunProperties.Append(solidFill);
-            A.LatinFont latinTypeface = new { Typeface = "+mj-lt" };
-            A.EastAsianFont eastAsianTypeface = new { Typeface = "+mj-ea" };
-            A.ComplexScriptFont complexScriptTypeface = new { Typeface = "+mj-cs" };
+            A.LatinFont latinTypeface = new() { Typeface = "+mj-lt" };
+            A.EastAsianFont eastAsianTypeface = new() { Typeface = "+mj-ea" };
+            A.ComplexScriptFont complexScriptTypeface = new() { Typeface = "+mj-cs" };
             titleRunProperties.Append(latinTypeface, eastAsianTypeface, complexScriptTypeface);
             titleLevel1ParagraphProperties.Append(lineSpacing, spaceBefore, bulletNone, titleRunProperties);
             titleStyle.Append(titleLevel1ParagraphProperties);
@@ -146,8 +146,8 @@ namespace OpenXMLOffice.Presentation
                     Val = 0
                 }
             };
-            A.BulletFont bulletFont = new { CharacterSet = 0, Panose = "020B0604020202020204", PitchFamily = 34, Typeface = "Arial" };
-            A.CharacterBullet bulletChar = new { Char = "•" };
+            A.BulletFont bulletFont = new() { CharacterSet = 0, Panose = "020B0604020202020204", PitchFamily = 34, Typeface = "Arial" };
+            A.CharacterBullet bulletChar = new() { Char = "•" };
             A.DefaultRunProperties bodyRunProperties = new()
             {
                 Kerning = 1200,
@@ -165,7 +165,7 @@ namespace OpenXMLOffice.Presentation
             bodyStyle.Append(bodyLevelParagraphProperties);
             P.OtherStyle otherStyle = new();
             A.DefaultParagraphProperties otherDefaultParagraphProperties = new();
-            A.DefaultRunProperties otherDefaultRunProperties = new { Language = "en-US" };
+            A.DefaultRunProperties otherDefaultRunProperties = new() { Language = "en-US" };
             solidFill = new A.SolidFill();
             schemeColor = new A.SchemeColor { Val = A.SchemeColorValues.Text1 };
             solidFill.Append(schemeColor);

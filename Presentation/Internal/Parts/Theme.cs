@@ -284,7 +284,7 @@ namespace OpenXMLOffice.Presentation
 
         private A.GradientStop GetGradientStop(int? position, int? saturationModulation, int? luminanceModulation, int? shade, int? tint)
         {
-            A.SchemeColor schemeColor = new { Val = A.SchemeColorValues.PhColor };
+            A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.PhColor };
             if (luminanceModulation != null)
             {
                 schemeColor.AppendChild(new A.LuminanceModulation()

@@ -9,7 +9,7 @@ internal class ChartColor
 
     public CS.ColorStyle CreateColorStyles()
     {
-        CS.ColorStyle colorStyle = new { Method = "cycle", Id = 10 };
+        CS.ColorStyle colorStyle = new() { Method = "cycle", Id = 10 };
         colorStyle.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
         colorStyle.Append(new A.SchemeColor()
         {
