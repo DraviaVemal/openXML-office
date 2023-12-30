@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Global
             Chart.PlotArea = barChartType switch
             {
                 GlobalConstants.BarChartTypes.STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.Stacked),
-                GlobalConstants.BarChartTypes.CENT_STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.PercentStacked),
+                GlobalConstants.BarChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.PercentStacked),
                 // Clusted
                 _ => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.Clustered),
             };

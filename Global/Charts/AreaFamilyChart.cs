@@ -4,22 +4,21 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
 {
-    public class BarFamilyChart : ChartBase
+    public class AreaFamilyChart : ChartBase
     {
         #region Protected Methods
 
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.BarDirectionValues barDirectionValue, C.BarGroupingValues barGroupingValue)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.GroupingValues groupingValue)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            C.BarChart BarChart = new(
-                new C.BarDirection() { Val = barDirectionValue },
-                new C.BarGrouping() { Val = barGroupingValue },
+            C.AreaChart AreaChart = new(
+                new C.Grouping() { Val = groupingValue },
                 new C.VaryColors() { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                BarChart.Append(CreateBarChartSeries(seriesIndex++,
+                AreaChart.Append(CreateAreaChartSeries(seriesIndex++,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -36,20 +35,10 @@ namespace OpenXMLOffice.Global
                 new C.ShowSeriesName() { Val = false },
                 new C.ShowPercent() { Val = false },
                 new C.ShowBubbleSize() { Val = false });
-            BarChart.Append(DataLabels);
-            if (barGroupingValue == C.BarGroupingValues.Clustered)
-            {
-                BarChart.Append(new C.GapWidth() { Val = 219 });
-                BarChart.Append(new C.Overlap() { Val = -27 });
-            }
-            else
-            {
-                BarChart.Append(new C.GapWidth() { Val = 150 });
-                BarChart.Append(new C.Overlap() { Val = 100 });
-            }
-            BarChart.Append(new C.AxisId() { Val = 1362418656 });
-            BarChart.Append(new C.AxisId() { Val = 1358349936 });
-            plotArea.Append(BarChart);
+            AreaChart.Append(DataLabels);
+            AreaChart.Append(new C.AxisId() { Val = 1362418656 });
+            AreaChart.Append(new C.AxisId() { Val = 1358349936 });
+            plotArea.Append(AreaChart);
             plotArea.Append(CreateCategoryAxis(1362418656, $"Sheet1!$A$2:$A${DataCols[0].Length}"));
             plotArea.Append(CreateValueAxis(1358349936));
             C.ShapeProperties ShapeProperties = new();
@@ -64,24 +53,18 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent)
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent)
         {
-            C.BarChartSeries series = new(
+            C.AreaChartSeries series = new(
                 new C.Index() { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order() { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
-                new C.InvertIfNegative() { Val = true });
+                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
             C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.SolidFill(new A.SchemeColor() { Val = new A.SchemeColorValues(accent) }));
-            ShapeProperties.Append(new A.Outline(new A.NoFill()));
+            ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor() { Val = new A.SchemeColorValues(accent) }), new A.Outline(new A.NoFill())));
             ShapeProperties.Append(new A.EffectList());
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
-            series.Append(new C.Smooth()
-            {
-                Val = false
-            });
             return series;
         }
 
@@ -141,7 +124,7 @@ namespace OpenXMLOffice.Global
                 new C.TickLabelPosition() { Val = C.TickLabelPositionValues.NextTo },
                 new C.CrossingAxis() { Val = axisId },
                 new C.Crosses() { Val = C.CrossesValues.AutoZero },
-                new C.CrossBetween() { Val = C.CrossBetweenValues.Between });
+                new C.CrossBetween() { Val = C.CrossBetweenValues.MidpointCategory });
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));

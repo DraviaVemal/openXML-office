@@ -8,21 +8,42 @@ namespace OpenXMLOffice.Global
         {
             CLUSTERED,
             STACKED,
-            CENT_STACKED,
-            CLUSTERED_3D,
-            STACKED_3D,
-            CENT_STACKED_3D,
-            COLUMN_3D
+            PERCENT_STACKED,
+            // CLUSTERED_3D,
+            // STACKED_3D,
+            // PERCENT_STACKED_3D,
+            // COLUMN_3D
         }
 
         public enum BarChartTypes
         {
             CLUSTERED,
             STACKED,
-            CENT_STACKED,
-            CLUSTERED_3D,
-            STACKED_3D,
-            CENT_STACKED_3D,
+            PERCENT_STACKED,
+            // CLUSTERED_3D,
+            // STACKED_3D,
+            // PERCENT_STACKED_3D,
+        }
+
+        public enum LineChartTypes
+        {
+            CLUSTERED,
+            STACKED,
+            PERCENT_STACKED,
+            CLUSTERED_MARKET,
+            STACKED_MARKET,
+            PERCENT_STACKED_MARKET,
+            // CLUSTERED_3D
+        }
+
+        public enum AreaChartTypes
+        {
+            CLUSTERED,
+            STACKED,
+            PERCENT_STACKED,
+            // CLUSTERED_3D,
+            // STACKED_3D,
+            // PERCENT_STACKED_3D
         }
 
         #endregion Public Enums

@@ -41,20 +41,20 @@ namespace OpenXMLOffice.Tests
             powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
             powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
             Slide slide = powerPoint1.GetSlideByIndex(0);
-            List<Shape> shapes = slide.FindShapeByText("Slide_1_Shape_1").ToList();
-            List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
-            List<Shape> shapes2 = slide.FindShapeByText("Test Update").ToList();
-            shapes[0].ReplaceShape(new TextBox()
+            List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
+            List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
+            List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
+            shapes1[0].ReplaceShape(new TextBox()
             {
                 Text = "Dravia Vemal",
                 FontFamily = "Bernard MT Condensed"
             }.CreateTextBox());
-            shapes1[0].ReplaceShape(new TextBox()
+            shapes2[0].ReplaceShape(new TextBox()
             {
                 Text = "Vemal Dravia",
                 TextBackground = "777777"
             }.CreateTextBox());
-            shapes2[0].ReplaceShape(new TextBox()
+            shapes3[0].ReplaceShape(new TextBox()
             {
                 Text = "This is text box",
                 FontSize = 22,
@@ -73,8 +73,16 @@ namespace OpenXMLOffice.Tests
             Slide Slide = powerPoint1.GetSlideByIndex(0);
             List<Shape> shape1 = Slide.FindShapeByText("Slide_1_Shape_1").ToList();
             List<Shape> shape2 = Slide.FindShapeByText("Slide_1_Shape_2").ToList();
-            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ColumnChartTypes.CLUSTERED, CreateDataPayload()));
+            List<Shape> shape3 = Slide.FindShapeByText("Slide_1_Shape_3").ToList();
+            List<Shape> shape4 = Slide.FindShapeByText("Slide_1_Shape_4").ToList();
+            List<Shape> shape5 = Slide.FindShapeByText("Slide_1_Shape_5").ToList();
+            List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
+            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.ColumnChartTypes.PERCENT_STACKED, CreateDataPayload()));
             shape2[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload()));
+            shape3[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload()));
+            shape4[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED_MARKET, CreateDataPayload()));
+            shape5[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.AreaChartTypes.CLUSTERED, CreateDataPayload()));
+            shape6[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.AreaChartTypes.STACKED, CreateDataPayload()));
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }

@@ -71,6 +71,32 @@ namespace OpenXMLOffice.Presentation
             return GetChartGraphicFrame();
         }
 
+        public P.GraphicFrame CreateChart(GlobalConstants.LineChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
+        {
+            LoadDataToExcel(DataRows);
+            // Prepare Excel Data for PPT Cache
+            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+            LineChart LineChart = new();
+            GetChartPart().ChartSpace = LineChart.GetChartSpace(ChartData, ChartTypes, chartSetting);
+            GetChartStylePart().ChartStyle = LineChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = LineChart.GetColorStyle();
+            return GetChartGraphicFrame();
+        }
+
+        public P.GraphicFrame CreateChart(GlobalConstants.AreaChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
+        {
+            LoadDataToExcel(DataRows);
+            // Prepare Excel Data for PPT Cache
+            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+            AreaChart AreaChart = new();
+            GetChartPart().ChartSpace = AreaChart.GetChartSpace(ChartData, ChartTypes, chartSetting);
+            GetChartStylePart().ChartStyle = AreaChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = AreaChart.GetColorStyle();
+            return GetChartGraphicFrame();
+        }
+
         public void Save()
         {
             CurrentSlide.GetSlidePart().Slide.Save();
