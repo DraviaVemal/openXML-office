@@ -86,15 +86,15 @@ public class ChartBase
         C.Legend legend = new();
         legend.Append(new C.LegendPosition() { Val = C.LegendPositionValues.Bottom });
         legend.Append(new C.Overlay() { Val = false });
-        C.ShapeProperties spPr = new();
-        spPr.Append(new A.NoFill());
+        C.ShapeProperties ShapeProperties = new();
+        ShapeProperties.Append(new A.NoFill());
         A.Outline ln = new();
         ln.Append(new A.NoFill());
-        spPr.Append(ln);
-        spPr.Append(new A.EffectList());
-        legend.Append(spPr);
-        C.TextProperties txPr = new();
-        txPr.Append(new A.BodyProperties()
+        ShapeProperties.Append(ln);
+        ShapeProperties.Append(new A.EffectList());
+        legend.Append(ShapeProperties);
+        C.TextProperties TextProperties = new();
+        TextProperties.Append(new A.BodyProperties()
         {
             Rotation = 0,
             UseParagraphSpacing = true,
@@ -104,7 +104,7 @@ public class ChartBase
             Anchor = A.TextAnchoringTypeValues.Center,
             AnchorCenter = true
         });
-        txPr.Append(new A.ListStyle());
+        TextProperties.Append(new A.ListStyle());
         A.Paragraph paragraph = new();
         A.ParagraphProperties paragraphProperties = new();
         A.DefaultRunProperties defaultRunProperties = new()
@@ -127,8 +127,8 @@ public class ChartBase
         paragraphProperties.Append(defaultRunProperties);
         paragraph.Append(paragraphProperties);
         paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-US" });
-        txPr.Append(paragraph);
-        legend.Append(txPr);
+        TextProperties.Append(paragraph);
+        legend.Append(TextProperties);
         return legend;
     }
 
@@ -136,15 +136,15 @@ public class ChartBase
     {
         C.Title title = new();
         title.Append(new C.Overlay() { Val = false });
-        C.ShapeProperties spPr = new();
-        spPr.Append(new A.NoFill());
+        C.ShapeProperties ShapeProperties = new();
+        ShapeProperties.Append(new A.NoFill());
         A.Outline ln = new();
         ln.Append(new A.NoFill());
-        spPr.Append(ln);
-        spPr.Append(new A.EffectList());
-        title.Append(spPr);
-        C.TextProperties txPr = new();
-        txPr.Append(new A.BodyProperties()
+        ShapeProperties.Append(ln);
+        ShapeProperties.Append(new A.EffectList());
+        title.Append(ShapeProperties);
+        C.TextProperties TextProperties = new();
+        TextProperties.Append(new A.BodyProperties()
         {
             Rotation = 0,
             UseParagraphSpacing = true,
@@ -154,7 +154,7 @@ public class ChartBase
             Anchor = A.TextAnchoringTypeValues.Center,
             AnchorCenter = true
         });
-        txPr.Append(new A.ListStyle());
+        TextProperties.Append(new A.ListStyle());
         A.Paragraph paragraph = new();
         A.ParagraphProperties paragraphProperties = new();
         A.DefaultRunProperties defaultRunProperties = new()
@@ -180,14 +180,14 @@ public class ChartBase
         paragraphProperties.Append(defaultRunProperties);
         paragraph.Append(paragraphProperties);
         paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-US" });
-        txPr.Append(paragraph);
-        title.Append(txPr);
+        TextProperties.Append(paragraph);
+        title.Append(TextProperties);
         return title;
     }
 
     #endregion Private Methods
 
-    protected C.NumberingCache AddNumberCacheValue(List<ChartData> Cells, ChartSeriesSetting? ChartSeriesSetting)
+    protected C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting? ChartSeriesSetting)
     {
         try
         {
@@ -196,7 +196,7 @@ public class ChartBase
                 FormatCode = new C.FormatCode(ChartSeriesSetting?.NumberFormat ?? "General"),
                 PointCount = new C.PointCount()
                 {
-                    Val = (UInt32Value)(uint)Cells.Count
+                    Val = (UInt32Value)(uint)Cells.Length
                 },
             };
             int count = 0;
@@ -218,7 +218,7 @@ public class ChartBase
         }
     }
 
-    protected C.StringCache AddStringCacheValue(List<ChartData> Cells)
+    protected C.StringCache AddStringCacheValue(ChartData[] Cells)
     {
         try
         {
@@ -226,7 +226,7 @@ public class ChartBase
             {
                 PointCount = new C.PointCount()
                 {
-                    Val = (UInt32Value)(uint)Cells.Count
+                    Val = (UInt32Value)(uint)Cells.Length
                 },
             };
             int count = 0;
