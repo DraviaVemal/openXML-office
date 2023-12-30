@@ -97,6 +97,19 @@ namespace OpenXMLOffice.Presentation
             return GetChartGraphicFrame();
         }
 
+        public P.GraphicFrame CreateChart(GlobalConstants.PieChartTypes ChartTypes, DataCell[][] DataRows, ChartSetting? chartSetting = null)
+        {
+            LoadDataToExcel(DataRows);
+            // Prepare Excel Data for PPT Cache
+            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+            PieChart PieChart = new();
+            GetChartPart().ChartSpace = PieChart.GetChartSpace(ChartData, ChartTypes, chartSetting);
+            GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = PieChart.GetColorStyle();
+            return GetChartGraphicFrame();
+        }
+
         public void Save()
         {
             CurrentSlide.GetSlidePart().Slide.Save();

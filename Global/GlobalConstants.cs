@@ -46,6 +46,15 @@ namespace OpenXMLOffice.Global
             // PERCENT_STACKED_3D
         }
 
+        public enum PieChartTypes
+        {
+            PIE,
+            // PIE_3D,
+            // PIE_PIE,
+            // PIE_BAR,
+            DOUGHNUT
+        }
+
         #endregion Public Enums
     }
 }

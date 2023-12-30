@@ -82,7 +82,7 @@ namespace OpenXMLOffice.Tests
             shape3[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload()));
             shape4[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED_MARKET, CreateDataPayload()));
             shape5[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.AreaChartTypes.CLUSTERED, CreateDataPayload()));
-            shape6[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.AreaChartTypes.STACKED, CreateDataPayload()));
+            shape6[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.PieChartTypes.DOUGHNUT, CreateDataPayload()));
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }
