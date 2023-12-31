@@ -59,13 +59,23 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.DataLabels GetDataLabels(AreaChartSetting AreaChartSetting, int index)
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula,
+                                                        ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
+                                                        string valueFormula, ChartData[] valueCells, A.SolidFill SolidFill,
+                                                        C.DataLabels DataLabels)
         {
-            if (index < AreaChartSetting.AreaChartSeriesSettings.Count)
-            {
-                return CreateDataLabel(AreaChartSetting.AreaChartSeriesSettings?[index]?.AreaChartDataLabel ?? new AreaChartDataLabel());
-            }
-            return CreateDataLabel(new AreaChartDataLabel());
+            C.AreaChartSeries series = new(
+                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
+            C.ShapeProperties ShapeProperties = new();
+            ShapeProperties.Append(new A.Outline(SolidFill, new A.Outline(new A.NoFill())));
+            ShapeProperties.Append(new A.EffectList());
+            series.Append(DataLabels);
+            series.Append(ShapeProperties);
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            return series;
         }
 
         private C.DataLabels CreateDataLabel(AreaChartDataLabel AreaChartDataLabel)
@@ -120,23 +130,13 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula,
-                                                        ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
-                                                        string valueFormula, ChartData[] valueCells, A.SolidFill SolidFill,
-                                                        C.DataLabels DataLabels)
+        private C.DataLabels GetDataLabels(AreaChartSetting AreaChartSetting, int index)
         {
-            C.AreaChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
-            C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.Outline(SolidFill, new A.Outline(new A.NoFill())));
-            ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
-            series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
-            return series;
+            if (index < AreaChartSetting.AreaChartSeriesSettings.Count)
+            {
+                return CreateDataLabel(AreaChartSetting.AreaChartSeriesSettings?[index]?.AreaChartDataLabel ?? new AreaChartDataLabel());
+            }
+            return CreateDataLabel(new AreaChartDataLabel());
         }
 
         #endregion Private Methods

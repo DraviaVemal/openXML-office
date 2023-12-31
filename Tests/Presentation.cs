@@ -28,14 +28,6 @@ namespace OpenXMLOffice.Tests
         }
 
         [TestMethod]
-        public void AddBlankSlide()
-        {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-            powerPoint.Save();
-            Assert.IsTrue(true);
-        }
-
-        [TestMethod]
         public void AddAllChartTypesToSlide()
         {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting());
@@ -117,6 +109,14 @@ namespace OpenXMLOffice.Tests
             {
                 PieChartTypes = PieChartTypes.DOUGHNUT
             });
+            powerPoint.Save();
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void AddBlankSlide()
+        {
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
             powerPoint.Save();
             Assert.IsTrue(true);
         }
@@ -237,33 +237,6 @@ namespace OpenXMLOffice.Tests
 
         #region Private Methods
 
-        private TableRow[] CreateTableRowPayload(int rowCount)
-        {
-            TableRow[] data = new TableRow[rowCount];
-            for (int i = 0; i < rowCount; i++)
-            {
-                TableRow row = new()
-                {
-                    Height = 370840,
-                    TableCells = new List<TableCell>
-                {
-                    new() {
-                        Value = $"Row {i + 1}, Cell 1",
-                        CellBackground = "EDEDED",
-                        TextColor = "333333"
-                    },
-                    new() {
-                        Value = $"Row {i + 1}, Cell 2",
-                        CellBackground = "EDEDED",
-                        TextColor = "333333"
-                    },
-                }
-                };
-                data[i] = row;
-            }
-            return data;
-        }
-
         private DataCell[][] CreateDataCellPayload()
         {
             Random random = new();
@@ -295,6 +268,33 @@ namespace OpenXMLOffice.Tests
                         styleId = 1
                     };
                 }
+            }
+            return data;
+        }
+
+        private TableRow[] CreateTableRowPayload(int rowCount)
+        {
+            TableRow[] data = new TableRow[rowCount];
+            for (int i = 0; i < rowCount; i++)
+            {
+                TableRow row = new()
+                {
+                    Height = 370840,
+                    TableCells = new List<TableCell>
+                {
+                    new() {
+                        Value = $"Row {i + 1}, Cell 1",
+                        CellBackground = "EDEDED",
+                        TextColor = "333333"
+                    },
+                    new() {
+                        Value = $"Row {i + 1}, Cell 2",
+                        CellBackground = "EDEDED",
+                        TextColor = "333333"
+                    },
+                }
+                };
+                data[i] = row;
             }
             return data;
         }

@@ -1,5 +1,5 @@
-using System.Data;
 using OpenXMLOffice.Global;
+using System.Data;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -8,33 +8,52 @@ namespace OpenXMLOffice.Presentation
 {
     public class Table
     {
-        private int X = 0;
-        private int Y = 0;
-        private int Width = 8128000;
-        private int Height = 741680;
+        #region Private Fields
+
         private readonly P.GraphicFrame GraphicFrame = new();
         private readonly TableSetting TableSetting;
+        private int Height = 741680;
+        private int Width = 8128000;
+        private int X = 0;
+        private int Y = 0;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Table(TableRow[] TableRows, TableSetting TableSetting)
         {
             this.TableSetting = TableSetting;
             CreateTableGraphicFrame(TableRows);
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns>X,Y</returns>
+        /// <returns>
+        /// X,Y
+        /// </returns>
         public (int, int) GetPosition()
         {
             return (X, Y);
         }
+
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns>Width,Height</returns>
+        /// <returns>
+        /// Width,Height
+        /// </returns>
         public (int, int) GetSize()
         {
             return (Width, Height);
+        }
+
+        public P.GraphicFrame GetTableGraphicFrame()
+        {
+            return GraphicFrame;
         }
 
         public void UpdatePosition(int X, int Y)
@@ -69,9 +88,19 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        public P.GraphicFrame GetTableGraphicFrame()
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private long CalculateColumnWidth(TableSetting.eWidthType widthType, float InputWidth)
         {
-            return GraphicFrame;
+            return widthType switch
+            {
+                TableSetting.eWidthType.PIXEL => ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
+                TableSetting.eWidthType.PERCENTAGE => Convert.ToInt32(Width / 100 * InputWidth),
+                TableSetting.eWidthType.RATIO => Convert.ToInt32(Width / 100 * (InputWidth * 10)),
+                _ => Convert.ToInt32(InputWidth)
+            };
         }
 
         private A.Table CreateTable(TableRow[] TableRows)
@@ -99,68 +128,6 @@ namespace OpenXMLOffice.Presentation
                 Table.Append(CreateTableRow(row));
             }
             return Table;
-        }
-
-        private A.TableRow CreateTableRow(TableRow Row)
-        {
-            A.TableRow TableRow = new()
-            {
-                Height = Row.Height
-            };
-            foreach (TableCell cell in Row.TableCells)
-            {
-                TableRow.Append(CreateTableCell(cell));
-            }
-            return TableRow;
-        }
-
-        private A.TableGrid CreateTableGrid(int ColumnCount)
-        {
-            A.TableGrid TableGrid = new();
-            if (TableSetting.WidthType == TableSetting.eWidthType.AUTO)
-            {
-                for (int i = 0; i < ColumnCount; i++)
-                {
-                    TableGrid.Append(new A.GridColumn() { Width = Width / ColumnCount });
-                }
-            }
-            else
-            {
-                for (int i = 0; i < ColumnCount; i++)
-                {
-                    TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnwidth[i]) });
-                }
-            }
-            return TableGrid;
-        }
-
-        private void ReCalculateColumnWidth()
-        {
-            A.Table? Table = GraphicFrame!.Graphic!.GraphicData!.GetFirstChild<A.Table>();
-            if (Table != null)
-            {
-                List<A.GridColumn> GridColumn = Table.TableGrid!.Elements<A.GridColumn>().ToList();
-                if (TableSetting.WidthType == TableSetting.eWidthType.AUTO)
-                {
-                    GridColumn.ForEach(Column => Column.Width = Width / GridColumn.Count);
-                }
-                else
-                {
-                    GridColumn.Select((item, index) => (item, index)).ToList().ForEach(Column =>
-                        Column.item.Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnwidth[Column.index]));
-                }
-            }
-        }
-
-        private long CalculateColumnWidth(TableSetting.eWidthType widthType, float InputWidth)
-        {
-            return widthType switch
-            {
-                TableSetting.eWidthType.PIXEL => ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
-                TableSetting.eWidthType.PERCENTAGE => Convert.ToInt32(Width / 100 * InputWidth),
-                TableSetting.eWidthType.RATIO => Convert.ToInt32(Width / 100 * (InputWidth * 10)),
-                _ => Convert.ToInt32(InputWidth)
-            };
         }
 
         private A.TableCell CreateTableCell(TableCell Cell)
@@ -258,5 +225,58 @@ namespace OpenXMLOffice.Presentation
                 }
             };
         }
+
+        private A.TableGrid CreateTableGrid(int ColumnCount)
+        {
+            A.TableGrid TableGrid = new();
+            if (TableSetting.WidthType == TableSetting.eWidthType.AUTO)
+            {
+                for (int i = 0; i < ColumnCount; i++)
+                {
+                    TableGrid.Append(new A.GridColumn() { Width = Width / ColumnCount });
+                }
+            }
+            else
+            {
+                for (int i = 0; i < ColumnCount; i++)
+                {
+                    TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnwidth[i]) });
+                }
+            }
+            return TableGrid;
+        }
+
+        private A.TableRow CreateTableRow(TableRow Row)
+        {
+            A.TableRow TableRow = new()
+            {
+                Height = Row.Height
+            };
+            foreach (TableCell cell in Row.TableCells)
+            {
+                TableRow.Append(CreateTableCell(cell));
+            }
+            return TableRow;
+        }
+
+        private void ReCalculateColumnWidth()
+        {
+            A.Table? Table = GraphicFrame!.Graphic!.GraphicData!.GetFirstChild<A.Table>();
+            if (Table != null)
+            {
+                List<A.GridColumn> GridColumn = Table.TableGrid!.Elements<A.GridColumn>().ToList();
+                if (TableSetting.WidthType == TableSetting.eWidthType.AUTO)
+                {
+                    GridColumn.ForEach(Column => Column.Width = Width / GridColumn.Count);
+                }
+                else
+                {
+                    GridColumn.Select((item, index) => (item, index)).ToList().ForEach(Column =>
+                        Column.item.Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnwidth[Column.index]));
+                }
+            }
+        }
+
+        #endregion Private Methods
     }
 }

@@ -7,6 +7,12 @@ namespace OpenXMLOffice.Global;
 
 public class ChartBase
 {
+    #region Protected Fields
+
+    protected ChartGridLinesOptions ChartGridLinesOptions = new();
+
+    #endregion Protected Fields
+
     #region Private Fields
 
     private C.ChartSpace OpenXMLChartSpace;
@@ -21,8 +27,6 @@ public class ChartBase
     }
 
     #endregion Protected Constructors
-
-    protected ChartGridLinesOptions ChartGridLinesOptions = new();
 
     #region Protected Methods
 
@@ -87,6 +91,38 @@ public class ChartBase
         }
     }
 
+    protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId)
+    {
+        C.CategoryAxis CategoryAxis = new(
+            new C.AxisId { Val = axisId },
+            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
+            new C.Delete { Val = false },
+            new C.AxisPosition { Val = C.AxisPositionValues.Bottom },
+            new C.MajorTickMark { Val = C.TickMarkValues.None },
+            new C.MinorTickMark { Val = C.TickMarkValues.None },
+            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
+            new C.CrossingAxis { Val = axisId },
+            new C.Crosses { Val = C.CrossesValues.AutoZero },
+            new C.AutoLabeled { Val = true },
+            new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
+            new C.LabelOffset { Val = 100 },
+            new C.NoMultiLevelLabels { Val = false });
+        C.ShapeProperties ShapeProperties = new();
+        ShapeProperties.Append(new A.NoFill());
+        ShapeProperties.Append(new A.Outline(new A.NoFill()));
+        ShapeProperties.Append(new A.EffectList());
+        if (ChartGridLinesOptions.IsMajorCategoryLinesEnabled)
+        {
+            CategoryAxis.Append(CreateMajorGridLine());
+        }
+        if (ChartGridLinesOptions.IsMinorCategoryLinesEnabled)
+        {
+            CategoryAxis.Append(CreateMinorGridLine());
+        }
+        CategoryAxis.Append(ShapeProperties);
+        return CategoryAxis;
+    }
+
     protected C.Chart CreateChart(ChartSetting chartSetting)
     {
         C.Chart Chart = new()
@@ -127,43 +163,6 @@ public class ChartBase
         return ChartColor.CreateColorStyles();
     }
 
-    protected C.ChartSpace GetChartSpace()
-    {
-        return OpenXMLChartSpace;
-    }
-
-    protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId)
-    {
-        C.CategoryAxis CategoryAxis = new(
-            new C.AxisId { Val = axisId },
-            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
-            new C.Delete { Val = false },
-            new C.AxisPosition { Val = C.AxisPositionValues.Bottom },
-            new C.MajorTickMark { Val = C.TickMarkValues.None },
-            new C.MinorTickMark { Val = C.TickMarkValues.None },
-            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = axisId },
-            new C.Crosses { Val = C.CrossesValues.AutoZero },
-            new C.AutoLabeled { Val = true },
-            new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
-            new C.LabelOffset { Val = 100 },
-            new C.NoMultiLevelLabels { Val = false });
-        C.ShapeProperties ShapeProperties = new();
-        ShapeProperties.Append(new A.NoFill());
-        ShapeProperties.Append(new A.Outline(new A.NoFill()));
-        ShapeProperties.Append(new A.EffectList());
-        if (ChartGridLinesOptions.IsMajorCategoryLinesEnabled)
-        {
-            CategoryAxis.Append(CreateMajorGridLine());
-        }
-        if (ChartGridLinesOptions.IsMinorCategoryLinesEnabled)
-        {
-            CategoryAxis.Append(CreateMinorGridLine());
-        }
-        CategoryAxis.Append(ShapeProperties);
-        return CategoryAxis;
-    }
-
     protected C.ValueAxis CreateValueAxis(UInt32Value axisId)
     {
         C.ValueAxis ValueAxis = new(
@@ -194,6 +193,11 @@ public class ChartBase
         return ValueAxis;
     }
 
+    protected C.ChartSpace GetChartSpace()
+    {
+        return OpenXMLChartSpace;
+    }
+
     protected A.SolidFill GetSolidFill(List<string> FillColors, int index)
     {
         if (FillColors.Count > 0)
@@ -201,50 +205,6 @@ public class ChartBase
             return new A.SolidFill(new A.RgbColorModelHex() { Val = FillColors[index % FillColors.Count] });
         }
         return new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(index % 6) + 1}") });
-    }
-
-    private C.MajorGridlines CreateMajorGridLine()
-    {
-        return new(new C.ShapeProperties(
-                        new A.Outline(
-                            new A.SolidFill(
-                                new A.SchemeColor(
-                                    new A.LuminanceModulation { Val = 15000 },
-                                    new A.LuminanceOffset { Val = 85000 })
-                                { Val = A.SchemeColorValues.Text1 }
-                            )
-                        )
-                        {
-                            Width = 9525,
-                            CapType = A.LineCapValues.Flat,
-                            CompoundLineType = A.CompoundLineValues.Single,
-                            Alignment = A.PenAlignmentValues.Center
-                        },
-                        new A.Round()
-                    )
-                );
-    }
-
-    private C.MinorGridlines CreateMinorGridLine()
-    {
-        return new(new C.ShapeProperties(
-                        new A.Outline(
-                            new A.SolidFill(
-                                new A.SchemeColor(
-                                    new A.LuminanceModulation { Val = 5000 },
-                                    new A.LuminanceOffset { Val = 95000 })
-                                { Val = A.SchemeColorValues.Text1 }
-                            )
-                        )
-                        {
-                            Width = 9525,
-                            CapType = A.LineCapValues.Flat,
-                            CompoundLineType = A.CompoundLineValues.Single,
-                            Alignment = A.PenAlignmentValues.Center
-                        },
-                        new A.Round()
-                    )
-                );
     }
 
     #endregion Protected Methods
@@ -332,6 +292,50 @@ public class ChartBase
             Val = "en-US"
         };
         return ChartSpace;
+    }
+
+    private C.MajorGridlines CreateMajorGridLine()
+    {
+        return new(new C.ShapeProperties(
+                        new A.Outline(
+                            new A.SolidFill(
+                                new A.SchemeColor(
+                                    new A.LuminanceModulation { Val = 15000 },
+                                    new A.LuminanceOffset { Val = 85000 })
+                                { Val = A.SchemeColorValues.Text1 }
+                            )
+                        )
+                        {
+                            Width = 9525,
+                            CapType = A.LineCapValues.Flat,
+                            CompoundLineType = A.CompoundLineValues.Single,
+                            Alignment = A.PenAlignmentValues.Center
+                        },
+                        new A.Round()
+                    )
+                );
+    }
+
+    private C.MinorGridlines CreateMinorGridLine()
+    {
+        return new(new C.ShapeProperties(
+                        new A.Outline(
+                            new A.SolidFill(
+                                new A.SchemeColor(
+                                    new A.LuminanceModulation { Val = 5000 },
+                                    new A.LuminanceOffset { Val = 95000 })
+                                { Val = A.SchemeColorValues.Text1 }
+                            )
+                        )
+                        {
+                            Width = 9525,
+                            CapType = A.LineCapValues.Flat,
+                            CompoundLineType = A.CompoundLineValues.Single,
+                            Alignment = A.PenAlignmentValues.Center
+                        },
+                        new A.Round()
+                    )
+                );
     }
 
     private C.Title CreateTitle(string strTitle)

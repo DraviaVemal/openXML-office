@@ -83,15 +83,6 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.DataLabels GetDataLabels(LineChartSetting LineChartSetting, int index)
-        {
-            if (index < LineChartSetting.LineChartSeriesSettings.Count)
-            {
-                return CreateDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
-            }
-            return CreateDataLabel(new LineChartDataLabel());
-        }
-
         private C.DataLabels CreateDataLabel(LineChartDataLabel LineChartDataLabel)
         {
             C.DataLabels DataLabels = new(
@@ -166,6 +157,15 @@ namespace OpenXMLOffice.Global
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
             return series;
+        }
+
+        private C.DataLabels GetDataLabels(LineChartSetting LineChartSetting, int index)
+        {
+            if (index < LineChartSetting.LineChartSeriesSettings.Count)
+            {
+                return CreateDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
+            }
+            return CreateDataLabel(new LineChartDataLabel());
         }
 
         #endregion Private Methods

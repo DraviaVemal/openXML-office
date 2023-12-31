@@ -2,6 +2,8 @@ namespace OpenXMLOffice.Global
 {
     public class TextBoxSetting
     {
+        #region Public Fields
+
         public string FontFamily = "Calibri (Body)";
         public int FontSize = 18;
         public bool IsBold = false;
@@ -11,5 +13,7 @@ namespace OpenXMLOffice.Global
         public string Text = "Text Box";
         public string TextBackground = "FFFFFF";
         public string TextColor = "000000";
+
+        #endregion Public Fields
     }
 }

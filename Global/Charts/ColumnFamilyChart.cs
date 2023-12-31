@@ -70,13 +70,28 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.DataLabels GetDataLabels(ColumnChartSetting ColumnChartSetting, int index)
+        private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
+                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
+                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
         {
-            if (index < ColumnChartSetting.ColumnChartSeriesSettings.Count)
+            C.BarChartSeries series = new(
+                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
+                new C.InvertIfNegative { Val = true });
+            C.ShapeProperties ShapeProperties = new();
+            ShapeProperties.Append(SolidFill);
+            ShapeProperties.Append(new A.Outline(new A.NoFill()));
+            ShapeProperties.Append(new A.EffectList());
+            series.Append(DataLabels);
+            series.Append(ShapeProperties);
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.Smooth()
             {
-                return CreateDataLabel(ColumnChartSetting.ColumnChartSeriesSettings[index]?.ColumnChartDataLabel ?? new ColumnChartDataLabel());
-            }
-            return CreateDataLabel(new ColumnChartDataLabel());
+                Val = false
+            });
+            return series;
         }
 
         private C.DataLabels CreateDataLabel(ColumnChartDataLabel ColumnChartDataLabel)
@@ -133,28 +148,13 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.DataLabels GetDataLabels(ColumnChartSetting ColumnChartSetting, int index)
         {
-            C.BarChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
-                new C.InvertIfNegative { Val = true });
-            C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(SolidFill);
-            ShapeProperties.Append(new A.Outline(new A.NoFill()));
-            ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
-            series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
-            series.Append(new C.Smooth()
+            if (index < ColumnChartSetting.ColumnChartSeriesSettings.Count)
             {
-                Val = false
-            });
-            return series;
+                return CreateDataLabel(ColumnChartSetting.ColumnChartSeriesSettings[index]?.ColumnChartDataLabel ?? new ColumnChartDataLabel());
+            }
+            return CreateDataLabel(new ColumnChartDataLabel());
         }
 
         #endregion Private Methods

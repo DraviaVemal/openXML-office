@@ -1,15 +1,51 @@
 namespace OpenXMLOffice.Global
 {
-    public class ChartSeriesSetting
+    public class ChartAxesOptions
     {
-        internal ChartSeriesSetting()
-        { }
+        #region Public Fields
 
-        public string? NumberFormat;
+        public bool IsHorizontalAxesEnabled = true;
+        public bool IsVerticalAxesEnabled = true;
+
+        #endregion Public Fields
+    }
+
+    public class ChartAxisOptions
+    {
+        #region Public Fields
+
+        public string? HorizontalAxisTitle;
+        public string? VerticalAxisTitle;
+
+        #endregion Public Fields
+    }
+
+    public class ChartGridLinesOptions
+    {
+        #region Public Fields
+
+        public bool IsMajorCategoryLinesEnabled = false;
+        public bool IsMajorValueLinesEnabled = true;
+        public bool IsMinorCategoryLinesEnabled = false;
+        public bool IsMinorValueLinesEnabled = false;
+
+        #endregion Public Fields
     }
 
     public class ChartLegendOptions
     {
+        #region Public Fields
+
+        public bool IsEnableLegend = true;
+
+        public bool IsLegendChartOverLap = false;
+
+        public eLegendPosition legendPosition = eLegendPosition.BOTTOM;
+
+        #endregion Public Fields
+
+        #region Public Enums
+
         public enum eLegendPosition
         {
             BOTTOM,
@@ -19,41 +55,40 @@ namespace OpenXMLOffice.Global
             TOP_RIGHT
         }
 
-        public bool IsEnableLegend = true;
-        public eLegendPosition legendPosition = eLegendPosition.BOTTOM;
-        public bool IsLegendChartOverLap = false;
+        #endregion Public Enums
     }
 
-    public class ChartAxesOptions
+    public class ChartSeriesSetting
     {
-        public bool IsHorizontalAxesEnabled = true;
-        public bool IsVerticalAxesEnabled = true;
-    }
+        #region Public Fields
 
-    public class ChartGridLinesOptions
-    {
-        public bool IsMajorCategoryLinesEnabled = false;
-        public bool IsMinorCategoryLinesEnabled = false;
-        public bool IsMajorValueLinesEnabled = true;
-        public bool IsMinorValueLinesEnabled = false;
-    }
+        public string? NumberFormat;
 
-    public class ChartAxisOptions
-    {
-        public string? HorizontalAxisTitle;
-        public string? VerticalAxisTitle;
+        #endregion Public Fields
+
+        #region Internal Constructors
+
+        internal ChartSeriesSetting()
+        { }
+
+        #endregion Internal Constructors
     }
 
     public class ChartSetting
     {
+        #region Public Fields
+
+        public ChartLegendOptions ChartLegendOptions = new();
+
+        public string? Title;
+
+        #endregion Public Fields
+
+        #region Internal Constructors
+
         internal ChartSetting()
         { }
 
-        #region Public Fields
-
-        public string? Title;
-        public ChartLegendOptions ChartLegendOptions = new();
-
-        #endregion Public Fields
+        #endregion Internal Constructors
     }
 }

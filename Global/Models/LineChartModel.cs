@@ -11,19 +11,16 @@ namespace OpenXMLOffice.Global
         // CLUSTERED_3D
     }
 
-    public class LineChartSeriesSetting : ChartSeriesSetting
+    public class LineChartDataLabel
     {
         #region Public Fields
 
-        public string? FillColor;
-        public string? BorderColor;
-        public LineChartDataLabel LineChartDataLabel = new();
+        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
 
         #endregion Public Fields
-    }
 
-    public class LineChartDataLabel
-    {
+        #region Public Enums
+
         public enum eDataLabelPosition
         {
             NONE,
@@ -35,15 +32,30 @@ namespace OpenXMLOffice.Global
             // CALLOUT
         }
 
-        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
+        #endregion Public Enums
+    }
+
+    public class LineChartSeriesSetting : ChartSeriesSetting
+    {
+        #region Public Fields
+
+        public string? BorderColor;
+        public string? FillColor;
+        public LineChartDataLabel LineChartDataLabel = new();
+
+        #endregion Public Fields
     }
 
     public class LineChartSetting : ChartSetting
     {
-        public LineChartTypes LineChartTypes = LineChartTypes.CLUSTERED;
-        public ChartAxisOptions ChartAxisOptions = new();
+        #region Public Fields
+
         public ChartAxesOptions ChartAxesOptions = new();
+        public ChartAxisOptions ChartAxisOptions = new();
         public ChartGridLinesOptions ChartGridLinesOptions = new();
         public List<LineChartSeriesSetting> LineChartSeriesSettings = new();
+        public LineChartTypes LineChartTypes = LineChartTypes.CLUSTERED;
+
+        #endregion Public Fields
     }
 }

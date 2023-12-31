@@ -8,19 +8,16 @@ namespace OpenXMLOffice.Global
         // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D,
     }
 
-    public class BarChartSeriesSetting : ChartSeriesSetting
+    public class BarChartDataLabel
     {
         #region Public Fields
 
-        public string? FillColor;
-        public string? BorderColor;
-        public BarChartDataLabel BarChartDataLabel = new();
+        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
 
         #endregion Public Fields
-    }
 
-    public class BarChartDataLabel
-    {
+        #region Public Enums
+
         public enum eDataLabelPosition
         {
             NONE,
@@ -31,15 +28,30 @@ namespace OpenXMLOffice.Global
             // CALLOUT
         }
 
-        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
+        #endregion Public Enums
+    }
+
+    public class BarChartSeriesSetting : ChartSeriesSetting
+    {
+        #region Public Fields
+
+        public BarChartDataLabel BarChartDataLabel = new();
+        public string? BorderColor;
+        public string? FillColor;
+
+        #endregion Public Fields
     }
 
     public class BarChartSetting : ChartSetting
     {
-        public BarChartTypes BarChartTypes = BarChartTypes.CLUSTERED;
-        public ChartAxisOptions ChartAxisOptions = new();
-        public ChartAxesOptions ChartAxesOptions = new();
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
+        #region Public Fields
+
         public List<BarChartSeriesSetting> BarChartSeriesSettings = new();
+        public BarChartTypes BarChartTypes = BarChartTypes.CLUSTERED;
+        public ChartAxesOptions ChartAxesOptions = new();
+        public ChartAxisOptions ChartAxisOptions = new();
+        public ChartGridLinesOptions ChartGridLinesOptions = new();
+
+        #endregion Public Fields
     }
 }

@@ -38,14 +38,6 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
-        public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
-        {
-            Table Table = new(DataCells, TableSetting);
-            P.GraphicFrame GraphicFrame = Table.GetTableGraphicFrame();
-            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
-            return Table;
-        }
-
         public Chart AddChart(Excel.DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
         {
             Chart Chart = new(this, DataCells, AreaChartSetting);
@@ -84,6 +76,14 @@ namespace OpenXMLOffice.Presentation
             P.GraphicFrame GraphicFrame = Chart.GetChartGraphicFrame();
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
+        }
+
+        public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
+        {
+            Table Table = new(DataCells, TableSetting);
+            P.GraphicFrame GraphicFrame = Table.GetTableGraphicFrame();
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Table;
         }
 
         public IEnumerable<Shape> FindShapeByText(string searchText)

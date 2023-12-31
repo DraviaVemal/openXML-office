@@ -10,20 +10,15 @@ namespace OpenXMLOffice.Presentation
 {
     public class Chart
     {
-        #region Public Fields
-
-        private int Height = 6858000;
-        private int Width = 12192000;
-        private int X = 0;
-        private int Y = 0;
-        private P.GraphicFrame? GraphicFrame;
-
-        #endregion Public Fields
-
         #region Private Fields
 
         private readonly Slide CurrentSlide;
         private readonly ChartPart OpenXMLChartPart;
+        private P.GraphicFrame? GraphicFrame;
+        private int Height = 6858000;
+        private int Width = 12192000;
+        private int X = 0;
+        private int Y = 0;
 
         #endregion Private Fields
 
@@ -73,22 +68,72 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
+        public P.GraphicFrame GetChartGraphicFrame()
+        {
+            // Load Chart Part To Graphics Frame For Export
+            string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
+            P.NonVisualGraphicFrameProperties NonVisualProperties = new()
+            {
+                NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = (UInt32Value)2U, Name = "Chart" },
+                NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
+                ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
+            };
+            GraphicFrame = new()
+            {
+                NonVisualGraphicFrameProperties = NonVisualProperties,
+                Transform = new P.Transform(
+                   new A.Offset
+                   {
+                       X = X,
+                       Y = Y
+                   },
+                   new A.Extents
+                   {
+                       Cx = Width,
+                       Cy = Height
+                   }),
+                Graphic = new A.Graphic(
+                   new A.GraphicData(
+                       new C.ChartReference { Id = relationshipId }
+                   )
+                   { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" })
+            };
+            // Save All Changes
+            GetChartPart().ChartSpace.Save();
+            GetChartStylePart().ChartStyle.Save();
+            GetChartColorStylePart().ColorStyle.Save();
+            return GraphicFrame;
+        }
+
+        public Spreadsheet GetChartWorkBook()
+        {
+            Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
+            return new(stream, SpreadsheetDocumentType.Workbook);
+        }
+
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns>X,Y</returns>
+        /// <returns>
+        /// X,Y
+        /// </returns>
         public (int, int) GetPosition()
         {
             return (X, Y);
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns>Width,Height</returns>
+        /// <returns>
+        /// Width,Height
+        /// </returns>
         public (int, int) GetSize()
         {
             return (Width, Height);
+        }
+
+        public void Save()
+        {
+            CurrentSlide.GetSlidePart().Slide.Save();
         }
 
         public void UpdatePosition(int X, int Y)
@@ -119,11 +164,18 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        public Spreadsheet GetChartWorkBook()
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal string GetNextChartRelationId()
         {
-            Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-            return new(stream, SpreadsheetDocumentType.Workbook);
+            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
         }
+
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private P.GraphicFrame CreateChart(DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
         {
@@ -190,64 +242,9 @@ namespace OpenXMLOffice.Presentation
             return GetChartGraphicFrame();
         }
 
-        public void Save()
-        {
-            CurrentSlide.GetSlidePart().Slide.Save();
-        }
-
-        #endregion Public Methods
-
-        #region Internal Methods
-
-        internal string GetNextChartRelationId()
-        {
-            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
         private ChartColorStylePart GetChartColorStylePart()
         {
             return OpenXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
-        }
-
-        public P.GraphicFrame GetChartGraphicFrame()
-        {
-            // Load Chart Part To Graphics Frame For Export
-            string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
-            P.NonVisualGraphicFrameProperties NonVisualProperties = new()
-            {
-                NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = (UInt32Value)2U, Name = "Chart" },
-                NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
-                ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
-            };
-            GraphicFrame = new()
-            {
-                NonVisualGraphicFrameProperties = NonVisualProperties,
-                Transform = new P.Transform(
-                   new A.Offset
-                   {
-                       X = X,
-                       Y = Y
-                   },
-                   new A.Extents
-                   {
-                       Cx = Width,
-                       Cy = Height
-                   }),
-                Graphic = new A.Graphic(
-                   new A.GraphicData(
-                       new C.ChartReference { Id = relationshipId }
-                   )
-                   { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" })
-            };
-            // Save All Changes
-            GetChartPart().ChartSpace.Save();
-            GetChartStylePart().ChartStyle.Save();
-            GetChartColorStylePart().ColorStyle.Save();
-            return GraphicFrame;
         }
 
         private ChartPart GetChartPart()

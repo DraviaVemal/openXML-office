@@ -99,13 +99,36 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.DataLabels GetDataLabels(PieChartSetting PieChartSetting, int index)
+        private C.PieChartSeries CreateChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
+                                                    string categoryFormula, ChartData[] categoryCells, string valueFormula,
+                                                    ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels,
+                                                    bool IsDoughnut = false)
         {
-            if (index < PieChartSetting.PieChartSeriesSettings.Count)
+            C.PieChartSeries series = new(
+                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
+            for (uint index = 0; index < categoryCells.Length; index++)
             {
-                return CreateDataLabel(PieChartSetting.PieChartSeriesSettings?[index]?.PieChartDataLabel ?? new PieChartDataLabel());
+                C.DataPoint DataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
+                C.ShapeProperties ShapeProperties = new();
+                ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(index % 6) + 1}") }));
+                if (IsDoughnut)
+                {
+                    ShapeProperties.Append(new A.Outline(new A.NoFill()));
+                }
+                else
+                {
+                    ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = A.SchemeColorValues.Light1 })) { Width = 19050 });
+                }
+                ShapeProperties.Append(new A.EffectList());
+                // series.Append(DataLabels);
+                DataPoint.Append(ShapeProperties);
+                series.Append(DataPoint);
             }
-            return CreateDataLabel(new PieChartDataLabel());
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            return series;
         }
 
         private C.DataLabels CreateDataLabel(PieChartDataLabel PieChartDataLabel)
@@ -160,36 +183,13 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.PieChartSeries CreateChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                    string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                    ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels,
-                                                    bool IsDoughnut = false)
+        private C.DataLabels GetDataLabels(PieChartSetting PieChartSetting, int index)
         {
-            C.PieChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
-            for (uint index = 0; index < categoryCells.Length; index++)
+            if (index < PieChartSetting.PieChartSeriesSettings.Count)
             {
-                C.DataPoint DataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
-                C.ShapeProperties ShapeProperties = new();
-                ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(index % 6) + 1}") }));
-                if (IsDoughnut)
-                {
-                    ShapeProperties.Append(new A.Outline(new A.NoFill()));
-                }
-                else
-                {
-                    ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = A.SchemeColorValues.Light1 })) { Width = 19050 });
-                }
-                ShapeProperties.Append(new A.EffectList());
-                // series.Append(DataLabels);
-                DataPoint.Append(ShapeProperties);
-                series.Append(DataPoint);
+                return CreateDataLabel(PieChartSetting.PieChartSeriesSettings?[index]?.PieChartDataLabel ?? new PieChartDataLabel());
             }
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
-            return series;
+            return CreateDataLabel(new PieChartDataLabel());
         }
 
         #endregion Private Methods

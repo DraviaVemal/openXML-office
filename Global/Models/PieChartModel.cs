@@ -8,19 +8,16 @@ namespace OpenXMLOffice.Global
         DOUGHNUT
     }
 
-    public class PieChartSeriesSetting : ChartSeriesSetting
+    public class PieChartDataLabel
     {
         #region Public Fields
 
-        public string? FillColor;
-        public string? BorderColor;
-        public PieChartDataLabel PieChartDataLabel = new();
+        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
 
         #endregion Public Fields
-    }
 
-    public class PieChartDataLabel
-    {
+        #region Public Enums
+
         public enum eDataLabelPosition
         {
             NONE,
@@ -28,13 +25,28 @@ namespace OpenXMLOffice.Global
             // CALLOUT
         }
 
-        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
+        #endregion Public Enums
+    }
+
+    public class PieChartSeriesSetting : ChartSeriesSetting
+    {
+        #region Public Fields
+
+        public string? BorderColor;
+        public string? FillColor;
+        public PieChartDataLabel PieChartDataLabel = new();
+
+        #endregion Public Fields
     }
 
     public class PieChartSetting : ChartSetting
     {
-        public PieChartTypes PieChartTypes = PieChartTypes.PIE;
+        #region Public Fields
+
         public PieChartDataLabel PieChartDataLabel = new();
         public List<PieChartSeriesSetting> PieChartSeriesSettings = new();
+        public PieChartTypes PieChartTypes = PieChartTypes.PIE;
+
+        #endregion Public Fields
     }
 }

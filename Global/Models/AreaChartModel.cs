@@ -8,19 +8,16 @@ namespace OpenXMLOffice.Global
         // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
     }
 
-    public class AreaChartSeriesSetting : ChartSeriesSetting
+    public class AreaChartDataLabel
     {
         #region Public Fields
 
-        public string? FillColor;
-        public string? BorderColor;
-        public AreaChartDataLabel AreaChartDataLabel = new();
+        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
 
         #endregion Public Fields
-    }
 
-    public class AreaChartDataLabel
-    {
+        #region Public Enums
+
         public enum eDataLabelPosition
         {
             NONE,
@@ -28,15 +25,30 @@ namespace OpenXMLOffice.Global
             // CALLOUT
         }
 
-        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
+        #endregion Public Enums
+    }
+
+    public class AreaChartSeriesSetting : ChartSeriesSetting
+    {
+        #region Public Fields
+
+        public AreaChartDataLabel AreaChartDataLabel = new();
+        public string? BorderColor;
+        public string? FillColor;
+
+        #endregion Public Fields
     }
 
     public class AreaChartSetting : ChartSetting
     {
-        public AreaChartTypes AreaChartTypes = AreaChartTypes.CLUSTERED;
-        public ChartAxisOptions ChartAxisOptions = new();
-        public ChartAxesOptions ChartAxesOptions = new();
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
+        #region Public Fields
+
         public List<AreaChartSeriesSetting> AreaChartSeriesSettings = new();
+        public AreaChartTypes AreaChartTypes = AreaChartTypes.CLUSTERED;
+        public ChartAxesOptions ChartAxesOptions = new();
+        public ChartAxisOptions ChartAxisOptions = new();
+        public ChartGridLinesOptions ChartGridLinesOptions = new();
+
+        #endregion Public Fields
     }
 }

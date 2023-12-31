@@ -70,13 +70,28 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.DataLabels GetDataLabels(BarChartSetting BarChartSetting, int index)
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
+                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
+                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
         {
-            if (index < BarChartSetting.BarChartSeriesSettings.Count)
+            C.BarChartSeries series = new(
+                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
+                new C.InvertIfNegative { Val = true });
+            C.ShapeProperties ShapeProperties = new();
+            ShapeProperties.Append(SolidFill);
+            ShapeProperties.Append(new A.Outline(new A.NoFill()));
+            ShapeProperties.Append(new A.EffectList());
+            series.Append(DataLabels);
+            series.Append(ShapeProperties);
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.Smooth()
             {
-                return CreateDataLabel(BarChartSetting.BarChartSeriesSettings?[index]?.BarChartDataLabel ?? new BarChartDataLabel());
-            }
-            return CreateDataLabel(new BarChartDataLabel());
+                Val = false
+            });
+            return series;
         }
 
         private C.DataLabels CreateDataLabel(BarChartDataLabel BarChartDataLabel)
@@ -133,28 +148,13 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.DataLabels GetDataLabels(BarChartSetting BarChartSetting, int index)
         {
-            C.BarChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
-                new C.InvertIfNegative { Val = true });
-            C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(SolidFill);
-            ShapeProperties.Append(new A.Outline(new A.NoFill()));
-            ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
-            series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
-            series.Append(new C.Smooth()
+            if (index < BarChartSetting.BarChartSeriesSettings.Count)
             {
-                Val = false
-            });
-            return series;
+                return CreateDataLabel(BarChartSetting.BarChartSeriesSettings?[index]?.BarChartDataLabel ?? new BarChartDataLabel());
+            }
+            return CreateDataLabel(new BarChartDataLabel());
         }
 
         #endregion Private Methods
