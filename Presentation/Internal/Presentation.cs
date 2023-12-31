@@ -7,15 +7,17 @@ namespace OpenXMLOffice.Presentation
     internal class Presentation : PresentationCore
     {
         #region Public Constructors
+        public Presentation(string filePath, PresentationProperties? presentationProperties = null)
+        : base(filePath, presentationProperties) { }
 
         public Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
-        : base(filePath, isEditable, presentationProperties, autosave) { }
+        : base(filePath, isEditable, presentationProperties) { }
 
-        public Presentation(string filePath, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
-        : base(filePath, presentationProperties, presentationDocumentType, autosave) { }
+        public Presentation(Stream stream, PresentationProperties? presentationProperties = null)
+        : base(stream, presentationProperties) { }
 
-        public Presentation(Stream stream, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
-        : base(stream, presentationProperties, presentationDocumentType) { }
+        public Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
+        : base(stream, isEditable, presentationProperties) { }
 
         #endregion Public Constructors
 

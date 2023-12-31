@@ -22,7 +22,7 @@ namespace OpenXMLOffice.Tests
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            spreadsheet = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
+            spreadsheet = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         }
 
         [TestMethod]
@@ -107,7 +107,7 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void SheetConstructorFile()
         {
-            Spreadsheet spreadsheet1 = new("../try.xlsx", DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
+            Spreadsheet spreadsheet1 = new("../try.xlsx");
             Assert.IsNotNull(spreadsheet1);
             spreadsheet1.Save();
             File.Delete("../try.xlsx");

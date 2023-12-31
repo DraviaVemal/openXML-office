@@ -12,6 +12,19 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Constructors
 
+
+        /// <summary>
+        /// Create New file in the system
+        /// </summary>
+        /// <param name="filePath">
+        /// </param>
+        /// <param name="powerPointProperties">
+        /// </param>
+        public PowerPoint(string filePath, PresentationProperties? powerPointProperties = null)
+        {
+            presentation = new(filePath, powerPointProperties);
+        }
+
         /// <summary>
         /// Open and work with existing file
         /// </summary>
@@ -27,27 +40,15 @@ namespace OpenXMLOffice.Presentation
         }
 
         /// <summary>
-        /// Create New file in the system
+        /// Works with in memory object can be saved to file at later point
         /// </summary>
         /// <param name="filePath">
         /// </param>
         /// <param name="powerPointProperties">
         /// </param>
-        public PowerPoint(string filePath, PresentationProperties? powerPointProperties = null)
+        public PowerPoint(Stream stream, PresentationProperties? powerPointProperties = null)
         {
-            presentation = new(filePath, powerPointProperties);
-        }
-
-        /// <summary>
-        /// Create New file in the system
-        /// </summary>
-        /// <param name="filePath">
-        /// </param>
-        /// <param name="powerPointProperties">
-        /// </param>
-        public PowerPoint(string filePath, PresentationProperties? powerPointProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation)
-        {
-            presentation = new(filePath, powerPointProperties, presentationDocumentType);
+            presentation = new(stream, powerPointProperties);
         }
 
         /// <summary>
@@ -57,9 +58,9 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="powerPointProperties">
         /// </param>
-        public PowerPoint(Stream stream, PresentationDocumentType presentationDocumentType, PresentationProperties? powerPointProperties = null)
+        public PowerPoint(Stream stream, bool isEditable, PresentationProperties? powerPointProperties = null)
         {
-            presentation = new(stream, powerPointProperties, presentationDocumentType);
+            presentation = new(stream, isEditable, powerPointProperties);
         }
 
         #endregion Public Constructors

@@ -32,7 +32,16 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Constructors
 
-        public PresentationCore(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
+        public PresentationCore(string filePath, PresentationProperties? presentationProperties = null)
+        {
+            presentationInfo.FilePath = filePath;
+            this.presentationProperties = presentationProperties ?? new();
+            MemoryStream memoryStream = new();
+            presentationDocument = PresentationDocument.Create(memoryStream, PresentationDocumentType.Presentation, true);
+            InitialisePresentation(this.presentationProperties);
+        }
+
+        public PresentationCore(string filePath, bool isEditable, PresentationProperties? presentationProperties = null)
         {
             presentationInfo.FilePath = filePath;
             this.presentationProperties = presentationProperties ?? new();
@@ -42,7 +51,7 @@ namespace OpenXMLOffice.Presentation
             reader.Close();
             presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
             {
-                AutoSave = autosave
+                AutoSave = true
             });
             if (isEditable)
             {
@@ -54,19 +63,20 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        public PresentationCore(string filePath, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
+        public PresentationCore(Stream stream, PresentationProperties? presentationProperties = null)
         {
-            presentationInfo.FilePath = filePath;
             this.presentationProperties = presentationProperties ?? new();
-            MemoryStream memoryStream = new();
-            presentationDocument = PresentationDocument.Create(memoryStream, presentationDocumentType, autosave);
+            presentationDocument = PresentationDocument.Create(stream, PresentationDocumentType.Presentation, true);
             InitialisePresentation(this.presentationProperties);
         }
 
-        public PresentationCore(Stream stream, PresentationProperties? presentationProperties = null, PresentationDocumentType presentationDocumentType = PresentationDocumentType.Presentation, bool autosave = true)
+        public PresentationCore(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
         {
             this.presentationProperties = presentationProperties ?? new();
-            presentationDocument = PresentationDocument.Create(stream, presentationDocumentType, autosave);
+            presentationDocument = PresentationDocument.Open(stream, isEditable, new OpenSettings()
+            {
+                AutoSave = true
+            });
             InitialisePresentation(this.presentationProperties);
         }
 

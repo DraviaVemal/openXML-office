@@ -108,7 +108,7 @@ namespace OpenXMLOffice.Presentation
         public Spreadsheet GetChartWorkBook()
         {
             Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-            return new(stream, SpreadsheetDocumentType.Workbook);
+            return new(stream);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace OpenXMLOffice.Presentation
         {
             // Load Data To Embeded Sheet
             Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-            Spreadsheet spreadsheet = new(stream, SpreadsheetDocumentType.Workbook);
+            Spreadsheet spreadsheet = new(stream);
             Worksheet Worksheet = spreadsheet.AddSheet();
             int RowIndex = 1;
             foreach (DataCell[] DataCells in DataRows)

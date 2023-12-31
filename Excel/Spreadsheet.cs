@@ -45,19 +45,9 @@ namespace OpenXMLOffice.Excel
         /// <param name="autoSave">
         /// Defaults to true. The source document gets updated automatically
         /// </param>
-        public Spreadsheet(string filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool autoSave = true)
-        {
-            spreadsheetDocument = SpreadsheetDocument.Create(filePath, spreadsheetDocumentType, autoSave);
-            PrepareSpreadsheet();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="filePath">
-        /// </param>
         public Spreadsheet(string filePath)
         {
-            spreadsheetDocument = SpreadsheetDocument.CreateFromTemplate(filePath);
+            spreadsheetDocument = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook, true);
             PrepareSpreadsheet();
         }
 
@@ -69,11 +59,11 @@ namespace OpenXMLOffice.Excel
         /// </param>
         /// <param name="autoSave">
         /// </param>
-        public Spreadsheet(string filePath, bool isEditable = true, bool autoSave = true)
+        public Spreadsheet(string filePath, bool isEditable)
         {
             spreadsheetDocument = SpreadsheetDocument.Open(filePath, isEditable, new OpenSettings
             {
-                AutoSave = autoSave
+                AutoSave = true
             });
             PrepareSpreadsheet();
         }
@@ -92,9 +82,9 @@ namespace OpenXMLOffice.Excel
         /// <param name="autoSave">
         /// Defaults to true. The source document gets updated automatically
         /// </param>
-        public Spreadsheet(Stream stream, SpreadsheetDocumentType spreadsheetDocumentType = SpreadsheetDocumentType.Workbook, bool autoSave = true)
+        public Spreadsheet(Stream stream)
         {
-            spreadsheetDocument = SpreadsheetDocument.Create(stream, spreadsheetDocumentType, autoSave);
+            spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
             PrepareSpreadsheet();
         }
 
@@ -107,11 +97,11 @@ namespace OpenXMLOffice.Excel
         /// </param>
         /// <param name="autoSave">
         /// </param>
-        public Spreadsheet(Stream stream, bool isEditable = true, bool autoSave = true)
+        public Spreadsheet(Stream stream, bool isEditable)
         {
             spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings
             {
-                AutoSave = autoSave
+                AutoSave = true
             });
         }
 

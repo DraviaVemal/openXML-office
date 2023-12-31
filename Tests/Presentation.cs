@@ -9,7 +9,7 @@ namespace OpenXMLOffice.Tests
     {
         #region Private Fields
 
-        private static PowerPoint powerPoint = new(new MemoryStream(), DocumentFormat.OpenXml.PresentationDocumentType.Presentation);
+        private static PowerPoint powerPoint = new(new MemoryStream());
 
         #endregion Private Fields
 
