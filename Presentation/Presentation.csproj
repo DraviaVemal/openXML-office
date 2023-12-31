@@ -6,8 +6,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="internal/" />
-    <Folder Include="public/" />
+    <Folder Include="Internal/" />
+    <Folder Include="Public/" />
+    <Folder Include="Models/" />
   </ItemGroup>
 
   <PropertyGroup>

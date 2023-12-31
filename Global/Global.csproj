@@ -1,6 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <Folder Include="Charts/" />
+    <Folder Include="Utils/" />
+    <Folder Include="Componenets/" />
+    <Folder Include="Models/" />
+  </ItemGroup>
+
   <PropertyGroup>
+    <PackageId>OpenXMLOffice.Global</PackageId>
     <RootNamespace>OpenXMLOffice.Global</RootNamespace>
     <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
     <CosturaOutputType>SingleFile</CosturaOutputType>
