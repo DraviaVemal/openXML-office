@@ -35,6 +35,30 @@ namespace OpenXMLOffice.Tests
         }
 
         [TestMethod]
+        public void AddAllChartTypesToSlide()
+        {
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.AreaChartTypes.CLUSTERED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.AreaChartTypes.STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.AreaChartTypes.PERCENT_STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.BarChartTypes.CLUSTERED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.BarChartTypes.PERCENT_STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.ColumnChartTypes.CLUSTERED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.ColumnChartTypes.STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.ColumnChartTypes.PERCENT_STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.LineChartTypes.STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.LineChartTypes.PERCENT_STACKED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.LineChartTypes.CLUSTERED_MARKER, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.LineChartTypes.STACKED_MARKER, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.LineChartTypes.PERCENT_STACKED_MARKER, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.PieChartTypes.PIE, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.PieChartTypes.DOUGHNUT, CreateDataPayload());
+            powerPoint.Save();
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
         public void OpenExistingPresentationEdit()
         {
             PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
@@ -112,7 +136,7 @@ namespace OpenXMLOffice.Tests
                     IsMinorValueLinesEnabled = true,
                 }
             }));
-            shape4[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED_MARKET, CreateDataPayload()));
+            shape4[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED_MARKER, CreateDataPayload()));
             shape5[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.AreaChartTypes.CLUSTERED, CreateDataPayload()));
             shape6[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.PieChartTypes.DOUGHNUT, CreateDataPayload()));
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));

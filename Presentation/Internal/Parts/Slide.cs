@@ -1,3 +1,4 @@
+using OpenXMLOffice.Global;
 using DocumentFormat.OpenXml.Packaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -37,9 +38,44 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
-        public Chart AddChart()
+        public Chart AddChart(GlobalConstants.AreaChartTypes AreaChartTypes, Excel.DataCell[][] DataCells, AreaChartSetting? AreaChartSetting = null)
         {
-            return new Chart(this);
+            Chart Chart = new(this);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(AreaChartTypes, DataCells, AreaChartSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Chart;
+        }
+
+        public Chart AddChart(GlobalConstants.BarChartTypes BarChartTypes, Excel.DataCell[][] DataCells, BarChartSetting? BarChartSetting = null)
+        {
+            Chart Chart = new(this);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(BarChartTypes, DataCells, BarChartSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Chart;
+        }
+
+        public Chart AddChart(GlobalConstants.ColumnChartTypes ColumnChartTypes, Excel.DataCell[][] DataCells, ColumnChartSetting? ColumnChartSetting = null)
+        {
+            Chart Chart = new(this);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(ColumnChartTypes, DataCells, ColumnChartSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Chart;
+        }
+
+        public Chart AddChart(GlobalConstants.LineChartTypes LineChartTypes, Excel.DataCell[][] DataCells, LineChartSetting? LineChartSetting = null)
+        {
+            Chart Chart = new(this);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(LineChartTypes, DataCells, LineChartSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Chart;
+        }
+
+        public Chart AddChart(GlobalConstants.PieChartTypes PieChartTypes, Excel.DataCell[][] DataCells, PieChartSetting? PieChartSetting = null)
+        {
+            Chart Chart = new(this);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(PieChartTypes, DataCells, PieChartSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Chart;
         }
 
         public IEnumerable<Shape> FindShapeByText(string searchText)

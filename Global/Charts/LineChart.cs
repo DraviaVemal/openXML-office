@@ -14,9 +14,9 @@ namespace OpenXMLOffice.Global
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = LineChartType switch
             {
-                GlobalConstants.LineChartTypes.CLUSTERED_MARKET => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, true),
-                GlobalConstants.LineChartTypes.STACKED_MARKET => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked, true),
-                GlobalConstants.LineChartTypes.PERCENT_STACKED_MARKET => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked, true),
+                GlobalConstants.LineChartTypes.CLUSTERED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, true),
+                GlobalConstants.LineChartTypes.STACKED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked, true),
+                GlobalConstants.LineChartTypes.PERCENT_STACKED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked, true),
                 GlobalConstants.LineChartTypes.STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked),
                 GlobalConstants.LineChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked),
                 // Clusted

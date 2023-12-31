@@ -98,6 +98,15 @@ namespace OpenXMLOffice.Global
             return ConvertIntToColumnName(column) + row;
         }
 
+        public static int EmuToPixels(long emuValue)
+        {
+            return (int)Math.Round((double)emuValue / 914400 * GlobalConstants.DefaultDPI);
+        }
+
+        public static long PixelsToEmu(int pixels)
+        {
+            return (long)Math.Round((double)pixels / GlobalConstants.DefaultDPI * 914400);
+        }
         #endregion Public Methods
     }
 }

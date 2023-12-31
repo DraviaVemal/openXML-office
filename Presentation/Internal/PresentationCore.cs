@@ -173,7 +173,7 @@ namespace OpenXMLOffice.Presentation
             }
             if (presentationPart.Presentation.GetFirstChild<P.NotesSize>() == null)
             {
-                presentationPart.Presentation.AppendChild(new P.NotesSize { Cx = 6858000, Cy = 9144000 });
+                presentationPart.Presentation.AppendChild(new P.NotesSize { Cx = 6858000, Cy = 6858000 });
             }
             if (presentationPart.Presentation.GetFirstChild<P.DefaultTextStyle>() == null)
             {

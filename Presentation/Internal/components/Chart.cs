@@ -12,11 +12,11 @@ namespace OpenXMLOffice.Presentation
     {
         #region Public Fields
 
-        public int Height = 100;
-        public int Width = 100;
-        public int X = 0;
-        public int Y = 0;
-
+        private int Height = 6858000;
+        private int Width = 12192000;
+        private int X = 0;
+        private int Y = 0;
+        private P.GraphicFrame? GraphicFrame;
         #endregion Public Fields
 
         #region Private Fields
@@ -44,6 +44,34 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Constructors
 
         #region Public Methods
+
+        public void UpdatePosition(int X, int Y)
+        {
+            this.X = X;
+            this.Y = Y;
+            if (GraphicFrame != null)
+            {
+                GraphicFrame.Transform = new P.Transform
+                {
+                    Offset = new A.Offset { X = X, Y = Y },
+                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                };
+            }
+        }
+
+        public void UpdateSize(int Width, int Height)
+        {
+            this.Width = Width;
+            this.Height = Height;
+            if (GraphicFrame != null)
+            {
+                GraphicFrame.Transform = new P.Transform
+                {
+                    Offset = new A.Offset { X = X, Y = Y },
+                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                };
+            }
+        }
 
         public P.GraphicFrame CreateChart(GlobalConstants.AreaChartTypes ChartTypes, DataCell[][] DataRows, AreaChartSetting? chartSetting = null)
         {
@@ -143,25 +171,25 @@ namespace OpenXMLOffice.Presentation
                 NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
                 ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
             };
-            P.GraphicFrame GraphicFrame = new()
+            GraphicFrame = new()
             {
                 NonVisualGraphicFrameProperties = NonVisualProperties,
                 Transform = new P.Transform(
-                    new A.Offset
-                    {
-                        X = X,
-                        Y = Y
-                    },
-                    new A.Extents
-                    {
-                        Cx = Width,
-                        Cy = Height
-                    }),
+                   new A.Offset
+                   {
+                       X = X,
+                       Y = Y
+                   },
+                   new A.Extents
+                   {
+                       Cx = Width,
+                       Cy = Height
+                   }),
                 Graphic = new A.Graphic(
-                    new A.GraphicData(
-                        new C.ChartReference { Id = relationshipId }
-                    )
-                    { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" })
+                   new A.GraphicData(
+                       new C.ChartReference { Id = relationshipId }
+                   )
+                   { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" })
             };
             // Save All Changes
             GetChartPart().ChartSpace.Save();
