@@ -84,14 +84,18 @@ namespace OpenXMLOffice.Tests
                 ChartLegendOptions = new Global.ChartLegendOptions()
                 {
                     IsEnableLegend = false
-                }
+                },
             }));
-            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload(),
+            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.BarChartTypes.CLUSTERED, CreateDataPayload(),
             new Global.BarChartSetting()
             {
                 ChartLegendOptions = new Global.ChartLegendOptions()
                 {
                     legendPosition = Global.ChartLegendOptions.eLegendPosition.RIGHT
+                },
+                BarChartDataLabel = new Global.BarChartDataLabel()
+                {
+                    DataLabelPosition = Global.BarChartDataLabel.eDataLabelPosition.INSIDE_BASE
                 }
             }));
             shape3[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload(), new Global.LineChartSetting()

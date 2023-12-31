@@ -1,16 +1,5 @@
 namespace OpenXMLOffice.Global
 {
-    public class ChartSeriesSetting
-    {
-        #region Public Fields
-
-        public string? NumberFormat;
-        public string? FillColor;
-        public string? BorderColor;
-
-        #endregion Public Fields
-    }
-
     public class ChartLegendOptions
     {
         public enum eLegendPosition
@@ -56,7 +45,6 @@ namespace OpenXMLOffice.Global
 
         public string? Title;
         public ChartLegendOptions ChartLegendOptions = new();
-        public List<ChartSeriesSetting>? SeriesSettings;
 
         #endregion Public Fields
     }

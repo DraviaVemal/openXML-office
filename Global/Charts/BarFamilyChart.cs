@@ -7,7 +7,7 @@ namespace OpenXMLOffice.Global
     public class BarFamilyChart : ChartBase
     {
         #region Protected Methods
-
+        protected BarChartDataLabel BarChartDataLabel = new();
         protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.BarDirectionValues barDirectionValue, C.BarGroupingValues barGroupingValue)
         {
             C.PlotArea plotArea = new();
@@ -29,14 +29,6 @@ namespace OpenXMLOffice.Global
                     $"accent{(seriesIndex % 6) + 1}"
                 ));
             }
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false });
-            BarChart.Append(DataLabels);
             if (barGroupingValue == C.BarGroupingValues.Clustered)
             {
                 BarChart.Append(new C.GapWidth { Val = 219 });
@@ -64,6 +56,60 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
+        private C.DataLabels CreateDataLabel()
+        {
+            C.DataLabels DataLabels = new(
+                new C.ShowLegendKey { Val = false },
+                new C.ShowValue { Val = BarChartDataLabel.DataLabelPosition != BarChartDataLabel.eDataLabelPosition.NONE },
+                new C.ShowCategoryName { Val = false },
+                new C.ShowSeriesName { Val = false },
+                new C.ShowPercent { Val = false },
+                new C.ShowBubbleSize { Val = false },
+                new C.ShowLeaderLines() { Val = false });
+            if (BarChartDataLabel.DataLabelPosition != BarChartDataLabel.eDataLabelPosition.NONE)
+            {
+                DataLabels.InsertAt(new C.DataLabelPosition()
+                {
+                    Val = BarChartDataLabel.DataLabelPosition switch
+                    {
+                        BarChartDataLabel.eDataLabelPosition.CENTER => C.DataLabelPositionValues.Center,
+                        BarChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                        BarChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
+                        _ => C.DataLabelPositionValues.OutsideEnd
+                    }
+                }, 0);
+                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
+                A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
+                {
+                    FontSize = 1197,
+                    Bold = false,
+                    Italic = false,
+                    Underline = A.TextUnderlineValues.None,
+                    Strike = A.TextStrikeValues.NoStrike,
+                    Kerning = 1200,
+                    Baseline = 0
+                }), new A.EndParagraphRunProperties() { Language = "en-US" });
+                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                {
+                    Rotation = 0,
+                    UseParagraphSpacing = true,
+                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
+                    Vertical = A.TextVerticalValues.Horizontal,
+                    Wrap = A.TextWrappingValues.Square,
+                    LeftInset = 38100,
+                    TopInset = 19050,
+                    RightInset = 38100,
+                    BottomInset = 19050,
+                    Anchor = A.TextAnchoringTypeValues.Center,
+                    AnchorCenter = true
+                }, new A.ListStyle(),
+               Paragraph), 0);
+            }
+            return DataLabels;
+        }
+
         private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent)
         {
             C.BarChartSeries series = new(
@@ -75,6 +121,7 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }));
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
+            series.Append(CreateDataLabel());
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));

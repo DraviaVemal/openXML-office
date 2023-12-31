@@ -11,6 +11,7 @@ namespace OpenXMLOffice.Global
         {
             // Apply Properties
             ChartGridLinesOptions = chartSetting.ChartGridLinesOptions;
+            BarChartDataLabel = chartSetting.BarChartDataLabel;
             // Start Creating Objects
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = barChartType switch
