@@ -1,12 +1,12 @@
 # Status
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXMLOffice/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXMLOffice/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Downloads](https://img.shields.io/nuget/dt/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation)
 
 # OpenXMLOffice
 
 OpenXMLOffice is an advanced .NET library that leverages the power of OpenXML SDK 3.0 to streamline the creation and manipulation of Office documents, with a primary focus on Excel, Word, and PowerPoint files. Our mission is to enhance the document creation experience for developers by providing intuitive namespaces, classes, and utilities. The library is designed to offer maximum efficiency and ease of use, ensuring a seamless workflow. Please note that a minimum Microsoft Office support version of 2013 is required for optimal compatibility.
 
-## Features
+## Scope Details
 
 - **Easy Creation of Office Documents**: Create and manipulate Excel, Word, and PowerPoint files with ease.
 - **OpenXML SDK 3.0**: Built on the robust foundation of the OpenXML SDK.
@@ -24,14 +24,25 @@ Install-Package OpenXMLOffice
 dotnet add package OpenXMLOffice.Presentation
 ```
 
+## Package Details
+
+The official release NuGet packages for OpenXMLOffice on NuGet.org:
+
+| Package | Dev Status | Download | Prerelease |
+|---------|---|----------|------------|
+| OpenXMLOffice.Presentation | Active | [![NuGet](https://img.shields.io/nuget/v/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation) | [![NuGet](https://img.shields.io/nuget/vpre/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation) |
+| OpenXMLOffice.Excel | Active | [![NuGet](https://img.shields.io/nuget/v/OpenXMLOffice.Excel.svg)](https://www.nuget.org/packages/OpenXMLOffice.Excel) | [![NuGet](https://img.shields.io/nuget/vpre/OpenXMLOffice.Excel.svg)](https://www.nuget.org/packages/OpenXMLOffice.Excel)  |
+| OpenXMLOffice.Document | Not Active | [![NuGet](https://img.shields.io/nuget/v/OpenXMLOffice.Document.svg)](https://www.nuget.org/packages/OpenXMLOffice.Document) | [![NuGet](https://img.shields.io/nuget/vpre/OpenXMLOffice.Document.svg)](https://www.nuget.org/packages/OpenXMLOffice.Document) |
+
+
 ## Documentation [Link](https://draviavemal.github.io/OpenXMLOffice)
 
-All the documentation for this project is published on our GitHub Pages. You can access it by visiting the [link](https://draviavemal.github.io/OpenXMLOffice). Project documentation is automatically generated using Doxygen
+All the documentation for this project is published on our GitHub Pages. You can access it by visiting the [link](https://draviavemal.github.io/OpenXMLOffice). Project documentation is automatically generated using Doxygen.
+Any help in this region is much appriciated.
 
 ## Version History
 
-- **v0.0.1**: Initial release with basic setup and dependencies.
-- **v0.1.0**: Cover Spreadsheet data loading, formatting and saving.
+- **v0.1.0**: Cover Spreadsheet data loading and saving.
 - **v0.2.0**: Power Point Exisitng File Shape Based Manipulation of Tables, Text, Charts (Primary)
 - Follow project roadmap to get upto date info [Link](https://github.com/users/DraviaVemal/projects/2)
 - **v1.0.0**: Planned release with three separate DLLs for Excel, Presentation, and Word, covering all major functionalities.

@@ -38,16 +38,16 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void AddAllChartTypesToSlide()
         {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new AreaChartSetting());
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new AreaChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting()
             {
                 AreaChartTypes = AreaChartTypes.STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new AreaChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting()
             {
                 AreaChartTypes = AreaChartTypes.PERCENT_STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new BarChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
             {
                 BarChartSeriesSettings = new List<BarChartSeriesSetting>(){
                     new(),
@@ -58,16 +58,16 @@ namespace OpenXMLOffice.Tests
                     }
                 }
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new BarChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
             {
                 Title = "Change Data Layout",
                 BarChartTypes = BarChartTypes.STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new BarChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
             {
                 BarChartTypes = BarChartTypes.PERCENT_STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new ColumnChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ColumnChartSetting()
             {
                 Title = "Color Change Chart",
                 ChartLegendOptions = new ChartLegendOptions()
@@ -83,42 +83,60 @@ namespace OpenXMLOffice.Tests
                     }
                 }
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new ColumnChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ColumnChartSetting()
             {
                 ColumnChartTypes = ColumnChartTypes.STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new ColumnChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ColumnChartSetting()
             {
                 ColumnChartTypes = ColumnChartTypes.PERCENT_STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new LineChartSetting());
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new LineChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
             {
                 LineChartTypes = LineChartTypes.STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new LineChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
             {
                 LineChartTypes = LineChartTypes.PERCENT_STACKED
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new LineChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
             {
                 LineChartTypes = LineChartTypes.CLUSTERED_MARKER
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new LineChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
             {
                 LineChartTypes = LineChartTypes.STACKED_MARKER
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new LineChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
             {
                 LineChartTypes = LineChartTypes.PERCENT_STACKED_MARKER
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new PieChartSetting());
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataPayload(), new PieChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new PieChartSetting());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new PieChartSetting()
             {
                 PieChartTypes = PieChartTypes.DOUGHNUT
             });
             powerPoint.Save();
             Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void AddTable()
+        {
+            Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+            slide.AddTable(CreateTableRowPayload(5), new TableSetting()
+            {
+                Name = "New Table",
+                TableColumnSettings = new(){
+                    new(){
+                        Width=100
+                    },
+                    new(){
+                        Width=100
+                    }
+                }
+            });
         }
 
         [TestMethod]
@@ -164,7 +182,7 @@ namespace OpenXMLOffice.Tests
             List<Shape> shape4 = Slide.FindShapeByText("Slide_1_Shape_4").ToList();
             List<Shape> shape5 = Slide.FindShapeByText("Slide_1_Shape_5").ToList();
             List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
-            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataPayload(),
+            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(),
             new ColumnChartSetting()
             {
                 Title = "Title",
@@ -173,7 +191,7 @@ namespace OpenXMLOffice.Tests
                     IsEnableLegend = false
                 },
             }));
-            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataPayload(),
+            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(),
             new BarChartSetting()
             {
                 ChartLegendOptions = new ChartLegendOptions()
@@ -181,7 +199,7 @@ namespace OpenXMLOffice.Tests
                     legendPosition = ChartLegendOptions.eLegendPosition.RIGHT
                 }
             }));
-            shape3[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataPayload(), new LineChartSetting()
+            shape3[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new LineChartSetting()
             {
                 ChartAxesOptions = new ChartAxesOptions()
                 {
@@ -195,9 +213,9 @@ namespace OpenXMLOffice.Tests
                     IsMinorValueLinesEnabled = true,
                 }
             }));
-            shape4[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataPayload(), new LineChartSetting()));
-            shape5[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataPayload(), new AreaChartSetting()));
-            shape6[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataPayload(), new PieChartSetting()));
+            shape4[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new LineChartSetting()));
+            shape5[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new AreaChartSetting()));
+            shape6[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new PieChartSetting()));
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }
@@ -223,7 +241,28 @@ namespace OpenXMLOffice.Tests
 
         #region Private Methods
 
-        private DataCell[][] CreateDataPayload()
+        static TableRow[] CreateTableRowPayload(int rowCount)
+        {
+            TableRow[] data = new TableRow[rowCount];
+            for (int i = 0; i < rowCount; i++)
+            {
+                TableRow row = new()
+                {
+                    Background = "EDEDED",
+                    TextColor = "333333",
+                    Height = 370840,
+                    TableCells = new List<TableCell>
+                {
+                    new() { Value = $"Row {i + 1}, Cell 1" },
+                    new() { Value = $"Row {i + 1}, Cell 2" },
+                }
+                };
+                data[i] = row;
+            }
+            return data;
+        }
+
+        private DataCell[][] CreateDataCellPayload()
         {
             Random random = new();
             DataCell[][] data = new DataCell[5][];

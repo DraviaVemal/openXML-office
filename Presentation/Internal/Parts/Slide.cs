@@ -38,6 +38,14 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
+        public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
+        {
+            Table Table = new();
+            P.GraphicFrame GraphicFrame = Table.CreateTableGraphicFrame(DataCells, TableSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Table;
+        }
+
         public Chart AddChart(Excel.DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
         {
             Chart Chart = new(this);

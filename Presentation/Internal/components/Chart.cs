@@ -74,66 +74,72 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, AreaChartSetting? chartSetting = null)
+        public Spreadsheet GetChartWorkBook()
+        {
+            Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
+            return new(stream, SpreadsheetDocumentType.Workbook);
+        }
+
+        public P.GraphicFrame CreateChart(DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
             AreaChart AreaChart = new();
-            GetChartPart().ChartSpace = AreaChart.GetChartSpace(ChartData, chartSetting ?? new());
+            GetChartPart().ChartSpace = AreaChart.GetChartSpace(ChartData, AreaChartSetting);
             GetChartStylePart().ChartStyle = AreaChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = AreaChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, BarChartSetting? chartSetting = null)
+        public P.GraphicFrame CreateChart(DataCell[][] DataRows, BarChartSetting BarChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
             BarChart BarChart = new();
-            GetChartPart().ChartSpace = BarChart.GetChartSpace(ChartData, chartSetting ?? new());
+            GetChartPart().ChartSpace = BarChart.GetChartSpace(ChartData, BarChartSetting);
             GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, ColumnChartSetting? chartSetting = null)
+        public P.GraphicFrame CreateChart(DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
             ColumnChart ColumnChart = new();
-            GetChartPart().ChartSpace = ColumnChart.GetChartSpace(ChartData, chartSetting ?? new());
+            GetChartPart().ChartSpace = ColumnChart.GetChartSpace(ChartData, ColumnChartSetting);
             GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, LineChartSetting? chartSetting = null)
+        public P.GraphicFrame CreateChart(DataCell[][] DataRows, LineChartSetting LineChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
             LineChart LineChart = new();
-            GetChartPart().ChartSpace = LineChart.GetChartSpace(ChartData, chartSetting ?? new());
+            GetChartPart().ChartSpace = LineChart.GetChartSpace(ChartData, LineChartSetting);
             GetChartStylePart().ChartStyle = LineChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = LineChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, PieChartSetting? chartSetting = null)
+        public P.GraphicFrame CreateChart(DataCell[][] DataRows, PieChartSetting PieChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
             PieChart PieChart = new();
-            GetChartPart().ChartSpace = PieChart.GetChartSpace(ChartData, chartSetting ?? new());
+            GetChartPart().ChartSpace = PieChart.GetChartSpace(ChartData, PieChartSetting);
             GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = PieChart.GetColorStyle();
             return GetChartGraphicFrame();
