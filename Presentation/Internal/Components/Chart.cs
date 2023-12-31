@@ -29,22 +29,67 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Constructors
 
-        public Chart(Slide Slide)
+        public Chart(Slide Slide, DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
         {
-            CurrentSlide = Slide;
             OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
+            CurrentSlide = Slide;
             InitialiseChartParts();
+            CreateChart(DataRows, AreaChartSetting);
         }
 
-        public Chart(Slide Slide, ChartPart ChartPart)
+        public Chart(Slide Slide, DataCell[][] DataRows, BarChartSetting BarChartSetting)
         {
-            OpenXMLChartPart = ChartPart;
+            OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
             CurrentSlide = Slide;
+            InitialiseChartParts();
+            CreateChart(DataRows, BarChartSetting);
+        }
+
+        public Chart(Slide Slide, DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
+        {
+            OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
+            CurrentSlide = Slide;
+            InitialiseChartParts();
+            CreateChart(DataRows, ColumnChartSetting);
+        }
+
+        public Chart(Slide Slide, DataCell[][] DataRows, LineChartSetting LineChartSetting)
+        {
+            OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
+            CurrentSlide = Slide;
+            InitialiseChartParts();
+            CreateChart(DataRows, LineChartSetting);
+        }
+
+        public Chart(Slide Slide, DataCell[][] DataRows, PieChartSetting PieChartSetting)
+        {
+            OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
+            CurrentSlide = Slide;
+            InitialiseChartParts();
+            CreateChart(DataRows, PieChartSetting);
         }
 
         #endregion Public Constructors
 
         #region Public Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>X,Y</returns>
+        public (int, int) GetPosition()
+        {
+            return (X, Y);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Width,Height</returns>
+        public (int, int) GetSize()
+        {
+            return (Width, Height);
+        }
 
         public void UpdatePosition(int X, int Y)
         {
@@ -80,7 +125,7 @@ namespace OpenXMLOffice.Presentation
             return new(stream, SpreadsheetDocumentType.Workbook);
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
+        private P.GraphicFrame CreateChart(DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -93,7 +138,7 @@ namespace OpenXMLOffice.Presentation
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, BarChartSetting BarChartSetting)
+        private P.GraphicFrame CreateChart(DataCell[][] DataRows, BarChartSetting BarChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -106,7 +151,7 @@ namespace OpenXMLOffice.Presentation
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
+        private P.GraphicFrame CreateChart(DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -119,7 +164,7 @@ namespace OpenXMLOffice.Presentation
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, LineChartSetting LineChartSetting)
+        private P.GraphicFrame CreateChart(DataCell[][] DataRows, LineChartSetting LineChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -132,7 +177,7 @@ namespace OpenXMLOffice.Presentation
             return GetChartGraphicFrame();
         }
 
-        public P.GraphicFrame CreateChart(DataCell[][] DataRows, PieChartSetting PieChartSetting)
+        private P.GraphicFrame CreateChart(DataCell[][] DataRows, PieChartSetting PieChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -168,7 +213,7 @@ namespace OpenXMLOffice.Presentation
             return OpenXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
         }
 
-        private P.GraphicFrame GetChartGraphicFrame()
+        public P.GraphicFrame GetChartGraphicFrame()
         {
             // Load Chart Part To Graphics Frame For Export
             string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());

@@ -38,42 +38,50 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
+        public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
+        {
+            Table Table = new(DataCells, TableSetting);
+            P.GraphicFrame GraphicFrame = Table.GetTableGraphicFrame();
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Table;
+        }
+
         public Chart AddChart(Excel.DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
         {
-            Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, AreaChartSetting);
+            Chart Chart = new(this, DataCells, AreaChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.GetChartGraphicFrame();
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
         public Chart AddChart(Excel.DataCell[][] DataCells, BarChartSetting BarChartSetting)
         {
-            Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, BarChartSetting);
+            Chart Chart = new(this, DataCells, BarChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.GetChartGraphicFrame();
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
         public Chart AddChart(Excel.DataCell[][] DataCells, ColumnChartSetting ColumnChartSetting)
         {
-            Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, ColumnChartSetting);
+            Chart Chart = new(this, DataCells, ColumnChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.GetChartGraphicFrame();
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
         public Chart AddChart(Excel.DataCell[][] DataCells, LineChartSetting LineChartSetting)
         {
-            Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, LineChartSetting);
+            Chart Chart = new(this, DataCells, LineChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.GetChartGraphicFrame();
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
         public Chart AddChart(Excel.DataCell[][] DataCells, PieChartSetting PieChartSetting)
         {
-            Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, PieChartSetting);
+            Chart Chart = new(this, DataCells, PieChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.GetChartGraphicFrame();
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }

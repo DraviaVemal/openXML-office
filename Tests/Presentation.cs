@@ -128,14 +128,8 @@ namespace OpenXMLOffice.Tests
             slide.AddTable(CreateTableRowPayload(5), new TableSetting()
             {
                 Name = "New Table",
-                TableColumnSettings = new(){
-                    new(){
-                        Width=100
-                    },
-                    new(){
-                        Width=100
-                    }
-                }
+                WidthType = TableSetting.eWidthType.AUTO,
+                TableColumnwidth = new() { 100, 100 }
             });
             powerPoint.Save();
             Assert.IsTrue(true);
@@ -184,7 +178,7 @@ namespace OpenXMLOffice.Tests
             List<Shape> shape4 = Slide.FindShapeByText("Slide_1_Shape_4").ToList();
             List<Shape> shape5 = Slide.FindShapeByText("Slide_1_Shape_5").ToList();
             List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
-            shape1[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(),
+            shape1[0].ReplaceShape(new Chart(Slide, CreateDataCellPayload(),
             new ColumnChartSetting()
             {
                 Title = "Title",
@@ -192,16 +186,16 @@ namespace OpenXMLOffice.Tests
                 {
                     IsEnableLegend = false
                 },
-            }));
-            shape2[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(),
+            }).GetChartGraphicFrame());
+            shape2[0].ReplaceShape(new Chart(Slide, CreateDataCellPayload(),
             new BarChartSetting()
             {
                 ChartLegendOptions = new ChartLegendOptions()
                 {
                     legendPosition = ChartLegendOptions.eLegendPosition.RIGHT
                 }
-            }));
-            shape3[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new LineChartSetting()
+            }).GetChartGraphicFrame());
+            shape3[0].ReplaceShape(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()
             {
                 ChartAxesOptions = new ChartAxesOptions()
                 {
@@ -214,10 +208,10 @@ namespace OpenXMLOffice.Tests
                     IsMinorCategoryLinesEnabled = true,
                     IsMinorValueLinesEnabled = true,
                 }
-            }));
-            shape4[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new LineChartSetting()));
-            shape5[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new AreaChartSetting()));
-            shape6[0].ReplaceShape(new Chart(Slide).CreateChart(CreateDataCellPayload(), new PieChartSetting()));
+            }).GetChartGraphicFrame());
+            shape4[0].ReplaceShape(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()).GetChartGraphicFrame());
+            shape5[0].ReplaceShape(new Chart(Slide, CreateDataCellPayload(), new AreaChartSetting()).GetChartGraphicFrame());
+            shape6[0].ReplaceShape(new Chart(Slide, CreateDataCellPayload(), new PieChartSetting()).GetChartGraphicFrame());
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }
@@ -243,7 +237,7 @@ namespace OpenXMLOffice.Tests
 
         #region Private Methods
 
-        private static TableRow[] CreateTableRowPayload(int rowCount)
+        private TableRow[] CreateTableRowPayload(int rowCount)
         {
             TableRow[] data = new TableRow[rowCount];
             for (int i = 0; i < rowCount; i++)
