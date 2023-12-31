@@ -6,6 +6,7 @@ namespace OpenXMLOffice.Global
     public class TextBox
     {
         #region Public Fields
+
         public int Height = 100;
         public int Width = 100;
         public int X = 0;
@@ -15,6 +16,7 @@ namespace OpenXMLOffice.Global
         #endregion Public Fields
 
         #region Public Methods
+
         public void UpdatePosition(int X, int Y)
         {
             this.X = X;

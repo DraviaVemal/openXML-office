@@ -1,6 +1,5 @@
 namespace OpenXMLOffice.Presentation
 {
-
     public class TableCell
     {
         public bool LeftBorder = false;

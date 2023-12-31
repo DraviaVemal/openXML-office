@@ -1,6 +1,5 @@
 namespace OpenXMLOffice.Global
 {
-
     public class TextBoxSetting
     {
         public string FontFamily = "Calibri (Body)";

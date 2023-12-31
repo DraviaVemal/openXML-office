@@ -243,7 +243,7 @@ namespace OpenXMLOffice.Tests
 
         #region Private Methods
 
-        static TableRow[] CreateTableRowPayload(int rowCount)
+        private static TableRow[] CreateTableRowPayload(int rowCount)
         {
             TableRow[] data = new TableRow[rowCount];
             for (int i = 0; i < rowCount; i++)

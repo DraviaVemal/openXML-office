@@ -1,6 +1,6 @@
-using P = DocumentFormat.OpenXml.Presentation;
-using A = DocumentFormat.OpenXml.Drawing;
 using OpenXMLOffice.Global;
+using A = DocumentFormat.OpenXml.Drawing;
+using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 
@@ -178,5 +178,4 @@ namespace OpenXMLOffice.Presentation
             return GraphicFrame;
         }
     }
-
 }
