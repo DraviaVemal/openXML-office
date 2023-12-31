@@ -47,7 +47,7 @@ namespace OpenXMLOffice.Presentation
             OpenXMLShape.Remove();
         }
 
-        public void ReplaceShape(P.GraphicFrame GraphicFrame)
+        public void ReplaceGraphicFrame(P.GraphicFrame GraphicFrame)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
             if (OpenXMLShape.ShapeProperties?.Transform2D != null)

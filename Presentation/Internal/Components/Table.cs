@@ -140,7 +140,7 @@ namespace OpenXMLOffice.Presentation
             }
             else
             {
-                Paragraph.Append(new TextBox().CreateTextRun(new TextBoxSetting()
+                Paragraph.Append(new TextBox(new TextBoxSetting()
                 {
                     Text = Cell.Value,
                     TextBackground = Cell.TextBackground,
@@ -150,7 +150,7 @@ namespace OpenXMLOffice.Presentation
                     IsBold = Cell.IsBold,
                     IsItalic = Cell.IsItalic,
                     IsUnderline = Cell.IsUnderline,
-                }));
+                }).GetTextBoxRun());
             }
             TableCell.Append(new A.TextBody(
                 new A.BodyProperties(),

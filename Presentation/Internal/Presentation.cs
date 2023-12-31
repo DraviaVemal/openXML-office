@@ -7,23 +7,23 @@ namespace OpenXMLOffice.Presentation
     internal class Presentation : PresentationCore
     {
         #region Public Constructors
-        public Presentation(string filePath, PresentationProperties? presentationProperties = null)
+        internal Presentation(string filePath, PresentationProperties? presentationProperties = null)
         : base(filePath, presentationProperties) { }
 
-        public Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
+        internal Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
         : base(filePath, isEditable, presentationProperties) { }
 
-        public Presentation(Stream stream, PresentationProperties? presentationProperties = null)
+        internal Presentation(Stream stream, PresentationProperties? presentationProperties = null)
         : base(stream, presentationProperties) { }
 
-        public Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
+        internal Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
         : base(stream, isEditable, presentationProperties) { }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
+        internal Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
         {
             SlidePart slidePart = GetPresentationPart().AddNewPart<SlidePart>(GetNextPresentationRelationId());
             Slide slide = new();
@@ -35,7 +35,7 @@ namespace OpenXMLOffice.Presentation
             return slide;
         }
 
-        public Slide GetSlideByIndex(int SlideIndex)
+        internal Slide GetSlideByIndex(int SlideIndex)
         {
             if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
             {
@@ -49,7 +49,7 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        public void MoveSlideByIndex(int SourceIndex, int TargetIndex)
+        internal void MoveSlideByIndex(int SourceIndex, int TargetIndex)
         {
             if (SourceIndex >= 0 && GetSlideIdList().Count() > SourceIndex &&
             TargetIndex >= 0 && GetSlideIdList().Count() > TargetIndex)
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        public void RemoveSlideByIndex(int SlideIndex)
+        internal void RemoveSlideByIndex(int SlideIndex)
         {
             if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
             {
@@ -82,7 +82,12 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        public void Save()
+        internal int GetSlideCount()
+        {
+            return GetSlideIdList().Count();
+        }
+
+        internal void Save()
         {
             if (presentationInfo.FilePath == null)
             {
@@ -95,7 +100,7 @@ namespace OpenXMLOffice.Presentation
             presentationDocument.Dispose();
         }
 
-        public void SaveAs(string filePath)
+        internal void SaveAs(string filePath)
         {
             presentationDocument.Clone(filePath).Dispose();
             presentationDocument.Dispose();

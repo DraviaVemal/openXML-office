@@ -7,10 +7,11 @@ namespace OpenXMLOffice.Global
     {
         #region Public Fields
 
-        public int Height = 100;
-        public int Width = 100;
-        public int X = 0;
-        public int Y = 0;
+        private int Height = 100;
+        private int Width = 100;
+        private int X = 0;
+        private int Y = 0;
+        private readonly TextBoxSetting TextBoxSetting;
 
         #endregion Public Fields
 
@@ -20,48 +21,21 @@ namespace OpenXMLOffice.Global
 
         #endregion Private Fields
 
-        #region Public Methods
-
-        public P.Shape CreateTextBox(uint Id, TextBoxSetting TextBoxSetting)
+        public TextBox(TextBoxSetting TextBoxSetting)
         {
-            OpenXMLShape = new()
-            {
-                NonVisualShapeProperties = new P.NonVisualShapeProperties(
-                new P.NonVisualDrawingProperties()
-                {
-                    Id = Id,
-                    Name = "Text Box"
-                },
-                new P.NonVisualShapeDrawingProperties(),
-                new P.ApplicationNonVisualDrawingProperties()),
-                ShapeProperties = new P.ShapeProperties(
-                new A.Transform2D(
-                    new A.Offset { X = X, Y = Y },
-                    new A.Extents { Cx = Width, Cy = Height }),
-                new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
-                new A.SolidFill(new A.RgbColorModelHex { Val = TextBoxSetting.ShapeBackground })),
-                TextBody = new P.TextBody(
-                        new A.BodyProperties(),
-                        new A.ListStyle(),
-                        new A.Paragraph(CreateTextRun(TextBoxSetting)))
-            };
-            return OpenXMLShape;
+            this.TextBoxSetting = TextBoxSetting;
         }
 
-        public A.Run CreateTextRun(TextBoxSetting TextBoxSetting)
+        #region Public Methods
+
+        public P.Shape GetTextBoxShape()
         {
-            return new(new A.RunProperties(new A.SolidFill(new A.RgbColorModelHex { Val = TextBoxSetting.TextColor }),
-                        new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground ?? "FFFFFF" }),
-                        new A.LatinFont { Typeface = TextBoxSetting.FontFamily },
-                        new A.EastAsianFont { Typeface = TextBoxSetting.FontFamily },
-                        new A.ComplexScriptFont { Typeface = TextBoxSetting.FontFamily })
-            {
-                FontSize = TextBoxSetting.FontSize * 100,
-                Bold = TextBoxSetting.IsBold,
-                Italic = TextBoxSetting.IsItalic,
-                Underline = TextBoxSetting.IsUnderline ? A.TextUnderlineValues.Single : A.TextUnderlineValues.None,
-                Dirty = false
-            }, new A.Text(TextBoxSetting.Text));
+            return CreateTextBox();
+        }
+
+        public A.Run GetTextBoxRun()
+        {
+            return CreateTextRun();
         }
 
         public void UpdatePosition(int X, int Y)
@@ -93,5 +67,51 @@ namespace OpenXMLOffice.Global
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private P.Shape CreateTextBox()
+        {
+            OpenXMLShape = new()
+            {
+                NonVisualShapeProperties = new P.NonVisualShapeProperties(
+                new P.NonVisualDrawingProperties()
+                {
+                    Id = 10,
+                    Name = "Text Box"
+                },
+                new P.NonVisualShapeDrawingProperties(),
+                new P.ApplicationNonVisualDrawingProperties()),
+                ShapeProperties = new P.ShapeProperties(
+                new A.Transform2D(
+                    new A.Offset { X = X, Y = Y },
+                    new A.Extents { Cx = Width, Cy = Height }),
+                new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
+                new A.SolidFill(new A.RgbColorModelHex { Val = TextBoxSetting.ShapeBackground })),
+                TextBody = new P.TextBody(
+                        new A.BodyProperties(),
+                        new A.ListStyle(),
+                        new A.Paragraph(CreateTextRun()))
+            };
+            return OpenXMLShape;
+        }
+
+        private A.Run CreateTextRun()
+        {
+            return new(new A.RunProperties(new A.SolidFill(new A.RgbColorModelHex { Val = TextBoxSetting.TextColor }),
+                        new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground ?? "FFFFFF" }),
+                        new A.LatinFont { Typeface = TextBoxSetting.FontFamily },
+                        new A.EastAsianFont { Typeface = TextBoxSetting.FontFamily },
+                        new A.ComplexScriptFont { Typeface = TextBoxSetting.FontFamily })
+            {
+                FontSize = TextBoxSetting.FontSize * 100,
+                Bold = TextBoxSetting.IsBold,
+                Italic = TextBoxSetting.IsItalic,
+                Underline = TextBoxSetting.IsUnderline ? A.TextUnderlineValues.Single : A.TextUnderlineValues.None,
+                Dirty = false
+            }, new A.Text(TextBoxSetting.Text));
+        }
+
+        #endregion Private Methods
     }
 }

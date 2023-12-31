@@ -87,6 +87,11 @@ namespace OpenXMLOffice.Presentation
             presentation.RemoveSlideByIndex(SlideIndex);
         }
 
+        public int GetSlideCount()
+        {
+            return presentation.GetSlideCount();
+        }
+
         public void Save()
         {
             presentation.Save();
