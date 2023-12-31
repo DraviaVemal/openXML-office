@@ -7,7 +7,7 @@ namespace OpenXMLOffice.Global
     public class PieFamilyChart : ChartBase
     {
         #region Protected Methods
-        protected C.PlotArea CreateDoughnutChartPlotArea(ChartData[][] DataCols, PieChartSetting chartSetting)
+        protected C.PlotArea CreateDoughnutChartPlotArea(ChartData[][] DataCols, PieChartSetting PieChartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
@@ -17,13 +17,17 @@ namespace OpenXMLOffice.Global
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
                 DoughnutChart.Append(CreateChartSeries(seriesIndex,
-                    chartSetting,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
                     DataCols[0].Skip(1).ToArray(),
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray()
+                    col.Skip(1).ToArray(),
+                    GetSolidFill(PieChartSetting.PieChartSeriesSettings
+                            .Where(item => item.FillColor != null)
+                            .Select(item => item.FillColor!)
+                            .ToList(), seriesIndex),
+                    GetDataLabels(PieChartSetting, seriesIndex)
                 ));
                 seriesIndex++;
             }
@@ -47,7 +51,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        protected C.PlotArea CreatePieChartPlotArea(ChartData[][] DataCols, PieChartSetting chartSetting)
+        protected C.PlotArea CreatePieChartPlotArea(ChartData[][] DataCols, PieChartSetting PieChartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
@@ -57,13 +61,18 @@ namespace OpenXMLOffice.Global
             foreach (ChartData[] col in DataCols.Skip(1).Take(1).ToArray())
             {
                 PieChart.Append(CreateChartSeries(seriesIndex,
-                    chartSetting,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
                     DataCols[0].Skip(1).ToArray(),
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray()));
+                    col.Skip(1).ToArray(),
+                    GetSolidFill(PieChartSetting.PieChartSeriesSettings
+                            .Where(item => item.FillColor != null)
+                            .Select(item => item.FillColor!)
+                            .ToList(), seriesIndex),
+                    GetDataLabels(PieChartSetting, seriesIndex),
+                    true));
                 seriesIndex++;
             }
             C.DataLabels DataLabels = new(
@@ -88,6 +97,15 @@ namespace OpenXMLOffice.Global
         #endregion Protected Methods
 
         #region Private Methods
+        private C.DataLabels GetDataLabels(PieChartSetting PieChartSetting, int index)
+        {
+            if (index < PieChartSetting.PieChartSeriesSettings.Count)
+            {
+                return CreateDataLabel(PieChartSetting.PieChartSeriesSettings?[index]?.PieChartDataLabel ?? new PieChartDataLabel());
+            }
+            return CreateDataLabel(new PieChartDataLabel());
+        }
+
         private C.DataLabels CreateDataLabel(PieChartDataLabel PieChartDataLabel)
         {
             C.DataLabels DataLabels = new(
@@ -139,7 +157,10 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
-        private C.PieChartSeries CreateChartSeries(int seriesIndex, PieChartSetting PieChartSetting, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, bool IsDoughnut = false)
+        private C.PieChartSeries CreateChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
+                                                    string categoryFormula, ChartData[] categoryCells, string valueFormula,
+                                                    ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels,
+                                                    bool IsDoughnut = false)
         {
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -159,7 +180,7 @@ namespace OpenXMLOffice.Global
                     ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = A.SchemeColorValues.Light1 })) { Width = 19050 });
                 }
                 ShapeProperties.Append(new A.EffectList());
-                series.Append(CreateDataLabel(PieChartSetting.SeriesSettings?[seriesIndex]?.PieChartDataLabel ?? new PieChartDataLabel()));
+                // series.Append(DataLabels);
                 DataPoint.Append(ShapeProperties);
                 series.Append(DataPoint);
             }

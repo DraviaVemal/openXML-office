@@ -7,18 +7,12 @@ namespace OpenXMLOffice.Global
     {
         #region Public Methods
 
-        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, GlobalConstants.AreaChartTypes AreaChartType, AreaChartSetting chartSetting)
+        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, AreaChartSetting AreaChartSetting)
         {
             // Apply Properties
-            ChartGridLinesOptions = chartSetting.ChartGridLinesOptions;
-            C.Chart Chart = CreateChart(chartSetting);
-            Chart.PlotArea = AreaChartType switch
-            {
-                GlobalConstants.AreaChartTypes.STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked, chartSetting),
-                GlobalConstants.AreaChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked, chartSetting),
-                // Clusted
-                _ => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, chartSetting),
-            };
+            ChartGridLinesOptions = AreaChartSetting.ChartGridLinesOptions;
+            C.Chart Chart = CreateChart(AreaChartSetting);
+            Chart.PlotArea = CreateChartPlotArea(DataCols, AreaChartSetting);
             GetChartSpace().Append(Chart);
             return GetChartSpace();
         }

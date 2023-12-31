@@ -7,25 +7,37 @@ namespace OpenXMLOffice.Global
     public class AreaFamilyChart : ChartBase
     {
         #region Protected Methods
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.GroupingValues groupingValue, AreaChartSetting chartSetting)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, AreaChartSetting AreaChartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
             C.AreaChart AreaChart = new(
-                new C.Grouping { Val = groupingValue },
+                new C.Grouping
+                {
+                    Val = AreaChartSetting.AreaChartTypes switch
+                    {
+                        AreaChartTypes.STACKED => C.GroupingValues.Stacked,
+                        AreaChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
+                        // Clusted
+                        _ => C.GroupingValues.Standard,
+                    }
+                },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
                 AreaChart.Append(CreateAreaChartSeries(seriesIndex,
-                    chartSetting,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
                     DataCols[0].Skip(1).ToArray(),
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
                     col.Skip(1).ToArray(),
-                    $"accent{(seriesIndex % 6) + 1}"
+                    GetSolidFill(AreaChartSetting.AreaChartSeriesSettings
+                            .Where(item => item.FillColor != null)
+                            .Select(item => item.FillColor!)
+                            .ToList(), seriesIndex),
+                    GetDataLabels(AreaChartSetting, seriesIndex)
                 ));
                 seriesIndex++;
             }
@@ -45,6 +57,16 @@ namespace OpenXMLOffice.Global
         #endregion Protected Methods
 
         #region Private Methods
+
+        private C.DataLabels GetDataLabels(AreaChartSetting AreaChartSetting, int index)
+        {
+            if (index < AreaChartSetting.AreaChartSeriesSettings.Count)
+            {
+                return CreateDataLabel(AreaChartSetting.AreaChartSeriesSettings?[index]?.AreaChartDataLabel ?? new AreaChartDataLabel());
+            }
+            return CreateDataLabel(new AreaChartDataLabel());
+        }
+
         private C.DataLabels CreateDataLabel(AreaChartDataLabel AreaChartDataLabel)
         {
             C.DataLabels DataLabels = new(
@@ -96,18 +118,19 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
-        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, AreaChartSetting AreaChartSetting, string seriesTextFormula,
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula,
                                                         ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
-                                                        string valueFormula, ChartData[] valueCells, string accent)
+                                                        string valueFormula, ChartData[] valueCells, A.SolidFill SolidFill,
+                                                        C.DataLabels DataLabels)
         {
             C.AreaChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
             C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }), new A.Outline(new A.NoFill())));
+            ShapeProperties.Append(new A.Outline(SolidFill, new A.Outline(new A.NoFill())));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(CreateDataLabel(AreaChartSetting.SeriesSettings?[seriesIndex]?.AreaChartDataLabel ?? new AreaChartDataLabel()));
+            series.Append(DataLabels);
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));

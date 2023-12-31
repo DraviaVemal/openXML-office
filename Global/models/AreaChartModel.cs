@@ -1,5 +1,12 @@
 namespace OpenXMLOffice.Global
 {
+    public enum AreaChartTypes
+    {
+        CLUSTERED,
+        STACKED,
+        PERCENT_STACKED,
+        // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
+    }
     public class AreaChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
@@ -20,12 +27,13 @@ namespace OpenXMLOffice.Global
 
         public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
     }
-    
+
     public class AreaChartSetting : ChartSetting
     {
+        public AreaChartTypes AreaChartTypes = AreaChartTypes.CLUSTERED;
         public ChartAxisOptions ChartAxisOptions = new();
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartGridLinesOptions ChartGridLinesOptions = new();
-        public List<AreaChartSeriesSetting>? SeriesSettings;
+        public List<AreaChartSeriesSetting> AreaChartSeriesSettings = new();
     }
 }

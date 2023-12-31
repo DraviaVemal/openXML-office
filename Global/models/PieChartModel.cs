@@ -1,5 +1,12 @@
 namespace OpenXMLOffice.Global
 {
+    public enum PieChartTypes
+    {
+        PIE,
+
+        // PIE_3D, PIE_PIE, PIE_BAR,
+        DOUGHNUT
+    }
     public class PieChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
@@ -23,8 +30,8 @@ namespace OpenXMLOffice.Global
 
     public class PieChartSetting : ChartSetting
     {
-
+        public PieChartTypes PieChartTypes = PieChartTypes.PIE;
         public PieChartDataLabel PieChartDataLabel = new();
-        public List<PieChartSeriesSetting>? SeriesSettings;
+        public List<PieChartSeriesSetting> PieChartSeriesSettings = new();
     }
 }

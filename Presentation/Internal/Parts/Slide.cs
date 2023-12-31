@@ -38,42 +38,42 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
-        public Chart AddChart(GlobalConstants.AreaChartTypes AreaChartTypes, Excel.DataCell[][] DataCells, AreaChartSetting? AreaChartSetting = null)
+        public Chart AddChart(Excel.DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
         {
             Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(AreaChartTypes, DataCells, AreaChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, AreaChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
-        public Chart AddChart(GlobalConstants.BarChartTypes BarChartTypes, Excel.DataCell[][] DataCells, BarChartSetting? BarChartSetting = null)
+        public Chart AddChart(Excel.DataCell[][] DataCells, BarChartSetting BarChartSetting)
         {
             Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(BarChartTypes, DataCells, BarChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, BarChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
-        public Chart AddChart(GlobalConstants.ColumnChartTypes ColumnChartTypes, Excel.DataCell[][] DataCells, ColumnChartSetting? ColumnChartSetting = null)
+        public Chart AddChart(Excel.DataCell[][] DataCells, ColumnChartSetting ColumnChartSetting)
         {
             Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(ColumnChartTypes, DataCells, ColumnChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, ColumnChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
-        public Chart AddChart(GlobalConstants.LineChartTypes LineChartTypes, Excel.DataCell[][] DataCells, LineChartSetting? LineChartSetting = null)
+        public Chart AddChart(Excel.DataCell[][] DataCells, LineChartSetting LineChartSetting)
         {
             Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(LineChartTypes, DataCells, LineChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, LineChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }
 
-        public Chart AddChart(GlobalConstants.PieChartTypes PieChartTypes, Excel.DataCell[][] DataCells, PieChartSetting? PieChartSetting = null)
+        public Chart AddChart(Excel.DataCell[][] DataCells, PieChartSetting PieChartSetting)
         {
             Chart Chart = new(this);
-            P.GraphicFrame GraphicFrame = Chart.CreateChart(PieChartTypes, DataCells, PieChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.CreateChart(DataCells, PieChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Chart;
         }

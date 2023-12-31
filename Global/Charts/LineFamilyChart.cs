@@ -7,17 +7,28 @@ namespace OpenXMLOffice.Global
     public class LineFamilyChart : ChartBase
     {
         #region Protected Methods
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.GroupingValues groupingValue, LineChartSetting chartSetting, bool isMarkerEnabled = false)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, LineChartSetting LineChartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
             C.LineChart LineChart = new(
-                new C.Grouping { Val = groupingValue },
+                new C.Grouping
+                {
+                    Val = LineChartSetting.LineChartTypes switch
+                    {
+                        LineChartTypes.STACKED => C.GroupingValues.Stacked,
+                        LineChartTypes.STACKED_MARKER => C.GroupingValues.Stacked,
+                        LineChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
+                        LineChartTypes.PERCENT_STACKED_MARKER => C.GroupingValues.PercentStacked,
+                        // Clusted
+                        _ => C.GroupingValues.Standard,
+                    }
+                },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                C.Marker Marker = isMarkerEnabled ? new(
+                C.Marker Marker = new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(LineChartSetting.LineChartTypes) ? new(
                     new C.Symbol { Val = C.MarkerStyleValues.Circle },
                     new C.Size { Val = 5 },
                     new C.ShapeProperties(
@@ -30,15 +41,18 @@ namespace OpenXMLOffice.Global
                         Val = C.MarkerStyleValues.None
                     });
                 LineChart.Append(CreateLineChartSeries(seriesIndex,
-                    chartSetting,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
                     DataCols[0].Skip(1).ToArray(),
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
                     col.Skip(1).ToArray(),
-                    $"accent{(seriesIndex % 6) + 1}",
-                    Marker
+                    Marker,
+                     GetSolidFill(LineChartSetting.LineChartSeriesSettings
+                            .Where(item => item.FillColor != null)
+                            .Select(item => item.FillColor!)
+                            .ToList(), seriesIndex),
+                    GetDataLabels(LineChartSetting, seriesIndex)
                 ));
                 seriesIndex++;
             }
@@ -67,6 +81,15 @@ namespace OpenXMLOffice.Global
         #endregion Protected Methods
 
         #region Private Methods
+        private C.DataLabels GetDataLabels(LineChartSetting LineChartSetting, int index)
+        {
+            if (index < LineChartSetting.LineChartSeriesSettings.Count)
+            {
+                return CreateDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
+            }
+            return CreateDataLabel(new LineChartDataLabel());
+        }
+
         private C.DataLabels CreateDataLabel(LineChartDataLabel LineChartDataLabel)
         {
             C.DataLabels DataLabels = new(
@@ -122,7 +145,10 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
-        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, LineChartSetting LineChartSetting, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent, C.Marker Marker)
+        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
+                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
+                                                        ChartData[] valueCells, C.Marker Marker, A.SolidFill SolidFill,
+                                                        C.DataLabels DataLabels)
         {
             C.LineChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -130,9 +156,9 @@ namespace OpenXMLOffice.Global
                 new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
                 Marker);
             C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }), new A.Round()));
+            ShapeProperties.Append(new A.Outline(SolidFill, new A.Round()));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(CreateDataLabel(LineChartSetting.SeriesSettings?[seriesIndex]?.LineChartDataLabel ?? new LineChartDataLabel()));
+            series.Append(DataLabels);
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));

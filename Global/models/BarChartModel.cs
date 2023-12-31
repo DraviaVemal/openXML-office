@@ -1,5 +1,13 @@
 namespace OpenXMLOffice.Global
 {
+    public enum BarChartTypes
+    {
+        CLUSTERED,
+        STACKED,
+        PERCENT_STACKED,
+        // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D,
+    }
+
     public class BarChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
@@ -26,9 +34,10 @@ namespace OpenXMLOffice.Global
 
     public class BarChartSetting : ChartSetting
     {
+        public BarChartTypes BarChartTypes = BarChartTypes.CLUSTERED;
         public ChartAxisOptions ChartAxisOptions = new();
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartGridLinesOptions ChartGridLinesOptions = new();
-        public List<BarChartSeriesSetting>? SeriesSettings;
+        public List<BarChartSeriesSetting> BarChartSeriesSettings = new();
     }
 }

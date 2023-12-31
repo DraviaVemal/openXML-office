@@ -11,26 +11,13 @@ internal class ChartColor
     {
         CS.ColorStyle colorStyle = new() { Method = "cycle", Id = 10 };
         colorStyle.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-        colorStyle.Append(new A.SchemeColor()
+        for (int i = 1; i < 7; i++)
         {
-            Val = A.SchemeColorValues.Accent1
-        });
-        colorStyle.Append(new A.SchemeColor()
-        {
-            Val = A.SchemeColorValues.Accent2
-        }); colorStyle.Append(new A.SchemeColor()
-        {
-            Val = A.SchemeColorValues.Accent3
-        }); colorStyle.Append(new A.SchemeColor()
-        {
-            Val = A.SchemeColorValues.Accent4
-        }); colorStyle.Append(new A.SchemeColor()
-        {
-            Val = A.SchemeColorValues.Accent5
-        }); colorStyle.Append(new A.SchemeColor()
-        {
-            Val = A.SchemeColorValues.Accent6
-        });
+            colorStyle.Append(new A.SchemeColor()
+            {
+                Val = new A.SchemeColorValues($"accent{i}")
+            });
+        }
         colorStyle.Append(new CS.ColorStyleVariation());
         colorStyle.Append(new CS.ColorStyleVariation(new A.LuminanceModulation()
         {

@@ -7,14 +7,14 @@ namespace OpenXMLOffice.Global
     {
         #region Public Methods
 
-        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, GlobalConstants.PieChartTypes PieChartType, PieChartSetting chartSetting)
+        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, PieChartSetting PieChartSetting)
         {
-            C.Chart Chart = CreateChart(chartSetting);
-            Chart.PlotArea = PieChartType switch
+            C.Chart Chart = CreateChart(PieChartSetting);
+            Chart.PlotArea = PieChartSetting.PieChartTypes switch
             {
-                GlobalConstants.PieChartTypes.DOUGHNUT => CreateDoughnutChartPlotArea(DataCols, chartSetting),
+                PieChartTypes.DOUGHNUT => CreateDoughnutChartPlotArea(DataCols, PieChartSetting),
                 // Pie
-                _ => CreatePieChartPlotArea(DataCols, chartSetting),
+                _ => CreatePieChartPlotArea(DataCols, PieChartSetting),
             };
             GetChartSpace().Append(Chart);
             return GetChartSpace();
