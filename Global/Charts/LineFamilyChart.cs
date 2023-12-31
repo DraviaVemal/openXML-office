@@ -7,6 +7,7 @@ namespace OpenXMLOffice.Global
     public class LineFamilyChart : ChartBase
     {
         #region Protected Methods
+
         protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, LineChartSetting LineChartSetting)
         {
             C.PlotArea plotArea = new();
@@ -81,6 +82,7 @@ namespace OpenXMLOffice.Global
         #endregion Protected Methods
 
         #region Private Methods
+
         private C.DataLabels GetDataLabels(LineChartSetting LineChartSetting, int index)
         {
             if (index < LineChartSetting.LineChartSeriesSettings.Count)
@@ -145,6 +147,7 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
+
         private C.LineChartSeries CreateLineChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
                                                         string categoryFormula, ChartData[] categoryCells, string valueFormula,
                                                         ChartData[] valueCells, C.Marker Marker, A.SolidFill SolidFill,

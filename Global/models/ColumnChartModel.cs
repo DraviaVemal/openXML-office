@@ -7,12 +7,15 @@ namespace OpenXMLOffice.Global
         PERCENT_STACKED,
         // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D, COLUMN_3D
     }
+
     public class ColumnChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
+
         public string? FillColor;
         public string? BorderColor;
         public ColumnChartDataLabel ColumnChartDataLabel = new();
+
         #endregion Public Fields
     }
 

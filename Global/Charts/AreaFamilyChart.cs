@@ -7,6 +7,7 @@ namespace OpenXMLOffice.Global
     public class AreaFamilyChart : ChartBase
     {
         #region Protected Methods
+
         protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, AreaChartSetting AreaChartSetting)
         {
             C.PlotArea plotArea = new();
@@ -118,6 +119,7 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
+
         private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula,
                                                         ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
                                                         string valueFormula, ChartData[] valueCells, A.SolidFill SolidFill,

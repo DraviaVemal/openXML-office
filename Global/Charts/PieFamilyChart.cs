@@ -7,6 +7,7 @@ namespace OpenXMLOffice.Global
     public class PieFamilyChart : ChartBase
     {
         #region Protected Methods
+
         protected C.PlotArea CreateDoughnutChartPlotArea(ChartData[][] DataCols, PieChartSetting PieChartSetting)
         {
             C.PlotArea plotArea = new();
@@ -97,6 +98,7 @@ namespace OpenXMLOffice.Global
         #endregion Protected Methods
 
         #region Private Methods
+
         private C.DataLabels GetDataLabels(PieChartSetting PieChartSetting, int index)
         {
             if (index < PieChartSetting.PieChartSeriesSettings.Count)
@@ -157,6 +159,7 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
+
         private C.PieChartSeries CreateChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
                                                     string categoryFormula, ChartData[] categoryCells, string valueFormula,
                                                     ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels,

@@ -7,12 +7,15 @@ namespace OpenXMLOffice.Global
         // PIE_3D, PIE_PIE, PIE_BAR,
         DOUGHNUT
     }
+
     public class PieChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
+
         public string? FillColor;
         public string? BorderColor;
         public PieChartDataLabel PieChartDataLabel = new();
+
         #endregion Public Fields
     }
 

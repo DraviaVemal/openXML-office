@@ -11,9 +11,11 @@ namespace OpenXMLOffice.Global
     public class BarChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
+
         public string? FillColor;
         public string? BorderColor;
         public BarChartDataLabel BarChartDataLabel = new();
+
         #endregion Public Fields
     }
 

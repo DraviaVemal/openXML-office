@@ -107,6 +107,7 @@ namespace OpenXMLOffice.Global
         {
             return (long)Math.Round((double)pixels / GlobalConstants.DefaultDPI * 914400);
         }
+
         #endregion Public Methods
     }
 }

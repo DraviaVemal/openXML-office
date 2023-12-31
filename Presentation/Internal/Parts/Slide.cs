@@ -1,5 +1,5 @@
-using OpenXMLOffice.Global;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 

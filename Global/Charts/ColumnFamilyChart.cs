@@ -7,6 +7,7 @@ namespace OpenXMLOffice.Global
     public class ColumnFamilyChart : ChartBase
     {
         #region Protected Methods
+
         protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, ColumnChartSetting ColumnChartSetting)
         {
             C.PlotArea plotArea = new();

@@ -17,6 +17,7 @@ namespace OpenXMLOffice.Presentation
         private int X = 0;
         private int Y = 0;
         private P.GraphicFrame? GraphicFrame;
+
         #endregion Public Fields
 
         #region Private Fields

@@ -14,9 +14,11 @@ namespace OpenXMLOffice.Global
     public class LineChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
+
         public string? FillColor;
         public string? BorderColor;
         public LineChartDataLabel LineChartDataLabel = new();
+
         #endregion Public Fields
     }
 

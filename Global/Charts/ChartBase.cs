@@ -163,6 +163,7 @@ public class ChartBase
         CategoryAxis.Append(ShapeProperties);
         return CategoryAxis;
     }
+
     protected C.ValueAxis CreateValueAxis(UInt32Value axisId)
     {
         C.ValueAxis ValueAxis = new(
@@ -223,6 +224,7 @@ public class ChartBase
                     )
                 );
     }
+
     private C.MinorGridlines CreateMinorGridLine()
     {
         return new(new C.ShapeProperties(
