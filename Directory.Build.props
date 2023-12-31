@@ -3,7 +3,6 @@
         <PackageProjectUrl>https://draviavemal.github.io/OpenXMLOffice/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DraviaVemal/OpenXMLOffice</RepositoryUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageLicenseFile>LICENCE.md</PackageLicenseFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <TargetFramework>net7.0</TargetFramework>
         <OutputPath>..\bin\</OutputPath>
@@ -37,7 +36,6 @@
     </PropertyGroup>
     <ItemGroup>
         <None Include="../README.md" Pack="true" PackagePath="\" />
-        <None Include="../LICENCE.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
   
