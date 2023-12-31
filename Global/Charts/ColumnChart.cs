@@ -3,7 +3,7 @@ using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global
 {
-    public class ColumnChart : BarFamilyChart
+    public class ColumnChart : ColumnFamilyChart
     {
         #region Public Methods
 
@@ -14,10 +14,10 @@ namespace OpenXMLOffice.Global
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = columnChartTypes switch
             {
-                GlobalConstants.ColumnChartTypes.STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Column, C.BarGroupingValues.Stacked),
-                GlobalConstants.ColumnChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Column, C.BarGroupingValues.PercentStacked),
+                GlobalConstants.ColumnChartTypes.STACKED => CreateChartPlotArea(DataCols, C.BarGroupingValues.Stacked, chartSetting),
+                GlobalConstants.ColumnChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.BarGroupingValues.PercentStacked, chartSetting),
                 // Clusted
-                _ => CreateChartPlotArea(DataCols, C.BarDirectionValues.Column, C.BarGroupingValues.Clustered),
+                _ => CreateChartPlotArea(DataCols, C.BarGroupingValues.Clustered, chartSetting),
             };
             GetChartSpace().Append(Chart);
             return GetChartSpace();

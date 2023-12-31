@@ -7,19 +7,19 @@ namespace OpenXMLOffice.Global
     public class BarFamilyChart : ChartBase
     {
         #region Protected Methods
-        protected BarChartDataLabel BarChartDataLabel = new();
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.BarDirectionValues barDirectionValue, C.BarGroupingValues barGroupingValue)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.BarGroupingValues barGroupingValue, BarChartSetting chartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
             C.BarChart BarChart = new(
-                new C.BarDirection { Val = barDirectionValue },
+                new C.BarDirection { Val = C.BarDirectionValues.Bar },
                 new C.BarGrouping { Val = barGroupingValue },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
                 BarChart.Append(CreateBarChartSeries(seriesIndex,
+                    chartSetting,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -57,7 +57,7 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.DataLabels CreateDataLabel()
+        private C.DataLabels CreateDataLabel(BarChartDataLabel BarChartDataLabel)
         {
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },
@@ -111,7 +111,9 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent)
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, BarChartSetting BarChartSetting, string seriesTextFormula,
+                                                        ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
+                                                        string valueFormula, ChartData[] valueCells, string accent)
         {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -122,7 +124,7 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }));
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(CreateDataLabel());
+            series.Append(CreateDataLabel(BarChartSetting.SeriesSettings?[seriesIndex]?.BarChartDataLabel ?? new BarChartDataLabel()));
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));

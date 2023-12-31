@@ -12,9 +12,9 @@ namespace OpenXMLOffice.Global
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = PieChartType switch
             {
-                GlobalConstants.PieChartTypes.DOUGHNUT => CreateDoughnutChartPlotArea(DataCols),
+                GlobalConstants.PieChartTypes.DOUGHNUT => CreateDoughnutChartPlotArea(DataCols, chartSetting),
                 // Pie
-                _ => CreatePieChartPlotArea(DataCols),
+                _ => CreatePieChartPlotArea(DataCols, chartSetting),
             };
             GetChartSpace().Append(Chart);
             return GetChartSpace();

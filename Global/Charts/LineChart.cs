@@ -14,13 +14,13 @@ namespace OpenXMLOffice.Global
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = LineChartType switch
             {
-                GlobalConstants.LineChartTypes.CLUSTERED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, true),
-                GlobalConstants.LineChartTypes.STACKED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked, true),
-                GlobalConstants.LineChartTypes.PERCENT_STACKED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked, true),
-                GlobalConstants.LineChartTypes.STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked),
-                GlobalConstants.LineChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked),
+                GlobalConstants.LineChartTypes.CLUSTERED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, chartSetting, true),
+                GlobalConstants.LineChartTypes.STACKED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked, chartSetting, true),
+                GlobalConstants.LineChartTypes.PERCENT_STACKED_MARKER => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked, chartSetting, true),
+                GlobalConstants.LineChartTypes.STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked, chartSetting),
+                GlobalConstants.LineChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked, chartSetting),
                 // Clusted
-                _ => CreateChartPlotArea(DataCols, C.GroupingValues.Standard),
+                _ => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, chartSetting),
             };
             GetChartSpace().Append(Chart);
             return GetChartSpace();

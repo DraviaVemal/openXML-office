@@ -4,32 +4,21 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
 {
-    public class LineFamilyChart : ChartBase
+    public class ColumnFamilyChart : ChartBase
     {
         #region Protected Methods
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.GroupingValues groupingValue, LineChartSetting chartSetting, bool isMarkerEnabled = false)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.BarGroupingValues ColumnGroupingValue, ColumnChartSetting chartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            C.LineChart LineChart = new(
-                new C.Grouping { Val = groupingValue },
+            C.BarChart ColumnChart = new(
+                new C.BarDirection { Val = C.BarDirectionValues.Column },
+                new C.BarGrouping { Val = ColumnGroupingValue },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                C.Marker Marker = isMarkerEnabled ? new(
-                    new C.Symbol { Val = C.MarkerStyleValues.Circle },
-                    new C.Size { Val = 5 },
-                    new C.ShapeProperties(
-                        new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(seriesIndex % 6) + 1}") }),
-                        new A.Outline(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(seriesIndex % 6) + 1}") })),
-                        new A.EffectList()
-                    )) :
-                    new(new C.Symbol()
-                    {
-                        Val = C.MarkerStyleValues.None
-                    });
-                LineChart.Append(CreateLineChartSeries(seriesIndex,
+                ColumnChart.Append(CreateColumnChartSeries(seriesIndex,
                     chartSetting,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
@@ -37,23 +26,23 @@ namespace OpenXMLOffice.Global
                     DataCols[0].Skip(1).ToArray(),
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
                     col.Skip(1).ToArray(),
-                    $"accent{(seriesIndex % 6) + 1}",
-                    Marker
+                    $"accent{(seriesIndex % 6) + 1}"
                 ));
                 seriesIndex++;
             }
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false });
-            LineChart.Append(DataLabels);
-            LineChart.Append(new C.Smooth { Val = false });
-            LineChart.Append(new C.AxisId { Val = 1362418656 });
-            LineChart.Append(new C.AxisId { Val = 1358349936 });
-            plotArea.Append(LineChart);
+            if (ColumnGroupingValue == C.BarGroupingValues.Clustered)
+            {
+                ColumnChart.Append(new C.GapWidth { Val = 219 });
+                ColumnChart.Append(new C.Overlap { Val = -27 });
+            }
+            else
+            {
+                ColumnChart.Append(new C.GapWidth { Val = 150 });
+                ColumnChart.Append(new C.Overlap { Val = 100 });
+            }
+            ColumnChart.Append(new C.AxisId { Val = 1362418656 });
+            ColumnChart.Append(new C.AxisId { Val = 1358349936 });
+            plotArea.Append(ColumnChart);
             plotArea.Append(CreateCategoryAxis(1362418656));
             plotArea.Append(CreateValueAxis(1358349936));
             C.ShapeProperties ShapeProperties = new();
@@ -67,28 +56,27 @@ namespace OpenXMLOffice.Global
         #endregion Protected Methods
 
         #region Private Methods
-        private C.DataLabels CreateDataLabel(LineChartDataLabel LineChartDataLabel)
+
+        private C.DataLabels CreateDataLabel(ColumnChartDataLabel ColumnChartDataLabel)
         {
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = LineChartDataLabel.DataLabelPosition != LineChartDataLabel.eDataLabelPosition.NONE },
+                new C.ShowValue { Val = ColumnChartDataLabel.DataLabelPosition != ColumnChartDataLabel.eDataLabelPosition.NONE },
                 new C.ShowCategoryName { Val = false },
                 new C.ShowSeriesName { Val = false },
                 new C.ShowPercent { Val = false },
                 new C.ShowBubbleSize { Val = false },
                 new C.ShowLeaderLines() { Val = false });
-            if (LineChartDataLabel.DataLabelPosition != LineChartDataLabel.eDataLabelPosition.NONE)
+            if (ColumnChartDataLabel.DataLabelPosition != ColumnChartDataLabel.eDataLabelPosition.NONE)
             {
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
-                    Val = LineChartDataLabel.DataLabelPosition switch
+                    Val = ColumnChartDataLabel.DataLabelPosition switch
                     {
-                        LineChartDataLabel.eDataLabelPosition.LEFT => C.DataLabelPositionValues.Left,
-                        LineChartDataLabel.eDataLabelPosition.RIGHT => C.DataLabelPositionValues.Right,
-                        LineChartDataLabel.eDataLabelPosition.ABOVE => C.DataLabelPositionValues.Top,
-                        LineChartDataLabel.eDataLabelPosition.BELOW => C.DataLabelPositionValues.Bottom,
-                        //Center
-                        _ => C.DataLabelPositionValues.Center,
+                        ColumnChartDataLabel.eDataLabelPosition.CENTER => C.DataLabelPositionValues.Center,
+                        ColumnChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                        ColumnChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
+                        _ => C.DataLabelPositionValues.OutsideEnd
                     }
                 }, 0);
                 DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
@@ -122,20 +110,28 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
-        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, LineChartSetting LineChartSetting, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent, C.Marker Marker)
+
+        private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, ColumnChartSetting ColumnChartSetting, string seriesTextFormula,
+                                                        ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
+                                                        string valueFormula, ChartData[] valueCells, string accent)
         {
-            C.LineChartSeries series = new(
+            C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
-                Marker);
+                new C.InvertIfNegative { Val = true });
             C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }), new A.Round()));
+            ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }));
+            ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(CreateDataLabel(LineChartSetting.SeriesSettings?[seriesIndex]?.LineChartDataLabel ?? new LineChartDataLabel()));
+            series.Append(CreateDataLabel(ColumnChartSetting.SeriesSettings?[seriesIndex]?.ColumnChartDataLabel ?? new ColumnChartDataLabel()));
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.Smooth()
+            {
+                Val = false
+            });
             return series;
         }
 

@@ -11,15 +11,15 @@ namespace OpenXMLOffice.Global
         {
             // Apply Properties
             ChartGridLinesOptions = chartSetting.ChartGridLinesOptions;
-            
+
             // Start Creating Objects
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = barChartType switch
             {
-                GlobalConstants.BarChartTypes.STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.Stacked),
-                GlobalConstants.BarChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.PercentStacked),
+                GlobalConstants.BarChartTypes.STACKED => CreateChartPlotArea(DataCols, C.BarGroupingValues.Stacked, chartSetting),
+                GlobalConstants.BarChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.BarGroupingValues.PercentStacked, chartSetting),
                 // Clusted
-                _ => CreateChartPlotArea(DataCols, C.BarDirectionValues.Bar, C.BarGroupingValues.Clustered),
+                _ => CreateChartPlotArea(DataCols, C.BarGroupingValues.Clustered, chartSetting),
             };
             GetChartSpace().Append(Chart);
             return GetChartSpace();

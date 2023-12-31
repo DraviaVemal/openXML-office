@@ -14,10 +14,10 @@ namespace OpenXMLOffice.Global
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = AreaChartType switch
             {
-                GlobalConstants.AreaChartTypes.STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked),
-                GlobalConstants.AreaChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked),
+                GlobalConstants.AreaChartTypes.STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.Stacked, chartSetting),
+                GlobalConstants.AreaChartTypes.PERCENT_STACKED => CreateChartPlotArea(DataCols, C.GroupingValues.PercentStacked, chartSetting),
                 // Clusted
-                _ => CreateChartPlotArea(DataCols, C.GroupingValues.Standard),
+                _ => CreateChartPlotArea(DataCols, C.GroupingValues.Standard, chartSetting),
             };
             GetChartSpace().Append(Chart);
             return GetChartSpace();

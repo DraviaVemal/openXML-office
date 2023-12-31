@@ -7,8 +7,7 @@ namespace OpenXMLOffice.Global
     public class AreaFamilyChart : ChartBase
     {
         #region Protected Methods
-        protected AreaChartDataLabel AreaChartDataLabel = new();
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.GroupingValues groupingValue)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, C.GroupingValues groupingValue, AreaChartSetting chartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
@@ -19,6 +18,7 @@ namespace OpenXMLOffice.Global
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
                 AreaChart.Append(CreateAreaChartSeries(seriesIndex,
+                    chartSetting,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Global
         #endregion Protected Methods
 
         #region Private Methods
-        private C.DataLabels CreateDataLabel()
+        private C.DataLabels CreateDataLabel(AreaChartDataLabel AreaChartDataLabel)
         {
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },
@@ -96,7 +96,9 @@ namespace OpenXMLOffice.Global
             }
             return DataLabels;
         }
-        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells, string valueFormula, ChartData[] valueCells, string accent)
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, AreaChartSetting AreaChartSetting, string seriesTextFormula,
+                                                        ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
+                                                        string valueFormula, ChartData[] valueCells, string accent)
         {
             C.AreaChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -105,7 +107,7 @@ namespace OpenXMLOffice.Global
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues(accent) }), new A.Outline(new A.NoFill())));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(CreateDataLabel());
+            series.Append(CreateDataLabel(AreaChartSetting.SeriesSettings?[seriesIndex]?.AreaChartDataLabel ?? new AreaChartDataLabel()));
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));

@@ -1,4 +1,5 @@
 using OpenXMLOffice.Excel;
+using OpenXMLOffice.Global;
 using OpenXMLOffice.Presentation;
 
 namespace OpenXMLOffice.Tests
@@ -43,7 +44,15 @@ namespace OpenXMLOffice.Tests
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.BarChartTypes.CLUSTERED, CreateDataPayload());
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.BarChartTypes.STACKED, CreateDataPayload());
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.BarChartTypes.PERCENT_STACKED, CreateDataPayload());
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.ColumnChartTypes.CLUSTERED, CreateDataPayload());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.ColumnChartTypes.CLUSTERED, CreateDataPayload(), new ColumnChartSetting()
+            {
+                Title = "Chart Title",
+                ChartLegendOptions = new ChartLegendOptions()
+                {
+                    legendPosition = ChartLegendOptions.eLegendPosition.TOP
+                },
+                SeriesSettings = new List<ColumnChartSeriesSetting>()
+            });
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.ColumnChartTypes.STACKED, CreateDataPayload());
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.ColumnChartTypes.PERCENT_STACKED, CreateDataPayload());
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload());
