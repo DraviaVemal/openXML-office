@@ -51,7 +51,7 @@ namespace OpenXMLOffice.Global
         public A.Run CreateTextRun(TextBoxSetting TextBoxSetting)
         {
             return new(new A.RunProperties(new A.SolidFill(new A.RgbColorModelHex { Val = TextBoxSetting.TextColor }),
-                        new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground }),
+                        new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground ?? "FFFFFF" }),
                         new A.LatinFont { Typeface = TextBoxSetting.FontFamily },
                         new A.EastAsianFont { Typeface = TextBoxSetting.FontFamily },
                         new A.ComplexScriptFont { Typeface = TextBoxSetting.FontFamily })

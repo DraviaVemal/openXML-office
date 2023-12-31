@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Global
         public bool IsUnderline = false;
         public string ShapeBackground = "FFFFFF";
         public string Text = "Text Box";
-        public string TextBackground = "FFFFFF";
+        public string? TextBackground;
         public string TextColor = "000000";
 
         #endregion Public Fields

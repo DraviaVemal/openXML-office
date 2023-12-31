@@ -5,7 +5,7 @@ namespace OpenXMLOffice.Presentation
         #region Public Fields
 
         public bool BottomBorder = false;
-        public string CellBackground = "FFFFFF";
+        public string? CellBackground;
         public string FontFamily = "Calibri (Body)";
         public int FontSize = 16;
         public bool IsBold = false;
@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Presentation
         public bool IsUnderline = false;
         public bool LeftBorder = false;
         public bool RightBorder = false;
-        public string TextBackground = "FFFFFF";
+        public string? TextBackground;
         public string TextColor = "000000";
         public bool TopBorder = false;
         public string? Value;

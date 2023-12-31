@@ -109,7 +109,6 @@ namespace OpenXMLOffice.Tests
             {
                 PieChartTypes = PieChartTypes.DOUGHNUT
             });
-            powerPoint.Save();
             Assert.IsTrue(true);
         }
 
@@ -117,7 +116,6 @@ namespace OpenXMLOffice.Tests
         public void AddBlankSlide()
         {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-            powerPoint.Save();
             Assert.IsTrue(true);
         }
 
@@ -131,7 +129,6 @@ namespace OpenXMLOffice.Tests
                 WidthType = TableSetting.eWidthType.AUTO,
                 TableColumnwidth = new() { 100, 100 }
             });
-            powerPoint.Save();
             Assert.IsTrue(true);
         }
 
@@ -284,13 +281,11 @@ namespace OpenXMLOffice.Tests
                 {
                     new() {
                         Value = $"Row {i + 1}, Cell 1",
-                        CellBackground = "EDEDED",
-                        TextColor = "333333"
+                        TextColor = "FF0000"
                     },
                     new() {
                         Value = $"Row {i + 1}, Cell 2",
-                        CellBackground = "EDEDED",
-                        TextColor = "333333"
+                        TextColor = "00FF00"
                     },
                 }
                 };

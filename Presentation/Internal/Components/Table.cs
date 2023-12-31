@@ -188,7 +188,7 @@ namespace OpenXMLOffice.Presentation
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(new A.SolidFill(new A.RgbColorModelHex() { Val = Cell.CellBackground }));
+            TableCellProperties.Append(Cell.CellBackground != null ? new A.SolidFill(new A.RgbColorModelHex() { Val = Cell.CellBackground }) : new A.NoFill());
             TableCell.Append(TableCellProperties);
             return TableCell;
         }
