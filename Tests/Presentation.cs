@@ -99,6 +99,13 @@ namespace OpenXMLOffice.Tests
                 ChartAxesOptions = new Global.ChartAxesOptions()
                 {
                     IsHorizontalAxesEnabled = false
+                },
+                ChartGridLinesOptions = new Global.ChartGridLinesOptions()
+                {
+                    IsMajorCategoryLinesEnabled = true,
+                    IsMajorValueLinesEnabled = true,
+                    IsMinorCategoryLinesEnabled = true,
+                    IsMinorValueLinesEnabled = true,
                 }
             }));
             shape4[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED_MARKET, CreateDataPayload()));

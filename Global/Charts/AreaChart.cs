@@ -9,6 +9,8 @@ namespace OpenXMLOffice.Global
 
         public C.ChartSpace GetChartSpace(ChartData[][] DataCols, GlobalConstants.AreaChartTypes AreaChartType, AreaChartSetting chartSetting)
         {
+            // Apply Properties
+            ChartGridLinesOptions = chartSetting.ChartGridLinesOptions;
             C.Chart Chart = CreateChart(chartSetting);
             Chart.PlotArea = AreaChartType switch
             {

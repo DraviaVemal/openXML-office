@@ -35,10 +35,10 @@ namespace OpenXMLOffice.Global
 
     public class ChartGridLinesOptions
     {
-        public bool IsMajorHorizontalEnabled = true;
-        public bool IsMinorHorizontalEnabled = false;
-        public bool IsMajorVerticalEnabled = false;
-        public bool IsMinorVerticalEnabled = false;
+        public bool IsMajorCategoryLinesEnabled = false;
+        public bool IsMinorCategoryLinesEnabled = false;
+        public bool IsMajorValueLinesEnabled = true;
+        public bool IsMinorValueLinesEnabled = false;
     }
 
     public class ChartAxisOptions
