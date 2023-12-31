@@ -93,10 +93,10 @@ namespace OpenXMLOffice.Tests
                 {
                     legendPosition = Global.ChartLegendOptions.eLegendPosition.RIGHT
                 },
-                BarChartDataLabel = new Global.BarChartDataLabel()
-                {
-                    DataLabelPosition = Global.BarChartDataLabel.eDataLabelPosition.INSIDE_BASE
-                }
+                // BarChartDataLabel = new Global.BarChartDataLabel()
+                // {
+                //     DataLabelPosition = Global.BarChartDataLabel.eDataLabelPosition.INSIDE_BASE
+                // }
             }));
             shape3[0].ReplaceShape(new Chart(Slide).CreateChart(Global.GlobalConstants.LineChartTypes.CLUSTERED, CreateDataPayload(), new Global.LineChartSetting()
             {

@@ -1,5 +1,11 @@
 namespace OpenXMLOffice.Global
 {
+    public class ChartSeriesSetting
+    {
+        internal ChartSeriesSetting() { }
+        public string? NumberFormat;
+    }
+    
     public class ChartLegendOptions
     {
         public enum eLegendPosition

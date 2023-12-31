@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Global
                     {
                         Val = C.MarkerStyleValues.None
                     });
-                LineChart.Append(CreateLineChartSeries(seriesIndex++,
+                LineChart.Append(CreateLineChartSeries(seriesIndex,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -40,6 +40,7 @@ namespace OpenXMLOffice.Global
                     $"accent{(seriesIndex % 6) + 1}",
                     Marker
                 ));
+                seriesIndex++;
             }
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },

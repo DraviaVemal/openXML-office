@@ -1,15 +1,14 @@
 namespace OpenXMLOffice.Global
 {
-    public class AreaChartSeriesSetting
+    public class AreaChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
-
-        public string? NumberFormat;
         public string? FillColor;
         public string? BorderColor;
         public AreaChartDataLabel AreaChartDataLabel = new();
         #endregion Public Fields
     }
+
     public class AreaChartDataLabel
     {
         public enum eDataLabelPosition
@@ -21,6 +20,7 @@ namespace OpenXMLOffice.Global
 
         public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
     }
+    
     public class AreaChartSetting : ChartSetting
     {
         public ChartAxisOptions ChartAxisOptions = new();

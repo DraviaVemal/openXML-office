@@ -19,7 +19,7 @@ namespace OpenXMLOffice.Global
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                BarChart.Append(CreateBarChartSeries(seriesIndex++,
+                BarChart.Append(CreateBarChartSeries(seriesIndex,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -28,6 +28,7 @@ namespace OpenXMLOffice.Global
                     col.Skip(1).ToArray(),
                     $"accent{(seriesIndex % 6) + 1}"
                 ));
+                seriesIndex++;
             }
             if (barGroupingValue == C.BarGroupingValues.Clustered)
             {

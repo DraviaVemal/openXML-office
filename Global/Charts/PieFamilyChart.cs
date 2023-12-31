@@ -17,7 +17,7 @@ namespace OpenXMLOffice.Global
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                DoughnutChart.Append(CreateChartSeries(seriesIndex++,
+                DoughnutChart.Append(CreateChartSeries(seriesIndex,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -25,6 +25,7 @@ namespace OpenXMLOffice.Global
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
                     col.Skip(1).ToArray()
                 ));
+                seriesIndex++;
             }
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },

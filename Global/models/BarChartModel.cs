@@ -1,6 +1,14 @@
 namespace OpenXMLOffice.Global
 {
-
+    public class BarChartSeriesSetting : ChartSeriesSetting
+    {
+        #region Public Fields
+        public string? FillColor;
+        public string? BorderColor;
+        public BarChartDataLabel BarChartDataLabel = new();
+        #endregion Public Fields
+    }
+    
     public class BarChartDataLabel
     {
         public enum eDataLabelPosition
@@ -21,6 +29,6 @@ namespace OpenXMLOffice.Global
         public ChartAxisOptions ChartAxisOptions = new();
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartGridLinesOptions ChartGridLinesOptions = new();
-        public BarChartDataLabel BarChartDataLabel = new();
+        public List<AreaChartSeriesSetting>? SeriesSettings;
     }
 }
