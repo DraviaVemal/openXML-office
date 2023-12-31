@@ -355,7 +355,10 @@ public class ChartBase
         DefaultRunProperties.Append(new A.ComplexScriptFont { Typeface = "+mn-cs" });
         RichText.Append(
             new A.Paragraph(new A.ParagraphProperties(DefaultRunProperties),
-            new A.Run(new A.RunProperties { Dirty = false, Language = "en-IN" }, new A.Text(strTitle ?? "Chart Title"))));
+            new TextBox().CreateTextRun(new TextBoxSetting()
+            {
+                Text = strTitle ?? "Chart Title"
+            })));
         C.Title title = new(new C.ChartText(RichText));
         title.Append(new C.Overlay { Val = false });
         C.ShapeProperties ShapeProperties = new();

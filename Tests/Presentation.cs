@@ -137,6 +137,8 @@ namespace OpenXMLOffice.Tests
                     }
                 }
             });
+            powerPoint.Save();
+            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -149,23 +151,23 @@ namespace OpenXMLOffice.Tests
             List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
             List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
             List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
-            shapes1[0].ReplaceShape(new TextBox()
+            shapes1[0].ReplaceShape(new TextBox().CreateTextBox(1, new TextBoxSetting()
             {
                 Text = "Dravia Vemal",
                 FontFamily = "Bernard MT Condensed"
-            }.CreateTextBox());
-            shapes2[0].ReplaceShape(new TextBox()
+            }));
+            shapes2[0].ReplaceShape(new TextBox().CreateTextBox(2, new TextBoxSetting()
             {
                 Text = "Vemal Dravia",
                 TextBackground = "777777"
-            }.CreateTextBox());
-            shapes3[0].ReplaceShape(new TextBox()
+            }));
+            shapes3[0].ReplaceShape(new TextBox().CreateTextBox(30, new TextBoxSetting()
             {
                 Text = "This is text box",
                 FontSize = 22,
                 IsBold = true,
                 TextColor = "AAAAAA"
-            }.CreateTextBox());
+            }));
             powerPoint1.MoveSlideByIndex(4, 0);
             powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
@@ -248,13 +250,19 @@ namespace OpenXMLOffice.Tests
             {
                 TableRow row = new()
                 {
-                    Background = "EDEDED",
-                    TextColor = "333333",
                     Height = 370840,
                     TableCells = new List<TableCell>
                 {
-                    new() { Value = $"Row {i + 1}, Cell 1" },
-                    new() { Value = $"Row {i + 1}, Cell 2" },
+                    new() {
+                        Value = $"Row {i + 1}, Cell 1",
+                        CellBackground = "EDEDED",
+                        TextColor = "333333"
+                    },
+                    new() {
+                        Value = $"Row {i + 1}, Cell 2",
+                        CellBackground = "EDEDED",
+                        TextColor = "333333"
+                    },
                 }
                 };
                 data[i] = row;
