@@ -22,15 +22,15 @@ namespace OpenXMLOffice.Global
                         ScatterChartTypes.SCATTER_STRIGHT => C.ScatterStyleValues.Line,
                         ScatterChartTypes.SCATTER_STRIGHT_MARKER => C.ScatterStyleValues.LineMarker,
                         // Clusted
-                        _ => C.ScatterStyleValues.Marker,
+                        _ => C.ScatterStyleValues.LineMarker,
                     }
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                C.Marker Marker = new[] { ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) ? new(
-                    new C.Symbol { Val = C.MarkerStyleValues.Circle },
+                C.Marker Marker = new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) ? new(
+                    new C.Symbol { Val = ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.SCATTER ? C.MarkerStyleValues.Auto : C.MarkerStyleValues.Circle },
                     new C.Size { Val = 5 },
                     new C.ShapeProperties(
                         new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(seriesIndex % 6) + 1}") }),
@@ -42,17 +42,17 @@ namespace OpenXMLOffice.Global
                         Val = C.MarkerStyleValues.None
                     });
                 ScatterChart.Append(CreateScatterChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
+                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
                     DataCols[0].Skip(1).ToArray(),
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
                     col.Skip(1).ToArray(),
                     Marker,
-                     GetSolidFill(ScatterChartSetting.ScatterChartSeriesSettings
+                     ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.SCATTER ? new A.Outline(new A.NoFill()) : new A.Outline(GetSolidFill(ScatterChartSetting.ScatterChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
-                            .ToList(), seriesIndex),
+                            .ToList(), seriesIndex)),
                     GetDataLabels(ScatterChartSetting, seriesIndex)
                 ));
                 seriesIndex++;
@@ -69,7 +69,7 @@ namespace OpenXMLOffice.Global
             ScatterChart.Append(new C.AxisId { Val = 1362418656 });
             ScatterChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ScatterChart);
-            plotArea.Append(CreateCategoryAxis(1362418656));
+            plotArea.Append(CreateValueAxis(1362418656));
             plotArea.Append(CreateValueAxis(1358349936));
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(new A.NoFill());
@@ -141,7 +141,7 @@ namespace OpenXMLOffice.Global
 
         private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
                                                         string xFormula, ChartData[] xCells, string yFormula,
-                                                        ChartData[] yCells, C.Marker Marker, A.SolidFill SolidFill,
+                                                        ChartData[] yCells, C.Marker Marker, A.Outline Outline,
                                                         C.DataLabels DataLabels)
         {
             C.ScatterChartSeries series = new(
@@ -150,7 +150,7 @@ namespace OpenXMLOffice.Global
                 new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
                 Marker);
             C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.Outline(SolidFill, new A.Round()));
+            ShapeProperties.Append(Outline);
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);
             series.Append(ShapeProperties);

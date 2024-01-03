@@ -28,7 +28,7 @@ namespace OpenXMLOffice.Global
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
                 AreaChart.Append(CreateAreaChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
+                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
                     DataCols[0].Skip(1).ToArray(),
