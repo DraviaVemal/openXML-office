@@ -14,23 +14,24 @@ namespace OpenXMLOffice.Global
             switch (PieChartSetting.PieChartTypes)
             {
                 case PieChartTypes.DOUGHNUT:
-                    SetChartPlotArea(CreateDoughnutChartPlotArea(DataCols));
+                    SetChartPlotArea(CreateChartPlotArea(DataCols));
                     break;
                 default:
-                    SetChartPlotArea(CreatePieChartPlotArea(DataCols));
+                    SetChartPlotArea(CreateChartPlotArea(DataCols));
                     break;
             };
         }
-        private C.PlotArea CreateDoughnutChartPlotArea(ChartData[][] DataCols)
+        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            C.DoughnutChart DoughnutChart = new(
+            OpenXmlCompositeElement Chart = PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT ? new C.DoughnutChart(
+                new C.VaryColors { Val = true }) : new C.PieChart(
                 new C.VaryColors { Val = true });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                DoughnutChart.Append(CreateChartSeries(seriesIndex,
+                Chart.Append(CreateChartSeries(seriesIndex,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -41,7 +42,8 @@ namespace OpenXMLOffice.Global
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
-                    GetDataLabels(PieChartSetting, seriesIndex)
+                    GetDataLabels(PieChartSetting, seriesIndex),
+                    PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT
                 ));
                 seriesIndex++;
             }
@@ -53,53 +55,10 @@ namespace OpenXMLOffice.Global
                 new C.ShowPercent { Val = false },
                 new C.ShowBubbleSize { Val = false },
                 new C.ShowLeaderLines { Val = true });
-            DoughnutChart.Append(DataLabels);
-            DoughnutChart.Append(new C.FirstSliceAngle { Val = 0 });
-            DoughnutChart.Append(new C.HoleSize { Val = 50 });
-            plotArea.Append(DoughnutChart);
-            C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(new A.NoFill());
-            ShapeProperties.Append(new A.Outline(new A.NoFill()));
-            ShapeProperties.Append(new A.EffectList());
-            plotArea.Append(ShapeProperties);
-            return plotArea;
-        }
-
-        protected C.PlotArea CreatePieChartPlotArea(ChartData[][] DataCols)
-        {
-            C.PlotArea plotArea = new();
-            plotArea.Append(new C.Layout());
-            C.PieChart PieChart = new(
-                new C.VaryColors { Val = true });
-            int seriesIndex = 0;
-            foreach (ChartData[] col in DataCols.Skip(1).Take(1).ToArray())
-            {
-                PieChart.Append(CreateChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
-                    col.Take(1).ToArray(),
-                    $"Sheet1!$A$2:$A${DataCols[0].Length}",
-                    DataCols[0].Skip(1).ToArray(),
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray(),
-                    GetSolidFill(PieChartSetting.PieChartSeriesSettings
-                            .Where(item => item.FillColor != null)
-                            .Select(item => item.FillColor!)
-                            .ToList(), seriesIndex),
-                    GetDataLabels(PieChartSetting, seriesIndex),
-                    true));
-                seriesIndex++;
-            }
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false },
-                new C.ShowLeaderLines { Val = true });
-            PieChart.Append(DataLabels);
-            PieChart.Append(new C.FirstSliceAngle { Val = 0 });
-            plotArea.Append(PieChart);
+            Chart.Append(DataLabels);
+            Chart.Append(new C.FirstSliceAngle { Val = 0 });
+            Chart.Append(new C.HoleSize { Val = 50 });
+            plotArea.Append(Chart);
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
