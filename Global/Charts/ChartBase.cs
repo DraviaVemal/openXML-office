@@ -8,8 +8,8 @@ namespace OpenXMLOffice.Global;
 public class ChartBase
 {
     #region Protected Fields
-
-    protected ChartGridLinesOptions ChartGridLinesOptions = new();
+    protected ChartSetting ChartSetting;
+    private C.Chart Chart;
 
     #endregion Protected Fields
 
@@ -21,9 +21,12 @@ public class ChartBase
 
     #region Protected Constructors
 
-    protected ChartBase()
+    protected ChartBase(ChartSetting ChartSetting)
     {
+        this.ChartSetting = ChartSetting;
         OpenXMLChartSpace = CreateChartSpace();
+        Chart = CreateChart();
+        GetChartSpace().Append(Chart);
     }
 
     #endregion Protected Constructors
@@ -111,11 +114,11 @@ public class ChartBase
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
         ShapeProperties.Append(new A.EffectList());
-        if (ChartGridLinesOptions.IsMajorCategoryLinesEnabled)
+        if (ChartSetting.ChartGridLinesOptions.IsMajorCategoryLinesEnabled)
         {
             CategoryAxis.Append(CreateMajorGridLine());
         }
-        if (ChartGridLinesOptions.IsMinorCategoryLinesEnabled)
+        if (ChartSetting.ChartGridLinesOptions.IsMinorCategoryLinesEnabled)
         {
             CategoryAxis.Append(CreateMinorGridLine());
         }
@@ -123,7 +126,7 @@ public class ChartBase
         return CategoryAxis;
     }
 
-    protected C.Chart CreateChart(ChartSetting chartSetting)
+    private C.Chart CreateChart()
     {
         C.Chart Chart = new()
         {
@@ -140,13 +143,13 @@ public class ChartBase
                 Val = C.DisplayBlanksAsValues.Gap
             }
         };
-        if (chartSetting.ChartLegendOptions.IsEnableLegend)
+        if (ChartSetting.ChartLegendOptions.IsEnableLegend)
         {
-            Chart.Legend = CreateChartLegend(chartSetting.ChartLegendOptions);
+            Chart.Legend = CreateChartLegend(ChartSetting.ChartLegendOptions);
         }
-        if (chartSetting.Title != null)
+        if (ChartSetting.Title != null)
         {
-            Chart.Title = CreateTitle(chartSetting.Title);
+            Chart.Title = CreateTitle(ChartSetting.Title);
         }
         return Chart;
     }
@@ -177,11 +180,11 @@ public class ChartBase
             new C.CrossingAxis { Val = axisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
             new C.CrossBetween { Val = C.CrossBetweenValues.Between });
-        if (ChartGridLinesOptions.IsMajorValueLinesEnabled)
+        if (ChartSetting.ChartGridLinesOptions.IsMajorValueLinesEnabled)
         {
             ValueAxis.Append(CreateMajorGridLine());
         }
-        if (ChartGridLinesOptions.IsMinorValueLinesEnabled)
+        if (ChartSetting.ChartGridLinesOptions.IsMinorValueLinesEnabled)
         {
             ValueAxis.Append(CreateMinorGridLine());
         }
@@ -193,9 +196,14 @@ public class ChartBase
         return ValueAxis;
     }
 
-    protected C.ChartSpace GetChartSpace()
+    public C.ChartSpace GetChartSpace()
     {
         return OpenXMLChartSpace;
+    }
+
+    public void SetChartPlotArea(C.PlotArea PlotArea)
+    {
+        Chart.PlotArea = PlotArea;
     }
 
     protected A.SolidFill GetSolidFill(List<string> FillColors, int index)

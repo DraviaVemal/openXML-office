@@ -6,9 +6,14 @@ namespace OpenXMLOffice.Global
 {
     public class BarFamilyChart : ChartBase
     {
+        protected readonly BarChartSetting BarChartSetting;
         #region Protected Methods
-
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, BarChartSetting BarChartSetting)
+        public BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
+        {
+            this.BarChartSetting = BarChartSetting;
+            SetChartPlotArea(CreateChartPlotArea(DataCols));
+        }
+        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());

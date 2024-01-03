@@ -52,7 +52,6 @@ namespace OpenXMLOffice.Global
 
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
         public List<ScatterChartSeriesSetting> ScatterChartSeriesSettings = new();
         public ScatterChartTypes ScatterChartTypes = ScatterChartTypes.SCATTER;
 

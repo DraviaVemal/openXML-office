@@ -80,6 +80,7 @@ namespace OpenXMLOffice.Global
 
         public ChartLegendOptions ChartLegendOptions = new();
 
+        public ChartGridLinesOptions ChartGridLinesOptions = new();
         public string? Title;
 
         #endregion Public Fields

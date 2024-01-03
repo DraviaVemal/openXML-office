@@ -191,8 +191,8 @@ namespace OpenXMLOffice.Presentation
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
-            AreaChart AreaChart = new();
-            GetChartPart().ChartSpace = AreaChart.GetChartSpace(ChartData, AreaChartSetting);
+            AreaChart AreaChart = new(AreaChartSetting, ChartData);
+            GetChartPart().ChartSpace = AreaChart.GetChartSpace();
             GetChartStylePart().ChartStyle = AreaChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = AreaChart.GetColorStyle();
             return GetChartGraphicFrame();
@@ -204,8 +204,8 @@ namespace OpenXMLOffice.Presentation
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
-            BarChart BarChart = new();
-            GetChartPart().ChartSpace = BarChart.GetChartSpace(ChartData, BarChartSetting);
+            BarChart BarChart = new(BarChartSetting, ChartData);
+            GetChartPart().ChartSpace = BarChart.GetChartSpace();
             GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
             return GetChartGraphicFrame();
@@ -217,8 +217,8 @@ namespace OpenXMLOffice.Presentation
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
-            ColumnChart ColumnChart = new();
-            GetChartPart().ChartSpace = ColumnChart.GetChartSpace(ChartData, ColumnChartSetting);
+            ColumnChart ColumnChart = new(ColumnChartSetting, ChartData);
+            GetChartPart().ChartSpace = ColumnChart.GetChartSpace();
             GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
             return GetChartGraphicFrame();
@@ -230,8 +230,8 @@ namespace OpenXMLOffice.Presentation
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
-            LineChart LineChart = new();
-            GetChartPart().ChartSpace = LineChart.GetChartSpace(ChartData, LineChartSetting);
+            LineChart LineChart = new(LineChartSetting, ChartData);
+            GetChartPart().ChartSpace = LineChart.GetChartSpace();
             GetChartStylePart().ChartStyle = LineChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = LineChart.GetColorStyle();
             return GetChartGraphicFrame();
@@ -243,8 +243,8 @@ namespace OpenXMLOffice.Presentation
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
-            PieChart PieChart = new();
-            GetChartPart().ChartSpace = PieChart.GetChartSpace(ChartData, PieChartSetting);
+            PieChart PieChart = new(PieChartSetting, ChartData);
+            GetChartPart().ChartSpace = PieChart.GetChartSpace();
             GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = PieChart.GetColorStyle();
             return GetChartGraphicFrame();
@@ -256,8 +256,8 @@ namespace OpenXMLOffice.Presentation
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
-            ScatterChart ScatterChart = new();
-            GetChartPart().ChartSpace = ScatterChart.GetChartSpace(ChartData, ScatterChartSetting);
+            ScatterChart ScatterChart = new(ScatterChartSetting, ChartData);
+            GetChartPart().ChartSpace = ScatterChart.GetChartSpace();
             GetChartStylePart().ChartStyle = ScatterChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = ScatterChart.GetColorStyle();
             return GetChartGraphicFrame();

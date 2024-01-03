@@ -7,8 +7,13 @@ namespace OpenXMLOffice.Global
     public class ScatterFamilyChart : ChartBase
     {
         #region Protected Methods
-
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, ScatterChartSetting ScatterChartSetting)
+        protected ScatterChartSetting ScatterChartSetting;
+        protected ScatterFamilyChart(ScatterChartSetting ScatterChartSetting, ChartData[][] DataCols) : base(ScatterChartSetting)
+        {
+            this.ScatterChartSetting = ScatterChartSetting;
+            SetChartPlotArea(CreateChartPlotArea(DataCols));
+        }
+        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
@@ -85,16 +90,16 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels CreateDataLabel(ScatterChartDataLabel ScatterChartDataLabel)
         {
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = ScatterChartDataLabel.DataLabelPosition != ScatterChartDataLabel.eDataLabelPosition.NONE },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false },
-                new C.ShowLeaderLines() { Val = false });
             if (ScatterChartDataLabel.DataLabelPosition != ScatterChartDataLabel.eDataLabelPosition.NONE)
             {
+                C.DataLabels DataLabels = new(
+                    new C.ShowLegendKey { Val = false },
+                    new C.ShowValue { Val = ScatterChartDataLabel.DataLabelPosition != ScatterChartDataLabel.eDataLabelPosition.NONE },
+                    new C.ShowCategoryName { Val = false },
+                    new C.ShowSeriesName { Val = false },
+                    new C.ShowPercent { Val = false },
+                    new C.ShowBubbleSize { Val = false },
+                    new C.ShowLeaderLines() { Val = false });
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = ScatterChartDataLabel.DataLabelPosition switch
@@ -135,8 +140,9 @@ namespace OpenXMLOffice.Global
                     AnchorCenter = true
                 }, new A.ListStyle(),
                Paragraph), 0);
+                return DataLabels;
             }
-            return DataLabels;
+            else return new();
         }
 
         private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,

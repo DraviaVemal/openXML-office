@@ -48,7 +48,6 @@ namespace OpenXMLOffice.Global
 
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
         public List<ColumnChartSeriesSetting> ColumnChartSeriesSettings = new();
         public ColumnChartTypes ColumnChartTypes = ColumnChartTypes.CLUSTERED;
 

@@ -52,7 +52,6 @@ namespace OpenXMLOffice.Global
 
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
         public List<LineChartSeriesSetting> LineChartSeriesSettings = new();
         public LineChartTypes LineChartTypes = LineChartTypes.CLUSTERED;
 

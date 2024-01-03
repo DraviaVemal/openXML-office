@@ -6,16 +6,7 @@ namespace OpenXMLOffice.Global
     public class LineChart : LineFamilyChart
     {
         #region Public Methods
-
-        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, LineChartSetting LineChartSetting)
-        {
-            // Apply Properties
-            ChartGridLinesOptions = LineChartSetting.ChartGridLinesOptions;
-            C.Chart Chart = CreateChart(LineChartSetting);
-            Chart.PlotArea = CreateChartPlotArea(DataCols, LineChartSetting);
-            GetChartSpace().Append(Chart);
-            return GetChartSpace();
-        }
+        public LineChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting, DataCols) { }
 
         public CS.ChartStyle GetChartStyle()
         {

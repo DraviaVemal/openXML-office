@@ -6,9 +6,14 @@ namespace OpenXMLOffice.Global
 {
     public class AreaFamilyChart : ChartBase
     {
+        protected readonly AreaChartSetting AreaChartSetting;
         #region Protected Methods
-
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, AreaChartSetting AreaChartSetting)
+        public AreaFamilyChart(AreaChartSetting AreaChartSetting, ChartData[][] DataCols) : base(AreaChartSetting)
+        {
+            this.AreaChartSetting = AreaChartSetting;
+            SetChartPlotArea(CreateChartPlotArea(DataCols));
+        }
+        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
@@ -38,7 +43,7 @@ namespace OpenXMLOffice.Global
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
-                    GetDataLabels(AreaChartSetting, seriesIndex)
+                    GetDataLabels(seriesIndex)
                 ));
                 seriesIndex++;
             }
@@ -130,7 +135,7 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.DataLabels GetDataLabels(AreaChartSetting AreaChartSetting, int index)
+        private C.DataLabels GetDataLabels(int index)
         {
             if (index < AreaChartSetting.AreaChartSeriesSettings.Count)
             {

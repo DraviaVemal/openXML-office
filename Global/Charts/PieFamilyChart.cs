@@ -7,8 +7,21 @@ namespace OpenXMLOffice.Global
     public class PieFamilyChart : ChartBase
     {
         #region Protected Methods
-
-        protected C.PlotArea CreateDoughnutChartPlotArea(ChartData[][] DataCols, PieChartSetting PieChartSetting)
+        protected PieChartSetting PieChartSetting;
+        protected PieFamilyChart(PieChartSetting PieChartSetting, ChartData[][] DataCols) : base(PieChartSetting)
+        {
+            this.PieChartSetting = PieChartSetting;
+            switch (PieChartSetting.PieChartTypes)
+            {
+                case PieChartTypes.DOUGHNUT:
+                    SetChartPlotArea(CreateDoughnutChartPlotArea(DataCols));
+                    break;
+                default:
+                    SetChartPlotArea(CreatePieChartPlotArea(DataCols));
+                    break;
+            };
+        }
+        private C.PlotArea CreateDoughnutChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
@@ -52,7 +65,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        protected C.PlotArea CreatePieChartPlotArea(ChartData[][] DataCols, PieChartSetting PieChartSetting)
+        protected C.PlotArea CreatePieChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());

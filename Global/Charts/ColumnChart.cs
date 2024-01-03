@@ -6,16 +6,7 @@ namespace OpenXMLOffice.Global
     public class ColumnChart : ColumnFamilyChart
     {
         #region Public Methods
-
-        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, ColumnChartSetting ColumnChartSetting)
-        {
-            // Apply Properties
-            ChartGridLinesOptions = ColumnChartSetting.ChartGridLinesOptions;
-            C.Chart Chart = CreateChart(ColumnChartSetting);
-            Chart.PlotArea = CreateChartPlotArea(DataCols, ColumnChartSetting);
-            GetChartSpace().Append(Chart);
-            return GetChartSpace();
-        }
+        public ColumnChart(ColumnChartSetting ColumnChartSetting, ChartData[][] DataCols) : base(ColumnChartSetting, DataCols) { }
 
         public CS.ChartStyle GetChartStyle()
         {

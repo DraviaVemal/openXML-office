@@ -7,8 +7,15 @@ namespace OpenXMLOffice.Global
     public class LineFamilyChart : ChartBase
     {
         #region Protected Methods
+        protected LineChartSetting LineChartSetting;
 
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, LineChartSetting LineChartSetting)
+        protected LineFamilyChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting)
+        {
+            this.LineChartSetting = LineChartSetting;
+            SetChartPlotArea(CreateChartPlotArea(DataCols));
+        }
+
+        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());

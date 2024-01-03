@@ -47,7 +47,6 @@ namespace OpenXMLOffice.Global
         public AreaChartTypes AreaChartTypes = AreaChartTypes.CLUSTERED;
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
 
         #endregion Public Fields
     }

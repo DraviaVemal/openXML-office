@@ -6,17 +6,7 @@ namespace OpenXMLOffice.Global
     public class BarChart : BarFamilyChart
     {
         #region Public Methods
-
-        public C.ChartSpace GetChartSpace(ChartData[][] DataCols, BarChartSetting BarChartSetting)
-        {
-            // Apply Properties
-            ChartGridLinesOptions = BarChartSetting.ChartGridLinesOptions;
-            // Start Creating Objects
-            C.Chart Chart = CreateChart(BarChartSetting);
-            Chart.PlotArea = CreateChartPlotArea(DataCols, BarChartSetting);
-            GetChartSpace().Append(Chart);
-            return GetChartSpace();
-        }
+        public BarChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting, DataCols) { }
 
         public CS.ChartStyle GetChartStyle()
         {

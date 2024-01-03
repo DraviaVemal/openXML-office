@@ -50,7 +50,6 @@ namespace OpenXMLOffice.Global
         public BarChartTypes BarChartTypes = BarChartTypes.CLUSTERED;
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
 
         #endregion Public Fields
     }
