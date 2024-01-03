@@ -154,7 +154,6 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void AddScatterPlot()
         {
-            Random random = new();
             DataCell[][] data = new DataCell[4][];
             data[0] = new DataCell[4];
             data[1] = new DataCell[4];
@@ -199,7 +198,7 @@ namespace OpenXMLOffice.Tests
             };
             data[1][3] = new DataCell
             {
-                CellValue = "10",
+                CellValue = "12.5",
                 DataType = CellDataType.NUMBER,
                 numberFormatting = "General",
                 styleId = 1
@@ -214,21 +213,21 @@ namespace OpenXMLOffice.Tests
             };
             data[2][1] = new DataCell
             {
-                CellValue = "10",
+                CellValue = "20",
                 DataType = CellDataType.NUMBER,
                 numberFormatting = "General",
                 styleId = 1
             };
             data[2][2] = new DataCell
             {
-                CellValue = "12",
+                CellValue = "22",
                 DataType = CellDataType.NUMBER,
                 numberFormatting = "General",
                 styleId = 1
             };
             data[2][3] = new DataCell
             {
-                CellValue = "10",
+                CellValue = "13",
                 DataType = CellDataType.NUMBER,
                 numberFormatting = "General",
                 styleId = 1
@@ -243,21 +242,21 @@ namespace OpenXMLOffice.Tests
             };
             data[3][1] = new DataCell
             {
-                CellValue = "10",
+                CellValue = "3",
                 DataType = CellDataType.NUMBER,
                 numberFormatting = "General",
                 styleId = 1
             };
             data[3][2] = new DataCell
             {
-                CellValue = "12",
+                CellValue = "7",
                 DataType = CellDataType.NUMBER,
                 numberFormatting = "General",
                 styleId = 1
             };
             data[3][3] = new DataCell
             {
-                CellValue = "10",
+                CellValue = "4.5",
                 DataType = CellDataType.NUMBER,
                 numberFormatting = "General",
                 styleId = 1
@@ -268,30 +267,30 @@ namespace OpenXMLOffice.Tests
             {
                 Title = "Default"
             });
-            // //2
-            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            // {
-            //     ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
-            //     Title = "Scatter Smooth"
-            // });
-            // //3
-            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            // {
-            //     ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH_MARKER,
-            //     Title = "Scatter Smooth Market"
-            // });
-            // //4
-            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            // {
-            //     ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT,
-            //     Title = "Scatter Stright"
-            // });
-            // //5
-            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            // {
-            //     ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
-            //     Title = "Scatter Straight Marker"
-            // });
+            //2
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            {
+                ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
+                Title = "Scatter Smooth"
+            });
+            //3
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            {
+                ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH_MARKER,
+                Title = "Scatter Smooth Market"
+            });
+            //4
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            {
+                ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT,
+                Title = "Scatter Stright"
+            });
+            //5
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            {
+                ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
+                Title = "Scatter Straight Marker"
+            });
             Assert.IsTrue(true);
         }
 
