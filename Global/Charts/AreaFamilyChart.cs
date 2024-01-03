@@ -32,7 +32,7 @@ namespace OpenXMLOffice.Global
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
                     DataCols[0].Skip(1).ToArray(),
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}${DataCols[0].Length}",
+                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
                     col.Skip(1).ToArray(),
                     GetSolidFill(AreaChartSetting.AreaChartSeriesSettings
                             .Where(item => item.FillColor != null)

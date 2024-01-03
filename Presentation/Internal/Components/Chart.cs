@@ -64,6 +64,14 @@ namespace OpenXMLOffice.Presentation
             CreateChart(DataRows, PieChartSetting);
         }
 
+        public Chart(Slide Slide, DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
+        {
+            OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
+            CurrentSlide = Slide;
+            InitialiseChartParts();
+            CreateChart(DataRows, ScatterChartSetting);
+        }
+
         #endregion Public Constructors
 
         #region Public Methods
@@ -239,6 +247,19 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace = PieChart.GetChartSpace(ChartData, PieChartSetting);
             GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = PieChart.GetColorStyle();
+            return GetChartGraphicFrame();
+        }
+
+        private P.GraphicFrame CreateChart(DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
+        {
+            LoadDataToExcel(DataRows);
+            // Prepare Excel Data for PPT Cache
+            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+            ScatterChart ScatterChart = new();
+            GetChartPart().ChartSpace = ScatterChart.GetChartSpace(ChartData, ScatterChartSetting);
+            GetChartStylePart().ChartStyle = ScatterChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = ScatterChart.GetColorStyle();
             return GetChartGraphicFrame();
         }
 

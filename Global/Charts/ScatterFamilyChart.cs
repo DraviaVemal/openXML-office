@@ -4,32 +4,32 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
 {
-    public class LineFamilyChart : ChartBase
+    public class ScatterFamilyChart : ChartBase
     {
         #region Protected Methods
 
-        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, LineChartSetting LineChartSetting)
+        protected C.PlotArea CreateChartPlotArea(ChartData[][] DataCols, ScatterChartSetting ScatterChartSetting)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            C.LineChart LineChart = new(
-                new C.Grouping
+            C.ScatterChart ScatterChart = new(
+                new C.ScatterStyle
                 {
-                    Val = LineChartSetting.LineChartTypes switch
+                    Val = ScatterChartSetting.ScatterChartTypes switch
                     {
-                        LineChartTypes.STACKED => C.GroupingValues.Stacked,
-                        LineChartTypes.STACKED_MARKER => C.GroupingValues.Stacked,
-                        LineChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
-                        LineChartTypes.PERCENT_STACKED_MARKER => C.GroupingValues.PercentStacked,
+                        ScatterChartTypes.SCATTER_SMOOTH => C.ScatterStyleValues.Smooth,
+                        ScatterChartTypes.SCATTER_SMOOTH_MARKER => C.ScatterStyleValues.SmoothMarker,
+                        ScatterChartTypes.SCATTER_STRIGHT => C.ScatterStyleValues.Line,
+                        ScatterChartTypes.SCATTER_STRIGHT_MARKER => C.ScatterStyleValues.LineMarker,
                         // Clusted
-                        _ => C.GroupingValues.Standard,
+                        _ => C.ScatterStyleValues.Marker,
                     }
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
             foreach (ChartData[] col in DataCols.Skip(1).ToArray())
             {
-                C.Marker Marker = new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(LineChartSetting.LineChartTypes) ? new(
+                C.Marker Marker = new[] { ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) ? new(
                     new C.Symbol { Val = C.MarkerStyleValues.Circle },
                     new C.Size { Val = 5 },
                     new C.ShapeProperties(
@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Global
                     {
                         Val = C.MarkerStyleValues.None
                     });
-                LineChart.Append(CreateLineChartSeries(seriesIndex,
+                ScatterChart.Append(CreateScatterChartSeries(seriesIndex,
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 1)}$1",
                     col.Take(1).ToArray(),
                     $"Sheet1!$A$2:$A${DataCols[0].Length}",
@@ -49,11 +49,11 @@ namespace OpenXMLOffice.Global
                     $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
                     col.Skip(1).ToArray(),
                     Marker,
-                     GetSolidFill(LineChartSetting.LineChartSeriesSettings
+                     GetSolidFill(ScatterChartSetting.ScatterChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
-                    GetDataLabels(LineChartSetting, seriesIndex)
+                    GetDataLabels(ScatterChartSetting, seriesIndex)
                 ));
                 seriesIndex++;
             }
@@ -64,11 +64,11 @@ namespace OpenXMLOffice.Global
                 new C.ShowSeriesName { Val = false },
                 new C.ShowPercent { Val = false },
                 new C.ShowBubbleSize { Val = false });
-            LineChart.Append(DataLabels);
-            LineChart.Append(new C.Smooth { Val = false });
-            LineChart.Append(new C.AxisId { Val = 1362418656 });
-            LineChart.Append(new C.AxisId { Val = 1358349936 });
-            plotArea.Append(LineChart);
+            ScatterChart.Append(DataLabels);
+            ScatterChart.Append(new C.Smooth { Val = false });
+            ScatterChart.Append(new C.AxisId { Val = 1362418656 });
+            ScatterChart.Append(new C.AxisId { Val = 1358349936 });
+            plotArea.Append(ScatterChart);
             plotArea.Append(CreateCategoryAxis(1362418656));
             plotArea.Append(CreateValueAxis(1358349936));
             C.ShapeProperties ShapeProperties = new();
@@ -83,26 +83,26 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.DataLabels CreateDataLabel(LineChartDataLabel LineChartDataLabel)
+        private C.DataLabels CreateDataLabel(ScatterChartDataLabel ScatterChartDataLabel)
         {
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = LineChartDataLabel.DataLabelPosition != LineChartDataLabel.eDataLabelPosition.NONE },
+                new C.ShowValue { Val = ScatterChartDataLabel.DataLabelPosition != ScatterChartDataLabel.eDataLabelPosition.NONE },
                 new C.ShowCategoryName { Val = false },
                 new C.ShowSeriesName { Val = false },
                 new C.ShowPercent { Val = false },
                 new C.ShowBubbleSize { Val = false },
                 new C.ShowLeaderLines() { Val = false });
-            if (LineChartDataLabel.DataLabelPosition != LineChartDataLabel.eDataLabelPosition.NONE)
+            if (ScatterChartDataLabel.DataLabelPosition != ScatterChartDataLabel.eDataLabelPosition.NONE)
             {
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
-                    Val = LineChartDataLabel.DataLabelPosition switch
+                    Val = ScatterChartDataLabel.DataLabelPosition switch
                     {
-                        LineChartDataLabel.eDataLabelPosition.LEFT => C.DataLabelPositionValues.Left,
-                        LineChartDataLabel.eDataLabelPosition.RIGHT => C.DataLabelPositionValues.Right,
-                        LineChartDataLabel.eDataLabelPosition.ABOVE => C.DataLabelPositionValues.Top,
-                        LineChartDataLabel.eDataLabelPosition.BELOW => C.DataLabelPositionValues.Bottom,
+                        ScatterChartDataLabel.eDataLabelPosition.LEFT => C.DataLabelPositionValues.Left,
+                        ScatterChartDataLabel.eDataLabelPosition.RIGHT => C.DataLabelPositionValues.Right,
+                        ScatterChartDataLabel.eDataLabelPosition.ABOVE => C.DataLabelPositionValues.Top,
+                        ScatterChartDataLabel.eDataLabelPosition.BELOW => C.DataLabelPositionValues.Bottom,
                         //Center
                         _ => C.DataLabelPositionValues.Center,
                     }
@@ -139,12 +139,12 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                        ChartData[] valueCells, C.Marker Marker, A.SolidFill SolidFill,
+        private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
+                                                        string xFormula, ChartData[] xCells, string yFormula,
+                                                        ChartData[] yCells, C.Marker Marker, A.SolidFill SolidFill,
                                                         C.DataLabels DataLabels)
         {
-            C.LineChartSeries series = new(
+            C.ScatterChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
@@ -154,19 +154,19 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);
             series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.XValues(new C.NumberReference(new C.Formula(xFormula), AddNumberCacheValue(xCells, null))));
+            series.Append(new C.YValues(new C.NumberReference(new C.Formula(yFormula), AddNumberCacheValue(yCells, null))));
             series.Append(new C.Smooth() { Val = false });
             return series;
         }
 
-        private C.DataLabels GetDataLabels(LineChartSetting LineChartSetting, int index)
+        private C.DataLabels GetDataLabels(ScatterChartSetting ScatterChartSetting, int index)
         {
-            if (index < LineChartSetting.LineChartSeriesSettings.Count)
+            if (index < ScatterChartSetting.ScatterChartSeriesSettings.Count)
             {
-                return CreateDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
+                return CreateDataLabel(ScatterChartSetting.ScatterChartSeriesSettings?[index]?.ScatterChartDataLabel ?? new ScatterChartDataLabel());
             }
-            return CreateDataLabel(new LineChartDataLabel());
+            return CreateDataLabel(new ScatterChartDataLabel());
         }
 
         #endregion Private Methods

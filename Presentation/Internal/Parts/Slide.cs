@@ -78,6 +78,14 @@ namespace OpenXMLOffice.Presentation
             return Chart;
         }
 
+        public Chart AddChart(Excel.DataCell[][] DataCells, ScatterChartSetting ScatterChartSetting)
+        {
+            Chart Chart = new(this, DataCells, ScatterChartSetting);
+            P.GraphicFrame GraphicFrame = Chart.GetChartGraphicFrame();
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Chart;
+        }
+
         public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
         {
             Table Table = new(DataCells, TableSetting);
