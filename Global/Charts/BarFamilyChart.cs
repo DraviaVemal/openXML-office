@@ -56,8 +56,8 @@ namespace OpenXMLOffice.Global
             BarChart.Append(new C.AxisId { Val = 1362418656 });
             BarChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(BarChart);
-            plotArea.Append(CreateCategoryAxis(1362418656));
-            plotArea.Append(CreateValueAxis(1358349936));
+            plotArea.Append(CreateCategoryAxis(1362418656, C.AxisPositionValues.Left));
+            plotArea.Append(CreateValueAxis(1358349936, C.AxisPositionValues.Bottom));
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));

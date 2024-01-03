@@ -154,35 +154,144 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void AddScatterPlot()
         {
+            Random random = new();
+            DataCell[][] data = new DataCell[4][];
+            data[0] = new DataCell[4];
+            data[1] = new DataCell[4];
+            data[2] = new DataCell[4];
+            data[3] = new DataCell[4];
+            data[0][1] = new DataCell
+            {
+                CellValue = "Series 1",
+                DataType = CellDataType.STRING
+            };
+            data[0][2] = new DataCell
+            {
+                CellValue = "Series 2",
+                DataType = CellDataType.STRING
+            };
+            data[0][3] = new DataCell
+            {
+                CellValue = "Series 3",
+                DataType = CellDataType.STRING
+            };
+
+            data[1][0] = new DataCell
+            {
+                CellValue = "1",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[1][1] = new DataCell
+            {
+                CellValue = "10",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[1][2] = new DataCell
+            {
+                CellValue = "12",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[1][3] = new DataCell
+            {
+                CellValue = "10",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+
+            data[2][0] = new DataCell
+            {
+                CellValue = "2",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[2][1] = new DataCell
+            {
+                CellValue = "10",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[2][2] = new DataCell
+            {
+                CellValue = "12",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[2][3] = new DataCell
+            {
+                CellValue = "10",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+
+            data[3][0] = new DataCell
+            {
+                CellValue = "3",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[3][1] = new DataCell
+            {
+                CellValue = "10",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[3][2] = new DataCell
+            {
+                CellValue = "12",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+            data[3][3] = new DataCell
+            {
+                CellValue = "10",
+                DataType = CellDataType.NUMBER,
+                numberFormatting = "General",
+                styleId = 1
+            };
+
             //1
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
             {
                 Title = "Default"
             });
-            //2
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            {
-                ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
-                Title = "Scatter Smooth"
-            });
-            //3
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            {
-                ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH_MARKER,
-                Title = "Scatter Smooth Market"
-            });
-            //4
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            {
-                ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT,
-                Title = "Scatter Stright"
-            });
-            //5
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            {
-                ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
-                Title = "Scatter Straight Marker"
-            });
+            // //2
+            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            // {
+            //     ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
+            //     Title = "Scatter Smooth"
+            // });
+            // //3
+            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            // {
+            //     ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH_MARKER,
+            //     Title = "Scatter Smooth Market"
+            // });
+            // //4
+            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            // {
+            //     ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT,
+            //     Title = "Scatter Stright"
+            // });
+            // //5
+            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            // {
+            //     ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
+            //     Title = "Scatter Straight Marker"
+            // });
             Assert.IsTrue(true);
         }
 

@@ -69,7 +69,7 @@ namespace OpenXMLOffice.Global
             ScatterChart.Append(new C.AxisId { Val = 1362418656 });
             ScatterChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ScatterChart);
-            plotArea.Append(CreateValueAxis(1362418656));
+            plotArea.Append(CreateValueAxis(1362418656, C.AxisPositionValues.Bottom));
             plotArea.Append(CreateValueAxis(1358349936));
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(new A.NoFill());

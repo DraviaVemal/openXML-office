@@ -91,13 +91,13 @@ public class ChartBase
         }
     }
 
-    protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId)
+    protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId, C.AxisPositionValues? AxisPositionValues = null)
     {
         C.CategoryAxis CategoryAxis = new(
             new C.AxisId { Val = axisId },
             new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
             new C.Delete { Val = false },
-            new C.AxisPosition { Val = C.AxisPositionValues.Bottom },
+            new C.AxisPosition { Val = AxisPositionValues ?? C.AxisPositionValues.Bottom },
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
@@ -163,13 +163,13 @@ public class ChartBase
         return ChartColor.CreateColorStyles();
     }
 
-    protected C.ValueAxis CreateValueAxis(UInt32Value axisId)
+    protected C.ValueAxis CreateValueAxis(UInt32Value axisId, C.AxisPositionValues? AxisPositionValues = null)
     {
         C.ValueAxis ValueAxis = new(
             new C.AxisId { Val = axisId },
             new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
             new C.Delete { Val = false },
-            new C.AxisPosition { Val = C.AxisPositionValues.Left },
+            new C.AxisPosition { Val = AxisPositionValues ?? C.AxisPositionValues.Left },
             new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
@@ -310,8 +310,7 @@ public class ChartBase
                             CapType = A.LineCapValues.Flat,
                             CompoundLineType = A.CompoundLineValues.Single,
                             Alignment = A.PenAlignmentValues.Center
-                        },
-                        new A.Round()
+                        }
                     )
                 );
     }
@@ -332,8 +331,7 @@ public class ChartBase
                             CapType = A.LineCapValues.Flat,
                             CompoundLineType = A.CompoundLineValues.Single,
                             Alignment = A.PenAlignmentValues.Center
-                        },
-                        new A.Round()
+                        }
                     )
                 );
     }
