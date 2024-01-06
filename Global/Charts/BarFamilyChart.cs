@@ -120,10 +120,10 @@ namespace OpenXMLOffice.Global
             {
                 Val = BarChartDataLabel.DataLabelPosition switch
                 {
-                    BarChartDataLabel.eDataLabelPosition.CENTER => C.DataLabelPositionValues.Center,
+                    BarChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
                     BarChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
                     BarChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
-                    _ => C.DataLabelPositionValues.OutsideEnd
+                    _ => C.DataLabelPositionValues.Center
                 }
             }, 0);
             DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);

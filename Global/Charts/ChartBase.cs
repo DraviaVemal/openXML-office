@@ -1,6 +1,7 @@
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
+using C15 = DocumentFormat.OpenXml.Office2013.Drawing.Chart;
 using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global;
@@ -10,7 +11,7 @@ public class ChartBase
     #region Protected Fields
 
     protected ChartSetting ChartSetting;
-
+    protected List<ChartDataGrouping> ChartDataGroupings = new();
     #endregion Protected Fields
 
     #region Private Fields
@@ -48,6 +49,36 @@ public class ChartBase
     #endregion Public Methods
 
     #region Protected Methods
+
+    protected C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] Cells)
+    {
+        try
+        {
+            C15.DataLabelsRangeChache DataLabelsRangeChache = new()
+            {
+                PointCount = new C.PointCount()
+                {
+                    Val = (UInt32Value)(uint)Cells.Length
+                },
+            };
+            int count = 0;
+            foreach (ChartData Cell in Cells)
+            {
+                C.StringPoint StringPoint = new()
+                {
+                    Index = (UInt32Value)(uint)count
+                };
+                StringPoint.AppendChild(new C.NumericValue(Cell.Value ?? ""));
+                DataLabelsRangeChache.AppendChild(StringPoint);
+                ++count;
+            }
+            return DataLabelsRangeChache;
+        }
+        catch
+        {
+            throw new Exception("Chart. Data Label Ref Error");
+        }
+    }
 
     protected C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting? ChartSeriesSetting)
     {
@@ -109,7 +140,40 @@ public class ChartBase
             throw new Exception("Chart. String Ref Error");
         }
     }
-
+    protected List<ChartDataGrouping> CreateDataSeries(C.BarChart ColumnChart, ChartData[][] DataCols, ChartDataSetting ChartDataSetting)
+    {
+        if (ChartDataSetting.ChartDataRowStart < 1)
+        {
+            throw new ArgumentOutOfRangeException("Data Range Cannot Be Less Than 0");
+        }
+        List<uint> SeriesColumns = new();
+        long TotalSeriesCount = (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.ChartDataColumnEnd) - ChartDataSetting.ChartDataColumnStart - ChartDataSetting.ValueFromColumn.Count;
+        for (uint col = ChartDataSetting.ChartDataColumnStart; col < ChartDataSetting.ChartDataColumnEnd; col++)
+        {
+            if (!(ChartDataSetting.ValueFromColumn.TryGetValue(col, out _) || col == ChartDataSetting.ChartRowHeader))
+            {
+                SeriesColumns.Add(col);
+            }
+        }
+        if (TotalSeriesCount != SeriesColumns.Count)
+        {
+            throw new ArgumentOutOfRangeException("Data Series Column Miss Match");
+        }
+        foreach (uint Column in SeriesColumns)
+        {
+            ChartDataGrouping ChartDataGrouping = new()
+            {
+                XaxisCells = (ChartData[]?)DataCols[ChartDataSetting.ChartRowHeader].Clone(),
+                YaxisCells = (ChartData[]?)DataCols[Column].Clone(),
+            };
+            if (ChartDataSetting.ValueFromColumn.TryGetValue(Column, out uint DataValueColumn))
+            {
+                ChartDataGrouping.DataLabelCells = (ChartData[]?)DataCols[DataValueColumn].Clone();
+            }
+            ChartDataGroupings.Add(ChartDataGrouping);
+        }
+        return ChartDataGroupings;
+    }
     protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId, C.AxisPositionValues? AxisPositionValues = null)
     {
         C.CategoryAxis CategoryAxis = new(

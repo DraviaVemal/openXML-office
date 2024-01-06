@@ -309,8 +309,7 @@ namespace OpenXMLOffice.Tests
                         FillColor= "ff0000",
                         ColumnChartDataLabel = new ColumnChartDataLabel(){
                             ShowValue = true,
-                            ShowSeriesName = true,
-                            DataLabelPosition = ColumnChartDataLabel.eDataLabelPosition.CENTER
+                            ShowSeriesName = true
                         }
                     },
                     new(){
@@ -320,7 +319,8 @@ namespace OpenXMLOffice.Tests
                         }
                     },
                     new(){
-                        FillColor= "0000ff"
+                        FillColor= "0000ff",
+                        ColumnChartDataLabel = new ColumnChartDataLabel()
                     },
                     new(){
                         FillColor= "f0f0f0"

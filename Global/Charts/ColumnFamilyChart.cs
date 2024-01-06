@@ -1,6 +1,7 @@
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
+using C15 = DocumentFormat.OpenXml.Office2013.Drawing.Chart;
 
 namespace OpenXMLOffice.Global
 {
@@ -42,23 +43,19 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            foreach (ChartData[] col in DataCols.Skip(1).ToArray())
+            CreateDataSeries(ColumnChart, DataCols, ColumnChartSetting.ChartDataSetting)
+            .ForEach(Series =>
             {
                 ColumnChart.Append(CreateColumnChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
-                    col.Take(1).ToArray(),
-                    $"Sheet1!$A$2:$A${DataCols[0].Length}",
-                    DataCols[0].Skip(1).ToArray(),
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray(),
-                    GetSolidFill(ColumnChartSetting.ColumnChartSeriesSettings
-                            .Where(item => item.FillColor != null)
-                            .Select(item => item.FillColor!)
-                            .ToList(), seriesIndex),
-                    GetDataLabels(ColumnChartSetting, seriesIndex)
-                ));
+                                    Series,
+                                    GetSolidFill(ColumnChartSetting.ColumnChartSeriesSettings
+                                            .Where(item => item.FillColor != null)
+                                            .Select(item => item.FillColor!)
+                                            .ToList(), seriesIndex),
+                                    GetDataLabels(ColumnChartSetting, seriesIndex)
+                                ));
                 seriesIndex++;
-            }
+            });
             if (ColumnChartSetting.ColumnChartTypes == ColumnChartTypes.CLUSTERED)
             {
                 ColumnChart.Append(new C.GapWidth { Val = 219 });
@@ -82,14 +79,12 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.BarChartSeries CreateColumnChartSeries(int SeriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels DataLabels)
         {
             C.BarChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
+                new C.Index { Val = new UInt32Value((uint)SeriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)SeriesIndex) },
+                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(ChartDataGrouping.SeriesHeaderCells!))),
                 new C.InvertIfNegative { Val = true });
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(SolidFill);
@@ -97,12 +92,16 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);
             series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(ChartDataGrouping.XaxisFormula!), AddStringCacheValue(ChartDataGrouping.XaxisCells!))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(ChartDataGrouping.YaxisFormula!), AddNumberCacheValue(ChartDataGrouping.YaxisCells!, null))));
             series.Append(new C.Smooth()
             {
                 Val = false
             });
+            if (ChartDataGrouping.DataLabelFormula != null && ChartDataGrouping.DataLabelCells != null)
+            {
+                series.Append(new C.ExtensionList(new C.Extension(new C15.DataLabelsRange(new C15.Formula(ChartDataGrouping.DataLabelFormula), AddDataLabelCacheValue(ChartDataGrouping.DataLabelCells)))));
+            }
             return series;
         }
 
@@ -120,10 +119,10 @@ namespace OpenXMLOffice.Global
             {
                 Val = ColumnChartDataLabel.DataLabelPosition switch
                 {
-                    ColumnChartDataLabel.eDataLabelPosition.CENTER => C.DataLabelPositionValues.Center,
+                    ColumnChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
                     ColumnChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
                     ColumnChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
-                    _ => C.DataLabelPositionValues.OutsideEnd
+                    _ => C.DataLabelPositionValues.Center
                 }
             }, 0);
             DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
