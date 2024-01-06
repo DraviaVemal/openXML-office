@@ -7,7 +7,7 @@ namespace OpenXMLOffice.Global
         SCATTER_SMOOTH_MARKER,
         SCATTER_STRIGHT,
         SCATTER_STRIGHT_MARKER,
-        BUBBLE,
+        // BUBBLE,
         // BUBBLE_3D
     }
 

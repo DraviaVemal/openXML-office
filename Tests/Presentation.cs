@@ -148,6 +148,11 @@ namespace OpenXMLOffice.Tests
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER
             });
+            //23
+            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            // {
+            //     ScatterChartTypes = ScatterChartTypes.BUBBLE
+            // });
             Assert.IsTrue(true);
         }
 
@@ -291,6 +296,11 @@ namespace OpenXMLOffice.Tests
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
                 Title = "Scatter Straight Marker"
             });
+            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            // {
+            //     ScatterChartTypes = ScatterChartTypes.BUBBLE,
+            //     Title = "Scatter Straight Bubble"
+            // });
             Assert.IsTrue(true);
         }
 

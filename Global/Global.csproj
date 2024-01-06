@@ -3,7 +3,7 @@
   <ItemGroup>
     <Folder Include="Charts/" />
     <Folder Include="Utils/" />
-    <Folder Include="Componenets/" />
+    <Folder Include="Components/" />
     <Folder Include="Models/" />
   </ItemGroup>
 

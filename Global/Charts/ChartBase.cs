@@ -31,7 +31,7 @@ public class ChartBase
         OpenXMLChartSpace = CreateChartSpace();
         Chart = CreateChart();
         GetChartSpace().Append(Chart);
-        GetChartSpace().Append(new C.ExternalData() { Id = "rId1" });
+        GetChartSpace().Append(new C.ExternalData(new C.AutoUpdate() { Val = true }) { Id = "rId1" });
     }
 
     #endregion Protected Constructors
