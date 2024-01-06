@@ -295,6 +295,42 @@ namespace OpenXMLOffice.Tests
         }
 
         [TestMethod]
+        public void AddDevChart()
+        {
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ColumnChartSetting()
+            {
+                Title = "Color Change Chart",
+                ChartLegendOptions = new ChartLegendOptions()
+                {
+                    legendPosition = ChartLegendOptions.eLegendPosition.TOP
+                },
+                ColumnChartSeriesSettings = new List<ColumnChartSeriesSetting>(){
+                    new(){
+                        FillColor= "ff0000",
+                        ColumnChartDataLabel = new ColumnChartDataLabel(){
+                            ShowValue = true,
+                            ShowSeriesName = true,
+                            DataLabelPosition = ColumnChartDataLabel.eDataLabelPosition.CENTER
+                        }
+                    },
+                    new(){
+                        FillColor= "00ff00",
+                        ColumnChartDataLabel = new ColumnChartDataLabel(){
+                            ShowCategoryName = true
+                        }
+                    },
+                    new(){
+                        FillColor= "0000ff"
+                    },
+                    new(){
+                        FillColor= "f0f0f0"
+                    }
+                }
+            });
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
         public void AddBlankSlide()
         {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);

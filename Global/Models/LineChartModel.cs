@@ -15,7 +15,11 @@ namespace OpenXMLOffice.Global
     {
         #region Public Fields
 
-        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.NONE;
+        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.CENTER;
+        public bool ShowValue = false;
+        public bool ShowLegendKey = false;
+        public bool ShowCategoryName = false;
+        public bool ShowSeriesName = false;
 
         #endregion Public Fields
 
@@ -23,7 +27,6 @@ namespace OpenXMLOffice.Global
 
         public enum eDataLabelPosition
         {
-            NONE,
             LEFT,
             RIGHT,
             CENTER,

@@ -98,56 +98,53 @@ namespace OpenXMLOffice.Global
         private C.DataLabels CreateDataLabel(LineChartDataLabel LineChartDataLabel)
         {
             C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = LineChartDataLabel.DataLabelPosition != LineChartDataLabel.eDataLabelPosition.NONE },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
+                new C.ShowLegendKey { Val = LineChartDataLabel.ShowLegendKey },
+                new C.ShowValue { Val = LineChartDataLabel.ShowValue },
+                new C.ShowCategoryName { Val = LineChartDataLabel.ShowCategoryName },
+                new C.ShowSeriesName { Val = LineChartDataLabel.ShowSeriesName },
                 new C.ShowPercent { Val = false },
                 new C.ShowBubbleSize { Val = false },
                 new C.ShowLeaderLines() { Val = false });
-            if (LineChartDataLabel.DataLabelPosition != LineChartDataLabel.eDataLabelPosition.NONE)
+            DataLabels.InsertAt(new C.DataLabelPosition()
             {
-                DataLabels.InsertAt(new C.DataLabelPosition()
+                Val = LineChartDataLabel.DataLabelPosition switch
                 {
-                    Val = LineChartDataLabel.DataLabelPosition switch
-                    {
-                        LineChartDataLabel.eDataLabelPosition.LEFT => C.DataLabelPositionValues.Left,
-                        LineChartDataLabel.eDataLabelPosition.RIGHT => C.DataLabelPositionValues.Right,
-                        LineChartDataLabel.eDataLabelPosition.ABOVE => C.DataLabelPositionValues.Top,
-                        LineChartDataLabel.eDataLabelPosition.BELOW => C.DataLabelPositionValues.Bottom,
-                        //Center
-                        _ => C.DataLabelPositionValues.Center,
-                    }
-                }, 0);
-                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
-                A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-                {
-                    FontSize = 1197,
-                    Bold = false,
-                    Italic = false,
-                    Underline = A.TextUnderlineValues.None,
-                    Strike = A.TextStrikeValues.NoStrike,
-                    Kerning = 1200,
-                    Baseline = 0
-                }), new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
-                {
-                    Rotation = 0,
-                    UseParagraphSpacing = true,
-                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-                    Vertical = A.TextVerticalValues.Horizontal,
-                    Wrap = A.TextWrappingValues.Square,
-                    LeftInset = 38100,
-                    TopInset = 19050,
-                    RightInset = 38100,
-                    BottomInset = 19050,
-                    Anchor = A.TextAnchoringTypeValues.Center,
-                    AnchorCenter = true
-                }, new A.ListStyle(),
-               Paragraph), 0);
-            }
+                    LineChartDataLabel.eDataLabelPosition.LEFT => C.DataLabelPositionValues.Left,
+                    LineChartDataLabel.eDataLabelPosition.RIGHT => C.DataLabelPositionValues.Right,
+                    LineChartDataLabel.eDataLabelPosition.ABOVE => C.DataLabelPositionValues.Top,
+                    LineChartDataLabel.eDataLabelPosition.BELOW => C.DataLabelPositionValues.Bottom,
+                    //Center
+                    _ => C.DataLabelPositionValues.Center,
+                }
+            }, 0);
+            DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
+            A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
+                new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
+            {
+                FontSize = 1197,
+                Bold = false,
+                Italic = false,
+                Underline = A.TextUnderlineValues.None,
+                Strike = A.TextStrikeValues.NoStrike,
+                Kerning = 1200,
+                Baseline = 0
+            }), new A.EndParagraphRunProperties() { Language = "en-US" });
+            DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+            {
+                Rotation = 0,
+                UseParagraphSpacing = true,
+                VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
+                Vertical = A.TextVerticalValues.Horizontal,
+                Wrap = A.TextWrappingValues.Square,
+                LeftInset = 38100,
+                TopInset = 19050,
+                RightInset = 38100,
+                BottomInset = 19050,
+                Anchor = A.TextAnchoringTypeValues.Center,
+                AnchorCenter = true
+            }, new A.ListStyle(),
+           Paragraph), 0);
             return DataLabels;
         }
 
