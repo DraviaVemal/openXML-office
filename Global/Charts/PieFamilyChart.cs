@@ -44,7 +44,7 @@ namespace OpenXMLOffice.Global
             CreateDataSeries(DataCols, PieChartSetting.ChartDataSetting)
            .ForEach(Series =>
            {
-               Chart.Append(CreateChartSeries(seriesIndex, Series,
+               Chart.Append(CreateChartSeries(seriesIndex, Series, PieChartSetting.PieChartSeriesSettings.Count > seriesIndex ? PieChartSetting.PieChartSeriesSettings[seriesIndex] : new PieChartSeriesSetting(),
                    CreateSolidFill(PieChartSetting.PieChartSeriesSettings
                            .Where(item => item.FillColor != null)
                            .Select(item => item.FillColor!)
@@ -73,7 +73,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, PieChartSeriesSetting PieChartSeriesSetting, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -97,8 +97,8 @@ namespace OpenXMLOffice.Global
                 DataPoint.Append(ShapeProperties);
                 series.Append(DataPoint);
             }
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, PieChartSeriesSetting));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, PieChartSeriesSetting));
             return series;
         }
 

@@ -24,7 +24,7 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, AreaChartSeriesSetting AreaChartSeriesSetting, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.AreaChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -38,8 +38,8 @@ namespace OpenXMLOffice.Global
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, AreaChartSeriesSetting));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, AreaChartSeriesSetting));
             return series;
         }
 
@@ -63,7 +63,7 @@ namespace OpenXMLOffice.Global
             CreateDataSeries(DataCols, AreaChartSetting.ChartDataSetting)
             .ForEach(Series =>
             {
-                AreaChart.Append(CreateAreaChartSeries(seriesIndex, Series,
+                AreaChart.Append(CreateAreaChartSeries(seriesIndex, Series, AreaChartSetting.AreaChartSeriesSettings.Count > seriesIndex ? AreaChartSetting.AreaChartSeriesSettings[seriesIndex] : new AreaChartSeriesSetting(),
                                 CreateSolidFill(AreaChartSetting.AreaChartSeriesSettings
                                         .Where(item => item.FillColor != null)
                                         .Select(item => item.FillColor!)

@@ -15,7 +15,13 @@ namespace OpenXMLOffice.Presentation
             this.PictureSetting = PictureSetting;
             OpenXMLPicture = new();
             CreatePicture();
-            ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>("image/jpeg", EmbedId);
+            ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.ImageType switch
+            {
+                ImageType.PNG => "image/png",
+                ImageType.GIF => "image/gif",
+                ImageType.TIFF => "image/tiff",
+                _ => "image/jpeg"
+            }, EmbedId);
             ImagePart.FeedData(Stream);
         }
 
@@ -26,7 +32,13 @@ namespace OpenXMLOffice.Presentation
             this.PictureSetting = PictureSetting;
             OpenXMLPicture = new();
             CreatePicture();
-            ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>("image/jpeg", EmbedId);
+            ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.ImageType switch
+            {
+                ImageType.PNG => "image/png",
+                ImageType.GIF => "image/gif",
+                ImageType.TIFF => "image/tiff",
+                _ => "image/jpeg"
+            }, EmbedId);
             ImagePart.FeedData(new FileStream(FilePath, FileMode.Open, FileAccess.Read));
 
         }

@@ -58,7 +58,7 @@ namespace OpenXMLOffice.Global
                     {
                         Val = C.MarkerStyleValues.None
                     });
-                LineChart.Append(CreateLineChartSeries(seriesIndex, Series, Marker,
+                LineChart.Append(CreateLineChartSeries(seriesIndex, Series, LineChartSetting.LineChartSeriesSettings.Count > seriesIndex ? LineChartSetting.LineChartSeriesSettings[seriesIndex] : new LineChartSeriesSetting(), Marker,
                      CreateSolidFill(LineChartSetting.LineChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
@@ -152,7 +152,7 @@ namespace OpenXMLOffice.Global
             return null;
         }
 
-        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, LineChartSeriesSetting LineChartSeriesSetting, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.LineChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -167,8 +167,8 @@ namespace OpenXMLOffice.Global
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, LineChartSeriesSetting));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, LineChartSeriesSetting));
             return series;
         }
 

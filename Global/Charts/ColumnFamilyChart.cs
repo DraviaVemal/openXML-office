@@ -46,7 +46,7 @@ namespace OpenXMLOffice.Global
             CreateDataSeries(DataCols, ColumnChartSetting.ChartDataSetting)
             .ForEach(Series =>
             {
-                ColumnChart.Append(CreateColumnChartSeries(SeriesIndex, Series,
+                ColumnChart.Append(CreateColumnChartSeries(SeriesIndex, Series, ColumnChartSetting.ColumnChartSeriesSettings.Count > SeriesIndex ? ColumnChartSetting.ColumnChartSeriesSettings[SeriesIndex] : new ColumnChartSeriesSetting(),
                                     CreateSolidFill(ColumnChartSetting.ColumnChartSeriesSettings
                                             .Where(item => item.FillColor != null)
                                             .Select(item => item.FillColor!)
@@ -83,7 +83,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.BarChartSeries CreateColumnChartSeries(int SeriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.BarChartSeries CreateColumnChartSeries(int SeriesIndex, ChartDataGrouping ChartDataGrouping, ColumnChartSeriesSetting ColumnChartSeriesSetting, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)SeriesIndex) },
@@ -99,8 +99,8 @@ namespace OpenXMLOffice.Global
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, ColumnChartSeriesSetting));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, ColumnChartSeriesSetting));
             if (ChartDataGrouping.DataLabelFormula != null && ChartDataGrouping.DataLabelCells != null)
             {
                 series.Append(new C.ExtensionList(new C.Extension(new C15.DataLabelsRange(new C15.Formula(ChartDataGrouping.DataLabelFormula), AddDataLabelCacheValue(ChartDataGrouping.DataLabelCells)))));

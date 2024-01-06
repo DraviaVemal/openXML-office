@@ -24,7 +24,7 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, BarChartSeriesSetting BarChartSeriesSetting, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -40,8 +40,8 @@ namespace OpenXMLOffice.Global
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, BarChartSeriesSetting));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, BarChartSeriesSetting));
             return series;
         }
 
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Global
             CreateDataSeries(DataCols, BarChartSetting.ChartDataSetting)
             .ForEach(Series =>
             {
-                BarChart.Append(CreateBarChartSeries(seriesIndex, Series,
+                BarChart.Append(CreateBarChartSeries(seriesIndex, Series, BarChartSetting.BarChartSeriesSettings.Count > seriesIndex ? BarChartSetting.BarChartSeriesSettings[seriesIndex] : new BarChartSeriesSetting(),
                     CreateSolidFill(BarChartSetting.BarChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)

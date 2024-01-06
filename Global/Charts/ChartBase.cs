@@ -123,11 +123,11 @@ public class ChartBase : CommonProperties
         return CategoryAxis;
     }
 
-    protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells)
+    protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
         if (Cells.All(v => v.DataType == DataType.NUMBER))
         {
-            return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+            return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
         }
         else
         {
@@ -234,26 +234,26 @@ public class ChartBase : CommonProperties
         return ValueAxis;
     }
 
-    protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells)
+    protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 
-    protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells)
+    protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 
-    protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells)
+    protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 
     #endregion Protected Methods
 
     #region Private Methods
 
-    private C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting? ChartSeriesSetting)
+    private C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
         try
         {
