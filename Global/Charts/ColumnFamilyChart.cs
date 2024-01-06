@@ -83,7 +83,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.BarChartSeries CreateColumnChartSeries(int SeriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.BarChartSeries CreateColumnChartSeries(int SeriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)SeriesIndex) },
@@ -94,7 +94,10 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(SolidFill);
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
+            if (DataLabels != null)
+            {
+                series.Append(DataLabels);
+            }
             series.Append(ShapeProperties);
             series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
             series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
@@ -156,13 +159,13 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.DataLabels GetDataLabels(ColumnChartSetting ColumnChartSetting, int index)
+        private C.DataLabels? GetDataLabels(ColumnChartSetting ColumnChartSetting, int index)
         {
             if (index < ColumnChartSetting.ColumnChartSeriesSettings.Count)
             {
                 return CreateDataLabel(ColumnChartSetting.ColumnChartSeriesSettings[index]?.ColumnChartDataLabel ?? new ColumnChartDataLabel());
             }
-            return CreateDataLabel(new ColumnChartDataLabel());
+            return null;
         }
 
         #endregion Private Methods

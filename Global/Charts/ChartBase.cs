@@ -31,7 +31,7 @@ public class ChartBase : CommonProperties
         OpenXMLChartSpace = CreateChartSpace();
         Chart = CreateChart();
         GetChartSpace().Append(Chart);
-        GetChartSpace().Append(new C.ExternalData(new C.AutoUpdate() { Val = true }) { Id = "rId1" });
+        GetChartSpace().Append(new C.ExternalData(new C.AutoUpdate() { Val = false }) { Id = "rId1" });
     }
 
     #endregion Protected Constructors
@@ -125,7 +125,14 @@ public class ChartBase : CommonProperties
 
     protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells)
     {
-        return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
+        if (Cells.All(v => v.DataType == DataType.NUMBER))
+        {
+            return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+        }
+        else
+        {
+            return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
+        }
     }
 
     protected CS.ChartStyle CreateChartStyles()
@@ -322,6 +329,10 @@ public class ChartBase : CommonProperties
             DisplayBlanksAs = new C.DisplayBlanksAs()
             {
                 Val = C.DisplayBlanksAsValues.Gap
+            },
+            ShowDataLabelsOverMaximum = new C.ShowDataLabelsOverMaximum()
+            {
+                Val = true
             }
         };
         if (ChartSetting.ChartLegendOptions.IsEnableLegend)
@@ -481,7 +492,7 @@ public class ChartBase : CommonProperties
         DefaultRunProperties.Append(new A.ComplexScriptFont { Typeface = "+mn-cs" });
         RichText.Append(
             new A.Paragraph(new A.ParagraphProperties(DefaultRunProperties),
-            new TextBox(new TextBoxSetting()
+            new TextBoxBase(new TextBoxSetting()
             {
                 Text = strTitle ?? "Chart Title"
             }).GetTextBoxRun()));

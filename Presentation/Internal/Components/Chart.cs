@@ -13,12 +13,9 @@ namespace OpenXMLOffice.Presentation
         #region Private Fields
 
         private readonly Slide CurrentSlide;
+        private readonly ChartSetting ChartSetting;
         private readonly ChartPart OpenXMLChartPart;
         private P.GraphicFrame? GraphicFrame;
-        private int Height = 6858000;
-        private int Width = 12192000;
-        private int X = 0;
-        private int Y = 0;
 
         #endregion Private Fields
 
@@ -26,6 +23,7 @@ namespace OpenXMLOffice.Presentation
 
         public Chart(Slide Slide, DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
         {
+            ChartSetting = AreaChartSetting;
             OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
             CurrentSlide = Slide;
             InitialiseChartParts();
@@ -34,6 +32,7 @@ namespace OpenXMLOffice.Presentation
 
         public Chart(Slide Slide, DataCell[][] DataRows, BarChartSetting BarChartSetting)
         {
+            ChartSetting = BarChartSetting;
             OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
             CurrentSlide = Slide;
             InitialiseChartParts();
@@ -42,6 +41,7 @@ namespace OpenXMLOffice.Presentation
 
         public Chart(Slide Slide, DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
         {
+            ChartSetting = ColumnChartSetting;
             OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
             CurrentSlide = Slide;
             InitialiseChartParts();
@@ -50,6 +50,7 @@ namespace OpenXMLOffice.Presentation
 
         public Chart(Slide Slide, DataCell[][] DataRows, LineChartSetting LineChartSetting)
         {
+            ChartSetting = LineChartSetting;
             OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
             CurrentSlide = Slide;
             InitialiseChartParts();
@@ -58,6 +59,7 @@ namespace OpenXMLOffice.Presentation
 
         public Chart(Slide Slide, DataCell[][] DataRows, PieChartSetting PieChartSetting)
         {
+            ChartSetting = PieChartSetting;
             OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
             CurrentSlide = Slide;
             InitialiseChartParts();
@@ -66,6 +68,7 @@ namespace OpenXMLOffice.Presentation
 
         public Chart(Slide Slide, DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
         {
+            ChartSetting = ScatterChartSetting;
             OpenXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
             CurrentSlide = Slide;
             InitialiseChartParts();
@@ -76,7 +79,7 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
-        public P.GraphicFrame GetChartGraphicFrame()
+        internal P.GraphicFrame GetChartGraphicFrame()
         {
             // Load Chart Part To Graphics Frame For Export
             string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
@@ -92,13 +95,13 @@ namespace OpenXMLOffice.Presentation
                 Transform = new P.Transform(
                    new A.Offset
                    {
-                       X = X,
-                       Y = Y
+                       X = ChartSetting.X,
+                       Y = ChartSetting.Y
                    },
                    new A.Extents
                    {
-                       Cx = Width,
-                       Cy = Height
+                       Cx = ChartSetting.Width,
+                       Cy = ChartSetting.Height
                    }),
                 Graphic = new A.Graphic(
                    new A.GraphicData(
@@ -124,9 +127,9 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// X,Y
         /// </returns>
-        public (int, int) GetPosition()
+        public (uint, uint) GetPosition()
         {
-            return (X, Y);
+            return (ChartSetting.X, ChartSetting.Y);
         }
 
         /// <summary>
@@ -134,9 +137,9 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// Width,Height
         /// </returns>
-        public (int, int) GetSize()
+        public (uint, uint) GetSize()
         {
-            return (Width, Height);
+            return (ChartSetting.Width, ChartSetting.Height);
         }
 
         public void Save()
@@ -144,30 +147,30 @@ namespace OpenXMLOffice.Presentation
             CurrentSlide.GetSlidePart().Slide.Save();
         }
 
-        public void UpdatePosition(int X, int Y)
+        public void UpdatePosition(uint X, uint Y)
         {
-            this.X = X;
-            this.Y = Y;
+            ChartSetting.X = X;
+            ChartSetting.Y = Y;
             if (GraphicFrame != null)
             {
                 GraphicFrame.Transform = new P.Transform
                 {
-                    Offset = new A.Offset { X = X, Y = Y },
-                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                    Offset = new A.Offset { X = ChartSetting.X, Y = ChartSetting.Y },
+                    Extents = new A.Extents { Cx = ChartSetting.Width, Cy = ChartSetting.Height }
                 };
             }
         }
 
-        public void UpdateSize(int Width, int Height)
+        public void UpdateSize(uint Width, uint Height)
         {
-            this.Width = Width;
-            this.Height = Height;
+            ChartSetting.Width = Width;
+            ChartSetting.Height = Height;
             if (GraphicFrame != null)
             {
                 GraphicFrame.Transform = new P.Transform
                 {
-                    Offset = new A.Offset { X = X, Y = Y },
-                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                    Offset = new A.Offset { X = ChartSetting.X, Y = ChartSetting.Y },
+                    Extents = new A.Extents { Cx = ChartSetting.Width, Cy = ChartSetting.Height }
                 };
             }
         }
@@ -190,7 +193,16 @@ namespace OpenXMLOffice.Presentation
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
-                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+                col.Select(Cell => new ChartData
+                {
+                    Value = Cell?.CellValue,
+                    DataType = Cell?.DataType switch
+                    {
+                        CellDataType.NUMBER => DataType.NUMBER,
+                        CellDataType.DATE => DataType.DATE,
+                        _ => DataType.STRING
+                    }
+                }).ToArray()).ToArray();
             AreaChart AreaChart = new(AreaChartSetting, ChartData);
             GetChartPart().ChartSpace = AreaChart.GetChartSpace();
             GetChartStylePart().ChartStyle = AreaChart.GetChartStyle();
@@ -203,7 +215,16 @@ namespace OpenXMLOffice.Presentation
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
-               col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+               col.Select(Cell => new ChartData
+               {
+                   Value = Cell?.CellValue,
+                   DataType = Cell?.DataType switch
+                   {
+                       CellDataType.NUMBER => DataType.NUMBER,
+                       CellDataType.DATE => DataType.DATE,
+                       _ => DataType.STRING
+                   }
+               }).ToArray()).ToArray();
             BarChart BarChart = new(BarChartSetting, ChartData);
             GetChartPart().ChartSpace = BarChart.GetChartSpace();
             GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
@@ -216,7 +237,16 @@ namespace OpenXMLOffice.Presentation
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
-                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+                col.Select(Cell => new ChartData
+                {
+                    Value = Cell?.CellValue,
+                    DataType = Cell?.DataType switch
+                    {
+                        CellDataType.NUMBER => DataType.NUMBER,
+                        CellDataType.DATE => DataType.DATE,
+                        _ => DataType.STRING
+                    }
+                }).ToArray()).ToArray();
             ColumnChart ColumnChart = new(ColumnChartSetting, ChartData);
             GetChartPart().ChartSpace = ColumnChart.GetChartSpace();
             GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
@@ -229,7 +259,16 @@ namespace OpenXMLOffice.Presentation
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
-                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+                col.Select(Cell => new ChartData
+                {
+                    Value = Cell?.CellValue,
+                    DataType = Cell?.DataType switch
+                    {
+                        CellDataType.NUMBER => DataType.NUMBER,
+                        CellDataType.DATE => DataType.DATE,
+                        _ => DataType.STRING
+                    }
+                }).ToArray()).ToArray();
             LineChart LineChart = new(LineChartSetting, ChartData);
             GetChartPart().ChartSpace = LineChart.GetChartSpace();
             GetChartStylePart().ChartStyle = LineChart.GetChartStyle();
@@ -242,7 +281,16 @@ namespace OpenXMLOffice.Presentation
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
-                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+                col.Select(Cell => new ChartData
+                {
+                    Value = Cell?.CellValue,
+                    DataType = Cell?.DataType switch
+                    {
+                        CellDataType.NUMBER => DataType.NUMBER,
+                        CellDataType.DATE => DataType.DATE,
+                        _ => DataType.STRING
+                    }
+                }).ToArray()).ToArray();
             PieChart PieChart = new(PieChartSetting, ChartData);
             GetChartPart().ChartSpace = PieChart.GetChartSpace();
             GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
@@ -255,7 +303,16 @@ namespace OpenXMLOffice.Presentation
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
-                col.Select(cell => new ChartData { Value = cell?.CellValue }).ToArray()).ToArray();
+                col.Select(Cell => new ChartData
+                {
+                    Value = Cell?.CellValue,
+                    DataType = Cell?.DataType switch
+                    {
+                        CellDataType.NUMBER => DataType.NUMBER,
+                        CellDataType.DATE => DataType.DATE,
+                        _ => DataType.STRING
+                    }
+                }).ToArray()).ToArray();
             ScatterChart ScatterChart = new(ScatterChartSetting, ChartData);
             GetChartPart().ChartSpace = ScatterChart.GetChartSpace();
             GetChartStylePart().ChartStyle = ScatterChart.GetChartStyle();

@@ -94,6 +94,20 @@ namespace OpenXMLOffice.Presentation
             return Table;
         }
 
+        public Picture AddPicture(string FilePath, PictureSetting PictureSetting)
+        {
+            Picture Picture = new(FilePath, this, PictureSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(Picture.GetPicture());
+            return Picture;
+        }
+
+        public Picture AddPicture(Stream Stream, PictureSetting PictureSetting)
+        {
+            Picture Picture = new(Stream, this, PictureSetting);
+            GetSlide().CommonSlideData!.ShapeTree!.Append(Picture.GetPicture());
+            return Picture;
+        }
+
         public IEnumerable<Shape> FindShapeByText(string searchText)
         {
             IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape =>

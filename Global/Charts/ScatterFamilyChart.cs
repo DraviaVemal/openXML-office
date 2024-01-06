@@ -139,7 +139,7 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.Outline Outline, C.DataLabels DataLabels)
+        private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.Outline Outline, C.DataLabels? DataLabels)
         {
             C.ScatterChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -149,7 +149,10 @@ namespace OpenXMLOffice.Global
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(Outline);
             ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
+            if (DataLabels != null)
+            {
+                series.Append(DataLabels);
+            }
             series.Append(ShapeProperties);
             series.Append(CreateXValueAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
             series.Append(CreateYValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
@@ -157,13 +160,13 @@ namespace OpenXMLOffice.Global
             return series;
         }
 
-        private C.DataLabels GetDataLabels(ScatterChartSetting ScatterChartSetting, int index)
+        private C.DataLabels? GetDataLabels(ScatterChartSetting ScatterChartSetting, int index)
         {
             if (index < ScatterChartSetting.ScatterChartSeriesSettings.Count)
             {
                 return CreateDataLabel(ScatterChartSetting.ScatterChartSeriesSettings?[index]?.ScatterChartDataLabel ?? new ScatterChartDataLabel());
             }
-            return CreateDataLabel(new ScatterChartDataLabel());
+            return null;
         }
 
         #endregion Private Methods

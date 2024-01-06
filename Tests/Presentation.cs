@@ -344,6 +344,14 @@ namespace OpenXMLOffice.Tests
         }
 
         [TestMethod]
+        public void AddPicture()
+        {
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new PictureSetting());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new PictureSetting());
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
         public void OpenExistingPresentationEdit()
         {
             PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
@@ -353,23 +361,23 @@ namespace OpenXMLOffice.Tests
             List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
             List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
             List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
-            shapes1[0].ReplaceShape(new TextBox(new TextBoxSetting()
+            shapes1[0].ReplaceTextBox(new TextBox(new TextBoxSetting()
             {
                 Text = "Dravia Vemal",
                 FontFamily = "Bernard MT Condensed"
-            }).GetTextBoxShape());
-            shapes2[0].ReplaceShape(new TextBox(new TextBoxSetting()
+            }));
+            shapes2[0].ReplaceTextBox(new TextBox(new TextBoxSetting()
             {
                 Text = "Vemal Dravia",
                 TextBackground = "777777"
-            }).GetTextBoxShape());
-            shapes3[0].ReplaceShape(new TextBox(new TextBoxSetting()
+            }));
+            shapes3[0].ReplaceTextBox(new TextBox(new TextBoxSetting()
             {
                 Text = "This is text box",
                 FontSize = 22,
                 IsBold = true,
                 TextColor = "AAAAAA"
-            }).GetTextBoxShape());
+            }));
             powerPoint1.MoveSlideByIndex(4, 0);
             powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
@@ -386,7 +394,7 @@ namespace OpenXMLOffice.Tests
             List<Shape> shape4 = Slide.FindShapeByText("Slide_1_Shape_4").ToList();
             List<Shape> shape5 = Slide.FindShapeByText("Slide_1_Shape_5").ToList();
             List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
-            shape1[0].ReplaceGraphicFrame(new Chart(Slide, CreateDataCellPayload(),
+            shape1[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(),
             new ColumnChartSetting()
             {
                 Title = "Title",
@@ -394,16 +402,16 @@ namespace OpenXMLOffice.Tests
                 {
                     IsEnableLegend = false
                 },
-            }).GetChartGraphicFrame());
-            shape2[0].ReplaceGraphicFrame(new Chart(Slide, CreateDataCellPayload(),
+            }));
+            shape2[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(),
             new BarChartSetting()
             {
                 ChartLegendOptions = new ChartLegendOptions()
                 {
                     legendPosition = ChartLegendOptions.eLegendPosition.RIGHT
                 }
-            }).GetChartGraphicFrame());
-            shape3[0].ReplaceGraphicFrame(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()
+            }));
+            shape3[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()
             {
                 ChartAxesOptions = new ChartAxesOptions()
                 {
@@ -416,10 +424,10 @@ namespace OpenXMLOffice.Tests
                     IsMinorCategoryLinesEnabled = true,
                     IsMinorValueLinesEnabled = true,
                 }
-            }).GetChartGraphicFrame());
-            shape4[0].ReplaceGraphicFrame(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()).GetChartGraphicFrame());
-            shape5[0].ReplaceGraphicFrame(new Chart(Slide, CreateDataCellPayload(), new AreaChartSetting()).GetChartGraphicFrame());
-            shape6[0].ReplaceGraphicFrame(new Chart(Slide, CreateDataCellPayload(), new PieChartSetting()).GetChartGraphicFrame());
+            }));
+            shape4[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()));
+            shape5[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new AreaChartSetting()));
+            shape6[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new PieChartSetting()));
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }

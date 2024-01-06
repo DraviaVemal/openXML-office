@@ -3,22 +3,18 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Global
 {
-    public class TextBox : CommonProperties
+    public class TextBoxBase : CommonProperties
     {
         #region Private Fields
 
         private readonly TextBoxSetting TextBoxSetting;
-        private int Height = 100;
         private P.Shape? OpenXMLShape;
-        private int Width = 100;
-        private int X = 0;
-        private int Y = 0;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public TextBox(TextBoxSetting TextBoxSetting)
+        public TextBoxBase(TextBoxSetting TextBoxSetting)
         {
             this.TextBoxSetting = TextBoxSetting;
         }
@@ -37,30 +33,30 @@ namespace OpenXMLOffice.Global
             return CreateTextBox();
         }
 
-        public void UpdatePosition(int X, int Y)
+        public void UpdatePosition(uint X, uint Y)
         {
-            this.X = X;
-            this.Y = Y;
+            TextBoxSetting.X = X;
+            TextBoxSetting.Y = Y;
             if (OpenXMLShape != null)
             {
                 OpenXMLShape.ShapeProperties!.Transform2D = new A.Transform2D
                 {
-                    Offset = new A.Offset { X = X, Y = Y },
-                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                    Offset = new A.Offset { X = TextBoxSetting.X, Y = TextBoxSetting.Y },
+                    Extents = new A.Extents { Cx = TextBoxSetting.Width, Cy = TextBoxSetting.Height }
                 };
             }
         }
 
-        public void UpdateSize(int Width, int Height)
+        public void UpdateSize(uint Width, uint Height)
         {
-            this.Width = Width;
-            this.Height = Height;
+            TextBoxSetting.Width = Width;
+            TextBoxSetting.Height = Height;
             if (OpenXMLShape != null)
             {
                 OpenXMLShape.ShapeProperties!.Transform2D = new A.Transform2D
                 {
-                    Offset = new A.Offset { X = X, Y = Y },
-                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                    Offset = new A.Offset { X = TextBoxSetting.X, Y = TextBoxSetting.Y },
+                    Extents = new A.Extents { Cx = TextBoxSetting.Width, Cy = TextBoxSetting.Height }
                 };
             }
         }
@@ -83,8 +79,8 @@ namespace OpenXMLOffice.Global
                 new P.ApplicationNonVisualDrawingProperties()),
                 ShapeProperties = new P.ShapeProperties(
                 new A.Transform2D(
-                    new A.Offset { X = X, Y = Y },
-                    new A.Extents { Cx = Width, Cy = Height }),
+                    new A.Offset { X = TextBoxSetting.X, Y = TextBoxSetting.Y },
+                    new A.Extents { Cx = TextBoxSetting.Width, Cy = TextBoxSetting.Height }),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
                 CreateSolidFill(new List<string>() { TextBoxSetting.ShapeBackground }, 0)),
                 TextBody = new P.TextBody(

@@ -138,9 +138,11 @@ namespace OpenXMLOffice.Global
     public class ChartSetting
     {
         #region Public Fields
-
+        public uint X = 0;
+        public uint Y = 0;
+        public uint Height = 6858000;
+        public uint Width = 12192000;
         public ChartDataSetting ChartDataSetting = new();
-
         public ChartGridLinesOptions ChartGridLinesOptions = new();
         public ChartLegendOptions ChartLegendOptions = new();
         public string? Title;

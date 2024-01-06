@@ -30,37 +30,46 @@ namespace OpenXMLOffice.Presentation
             OpenXMLShape.Remove();
         }
 
-        public void ReplaceGraphicFrame(P.GraphicFrame GraphicFrame)
+        public Chart ReplaceChart(Chart Chart)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
             if (OpenXMLShape.ShapeProperties?.Transform2D != null)
             {
                 A.Transform2D oldTransform = OpenXMLShape.ShapeProperties.Transform2D;
-                GraphicFrame.Transform = new P.Transform
-                {
-                    Offset = new A.Offset { X = oldTransform.Offset!.X, Y = oldTransform.Offset.Y },
-                    Extents = new A.Extents { Cx = oldTransform.Extents!.Cx, Cy = oldTransform.Extents.Cy }
-                };
+                Chart.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
+                Chart.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
             }
-            parent.InsertBefore(GraphicFrame, OpenXMLShape);
+            parent.InsertBefore(Chart.GetChartGraphicFrame(), OpenXMLShape);
             OpenXMLShape.Remove();
+            return Chart;
         }
 
-        public void ReplaceShape(P.Shape Shape)
+        public Picture ReplacePicture(Picture Picture)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
             if (OpenXMLShape.ShapeProperties?.Transform2D != null)
             {
                 A.Transform2D oldTransform = OpenXMLShape.ShapeProperties.Transform2D;
-                Shape.ShapeProperties ??= new P.ShapeProperties();
-                Shape.ShapeProperties.Transform2D = new A.Transform2D
-                {
-                    Offset = new A.Offset { X = oldTransform.Offset!.X, Y = oldTransform.Offset.Y },
-                    Extents = new A.Extents { Cx = oldTransform.Extents!.Cx, Cy = oldTransform.Extents.Cy }
-                };
+                Picture.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
+                Picture.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
             }
-            parent.InsertBefore(Shape, OpenXMLShape);
+            parent.InsertBefore(Picture.GetPicture(), OpenXMLShape);
             OpenXMLShape.Remove();
+            return Picture;
+        }
+
+        public TextBox ReplaceTextBox(TextBox TextBox)
+        {
+            DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
+            if (OpenXMLShape.ShapeProperties?.Transform2D != null)
+            {
+                A.Transform2D oldTransform = OpenXMLShape.ShapeProperties.Transform2D;
+                TextBox.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
+                TextBox.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
+            }
+            parent.InsertBefore(TextBox.GetTextBoxShape(), OpenXMLShape);
+            OpenXMLShape.Remove();
+            return TextBox;
         }
 
         #endregion Public Methods

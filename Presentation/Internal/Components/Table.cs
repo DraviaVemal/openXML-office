@@ -1,21 +1,17 @@
-using OpenXMLOffice.Global;
 using System.Data;
+using G = OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 
 {
-    public class Table : CommonProperties
+    public class Table : G.CommonProperties
     {
         #region Private Fields
 
         private readonly P.GraphicFrame GraphicFrame = new();
         private readonly TableSetting TableSetting;
-        private int Height = 741680;
-        private int Width = 8128000;
-        private int X = 0;
-        private int Y = 0;
 
         #endregion Private Fields
 
@@ -36,9 +32,9 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// X,Y
         /// </returns>
-        public (int, int) GetPosition()
+        public (uint, uint) GetPosition()
         {
-            return (X, Y);
+            return (TableSetting.X, TableSetting.Y);
         }
 
         /// <summary>
@@ -46,9 +42,9 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// Width,Height
         /// </returns>
-        public (int, int) GetSize()
+        public (uint, uint) GetSize()
         {
-            return (Width, Height);
+            return (TableSetting.Width, TableSetting.Height);
         }
 
         public P.GraphicFrame GetTableGraphicFrame()
@@ -56,34 +52,31 @@ namespace OpenXMLOffice.Presentation
             return GraphicFrame;
         }
 
-        public void UpdatePosition(int X, int Y)
+        public void UpdatePosition(uint X, uint Y)
         {
-            this.X = X;
-            this.Y = Y;
+            TableSetting.X = X;
+            TableSetting.Y = Y;
             if (GraphicFrame != null)
             {
                 GraphicFrame.Transform = new P.Transform
                 {
-                    Offset = new A.Offset { X = X, Y = Y },
-                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                    Offset = new A.Offset { X = TableSetting.X, Y = TableSetting.Y },
+                    Extents = new A.Extents { Cx = TableSetting.Width, Cy = TableSetting.Height }
                 };
             }
         }
 
-        public void UpdateSize(int Width, int Height)
+        public void UpdateSize(uint Width, uint Height)
         {
-            if (this.Width != Width && TableSetting != null)
-            {
-                ReCalculateColumnWidth();
-            }
-            this.Width = Width;
-            this.Height = Height;
+            ReCalculateColumnWidth();
+            TableSetting.Width = Width;
+            TableSetting.Height = Height;
             if (GraphicFrame != null)
             {
                 GraphicFrame.Transform = new P.Transform
                 {
-                    Offset = new A.Offset { X = X, Y = Y },
-                    Extents = new A.Extents { Cx = Width, Cy = Height }
+                    Offset = new A.Offset { X = TableSetting.X, Y = TableSetting.Y },
+                    Extents = new A.Extents { Cx = TableSetting.Width, Cy = TableSetting.Height }
                 };
             }
         }
@@ -96,9 +89,9 @@ namespace OpenXMLOffice.Presentation
         {
             return widthType switch
             {
-                TableSetting.eWidthType.PIXEL => ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
-                TableSetting.eWidthType.PERCENTAGE => Convert.ToInt32(Width / 100 * InputWidth),
-                TableSetting.eWidthType.RATIO => Convert.ToInt32(Width / 100 * (InputWidth * 10)),
+                TableSetting.eWidthType.PIXEL => G.ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
+                TableSetting.eWidthType.PERCENTAGE => Convert.ToInt32(TableSetting.Width / 100 * InputWidth),
+                TableSetting.eWidthType.RATIO => Convert.ToInt32(TableSetting.Width / 100 * (InputWidth * 10)),
                 _ => Convert.ToInt32(InputWidth)
             };
         }
@@ -140,7 +133,7 @@ namespace OpenXMLOffice.Presentation
             }
             else
             {
-                Paragraph.Append(new TextBox(new TextBoxSetting()
+                Paragraph.Append(new TextBox(new G.TextBoxSetting()
                 {
                     Text = Cell.Value,
                     TextBackground = Cell.TextBackground,
@@ -215,13 +208,13 @@ namespace OpenXMLOffice.Presentation
             {
                 Offset = new A.Offset()
                 {
-                    X = X,
-                    Y = Y
+                    X = TableSetting.X,
+                    Y = TableSetting.Y
                 },
                 Extents = new A.Extents()
                 {
-                    Cx = Width,
-                    Cy = Height
+                    Cx = TableSetting.Width,
+                    Cy = TableSetting.Height
                 }
             };
         }
@@ -233,7 +226,7 @@ namespace OpenXMLOffice.Presentation
             {
                 for (int i = 0; i < ColumnCount; i++)
                 {
-                    TableGrid.Append(new A.GridColumn() { Width = Width / ColumnCount });
+                    TableGrid.Append(new A.GridColumn() { Width = TableSetting.Width / ColumnCount });
                 }
             }
             else
@@ -267,7 +260,7 @@ namespace OpenXMLOffice.Presentation
                 List<A.GridColumn> GridColumn = Table.TableGrid!.Elements<A.GridColumn>().ToList();
                 if (TableSetting.WidthType == TableSetting.eWidthType.AUTO)
                 {
-                    GridColumn.ForEach(Column => Column.Width = Width / GridColumn.Count);
+                    GridColumn.ForEach(Column => Column.Width = TableSetting.Width / GridColumn.Count);
                 }
                 else
                 {

@@ -146,7 +146,7 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.LineChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -156,20 +156,23 @@ namespace OpenXMLOffice.Global
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.Outline(SolidFill, new A.Round()));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
+            if (DataLabels != null)
+            {
+                series.Append(DataLabels);
+            }
             series.Append(ShapeProperties);
             series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
             series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
             return series;
         }
 
-        private C.DataLabels GetDataLabels(LineChartSetting LineChartSetting, int index)
+        private C.DataLabels? GetDataLabels(LineChartSetting LineChartSetting, int index)
         {
             if (index < LineChartSetting.LineChartSeriesSettings.Count)
             {
                 return CreateDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
             }
-            return CreateDataLabel(new LineChartDataLabel());
+            return null;
         }
 
         #endregion Private Methods

@@ -73,7 +73,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -151,13 +151,13 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.DataLabels GetDataLabels(PieChartSetting PieChartSetting, int index)
+        private C.DataLabels? GetDataLabels(PieChartSetting PieChartSetting, int index)
         {
             if (index < PieChartSetting.PieChartSeriesSettings.Count)
             {
                 return CreateDataLabel(PieChartSetting.PieChartSeriesSettings?[index]?.PieChartDataLabel ?? new PieChartDataLabel());
             }
-            return CreateDataLabel(new PieChartDataLabel());
+            return null;
         }
 
         #endregion Private Methods
