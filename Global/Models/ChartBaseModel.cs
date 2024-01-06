@@ -20,6 +20,52 @@ namespace OpenXMLOffice.Global
         #endregion Public Fields
     }
 
+    public class ChartDataGrouping
+    {
+        #region Public Fields
+
+        public ChartData[]? DataLabelCells;
+        public string? DataLabelFormula;
+        public ChartData[]? SeriesHeaderCells;
+        public string? SeriesHeaderFormula;
+        public ChartData[]? XaxisCells;
+        public string? XaxisFormula;
+        public ChartData[]? YaxisCells;
+        public string? YaxisFormula;
+
+        #endregion Public Fields
+    }
+
+    public class ChartDataSetting
+    {
+        #region Public Fields
+
+        public uint ChartColumnHeader = 1;
+
+        /// <summary>
+        /// Set 0 To Use Till End
+        /// </summary>
+        public uint ChartDataColumnEnd = 0;
+
+        public uint ChartDataColumnStart = 1;
+
+        /// <summary>
+        /// Set 0 To Use Till End
+        /// </summary>
+        public uint ChartDataRowEnd = 0;
+
+        public uint ChartDataRowStart = 1;
+        public uint ChartRowHeader = 1;
+
+        /// <summary>
+        /// Key For Data Column Value For Data Label Column If Data Label Column Are Present
+        /// Inbetween and Used in the list it will be auto skipped By Data Column
+        /// </summary>
+        public Dictionary<uint, uint> ValueFromColumn = new();
+
+        #endregion Public Fields
+    }
+
     public class ChartGridLinesOptions
     {
         #region Public Fields
@@ -74,37 +120,14 @@ namespace OpenXMLOffice.Global
         #endregion Internal Constructors
     }
 
-    public class ChartDataSetting
-    {
-        public uint ChartColumnHeader = 1;
-        public uint ChartRowHeader = 1;
-        public uint ChartDataRowStart = 1;
-        /// <summary>
-        /// Set 0 To Use Till End
-        /// </summary>
-        public uint ChartDataRowEnd = 0;
-        public uint ChartDataColumnStart = 1;
-        /// <summary>
-        /// Set 0 To Use Till End
-        /// </summary>
-        public uint ChartDataColumnEnd = 0;
-        /// <summary>
-        /// Key For Data Column Value For Data Label Column
-        /// If Data Label Column Are Present Inbetween and Used in the list it will be auto skipped By Data Column
-        /// </summary>
-        public Dictionary<uint, uint> ValueFromColumn = new();
-
-    }
-
     public class ChartSetting
     {
         #region Public Fields
 
         public ChartDataSetting ChartDataSetting = new();
 
-        public ChartLegendOptions ChartLegendOptions = new();
-
         public ChartGridLinesOptions ChartGridLinesOptions = new();
+        public ChartLegendOptions ChartLegendOptions = new();
         public string? Title;
 
         #endregion Public Fields
@@ -115,17 +138,5 @@ namespace OpenXMLOffice.Global
         { }
 
         #endregion Internal Constructors
-    }
-
-    public class ChartDataGrouping
-    {
-        public string? SeriesHeaderFormula;
-        public string? XaxisFormula;
-        public string? YaxisFormula;
-        public string? DataLabelFormula;
-        public ChartData[]? SeriesHeaderCells;
-        public ChartData[]? XaxisCells;
-        public ChartData[]? YaxisCells;
-        public ChartData[]? DataLabelCells;
     }
 }
