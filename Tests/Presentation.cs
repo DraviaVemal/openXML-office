@@ -296,11 +296,9 @@ namespace OpenXMLOffice.Tests
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
                 Title = "Scatter Straight Marker"
             });
-            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
-            // {
-            //     ScatterChartTypes = ScatterChartTypes.BUBBLE,
-            //     Title = "Scatter Straight Bubble"
-            // });
+            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new
+            // ScatterChartSetting() { ScatterChartTypes = ScatterChartTypes.BUBBLE, Title =
+            // "Scatter Straight Bubble" });
             Assert.IsTrue(true);
         }
 

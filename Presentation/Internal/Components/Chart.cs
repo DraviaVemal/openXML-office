@@ -11,6 +11,7 @@ namespace OpenXMLOffice.Presentation
     public class Chart
     {
         #region Private Fields
+
         private readonly Slide CurrentSlide;
         private readonly ChartPart OpenXMLChartPart;
         private P.GraphicFrame? GraphicFrame;

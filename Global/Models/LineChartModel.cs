@@ -16,10 +16,10 @@ namespace OpenXMLOffice.Global
         #region Public Fields
 
         public eDataLabelPosition DataLabelPosition = eDataLabelPosition.CENTER;
-        public bool ShowValue = false;
-        public bool ShowLegendKey = false;
         public bool ShowCategoryName = false;
+        public bool ShowLegendKey = false;
         public bool ShowSeriesName = false;
+        public bool ShowValue = false;
 
         #endregion Public Fields
 

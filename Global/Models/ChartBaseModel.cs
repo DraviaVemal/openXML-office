@@ -1,7 +1,23 @@
-using DocumentFormat.OpenXml;
-
 namespace OpenXMLOffice.Global
 {
+    public enum AxisPosition
+    {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT
+    }
+
+    public class CategoryAxisSetting
+    {
+        #region Internal Fields
+
+        internal AxisPosition AxisPosition = AxisPosition.BOTTOM;
+        internal uint Id;
+
+        #endregion Internal Fields
+    }
+
     public class ChartAxesOptions
     {
         #region Public Fields
@@ -139,24 +155,13 @@ namespace OpenXMLOffice.Global
         #endregion Internal Constructors
     }
 
-    public enum AxisPosition
-    {
-        TOP,
-        BOTTOM,
-        LEFT,
-        RIGHT
-    }
-
-    public class CategoryAxisSetting
-    {
-        internal uint Id;
-        internal AxisPosition AxisPosition = AxisPosition.BOTTOM;
-    }
-
     public class ValueAxisSetting
     {
-        internal uint Id;
-        internal AxisPosition AxisPosition = AxisPosition.LEFT;
-    }
+        #region Internal Fields
 
+        internal AxisPosition AxisPosition = AxisPosition.LEFT;
+        internal uint Id;
+
+        #endregion Internal Fields
+    }
 }

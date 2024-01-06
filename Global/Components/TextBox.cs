@@ -5,37 +5,36 @@ namespace OpenXMLOffice.Global
 {
     public class TextBox : CommonProperties
     {
-        #region Public Fields
+        #region Private Fields
 
+        private readonly TextBoxSetting TextBoxSetting;
         private int Height = 100;
+        private P.Shape? OpenXMLShape;
         private int Width = 100;
         private int X = 0;
         private int Y = 0;
-        private readonly TextBoxSetting TextBoxSetting;
-
-        #endregion Public Fields
-
-        #region Private Fields
-
-        private P.Shape? OpenXMLShape;
 
         #endregion Private Fields
+
+        #region Public Constructors
 
         public TextBox(TextBoxSetting TextBoxSetting)
         {
             this.TextBoxSetting = TextBoxSetting;
         }
 
-        #region Public Methods
+        #endregion Public Constructors
 
-        public P.Shape GetTextBoxShape()
-        {
-            return CreateTextBox();
-        }
+        #region Public Methods
 
         public A.Run GetTextBoxRun()
         {
             return CreateTextRun();
+        }
+
+        public P.Shape GetTextBoxShape()
+        {
+            return CreateTextBox();
         }
 
         public void UpdatePosition(int X, int Y)
