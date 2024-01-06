@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Global
 
         public ChartData[]? DataLabelCells;
         public string? DataLabelFormula;
-        public ChartData[]? SeriesHeaderCells;
+        public ChartData? SeriesHeaderCells;
         public string? SeriesHeaderFormula;
         public ChartData[]? XaxisCells;
         public string? XaxisFormula;
@@ -40,22 +40,19 @@ namespace OpenXMLOffice.Global
     {
         #region Public Fields
 
-        public uint ChartColumnHeader = 1;
-
         /// <summary>
         /// Set 0 To Use Till End
         /// </summary>
         public uint ChartDataColumnEnd = 0;
 
-        public uint ChartDataColumnStart = 1;
+        public uint ChartDataColumnStart = 0;
 
         /// <summary>
         /// Set 0 To Use Till End
         /// </summary>
         public uint ChartDataRowEnd = 0;
 
-        public uint ChartDataRowStart = 1;
-        public uint ChartRowHeader = 1;
+        public uint ChartDataRowStart = 0;
 
         /// <summary>
         /// Key For Data Column Value For Data Label Column If Data Label Column Are Present

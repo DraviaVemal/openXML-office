@@ -43,7 +43,8 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            foreach (ChartData[] col in DataCols.Skip(1).ToArray())
+            CreateDataSeries(DataCols, ScatterChartSetting.ChartDataSetting)
+            .ForEach(Series =>
             {
                 C.Marker Marker = new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) ? new(
                     new C.Symbol { Val = ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.SCATTER ? C.MarkerStyleValues.Auto : C.MarkerStyleValues.Circle },
@@ -57,22 +58,14 @@ namespace OpenXMLOffice.Global
                     {
                         Val = C.MarkerStyleValues.None
                     });
-                ScatterChart.Append(CreateScatterChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
-                    col.Take(1).ToArray(),
-                    $"Sheet1!$A$2:$A${DataCols[0].Length}",
-                    DataCols[0].Skip(1).ToArray(),
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray(),
-                    Marker,
+                ScatterChart.Append(CreateScatterChartSeries(seriesIndex, Series, Marker,
                      ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.SCATTER ? new A.Outline(new A.NoFill()) : new A.Outline(GetSolidFill(ScatterChartSetting.ScatterChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex)),
-                    GetDataLabels(ScatterChartSetting, seriesIndex)
-                ));
+                    GetDataLabels(ScatterChartSetting, seriesIndex)));
                 seriesIndex++;
-            }
+            });
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },
                 new C.ShowValue { Val = false },
@@ -148,23 +141,20 @@ namespace OpenXMLOffice.Global
             return DataLabels;
         }
 
-        private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                        string xFormula, ChartData[] xCells, string yFormula,
-                                                        ChartData[] yCells, C.Marker Marker, A.Outline Outline,
-                                                        C.DataLabels DataLabels)
+        private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.Outline Outline, C.DataLabels DataLabels)
         {
             C.ScatterChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
+                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
                 Marker);
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(Outline);
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);
             series.Append(ShapeProperties);
-            series.Append(new C.XValues(new C.NumberReference(new C.Formula(xFormula), AddNumberCacheValue(xCells, null))));
-            series.Append(new C.YValues(new C.NumberReference(new C.Formula(yFormula), AddNumberCacheValue(yCells, null))));
+            series.Append(new C.XValues(new C.NumberReference(new C.Formula(ChartDataGrouping.XaxisFormula!), AddNumberCacheValue(ChartDataGrouping.XaxisCells!, null))));
+            series.Append(new C.YValues(new C.NumberReference(new C.Formula(ChartDataGrouping.YaxisFormula!), AddNumberCacheValue(ChartDataGrouping.YaxisCells!, null))));
             series.Append(new C.Smooth() { Val = new[] { ScatterChartTypes.SCATTER_SMOOTH, ScatterChartTypes.SCATTER_SMOOTH_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) });
             return series;
         }

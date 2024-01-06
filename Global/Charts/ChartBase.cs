@@ -186,35 +186,38 @@ public class ChartBase
         return ChartColor.CreateColorStyles();
     }
 
-    protected List<ChartDataGrouping> CreateDataSeries(C.BarChart ColumnChart, ChartData[][] DataCols, ChartDataSetting ChartDataSetting)
+    protected List<ChartDataGrouping> CreateDataSeries(ChartData[][] DataCols, ChartDataSetting ChartDataSetting)
     {
-        if (ChartDataSetting.ChartDataRowStart < 1)
-        {
-            throw new ArgumentOutOfRangeException("Data Range Cannot Be Less Than 0");
-        }
         List<uint> SeriesColumns = new();
-        long TotalSeriesCount = (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.ChartDataColumnEnd) - ChartDataSetting.ChartDataColumnStart - ChartDataSetting.ValueFromColumn.Count;
-        for (uint col = ChartDataSetting.ChartDataColumnStart; col < ChartDataSetting.ChartDataColumnEnd; col++)
+        for (uint col = ChartDataSetting.ChartDataColumnStart + 1; col <= (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length - 1 : ChartDataSetting.ChartDataColumnEnd); col++)
         {
-            if (!(ChartDataSetting.ValueFromColumn.TryGetValue(col, out _) || col == ChartDataSetting.ChartRowHeader))
+            if (!ChartDataSetting.ValueFromColumn.TryGetValue(col, out _))
             {
                 SeriesColumns.Add(col);
             }
         }
-        if (TotalSeriesCount != SeriesColumns.Count)
+        if ((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : ChartDataSetting.ChartDataRowEnd) - ChartDataSetting.ChartDataRowStart < 1 || (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.ChartDataColumnEnd) - ChartDataSetting.ChartDataColumnStart < 1)
         {
-            throw new ArgumentOutOfRangeException("Data Series Column Miss Match");
+            throw new ArgumentException("Data Series Invalid Range");
         }
         foreach (uint Column in SeriesColumns)
         {
+            List<ChartData> XaxisCells = ((ChartData[]?)DataCols[ChartDataSetting.ChartDataColumnStart].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
+            List<ChartData> YaxisCells = ((ChartData[]?)DataCols[Column].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
             ChartDataGrouping ChartDataGrouping = new()
             {
-                XaxisCells = (ChartData[]?)DataCols[ChartDataSetting.ChartRowHeader].Clone(),
-                YaxisCells = (ChartData[]?)DataCols[Column].Clone(),
+                SeriesHeaderFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 1}",
+                SeriesHeaderCells = ((ChartData[]?)DataCols[Column].Clone()!)[ChartDataSetting.ChartDataRowStart],
+                XaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.ChartDataColumnStart + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.ChartDataColumnStart + 1)}${ChartDataSetting.ChartDataRowStart + XaxisCells.Count + 1}",
+                XaxisCells = XaxisCells.ToArray(),
+                YaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + YaxisCells.Count + 1}",
+                YaxisCells = YaxisCells.ToArray(),
             };
             if (ChartDataSetting.ValueFromColumn.TryGetValue(Column, out uint DataValueColumn))
             {
-                ChartDataGrouping.DataLabelCells = (ChartData[]?)DataCols[DataValueColumn].Clone();
+                List<ChartData> DataLabelCells = ((ChartData[]?)DataCols[DataValueColumn].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
+                ChartDataGrouping.DataLabelFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.ChartDataRowStart + DataLabelCells.Count + 1}";
+                ChartDataGrouping.DataLabelCells = DataLabelCells.ToArray();
             }
             ChartDataGroupings.Add(ChartDataGrouping);
         }

@@ -297,36 +297,42 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void AddDevChart()
         {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ColumnChartSetting()
-            {
-                Title = "Color Change Chart",
-                ChartLegendOptions = new ChartLegendOptions()
-                {
-                    legendPosition = ChartLegendOptions.eLegendPosition.TOP
-                },
-                ColumnChartSeriesSettings = new List<ColumnChartSeriesSetting>(){
-                    new(){
-                        FillColor= "ff0000",
-                        ColumnChartDataLabel = new ColumnChartDataLabel(){
-                            ShowValue = true,
-                            ShowSeriesName = true
-                        }
-                    },
-                    new(){
-                        FillColor= "00ff00",
-                        ColumnChartDataLabel = new ColumnChartDataLabel(){
-                            ShowCategoryName = true
-                        }
-                    },
-                    new(){
-                        FillColor= "0000ff",
-                        ColumnChartDataLabel = new ColumnChartDataLabel()
-                    },
-                    new(){
-                        FillColor= "f0f0f0"
-                    }
-                }
-            });
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting()
+            // {
+            //     Title = "Color Change Chart",
+            //     ChartDataSetting = new ChartDataSetting()
+            //     {
+            //         ChartDataRowStart = 1,
+            //         ChartDataColumnStart = 2
+            //     },
+            //     ChartLegendOptions = new ChartLegendOptions()
+            //     {
+            //         legendPosition = ChartLegendOptions.eLegendPosition.TOP
+            //     },
+            //     AreaChartSeriesSettings = new List<AreaChartSeriesSetting>(){
+            //         new(){
+            //             FillColor= "ff0000",
+            //             AreaChartDataLabel = new AreaChartDataLabel(){
+            //                 ShowValue = true,
+            //                 ShowSeriesName = true
+            //             }
+            //         },
+            //         new(){
+            //             FillColor= "00ff00",
+            //             AreaChartDataLabel = new AreaChartDataLabel(){
+            //                 ShowCategoryName = true
+            //             }
+            //         },
+            //         new(){
+            //             FillColor= "0000ff",
+            //             AreaChartDataLabel = new AreaChartDataLabel()
+            //         },
+            //         new(){
+            //             FillColor= "f0f0f0"
+            //         }
+            //     }
+            // }
+            );
             Assert.IsTrue(true);
         }
 

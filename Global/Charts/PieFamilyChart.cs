@@ -41,24 +41,18 @@ namespace OpenXMLOffice.Global
                 new C.VaryColors { Val = true }) : new C.PieChart(
                 new C.VaryColors { Val = true });
             int seriesIndex = 0;
-            foreach (ChartData[] col in DataCols.Skip(1).ToArray())
-            {
-                Chart.Append(CreateChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
-                    col.Take(1).ToArray(),
-                    $"Sheet1!$A$2:$A${DataCols[0].Length}",
-                    DataCols[0].Skip(1).ToArray(),
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray(),
-                    GetSolidFill(PieChartSetting.PieChartSeriesSettings
-                            .Where(item => item.FillColor != null)
-                            .Select(item => item.FillColor!)
-                            .ToList(), seriesIndex),
-                    GetDataLabels(PieChartSetting, seriesIndex),
-                    PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT
-                ));
-                seriesIndex++;
-            }
+            CreateDataSeries(DataCols, PieChartSetting.ChartDataSetting)
+           .ForEach(Series =>
+           {
+               Chart.Append(CreateChartSeries(seriesIndex, Series,
+                   GetSolidFill(PieChartSetting.PieChartSeriesSettings
+                           .Where(item => item.FillColor != null)
+                           .Select(item => item.FillColor!)
+                           .ToList(), seriesIndex),
+                   GetDataLabels(PieChartSetting, seriesIndex)));
+               seriesIndex++;
+           });
+
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },
                 new C.ShowValue { Val = false },
@@ -79,21 +73,18 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.PieChartSeries CreateChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                    string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                    ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels,
-                                                    bool IsDoughnut = false)
+        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels DataLabels)
         {
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
-            for (uint index = 0; index < categoryCells.Length; index++)
+                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))));
+            for (uint index = 0; index < ChartDataGrouping.XaxisCells!.Length; index++)
             {
                 C.DataPoint DataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
                 C.ShapeProperties ShapeProperties = new();
                 ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(index % 6) + 1}") }));
-                if (IsDoughnut)
+                if (PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT)
                 {
                     ShapeProperties.Append(new A.Outline(new A.NoFill()));
                 }
@@ -106,8 +97,8 @@ namespace OpenXMLOffice.Global
                 DataPoint.Append(ShapeProperties);
                 series.Append(DataPoint);
             }
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(ChartDataGrouping.XaxisFormula!), AddStringCacheValue(ChartDataGrouping.XaxisCells!))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(ChartDataGrouping.YaxisFormula!), AddNumberCacheValue(ChartDataGrouping.YaxisCells!, null))));
             return series;
         }
 

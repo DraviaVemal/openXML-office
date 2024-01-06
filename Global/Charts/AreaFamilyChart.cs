@@ -24,22 +24,19 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, string seriesTextFormula,
-                                                        ChartData[] seriesTextCells, string categoryFormula, ChartData[] categoryCells,
-                                                        string valueFormula, ChartData[] valueCells, A.SolidFill SolidFill,
-                                                        C.DataLabels DataLabels)
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels DataLabels)
         {
             C.AreaChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))));
+                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))));
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(new A.Outline(SolidFill, new A.Outline(new A.NoFill())));
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);
             series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(ChartDataGrouping.XaxisFormula!), AddStringCacheValue(ChartDataGrouping.XaxisCells!))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(ChartDataGrouping.YaxisFormula!), AddNumberCacheValue(ChartDataGrouping.YaxisCells!, null))));
             return series;
         }
 
@@ -60,23 +57,17 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            foreach (ChartData[] col in DataCols.Skip(1).ToArray())
+            CreateDataSeries(DataCols, AreaChartSetting.ChartDataSetting)
+            .ForEach(Series =>
             {
-                AreaChart.Append(CreateAreaChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
-                    col.Take(1).ToArray(),
-                    $"Sheet1!$A$2:$A${DataCols[0].Length}",
-                    DataCols[0].Skip(1).ToArray(),
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray(),
-                    GetSolidFill(AreaChartSetting.AreaChartSeriesSettings
-                            .Where(item => item.FillColor != null)
-                            .Select(item => item.FillColor!)
-                            .ToList(), seriesIndex),
-                    GetDataLabels(seriesIndex)
-                ));
+                AreaChart.Append(CreateAreaChartSeries(seriesIndex, Series,
+                                GetSolidFill(AreaChartSetting.AreaChartSeriesSettings
+                                        .Where(item => item.FillColor != null)
+                                        .Select(item => item.FillColor!)
+                                        .ToList(), seriesIndex),
+                                GetDataLabels(seriesIndex)));
                 seriesIndex++;
-            }
+            });
             AreaChart.Append(new C.AxisId { Val = 1362418656 });
             AreaChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(AreaChart);

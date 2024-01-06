@@ -42,19 +42,17 @@ namespace OpenXMLOffice.Global
                     }
                 },
                 new C.VaryColors { Val = false });
-            int seriesIndex = 0;
-            CreateDataSeries(ColumnChart, DataCols, ColumnChartSetting.ChartDataSetting)
+            int SeriesIndex = 0;
+            CreateDataSeries(DataCols, ColumnChartSetting.ChartDataSetting)
             .ForEach(Series =>
             {
-                ColumnChart.Append(CreateColumnChartSeries(seriesIndex,
-                                    Series,
+                ColumnChart.Append(CreateColumnChartSeries(SeriesIndex, Series,
                                     GetSolidFill(ColumnChartSetting.ColumnChartSeriesSettings
                                             .Where(item => item.FillColor != null)
                                             .Select(item => item.FillColor!)
-                                            .ToList(), seriesIndex),
-                                    GetDataLabels(ColumnChartSetting, seriesIndex)
-                                ));
-                seriesIndex++;
+                                            .ToList(), SeriesIndex),
+                                    GetDataLabels(ColumnChartSetting, SeriesIndex)));
+                SeriesIndex++;
             });
             if (ColumnChartSetting.ColumnChartTypes == ColumnChartTypes.CLUSTERED)
             {
@@ -84,7 +82,7 @@ namespace OpenXMLOffice.Global
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)SeriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)SeriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(ChartDataGrouping.SeriesHeaderCells!))),
+                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
                 new C.InvertIfNegative { Val = true });
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(SolidFill);

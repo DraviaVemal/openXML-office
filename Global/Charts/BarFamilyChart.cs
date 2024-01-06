@@ -24,14 +24,12 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels DataLabels)
         {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
+                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
                 new C.InvertIfNegative { Val = true });
             C.ShapeProperties ShapeProperties = new();
             ShapeProperties.Append(SolidFill);
@@ -39,8 +37,8 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);
             series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(ChartDataGrouping.XaxisFormula!), AddStringCacheValue(ChartDataGrouping.XaxisCells!))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(ChartDataGrouping.YaxisFormula!), AddNumberCacheValue(ChartDataGrouping.YaxisCells!, null))));
             series.Append(new C.Smooth()
             {
                 Val = false
@@ -66,23 +64,17 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            foreach (ChartData[] col in DataCols.Skip(1).ToArray())
+            CreateDataSeries(DataCols, BarChartSetting.ChartDataSetting)
+            .ForEach(Series =>
             {
-                BarChart.Append(CreateBarChartSeries(seriesIndex,
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$1",
-                    col.Take(1).ToArray(),
-                    $"Sheet1!$A$2:$A${DataCols[0].Length}",
-                    DataCols[0].Skip(1).ToArray(),
-                    $"Sheet1!${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}$2:${ConverterUtils.ConvertIntToColumnName(seriesIndex + 2)}${DataCols[0].Length}",
-                    col.Skip(1).ToArray(),
+                BarChart.Append(CreateBarChartSeries(seriesIndex, Series,
                     GetSolidFill(BarChartSetting.BarChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
-                    GetDataLabels(BarChartSetting, seriesIndex)
-                ));
+                    GetDataLabels(BarChartSetting, seriesIndex)));
                 seriesIndex++;
-            }
+            });
             if (BarChartSetting.BarChartTypes == BarChartTypes.CLUSTERED)
             {
                 BarChart.Append(new C.GapWidth { Val = 219 });
