@@ -92,7 +92,7 @@ namespace OpenXMLOffice.Tests
                 }
             }, new RowProperties()
             {
-                height = 20
+                Height = 20
             });
             worksheet.SetRow("C1", new DataCell[1]{
                 new(){
@@ -101,7 +101,7 @@ namespace OpenXMLOffice.Tests
                 }
             }, new RowProperties()
             {
-                height = 30
+                Height = 30
             });
             Assert.IsTrue(true);
         }

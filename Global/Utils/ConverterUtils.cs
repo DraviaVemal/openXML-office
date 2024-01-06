@@ -23,7 +23,7 @@ namespace OpenXMLOffice.Global
         public static (int, int) ConvertFromExcelCellReference(string cellReference)
         {
             if (string.IsNullOrEmpty(cellReference))
-                throw new ArgumentException("Cell reference cannot be empty.");
+            { throw new ArgumentException("Cell reference cannot be empty."); }
             StringBuilder columnName = new();
             int rowIndex = 0;
             int columnIndex = 0;
@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Global
         public static string ConvertIntToColumnName(int column)
         {
             if (column < 1)
-                throw new ArgumentException("Column indices must be positive integers.");
+            { throw new ArgumentException("Column indices must be positive integers."); }
             int dividend = column;
             string columnName = string.Empty;
             while (dividend > 0)
@@ -96,7 +96,7 @@ namespace OpenXMLOffice.Global
         public static string ConvertToExcelCellReference(int row, int column)
         {
             if (row < 1 || column < 1)
-                throw new ArgumentException("Row and column indices must be positive integers.");
+            { throw new ArgumentException("Row and column indices must be positive integers."); }
             return ConvertIntToColumnName(column) + row;
         }
 

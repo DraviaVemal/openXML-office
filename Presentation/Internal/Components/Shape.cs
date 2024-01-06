@@ -60,6 +60,20 @@ namespace OpenXMLOffice.Presentation
             return Picture;
         }
 
+        public Table ReplaceTable(Table Table)
+        {
+            DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
+            if (OpenXMLShape.ShapeProperties?.Transform2D != null)
+            {
+                A.Transform2D oldTransform = OpenXMLShape.ShapeProperties.Transform2D;
+                Table.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
+                Table.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
+            }
+            parent.InsertBefore(Table.GetTableGraphicFrame(), OpenXMLShape);
+            OpenXMLShape.Remove();
+            return Table;
+        }
+
         public TextBox ReplaceTextBox(TextBox TextBox)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");

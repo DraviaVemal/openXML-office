@@ -186,87 +186,87 @@ namespace OpenXMLOffice.Tests
             {
                 CellValue = "1",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[1][1] = new DataCell
             {
                 CellValue = "10",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[1][2] = new DataCell
             {
                 CellValue = "12",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[1][3] = new DataCell
             {
                 CellValue = "12.5",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
 
             data[2][0] = new DataCell
             {
                 CellValue = "2",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[2][1] = new DataCell
             {
                 CellValue = "20",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[2][2] = new DataCell
             {
                 CellValue = "22",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[2][3] = new DataCell
             {
                 CellValue = "13",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
 
             data[3][0] = new DataCell
             {
                 CellValue = "3",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[3][1] = new DataCell
             {
                 CellValue = "3",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[3][2] = new DataCell
             {
                 CellValue = "7",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
             data[3][3] = new DataCell
             {
                 CellValue = "4.5",
                 DataType = CellDataType.NUMBER,
-                numberFormatting = "General",
-                styleId = 1
+                NumberFormatting = "General",
+                StyleId = 1
             };
 
             //1
@@ -477,8 +477,8 @@ namespace OpenXMLOffice.Tests
                     {
                         CellValue = random.Next(1, 100).ToString(),
                         DataType = CellDataType.NUMBER,
-                        numberFormatting = "General",
-                        styleId = 1
+                        NumberFormatting = "General",
+                        StyleId = 1
                     };
                 }
             }

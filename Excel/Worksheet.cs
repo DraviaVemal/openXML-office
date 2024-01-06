@@ -60,13 +60,13 @@ namespace OpenXMLOffice.Excel
         /// <param name="cellId">
         /// The cell ID (e.g., "A1") in the desired column.
         /// </param>
-        /// <param name="columnProperties">
+        /// <param name="ColumnProperties">
         /// Optional column properties to be applied (e.g., width, hidden).
         /// </param>
-        public void SetColumn(string cellId, ColumnProperties? columnProperties = null)
+        public void SetColumn(string cellId, ColumnProperties ColumnProperties)
         {
             (int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
-            SetColumn(colIndex, columnProperties);
+            SetColumn(colIndex, ColumnProperties);
         }
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace OpenXMLOffice.Excel
         /// <param name="col">
         /// The zero-based column index where properties will be applied.
         /// </param>
-        /// <param name="columnProperties">
+        /// <param name="ColumnProperties">
         /// Optional column properties to be applied (e.g., width, hidden).
         /// </param>
-        public void SetColumn(int col, ColumnProperties? columnProperties = null)
+        public void SetColumn(int col, ColumnProperties ColumnProperties)
         {
             Columns? columns = openXMLworksheet.GetFirstChild<Columns>();
             if (columns == null)
@@ -90,12 +90,12 @@ namespace OpenXMLOffice.Excel
             if (existingColumn != null)
             {
                 existingColumn.CustomWidth = true;
-                if (columnProperties != null)
+                if (ColumnProperties != null)
                 {
-                    if (columnProperties.Width != null && !columnProperties.BestFit)
-                        existingColumn.Width = columnProperties.Width;
-                    existingColumn.Hidden = columnProperties.Hidden;
-                    existingColumn.BestFit = BooleanValue.FromBoolean(columnProperties.BestFit);
+                    if (ColumnProperties.Width != null && !ColumnProperties.BestFit)
+                    { existingColumn.Width = ColumnProperties.Width; }
+                    existingColumn.Hidden = ColumnProperties.Hidden;
+                    existingColumn.BestFit = BooleanValue.FromBoolean(ColumnProperties.BestFit);
                 }
             }
             else
@@ -105,15 +105,15 @@ namespace OpenXMLOffice.Excel
                     Min = (uint)col,
                     Max = (uint)col,
                 };
-                if (columnProperties != null)
+                if (ColumnProperties != null)
                 {
-                    if (columnProperties.Width != null && !columnProperties.BestFit)
+                    if (ColumnProperties.Width != null && !ColumnProperties.BestFit)
                     {
-                        newColumn.Width = columnProperties.Width;
+                        newColumn.Width = ColumnProperties.Width;
                         newColumn.CustomWidth = true;
                     }
-                    newColumn.Hidden = columnProperties.Hidden;
-                    newColumn.BestFit = columnProperties.BestFit;
+                    newColumn.Hidden = ColumnProperties.Hidden;
+                    newColumn.BestFit = ColumnProperties.BestFit;
                 }
                 columns.Append(newColumn);
             }
@@ -131,12 +131,12 @@ namespace OpenXMLOffice.Excel
         /// <param name="dataCells">
         /// An array of data cells to be added to the row.
         /// </param>
-        /// <param name="rowProperties">
+        /// <param name="RowProperties">
         /// Optional row properties to be applied to the row (e.g., height, custom formatting).
         /// </param>
-        public void SetRow(int row, int col, DataCell[] dataCells, RowProperties? rowProperties = null)
+        public void SetRow(int row, int col, DataCell[] dataCells, RowProperties RowProperties)
         {
-            SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), dataCells, rowProperties);
+            SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), dataCells, RowProperties);
         }
 
         /// <summary>
@@ -149,10 +149,10 @@ namespace OpenXMLOffice.Excel
         /// <param name="dataCells">
         /// An array of data cells to be added to the row.
         /// </param>
-        /// <param name="rowProperties">
+        /// <param name="RowProperties">
         /// Optional row properties to be applied to the row (e.g., height, custom formatting).
         /// </param>
-        public void SetRow(string cellId, DataCell[] dataCells, RowProperties? rowProperties = null)
+        public void SetRow(string cellId, DataCell[] DataCells, RowProperties RowProperties)
         {
             SheetData sheetData = openXMLworksheet.Elements<SheetData>().First();
             (int rowIndex, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
@@ -165,21 +165,21 @@ namespace OpenXMLOffice.Excel
                 };
                 sheetData.AppendChild(row);
             }
-            if (rowProperties != null)
+            if (RowProperties != null)
             {
-                if (rowProperties.height != null)
+                if (RowProperties.Height != null)
                 {
-                    row.Height = rowProperties.height;
+                    row.Height = RowProperties.Height;
                     row.CustomHeight = true;
                 }
-                row.Hidden = rowProperties.Hidden;
+                row.Hidden = RowProperties.Hidden;
             }
-            foreach (DataCell dataCell in dataCells)
+            foreach (DataCell DataCell in DataCells)
             {
                 string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, colIndex);
                 colIndex++;
                 Cell? cell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference?.Value == currentCellId);
-                if (string.IsNullOrEmpty(dataCell?.CellValue))
+                if (string.IsNullOrEmpty(DataCell?.CellValue))
                 {
                     cell?.Remove();
                 }
@@ -193,8 +193,8 @@ namespace OpenXMLOffice.Excel
                         };
                         row.AppendChild(cell);
                     }
-                    cell.DataType = GetCellValues(dataCell.DataType);
-                    cell.CellValue = new CellValue(dataCell.CellValue);
+                    cell.DataType = GetCellValues(DataCell.DataType);
+                    cell.CellValue = new CellValue(DataCell.CellValue);
                 }
             }
             openXMLworksheet.Save();

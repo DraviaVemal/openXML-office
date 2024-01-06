@@ -353,7 +353,7 @@ namespace OpenXMLOffice.Presentation
             int RowIndex = 1;
             foreach (DataCell[] DataCells in DataRows)
             {
-                Worksheet.SetRow(RowIndex, 1, DataCells);
+                Worksheet.SetRow(RowIndex, 1, DataCells, new RowProperties());
                 ++RowIndex;
             }
             spreadsheet.Save();

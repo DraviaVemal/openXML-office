@@ -26,8 +26,8 @@ namespace OpenXMLOffice.Excel
 
         public string? CellValue;
         public CellDataType DataType;
-        public string? numberFormatting;
-        public int? styleId;
+        public string? NumberFormatting;
+        public int? StyleId;
 
         #endregion Public Fields
     }
@@ -36,7 +36,7 @@ namespace OpenXMLOffice.Excel
     {
         #region Public Fields
 
-        public double? height;
+        public double? Height;
         public bool Hidden;
 
         #endregion Public Fields

@@ -158,9 +158,9 @@ namespace OpenXMLOffice.Excel
         {
             Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
             if (sheet == null)
-                return null;
+            { return null; }
             if (workbookPart!.GetPartById(sheet.Id!) is not WorksheetPart worksheetPart)
-                return null;
+            { return null; }
             return new Worksheet(worksheetPart.Worksheet, sheet);
         }
 
