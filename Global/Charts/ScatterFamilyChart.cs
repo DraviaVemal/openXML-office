@@ -59,28 +59,26 @@ namespace OpenXMLOffice.Global
                         Val = C.MarkerStyleValues.None
                     });
                 ScatterChart.Append(CreateScatterChartSeries(seriesIndex, Series, Marker,
-                     ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.SCATTER ? new A.Outline(new A.NoFill()) : new A.Outline(GetSolidFill(ScatterChartSetting.ScatterChartSeriesSettings
+                     ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.SCATTER ? new A.Outline(new A.NoFill()) : new A.Outline(CreateSolidFill(ScatterChartSetting.ScatterChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex)),
                     GetDataLabels(ScatterChartSetting, seriesIndex)));
                 seriesIndex++;
             });
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false });
-            ScatterChart.Append(DataLabels);
-            ScatterChart.Append(new C.Smooth { Val = false });
             ScatterChart.Append(new C.AxisId { Val = 1362418656 });
             ScatterChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ScatterChart);
-            plotArea.Append(CreateValueAxis(1362418656, C.AxisPositionValues.Bottom));
-            plotArea.Append(CreateValueAxis(1358349936));
-            C.ShapeProperties ShapeProperties = new();
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+            {
+                Id = 1362418656,
+                AxisPosition = AxisPosition.BOTTOM
+            }));
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+            {
+                Id = 1358349936
+            }));
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
@@ -148,7 +146,7 @@ namespace OpenXMLOffice.Global
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
                 Marker);
-            C.ShapeProperties ShapeProperties = new();
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(Outline);
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);

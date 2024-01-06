@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Global
            .ForEach(Series =>
            {
                Chart.Append(CreateChartSeries(seriesIndex, Series,
-                   GetSolidFill(PieChartSetting.PieChartSeriesSettings
+                   CreateSolidFill(PieChartSetting.PieChartSeriesSettings
                            .Where(item => item.FillColor != null)
                            .Select(item => item.FillColor!)
                            .ToList(), seriesIndex),
@@ -65,7 +65,7 @@ namespace OpenXMLOffice.Global
             Chart.Append(new C.FirstSliceAngle { Val = 0 });
             Chart.Append(new C.HoleSize { Val = 50 });
             plotArea.Append(Chart);
-            C.ShapeProperties ShapeProperties = new();
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
@@ -82,7 +82,7 @@ namespace OpenXMLOffice.Global
             for (uint index = 0; index < ChartDataGrouping.XaxisCells!.Length; index++)
             {
                 C.DataPoint DataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
-                C.ShapeProperties ShapeProperties = new();
+                C.ShapeProperties ShapeProperties = CreateShapeProperties();
                 ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(index % 6) + 1}") }));
                 if (PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT)
                 {

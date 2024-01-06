@@ -6,7 +6,7 @@ using P = DocumentFormat.OpenXml.Presentation;
 namespace OpenXMLOffice.Presentation
 
 {
-    public class Table
+    public class Table : CommonProperties
     {
         #region Private Fields
 
@@ -159,36 +159,36 @@ namespace OpenXMLOffice.Presentation
             ));
             A.TableCellProperties TableCellProperties = new();
             TableCellProperties.Append(new A.LeftBorderLineProperties(
-                Cell.LeftBorder ? new A.SolidFill(new A.RgbColorModelHex() { Val = "000000" }) : new A.NoFill(),
+                Cell.LeftBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.RightBorderLineProperties(
-                Cell.RightBorder ? new A.SolidFill(new A.RgbColorModelHex() { Val = "000000" }) : new A.NoFill(),
+                Cell.RightBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.TopBorderLineProperties(
-                Cell.TopBorder ? new A.SolidFill(new A.RgbColorModelHex() { Val = "000000" }) : new A.NoFill(),
+                Cell.TopBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.BottomBorderLineProperties(
-                Cell.BottomBorder ? new A.SolidFill(new A.RgbColorModelHex() { Val = "000000" }) : new A.NoFill(),
+                Cell.BottomBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-                Cell.BottomBorder ? new A.SolidFill(new A.RgbColorModelHex() { Val = "000000" }) : new A.NoFill(),
+                Cell.BottomBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-                Cell.BottomBorder ? new A.SolidFill(new A.RgbColorModelHex() { Val = "000000" }) : new A.NoFill(),
+                Cell.BottomBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(Cell.CellBackground != null ? new A.SolidFill(new A.RgbColorModelHex() { Val = Cell.CellBackground }) : new A.NoFill());
+            TableCellProperties.Append(Cell.CellBackground != null ? CreateSolidFill(new List<string>() { Cell.CellBackground }, 0) : new A.NoFill());
             TableCell.Append(TableCellProperties);
             return TableCell;
         }

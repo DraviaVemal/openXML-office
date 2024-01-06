@@ -24,16 +24,19 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.AreaChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))));
-            C.ShapeProperties ShapeProperties = new();
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.Outline(SolidFill, new A.Outline(new A.NoFill())));
             ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
+            if (DataLabels != null)
+            {
+                series.Append(DataLabels);
+            }
             series.Append(ShapeProperties);
             series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(ChartDataGrouping.XaxisFormula!), AddStringCacheValue(ChartDataGrouping.XaxisCells!))));
             series.Append(new C.Values(new C.NumberReference(new C.Formula(ChartDataGrouping.YaxisFormula!), AddNumberCacheValue(ChartDataGrouping.YaxisCells!, null))));
@@ -61,7 +64,7 @@ namespace OpenXMLOffice.Global
             .ForEach(Series =>
             {
                 AreaChart.Append(CreateAreaChartSeries(seriesIndex, Series,
-                                GetSolidFill(AreaChartSetting.AreaChartSeriesSettings
+                                CreateSolidFill(AreaChartSetting.AreaChartSeriesSettings
                                         .Where(item => item.FillColor != null)
                                         .Select(item => item.FillColor!)
                                         .ToList(), seriesIndex),
@@ -71,9 +74,15 @@ namespace OpenXMLOffice.Global
             AreaChart.Append(new C.AxisId { Val = 1362418656 });
             AreaChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(AreaChart);
-            plotArea.Append(CreateCategoryAxis(1362418656));
-            plotArea.Append(CreateValueAxis(1358349936));
-            C.ShapeProperties ShapeProperties = new();
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+            {
+                Id = 1362418656
+            }));
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+            {
+                Id = 1358349936
+            }));
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
@@ -81,18 +90,18 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels CreateDataLabel(AreaChartDataLabel AreaChartDataLabel)
+        private C.DataLabels? CreateDataLabel(AreaChartDataLabel AreaChartDataLabel)
         {
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = AreaChartDataLabel.ShowLegendKey },
-                new C.ShowValue { Val = AreaChartDataLabel.ShowValue },
-                new C.ShowCategoryName { Val = AreaChartDataLabel.ShowCategoryName },
-                new C.ShowSeriesName { Val = AreaChartDataLabel.ShowSeriesName },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false },
-                new C.ShowLeaderLines() { Val = false });
-            if (false)
+            if (AreaChartDataLabel.ShowLegendKey || AreaChartDataLabel.ShowValue || AreaChartDataLabel.ShowCategoryName || AreaChartDataLabel.ShowSeriesName)
             {
+                C.DataLabels DataLabels = new(
+                    new C.ShowLegendKey { Val = AreaChartDataLabel.ShowLegendKey },
+                    new C.ShowValue { Val = AreaChartDataLabel.ShowValue },
+                    new C.ShowCategoryName { Val = AreaChartDataLabel.ShowCategoryName },
+                    new C.ShowSeriesName { Val = AreaChartDataLabel.ShowSeriesName },
+                    new C.ShowPercent { Val = false },
+                    new C.ShowBubbleSize { Val = false },
+                    new C.ShowLeaderLines() { Val = false });
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = AreaChartDataLabel.DataLabelPosition switch
@@ -129,11 +138,12 @@ namespace OpenXMLOffice.Global
                     AnchorCenter = true
                 }, new A.ListStyle(),
                Paragraph), 0);
+                return DataLabels;
             }
-            return DataLabels;
+            return null;
         }
 
-        private C.DataLabels GetDataLabels(int index)
+        private C.DataLabels? GetDataLabels(int index)
         {
             if (index < AreaChartSetting.AreaChartSeriesSettings.Count)
             {

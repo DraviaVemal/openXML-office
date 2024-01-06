@@ -50,8 +50,8 @@ namespace OpenXMLOffice.Global
                     new C.Symbol { Val = C.MarkerStyleValues.Circle },
                     new C.Size { Val = 5 },
                     new C.ShapeProperties(
-                        new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(seriesIndex % 6) + 1}") }),
-                        new A.Outline(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(seriesIndex % 6) + 1}") })),
+                        CreateSolidFill(new List<string>(), seriesIndex),
+                        new A.Outline(CreateSolidFill(new List<string>(), seriesIndex)),
                         new A.EffectList()
                     )) :
                     new(new C.Symbol()
@@ -59,7 +59,7 @@ namespace OpenXMLOffice.Global
                         Val = C.MarkerStyleValues.None
                     });
                 LineChart.Append(CreateLineChartSeries(seriesIndex, Series, Marker,
-                     GetSolidFill(LineChartSetting.LineChartSeriesSettings
+                     CreateSolidFill(LineChartSetting.LineChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
@@ -74,13 +74,18 @@ namespace OpenXMLOffice.Global
                 new C.ShowPercent { Val = false },
                 new C.ShowBubbleSize { Val = false });
             LineChart.Append(DataLabels);
-            LineChart.Append(new C.Smooth { Val = false });
             LineChart.Append(new C.AxisId { Val = 1362418656 });
             LineChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(LineChart);
-            plotArea.Append(CreateCategoryAxis(1362418656));
-            plotArea.Append(CreateValueAxis(1358349936));
-            C.ShapeProperties ShapeProperties = new();
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+            {
+                Id = 1362418656
+            }));
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+            {
+                Id = 1358349936
+            }));
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
@@ -148,7 +153,7 @@ namespace OpenXMLOffice.Global
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
                 Marker);
-            C.ShapeProperties ShapeProperties = new();
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.Outline(SolidFill, new A.Round()));
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);

@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Global
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
                 new C.InvertIfNegative { Val = true });
-            C.ShapeProperties ShapeProperties = new();
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(SolidFill);
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Global
             .ForEach(Series =>
             {
                 BarChart.Append(CreateBarChartSeries(seriesIndex, Series,
-                    GetSolidFill(BarChartSetting.BarChartSeriesSettings
+                    CreateSolidFill(BarChartSetting.BarChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
@@ -88,9 +88,15 @@ namespace OpenXMLOffice.Global
             BarChart.Append(new C.AxisId { Val = 1362418656 });
             BarChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(BarChart);
-            plotArea.Append(CreateCategoryAxis(1362418656, C.AxisPositionValues.Left));
-            plotArea.Append(CreateValueAxis(1358349936, C.AxisPositionValues.Bottom));
-            C.ShapeProperties ShapeProperties = new();
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+            {
+                Id = 1362418656
+            }));
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+            {
+                Id = 1358349936
+            }));
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());

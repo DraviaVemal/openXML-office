@@ -3,7 +3,7 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Global
 {
-    public class TextBox
+    public class TextBox : CommonProperties
     {
         #region Public Fields
 
@@ -87,7 +87,7 @@ namespace OpenXMLOffice.Global
                     new A.Offset { X = X, Y = Y },
                     new A.Extents { Cx = Width, Cy = Height }),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
-                new A.SolidFill(new A.RgbColorModelHex { Val = TextBoxSetting.ShapeBackground })),
+                CreateSolidFill(new List<string>() { TextBoxSetting.ShapeBackground }, 0)),
                 TextBody = new P.TextBody(
                         new A.BodyProperties(),
                         new A.ListStyle(),
@@ -98,7 +98,7 @@ namespace OpenXMLOffice.Global
 
         private A.Run CreateTextRun()
         {
-            return new(new A.RunProperties(new A.SolidFill(new A.RgbColorModelHex { Val = TextBoxSetting.TextColor }),
+            return new(new A.RunProperties(CreateSolidFill(new List<string>() { TextBoxSetting.TextColor }, 0),
                         new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground ?? "FFFFFF" }),
                         new A.LatinFont { Typeface = TextBoxSetting.FontFamily },
                         new A.EastAsianFont { Typeface = TextBoxSetting.FontFamily },

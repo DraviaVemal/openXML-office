@@ -307,9 +307,10 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void AddDevChart()
         {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
             {
                 Title = "Color Change Chart",
+                ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
                 ChartDataSetting = new ChartDataSetting()
                 {
                     ChartDataRowStart = 1,
@@ -318,28 +319,6 @@ namespace OpenXMLOffice.Tests
                 ChartLegendOptions = new ChartLegendOptions()
                 {
                     legendPosition = ChartLegendOptions.eLegendPosition.TOP
-                },
-                BarChartSeriesSettings = new List<BarChartSeriesSetting>(){
-                    new(){
-                        FillColor= "ff0000",
-                        BarChartDataLabel = new BarChartDataLabel(){
-                            ShowValue = true,
-                            ShowSeriesName = true
-                        }
-                    },
-                    new(){
-                        FillColor= "00ff00",
-                        BarChartDataLabel = new BarChartDataLabel(){
-                            ShowCategoryName = true
-                        }
-                    },
-                    new(){
-                        FillColor= "0000ff",
-                        BarChartDataLabel = new BarChartDataLabel()
-                    },
-                    new(){
-                        FillColor= "f0f0f0"
-                    }
                 }
             }
             );

@@ -6,7 +6,7 @@ using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global;
 
-public class ChartBase
+public class ChartBase : CommonProperties
 {
     #region Protected Fields
 
@@ -143,23 +143,32 @@ public class ChartBase
         }
     }
 
-    protected C.CategoryAxis CreateCategoryAxis(UInt32Value axisId, C.AxisPositionValues? AxisPositionValues = null)
+    protected C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting CategoryAxisSetting)
     {
         C.CategoryAxis CategoryAxis = new(
-            new C.AxisId { Val = axisId },
+            new C.AxisId { Val = CategoryAxisSetting.Id },
             new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
             new C.Delete { Val = false },
-            new C.AxisPosition { Val = AxisPositionValues ?? C.AxisPositionValues.Bottom },
+            new C.AxisPosition
+            {
+                Val = CategoryAxisSetting.AxisPosition switch
+                {
+                    AxisPosition.LEFT => C.AxisPositionValues.Left,
+                    AxisPosition.RIGHT => C.AxisPositionValues.Right,
+                    AxisPosition.TOP => C.AxisPositionValues.Top,
+                    _ => C.AxisPositionValues.Bottom
+                }
+            },
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = axisId },
+            new C.CrossingAxis { Val = CategoryAxisSetting.Id },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
             new C.AutoLabeled { Val = true },
             new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
             new C.LabelOffset { Val = 100 },
             new C.NoMultiLevelLabels { Val = false });
-        C.ShapeProperties ShapeProperties = new();
+        C.ShapeProperties ShapeProperties = CreateShapeProperties();
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
         ShapeProperties.Append(new A.EffectList());
@@ -173,6 +182,45 @@ public class ChartBase
         }
         CategoryAxis.Append(ShapeProperties);
         return CategoryAxis;
+    }
+
+    protected C.ValueAxis CreateValueAxis(ValueAxisSetting ValueAxisSetting)
+    {
+        C.ValueAxis ValueAxis = new(
+            new C.AxisId { Val = ValueAxisSetting.Id },
+            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
+            new C.Delete { Val = false },
+            new C.AxisPosition
+            {
+                Val = ValueAxisSetting.AxisPosition switch
+                {
+                    AxisPosition.LEFT => C.AxisPositionValues.Left,
+                    AxisPosition.RIGHT => C.AxisPositionValues.Right,
+                    AxisPosition.TOP => C.AxisPositionValues.Top,
+                    _ => C.AxisPositionValues.Bottom
+                }
+            },
+            new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
+            new C.MajorTickMark { Val = C.TickMarkValues.None },
+            new C.MinorTickMark { Val = C.TickMarkValues.None },
+            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
+            new C.CrossingAxis { Val = ValueAxisSetting.Id },
+            new C.Crosses { Val = C.CrossesValues.AutoZero },
+            new C.CrossBetween { Val = C.CrossBetweenValues.Between });
+        if (ChartSetting.ChartGridLinesOptions.IsMajorValueLinesEnabled)
+        {
+            ValueAxis.Append(CreateMajorGridLine());
+        }
+        if (ChartSetting.ChartGridLinesOptions.IsMinorValueLinesEnabled)
+        {
+            ValueAxis.Append(CreateMinorGridLine());
+        }
+        C.ShapeProperties ShapeProperties = CreateShapeProperties();
+        ShapeProperties.Append(new A.NoFill());
+        ShapeProperties.Append(new A.Outline(new A.NoFill()));
+        ShapeProperties.Append(new A.EffectList());
+        ValueAxis.Append(ShapeProperties);
+        return ValueAxis;
     }
 
     protected CS.ChartStyle CreateChartStyles()
@@ -225,45 +273,6 @@ public class ChartBase
         return ChartDataGroupings;
     }
 
-    protected C.ValueAxis CreateValueAxis(UInt32Value axisId, C.AxisPositionValues? AxisPositionValues = null)
-    {
-        C.ValueAxis ValueAxis = new(
-            new C.AxisId { Val = axisId },
-            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
-            new C.Delete { Val = false },
-            new C.AxisPosition { Val = AxisPositionValues ?? C.AxisPositionValues.Left },
-            new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
-            new C.MajorTickMark { Val = C.TickMarkValues.None },
-            new C.MinorTickMark { Val = C.TickMarkValues.None },
-            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = axisId },
-            new C.Crosses { Val = C.CrossesValues.AutoZero },
-            new C.CrossBetween { Val = C.CrossBetweenValues.Between });
-        if (ChartSetting.ChartGridLinesOptions.IsMajorValueLinesEnabled)
-        {
-            ValueAxis.Append(CreateMajorGridLine());
-        }
-        if (ChartSetting.ChartGridLinesOptions.IsMinorValueLinesEnabled)
-        {
-            ValueAxis.Append(CreateMinorGridLine());
-        }
-        C.ShapeProperties ShapeProperties = new();
-        ShapeProperties.Append(new A.NoFill());
-        ShapeProperties.Append(new A.Outline(new A.NoFill()));
-        ShapeProperties.Append(new A.EffectList());
-        ValueAxis.Append(ShapeProperties);
-        return ValueAxis;
-    }
-
-    protected A.SolidFill GetSolidFill(List<string> FillColors, int index)
-    {
-        if (FillColors.Count > 0)
-        {
-            return new A.SolidFill(new A.RgbColorModelHex() { Val = FillColors[index % FillColors.Count] });
-        }
-        return new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(index % 6) + 1}") });
-    }
-
     #endregion Protected Methods
 
     #region Private Methods
@@ -312,7 +321,7 @@ public class ChartBase
             }
         });
         legend.Append(new C.Overlay { Val = false });
-        C.ShapeProperties ShapeProperties = new();
+        C.ShapeProperties ShapeProperties = CreateShapeProperties();
         ShapeProperties.Append(new A.NoFill());
         A.Outline Outline = new();
         Outline.Append(new A.NoFill());
@@ -448,7 +457,7 @@ public class ChartBase
             }).GetTextBoxRun()));
         C.Title title = new(new C.ChartText(RichText));
         title.Append(new C.Overlay { Val = false });
-        C.ShapeProperties ShapeProperties = new();
+        C.ShapeProperties ShapeProperties = CreateShapeProperties();
         ShapeProperties.Append(new A.NoFill());
         A.Outline Outline = new();
         Outline.Append(new A.NoFill());
@@ -456,6 +465,11 @@ public class ChartBase
         ShapeProperties.Append(new A.EffectList());
         title.Append(ShapeProperties);
         return title;
+    }
+
+    protected C.ShapeProperties CreateShapeProperties()
+    {
+        return new();
     }
 
     #endregion Private Methods

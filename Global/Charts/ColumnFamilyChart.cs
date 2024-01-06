@@ -47,7 +47,7 @@ namespace OpenXMLOffice.Global
             .ForEach(Series =>
             {
                 ColumnChart.Append(CreateColumnChartSeries(SeriesIndex, Series,
-                                    GetSolidFill(ColumnChartSetting.ColumnChartSeriesSettings
+                                    CreateSolidFill(ColumnChartSetting.ColumnChartSeriesSettings
                                             .Where(item => item.FillColor != null)
                                             .Select(item => item.FillColor!)
                                             .ToList(), SeriesIndex),
@@ -67,9 +67,15 @@ namespace OpenXMLOffice.Global
             ColumnChart.Append(new C.AxisId { Val = 1362418656 });
             ColumnChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ColumnChart);
-            plotArea.Append(CreateCategoryAxis(1362418656));
-            plotArea.Append(CreateValueAxis(1358349936));
-            C.ShapeProperties ShapeProperties = new();
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+            {
+                Id = 1362418656
+            }));
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+            {
+                Id = 1358349936
+            }));
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
@@ -84,7 +90,7 @@ namespace OpenXMLOffice.Global
                 new C.Order { Val = new UInt32Value((uint)SeriesIndex) },
                 new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
                 new C.InvertIfNegative { Val = true });
-            C.ShapeProperties ShapeProperties = new();
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(SolidFill);
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
