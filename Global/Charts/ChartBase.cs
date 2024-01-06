@@ -52,6 +52,31 @@ public class ChartBase : CommonProperties
 
     #region Protected Methods
 
+    protected C.SeriesText CreateSeriesText(string Formula, ChartData[] Cells)
+    {
+        return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
+    }
+
+    protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells)
+    {
+        return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
+    }
+
+    protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells)
+    {
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+    }
+
+    protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells)
+    {
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+    }
+
+    protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells)
+    {
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, null)));
+    }
+
     protected C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] Cells)
     {
         try
@@ -82,7 +107,7 @@ public class ChartBase : CommonProperties
         }
     }
 
-    protected C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting? ChartSeriesSetting)
+    private C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting? ChartSeriesSetting)
     {
         try
         {
@@ -113,7 +138,7 @@ public class ChartBase : CommonProperties
         }
     }
 
-    protected C.StringCache AddStringCacheValue(ChartData[] Cells)
+    private C.StringCache AddStringCacheValue(ChartData[] Cells)
     {
         try
         {

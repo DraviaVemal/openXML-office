@@ -88,7 +88,7 @@ namespace OpenXMLOffice.Global
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)SeriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)SeriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(ChartDataGrouping.SeriesHeaderFormula!), AddStringCacheValue(new[] { ChartDataGrouping.SeriesHeaderCells! }))),
+                CreateSeriesText(ChartDataGrouping.SeriesHeaderFormula!, new[] { ChartDataGrouping.SeriesHeaderCells! }),
                 new C.InvertIfNegative { Val = true });
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(SolidFill);
@@ -96,12 +96,8 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.EffectList());
             series.Append(DataLabels);
             series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(ChartDataGrouping.XaxisFormula!), AddStringCacheValue(ChartDataGrouping.XaxisCells!))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(ChartDataGrouping.YaxisFormula!), AddNumberCacheValue(ChartDataGrouping.YaxisCells!, null))));
-            series.Append(new C.Smooth()
-            {
-                Val = false
-            });
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
             if (ChartDataGrouping.DataLabelFormula != null && ChartDataGrouping.DataLabelCells != null)
             {
                 series.Append(new C.ExtensionList(new C.Extension(new C15.DataLabelsRange(new C15.Formula(ChartDataGrouping.DataLabelFormula), AddDataLabelCacheValue(ChartDataGrouping.DataLabelCells)))));
