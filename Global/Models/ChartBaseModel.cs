@@ -1,3 +1,5 @@
+using DocumentFormat.OpenXml;
+
 namespace OpenXMLOffice.Global
 {
     public enum AxisPosition
@@ -14,7 +16,7 @@ namespace OpenXMLOffice.Global
 
         internal AxisPosition AxisPosition = AxisPosition.BOTTOM;
         internal uint Id;
-
+        internal uint CrossAxisId;
         #endregion Internal Fields
     }
 
@@ -163,6 +165,7 @@ namespace OpenXMLOffice.Global
 
         internal AxisPosition AxisPosition = AxisPosition.LEFT;
         internal uint Id;
+        internal uint CrossAxisId;
 
         #endregion Internal Fields
     }

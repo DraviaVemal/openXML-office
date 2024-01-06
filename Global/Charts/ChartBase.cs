@@ -101,7 +101,7 @@ public class ChartBase : CommonProperties
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = CategoryAxisSetting.Id },
+            new C.CrossingAxis { Val = CategoryAxisSetting.CrossAxisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
             new C.AutoLabeled { Val = true },
             new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
@@ -215,7 +215,7 @@ public class ChartBase : CommonProperties
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = ValueAxisSetting.Id },
+            new C.CrossingAxis { Val = ValueAxisSetting.CrossAxisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
             new C.CrossBetween { Val = C.CrossBetweenValues.Between });
         if (ChartSetting.ChartGridLinesOptions.IsMajorValueLinesEnabled)
