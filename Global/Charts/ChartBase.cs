@@ -8,12 +8,14 @@ namespace OpenXMLOffice.Global;
 public class ChartBase
 {
     #region Protected Fields
+
     protected ChartSetting ChartSetting;
-    private C.Chart Chart;
 
     #endregion Protected Fields
 
     #region Private Fields
+
+    private C.Chart Chart;
 
     private C.ChartSpace OpenXMLChartSpace;
 
@@ -30,6 +32,20 @@ public class ChartBase
     }
 
     #endregion Protected Constructors
+
+    #region Public Methods
+
+    public C.ChartSpace GetChartSpace()
+    {
+        return OpenXMLChartSpace;
+    }
+
+    public void SetChartPlotArea(C.PlotArea PlotArea)
+    {
+        Chart.PlotArea = PlotArea;
+    }
+
+    #endregion Public Methods
 
     #region Protected Methods
 
@@ -126,34 +142,6 @@ public class ChartBase
         return CategoryAxis;
     }
 
-    private C.Chart CreateChart()
-    {
-        C.Chart Chart = new()
-        {
-            PlotVisibleOnly = new C.PlotVisibleOnly()
-            {
-                Val = true
-            },
-            AutoTitleDeleted = new C.AutoTitleDeleted()
-            {
-                Val = false
-            },
-            DisplayBlanksAs = new C.DisplayBlanksAs()
-            {
-                Val = C.DisplayBlanksAsValues.Gap
-            }
-        };
-        if (ChartSetting.ChartLegendOptions.IsEnableLegend)
-        {
-            Chart.Legend = CreateChartLegend(ChartSetting.ChartLegendOptions);
-        }
-        if (ChartSetting.Title != null)
-        {
-            Chart.Title = CreateTitle(ChartSetting.Title);
-        }
-        return Chart;
-    }
-
     protected CS.ChartStyle CreateChartStyles()
     {
         ChartStyle ChartStyle = new();
@@ -196,16 +184,6 @@ public class ChartBase
         return ValueAxis;
     }
 
-    public C.ChartSpace GetChartSpace()
-    {
-        return OpenXMLChartSpace;
-    }
-
-    public void SetChartPlotArea(C.PlotArea PlotArea)
-    {
-        Chart.PlotArea = PlotArea;
-    }
-
     protected A.SolidFill GetSolidFill(List<string> FillColors, int index)
     {
         if (FillColors.Count > 0)
@@ -218,6 +196,34 @@ public class ChartBase
     #endregion Protected Methods
 
     #region Private Methods
+
+    private C.Chart CreateChart()
+    {
+        C.Chart Chart = new()
+        {
+            PlotVisibleOnly = new C.PlotVisibleOnly()
+            {
+                Val = true
+            },
+            AutoTitleDeleted = new C.AutoTitleDeleted()
+            {
+                Val = false
+            },
+            DisplayBlanksAs = new C.DisplayBlanksAs()
+            {
+                Val = C.DisplayBlanksAsValues.Gap
+            }
+        };
+        if (ChartSetting.ChartLegendOptions.IsEnableLegend)
+        {
+            Chart.Legend = CreateChartLegend(ChartSetting.ChartLegendOptions);
+        }
+        if (ChartSetting.Title != null)
+        {
+            Chart.Title = CreateTitle(ChartSetting.Title);
+        }
+        return Chart;
+    }
 
     private C.Legend CreateChartLegend(ChartLegendOptions objChartLegendOptions)
     {

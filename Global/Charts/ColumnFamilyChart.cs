@@ -6,13 +6,23 @@ namespace OpenXMLOffice.Global
 {
     public class ColumnFamilyChart : ChartBase
     {
-        #region Protected Methods
+        #region Protected Fields
+
         protected ColumnChartSetting ColumnChartSetting;
+
+        #endregion Protected Fields
+
+        #region Public Constructors
+
         public ColumnFamilyChart(ColumnChartSetting ColumnChartSetting, ChartData[][] DataCols) : base(ColumnChartSetting)
         {
             this.ColumnChartSetting = ColumnChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
@@ -71,10 +81,6 @@ namespace OpenXMLOffice.Global
             plotArea.Append(ShapeProperties);
             return plotArea;
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
                                                         string categoryFormula, ChartData[] categoryCells, string valueFormula,

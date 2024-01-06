@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml;
-
-namespace OpenXMLOffice.Presentation
+﻿namespace OpenXMLOffice.Presentation
 {
     public class PowerPoint
     {
@@ -11,7 +9,6 @@ namespace OpenXMLOffice.Presentation
         #endregion Private Fields
 
         #region Public Constructors
-
 
         /// <summary>
         /// Create New file in the system
@@ -77,6 +74,11 @@ namespace OpenXMLOffice.Presentation
             return presentation.GetSlideByIndex(SlideIndex);
         }
 
+        public int GetSlideCount()
+        {
+            return presentation.GetSlideCount();
+        }
+
         public void MoveSlideByIndex(int SourceIndex, int TargetIndex)
         {
             presentation.MoveSlideByIndex(SourceIndex, TargetIndex);
@@ -85,11 +87,6 @@ namespace OpenXMLOffice.Presentation
         public void RemoveSlideByIndex(int SlideIndex)
         {
             presentation.RemoveSlideByIndex(SlideIndex);
-        }
-
-        public int GetSlideCount()
-        {
-            return presentation.GetSlideCount();
         }
 
         public void Save()

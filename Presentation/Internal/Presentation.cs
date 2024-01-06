@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -6,7 +5,8 @@ namespace OpenXMLOffice.Presentation
 {
     internal class Presentation : PresentationCore
     {
-        #region Public Constructors
+        #region Internal Constructors
+
         internal Presentation(string filePath, PresentationProperties? presentationProperties = null)
         : base(filePath, presentationProperties) { }
 
@@ -19,9 +19,9 @@ namespace OpenXMLOffice.Presentation
         internal Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
         : base(stream, isEditable, presentationProperties) { }
 
-        #endregion Public Constructors
+        #endregion Internal Constructors
 
-        #region Public Methods
+        #region Internal Methods
 
         internal Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
         {
@@ -47,6 +47,11 @@ namespace OpenXMLOffice.Presentation
             {
                 throw new IndexOutOfRangeException("The specified slide index is out of range.");
             }
+        }
+
+        internal int GetSlideCount()
+        {
+            return GetSlideIdList().Count();
         }
 
         internal void MoveSlideByIndex(int SourceIndex, int TargetIndex)
@@ -82,11 +87,6 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        internal int GetSlideCount()
-        {
-            return GetSlideIdList().Count();
-        }
-
         internal void Save()
         {
             if (presentationInfo.FilePath == null)
@@ -106,6 +106,6 @@ namespace OpenXMLOffice.Presentation
             presentationDocument.Dispose();
         }
 
-        #endregion Public Methods
+        #endregion Internal Methods
     }
 }

@@ -6,14 +6,23 @@ namespace OpenXMLOffice.Global
 {
     public class LineFamilyChart : ChartBase
     {
-        #region Protected Methods
+        #region Protected Fields
+
         protected LineChartSetting LineChartSetting;
+
+        #endregion Protected Fields
+
+        #region Protected Constructors
 
         protected LineFamilyChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting)
         {
             this.LineChartSetting = LineChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
+
+        #endregion Protected Constructors
+
+        #region Private Methods
 
         private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
@@ -85,10 +94,6 @@ namespace OpenXMLOffice.Global
             plotArea.Append(ShapeProperties);
             return plotArea;
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private C.DataLabels CreateDataLabel(LineChartDataLabel LineChartDataLabel)
         {

@@ -6,8 +6,14 @@ namespace OpenXMLOffice.Global
 {
     public class PieFamilyChart : ChartBase
     {
-        #region Protected Methods
+        #region Protected Fields
+
         protected PieChartSetting PieChartSetting;
+
+        #endregion Protected Fields
+
+        #region Protected Constructors
+
         protected PieFamilyChart(PieChartSetting PieChartSetting, ChartData[][] DataCols) : base(PieChartSetting)
         {
             this.PieChartSetting = PieChartSetting;
@@ -16,11 +22,17 @@ namespace OpenXMLOffice.Global
                 case PieChartTypes.DOUGHNUT:
                     SetChartPlotArea(CreateChartPlotArea(DataCols));
                     break;
+
                 default:
                     SetChartPlotArea(CreateChartPlotArea(DataCols));
                     break;
             };
         }
+
+        #endregion Protected Constructors
+
+        #region Private Methods
+
         private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
@@ -66,10 +78,6 @@ namespace OpenXMLOffice.Global
             plotArea.Append(ShapeProperties);
             return plotArea;
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private C.PieChartSeries CreateChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
                                                     string categoryFormula, ChartData[] categoryCells, string valueFormula,

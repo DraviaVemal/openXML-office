@@ -6,13 +6,48 @@ namespace OpenXMLOffice.Global
 {
     public class BarFamilyChart : ChartBase
     {
+        #region Protected Fields
+
         protected readonly BarChartSetting BarChartSetting;
-        #region Protected Methods
+
+        #endregion Protected Fields
+
+        #region Public Constructors
+
         public BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
         {
             this.BarChartSetting = BarChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
+                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
+                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
+        {
+            C.BarChartSeries series = new(
+                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
+                new C.InvertIfNegative { Val = true });
+            C.ShapeProperties ShapeProperties = new();
+            ShapeProperties.Append(SolidFill);
+            ShapeProperties.Append(new A.Outline(new A.NoFill()));
+            ShapeProperties.Append(new A.EffectList());
+            series.Append(DataLabels);
+            series.Append(ShapeProperties);
+            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
+            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
+            series.Append(new C.Smooth()
+            {
+                Val = false
+            });
+            return series;
+        }
+
         private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
@@ -69,34 +104,6 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.EffectList());
             plotArea.Append(ShapeProperties);
             return plotArea;
-        }
-
-        #endregion Protected Methods
-
-        #region Private Methods
-
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, string seriesTextFormula, ChartData[] seriesTextCells,
-                                                        string categoryFormula, ChartData[] categoryCells, string valueFormula,
-                                                        ChartData[] valueCells, A.SolidFill SolidFill, C.DataLabels DataLabels)
-        {
-            C.BarChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                new C.SeriesText(new C.StringReference(new C.Formula(seriesTextFormula), AddStringCacheValue(seriesTextCells))),
-                new C.InvertIfNegative { Val = true });
-            C.ShapeProperties ShapeProperties = new();
-            ShapeProperties.Append(SolidFill);
-            ShapeProperties.Append(new A.Outline(new A.NoFill()));
-            ShapeProperties.Append(new A.EffectList());
-            series.Append(DataLabels);
-            series.Append(ShapeProperties);
-            series.Append(new C.CategoryAxisData(new C.StringReference(new C.Formula(categoryFormula), AddStringCacheValue(categoryCells))));
-            series.Append(new C.Values(new C.NumberReference(new C.Formula(valueFormula), AddNumberCacheValue(valueCells, null))));
-            series.Append(new C.Smooth()
-            {
-                Val = false
-            });
-            return series;
         }
 
         private C.DataLabels CreateDataLabel(BarChartDataLabel BarChartDataLabel)

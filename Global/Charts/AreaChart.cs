@@ -4,8 +4,15 @@ namespace OpenXMLOffice.Global
 {
     public class AreaChart : AreaFamilyChart
     {
+        #region Public Constructors
+
+        public AreaChart(AreaChartSetting AreaChartSetting, ChartData[][] DataCols) : base(AreaChartSetting, DataCols)
+        {
+        }
+
+        #endregion Public Constructors
+
         #region Public Methods
-        public AreaChart(AreaChartSetting AreaChartSetting, ChartData[][] DataCols) : base(AreaChartSetting, DataCols) { }
 
         public CS.ChartStyle GetChartStyle()
         {

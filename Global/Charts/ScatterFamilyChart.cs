@@ -6,13 +6,24 @@ namespace OpenXMLOffice.Global
 {
     public class ScatterFamilyChart : ChartBase
     {
-        #region Protected Methods
+        #region Protected Fields
+
         protected ScatterChartSetting ScatterChartSetting;
+
+        #endregion Protected Fields
+
+        #region Protected Constructors
+
         protected ScatterFamilyChart(ScatterChartSetting ScatterChartSetting, ChartData[][] DataCols) : base(ScatterChartSetting)
         {
             this.ScatterChartSetting = ScatterChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
+
+        #endregion Protected Constructors
+
+        #region Private Methods
+
         private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
@@ -83,10 +94,6 @@ namespace OpenXMLOffice.Global
             plotArea.Append(ShapeProperties);
             return plotArea;
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private C.DataLabels CreateDataLabel(ScatterChartDataLabel ScatterChartDataLabel)
         {
