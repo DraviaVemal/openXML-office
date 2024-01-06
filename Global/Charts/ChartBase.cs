@@ -17,9 +17,9 @@ public class ChartBase
 
     #region Private Fields
 
-    private C.Chart Chart;
+    private readonly C.Chart Chart;
 
-    private C.ChartSpace OpenXMLChartSpace;
+    private readonly C.ChartSpace OpenXMLChartSpace;
 
     #endregion Private Fields
 
@@ -31,6 +31,7 @@ public class ChartBase
         OpenXMLChartSpace = CreateChartSpace();
         Chart = CreateChart();
         GetChartSpace().Append(Chart);
+        GetChartSpace().Append(new C.ExternalData() { Id = "rId1" });
     }
 
     #endregion Protected Constructors
