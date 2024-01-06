@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Global
                     GetDataLabels(ScatterChartSetting, seriesIndex)));
                 seriesIndex++;
             });
-            
+
             ScatterChart.Append(new C.AxisId { Val = 1362418656 });
             ScatterChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ScatterChart);

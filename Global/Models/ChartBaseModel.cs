@@ -1,5 +1,3 @@
-using DocumentFormat.OpenXml;
-
 namespace OpenXMLOffice.Global
 {
     public enum AxisPosition
@@ -15,8 +13,9 @@ namespace OpenXMLOffice.Global
         #region Internal Fields
 
         internal AxisPosition AxisPosition = AxisPosition.BOTTOM;
-        internal uint Id;
         internal uint CrossAxisId;
+        internal uint Id;
+
         #endregion Internal Fields
     }
 
@@ -140,14 +139,15 @@ namespace OpenXMLOffice.Global
     public class ChartSetting
     {
         #region Public Fields
-        public uint X = 0;
-        public uint Y = 0;
-        public uint Height = 6858000;
-        public uint Width = 12192000;
+
         public ChartDataSetting ChartDataSetting = new();
         public ChartGridLinesOptions ChartGridLinesOptions = new();
         public ChartLegendOptions ChartLegendOptions = new();
+        public uint Height = 6858000;
         public string? Title;
+        public uint Width = 12192000;
+        public uint X = 0;
+        public uint Y = 0;
 
         #endregion Public Fields
 
@@ -164,8 +164,8 @@ namespace OpenXMLOffice.Global
         #region Internal Fields
 
         internal AxisPosition AxisPosition = AxisPosition.LEFT;
-        internal uint Id;
         internal uint CrossAxisId;
+        internal uint Id;
 
         #endregion Internal Fields
     }

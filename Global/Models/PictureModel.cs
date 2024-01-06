@@ -1,4 +1,3 @@
-
 namespace OpenXMLOffice.Global
 {
     public enum ImageType
@@ -9,12 +8,17 @@ namespace OpenXMLOffice.Global
         BMP,
         TIFF
     }
+
     public class PictureSetting
     {
+        #region Public Fields
+
+        public uint Height = 6858000;
         public ImageType ImageType = ImageType.JPEG;
+        public uint Width = 12192000;
         public uint X = 0;
         public uint Y = 0;
-        public uint Height = 6858000;
-        public uint Width = 12192000;
+
+        #endregion Public Fields
     }
 }

@@ -1,5 +1,5 @@
-using OpenXMLOffice.Global;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -7,7 +7,18 @@ namespace OpenXMLOffice.Presentation
 {
     public class Picture : CommonProperties
     {
+        #region Private Fields
+
         private readonly Slide CurrentSlide;
+
+        private readonly P.Picture OpenXMLPicture;
+
+        private readonly PictureSetting PictureSetting;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public Picture(Stream Stream, Slide Slide, PictureSetting PictureSetting)
         {
             CurrentSlide = Slide;
@@ -40,14 +51,11 @@ namespace OpenXMLOffice.Presentation
                 _ => "image/jpeg"
             }, EmbedId);
             ImagePart.FeedData(new FileStream(FilePath, FileMode.Open, FileAccess.Read));
+        }
 
-        }
-        private readonly P.Picture OpenXMLPicture;
-        private readonly PictureSetting PictureSetting;
-        internal P.Picture GetPicture()
-        {
-            return OpenXMLPicture;
-        }
+        #endregion Public Constructors
+
+        #region Public Methods
 
         /// <summary>
         /// </summary>
@@ -96,6 +104,20 @@ namespace OpenXMLOffice.Presentation
                 };
             }
         }
+
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal P.Picture GetPicture()
+        {
+            return OpenXMLPicture;
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
         private void CreatePicture()
         {
             GetPicture().NonVisualPictureProperties = new P.NonVisualPictureProperties(
@@ -123,5 +145,7 @@ namespace OpenXMLOffice.Presentation
                 }
             };
         }
+
+        #endregion Private Methods
     }
 }

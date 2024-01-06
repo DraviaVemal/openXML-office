@@ -1,6 +1,6 @@
 using System.Data;
-using G = OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
+using G = OpenXMLOffice.Global;
 using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation

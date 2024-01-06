@@ -35,12 +35,11 @@ namespace OpenXMLOffice.Presentation
     {
         #region Public Fields
 
-        public uint X = 0;
-        public uint Y = 0;
         public uint Height = 741680;
-        public uint Width = 8128000;
         public string Name = "Table 1";
         public List<float> TableColumnwidth = new();
+        public uint Width = 8128000;
+
         /// <summary>
         /// AUTO - Ingnore User Width value and space the colum equally EMU - (English Metric Units)
         /// Direct PPT standard Sizing 1 Inch * 914400 EMU's PIXEL - Based on Target DPI the pixel
@@ -48,6 +47,9 @@ namespace OpenXMLOffice.Presentation
         /// each column RATIO - 0-10 Width ratio of each column
         /// </summary>
         public eWidthType WidthType = eWidthType.AUTO;
+
+        public uint X = 0;
+        public uint Y = 0;
 
         #endregion Public Fields
 
