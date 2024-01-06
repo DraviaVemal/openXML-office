@@ -1,4 +1,6 @@
-﻿using DocumentFormat.OpenXml;
+﻿// Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License. See License in
+// the project root for license information.
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -13,8 +15,6 @@ namespace OpenXMLOffice.Excel
     /// </summary>
     public class Spreadsheet
     {
-        #region Private Fields
-
         /// <summary>
         /// Maintain the master OpenXML Spreadsheet document
         /// </summary>
@@ -25,10 +25,6 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// </summary>
         private WorkbookPart? workbookPart;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         /// <summary>
         /// This public constructor method initializes a new instance of the Spreadsheet class,
@@ -104,10 +100,6 @@ namespace OpenXMLOffice.Excel
                 AutoSave = true
             });
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public Worksheet AddSheet(string? sheetName = null)
         {
@@ -312,10 +304,6 @@ namespace OpenXMLOffice.Excel
             throw new NotImplementedException();
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Check if sheet name exist in the sheets list
         /// </summary>
@@ -350,7 +338,5 @@ namespace OpenXMLOffice.Excel
             workbookPart.Workbook.AppendChild(sheets);
             workbookPart.Workbook.Save();
         }
-
-        #endregion Private Methods
     }
 }
