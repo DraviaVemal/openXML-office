@@ -126,11 +126,6 @@ internal class ChartStyle
         return chartArea;
     }
 
-    private C.Layout CreateChartLayout()
-    {
-        return new();
-    }
-
     private CS.DataLabel CreateDataLabel()
     {
         CS.DataLabel dataLabel = new();

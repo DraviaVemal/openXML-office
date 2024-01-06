@@ -89,11 +89,13 @@ namespace OpenXMLOffice.Global
             plotArea.Append(BarChart);
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
-                Id = 1362418656
+                Id = 1362418656,
+                AxisPosition = AxisPosition.LEFT
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                Id = 1358349936
+                Id = 1358349936,
+                AxisPosition = AxisPosition.BOTTOM
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
@@ -105,53 +107,59 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreateDataLabel(BarChartDataLabel BarChartDataLabel)
         {
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = BarChartDataLabel.ShowLegendKey },
-                new C.ShowValue { Val = BarChartDataLabel.ShowValue },
-                new C.ShowCategoryName { Val = BarChartDataLabel.ShowCategoryName },
-                new C.ShowSeriesName { Val = BarChartDataLabel.ShowSeriesName },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false },
-                new C.ShowLeaderLines() { Val = false });
-            DataLabels.InsertAt(new C.DataLabelPosition()
+            if (BarChartDataLabel.GetType().GetProperties()
+                .Where(Prop => Prop.PropertyType == typeof(bool))
+                .Any(Prop => (bool)Prop.GetValue(BarChartDataLabel)!))
             {
-                Val = BarChartDataLabel.DataLabelPosition switch
+                C.DataLabels DataLabels = new(
+                                new C.ShowLegendKey { Val = BarChartDataLabel.ShowLegendKey },
+                                new C.ShowValue { Val = BarChartDataLabel.ShowValue },
+                                new C.ShowCategoryName { Val = BarChartDataLabel.ShowCategoryName },
+                                new C.ShowSeriesName { Val = BarChartDataLabel.ShowSeriesName },
+                                new C.ShowPercent { Val = false },
+                                new C.ShowBubbleSize { Val = false },
+                                new C.ShowLeaderLines() { Val = false });
+                DataLabels.InsertAt(new C.DataLabelPosition()
                 {
-                    BarChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
-                    BarChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
-                    BarChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
-                    _ => C.DataLabelPositionValues.Center
-                }
-            }, 0);
-            DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
-            A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-            {
-                FontSize = 1197,
-                Bold = false,
-                Italic = false,
-                Underline = A.TextUnderlineValues.None,
-                Strike = A.TextStrikeValues.NoStrike,
-                Kerning = 1200,
-                Baseline = 0
-            }), new A.EndParagraphRunProperties() { Language = "en-US" });
-            DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
-            {
-                Rotation = 0,
-                UseParagraphSpacing = true,
-                VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-                Vertical = A.TextVerticalValues.Horizontal,
-                Wrap = A.TextWrappingValues.Square,
-                LeftInset = 38100,
-                TopInset = 19050,
-                RightInset = 38100,
-                BottomInset = 19050,
-                Anchor = A.TextAnchoringTypeValues.Center,
-                AnchorCenter = true
-            }, new A.ListStyle(),
-           Paragraph), 0);
-            return DataLabels;
+                    Val = BarChartDataLabel.DataLabelPosition switch
+                    {
+                        BarChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
+                        BarChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                        BarChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
+                        _ => C.DataLabelPositionValues.Center
+                    }
+                }, 0);
+                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
+                A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
+                {
+                    FontSize = 1197,
+                    Bold = false,
+                    Italic = false,
+                    Underline = A.TextUnderlineValues.None,
+                    Strike = A.TextStrikeValues.NoStrike,
+                    Kerning = 1200,
+                    Baseline = 0
+                }), new A.EndParagraphRunProperties() { Language = "en-US" });
+                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                {
+                    Rotation = 0,
+                    UseParagraphSpacing = true,
+                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
+                    Vertical = A.TextVerticalValues.Horizontal,
+                    Wrap = A.TextWrappingValues.Square,
+                    LeftInset = 38100,
+                    TopInset = 19050,
+                    RightInset = 38100,
+                    BottomInset = 19050,
+                    Anchor = A.TextAnchoringTypeValues.Center,
+                    AnchorCenter = true
+                }, new A.ListStyle(),
+               Paragraph), 0);
+                return DataLabels;
+            }
+            return null;
         }
 
         private C.DataLabels? GetDataLabels(BarChartSetting BarChartSetting, int index)
