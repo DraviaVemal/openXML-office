@@ -56,6 +56,8 @@ namespace OpenXMLOffice.Global
         public string? XaxisFormula;
         public ChartData[]? YaxisCells;
         public string? YaxisFormula;
+        public ChartData[]? ZaxisCells;
+        public string? ZaxisFormula;
 
         #endregion Public Fields
     }
@@ -63,7 +65,7 @@ namespace OpenXMLOffice.Global
     public class ChartDataSetting
     {
         #region Public Fields
-
+        public bool Is3Ddata;
         /// <summary>
         /// Set 0 To Use Till End
         /// </summary>

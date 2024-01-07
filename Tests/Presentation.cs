@@ -154,7 +154,7 @@ namespace OpenXMLOffice.Tests
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER
             });
             //23
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.BUBBLE
             });
@@ -193,7 +193,7 @@ namespace OpenXMLOffice.Tests
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
                 Title = "Scatter Straight Marker"
             });
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.BUBBLE,
                 Title = "Scatter  Bubble"
@@ -204,21 +204,10 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void AddDevChart()
         {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new ScatterChartSetting()
             {
-                Title = "Color Change Chart",
-                ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
-                ChartDataSetting = new ChartDataSetting()
-                {
-                    ChartDataRowStart = 1,
-                    ChartDataColumnStart = 2
-                },
-                ChartLegendOptions = new ChartLegendOptions()
-                {
-                    legendPosition = ChartLegendOptions.eLegendPosition.TOP
-                }
-            }
-            );
+                ScatterChartTypes = ScatterChartTypes.BUBBLE
+            });
             Assert.IsTrue(true);
         }
 
