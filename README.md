@@ -115,7 +115,7 @@ For charts, the following types are supported:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/DraviaVemal/OpenXMLOffice/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://draviavemal.gitbook.io/openxmloffice/license) file for details.
 
 ## Contributing
 

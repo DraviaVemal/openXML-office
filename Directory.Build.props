@@ -1,13 +1,13 @@
 <Project>
     <PropertyGroup>
         <PackageProjectUrl>https://draviavemal.github.io/OpenXMLOffice/</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/DraviaVemal/OpenXMLOffice</RepositoryUrl>
+        <RepositoryUrl>https://draviavemal.gitbook.io/openxmloffice/</RepositoryUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <TargetFramework>net7.0</TargetFramework>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>0.2.2-alpha.3</Version>
+        <Version>0.2.2-alpha.4</Version>
         <Company>DraviaVemal</Company>
         <Copyright>Copyright (c) 2023 DraviaVemal
 

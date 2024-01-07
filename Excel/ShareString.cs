@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Excel
     {
         public int Id { get; set; }
         public string Value { get; set; }
-        internal Record(string Value)
+        public Record(string Value)
         {
             this.Value = Value;
         }
