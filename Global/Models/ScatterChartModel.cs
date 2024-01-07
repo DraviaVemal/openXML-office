@@ -19,6 +19,7 @@ namespace OpenXMLOffice.Global
     public class ScatterChartDataLabel : ChartDataLabel
     {
         #region Public Fields
+
         public DataLabelPositionValues DataLabelPosition = DataLabelPositionValues.CENTER;
         public bool ShowBubbleSize = false;
 
@@ -45,6 +46,7 @@ namespace OpenXMLOffice.Global
 
         public string? BorderColor;
         public string? FillColor;
+
         /// <summary>
         /// Option To Customise Specific Data Series, Will override Chart Level Setting
         /// </summary>
@@ -56,12 +58,16 @@ namespace OpenXMLOffice.Global
     public class ScatterChartSetting : ChartSetting
     {
         #region Public Fields
+
+        public ChartAxesOptions ChartAxesOptions = new();
+
+        public ChartAxisOptions ChartAxisOptions = new();
+
         /// <summary>
         /// Will get override by series level setting
         /// </summary>
         public ScatterChartDataLabel ScatterChartDataLabel = new();
-        public ChartAxesOptions ChartAxesOptions = new();
-        public ChartAxisOptions ChartAxisOptions = new();
+
         public List<ScatterChartSeriesSetting> ScatterChartSeriesSettings = new();
         public ScatterChartTypes ScatterChartTypes = ScatterChartTypes.SCATTER;
 

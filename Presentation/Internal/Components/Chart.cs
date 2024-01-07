@@ -17,8 +17,8 @@ namespace OpenXMLOffice.Presentation
     {
         #region Private Fields
 
-        private readonly Slide CurrentSlide;
         private readonly ChartSetting ChartSetting;
+        private readonly Slide CurrentSlide;
         private readonly ChartPart OpenXMLChartPart;
         private P.GraphicFrame? GraphicFrame;
 
@@ -84,43 +84,6 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Methods
 
-        internal P.GraphicFrame GetChartGraphicFrame()
-        {
-            // Load Chart Part To Graphics Frame For Export
-            string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
-            P.NonVisualGraphicFrameProperties NonVisualProperties = new()
-            {
-                NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = (UInt32Value)2U, Name = "Chart" },
-                NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
-                ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
-            };
-            GraphicFrame = new()
-            {
-                NonVisualGraphicFrameProperties = NonVisualProperties,
-                Transform = new P.Transform(
-                   new A.Offset
-                   {
-                       X = ChartSetting.X,
-                       Y = ChartSetting.Y
-                   },
-                   new A.Extents
-                   {
-                       Cx = ChartSetting.Width,
-                       Cy = ChartSetting.Height
-                   }),
-                Graphic = new A.Graphic(
-                   new A.GraphicData(
-                       new C.ChartReference { Id = relationshipId }
-                   )
-                   { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" })
-            };
-            // Save All Changes
-            GetChartPart().ChartSpace.Save();
-            GetChartStylePart().ChartStyle.Save();
-            GetChartColorStylePart().ColorStyle.Save();
-            return GraphicFrame;
-        }
-
         public Spreadsheet GetChartWorkBook()
         {
             Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
@@ -183,6 +146,43 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Methods
 
         #region Internal Methods
+
+        internal P.GraphicFrame GetChartGraphicFrame()
+        {
+            // Load Chart Part To Graphics Frame For Export
+            string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
+            P.NonVisualGraphicFrameProperties NonVisualProperties = new()
+            {
+                NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = (UInt32Value)2U, Name = "Chart" },
+                NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
+                ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
+            };
+            GraphicFrame = new()
+            {
+                NonVisualGraphicFrameProperties = NonVisualProperties,
+                Transform = new P.Transform(
+                   new A.Offset
+                   {
+                       X = ChartSetting.X,
+                       Y = ChartSetting.Y
+                   },
+                   new A.Extents
+                   {
+                       Cx = ChartSetting.Width,
+                       Cy = ChartSetting.Height
+                   }),
+                Graphic = new A.Graphic(
+                   new A.GraphicData(
+                       new C.ChartReference { Id = relationshipId }
+                   )
+                   { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" })
+            };
+            // Save All Changes
+            GetChartPart().ChartSpace.Save();
+            GetChartStylePart().ChartStyle.Save();
+            GetChartColorStylePart().ColorStyle.Save();
+            return GraphicFrame;
+        }
 
         internal string GetNextChartRelationId()
         {

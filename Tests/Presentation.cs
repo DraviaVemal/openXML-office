@@ -166,6 +166,52 @@ namespace OpenXMLOffice.Tests
         }
 
         [TestMethod]
+        public void AddBlankSlide()
+        {
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void AddDevChart()
+        {
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
+            {
+                LineChartDataLabel = new LineChartDataLabel()
+                {
+                    DataLabelPosition = LineChartDataLabel.DataLabelPositionValues.LEFT,
+                    ShowCategoryName = true,
+                    ShowValue = true,
+                    Separator = ". "
+                },
+                ChartDataSetting = new ChartDataSetting()
+                {
+                    ChartDataColumnEnd = 2,
+                    ValueFromColumn = new Dictionary<uint, uint>(){
+                        {2,4}
+                    }
+                },
+                LineChartSeriesSettings = new List<LineChartSeriesSetting>(){
+                    new(),
+                    new(){
+                        LineChartDataLabel = new LineChartDataLabel(){
+                            DataLabelPosition = LineChartDataLabel.DataLabelPositionValues.RIGHT
+                        }
+                    }
+                }
+            });
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void AddPicture()
+        {
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new PictureSetting());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new PictureSetting());
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
         public void AddScatterPlot()
         {
             //1
@@ -206,44 +252,6 @@ namespace OpenXMLOffice.Tests
         }
 
         [TestMethod]
-        public void AddDevChart()
-        {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
-            {
-                LineChartDataLabel = new LineChartDataLabel()
-                {
-                    DataLabelPosition = LineChartDataLabel.DataLabelPositionValues.LEFT,
-                    ShowCategoryName = true,
-                    ShowValue = true,
-                    Separator = ". "
-                },
-                ChartDataSetting = new ChartDataSetting()
-                {
-                    ChartDataColumnEnd = 2,
-                    ValueFromColumn = new Dictionary<uint, uint>(){
-                        {2,4}
-                    }
-                },
-                LineChartSeriesSettings = new List<LineChartSeriesSetting>(){
-                    new(),
-                    new(){
-                        LineChartDataLabel = new LineChartDataLabel(){
-                            DataLabelPosition = LineChartDataLabel.DataLabelPositionValues.RIGHT
-                        }
-                    }
-                }
-            });
-            Assert.IsTrue(true);
-        }
-
-        [TestMethod]
-        public void AddBlankSlide()
-        {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-            Assert.IsTrue(true);
-        }
-
-        [TestMethod]
         public void AddTable()
         {
             Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
@@ -253,14 +261,6 @@ namespace OpenXMLOffice.Tests
                 WidthType = TableSetting.WidthOptionValues.AUTO,
                 TableColumnwidth = new() { 100, 100 }
             });
-            Assert.IsTrue(true);
-        }
-
-        [TestMethod]
-        public void AddPicture()
-        {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new PictureSetting());
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new PictureSetting());
             Assert.IsTrue(true);
         }
 

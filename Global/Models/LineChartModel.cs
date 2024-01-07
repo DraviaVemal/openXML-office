@@ -45,6 +45,7 @@ namespace OpenXMLOffice.Global
 
         public string? BorderColor;
         public string? FillColor;
+
         /// <summary>
         /// Option To Customise Specific Data Series, Will override Chart Level Setting
         /// </summary>
@@ -56,12 +57,16 @@ namespace OpenXMLOffice.Global
     public class LineChartSetting : ChartSetting
     {
         #region Public Fields
+
+        public ChartAxesOptions ChartAxesOptions = new();
+
+        public ChartAxisOptions ChartAxisOptions = new();
+
         /// <summary>
         /// Will get override by series level setting
         /// </summary>
         public LineChartDataLabel LineChartDataLabel = new();
-        public ChartAxesOptions ChartAxesOptions = new();
-        public ChartAxisOptions ChartAxisOptions = new();
+
         public List<LineChartSeriesSetting> LineChartSeriesSettings = new();
         public LineChartTypes LineChartTypes = LineChartTypes.CLUSTERED;
 

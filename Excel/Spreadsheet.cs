@@ -18,6 +18,8 @@ namespace OpenXMLOffice.Excel
     /// </summary>
     public class Spreadsheet
     {
+        #region Private Fields
+
         /// <summary>
         /// Maintain the master OpenXML Spreadsheet document
         /// </summary>
@@ -28,6 +30,10 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// </summary>
         private WorkbookPart? workbookPart;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         /// <summary>
         /// This public constructor method initializes a new instance of the Spreadsheet class,
@@ -103,6 +109,10 @@ namespace OpenXMLOffice.Excel
                 AutoSave = true
             });
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public Worksheet AddSheet(string? sheetName = null)
         {
@@ -298,14 +308,6 @@ namespace OpenXMLOffice.Excel
             spreadsheetDocument.Dispose();
         }
 
-        private void UpdateSharedString()
-        {
-            ShareString.Instance.GetRecords().ForEach(Value =>
-            {
-                GetShareString().Append(new SharedStringItem(new Text(Value)));
-            });
-        }
-
         /// <summary>
         /// Save Copy of the content that updated to the source file
         /// </summary>
@@ -315,6 +317,10 @@ namespace OpenXMLOffice.Excel
         {
             throw new NotImplementedException();
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         /// <summary>
         /// Check if sheet name exist in the sheets list
@@ -339,17 +345,15 @@ namespace OpenXMLOffice.Excel
             return sheets!.Max(sheet => (sheet as Sheet)?.SheetId) ?? 0;
         }
 
-        /// <summary>
-        /// Common Spreadsheet perparation process used by all constructor
-        /// </summary>
-        private void PrepareSpreadsheet()
+        private SharedStringTable GetShareString()
         {
-            workbookPart = spreadsheetDocument.WorkbookPart ?? spreadsheetDocument.AddWorkbookPart();
-            workbookPart.Workbook ??= new Workbook();
-            sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? new Sheets();
-            workbookPart.Workbook.AppendChild(sheets);
-            LoadShareStringToCache();
-            workbookPart.Workbook.Save();
+            SharedStringTablePart? sharedStringPart = spreadsheetDocument.WorkbookPart!.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+            if (sharedStringPart == null)
+            {
+                sharedStringPart = spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
+                sharedStringPart.SharedStringTable = new SharedStringTable();
+            }
+            return sharedStringPart.SharedStringTable;
         }
 
         private void LoadShareStringToCache()
@@ -363,15 +367,27 @@ namespace OpenXMLOffice.Excel
             ShareString.Instance.InsertBulk(Records);
         }
 
-        private SharedStringTable GetShareString()
+        /// <summary>
+        /// Common Spreadsheet perparation process used by all constructor
+        /// </summary>
+        private void PrepareSpreadsheet()
         {
-            SharedStringTablePart? sharedStringPart = spreadsheetDocument.WorkbookPart!.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
-            if (sharedStringPart == null)
-            {
-                sharedStringPart = spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
-                sharedStringPart.SharedStringTable = new SharedStringTable();
-            }
-            return sharedStringPart.SharedStringTable;
+            workbookPart = spreadsheetDocument.WorkbookPart ?? spreadsheetDocument.AddWorkbookPart();
+            workbookPart.Workbook ??= new Workbook();
+            sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? new Sheets();
+            workbookPart.Workbook.AppendChild(sheets);
+            LoadShareStringToCache();
+            workbookPart.Workbook.Save();
         }
+
+        private void UpdateSharedString()
+        {
+            ShareString.Instance.GetRecords().ForEach(Value =>
+            {
+                GetShareString().Append(new SharedStringItem(new Text(Value)));
+            });
+        }
+
+        #endregion Private Methods
     }
 }

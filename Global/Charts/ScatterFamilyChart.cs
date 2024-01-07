@@ -119,6 +119,54 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
+        private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, ScatterChartSeriesSetting ScatterChartSeriesSetting, C.Marker? Marker, A.Outline Outline, C.DataLabels? DataLabels)
+        {
+            C.ScatterChartSeries series = new(
+                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                CreateSeriesText(ChartDataGrouping.SeriesHeaderFormula!, new[] { ChartDataGrouping.SeriesHeaderCells! }));
+            if (Marker != null)
+            {
+                series.Append(Marker);
+            }
+            C.ShapeProperties ShapeProperties = CreateShapeProperties();
+            if (ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.BUBBLE)
+            {
+                ShapeProperties.Append(new A.SolidFill(new A.SchemeColor(new A.Alpha() { Val = 75000 }) { Val = A.SchemeColorValues.Accent1 }));
+                ShapeProperties.Append(new A.Outline(new A.NoFill()));
+                series.Append(new C.InvertIfNegative() { Val = false });
+            }
+            else
+            {
+                ShapeProperties.Append(Outline);
+                ShapeProperties.Append(new A.EffectList());
+            }
+            if (DataLabels != null)
+            {
+                series.Append(DataLabels);
+            }
+            series.Append(ShapeProperties);
+            series.Append(CreateXValueAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, ScatterChartSeriesSetting));
+            series.Append(CreateYValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, ScatterChartSeriesSetting));
+            if (ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.BUBBLE)
+            {
+                series.Append(CreateBubbleSizeAxisData(ChartDataGrouping.ZaxisFormula!, ChartDataGrouping.ZaxisCells!, ScatterChartSeriesSetting));
+                series.Append(new C.Bubble3D() { Val = false });
+            }
+            else
+            {
+                series.Append(new C.Smooth() { Val = new[] { ScatterChartTypes.SCATTER_SMOOTH, ScatterChartTypes.SCATTER_SMOOTH_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) });
+            }
+            if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
+            {
+                series.Append(new C.ExtensionList(new C.Extension(
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), ScatterChartSeriesSetting)
+                )
+                { Uri = GeneratorUtils.GenerateNewGUID() }));
+            }
+            return series;
+        }
+
         private C.DataLabels? CreateScatterDataLabels(ScatterChartDataLabel ScatterChartDataLabel, int? DataLabelCounter = 0)
         {
             if (ScatterChartDataLabel.ShowValue || ScatterChartDataLabel.ShowCategoryName || ScatterChartDataLabel.ShowLegendKey || ScatterChartDataLabel.ShowSeriesName || ScatterChartDataLabel.ShowBubbleSize || DataLabelCounter > 0)
@@ -168,54 +216,6 @@ namespace OpenXMLOffice.Global
                 return DataLabels;
             }
             return null;
-        }
-
-        private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, ScatterChartSeriesSetting ScatterChartSeriesSetting, C.Marker? Marker, A.Outline Outline, C.DataLabels? DataLabels)
-        {
-            C.ScatterChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.SeriesHeaderFormula!, new[] { ChartDataGrouping.SeriesHeaderCells! }));
-            if (Marker != null)
-            {
-                series.Append(Marker);
-            }
-            C.ShapeProperties ShapeProperties = CreateShapeProperties();
-            if (ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.BUBBLE)
-            {
-                ShapeProperties.Append(new A.SolidFill(new A.SchemeColor(new A.Alpha() { Val = 75000 }) { Val = A.SchemeColorValues.Accent1 }));
-                ShapeProperties.Append(new A.Outline(new A.NoFill()));
-                series.Append(new C.InvertIfNegative() { Val = false });
-            }
-            else
-            {
-                ShapeProperties.Append(Outline);
-                ShapeProperties.Append(new A.EffectList());
-            }
-            if (DataLabels != null)
-            {
-                series.Append(DataLabels);
-            }
-            series.Append(ShapeProperties);
-            series.Append(CreateXValueAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, ScatterChartSeriesSetting));
-            series.Append(CreateYValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, ScatterChartSeriesSetting));
-            if (ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.BUBBLE)
-            {
-                series.Append(CreateBubbleSizeAxisData(ChartDataGrouping.ZaxisFormula!, ChartDataGrouping.ZaxisCells!, ScatterChartSeriesSetting));
-                series.Append(new C.Bubble3D() { Val = false });
-            }
-            else
-            {
-                series.Append(new C.Smooth() { Val = new[] { ScatterChartTypes.SCATTER_SMOOTH, ScatterChartTypes.SCATTER_SMOOTH_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) });
-            }
-            if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
-            {
-                series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), ScatterChartSeriesSetting)
-                )
-                { Uri = GeneratorUtils.GenerateNewGUID() }));
-            }
-            return series;
         }
 
         #endregion Private Methods

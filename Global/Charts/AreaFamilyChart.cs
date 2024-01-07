@@ -55,6 +55,52 @@ namespace OpenXMLOffice.Global
             return series;
         }
 
+        private C.DataLabels? CreateAreaDataLabels(AreaChartDataLabel AreaChartDataLabel, int? DataLabelCounter = 0)
+        {
+            if (AreaChartDataLabel.ShowValue || AreaChartDataLabel.ShowCategoryName || AreaChartDataLabel.ShowLegendKey || AreaChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
+            {
+                C.DataLabels DataLabels = CreateDataLabels(AreaChartDataLabel, DataLabelCounter);
+                DataLabels.InsertAt(new C.DataLabelPosition()
+                {
+                    Val = AreaChartDataLabel.DataLabelPosition switch
+                    {
+                        //Show
+                        _ => C.DataLabelPositionValues.Center,
+                    }
+                }, 0);
+                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
+                A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
+                {
+                    FontSize = 1197,
+                    Bold = false,
+                    Italic = false,
+                    Underline = A.TextUnderlineValues.None,
+                    Strike = A.TextStrikeValues.NoStrike,
+                    Kerning = 1200,
+                    Baseline = 0
+                }), new A.EndParagraphRunProperties() { Language = "en-US" });
+                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                {
+                    Rotation = 0,
+                    UseParagraphSpacing = true,
+                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
+                    Vertical = A.TextVerticalValues.Horizontal,
+                    Wrap = A.TextWrappingValues.Square,
+                    LeftInset = 38100,
+                    TopInset = 19050,
+                    RightInset = 38100,
+                    BottomInset = 19050,
+                    Anchor = A.TextAnchoringTypeValues.Center,
+                    AnchorCenter = true
+                }, new A.ListStyle(),
+               Paragraph), 0);
+                return DataLabels;
+            }
+            return null;
+        }
+
         private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
         {
             C.PlotArea plotArea = new();
@@ -114,52 +160,6 @@ namespace OpenXMLOffice.Global
             ShapeProperties.Append(new A.EffectList());
             plotArea.Append(ShapeProperties);
             return plotArea;
-        }
-
-        private C.DataLabels? CreateAreaDataLabels(AreaChartDataLabel AreaChartDataLabel, int? DataLabelCounter = 0)
-        {
-            if (AreaChartDataLabel.ShowValue || AreaChartDataLabel.ShowCategoryName || AreaChartDataLabel.ShowLegendKey || AreaChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
-            {
-                C.DataLabels DataLabels = CreateDataLabels(AreaChartDataLabel, DataLabelCounter);
-                DataLabels.InsertAt(new C.DataLabelPosition()
-                {
-                    Val = AreaChartDataLabel.DataLabelPosition switch
-                    {
-                        //Show
-                        _ => C.DataLabelPositionValues.Center,
-                    }
-                }, 0);
-                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
-                A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-                {
-                    FontSize = 1197,
-                    Bold = false,
-                    Italic = false,
-                    Underline = A.TextUnderlineValues.None,
-                    Strike = A.TextStrikeValues.NoStrike,
-                    Kerning = 1200,
-                    Baseline = 0
-                }), new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
-                {
-                    Rotation = 0,
-                    UseParagraphSpacing = true,
-                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-                    Vertical = A.TextVerticalValues.Horizontal,
-                    Wrap = A.TextWrappingValues.Square,
-                    LeftInset = 38100,
-                    TopInset = 19050,
-                    RightInset = 38100,
-                    BottomInset = 19050,
-                    Anchor = A.TextAnchoringTypeValues.Center,
-                    AnchorCenter = true
-                }, new A.ListStyle(),
-               Paragraph), 0);
-                return DataLabels;
-            }
-            return null;
         }
 
         #endregion Private Methods

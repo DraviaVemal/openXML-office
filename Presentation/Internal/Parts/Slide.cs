@@ -91,14 +91,6 @@ namespace OpenXMLOffice.Presentation
             return Chart;
         }
 
-        public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
-        {
-            Table Table = new(DataCells, TableSetting);
-            P.GraphicFrame GraphicFrame = Table.GetTableGraphicFrame();
-            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
-            return Table;
-        }
-
         public Picture AddPicture(string FilePath, PictureSetting PictureSetting)
         {
             Picture Picture = new(FilePath, this, PictureSetting);
@@ -111,6 +103,14 @@ namespace OpenXMLOffice.Presentation
             Picture Picture = new(Stream, this, PictureSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Picture.GetPicture());
             return Picture;
+        }
+
+        public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
+        {
+            Table Table = new(DataCells, TableSetting);
+            P.GraphicFrame GraphicFrame = Table.GetTableGraphicFrame();
+            GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
+            return Table;
         }
 
         public IEnumerable<Shape> FindShapeByText(string searchText)

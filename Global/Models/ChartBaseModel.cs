@@ -62,10 +62,23 @@ namespace OpenXMLOffice.Global
         #endregion Public Fields
     }
 
+    public class ChartDataLabel
+    {
+        #region Public Fields
+
+        public string Separator = ", ";
+        public bool ShowCategoryName = false;
+        public bool ShowLegendKey = false;
+        public bool ShowSeriesName = false;
+        public bool ShowValue = false;
+
+        #endregion Public Fields
+    }
+
     public class ChartDataSetting
     {
         #region Public Fields
-        public bool Is3Ddata;
+
         /// <summary>
         /// Set 0 To Use Till End
         /// </summary>
@@ -79,6 +92,7 @@ namespace OpenXMLOffice.Global
         public uint ChartDataRowEnd = 0;
 
         public uint ChartDataRowStart = 0;
+        public bool Is3Ddata;
 
         /// <summary>
         /// Key For Data Column Value For Data Label Column If Data Label Column Are Present
@@ -99,15 +113,6 @@ namespace OpenXMLOffice.Global
         public bool IsMinorValueLinesEnabled = false;
 
         #endregion Public Fields
-    }
-
-    public class ChartDataLabel
-    {
-        public string Separator = ", ";
-        public bool ShowCategoryName = false;
-        public bool ShowLegendKey = false;
-        public bool ShowSeriesName = false;
-        public bool ShowValue = false;
     }
 
     public class ChartLegendOptions

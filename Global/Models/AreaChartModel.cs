@@ -35,12 +35,14 @@ namespace OpenXMLOffice.Global
     public class AreaChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
-        public string? BorderColor;
-        public string? FillColor;
+
         /// <summary>
         /// Option To Customise Specific Data Series, Will override Chart Level Setting
         /// </summary>
         public AreaChartDataLabel AreaChartDataLabel = new();
+
+        public string? BorderColor;
+        public string? FillColor;
 
         #endregion Public Fields
     }
@@ -48,10 +50,12 @@ namespace OpenXMLOffice.Global
     public class AreaChartSetting : ChartSetting
     {
         #region Public Fields
+
         /// <summary>
         /// Will get override by series level setting
         /// </summary>
         public AreaChartDataLabel AreaChartDataLabel = new();
+
         public List<AreaChartSeriesSetting> AreaChartSeriesSettings = new();
         public AreaChartTypes AreaChartTypes = AreaChartTypes.CLUSTERED;
         public ChartAxesOptions ChartAxesOptions = new();

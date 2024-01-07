@@ -28,10 +28,12 @@ namespace OpenXMLOffice.Global
             CENTER,
             INSIDE_END,
             INSIDE_BASE,
+
             /// <summary>
             /// This Option is only for Cluster type chart
             /// </summary>
             OUTSIDE_END,
+
             DATA_CALLOUT
         }
 
@@ -43,11 +45,13 @@ namespace OpenXMLOffice.Global
         #region Public Fields
 
         public string? BorderColor;
-        public string? FillColor;
+
         /// <summary>
         /// Option To Customise Specific Data Series, Will override Chart Level Setting
         /// </summary>
         public ColumnChartDataLabel ColumnChartDataLabel = new();
+
+        public string? FillColor;
 
         #endregion Public Fields
     }
@@ -55,12 +59,16 @@ namespace OpenXMLOffice.Global
     public class ColumnChartSetting : ChartSetting
     {
         #region Public Fields
+
+        public ChartAxesOptions ChartAxesOptions = new();
+
+        public ChartAxisOptions ChartAxisOptions = new();
+
         /// <summary>
         /// Will get override by series level setting
         /// </summary>
         public ColumnChartDataLabel ColumnChartDataLabel = new();
-        public ChartAxesOptions ChartAxesOptions = new();
-        public ChartAxisOptions ChartAxisOptions = new();
+
         public List<ColumnChartSeriesSetting> ColumnChartSeriesSettings = new();
         public ColumnChartTypes ColumnChartTypes = ColumnChartTypes.CLUSTERED;
 

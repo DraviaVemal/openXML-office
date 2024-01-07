@@ -29,10 +29,12 @@ namespace OpenXMLOffice.Global
             INSIDE_END,
             OUTSIDE_END,
             BEST_FIT,
+
             /// <summary>
             /// Option only for doughnut chart type
             /// </summary>
             SHOW,
+
             DATA_CALLOUT
         }
 
@@ -45,6 +47,7 @@ namespace OpenXMLOffice.Global
 
         public string? BorderColor;
         public string? FillColor;
+
         /// <summary>
         /// Option To Customise Specific Data Series, Will override Chart Level Setting
         /// </summary>
@@ -56,10 +59,12 @@ namespace OpenXMLOffice.Global
     public class PieChartSetting : ChartSetting
     {
         #region Public Fields
+
         /// <summary>
         /// Will get override by series level setting
         /// </summary>
         public PieChartDataLabel PieChartDataLabel = new();
+
         public List<PieChartSeriesSetting> PieChartSeriesSettings = new();
         public PieChartTypes PieChartTypes = PieChartTypes.PIE;
 

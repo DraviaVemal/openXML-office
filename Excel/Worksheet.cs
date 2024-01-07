@@ -3,8 +3,8 @@
 * See License in the project root for license information.
 */
 
-using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Spreadsheet;
 using OpenXMLOffice.Global;
 
 using S = DocumentFormat.OpenXml.Spreadsheet;
@@ -196,17 +196,8 @@ namespace OpenXMLOffice.Excel
                         };
                         row.AppendChild(cell);
                     }
-                    CellValues DataType = GetCellValues(DataCell.DataType);
-                    if (DataType == CellValues.String)
-                    {
-                        cell.DataType = CellValues.SharedString;
-                        cell.CellValue = new CellValue(ShareString.Instance.InsertUnique(DataCell.CellValue));
-                    }
-                    else
-                    {
-                        cell.DataType = DataType;
-                        cell.CellValue = new CellValue(DataCell.CellValue);
-                    }
+                    cell.DataType = GetCellValues(DataCell.DataType);
+                    cell.CellValue = new CellValue(DataCell.CellValue);
                 }
             }
             openXMLworksheet.Save();

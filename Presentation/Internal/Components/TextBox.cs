@@ -11,9 +11,15 @@ namespace OpenXMLOffice.Presentation
 {
     public class TextBox : TextBoxBase
     {
+        #region Public Constructors
+
         public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting)
         {
         }
+
+        #endregion Public Constructors
+
+        #region Internal Methods
 
         internal A.Run GetTextBoxRun()
         {
@@ -24,5 +30,7 @@ namespace OpenXMLOffice.Presentation
         {
             return base.GetTextBoxShape();
         }
+
+        #endregion Internal Methods
     }
 }
