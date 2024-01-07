@@ -48,9 +48,16 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols, LineChartSetting.ChartDataSetting)
-            .ForEach(Series =>
+            CreateDataSeries(DataCols, LineChartSetting.ChartDataSetting).ForEach(Series =>
             {
+                C.DataLabels? GetDataLabels()
+                {
+                    if (seriesIndex < LineChartSetting.LineChartSeriesSettings.Count)
+                    {
+                        return CreateLineDataLabels(LineChartSetting.LineChartSeriesSettings?[seriesIndex]?.LineChartDataLabel ?? new LineChartDataLabel(), Series.DataLabelCells?.Length ?? 0);
+                    }
+                    return null;
+                }
                 C.Marker Marker = new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(LineChartSetting.LineChartTypes) ? new(
                     new C.Symbol { Val = C.MarkerStyleValues.Circle },
                     new C.Size { Val = 5 },
@@ -68,10 +75,10 @@ namespace OpenXMLOffice.Global
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
-                    GetDataLabels(LineChartSetting, seriesIndex)));
+                    GetDataLabels()));
                 seriesIndex++;
             });
-            C.DataLabels? DataLabels = CreateLineDataLabel(LineChartSetting.LineChartDataLabel);
+            C.DataLabels? DataLabels = CreateLineDataLabels(LineChartSetting.LineChartDataLabel);
             if (DataLabels != null)
             {
                 LineChart.Append(DataLabels);
@@ -97,13 +104,11 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels? CreateLineDataLabel(LineChartDataLabel LineChartDataLabel)
+        private C.DataLabels? CreateLineDataLabels(LineChartDataLabel LineChartDataLabel, int? DataLabelCounter = 0)
         {
-            if (LineChartDataLabel.GetType().GetProperties()
-                .Where(Prop => Prop.PropertyType == typeof(bool))
-                .Any(Prop => (bool)Prop.GetValue(LineChartDataLabel)!))
+            if (LineChartDataLabel.ShowValue || LineChartDataLabel.ShowCategoryName || LineChartDataLabel.ShowLegendKey || LineChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabel(LineChartDataLabel);
+                C.DataLabels DataLabels = CreateDataLabels(LineChartDataLabel, DataLabelCounter);
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = LineChartDataLabel.DataLabelPosition switch
@@ -166,16 +171,14 @@ namespace OpenXMLOffice.Global
             series.Append(ShapeProperties);
             series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, LineChartSeriesSetting));
             series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, LineChartSeriesSetting));
-            return series;
-        }
-
-        private C.DataLabels? GetDataLabels(LineChartSetting LineChartSetting, int index)
-        {
-            if (index < LineChartSetting.LineChartSeriesSettings.Count)
+            if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
             {
-                return CreateLineDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
+                series.Append(new C.ExtensionList(new C.Extension(
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), LineChartSeriesSetting)
+                )
+                { Uri = GeneratorUtils.GenerateNewGUID() }));
             }
-            return null;
+            return series;
         }
 
         #endregion Private Methods

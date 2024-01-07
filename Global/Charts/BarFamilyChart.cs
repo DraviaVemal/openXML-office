@@ -47,6 +47,13 @@ namespace OpenXMLOffice.Global
             series.Append(ShapeProperties);
             series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, BarChartSeriesSetting));
             series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, BarChartSeriesSetting));
+            if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
+            {
+                series.Append(new C.ExtensionList(new C.Extension(
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), BarChartSeriesSetting)
+                )
+                { Uri = GeneratorUtils.GenerateNewGUID() }));
+            }
             return series;
         }
 
@@ -68,15 +75,22 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols, BarChartSetting.ChartDataSetting)
-            .ForEach(Series =>
+            CreateDataSeries(DataCols, BarChartSetting.ChartDataSetting).ForEach(Series =>
             {
+                C.DataLabels? GetDataLabels()
+                {
+                    if (seriesIndex < BarChartSetting.BarChartSeriesSettings.Count)
+                    {
+                        return CreateBarDataLabels(BarChartSetting.BarChartSeriesSettings?[seriesIndex]?.BarChartDataLabel ?? new BarChartDataLabel(), Series.DataLabelCells?.Length ?? 0);
+                    }
+                    return null;
+                }
                 BarChart.Append(CreateBarChartSeries(seriesIndex, Series, BarChartSetting.BarChartSeriesSettings.Count > seriesIndex ? BarChartSetting.BarChartSeriesSettings[seriesIndex] : new BarChartSeriesSetting(),
                     CreateSolidFill(BarChartSetting.BarChartSeriesSettings
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex),
-                    GetDataLabels(BarChartSetting, seriesIndex)));
+                    GetDataLabels()));
                 seriesIndex++;
             });
             if (BarChartSetting.BarChartTypes == BarChartTypes.CLUSTERED)
@@ -89,7 +103,7 @@ namespace OpenXMLOffice.Global
                 BarChart.Append(new C.GapWidth { Val = 150 });
                 BarChart.Append(new C.Overlap { Val = 100 });
             }
-            C.DataLabels? DataLabels = CreateBarDataLabel(BarChartSetting.BarChartDataLabel);
+            C.DataLabels? DataLabels = CreateBarDataLabels(BarChartSetting.BarChartDataLabel);
             if (DataLabels != null)
             {
                 BarChart.Append(DataLabels);
@@ -117,13 +131,11 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels? CreateBarDataLabel(BarChartDataLabel BarChartDataLabel)
+        private C.DataLabels? CreateBarDataLabels(BarChartDataLabel BarChartDataLabel, int? DataLabelCounter = 0)
         {
-            if (BarChartDataLabel.GetType().GetProperties()
-                .Where(Prop => Prop.PropertyType == typeof(bool))
-                .Any(Prop => (bool)Prop.GetValue(BarChartDataLabel)!))
+            if (BarChartDataLabel.ShowValue || BarChartDataLabel.ShowCategoryName || BarChartDataLabel.ShowLegendKey || BarChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabel(BarChartDataLabel);
+                C.DataLabels DataLabels = CreateDataLabels(BarChartDataLabel, DataLabelCounter);
                 if (BarChartSetting.BarChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.DataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
                 {
                     throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
@@ -171,14 +183,7 @@ namespace OpenXMLOffice.Global
             return null;
         }
 
-        private C.DataLabels? GetDataLabels(BarChartSetting BarChartSetting, int index)
-        {
-            if (index < BarChartSetting.BarChartSeriesSettings.Count)
-            {
-                return CreateBarDataLabel(BarChartSetting.BarChartSeriesSettings?[index]?.BarChartDataLabel ?? new BarChartDataLabel());
-            }
-            return null;
-        }
+
 
         #endregion Private Methods
     }

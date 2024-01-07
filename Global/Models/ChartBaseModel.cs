@@ -103,15 +103,7 @@ namespace OpenXMLOffice.Global
 
     public class ChartDataLabel
     {
-        public enum SeparatorValues
-        {
-            COMMA,
-            SEMICOLON,
-            PERIOD,
-            NEW_LINE,
-            SPACE
-        }
-        public SeparatorValues Separator = SeparatorValues.COMMA;
+        public string Separator = ", ";
         public bool ShowCategoryName = false;
         public bool ShowLegendKey = false;
         public bool ShowSeriesName = false;

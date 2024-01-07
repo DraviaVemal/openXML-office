@@ -47,7 +47,6 @@ namespace OpenXMLOffice.Global
                     }
                 });
             Chart.Append(new C.VaryColors() { Val = false });
-            int seriesIndex = 0;
             if (ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.BUBBLE)
             {
                 ScatterChartSetting.ChartDataSetting.Is3Ddata = true;
@@ -56,9 +55,17 @@ namespace OpenXMLOffice.Global
                     throw new ArgumentOutOfRangeException("Required 3D Data Size is not met.");
                 }
             }
-            CreateDataSeries(DataCols, ScatterChartSetting.ChartDataSetting)
-            .ForEach(Series =>
+            int seriesIndex = 0;
+            CreateDataSeries(DataCols, ScatterChartSetting.ChartDataSetting).ForEach(Series =>
             {
+                C.DataLabels? GetDataLabels()
+                {
+                    if (seriesIndex < ScatterChartSetting.ScatterChartSeriesSettings.Count)
+                    {
+                        return CreateScatterDataLabels(ScatterChartSetting.ScatterChartSeriesSettings?[seriesIndex]?.ScatterChartDataLabel ?? new ScatterChartDataLabel(), Series.DataLabelCells?.Length ?? 0);
+                    }
+                    return null;
+                }
                 C.Marker Marker = new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) ? new(
                     new C.Symbol { Val = ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.SCATTER ? C.MarkerStyleValues.Auto : C.MarkerStyleValues.Circle },
                     new C.Size { Val = 5 },
@@ -77,10 +84,10 @@ namespace OpenXMLOffice.Global
                             .Where(item => item.FillColor != null)
                             .Select(item => item.FillColor!)
                             .ToList(), seriesIndex)),
-                    GetDataLabels(ScatterChartSetting, seriesIndex)));
+                    GetDataLabels()));
                 seriesIndex++;
             });
-            C.DataLabels? DataLabels = CreateScatterDataLabel(ScatterChartSetting.ScatterChartDataLabel);
+            C.DataLabels? DataLabels = CreateScatterDataLabels(ScatterChartSetting.ScatterChartDataLabel);
             if (DataLabels != null)
             {
                 Chart.Append(DataLabels);
@@ -112,13 +119,11 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels? CreateScatterDataLabel(ScatterChartDataLabel ScatterChartDataLabel)
+        private C.DataLabels? CreateScatterDataLabels(ScatterChartDataLabel ScatterChartDataLabel, int? DataLabelCounter = 0)
         {
-            if (ScatterChartDataLabel.GetType().GetProperties()
-                .Where(Prop => Prop.PropertyType == typeof(bool))
-                .Any(Prop => (bool)Prop.GetValue(ScatterChartDataLabel)!))
+            if (ScatterChartDataLabel.ShowValue || ScatterChartDataLabel.ShowCategoryName || ScatterChartDataLabel.ShowLegendKey || ScatterChartDataLabel.ShowSeriesName || ScatterChartDataLabel.ShowBubbleSize || DataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabel(ScatterChartDataLabel);
+                C.DataLabels DataLabels = CreateDataLabels(ScatterChartDataLabel, DataLabelCounter);
                 DataLabels.Append(new C.ShowBubbleSize { Val = ScatterChartDataLabel.ShowBubbleSize });
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
@@ -203,16 +208,14 @@ namespace OpenXMLOffice.Global
             {
                 series.Append(new C.Smooth() { Val = new[] { ScatterChartTypes.SCATTER_SMOOTH, ScatterChartTypes.SCATTER_SMOOTH_MARKER }.Contains(ScatterChartSetting.ScatterChartTypes) });
             }
-            return series;
-        }
-
-        private C.DataLabels? GetDataLabels(ScatterChartSetting ScatterChartSetting, int index)
-        {
-            if (index < ScatterChartSetting.ScatterChartSeriesSettings.Count)
+            if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
             {
-                return CreateScatterDataLabel(ScatterChartSetting.ScatterChartSeriesSettings?[index]?.ScatterChartDataLabel ?? new ScatterChartDataLabel());
+                series.Append(new C.ExtensionList(new C.Extension(
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), ScatterChartSeriesSetting)
+                )
+                { Uri = GeneratorUtils.GenerateNewGUID() }));
             }
-            return null;
+            return series;
         }
 
         #endregion Private Methods

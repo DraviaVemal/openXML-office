@@ -46,18 +46,25 @@ namespace OpenXMLOffice.Global
                 new C.VaryColors { Val = true }) : new C.PieChart(
                 new C.VaryColors { Val = true });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols, PieChartSetting.ChartDataSetting)
-           .ForEach(Series =>
-           {
-               Chart.Append(CreateChartSeries(seriesIndex, Series, PieChartSetting.PieChartSeriesSettings.Count > seriesIndex ? PieChartSetting.PieChartSeriesSettings[seriesIndex] : new PieChartSeriesSetting(),
-                   CreateSolidFill(PieChartSetting.PieChartSeriesSettings
-                           .Where(item => item.FillColor != null)
-                           .Select(item => item.FillColor!)
-                           .ToList(), seriesIndex),
-                   GetDataLabels(PieChartSetting, seriesIndex)));
-               seriesIndex++;
-           });
-            C.DataLabels? DataLabels = CreatePieDataLabel(PieChartSetting.PieChartDataLabel);
+            CreateDataSeries(DataCols, PieChartSetting.ChartDataSetting).ForEach(Series =>
+            {
+                C.DataLabels? GetDataLabels()
+                {
+                    if (seriesIndex < PieChartSetting.PieChartSeriesSettings.Count)
+                    {
+                        return CreatePieDataLabels(PieChartSetting.PieChartSeriesSettings?[seriesIndex]?.PieChartDataLabel ?? new PieChartDataLabel(), Series.DataLabelCells?.Length ?? 0);
+                    }
+                    return null;
+                }
+                Chart.Append(CreateChartSeries(seriesIndex, Series, PieChartSetting.PieChartSeriesSettings.Count > seriesIndex ? PieChartSetting.PieChartSeriesSettings[seriesIndex] : new PieChartSeriesSetting(),
+                    CreateSolidFill(PieChartSetting.PieChartSeriesSettings
+                            .Where(item => item.FillColor != null)
+                            .Select(item => item.FillColor!)
+                            .ToList(), seriesIndex),
+                    GetDataLabels()));
+                seriesIndex++;
+            });
+            C.DataLabels? DataLabels = CreatePieDataLabels(PieChartSetting.PieChartDataLabel);
             if (DataLabels != null)
             {
                 Chart.Append(DataLabels);
@@ -99,16 +106,21 @@ namespace OpenXMLOffice.Global
             }
             series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, PieChartSeriesSetting));
             series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, PieChartSeriesSetting));
+            if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
+            {
+                series.Append(new C.ExtensionList(new C.Extension(
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), PieChartSeriesSetting)
+                )
+                { Uri = GeneratorUtils.GenerateNewGUID() }));
+            }
             return series;
         }
 
-        private C.DataLabels? CreatePieDataLabel(PieChartDataLabel PieChartDataLabel)
+        private C.DataLabels? CreatePieDataLabels(PieChartDataLabel PieChartDataLabel, int? DataLabelCounter = 0)
         {
-            if (PieChartDataLabel.GetType().GetProperties()
-                .Where(Prop => Prop.PropertyType == typeof(bool))
-                .Any(Prop => (bool)Prop.GetValue(PieChartDataLabel)!))
+            if (PieChartDataLabel.ShowValue || PieChartDataLabel.ShowCategoryName || PieChartDataLabel.ShowLegendKey || PieChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabel(PieChartDataLabel);
+                C.DataLabels DataLabels = CreateDataLabels(PieChartDataLabel, DataLabelCounter);
                 if (PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT &&
                     new[] { PieChartDataLabel.DataLabelPositionValues.CENTER, PieChartDataLabel.DataLabelPositionValues.INSIDE_END, PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END, PieChartDataLabel.DataLabelPositionValues.BEST_FIT }.Contains(PieChartDataLabel.DataLabelPosition))
                     DataLabels.InsertAt(new C.DataLabelPosition()
@@ -151,15 +163,6 @@ namespace OpenXMLOffice.Global
                 }, new A.ListStyle(),
                Paragraph), 0);
                 return DataLabels;
-            }
-            return null;
-        }
-
-        private C.DataLabels? GetDataLabels(PieChartSetting PieChartSetting, int index)
-        {
-            if (index < PieChartSetting.PieChartSeriesSettings.Count)
-            {
-                return CreatePieDataLabel(PieChartSetting.PieChartSeriesSettings?[index]?.PieChartDataLabel ?? new PieChartDataLabel());
             }
             return null;
         }

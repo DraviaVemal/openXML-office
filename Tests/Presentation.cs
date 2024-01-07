@@ -50,6 +50,10 @@ namespace OpenXMLOffice.Tests
             //4
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
             {
+                BarChartDataLabel = new BarChartDataLabel()
+                {
+                    DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END
+                },
                 BarChartSeriesSettings = new List<BarChartSeriesSetting>(){
                     new(),
                     new(){
@@ -204,9 +208,30 @@ namespace OpenXMLOffice.Tests
         [TestMethod]
         public void AddDevChart()
         {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new LineChartSetting()
             {
-                ScatterChartTypes = ScatterChartTypes.BUBBLE
+                LineChartDataLabel = new LineChartDataLabel()
+                {
+                    DataLabelPosition = LineChartDataLabel.DataLabelPositionValues.LEFT,
+                    ShowCategoryName = true,
+                    ShowValue = true,
+                    Separator = ". "
+                },
+                ChartDataSetting = new ChartDataSetting()
+                {
+                    ChartDataColumnEnd = 2,
+                    ValueFromColumn = new Dictionary<uint, uint>(){
+                        {2,4}
+                    }
+                },
+                LineChartSeriesSettings = new List<LineChartSeriesSetting>(){
+                    new(),
+                    new(){
+                        LineChartDataLabel = new LineChartDataLabel(){
+                            DataLabelPosition = LineChartDataLabel.DataLabelPositionValues.RIGHT
+                        }
+                    }
+                }
             });
             Assert.IsTrue(true);
         }

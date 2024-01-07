@@ -57,7 +57,7 @@ public class ChartBase : CommonProperties
 
     #region Protected Methods
 
-    protected C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] Cells)
+    private C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] Cells)
     {
         try
         {
@@ -140,6 +140,11 @@ public class ChartBase : CommonProperties
         }
     }
 
+    protected C15.DataLabelsRange CreateDataLabelsRange(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    {
+        return new(new C.Formula(Formula), AddDataLabelCacheValue(Cells));
+    }
+
     protected CS.ChartStyle CreateChartStyles()
     {
         ChartStyle ChartStyle = new();
@@ -157,10 +162,7 @@ public class ChartBase : CommonProperties
         List<uint> SeriesColumns = new();
         for (uint col = ChartDataSetting.ChartDataColumnStart + 1; col <= (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length - 1 : ChartDataSetting.ChartDataColumnEnd); col++)
         {
-            if (!ChartDataSetting.ValueFromColumn.TryGetValue(col, out _))
-            {
-                SeriesColumns.Add(col);
-            }
+            SeriesColumns.Add(col);
         }
         if ((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : ChartDataSetting.ChartDataRowEnd) - ChartDataSetting.ChartDataRowStart < 1 || (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.ChartDataColumnEnd) - ChartDataSetting.ChartDataColumnStart < 1)
         {
@@ -449,6 +451,7 @@ public class ChartBase : CommonProperties
         ChartSpace.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
         ChartSpace.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
         ChartSpace.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+        ChartSpace.AddNamespaceDeclaration("c15", "http://schemas.microsoft.com/office/drawing/2012/chart");
         ChartSpace.RoundedCorners = new C.RoundedCorners()
         {
             Val = false
@@ -543,8 +546,17 @@ public class ChartBase : CommonProperties
         return title;
     }
 
-    protected C.DataLabels CreateDataLabel(ChartDataLabel ChartDataLabel)
+    protected C.DataLabels CreateDataLabels(ChartDataLabel ChartDataLabel, int? DataLabelCount = 0)
     {
+        C.ExtensionList ExtensionList = new(
+            new C.Extension(
+                new C15.DataLabelFieldTable(),
+                new C15.ShowDataLabelsRange() { Val = true }
+            )
+            {
+                Uri = GeneratorUtils.GenerateNewGUID()
+            }
+        );
         C.DataLabels DataLabels = new(
             new C.ShowLegendKey { Val = ChartDataLabel.ShowLegendKey },
             new C.ShowValue { Val = ChartDataLabel.ShowValue },
@@ -552,16 +564,78 @@ public class ChartBase : CommonProperties
             new C.ShowSeriesName { Val = ChartDataLabel.ShowSeriesName },
             new C.ShowPercent { Val = false },
             new C.ShowLeaderLines() { Val = false },
-            new C.Separator(ChartDataLabel.Separator switch
+            new C.Separator(ChartDataLabel.Separator),
+            (OpenXmlElement)ExtensionList.Clone());
+        for (int i = 0; i < DataLabelCount; i++)
+        {
+            A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
+            if (ChartDataLabel.ShowSeriesName)
             {
-                ChartDataLabel.SeparatorValues.SEMICOLON => ";",
-                ChartDataLabel.SeparatorValues.PERIOD => ".",
-                ChartDataLabel.SeparatorValues.NEW_LINE => "\n",
-                ChartDataLabel.SeparatorValues.SPACE => "",
-                // Comma
-                _ => ","
-            }));
+                Paragraph.Append(new TextBoxBase(new TextBoxSetting()
+                {
+                    Text = ChartDataLabel.Separator
+                }).GetTextBoxRun());
+                Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
+            }
+            if (ChartDataLabel.ShowCategoryName)
+            {
+                Paragraph.Append(new TextBoxBase(new TextBoxSetting()
+                {
+                    Text = ChartDataLabel.Separator
+                }).GetTextBoxRun());
+                Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
+            }
+            if (ChartDataLabel.ShowValue)
+            {
+                Paragraph.Append(new TextBoxBase(new TextBoxSetting()
+                {
+                    Text = ChartDataLabel.Separator
+                }).GetTextBoxRun());
+                Paragraph.Append(CreateField("VALUE", "[VALUE]"));
+            }
+            Paragraph.Append(new A.EndParagraphRunProperties(
+                    new A.SolidFill(
+                        new A.RgbColorModelHex() { Val = "000000" }
+                    ),
+                    new A.Highlight(
+                        new A.RgbColorModelHex() { Val = "FFFFFF" }
+                    ),
+                    new A.LatinFont() { Typeface = "Calibri (Body)" },
+                    new A.EastAsianFont() { Typeface = "Calibri (Body)" },
+                    new A.ComplexScriptFont() { Typeface = "Calibri (Body)" }
+                )
+            { Language = "", FontSize = 1800, Bold = false, Italic = false, Underline = A.TextUnderlineValues.None, Dirty = false });
+            DataLabels.Append(new C.DataLabel(
+                new C.Index() { Val = (uint)i },
+                new C.SeriesText(
+                    new C.RichText(
+                        new A.BodyProperties(),
+                        new A.ListStyle(),
+                        Paragraph
+                    )
+                ),
+                new C.ShowLegendKey { Val = ChartDataLabel.ShowLegendKey },
+                new C.ShowValue { Val = ChartDataLabel.ShowValue },
+                new C.ShowCategoryName { Val = ChartDataLabel.ShowCategoryName },
+                new C.ShowSeriesName { Val = ChartDataLabel.ShowSeriesName },
+                new C.Separator(ChartDataLabel.Separator),
+                (OpenXmlElement)ExtensionList.Clone()
+            ));
+        }
         return DataLabels;
+    }
+
+    private A.Field CreateField(string type, string text)
+    {
+        return new A.Field(
+            new A.RunProperties() { Language = "en-US" },
+            new A.ParagraphProperties(),
+            new A.Text()
+            {
+                Text = text
+            }
+        )
+        { Type = type, Id = GeneratorUtils.GenerateNewGUID() };
     }
 
     #endregion Private Methods
