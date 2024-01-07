@@ -57,15 +57,11 @@ namespace OpenXMLOffice.Global
                    GetDataLabels(PieChartSetting, seriesIndex)));
                seriesIndex++;
            });
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false },
-                new C.ShowLeaderLines { Val = true });
-            Chart.Append(DataLabels);
+            C.DataLabels? DataLabels = CreateDataLabel(PieChartSetting.PieChartDataLabel);
+            if (DataLabels != null)
+            {
+                Chart.Append(DataLabels);
+            }
             Chart.Append(new C.FirstSliceAngle { Val = 0 });
             Chart.Append(new C.HoleSize { Val = 50 });
             plotArea.Append(Chart);
@@ -120,14 +116,19 @@ namespace OpenXMLOffice.Global
                     new C.ShowPercent { Val = false },
                     new C.ShowBubbleSize { Val = false },
                     new C.ShowLeaderLines() { Val = false });
-                DataLabels.InsertAt(new C.DataLabelPosition()
-                {
-                    Val = PieChartDataLabel.DataLabelPosition switch
+                if (PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT &&
+                    new[] { PieChartDataLabel.eDataLabelPosition.CENTER, PieChartDataLabel.eDataLabelPosition.INSIDE_END, PieChartDataLabel.eDataLabelPosition.OUTSIDE_END, PieChartDataLabel.eDataLabelPosition.BEST_FIT }.Contains(PieChartDataLabel.DataLabelPosition))
+                    DataLabels.InsertAt(new C.DataLabelPosition()
                     {
-                        //Show
-                        _ => C.DataLabelPositionValues.Center,
-                    }
-                }, 0);
+                        Val = PieChartDataLabel.DataLabelPosition switch
+                        {
+                            PieChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                            PieChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
+                            PieChartDataLabel.eDataLabelPosition.BEST_FIT => C.DataLabelPositionValues.BestFit,
+                            //Center
+                            _ => C.DataLabelPositionValues.Center,
+                        }
+                    }, 0);
                 DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
                     new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),

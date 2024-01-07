@@ -76,15 +76,11 @@ namespace OpenXMLOffice.Global
                                 GetDataLabels(seriesIndex)));
                 seriesIndex++;
             });
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false },
-                new C.ShowLeaderLines { Val = true });
-            AreaChart.Append(DataLabels);
+            C.DataLabels? DataLabels = CreateDataLabel(AreaChartSetting.AreaChartDataLabel);
+            if (DataLabels != null)
+            {
+                AreaChart.Append(DataLabels);
+            }
             AreaChart.Append(new C.AxisId { Val = 1362418656 });
             AreaChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(AreaChart);

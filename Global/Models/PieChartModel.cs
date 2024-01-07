@@ -17,7 +17,7 @@ namespace OpenXMLOffice.Global
     {
         #region Public Fields
 
-        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.SHOW;
+        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.CENTER;
         public bool ShowCategoryName = false;
         public bool ShowLegendKey = false;
         public bool ShowSeriesName = false;
@@ -29,8 +29,15 @@ namespace OpenXMLOffice.Global
 
         public enum eDataLabelPosition
         {
+            CENTER,
+            INSIDE_END,
+            OUTSIDE_END,
+            BEST_FIT,
+            /// <summary>
+            /// Option only for doughnut chart type
+            /// </summary>
             SHOW,
-            // CALLOUT
+            DATA_CALLOUT
         }
 
         #endregion Public Enums
@@ -42,6 +49,9 @@ namespace OpenXMLOffice.Global
 
         public string? BorderColor;
         public string? FillColor;
+        /// <summary>
+        /// Option To Customise Specific Data Series, Will override Chart Level Setting
+        /// </summary>
         public PieChartDataLabel PieChartDataLabel = new();
 
         #endregion Public Fields
@@ -50,7 +60,9 @@ namespace OpenXMLOffice.Global
     public class PieChartSetting : ChartSetting
     {
         #region Public Fields
-
+        /// <summary>
+        /// Will get override by series level setting
+        /// </summary>
         public PieChartDataLabel PieChartDataLabel = new();
         public List<PieChartSeriesSetting> PieChartSeriesSettings = new();
         public PieChartTypes PieChartTypes = PieChartTypes.PIE;

@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Global
             CENTER,
             ABOVE,
             BELOW,
-            // CALLOUT
+            DATA_CALLOUT
         }
 
         #endregion Public Enums
@@ -49,6 +49,9 @@ namespace OpenXMLOffice.Global
 
         public string? BorderColor;
         public string? FillColor;
+        /// <summary>
+        /// Option To Customise Specific Data Series, Will override Chart Level Setting
+        /// </summary>
         public LineChartDataLabel LineChartDataLabel = new();
 
         #endregion Public Fields
@@ -57,7 +60,10 @@ namespace OpenXMLOffice.Global
     public class LineChartSetting : ChartSetting
     {
         #region Public Fields
-
+        /// <summary>
+        /// Will get override by series level setting
+        /// </summary>
+        public LineChartDataLabel LineChartDataLabel = new();
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();
         public List<LineChartSeriesSetting> LineChartSeriesSettings = new();

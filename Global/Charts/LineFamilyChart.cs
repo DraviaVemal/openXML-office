@@ -71,14 +71,11 @@ namespace OpenXMLOffice.Global
                     GetDataLabels(LineChartSetting, seriesIndex)));
                 seriesIndex++;
             });
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false });
-            LineChart.Append(DataLabels);
+            C.DataLabels? DataLabels = CreateDataLabel(LineChartSetting.LineChartDataLabel);
+            if (DataLabels != null)
+            {
+                LineChart.Append(DataLabels);
+            }
             LineChart.Append(new C.AxisId { Val = 1362418656 });
             LineChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(LineChart);

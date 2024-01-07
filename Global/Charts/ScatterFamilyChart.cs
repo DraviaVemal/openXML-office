@@ -80,15 +80,11 @@ namespace OpenXMLOffice.Global
                     GetDataLabels(ScatterChartSetting, seriesIndex)));
                 seriesIndex++;
             });
-            C.DataLabels DataLabels = new(
-                new C.ShowLegendKey { Val = false },
-                new C.ShowValue { Val = false },
-                new C.ShowCategoryName { Val = false },
-                new C.ShowSeriesName { Val = false },
-                new C.ShowPercent { Val = false },
-                new C.ShowBubbleSize { Val = false },
-                new C.ShowLeaderLines { Val = true });
-            Chart.Append(DataLabels);
+            C.DataLabels? DataLabels = CreateDataLabel(ScatterChartSetting.ScatterChartDataLabel);
+            if (DataLabels != null)
+            {
+                Chart.Append(DataLabels);
+            }
             if (ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.BUBBLE)
             {
                 Chart.Append(new C.BubbleScale() { Val = 100 });

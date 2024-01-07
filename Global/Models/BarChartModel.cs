@@ -32,8 +32,11 @@ namespace OpenXMLOffice.Global
             CENTER,
             INSIDE_END,
             INSIDE_BASE,
+            /// <summary>
+            /// This Option is only for Cluster type chart
+            /// </summary>
             OUTSIDE_END,
-            // CALLOUT
+            DATA_CALLOUT
         }
 
         #endregion Public Enums
@@ -43,9 +46,12 @@ namespace OpenXMLOffice.Global
     {
         #region Public Fields
 
-        public BarChartDataLabel BarChartDataLabel = new();
         public string? BorderColor;
         public string? FillColor;
+        /// <summary>
+        /// Option To Customise Specific Data Series, Will override Chart Level Setting
+        /// </summary>
+        public BarChartDataLabel BarChartDataLabel = new();
 
         #endregion Public Fields
     }
@@ -53,7 +59,10 @@ namespace OpenXMLOffice.Global
     public class BarChartSetting : ChartSetting
     {
         #region Public Fields
-
+        /// <summary>
+        /// Will get override by series level setting
+        /// </summary>
+        public BarChartDataLabel BarChartDataLabel = new();
         public List<BarChartSeriesSetting> BarChartSeriesSettings = new();
         public BarChartTypes BarChartTypes = BarChartTypes.CLUSTERED;
         public ChartAxesOptions ChartAxesOptions = new();
