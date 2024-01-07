@@ -54,7 +54,7 @@ namespace OpenXMLOffice.Tests
                     new(),
                     new(){
                         BarChartDataLabel = new BarChartDataLabel(){
-                            DataLabelPosition = BarChartDataLabel.eDataLabelPosition.OUTSIDE_END
+                            DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END
                         }
                     }
                 }
@@ -76,7 +76,7 @@ namespace OpenXMLOffice.Tests
                 Title = "Color Change Chart",
                 ChartLegendOptions = new ChartLegendOptions()
                 {
-                    legendPosition = ChartLegendOptions.eLegendPosition.TOP
+                    LegendPosition = ChartLegendOptions.LegendPositionValues.TOP
                 },
                 ColumnChartSeriesSettings = new List<ColumnChartSeriesSetting>(){
                     new(){
@@ -225,7 +225,7 @@ namespace OpenXMLOffice.Tests
             slide.AddTable(CreateTableRowPayload(5), new TableSetting()
             {
                 Name = "New Table",
-                WidthType = TableSetting.eWidthType.AUTO,
+                WidthType = TableSetting.WidthOptionValues.AUTO,
                 TableColumnwidth = new() { 100, 100 }
             });
             Assert.IsTrue(true);
@@ -296,7 +296,7 @@ namespace OpenXMLOffice.Tests
             {
                 ChartLegendOptions = new ChartLegendOptions()
                 {
-                    legendPosition = ChartLegendOptions.eLegendPosition.RIGHT
+                    LegendPosition = ChartLegendOptions.LegendPositionValues.RIGHT
                 }
             }));
             shape3[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()

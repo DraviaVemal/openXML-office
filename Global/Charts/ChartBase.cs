@@ -386,13 +386,13 @@ public class ChartBase : CommonProperties
         C.Legend legend = new();
         legend.Append(new C.LegendPosition()
         {
-            Val = objChartLegendOptions.legendPosition switch
+            Val = objChartLegendOptions.LegendPosition switch
             {
-                ChartLegendOptions.eLegendPosition.TOP_RIGHT => C.LegendPositionValues.TopRight,
-                ChartLegendOptions.eLegendPosition.TOP => C.LegendPositionValues.Top,
-                ChartLegendOptions.eLegendPosition.BOTTOM => C.LegendPositionValues.Bottom,
-                ChartLegendOptions.eLegendPosition.LEFT => C.LegendPositionValues.Left,
-                ChartLegendOptions.eLegendPosition.RIGHT => C.LegendPositionValues.Right,
+                ChartLegendOptions.LegendPositionValues.TOP_RIGHT => C.LegendPositionValues.TopRight,
+                ChartLegendOptions.LegendPositionValues.TOP => C.LegendPositionValues.Top,
+                ChartLegendOptions.LegendPositionValues.BOTTOM => C.LegendPositionValues.Bottom,
+                ChartLegendOptions.LegendPositionValues.LEFT => C.LegendPositionValues.Left,
+                ChartLegendOptions.LegendPositionValues.RIGHT => C.LegendPositionValues.Right,
                 _ => C.LegendPositionValues.Bottom
             }
         });
@@ -541,6 +541,27 @@ public class ChartBase : CommonProperties
         ShapeProperties.Append(new A.EffectList());
         title.Append(ShapeProperties);
         return title;
+    }
+
+    protected C.DataLabels CreateDataLabel(ChartDataLabel ChartDataLabel)
+    {
+        C.DataLabels DataLabels = new(
+            new C.ShowLegendKey { Val = ChartDataLabel.ShowLegendKey },
+            new C.ShowValue { Val = ChartDataLabel.ShowValue },
+            new C.ShowCategoryName { Val = ChartDataLabel.ShowCategoryName },
+            new C.ShowSeriesName { Val = ChartDataLabel.ShowSeriesName },
+            new C.ShowPercent { Val = false },
+            new C.ShowLeaderLines() { Val = false },
+            new C.Separator(ChartDataLabel.Separator switch
+            {
+                ChartDataLabel.SeparatorValues.SEMICOLON => ";",
+                ChartDataLabel.SeparatorValues.PERIOD => ".",
+                ChartDataLabel.SeparatorValues.NEW_LINE => "\n",
+                ChartDataLabel.SeparatorValues.SPACE => "",
+                // Comma
+                _ => ","
+            }));
+        return DataLabels;
     }
 
     #endregion Private Methods

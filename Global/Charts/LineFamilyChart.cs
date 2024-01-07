@@ -71,7 +71,7 @@ namespace OpenXMLOffice.Global
                     GetDataLabels(LineChartSetting, seriesIndex)));
                 seriesIndex++;
             });
-            C.DataLabels? DataLabels = CreateDataLabel(LineChartSetting.LineChartDataLabel);
+            C.DataLabels? DataLabels = CreateLineDataLabel(LineChartSetting.LineChartDataLabel);
             if (DataLabels != null)
             {
                 LineChart.Append(DataLabels);
@@ -97,28 +97,21 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels? CreateDataLabel(LineChartDataLabel LineChartDataLabel)
+        private C.DataLabels? CreateLineDataLabel(LineChartDataLabel LineChartDataLabel)
         {
             if (LineChartDataLabel.GetType().GetProperties()
                 .Where(Prop => Prop.PropertyType == typeof(bool))
                 .Any(Prop => (bool)Prop.GetValue(LineChartDataLabel)!))
             {
-                C.DataLabels DataLabels = new(
-                    new C.ShowLegendKey { Val = LineChartDataLabel.ShowLegendKey },
-                    new C.ShowValue { Val = LineChartDataLabel.ShowValue },
-                    new C.ShowCategoryName { Val = LineChartDataLabel.ShowCategoryName },
-                    new C.ShowSeriesName { Val = LineChartDataLabel.ShowSeriesName },
-                    new C.ShowPercent { Val = false },
-                    new C.ShowBubbleSize { Val = false },
-                    new C.ShowLeaderLines() { Val = false });
+                C.DataLabels DataLabels = CreateDataLabel(LineChartDataLabel);
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = LineChartDataLabel.DataLabelPosition switch
                     {
-                        LineChartDataLabel.eDataLabelPosition.LEFT => C.DataLabelPositionValues.Left,
-                        LineChartDataLabel.eDataLabelPosition.RIGHT => C.DataLabelPositionValues.Right,
-                        LineChartDataLabel.eDataLabelPosition.ABOVE => C.DataLabelPositionValues.Top,
-                        LineChartDataLabel.eDataLabelPosition.BELOW => C.DataLabelPositionValues.Bottom,
+                        LineChartDataLabel.DataLabelPositionValues.LEFT => C.DataLabelPositionValues.Left,
+                        LineChartDataLabel.DataLabelPositionValues.RIGHT => C.DataLabelPositionValues.Right,
+                        LineChartDataLabel.DataLabelPositionValues.ABOVE => C.DataLabelPositionValues.Top,
+                        LineChartDataLabel.DataLabelPositionValues.BELOW => C.DataLabelPositionValues.Bottom,
                         //Center
                         _ => C.DataLabelPositionValues.Center,
                     }
@@ -180,7 +173,7 @@ namespace OpenXMLOffice.Global
         {
             if (index < LineChartSetting.LineChartSeriesSettings.Count)
             {
-                return CreateDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
+                return CreateLineDataLabel(LineChartSetting.LineChartSeriesSettings?[index]?.LineChartDataLabel ?? new LineChartDataLabel());
             }
             return null;
         }

@@ -13,21 +13,17 @@ namespace OpenXMLOffice.Global
         // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
     }
 
-    public class AreaChartDataLabel
+    public class AreaChartDataLabel : ChartDataLabel
     {
         #region Public Fields
 
-        public eDataLabelPosition DataLabelPosition = eDataLabelPosition.SHOW;
-        public bool ShowCategoryName = false;
-        public bool ShowLegendKey = false;
-        public bool ShowSeriesName = false;
-        public bool ShowValue = false;
+        public DataLabelPositionValues DataLabelPosition = DataLabelPositionValues.SHOW;
 
         #endregion Public Fields
 
         #region Public Enums
 
-        public enum eDataLabelPosition
+        public enum DataLabelPositionValues
         {
             SHOW,
             DATA_CALLOUT

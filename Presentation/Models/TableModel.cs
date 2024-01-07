@@ -51,7 +51,7 @@ namespace OpenXMLOffice.Presentation
         /// is converted to EMU and used when running PERCENTAGE - 0-100 Width percentage split for
         /// each column RATIO - 0-10 Width ratio of each column
         /// </summary>
-        public eWidthType WidthType = eWidthType.AUTO;
+        public WidthOptionValues WidthType = WidthOptionValues.AUTO;
 
         public uint X = 0;
         public uint Y = 0;
@@ -60,7 +60,7 @@ namespace OpenXMLOffice.Presentation
 
         #region Public Enums
 
-        public enum eWidthType
+        public enum WidthOptionValues
         {
             AUTO,
             EMU,

@@ -101,6 +101,23 @@ namespace OpenXMLOffice.Global
         #endregion Public Fields
     }
 
+    public class ChartDataLabel
+    {
+        public enum SeparatorValues
+        {
+            COMMA,
+            SEMICOLON,
+            PERIOD,
+            NEW_LINE,
+            SPACE
+        }
+        public SeparatorValues Separator = SeparatorValues.COMMA;
+        public bool ShowCategoryName = false;
+        public bool ShowLegendKey = false;
+        public bool ShowSeriesName = false;
+        public bool ShowValue = false;
+    }
+
     public class ChartLegendOptions
     {
         #region Public Fields
@@ -109,13 +126,13 @@ namespace OpenXMLOffice.Global
 
         public bool IsLegendChartOverLap = false;
 
-        public eLegendPosition legendPosition = eLegendPosition.BOTTOM;
+        public LegendPositionValues LegendPosition = LegendPositionValues.BOTTOM;
 
         #endregion Public Fields
 
         #region Public Enums
 
-        public enum eLegendPosition
+        public enum LegendPositionValues
         {
             BOTTOM,
             TOP,

@@ -76,7 +76,7 @@ namespace OpenXMLOffice.Global
                                 GetDataLabels(seriesIndex)));
                 seriesIndex++;
             });
-            C.DataLabels? DataLabels = CreateDataLabel(AreaChartSetting.AreaChartDataLabel);
+            C.DataLabels? DataLabels = CreateAreaDataLabel(AreaChartSetting.AreaChartDataLabel);
             if (DataLabels != null)
             {
                 AreaChart.Append(DataLabels);
@@ -102,20 +102,13 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels? CreateDataLabel(AreaChartDataLabel AreaChartDataLabel)
+        private C.DataLabels? CreateAreaDataLabel(AreaChartDataLabel AreaChartDataLabel)
         {
             if (AreaChartDataLabel.GetType().GetProperties()
                 .Where(Prop => Prop.PropertyType == typeof(bool))
                 .Any(Prop => (bool)Prop.GetValue(AreaChartDataLabel)!))
             {
-                C.DataLabels DataLabels = new(
-                                new C.ShowLegendKey { Val = AreaChartDataLabel.ShowLegendKey },
-                                new C.ShowValue { Val = AreaChartDataLabel.ShowValue },
-                                new C.ShowCategoryName { Val = AreaChartDataLabel.ShowCategoryName },
-                                new C.ShowSeriesName { Val = AreaChartDataLabel.ShowSeriesName },
-                                new C.ShowPercent { Val = false },
-                                new C.ShowBubbleSize { Val = false },
-                                new C.ShowLeaderLines() { Val = false });
+                C.DataLabels DataLabels = CreateDataLabel(AreaChartDataLabel);
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = AreaChartDataLabel.DataLabelPosition switch
@@ -161,7 +154,7 @@ namespace OpenXMLOffice.Global
         {
             if (index < AreaChartSetting.AreaChartSeriesSettings.Count)
             {
-                return CreateDataLabel(AreaChartSetting.AreaChartSeriesSettings?[index]?.AreaChartDataLabel ?? new AreaChartDataLabel());
+                return CreateAreaDataLabel(AreaChartSetting.AreaChartSeriesSettings?[index]?.AreaChartDataLabel ?? new AreaChartDataLabel());
             }
             return null;
         }

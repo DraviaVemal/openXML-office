@@ -69,7 +69,7 @@ namespace OpenXMLOffice.Global
                 ColumnChart.Append(new C.GapWidth { Val = 150 });
                 ColumnChart.Append(new C.Overlap { Val = 100 });
             }
-            C.DataLabels? DataLabels = CreateDataLabel(ColumnChartSetting.ColumnChartDataLabel);
+            C.DataLabels? DataLabels = CreateColumnDataLabel(ColumnChartSetting.ColumnChartDataLabel);
             if (DataLabels != null)
             {
                 ColumnChart.Append(DataLabels);
@@ -120,27 +120,20 @@ namespace OpenXMLOffice.Global
             return series;
         }
 
-        private C.DataLabels? CreateDataLabel(ColumnChartDataLabel ColumnChartDataLabel)
+        private C.DataLabels? CreateColumnDataLabel(ColumnChartDataLabel ColumnChartDataLabel)
         {
             if (ColumnChartDataLabel.GetType().GetProperties()
                 .Where(Prop => Prop.PropertyType == typeof(bool))
                 .Any(Prop => (bool)Prop.GetValue(ColumnChartDataLabel)!))
             {
-                C.DataLabels DataLabels = new(
-                                new C.ShowLegendKey { Val = ColumnChartDataLabel.ShowLegendKey },
-                                new C.ShowValue { Val = ColumnChartDataLabel.ShowValue },
-                                new C.ShowCategoryName { Val = ColumnChartDataLabel.ShowCategoryName },
-                                new C.ShowSeriesName { Val = ColumnChartDataLabel.ShowSeriesName },
-                                new C.ShowPercent { Val = false },
-                                new C.ShowBubbleSize { Val = false },
-                                new C.ShowLeaderLines() { Val = false });
+                C.DataLabels DataLabels = CreateDataLabel(ColumnChartDataLabel);
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = ColumnChartDataLabel.DataLabelPosition switch
                     {
-                        ColumnChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
-                        ColumnChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
-                        ColumnChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
+                        ColumnChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
+                        ColumnChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                        ColumnChartDataLabel.DataLabelPositionValues.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
                         _ => C.DataLabelPositionValues.Center
                     }
                 }, 0);
@@ -181,7 +174,7 @@ namespace OpenXMLOffice.Global
         {
             if (index < ColumnChartSetting.ColumnChartSeriesSettings.Count)
             {
-                return CreateDataLabel(ColumnChartSetting.ColumnChartSeriesSettings[index]?.ColumnChartDataLabel ?? new ColumnChartDataLabel());
+                return CreateColumnDataLabel(ColumnChartSetting.ColumnChartSeriesSettings[index]?.ColumnChartDataLabel ?? new ColumnChartDataLabel());
             }
             return null;
         }

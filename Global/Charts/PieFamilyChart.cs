@@ -57,7 +57,7 @@ namespace OpenXMLOffice.Global
                    GetDataLabels(PieChartSetting, seriesIndex)));
                seriesIndex++;
            });
-            C.DataLabels? DataLabels = CreateDataLabel(PieChartSetting.PieChartDataLabel);
+            C.DataLabels? DataLabels = CreatePieDataLabel(PieChartSetting.PieChartDataLabel);
             if (DataLabels != null)
             {
                 Chart.Append(DataLabels);
@@ -102,29 +102,22 @@ namespace OpenXMLOffice.Global
             return series;
         }
 
-        private C.DataLabels? CreateDataLabel(PieChartDataLabel PieChartDataLabel)
+        private C.DataLabels? CreatePieDataLabel(PieChartDataLabel PieChartDataLabel)
         {
             if (PieChartDataLabel.GetType().GetProperties()
                 .Where(Prop => Prop.PropertyType == typeof(bool))
                 .Any(Prop => (bool)Prop.GetValue(PieChartDataLabel)!))
             {
-                C.DataLabels DataLabels = new(
-                    new C.ShowLegendKey { Val = PieChartDataLabel.ShowLegendKey },
-                    new C.ShowValue { Val = PieChartDataLabel.ShowValue },
-                    new C.ShowCategoryName { Val = PieChartDataLabel.ShowCategoryName },
-                    new C.ShowSeriesName { Val = PieChartDataLabel.ShowSeriesName },
-                    new C.ShowPercent { Val = false },
-                    new C.ShowBubbleSize { Val = false },
-                    new C.ShowLeaderLines() { Val = false });
+                C.DataLabels DataLabels = CreateDataLabel(PieChartDataLabel);
                 if (PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT &&
-                    new[] { PieChartDataLabel.eDataLabelPosition.CENTER, PieChartDataLabel.eDataLabelPosition.INSIDE_END, PieChartDataLabel.eDataLabelPosition.OUTSIDE_END, PieChartDataLabel.eDataLabelPosition.BEST_FIT }.Contains(PieChartDataLabel.DataLabelPosition))
+                    new[] { PieChartDataLabel.DataLabelPositionValues.CENTER, PieChartDataLabel.DataLabelPositionValues.INSIDE_END, PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END, PieChartDataLabel.DataLabelPositionValues.BEST_FIT }.Contains(PieChartDataLabel.DataLabelPosition))
                     DataLabels.InsertAt(new C.DataLabelPosition()
                     {
                         Val = PieChartDataLabel.DataLabelPosition switch
                         {
-                            PieChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
-                            PieChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
-                            PieChartDataLabel.eDataLabelPosition.BEST_FIT => C.DataLabelPositionValues.BestFit,
+                            PieChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                            PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
+                            PieChartDataLabel.DataLabelPositionValues.BEST_FIT => C.DataLabelPositionValues.BestFit,
                             //Center
                             _ => C.DataLabelPositionValues.Center,
                         }
@@ -166,7 +159,7 @@ namespace OpenXMLOffice.Global
         {
             if (index < PieChartSetting.PieChartSeriesSettings.Count)
             {
-                return CreateDataLabel(PieChartSetting.PieChartSeriesSettings?[index]?.PieChartDataLabel ?? new PieChartDataLabel());
+                return CreatePieDataLabel(PieChartSetting.PieChartSeriesSettings?[index]?.PieChartDataLabel ?? new PieChartDataLabel());
             }
             return null;
         }

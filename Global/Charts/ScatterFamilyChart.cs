@@ -80,7 +80,7 @@ namespace OpenXMLOffice.Global
                     GetDataLabels(ScatterChartSetting, seriesIndex)));
                 seriesIndex++;
             });
-            C.DataLabels? DataLabels = CreateDataLabel(ScatterChartSetting.ScatterChartDataLabel);
+            C.DataLabels? DataLabels = CreateScatterDataLabel(ScatterChartSetting.ScatterChartDataLabel);
             if (DataLabels != null)
             {
                 Chart.Append(DataLabels);
@@ -112,28 +112,22 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels? CreateDataLabel(ScatterChartDataLabel ScatterChartDataLabel)
+        private C.DataLabels? CreateScatterDataLabel(ScatterChartDataLabel ScatterChartDataLabel)
         {
             if (ScatterChartDataLabel.GetType().GetProperties()
                 .Where(Prop => Prop.PropertyType == typeof(bool))
                 .Any(Prop => (bool)Prop.GetValue(ScatterChartDataLabel)!))
             {
-                C.DataLabels DataLabels = new(
-                    new C.ShowLegendKey { Val = ScatterChartDataLabel.ShowLegendKey },
-                    new C.ShowValue { Val = ScatterChartDataLabel.ShowValue },
-                    new C.ShowCategoryName { Val = ScatterChartDataLabel.ShowCategoryName },
-                    new C.ShowSeriesName { Val = ScatterChartDataLabel.ShowSeriesName },
-                    new C.ShowPercent { Val = false },
-                    new C.ShowBubbleSize { Val = false },
-                    new C.ShowLeaderLines() { Val = false });
+                C.DataLabels DataLabels = CreateDataLabel(ScatterChartDataLabel);
+                DataLabels.Append(new C.ShowBubbleSize { Val = ScatterChartDataLabel.ShowBubbleSize });
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = ScatterChartDataLabel.DataLabelPosition switch
                     {
-                        ScatterChartDataLabel.eDataLabelPosition.LEFT => C.DataLabelPositionValues.Left,
-                        ScatterChartDataLabel.eDataLabelPosition.RIGHT => C.DataLabelPositionValues.Right,
-                        ScatterChartDataLabel.eDataLabelPosition.ABOVE => C.DataLabelPositionValues.Top,
-                        ScatterChartDataLabel.eDataLabelPosition.BELOW => C.DataLabelPositionValues.Bottom,
+                        ScatterChartDataLabel.DataLabelPositionValues.LEFT => C.DataLabelPositionValues.Left,
+                        ScatterChartDataLabel.DataLabelPositionValues.RIGHT => C.DataLabelPositionValues.Right,
+                        ScatterChartDataLabel.DataLabelPositionValues.ABOVE => C.DataLabelPositionValues.Top,
+                        ScatterChartDataLabel.DataLabelPositionValues.BELOW => C.DataLabelPositionValues.Bottom,
                         //Center
                         _ => C.DataLabelPositionValues.Center,
                     }
@@ -216,7 +210,7 @@ namespace OpenXMLOffice.Global
         {
             if (index < ScatterChartSetting.ScatterChartSeriesSettings.Count)
             {
-                return CreateDataLabel(ScatterChartSetting.ScatterChartSeriesSettings?[index]?.ScatterChartDataLabel ?? new ScatterChartDataLabel());
+                return CreateScatterDataLabel(ScatterChartSetting.ScatterChartSeriesSettings?[index]?.ScatterChartDataLabel ?? new ScatterChartDataLabel());
             }
             return null;
         }

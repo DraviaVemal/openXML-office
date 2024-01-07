@@ -89,7 +89,7 @@ namespace OpenXMLOffice.Global
                 BarChart.Append(new C.GapWidth { Val = 150 });
                 BarChart.Append(new C.Overlap { Val = 100 });
             }
-            C.DataLabels? DataLabels = CreateDataLabel(BarChartSetting.BarChartDataLabel);
+            C.DataLabels? DataLabels = CreateBarDataLabel(BarChartSetting.BarChartDataLabel);
             if (DataLabels != null)
             {
                 BarChart.Append(DataLabels);
@@ -117,21 +117,14 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.DataLabels? CreateDataLabel(BarChartDataLabel BarChartDataLabel)
+        private C.DataLabels? CreateBarDataLabel(BarChartDataLabel BarChartDataLabel)
         {
             if (BarChartDataLabel.GetType().GetProperties()
                 .Where(Prop => Prop.PropertyType == typeof(bool))
                 .Any(Prop => (bool)Prop.GetValue(BarChartDataLabel)!))
             {
-                C.DataLabels DataLabels = new(
-                                new C.ShowLegendKey { Val = BarChartDataLabel.ShowLegendKey },
-                                new C.ShowValue { Val = BarChartDataLabel.ShowValue },
-                                new C.ShowCategoryName { Val = BarChartDataLabel.ShowCategoryName },
-                                new C.ShowSeriesName { Val = BarChartDataLabel.ShowSeriesName },
-                                new C.ShowPercent { Val = false },
-                                new C.ShowBubbleSize { Val = false },
-                                new C.ShowLeaderLines() { Val = false });
-                if (BarChartSetting.BarChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.DataLabelPosition == BarChartDataLabel.eDataLabelPosition.OUTSIDE_END)
+                C.DataLabels DataLabels = CreateDataLabel(BarChartDataLabel);
+                if (BarChartSetting.BarChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.DataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
                 {
                     throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
                 }
@@ -139,9 +132,9 @@ namespace OpenXMLOffice.Global
                 {
                     Val = BarChartDataLabel.DataLabelPosition switch
                     {
-                        BarChartDataLabel.eDataLabelPosition.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
-                        BarChartDataLabel.eDataLabelPosition.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
-                        BarChartDataLabel.eDataLabelPosition.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
+                        BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
+                        BarChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                        BarChartDataLabel.DataLabelPositionValues.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
                         _ => C.DataLabelPositionValues.Center
                     }
                 }, 0);
@@ -182,7 +175,7 @@ namespace OpenXMLOffice.Global
         {
             if (index < BarChartSetting.BarChartSeriesSettings.Count)
             {
-                return CreateDataLabel(BarChartSetting.BarChartSeriesSettings?[index]?.BarChartDataLabel ?? new BarChartDataLabel());
+                return CreateBarDataLabel(BarChartSetting.BarChartSeriesSettings?[index]?.BarChartDataLabel ?? new BarChartDataLabel());
             }
             return null;
         }

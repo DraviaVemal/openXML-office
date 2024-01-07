@@ -90,13 +90,13 @@ namespace OpenXMLOffice.Presentation
 
         #region Private Methods
 
-        private long CalculateColumnWidth(TableSetting.eWidthType widthType, float InputWidth)
+        private long CalculateColumnWidth(TableSetting.WidthOptionValues widthType, float InputWidth)
         {
             return widthType switch
             {
-                TableSetting.eWidthType.PIXEL => G.ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
-                TableSetting.eWidthType.PERCENTAGE => Convert.ToInt32(TableSetting.Width / 100 * InputWidth),
-                TableSetting.eWidthType.RATIO => Convert.ToInt32(TableSetting.Width / 100 * (InputWidth * 10)),
+                TableSetting.WidthOptionValues.PIXEL => G.ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
+                TableSetting.WidthOptionValues.PERCENTAGE => Convert.ToInt32(TableSetting.Width / 100 * InputWidth),
+                TableSetting.WidthOptionValues.RATIO => Convert.ToInt32(TableSetting.Width / 100 * (InputWidth * 10)),
                 _ => Convert.ToInt32(InputWidth)
             };
         }
@@ -107,7 +107,7 @@ namespace OpenXMLOffice.Presentation
             {
                 throw new DataException("No Table Data Provided");
             }
-            if (TableSetting.WidthType != TableSetting.eWidthType.AUTO && TableSetting.TableColumnwidth.Count != TableRows[0].TableCells.Count)
+            if (TableSetting.WidthType != TableSetting.WidthOptionValues.AUTO && TableSetting.TableColumnwidth.Count != TableRows[0].TableCells.Count)
             {
                 throw new ArgumentException("Column With Setting Does Not Match Data");
             }
@@ -227,7 +227,7 @@ namespace OpenXMLOffice.Presentation
         private A.TableGrid CreateTableGrid(int ColumnCount)
         {
             A.TableGrid TableGrid = new();
-            if (TableSetting.WidthType == TableSetting.eWidthType.AUTO)
+            if (TableSetting.WidthType == TableSetting.WidthOptionValues.AUTO)
             {
                 for (int i = 0; i < ColumnCount; i++)
                 {
@@ -263,7 +263,7 @@ namespace OpenXMLOffice.Presentation
             if (Table != null)
             {
                 List<A.GridColumn> GridColumn = Table.TableGrid!.Elements<A.GridColumn>().ToList();
-                if (TableSetting.WidthType == TableSetting.eWidthType.AUTO)
+                if (TableSetting.WidthType == TableSetting.WidthOptionValues.AUTO)
                 {
                     GridColumn.ForEach(Column => Column.Width = TableSetting.Width / GridColumn.Count);
                 }
