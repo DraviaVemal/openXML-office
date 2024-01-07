@@ -241,21 +241,37 @@ public class ChartBase : CommonProperties
 
     protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
+        if (Cells.All(v => v.DataType != DataType.NUMBER))
+        {
+            throw new ArgumentException("Value Axis Data Should Be numaric");
+        }
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 
     protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
+        if (Cells.All(v => v.DataType != DataType.NUMBER))
+        {
+            throw new ArgumentException("X Axis Data Should Be numaric");
+        }
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 
     protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
+        if (Cells.All(v => v.DataType != DataType.NUMBER))
+        {
+            throw new ArgumentException("Y Axis Data Should Be numaric");
+        }
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 
     protected C.BubbleSize CreateBubbleSizeAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
     {
+        if (Cells.All(v => v.DataType != DataType.NUMBER))
+        {
+            throw new ArgumentException("Bubble Size Data Should Be numaric");
+        }
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 

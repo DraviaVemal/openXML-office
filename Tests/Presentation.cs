@@ -132,187 +132,79 @@ namespace OpenXMLOffice.Tests
                 PieChartTypes = PieChartTypes.DOUGHNUT
             });
             //18
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting());
             //19
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH
             });
             //20
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH_MARKER
             });
             //21
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT
             });
             //22
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER
             });
             //23
-            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
-            // {
-            //     ScatterChartTypes = ScatterChartTypes.BUBBLE
-            // });
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
+            {
+                ScatterChartTypes = ScatterChartTypes.BUBBLE
+            });
             Assert.IsTrue(true);
         }
 
         [TestMethod]
         public void AddScatterPlot()
         {
-            DataCell[][] data = new DataCell[4][];
-            data[0] = new DataCell[4];
-            data[1] = new DataCell[4];
-            data[2] = new DataCell[4];
-            data[3] = new DataCell[4];
-            data[0][1] = new DataCell
-            {
-                CellValue = "Series 1",
-                DataType = CellDataType.STRING
-            };
-            data[0][2] = new DataCell
-            {
-                CellValue = "Series 2",
-                DataType = CellDataType.STRING
-            };
-            data[0][3] = new DataCell
-            {
-                CellValue = "Series 3",
-                DataType = CellDataType.STRING
-            };
-
-            data[1][0] = new DataCell
-            {
-                CellValue = "1",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[1][1] = new DataCell
-            {
-                CellValue = "10",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[1][2] = new DataCell
-            {
-                CellValue = "12",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[1][3] = new DataCell
-            {
-                CellValue = "12.5",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-
-            data[2][0] = new DataCell
-            {
-                CellValue = "2",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[2][1] = new DataCell
-            {
-                CellValue = "20",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[2][2] = new DataCell
-            {
-                CellValue = "22",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[2][3] = new DataCell
-            {
-                CellValue = "13",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-
-            data[3][0] = new DataCell
-            {
-                CellValue = "3",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[3][1] = new DataCell
-            {
-                CellValue = "3",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[3][2] = new DataCell
-            {
-                CellValue = "7",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-            data[3][3] = new DataCell
-            {
-                CellValue = "4.5",
-                DataType = CellDataType.NUMBER,
-                NumberFormatting = "General",
-                StyleId = 1
-            };
-
             //1
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 Title = "Default"
             });
             //2
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
                 Title = "Scatter Smooth"
             });
             //3
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH_MARKER,
                 Title = "Scatter Smooth Market"
             });
             //4
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT,
                 Title = "Scatter Stright"
             });
             //5
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 ScatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
                 Title = "Scatter Straight Marker"
             });
-            // powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new ScatterChartSetting()
-            // {
-            //     ScatterChartTypes = ScatterChartTypes.BUBBLE,
-            //     Title = "Scatter  Bubble"
-            // });
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
+            {
+                ScatterChartTypes = ScatterChartTypes.BUBBLE,
+                Title = "Scatter  Bubble"
+            });
             Assert.IsTrue(true);
         }
 
         [TestMethod]
         public void AddDevChart()
         {
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new ScatterChartSetting()
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting()
             {
                 Title = "Color Change Chart",
                 ScatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
@@ -460,12 +352,12 @@ namespace OpenXMLOffice.Tests
 
         #region Private Methods
 
-        private DataCell[][] CreateDataCellPayload()
+        private DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
         {
             Random random = new();
-            DataCell[][] data = new DataCell[5][];
-            data[0] = new DataCell[5];
-            for (int col = 1; col < 5; col++)
+            DataCell[][] data = new DataCell[payloadSize][];
+            data[0] = new DataCell[payloadSize];
+            for (int col = 1; col < payloadSize; col++)
             {
                 data[0][col] = new DataCell
                 {
@@ -473,10 +365,16 @@ namespace OpenXMLOffice.Tests
                     DataType = CellDataType.STRING
                 };
             }
-            for (int row = 1; row < 5; row++)
+            for (int row = 1; row < payloadSize; row++)
             {
-                data[row] = new DataCell[5];
-                for (int col = 0; col < 5; col++)
+                data[row] = new DataCell[payloadSize];
+                data[row][0] = new DataCell
+                {
+                    CellValue = $"Category {row}",
+                    DataType = CellDataType.STRING,
+                    StyleId = 1
+                };
+                for (int col = IsValueAxis ? 0 : 1; col < payloadSize; col++)
                 {
                     data[row][col] = new DataCell
                     {
