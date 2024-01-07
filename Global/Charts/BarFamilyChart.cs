@@ -89,18 +89,29 @@ namespace OpenXMLOffice.Global
                 BarChart.Append(new C.GapWidth { Val = 150 });
                 BarChart.Append(new C.Overlap { Val = 100 });
             }
+            C.DataLabels DataLabels = new(
+                new C.ShowLegendKey { Val = false },
+                new C.ShowValue { Val = false },
+                new C.ShowCategoryName { Val = false },
+                new C.ShowSeriesName { Val = false },
+                new C.ShowPercent { Val = false },
+                new C.ShowBubbleSize { Val = false },
+                new C.ShowLeaderLines { Val = true });
+            BarChart.Append(DataLabels);
             BarChart.Append(new C.AxisId { Val = 1362418656 });
             BarChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(BarChart);
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
                 Id = 1362418656,
-                AxisPosition = AxisPosition.LEFT
+                AxisPosition = AxisPosition.LEFT,
+                CrossAxisId = 1358349936
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
                 Id = 1358349936,
-                AxisPosition = AxisPosition.BOTTOM
+                AxisPosition = AxisPosition.BOTTOM,
+                CrossAxisId = 1362418656
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());

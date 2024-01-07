@@ -57,7 +57,6 @@ namespace OpenXMLOffice.Global
                    GetDataLabels(PieChartSetting, seriesIndex)));
                seriesIndex++;
            });
-
             C.DataLabels DataLabels = new(
                 new C.ShowLegendKey { Val = false },
                 new C.ShowValue { Val = false },

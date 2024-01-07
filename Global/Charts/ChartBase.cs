@@ -254,6 +254,11 @@ public class ChartBase : CommonProperties
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
     }
 
+    protected C.BubbleSize CreateBubbleSizeAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    {
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
+    }
+
     #endregion Protected Methods
 
     #region Private Methods
@@ -337,7 +342,7 @@ public class ChartBase : CommonProperties
             },
             ShowDataLabelsOverMaximum = new C.ShowDataLabelsOverMaximum()
             {
-                Val = true
+                Val = false
             }
         };
         if (ChartSetting.ChartLegendOptions.IsEnableLegend)

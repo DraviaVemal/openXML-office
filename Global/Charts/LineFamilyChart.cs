@@ -84,11 +84,13 @@ namespace OpenXMLOffice.Global
             plotArea.Append(LineChart);
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
-                Id = 1362418656
+                Id = 1362418656,
+                CrossAxisId = 1358349936,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                Id = 1358349936
+                Id = 1358349936,
+                CrossAxisId = 1362418656
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());

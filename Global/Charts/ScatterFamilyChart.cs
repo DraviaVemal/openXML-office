@@ -71,18 +71,28 @@ namespace OpenXMLOffice.Global
                     GetDataLabels(ScatterChartSetting, seriesIndex)));
                 seriesIndex++;
             });
-
+            C.DataLabels DataLabels = new(
+                new C.ShowLegendKey { Val = false },
+                new C.ShowValue { Val = false },
+                new C.ShowCategoryName { Val = false },
+                new C.ShowSeriesName { Val = false },
+                new C.ShowPercent { Val = false },
+                new C.ShowBubbleSize { Val = false },
+                new C.ShowLeaderLines { Val = true });
+            ScatterChart.Append(DataLabels);
             ScatterChart.Append(new C.AxisId { Val = 1362418656 });
             ScatterChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ScatterChart);
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
                 Id = 1362418656,
-                AxisPosition = AxisPosition.BOTTOM
+                AxisPosition = AxisPosition.BOTTOM,
+                CrossAxisId = 1358349936,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                Id = 1358349936
+                Id = 1358349936,
+                CrossAxisId = 1362418656
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());

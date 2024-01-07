@@ -69,16 +69,27 @@ namespace OpenXMLOffice.Global
                 ColumnChart.Append(new C.GapWidth { Val = 150 });
                 ColumnChart.Append(new C.Overlap { Val = 100 });
             }
+            C.DataLabels DataLabels = new(
+                new C.ShowLegendKey { Val = false },
+                new C.ShowValue { Val = false },
+                new C.ShowCategoryName { Val = false },
+                new C.ShowSeriesName { Val = false },
+                new C.ShowPercent { Val = false },
+                new C.ShowBubbleSize { Val = false },
+                new C.ShowLeaderLines { Val = true });
+            ColumnChart.Append(DataLabels);
             ColumnChart.Append(new C.AxisId { Val = 1362418656 });
             ColumnChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ColumnChart);
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
-                Id = 1362418656
+                Id = 1362418656,
+                CrossAxisId = 1358349936
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                Id = 1358349936
+                Id = 1358349936,
+                CrossAxisId = 1362418656
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
