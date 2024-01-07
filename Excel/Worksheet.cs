@@ -196,8 +196,17 @@ namespace OpenXMLOffice.Excel
                         };
                         row.AppendChild(cell);
                     }
-                    cell.DataType = GetCellValues(DataCell.DataType);
-                    cell.CellValue = new CellValue(DataCell.CellValue);
+                    CellValues DataType = GetCellValues(DataCell.DataType);
+                    if (DataType == CellValues.String)
+                    {
+                        cell.DataType = CellValues.SharedString;
+                        cell.CellValue = new CellValue(ShareString.Instance.InsertUnique(DataCell.CellValue));
+                    }
+                    else
+                    {
+                        cell.DataType = DataType;
+                        cell.CellValue = new CellValue(DataCell.CellValue);
+                    }
                 }
             }
             openXMLworksheet.Save();

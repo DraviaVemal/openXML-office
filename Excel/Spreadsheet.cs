@@ -308,6 +308,14 @@ namespace OpenXMLOffice.Excel
             spreadsheetDocument.Dispose();
         }
 
+        private void UpdateSharedString()
+        {
+            ShareString.Instance.GetRecords().ForEach(Value =>
+            {
+                GetShareString().Append(new SharedStringItem(new Text(Value)));
+            });
+        }
+
         /// <summary>
         /// Save Copy of the content that updated to the source file
         /// </summary>
@@ -378,14 +386,6 @@ namespace OpenXMLOffice.Excel
             workbookPart.Workbook.AppendChild(sheets);
             LoadShareStringToCache();
             workbookPart.Workbook.Save();
-        }
-
-        private void UpdateSharedString()
-        {
-            ShareString.Instance.GetRecords().ForEach(Value =>
-            {
-                GetShareString().Append(new SharedStringItem(new Text(Value)));
-            });
         }
 
         #endregion Private Methods
