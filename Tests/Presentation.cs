@@ -340,7 +340,10 @@ namespace OpenXMLOffice.Tests
             }));
             shape4[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new LineChartSetting()));
             shape5[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new AreaChartSetting()));
-            shape6[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new PieChartSetting()));
+            shape6[0].ReplaceTextBox(new TextBox(new TextBoxSetting()
+            {
+                Text = "Test"
+            }));
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }

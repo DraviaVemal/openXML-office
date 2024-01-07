@@ -87,7 +87,7 @@ namespace OpenXMLOffice.Global
                     new A.Offset { X = TextBoxSetting.X, Y = TextBoxSetting.Y },
                     new A.Extents { Cx = TextBoxSetting.Width, Cy = TextBoxSetting.Height }),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
-                CreateSolidFill(new List<string>() { TextBoxSetting.ShapeBackground }, 0)),
+                TextBoxSetting.ShapeBackground != null ? CreateSolidFill(new List<string>() { TextBoxSetting.ShapeBackground }, 0) : new A.NoFill()),
                 TextBody = new P.TextBody(
                         new A.BodyProperties(),
                         new A.ListStyle(),
@@ -98,8 +98,7 @@ namespace OpenXMLOffice.Global
 
         private A.Run CreateTextRun()
         {
-            return new(new A.RunProperties(CreateSolidFill(new List<string>() { TextBoxSetting.TextColor }, 0),
-                        new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground ?? "FFFFFF" }),
+            A.Run Run = new(new A.RunProperties(CreateSolidFill(new List<string>() { TextBoxSetting.TextColor }, 0),
                         new A.LatinFont { Typeface = TextBoxSetting.FontFamily },
                         new A.EastAsianFont { Typeface = TextBoxSetting.FontFamily },
                         new A.ComplexScriptFont { Typeface = TextBoxSetting.FontFamily })
@@ -110,6 +109,11 @@ namespace OpenXMLOffice.Global
                 Underline = TextBoxSetting.IsUnderline ? A.TextUnderlineValues.Single : A.TextUnderlineValues.None,
                 Dirty = false
             }, new A.Text(TextBoxSetting.Text));
+            if (TextBoxSetting.TextBackground != null)
+            {
+                Run.Append(new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground }));
+            }
+            return Run;
         }
 
         #endregion Private Methods

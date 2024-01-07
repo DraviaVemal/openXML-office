@@ -15,7 +15,7 @@ namespace OpenXMLOffice.Global
         public bool IsBold = false;
         public bool IsItalic = false;
         public bool IsUnderline = false;
-        public string ShapeBackground = "FFFFFF";
+        public string? ShapeBackground;
         public string Text = "Text Box";
         public string? TextBackground;
         public string TextColor = "000000";
