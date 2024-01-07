@@ -146,14 +146,26 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Methods
 
         #region Internal Methods
-
         internal P.GraphicFrame GetChartGraphicFrame()
+        {
+            return GraphicFrame!;
+        }
+
+        internal string GetNextChartRelationId()
+        {
+            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+        private void CreateChartGraphicFrame()
         {
             // Load Chart Part To Graphics Frame For Export
             string? relationshipId = CurrentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
             P.NonVisualGraphicFrameProperties NonVisualProperties = new()
             {
-                NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = (UInt32Value)2U, Name = "Chart" },
+                NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = (uint)CurrentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), Name = "Chart" },
                 NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
                 ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
             };
@@ -181,19 +193,9 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace.Save();
             GetChartStylePart().ChartStyle.Save();
             GetChartColorStylePart().ColorStyle.Save();
-            return GraphicFrame;
         }
 
-        internal string GetNextChartRelationId()
-        {
-            return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private P.GraphicFrame CreateChart(DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
+        private void CreateChart(DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -212,10 +214,10 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace = AreaChart.GetChartSpace();
             GetChartStylePart().ChartStyle = AreaChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = AreaChart.GetColorStyle();
-            return GetChartGraphicFrame();
+            CreateChartGraphicFrame();
         }
 
-        private P.GraphicFrame CreateChart(DataCell[][] DataRows, BarChartSetting BarChartSetting)
+        private void CreateChart(DataCell[][] DataRows, BarChartSetting BarChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -234,10 +236,10 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace = BarChart.GetChartSpace();
             GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
-            return GetChartGraphicFrame();
+            CreateChartGraphicFrame();
         }
 
-        private P.GraphicFrame CreateChart(DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
+        private void CreateChart(DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -256,10 +258,10 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace = ColumnChart.GetChartSpace();
             GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
-            return GetChartGraphicFrame();
+            CreateChartGraphicFrame();
         }
 
-        private P.GraphicFrame CreateChart(DataCell[][] DataRows, LineChartSetting LineChartSetting)
+        private void CreateChart(DataCell[][] DataRows, LineChartSetting LineChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -278,10 +280,10 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace = LineChart.GetChartSpace();
             GetChartStylePart().ChartStyle = LineChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = LineChart.GetColorStyle();
-            return GetChartGraphicFrame();
+            CreateChartGraphicFrame();
         }
 
-        private P.GraphicFrame CreateChart(DataCell[][] DataRows, PieChartSetting PieChartSetting)
+        private void CreateChart(DataCell[][] DataRows, PieChartSetting PieChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -300,10 +302,10 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace = PieChart.GetChartSpace();
             GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = PieChart.GetColorStyle();
-            return GetChartGraphicFrame();
+            CreateChartGraphicFrame();
         }
 
-        private P.GraphicFrame CreateChart(DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
+        private void CreateChart(DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
         {
             LoadDataToExcel(DataRows);
             // Prepare Excel Data for PPT Cache
@@ -322,7 +324,7 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().ChartSpace = ScatterChart.GetChartSpace();
             GetChartStylePart().ChartStyle = ScatterChart.GetChartStyle();
             GetChartColorStylePart().ColorStyle = ScatterChart.GetColorStyle();
-            return GetChartGraphicFrame();
+            CreateChartGraphicFrame();
         }
 
         private ChartColorStylePart GetChartColorStylePart()
