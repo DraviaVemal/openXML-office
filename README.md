@@ -40,12 +40,79 @@ The official release NuGet packages for OpenXMLOffice on NuGet.org:
 All the documentation for this project is published on our GitHub Pages. You can access it by visiting the [link](https://draviavemal.github.io/OpenXMLOffice). Project documentation is automatically generated using Doxygen.
 Any help in this region is much appriciated.
 
+## Active Features In Different DLL
+
+### OpenXMLOffice.Presentation
+
+| Control  | Description |
+|----------|-------------|
+| Slide    | Allows addition of blank slides, removal of slides based on index, and rearrangement of slide positions. |
+| Shape    | Enables the location and replacement of shapes by text. Facilitates size and position updates within a slide. |
+| Table    | Adds and replaces existing charts. Future plans include finding and updating existing charts. Currently supports creating and updating tables, inheriting all shape functionality. |
+| TextBox  | Updates or replaces existing shape text content. Adds new text boxes based on slide control with inherited options from shapes. |
+| Picture  | Adds images in PNG, JPG, BMP, TIFF formats to slides. Supports replacement in existing shapes or creation of new controls within a slide. |
+| Chart    | Allows users to add charts based on slide control, directly insert them, or replace existing shape controls. Supports major and sub-chart types such as column, line, pie, bar, area, and scatter. Can update the data excel from control |
+
+For charts, the following types are supported:
+
+- **Column Chart:**
+  - Cluster
+  - Stacked
+  - 100% Stacked
+
+- **Line Chart:**
+  - Cluster
+  - Stacked
+  - 100% Stacked
+  - Cluster Marker
+  - Stacked Marker
+  - 100% Stacked Marker
+
+- **Pie Chart:**
+  - Pie
+  - Doughnut
+
+- **Bar Chart:**
+  - Cluster
+  - Stacked
+  - 100% Stacked
+
+- **Area Chart:**
+  - Cluster
+  - Stacked
+  - 100% Stacked
+
+- **X Y (Scatter) Chart:**
+  - Scatter
+  - Scatter Smooth Line Marker
+  - Scatter Smooth Line
+  - Scatter Line Marker
+  - Scatter Line
+  - Bubble
+
+### OpenXMLOffice.Excel
+
+| Control      | Description |
+|--------------|-------------|
+| Spreadsheet  | Enables manipulation of worksheets, including retrieval, addition, removal, and renaming of sheets. |
+| Worksheet    | Facilitates manipulation of cell data, row properties (e.g., height), column properties (e.g., width), and cell data formatting. |
+
+**Future Plans:**
+- **Styling:**
+  - Future releases will introduce styling options for enhanced visual representation.
+
+- **Shared String Data Loading:**
+  - Planned for memory optimization, shared string data loading will be implemented in upcoming releases.
+
+**Important Note:**
+- It is advised to avoid using the library for the creation of large, repeated data files at this point.
+
+
 ## Version History
 
 - **v0.1.0**: Cover Spreadsheet data loading and saving.
 - **v0.2.0**: Power Point Exisitng File Shape Based Manipulation of Tables, Text, Charts (Primary)
 - Follow project roadmap to get upto date info [Link](https://github.com/users/DraviaVemal/projects/2)
-- **v1.0.0**: Planned release with three separate DLLs for Excel, Presentation, and Word, covering all major functionalities.
 
 ## License
 
