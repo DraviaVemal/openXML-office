@@ -293,8 +293,17 @@ namespace OpenXMLOffice.Excel
         /// </summary>
         public void Save()
         {
+            UpdateSharedString();
             spreadsheetDocument.Save();
             spreadsheetDocument.Dispose();
+        }
+
+        private void UpdateSharedString()
+        {
+            ShareString.Instance.GetRecords().ForEach(Value =>
+            {
+                GetShareString().Append(new SharedStringItem(new Text(Value)));
+            });
         }
 
         /// <summary>
@@ -339,7 +348,30 @@ namespace OpenXMLOffice.Excel
             workbookPart.Workbook ??= new Workbook();
             sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? new Sheets();
             workbookPart.Workbook.AppendChild(sheets);
+            LoadShareStringToCache();
             workbookPart.Workbook.Save();
+        }
+
+        private void LoadShareStringToCache()
+        {
+            List<string> Records = new();
+            GetShareString().ChildElements.ToList().ForEach(rec =>
+            {
+                // TODO : File Open Implementation
+                //Records.Add("");
+            });
+            ShareString.Instance.InsertBulk(Records);
+        }
+
+        private SharedStringTable GetShareString()
+        {
+            SharedStringTablePart? sharedStringPart = spreadsheetDocument.WorkbookPart!.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+            if (sharedStringPart == null)
+            {
+                sharedStringPart = spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
+                sharedStringPart.SharedStringTable = new SharedStringTable();
+            }
+            return sharedStringPart.SharedStringTable;
         }
     }
 }
