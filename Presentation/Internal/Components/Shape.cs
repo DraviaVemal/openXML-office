@@ -44,7 +44,10 @@ namespace OpenXMLOffice.Presentation
                 Chart.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
                 Chart.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
             }
-            parent.InsertBefore(Chart.GetChartGraphicFrame(), OpenXMLShape);
+            if (Chart.GetChartGraphicFrame().Parent == null)
+            {
+                parent.InsertBefore(Chart.GetChartGraphicFrame(), OpenXMLShape);
+            }
             OpenXMLShape.Remove();
             return Chart;
         }
@@ -58,7 +61,10 @@ namespace OpenXMLOffice.Presentation
                 Picture.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
                 Picture.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
             }
-            parent.InsertBefore(Picture.GetPicture(), OpenXMLShape);
+            if (Picture.GetPicture().Parent == null)
+            {
+                parent.InsertBefore(Picture.GetPicture(), OpenXMLShape);
+            }
             OpenXMLShape.Remove();
             return Picture;
         }
@@ -72,7 +78,10 @@ namespace OpenXMLOffice.Presentation
                 Table.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
                 Table.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
             }
-            parent.InsertBefore(Table.GetTableGraphicFrame(), OpenXMLShape);
+            if (Table.GetTableGraphicFrame().Parent == null)
+            {
+                parent.InsertBefore(Table.GetTableGraphicFrame(), OpenXMLShape);
+            }
             OpenXMLShape.Remove();
             return Table;
         }
@@ -86,7 +95,10 @@ namespace OpenXMLOffice.Presentation
                 TextBox.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
                 TextBox.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
             }
-            parent.InsertBefore(TextBox.GetTextBoxShape(), OpenXMLShape);
+            if (TextBox.GetTextBoxShape() == null)
+            {
+                parent.InsertBefore(TextBox.GetTextBoxShape(), OpenXMLShape);
+            }
             OpenXMLShape.Remove();
             return TextBox;
         }

@@ -16,23 +16,8 @@ namespace OpenXMLOffice.Excel
     /// Excel file manipulation, including the creation of new Excel files, reading and updating
     /// existing files, and processing Excel data from stream
     /// </summary>
-    public class Spreadsheet
+    public class Spreadsheet : SpreadsheetCore
     {
-        #region Private Fields
-
-        /// <summary>
-        /// Maintain the master OpenXML Spreadsheet document
-        /// </summary>
-        private readonly SpreadsheetDocument spreadsheetDocument;
-
-        private Sheets? sheets;
-
-        /// <summary>
-        /// </summary>
-        private WorkbookPart? workbookPart;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
         /// <summary>
@@ -50,11 +35,7 @@ namespace OpenXMLOffice.Excel
         /// <param name="autoSave">
         /// Defaults to true. The source document gets updated automatically
         /// </param>
-        public Spreadsheet(string filePath)
-        {
-            spreadsheetDocument = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook, true);
-            PrepareSpreadsheet();
-        }
+        public Spreadsheet(string filePath) : base(filePath) { }
 
         /// <summary>
         /// </summary>
@@ -64,14 +45,7 @@ namespace OpenXMLOffice.Excel
         /// </param>
         /// <param name="autoSave">
         /// </param>
-        public Spreadsheet(string filePath, bool isEditable)
-        {
-            spreadsheetDocument = SpreadsheetDocument.Open(filePath, isEditable, new OpenSettings
-            {
-                AutoSave = true
-            });
-            PrepareSpreadsheet();
-        }
+        public Spreadsheet(string filePath, bool isEditable) : base(filePath, isEditable) { }
 
         /// <summary>
         /// This public constructor method initializes a new instance of the Spreadsheet class,
@@ -87,28 +61,8 @@ namespace OpenXMLOffice.Excel
         /// <param name="autoSave">
         /// Defaults to true. The source document gets updated automatically
         /// </param>
-        public Spreadsheet(Stream stream)
-        {
-            spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
-            PrepareSpreadsheet();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="stream">
-        /// Memory stream to use
-        /// </param>
-        /// <param name="isEditable">
-        /// </param>
-        /// <param name="autoSave">
-        /// </param>
-        public Spreadsheet(Stream stream, bool isEditable)
-        {
-            spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings
-            {
-                AutoSave = true
-            });
-        }
+        public Spreadsheet(Stream stream) : base(stream) { }
+        public Spreadsheet(Stream stream, bool isEditable) : base(stream, isEditable) { }
 
         #endregion Public Constructors
 
@@ -121,14 +75,14 @@ namespace OpenXMLOffice.Excel
                 throw new ArgumentException("Sheet with name already exist.");
             }
             // Check If Sheet Already exist
-            WorksheetPart worksheetPart = workbookPart!.AddNewPart<WorksheetPart>();
+            WorksheetPart worksheetPart = GetWorkbookPart().AddNewPart<WorksheetPart>();
             Sheet sheet = new()
             {
-                Id = spreadsheetDocument.WorkbookPart!.GetIdOfPart(worksheetPart),
+                Id = GetWorkbookPart().GetIdOfPart(worksheetPart),
                 SheetId = GetMaxSheetId() + 1,
                 Name = string.IsNullOrEmpty(sheetName) ? string.Format("Sheet{0}", GetMaxSheetId() + 1) : sheetName
             };
-            sheets!.Append(sheet);
+            GetSheets().Append(sheet);
             worksheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(new SheetData());
             return new Worksheet(worksheetPart.Worksheet, sheet);
         }
@@ -142,7 +96,7 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         public int? GetSheetId(string sheetName)
         {
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
             if (sheet != null)
             {
                 return int.Parse(sheet.Id!.Value!);
@@ -159,7 +113,7 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         public string? GetSheetName(string sheetId)
         {
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId) as Sheet;
             if (sheet != null)
             {
                 return sheet.Name;
@@ -169,10 +123,10 @@ namespace OpenXMLOffice.Excel
 
         public Worksheet? GetWorksheet(string sheetName)
         {
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
             if (sheet == null)
             { return null; }
-            if (workbookPart!.GetPartById(sheet.Id!) is not WorksheetPart worksheetPart)
+            if (GetWorkbookPart().GetPartById(sheet.Id!) is not WorksheetPart worksheetPart)
             { return null; }
             return new Worksheet(worksheetPart.Worksheet, sheet);
         }
@@ -188,12 +142,12 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         public bool RemoveSheet(string sheetName)
         {
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
             if (sheet != null)
             {
-                if (workbookPart!.GetPartById(sheet.Id!) is WorksheetPart worksheetPart)
+                if (GetWorkbookPart().GetPartById(sheet.Id!) is WorksheetPart worksheetPart)
                 {
-                    workbookPart.DeletePart(worksheetPart);
+                    GetWorkbookPart().DeletePart(worksheetPart);
                 }
                 sheet.Remove();
                 return true;
@@ -212,12 +166,12 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         public bool RemoveSheet(int sheetId)
         {
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId.ToString()) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId.ToString()) as Sheet;
             if (sheet != null)
             {
-                if (workbookPart!.GetPartById(sheet.Id!) is WorksheetPart worksheetPart)
+                if (GetWorkbookPart().GetPartById(sheet.Id!) is WorksheetPart worksheetPart)
                 {
-                    workbookPart.DeletePart(worksheetPart);
+                    GetWorkbookPart().DeletePart(worksheetPart);
                 }
                 sheet.Remove();
                 return true;
@@ -266,7 +220,7 @@ namespace OpenXMLOffice.Excel
             {
                 throw new ArgumentException("New Sheet with name already exist.");
             }
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Name == oldSheetName) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == oldSheetName) as Sheet;
             if (sheet == null)
                 return false;
             sheet.Name = newSheetName;
@@ -291,7 +245,7 @@ namespace OpenXMLOffice.Excel
             {
                 throw new ArgumentException("New Sheet with name already exist.");
             }
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId.ToString()) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId.ToString()) as Sheet;
             if (sheet == null)
                 return false;
             sheet.Name = newSheetName;
@@ -306,14 +260,6 @@ namespace OpenXMLOffice.Excel
             UpdateSharedString();
             spreadsheetDocument.Save();
             spreadsheetDocument.Dispose();
-        }
-
-        private void UpdateSharedString()
-        {
-            ShareString.Instance.GetRecords().ForEach(Value =>
-            {
-                GetShareString().Append(new SharedStringItem(new Text(Value)));
-            });
         }
 
         /// <summary>
@@ -339,7 +285,7 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         private bool CheckIfSheetNameExist(string sheetName)
         {
-            Sheet? sheet = sheets!.FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
+            Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
             return sheet != null;
         }
 
@@ -350,42 +296,7 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         private UInt32Value GetMaxSheetId()
         {
-            return sheets!.Max(sheet => (sheet as Sheet)?.SheetId) ?? 0;
-        }
-
-        private SharedStringTable GetShareString()
-        {
-            SharedStringTablePart? sharedStringPart = spreadsheetDocument.WorkbookPart!.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
-            if (sharedStringPart == null)
-            {
-                sharedStringPart = spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
-                sharedStringPart.SharedStringTable = new SharedStringTable();
-            }
-            return sharedStringPart.SharedStringTable;
-        }
-
-        private void LoadShareStringToCache()
-        {
-            List<string> Records = new();
-            GetShareString().ChildElements.ToList().ForEach(rec =>
-            {
-                // TODO : File Open Implementation
-                //Records.Add("");
-            });
-            ShareString.Instance.InsertBulk(Records);
-        }
-
-        /// <summary>
-        /// Common Spreadsheet perparation process used by all constructor
-        /// </summary>
-        private void PrepareSpreadsheet()
-        {
-            workbookPart = spreadsheetDocument.WorkbookPart ?? spreadsheetDocument.AddWorkbookPart();
-            workbookPart.Workbook ??= new Workbook();
-            sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? new Sheets();
-            workbookPart.Workbook.AppendChild(sheets);
-            LoadShareStringToCache();
-            workbookPart.Workbook.Save();
+            return GetSheets().Max(sheet => (sheet as Sheet)?.SheetId) ?? 0;
         }
 
         #endregion Private Methods
