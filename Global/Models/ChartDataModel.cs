@@ -19,6 +19,8 @@ namespace OpenXMLOffice.Global
         public DataType DataType = DataType.STRING;
         public string? Value;
 
+        public string NumberFormat = "General";
+
         #endregion Public Fields
     }
 }

@@ -146,11 +146,11 @@ namespace OpenXMLOffice.Global
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateXValueAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, ScatterChartSeriesSetting));
-            series.Append(CreateYValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, ScatterChartSeriesSetting));
+            series.Append(CreateXValueAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
+            series.Append(CreateYValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
             if (ScatterChartSetting.ScatterChartTypes == ScatterChartTypes.BUBBLE)
             {
-                series.Append(CreateBubbleSizeAxisData(ChartDataGrouping.ZaxisFormula!, ChartDataGrouping.ZaxisCells!, ScatterChartSeriesSetting));
+                series.Append(CreateBubbleSizeAxisData(ChartDataGrouping.ZaxisFormula!, ChartDataGrouping.ZaxisCells!));
                 series.Append(new C.Bubble3D() { Val = false });
             }
             else
@@ -160,7 +160,7 @@ namespace OpenXMLOffice.Global
             if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
             {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), ScatterChartSeriesSetting)
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray())
                 )
                 { Uri = GeneratorUtils.GenerateNewGUID() }));
             }

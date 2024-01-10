@@ -104,12 +104,12 @@ namespace OpenXMLOffice.Global
                 DataPoint.Append(ShapeProperties);
                 series.Append(DataPoint);
             }
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, PieChartSeriesSetting));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, PieChartSeriesSetting));
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
             if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
             {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), PieChartSeriesSetting)
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray())
                 )
                 { Uri = GeneratorUtils.GenerateNewGUID() }));
             }

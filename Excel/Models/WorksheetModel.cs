@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Excel
 
         public string? CellValue;
         public CellDataType DataType;
-        public string? NumberFormatting;
+        public string NumberFormat = "General";
         public int? StyleId;
 
         #endregion Public Fields
@@ -44,7 +44,7 @@ namespace OpenXMLOffice.Excel
 
         #endregion Public Fields
     }
-    
+
     public class Record
     {
         #region Public Constructors

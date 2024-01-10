@@ -119,12 +119,12 @@ namespace OpenXMLOffice.Global
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!, LineChartSeriesSetting));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!, LineChartSeriesSetting));
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!, ChartDataGrouping.XaxisCells!));
+            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!, ChartDataGrouping.YaxisCells!));
             if (ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null)
             {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray(), LineChartSeriesSetting)
+                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula, ChartDataGrouping.DataLabelCells.Skip(1).ToArray())
                 )
                 { Uri = GeneratorUtils.GenerateNewGUID() }));
             }

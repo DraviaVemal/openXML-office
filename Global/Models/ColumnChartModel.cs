@@ -44,13 +44,12 @@ namespace OpenXMLOffice.Global
     {
         #region Public Fields
 
-        public string? BorderColor;
 
         /// <summary>
         /// Option To Customise Specific Data Series, Will override Chart Level Setting
         /// </summary>
         public ColumnChartDataLabel ColumnChartDataLabel = new();
-
+        public string? BorderColor;
         public string? FillColor;
 
         #endregion Public Fields

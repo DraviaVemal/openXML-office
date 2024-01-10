@@ -52,12 +52,16 @@ namespace OpenXMLOffice.Global
         public string? DataLabelFormula;
         public ChartData? SeriesHeaderCells;
         public string? SeriesHeaderFormula;
+        public string? SeriesHeaderFormat;
         public ChartData[]? XaxisCells;
         public string? XaxisFormula;
+        public string? XaxisFormat;
         public ChartData[]? YaxisCells;
         public string? YaxisFormula;
+        public string? YaxisFormat;
         public ChartData[]? ZaxisCells;
         public string? ZaxisFormula;
+        public string? ZaxisFormat;
 
         #endregion Public Fields
     }
@@ -144,8 +148,6 @@ namespace OpenXMLOffice.Global
     public class ChartSeriesSetting
     {
         #region Public Fields
-
-        public string? NumberFormat;
 
         #endregion Public Fields
 

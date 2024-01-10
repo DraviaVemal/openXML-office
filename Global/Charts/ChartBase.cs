@@ -57,13 +57,13 @@ public class ChartBase : CommonProperties
 
     #region Protected Methods
 
-    protected C.BubbleSize CreateBubbleSizeAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    protected C.BubbleSize CreateBubbleSizeAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))
         {
             throw new ArgumentException("Bubble Size Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
     }
 
     protected C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting CategoryAxisSetting)
@@ -107,11 +107,11 @@ public class ChartBase : CommonProperties
         return CategoryAxis;
     }
 
-    protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType == DataType.NUMBER))
         {
-            return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
+            return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
         }
         else
         {
@@ -210,7 +210,7 @@ public class ChartBase : CommonProperties
         return DataLabels;
     }
 
-    protected C15.DataLabelsRange CreateDataLabelsRange(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    protected C15.DataLabelsRange CreateDataLabelsRange(string Formula, ChartData[] Cells)
     {
         return new(new C.Formula(Formula), AddDataLabelCacheValue(Cells));
     }
@@ -308,31 +308,31 @@ public class ChartBase : CommonProperties
         return ValueAxis;
     }
 
-    protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))
         {
             throw new ArgumentException("Value Axis Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
     }
 
-    protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))
         {
             throw new ArgumentException("X Axis Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
     }
 
-    protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))
         {
             throw new ArgumentException("Y Axis Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells, ChartSeriesSetting)));
+        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
     }
 
     #endregion Protected Methods
@@ -369,13 +369,12 @@ public class ChartBase : CommonProperties
         }
     }
 
-    private C.NumberingCache AddNumberCacheValue(ChartData[] Cells, ChartSeriesSetting ChartSeriesSetting)
+    private C.NumberingCache AddNumberCacheValue(ChartData[] Cells)
     {
         try
         {
             C.NumberingCache NumberingCache = new()
             {
-                FormatCode = new C.FormatCode(ChartSeriesSetting?.NumberFormat ?? "General"),
                 PointCount = new C.PointCount()
                 {
                     Val = (UInt32Value)(uint)Cells.Length
@@ -384,9 +383,10 @@ public class ChartBase : CommonProperties
             int count = 0;
             foreach (ChartData Cell in Cells)
             {
-                C.StringPoint StringPoint = new()
+                C.NumericPoint StringPoint = new()
                 {
-                    Index = (UInt32Value)(uint)count
+                    Index = (UInt32Value)(uint)count,
+                    FormatCode = Cell.NumberFormat
                 };
                 StringPoint.AppendChild(new C.NumericValue(Cell.Value ?? ""));
                 NumberingCache.AppendChild(StringPoint);

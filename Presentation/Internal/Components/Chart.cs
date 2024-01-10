@@ -202,6 +202,7 @@ namespace OpenXMLOffice.Presentation
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
+                    NumberFormat = Cell?.NumberFormat ?? "General",
                     Value = Cell?.CellValue,
                     DataType = Cell?.DataType switch
                     {
@@ -224,6 +225,7 @@ namespace OpenXMLOffice.Presentation
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                col.Select(Cell => new ChartData
                {
+                   NumberFormat = Cell?.NumberFormat ?? "General",
                    Value = Cell?.CellValue,
                    DataType = Cell?.DataType switch
                    {
@@ -246,6 +248,7 @@ namespace OpenXMLOffice.Presentation
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
+                    NumberFormat = Cell?.NumberFormat ?? "General",
                     Value = Cell?.CellValue,
                     DataType = Cell?.DataType switch
                     {
@@ -268,6 +271,7 @@ namespace OpenXMLOffice.Presentation
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
+                    NumberFormat = Cell?.NumberFormat ?? "General",
                     Value = Cell?.CellValue,
                     DataType = Cell?.DataType switch
                     {
@@ -290,6 +294,7 @@ namespace OpenXMLOffice.Presentation
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
+                    NumberFormat = Cell?.NumberFormat ?? "General",
                     Value = Cell?.CellValue,
                     DataType = Cell?.DataType switch
                     {
@@ -312,6 +317,7 @@ namespace OpenXMLOffice.Presentation
             ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
+                    NumberFormat = Cell?.NumberFormat ?? "General",
                     Value = Cell?.CellValue,
                     DataType = Cell?.DataType switch
                     {
