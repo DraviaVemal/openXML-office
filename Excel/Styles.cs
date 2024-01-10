@@ -21,13 +21,43 @@ namespace OpenXMLOffice.Excel
 
         private void Initialise()
         {
-            Stylesheet.Fonts ??= new() { Count = 0 };
-            Stylesheet.Fills ??= new() { Count = 0 };
-            Stylesheet.Borders ??= new() { Count = 0 };
-            Stylesheet.CellFormats ??= new() { Count = 0 };
-            Stylesheet.CellStyleFormats ??= new() { Count = 0 };
-            Stylesheet.CellStyles ??= new() { Count = 0 };
-            Stylesheet.DifferentialFormats ??= new() { Count = 0 };
+            Stylesheet.Fonts ??= new(
+                new Font(
+                    new FontSize() { Val = 11 },
+                    new Color() { Theme = 1 },
+                    new FontName() { Val = "Calibri" },
+                    new FontFamily() { Val = 2 },
+                    new FontScheme() { Val = FontSchemeValues.Minor }
+                ))
+            { Count = 1 };
+            Stylesheet.Fills ??= new(
+                new Fill(
+                    new PatternFill() { PatternType = PatternValues.None }
+                ),
+                new Fill(
+                    new PatternFill() { PatternType = PatternValues.DarkGray }
+                ))
+            { Count = 2 };
+            Stylesheet.Borders ??= new(
+                new Border(
+                    new LeftBorder(),
+                    new RightBorder(),
+                    new TopBorder(),
+                    new BottomBorder(),
+                    new DiagonalBorder()
+                )
+            )
+            { Count = 1 };
+            Stylesheet.CellStyleFormats ??= new(
+                new CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0 })
+            { Count = 1 };//cellStyleXfs
+            Stylesheet.CellFormats ??= new(
+                new CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0, FormatId = 0 })
+            { Count = 1 };//cellXfs
+            Stylesheet.CellStyles ??= new(
+                new CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
+            { Count = 1 };//cellStyles
+            Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
         }
 
         public int GetCellStyleId(CellStyleSetting CellStyleSetting)
