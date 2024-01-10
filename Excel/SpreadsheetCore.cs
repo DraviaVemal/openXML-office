@@ -12,6 +12,7 @@ namespace OpenXMLOffice.Excel
 {
     public class SpreadsheetCore
     {
+        private Styles? Styles;
         #region Protected Fields
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace OpenXMLOffice.Excel
             SpreadsheetProperties = spreadsheetProperties ?? new();
             spreadsheetDocument = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook, true);
             PrepareSpreadsheet(SpreadsheetProperties);
+            InitialiseStyle();
         }
 
         /// <summary>
@@ -63,6 +65,7 @@ namespace OpenXMLOffice.Excel
                 AutoSave = true
             });
             PrepareSpreadsheet(SpreadsheetProperties);
+            InitialiseStyle();
         }
 
         /// <summary>
@@ -84,6 +87,7 @@ namespace OpenXMLOffice.Excel
             SpreadsheetProperties = spreadsheetProperties ?? new();
             spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
             PrepareSpreadsheet(SpreadsheetProperties);
+            InitialiseStyle();
         }
 
         /// <summary>
@@ -102,10 +106,15 @@ namespace OpenXMLOffice.Excel
             {
                 AutoSave = true
             });
+            PrepareSpreadsheet(SpreadsheetProperties);
+            InitialiseStyle();
         }
 
         #endregion Protected Constructors
-
+        public Styles GetStyles()
+        {
+            return Styles!;
+        }
         #region Protected Methods
 
         protected string GetNextSpreadSheetRelationId()
@@ -115,10 +124,10 @@ namespace OpenXMLOffice.Excel
 
         protected SharedStringTable GetShareString()
         {
-            SharedStringTablePart? sharedStringPart = spreadsheetDocument.WorkbookPart!.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+            SharedStringTablePart? sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
             if (sharedStringPart == null)
             {
-                sharedStringPart = spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
+                sharedStringPart = GetWorkbookPart().AddNewPart<SharedStringTablePart>();
                 sharedStringPart.SharedStringTable = new SharedStringTable();
             }
             return sharedStringPart.SharedStringTable;
@@ -166,6 +175,20 @@ namespace OpenXMLOffice.Excel
         #endregion Protected Methods
 
         #region Private Methods
+
+        private void InitialiseStyle()
+        {
+            if (GetWorkbookPart().WorkbookStylesPart == null)
+            {
+                GetWorkbookPart().AddNewPart<WorkbookStylesPart>();
+                GetWorkbookPart().WorkbookStylesPart!.Stylesheet = new();
+            }
+            else
+            {
+                GetWorkbookPart().WorkbookStylesPart!.Stylesheet ??= new();
+            }
+            Styles = new(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+        }
 
         /// <summary>
         /// Common Spreadsheet perparation process used by all constructor

@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Tests
     {
         #region Private Fields
 
-        private static Spreadsheet spreadsheet = new(new MemoryStream(), true);
+        private static Spreadsheet spreadsheet = new(new MemoryStream());
 
         #endregion Private Fields
 

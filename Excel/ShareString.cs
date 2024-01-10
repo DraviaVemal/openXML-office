@@ -7,24 +7,6 @@ using LiteDB;
 
 namespace OpenXMLOffice.Excel
 {
-    public class Record
-    {
-        #region Public Constructors
-
-        public Record(string Value)
-        {
-            this.Value = Value;
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public int Id { get; set; }
-        public string Value { get; set; }
-
-        #endregion Public Properties
-    }
 
     internal class ShareString : IDisposable
     {
@@ -54,10 +36,7 @@ namespace OpenXMLOffice.Excel
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new ShareString();
-                }
+                instance ??= new ShareString();
                 return instance;
             }
         }

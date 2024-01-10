@@ -44,4 +44,23 @@ namespace OpenXMLOffice.Excel
 
         #endregion Public Fields
     }
+    
+    public class Record
+    {
+        #region Public Constructors
+
+        public Record(string Value)
+        {
+            this.Value = Value;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public int Id { get; set; }
+        public string Value { get; set; }
+
+        #endregion Public Properties
+    }
 }
