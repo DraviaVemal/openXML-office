@@ -1,3 +1,8 @@
+/*
+* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
+* See License in the project root for license information.
+*/
+
 using OpenXMLOffice.Global;
 
 namespace OpenXMLOffice.Excel
@@ -12,8 +17,8 @@ namespace OpenXMLOffice.Excel
 
         #endregion Public Fields
     }
+
     public class SpreadsheetSettings
     {
-
     }
 }

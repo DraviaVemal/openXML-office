@@ -1,5 +1,9 @@
+/*
+* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
+* See License in the project root for license information.
+*/
+
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using OpenXMLOffice.Global;
@@ -8,11 +12,19 @@ namespace OpenXMLOffice.Excel
 {
     public class SpreadsheetCore
     {
+        #region Protected Fields
+
         /// <summary>
         /// Maintain the master OpenXML Spreadsheet document
         /// </summary>
         protected readonly SpreadsheetDocument spreadsheetDocument;
+
         protected readonly SpreadsheetProperties SpreadsheetProperties;
+
+        #endregion Protected Fields
+
+        #region Protected Constructors
+
         /// <summary>
         /// This public constructor method initializes a new instance of the Spreadsheet class,
         /// allowing you to work with Excel spreadsheet It accepts a Existing excel file path and a
@@ -91,54 +103,14 @@ namespace OpenXMLOffice.Excel
                 AutoSave = true
             });
         }
-        protected WorkbookPart GetWorkbookPart()
-        {
-            if (spreadsheetDocument.WorkbookPart == null)
-            {
-                return spreadsheetDocument.AddWorkbookPart();
-            }
-            return spreadsheetDocument.WorkbookPart;
-        }
+
+        #endregion Protected Constructors
+
+        #region Protected Methods
 
         protected string GetNextSpreadSheetRelationId()
         {
             return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + 1);
-        }
-        /// <summary>
-        /// Common Spreadsheet perparation process used by all constructor
-        /// </summary>
-        private void PrepareSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
-        {
-            GetWorkbookPart().Workbook ??= new Workbook();
-            Sheets sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>() ?? new Sheets();
-            GetWorkbookPart().Workbook.AppendChild(sheets);
-            if (GetWorkbookPart().ThemePart == null)
-            {
-                GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
-            }
-            Theme theme = new(SpreadsheetProperties?.Theme);
-            GetWorkbookPart().ThemePart!.Theme = theme.GetTheme();
-            LoadShareStringToCache();
-            GetWorkbookPart().Workbook.Save();
-        }
-
-        protected void UpdateSharedString()
-        {
-            ShareString.Instance.GetRecords().ForEach(Value =>
-            {
-                GetShareString().Append(new SharedStringItem(new Text(Value)));
-            });
-        }
-
-        protected void LoadShareStringToCache()
-        {
-            List<string> Records = new();
-            GetShareString().ChildElements.ToList().ForEach(rec =>
-            {
-                // TODO : File Open Implementation
-                //Records.Add("");
-            });
-            ShareString.Instance.InsertBulk(Records);
         }
 
         protected SharedStringTable GetShareString()
@@ -162,5 +134,57 @@ namespace OpenXMLOffice.Excel
             }
             return Sheets;
         }
+
+        protected WorkbookPart GetWorkbookPart()
+        {
+            if (spreadsheetDocument.WorkbookPart == null)
+            {
+                return spreadsheetDocument.AddWorkbookPart();
+            }
+            return spreadsheetDocument.WorkbookPart;
+        }
+
+        protected void LoadShareStringToCache()
+        {
+            List<string> Records = new();
+            GetShareString().ChildElements.ToList().ForEach(rec =>
+            {
+                // TODO : File Open Implementation
+                //Records.Add("");
+            });
+            ShareString.Instance.InsertBulk(Records);
+        }
+
+        protected void UpdateSharedString()
+        {
+            ShareString.Instance.GetRecords().ForEach(Value =>
+            {
+                GetShareString().Append(new SharedStringItem(new Text(Value)));
+            });
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Common Spreadsheet perparation process used by all constructor
+        /// </summary>
+        private void PrepareSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
+        {
+            GetWorkbookPart().Workbook ??= new Workbook();
+            Sheets sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>() ?? new Sheets();
+            GetWorkbookPart().Workbook.AppendChild(sheets);
+            if (GetWorkbookPart().ThemePart == null)
+            {
+                GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
+            }
+            Theme theme = new(SpreadsheetProperties?.Theme);
+            GetWorkbookPart().ThemePart!.Theme = theme.GetTheme();
+            LoadShareStringToCache();
+            GetWorkbookPart().Workbook.Save();
+        }
+
+        #endregion Private Methods
     }
 }

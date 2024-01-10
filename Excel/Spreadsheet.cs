@@ -62,7 +62,10 @@ namespace OpenXMLOffice.Excel
         /// Defaults to true. The source document gets updated automatically
         /// </param>
         public Spreadsheet(Stream stream) : base(stream) { }
-        public Spreadsheet(Stream stream, bool isEditable) : base(stream, isEditable) { }
+
+        public Spreadsheet(Stream stream, bool isEditable) : base(stream, isEditable)
+        {
+        }
 
         #endregion Public Constructors
 
