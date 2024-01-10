@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Presentation
             string EmbedId = CurrentSlide.GetNextSlideRelationId();
             this.PictureSetting = PictureSetting;
             OpenXMLPicture = new();
-            CreatePicture();
+            CreatePicture(EmbedId);
             ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.ImageType switch
             {
                 ImageType.PNG => "image/png",
@@ -47,7 +47,7 @@ namespace OpenXMLOffice.Presentation
             string EmbedId = CurrentSlide.GetNextSlideRelationId();
             this.PictureSetting = PictureSetting;
             OpenXMLPicture = new();
-            CreatePicture();
+            CreatePicture(EmbedId);
             ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.ImageType switch
             {
                 ImageType.PNG => "image/png",
@@ -123,7 +123,7 @@ namespace OpenXMLOffice.Presentation
 
         #region Private Methods
 
-        private void CreatePicture()
+        private void CreatePicture(string EmbedId)
         {
             GetPicture().NonVisualPictureProperties = new P.NonVisualPictureProperties(
                 new P.NonVisualDrawingProperties()
@@ -149,6 +149,11 @@ namespace OpenXMLOffice.Presentation
                     Extents = new A.Extents() { Cx = PictureSetting.Width, Cy = PictureSetting.Height }
                 }
             };
+            GetPicture().BlipFill = new()
+            {
+                Blip = new A.Blip() { Embed = EmbedId }
+            };
+            GetPicture().BlipFill!.Append(new A.Stretch(new A.FillRectangle()));
         }
 
         #endregion Private Methods
