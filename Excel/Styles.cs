@@ -1,15 +1,27 @@
-using LiteDB;
+/*
+* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
+* See License in the project root for license information.
+*/
+
 using DocumentFormat.OpenXml.Spreadsheet;
+using LiteDB;
 
 namespace OpenXMLOffice.Excel
 {
     public class Styles
     {
-        private readonly Stylesheet Stylesheet;
+        #region Private Fields
+
         private static readonly LiteDatabase LiteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
-        private readonly ILiteCollection<FontStyle> FontStyleCollection;
-        private readonly ILiteCollection<FillStyle> FillStyleCollection;
         private readonly ILiteCollection<BorderStyle> BorderStyleCollection;
+        private readonly ILiteCollection<FillStyle> FillStyleCollection;
+        private readonly ILiteCollection<FontStyle> FontStyleCollection;
+        private readonly Stylesheet Stylesheet;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
+
         internal Styles(Stylesheet Stylesheet)
         {
             this.Stylesheet = Stylesheet;
@@ -17,6 +29,24 @@ namespace OpenXMLOffice.Excel
             FillStyleCollection = LiteDatabase.GetCollection<FillStyle>("FillStyle");
             BorderStyleCollection = LiteDatabase.GetCollection<BorderStyle>("BorderStyle");
             Initialise();
+        }
+
+        #endregion Internal Constructors
+
+        #region Public Methods
+
+        public int GetCellStyleId(CellStyleSetting CellStyleSetting)
+        {
+            return 0;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void AddUniqueFont(CellStyleSetting CellStyleSetting)
+        {
+            Font Font = new();
         }
 
         private void Initialise()
@@ -60,14 +90,6 @@ namespace OpenXMLOffice.Excel
             Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
         }
 
-        public int GetCellStyleId(CellStyleSetting CellStyleSetting)
-        {
-            return 0;
-        }
-
-        private void AddUniqueFont(CellStyleSetting CellStyleSetting)
-        {
-            Font Font = new();
-        }
+        #endregion Private Methods
     }
 }
