@@ -9,23 +9,32 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
 {
+    /// <summary>
+    /// Represents the settings for a column chart.
+    /// </summary>
     public class ColumnFamilyChart : ChartBase
     {
         #region Protected Fields
-
+        /// <summary>
+        /// Column Chart Setting
+        /// </summary>
         protected ColumnChartSetting ColumnChartSetting;
 
         #endregion Protected Fields
 
-        #region Public Constructors
-
-        public ColumnFamilyChart(ColumnChartSetting ColumnChartSetting, ChartData[][] DataCols) : base(ColumnChartSetting)
+        #region protected Constructors
+        /// <summary>
+        /// Create Column Chart with provided settings
+        /// </summary>
+        /// <param name="ColumnChartSetting"></param>
+        /// <param name="DataCols"></param>
+        protected ColumnFamilyChart(ColumnChartSetting ColumnChartSetting, ChartData[][] DataCols) : base(ColumnChartSetting)
         {
             this.ColumnChartSetting = ColumnChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
 
-        #endregion Public Constructors
+        #endregion protected Constructors
 
         #region Private Methods
 

@@ -10,6 +10,9 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
+    /// <summary>
+    /// Common Slide Data Class used to create the base components of a slide, slidemaster.
+    /// </summary>
     public class CommonSlideData
     {
         #region Private Fields

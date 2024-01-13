@@ -9,8 +9,10 @@ using G = OpenXMLOffice.Global;
 using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
-
 {
+    /// <summary>
+    /// Represents Table Class
+    /// </summary>
     public class Table : G.CommonProperties
     {
         #region Private Fields
@@ -21,7 +23,11 @@ namespace OpenXMLOffice.Presentation
         #endregion Private Fields
 
         #region Public Constructors
-
+        /// <summary>
+        /// Create Table with provided settings
+        /// </summary>
+        /// <param name="TableRows"></param>
+        /// <param name="TableSetting"></param>
         public Table(TableRow[] TableRows, TableSetting TableSetting)
         {
             this.TableSetting = TableSetting;
@@ -51,12 +57,19 @@ namespace OpenXMLOffice.Presentation
         {
             return (TableSetting.Width, TableSetting.Height);
         }
-
+        /// <summary>
+        /// Get Table Graphic Frame
+        /// </summary>
+        /// <returns></returns>
         public P.GraphicFrame GetTableGraphicFrame()
         {
             return GraphicFrame;
         }
-
+        /// <summary>
+        /// Update Table Position
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
         public void UpdatePosition(uint X, uint Y)
         {
             TableSetting.X = X;
@@ -70,7 +83,11 @@ namespace OpenXMLOffice.Presentation
                 };
             }
         }
-
+        /// <summary>
+        /// Update Table Size
+        /// </summary>
+        /// <param name="Width"></param>
+        /// <param name="Height"></param>
         public void UpdateSize(uint Width, uint Height)
         {
             ReCalculateColumnWidth();
@@ -107,7 +124,7 @@ namespace OpenXMLOffice.Presentation
             {
                 throw new DataException("No Table Data Provided");
             }
-            if (TableSetting.WidthType != TableSetting.WidthOptionValues.AUTO && TableSetting.TableColumnwidth.Count != TableRows[0].TableCells.Count)
+            if (TableSetting.WidthType != TableSetting.WidthOptionValues.AUTO && TableSetting.TableColumnWidth.Count != TableRows[0].TableCells.Count)
             {
                 throw new ArgumentException("Column With Setting Does Not Match Data");
             }
@@ -238,7 +255,7 @@ namespace OpenXMLOffice.Presentation
             {
                 for (int i = 0; i < ColumnCount; i++)
                 {
-                    TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnwidth[i]) });
+                    TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnWidth[i]) });
                 }
             }
             return TableGrid;
@@ -270,7 +287,7 @@ namespace OpenXMLOffice.Presentation
                 else
                 {
                     GridColumn.Select((item, index) => (item, index)).ToList().ForEach(Column =>
-                        Column.item.Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnwidth[Column.index]));
+                        Column.item.Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnWidth[Column.index]));
                 }
             }
         }

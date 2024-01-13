@@ -17,7 +17,6 @@ namespace OpenXMLOffice.Presentation
 
         protected readonly PresentationDocument presentationDocument;
 
-        //################################//
         protected readonly PresentationInfo presentationInfo = new();
 
         protected readonly PresentationProperties presentationProperties;

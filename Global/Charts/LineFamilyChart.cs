@@ -9,16 +9,25 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
 {
+    /// <summary>
+    /// Represents the settings for a line chart.
+    /// </summary>
     public class LineFamilyChart : ChartBase
     {
         #region Protected Fields
-
+        /// <summary>
+        /// The settings for the line chart.
+        /// </summary>
         protected LineChartSetting LineChartSetting;
 
         #endregion Protected Fields
 
         #region Protected Constructors
-
+        /// <summary>
+        /// Create Line Chart with provided settings
+        /// </summary>
+        /// <param name="LineChartSetting"></param>
+        /// <param name="DataCols"></param>
         protected LineFamilyChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting)
         {
             this.LineChartSetting = LineChartSetting;

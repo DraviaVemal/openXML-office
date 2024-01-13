@@ -7,6 +7,9 @@ using A = DocumentFormat.OpenXml.Drawing;
 
 namespace OpenXMLOffice.Global
 {
+    /// <summary>
+    /// Common Theme Class used by both presentation and spreadsheet.
+    /// </summary>
     public class Theme
     {
         #region Private Fields
@@ -36,6 +39,10 @@ namespace OpenXMLOffice.Global
 
         #region Public Constructors
 
+        /// <summary>
+        /// Creates a new theme with the given pallet.
+        /// </summary>
+        /// <param name="ThemePallet"></param>
         public Theme(ThemePallet? ThemePallet = null)
         {
             CreateTheme(ThemePallet);
@@ -45,6 +52,10 @@ namespace OpenXMLOffice.Global
 
         #region Public Methods
 
+        /// <summary>
+        /// Returns the OpenXML Theme Object.
+        /// </summary>
+        /// <returns></returns>
         public A.Theme GetTheme()
         {
             return OpenXMLTheme;

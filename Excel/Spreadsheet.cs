@@ -26,25 +26,11 @@ namespace OpenXMLOffice.Excel
         /// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding
         /// SpreadsheetDocument. This is also used to update as template.
         /// </summary>
-        /// <param name="filePath">
-        /// Excel File path location
-        /// </param>
-        /// <param name="spreadsheetDocumentType">
-        /// Excel File Type
-        /// </param>
-        /// <param name="autoSave">
-        /// Defaults to true. The source document gets updated automatically
-        /// </param>
         public Spreadsheet(string filePath) : base(filePath) { }
 
         /// <summary>
+        /// This public constructor method initializes a new instance of the Spreadsheet class,
         /// </summary>
-        /// <param name="filePath">
-        /// </param>
-        /// <param name="isEditable">
-        /// </param>
-        /// <param name="autoSave">
-        /// </param>
         public Spreadsheet(string filePath, bool isEditable) : base(filePath, isEditable) { }
 
         /// <summary>
@@ -52,25 +38,19 @@ namespace OpenXMLOffice.Excel
         /// allowing you to work with Excel spreadsheet It accepts a Stream object and a
         /// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding SpreadsheetDocument.
         /// </summary>
-        /// <param name="stream">
-        /// Memory stream to use
-        /// </param>
-        /// <param name="spreadsheetDocumentType">
-        /// Excel File Type
-        /// </param>
-        /// <param name="autoSave">
-        /// Defaults to true. The source document gets updated automatically
-        /// </param>
         public Spreadsheet(Stream stream) : base(stream) { }
-
-        public Spreadsheet(Stream stream, bool isEditable) : base(stream, isEditable)
-        {
-        }
+        /// <summary>
+        /// This public constructor method initializes a new instance of the Spreadsheet class
+        /// </summary>
+        public Spreadsheet(Stream stream, bool isEditable) : base(stream, isEditable) { }
 
         #endregion Public Constructors
 
         #region Public Methods
 
+        /// <summary>
+        /// Adds a new sheet to the OpenXMLOffice with the specified name. Throws an exception if SheetName already exist.
+        /// </summary>
         public Worksheet AddSheet(string? sheetName = null)
         {
             if (!string.IsNullOrEmpty(sheetName) && CheckIfSheetNameExist(sheetName))
@@ -123,7 +103,11 @@ namespace OpenXMLOffice.Excel
             }
             return null;
         }
-
+        /// <summary>
+        /// Retrieves a Worksheet object from an OpenXMLOffice, allowing manipulation of the worksheet.
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
         public Worksheet? GetWorksheet(string sheetName)
         {
             Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
@@ -186,37 +170,6 @@ namespace OpenXMLOffice.Excel
         /// Creates a new sheet with the specified name and adds its relevant components to the
         /// workbook. Throws an exception if the sheet name is already in use.
         /// </summary>
-        /// <param name="sheetName">
-        /// The name of the new sheet to be created.
-        /// </param>
-        /// <returns>
-        /// The newly created sheet.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        /// Thrown when the sheet name is already in use within the workbook.
-        /// </exception>
-        /// <summary>
-        /// Retrieves a Worksheet object from an OpenXMLOffice, allowing manipulation of the
-        /// specified target sheet.
-        /// </summary>
-        /// <param name="sheetName">
-        /// The name of the target sheet to be retrieved.
-        /// </param>
-        /// <returns>
-        /// The Worksheet object representing the target sheet for manipulation.
-        /// </returns>
-        /// <summary>
-        /// Renames an existing sheet in the OpenXMLOffice.
-        /// </summary>
-        /// <param name="oldSheetName">
-        /// The current name of the sheet to be renamed.
-        /// </param>
-        /// <param name="newSheetName">
-        /// The new name to assign to the sheet.
-        /// </param>
-        /// <returns>
-        /// True if the renaming action is successful; otherwise, false.
-        /// </returns>
         public bool RenameSheet(string oldSheetName, string newSheetName)
         {
             if (CheckIfSheetNameExist(newSheetName))
@@ -233,15 +186,6 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Renames an existing sheet in the OpenXMLOffice.
         /// </summary>
-        /// <param name="sheetId">
-        /// The current name of the sheet to be renamed.
-        /// </param>
-        /// <param name="newSheetName">
-        /// The new name to assign to the sheet.
-        /// </param>
-        /// <returns>
-        /// True if the renaming action is successful; otherwise, false.
-        /// </returns>
         public bool RenameSheet(int sheetId, string newSheetName)
         {
             if (CheckIfSheetNameExist(newSheetName))
@@ -268,8 +212,6 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Save Copy of the content that updated to the source file
         /// </summary>
-        /// <param name="filePath">
-        /// </param>
         public void SaveAs(string filePath)
         {
             throw new NotImplementedException();
@@ -282,10 +224,6 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Check if sheet name exist in the sheets list
         /// </summary>
-        /// <param name="sheetName">
-        /// </param>
-        /// <returns>
-        /// </returns>
         private bool CheckIfSheetNameExist(string sheetName)
         {
             Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;

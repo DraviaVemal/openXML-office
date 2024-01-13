@@ -12,6 +12,9 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
+    /// <summary>
+    /// Chart Class Exported out of PPT importing from Global
+    /// </summary>
     public class Chart
     {
         #region Private Fields
@@ -24,7 +27,12 @@ namespace OpenXMLOffice.Presentation
         #endregion Private Fields
 
         #region Public Constructors
-
+        /// <summary>
+        /// Create Area Chart with provided settings
+        /// </summary>
+        /// <param name="Slide"></param>
+        /// <param name="DataRows"></param>
+        /// <param name="AreaChartSetting"></param>
         public Chart(Slide Slide, DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
         {
             ChartSetting = AreaChartSetting;
@@ -33,7 +41,12 @@ namespace OpenXMLOffice.Presentation
             InitialiseChartParts();
             CreateChart(DataRows, AreaChartSetting);
         }
-
+        /// <summary>
+        /// Create Bar Chart with provided settings
+        /// </summary>
+        /// <param name="Slide"></param>
+        /// <param name="DataRows"></param>
+        /// <param name="BarChartSetting"></param>
         public Chart(Slide Slide, DataCell[][] DataRows, BarChartSetting BarChartSetting)
         {
             ChartSetting = BarChartSetting;
@@ -42,7 +55,12 @@ namespace OpenXMLOffice.Presentation
             InitialiseChartParts();
             CreateChart(DataRows, BarChartSetting);
         }
-
+        /// <summary>
+        /// Create Column Chart with provided settings
+        /// </summary>
+        /// <param name="Slide"></param>
+        /// <param name="DataRows"></param>
+        /// <param name="ColumnChartSetting"></param>
         public Chart(Slide Slide, DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
         {
             ChartSetting = ColumnChartSetting;
@@ -51,7 +69,12 @@ namespace OpenXMLOffice.Presentation
             InitialiseChartParts();
             CreateChart(DataRows, ColumnChartSetting);
         }
-
+        /// <summary>
+        /// Create Line Chart with provided settings
+        /// </summary>
+        /// <param name="Slide"></param>
+        /// <param name="DataRows"></param>
+        /// <param name="LineChartSetting"></param>
         public Chart(Slide Slide, DataCell[][] DataRows, LineChartSetting LineChartSetting)
         {
             ChartSetting = LineChartSetting;
@@ -60,7 +83,12 @@ namespace OpenXMLOffice.Presentation
             InitialiseChartParts();
             CreateChart(DataRows, LineChartSetting);
         }
-
+        /// <summary>
+        /// Create Pie Chart with provided settings
+        /// </summary>
+        /// <param name="Slide"></param>
+        /// <param name="DataRows"></param>
+        /// <param name="PieChartSetting"></param>
         public Chart(Slide Slide, DataCell[][] DataRows, PieChartSetting PieChartSetting)
         {
             ChartSetting = PieChartSetting;
@@ -69,7 +97,12 @@ namespace OpenXMLOffice.Presentation
             InitialiseChartParts();
             CreateChart(DataRows, PieChartSetting);
         }
-
+        /// <summary>
+        /// Create Scatter Chart with provided settings
+        /// </summary>
+        /// <param name="Slide"></param>
+        /// <param name="DataRows"></param>
+        /// <param name="ScatterChartSetting"></param>
         public Chart(Slide Slide, DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
         {
             ChartSetting = ScatterChartSetting;
@@ -82,7 +115,10 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Constructors
 
         #region Public Methods
-
+        /// <summary>
+        /// Get Worksheet control for the chart embedded object
+        /// </summary>
+        /// <returns></returns>
         public Spreadsheet GetChartWorkBook()
         {
             Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
@@ -108,12 +144,18 @@ namespace OpenXMLOffice.Presentation
         {
             return (ChartSetting.Width, ChartSetting.Height);
         }
-
+        /// <summary>
+        /// Save Chart Part
+        /// </summary>
         public void Save()
         {
             CurrentSlide.GetSlidePart().Slide.Save();
         }
-
+        /// <summary>
+        /// Update Chart Position
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
         public void UpdatePosition(uint X, uint Y)
         {
             ChartSetting.X = X;
@@ -127,7 +169,11 @@ namespace OpenXMLOffice.Presentation
                 };
             }
         }
-
+        /// <summary>
+        /// Update Chart Size
+        /// </summary>
+        /// <param name="Width"></param>
+        /// <param name="Height"></param>
         public void UpdateSize(uint Width, uint Height)
         {
             ChartSetting.Width = Width;

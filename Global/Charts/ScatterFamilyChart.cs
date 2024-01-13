@@ -9,16 +9,25 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
 {
+    /// <summary>
+    /// Represents the types of scatter charts.
+    /// </summary>
     public class ScatterFamilyChart : ChartBase
     {
         #region Protected Fields
-
+        /// <summary>
+        /// Scatter Chart Setting
+        /// </summary>
         protected ScatterChartSetting ScatterChartSetting;
 
         #endregion Protected Fields
 
         #region Protected Constructors
-
+        /// <summary>
+        /// Create Scatter Chart with provided settings
+        /// </summary>
+        /// <param name="ScatterChartSetting"></param>
+        /// <param name="DataCols"></param>
         protected ScatterFamilyChart(ScatterChartSetting ScatterChartSetting, ChartData[][] DataCols) : base(ScatterChartSetting)
         {
             this.ScatterChartSetting = ScatterChartSetting;

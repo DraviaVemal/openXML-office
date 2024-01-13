@@ -11,11 +11,19 @@ using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global;
 
+/// <summary>
+/// Chart Base Class Common to all charts. Class is only intended to get created by inherited classes
+/// </summary>
 public class ChartBase : CommonProperties
 {
     #region Protected Fields
-
+    /// <summary>
+    /// Chart Data Groupings
+    /// </summary>
     protected List<ChartDataGrouping> ChartDataGroupings = new();
+    /// <summary>
+    /// Core chart settings common for every possible chart
+    /// </summary>
     protected ChartSetting ChartSetting;
 
     #endregion Protected Fields
@@ -29,7 +37,10 @@ public class ChartBase : CommonProperties
     #endregion Private Fields
 
     #region Protected Constructors
-
+    /// <summary>
+    /// Chartbase class constructor restricted only for inheritance use
+    /// </summary>
+    /// <param name="ChartSetting"></param>
     protected ChartBase(ChartSetting ChartSetting)
     {
         this.ChartSetting = ChartSetting;
@@ -41,22 +52,34 @@ public class ChartBase : CommonProperties
 
     #endregion Protected Constructors
 
-    #region Public Methods
-
+    #region protected Methods
+    /// <summary>
+    /// Get OpenXML ChartSpace
+    /// </summary>
+    /// <returns></returns>
     public C.ChartSpace GetChartSpace()
     {
         return OpenXMLChartSpace;
     }
-
-    public void SetChartPlotArea(C.PlotArea PlotArea)
+    /// <summary>
+    /// Set chart plot area
+    /// </summary>
+    /// <param name="PlotArea"></param>
+    protected void SetChartPlotArea(C.PlotArea PlotArea)
     {
         Chart.PlotArea = PlotArea;
     }
 
-    #endregion Public Methods
+    #endregion protected Methods
 
     #region Protected Methods
-
+    /// <summary>
+    /// Create Bubble Size Axis for the chart
+    /// </summary>
+    /// <param name="Formula"></param>
+    /// <param name="Cells"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     protected C.BubbleSize CreateBubbleSizeAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))
@@ -65,7 +88,11 @@ public class ChartBase : CommonProperties
         }
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
     }
-
+    /// <summary>
+    /// Create Category Axis for the chart
+    /// </summary>
+    /// <param name="CategoryAxisSetting"></param>
+    /// <returns></returns>
     protected C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting CategoryAxisSetting)
     {
         C.CategoryAxis CategoryAxis = new(
@@ -106,7 +133,12 @@ public class ChartBase : CommonProperties
         CategoryAxis.Append(ShapeProperties);
         return CategoryAxis;
     }
-
+    /// <summary>
+    /// Create Category Axis Data for the chart
+    /// </summary>
+    /// <param name="Formula"></param>
+    /// <param name="Cells"></param>
+    /// <returns></returns>
     protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType == DataType.NUMBER))
@@ -118,19 +150,30 @@ public class ChartBase : CommonProperties
             return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
         }
     }
-
+    /// <summary>
+    /// Create Chart Styles for the chart
+    /// </summary>
+    /// <returns></returns>
     protected CS.ChartStyle CreateChartStyles()
     {
         ChartStyle ChartStyle = new();
         return ChartStyle.CreateChartStyles();
     }
-
+    /// <summary>
+    /// Create Color Styles for the chart
+    /// </summary>
+    /// <returns></returns>
     protected CS.ColorStyle CreateColorStyles()
     {
         ChartColor ChartColor = new();
         return ChartColor.CreateColorStyles();
     }
-
+    /// <summary>
+    /// Create Data Labels for the chart
+    /// </summary>
+    /// <param name="ChartDataLabel"></param>
+    /// <param name="DataLabelCount"></param>
+    /// <returns></returns>
     protected C.DataLabels CreateDataLabels(ChartDataLabel ChartDataLabel, int? DataLabelCount = 0)
     {
         C.ExtensionList ExtensionList = new(
@@ -209,12 +252,23 @@ public class ChartBase : CommonProperties
         }
         return DataLabels;
     }
-
+    /// <summary>
+    /// Create Data Labels Range for the chart.Used in value from Column
+    /// </summary>
+    /// <param name="Formula"></param>
+    /// <param name="Cells"></param>
+    /// <returns></returns>
     protected C15.DataLabelsRange CreateDataLabelsRange(string Formula, ChartData[] Cells)
     {
         return new(new C.Formula(Formula), AddDataLabelCacheValue(Cells));
     }
-
+    /// <summary>
+    /// Create Data Series for the chart
+    /// </summary>
+    /// <param name="DataCols"></param>
+    /// <param name="ChartDataSetting"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     protected List<ChartDataGrouping> CreateDataSeries(ChartData[][] DataCols, ChartDataSetting ChartDataSetting)
     {
         List<uint> SeriesColumns = new();
@@ -258,17 +312,29 @@ public class ChartBase : CommonProperties
         }
         return ChartDataGroupings;
     }
-
+    /// <summary>
+    /// Create Series Text for the chart
+    /// </summary>
+    /// <param name="Formula"></param>
+    /// <param name="Cells"></param>
+    /// <returns></returns>
     protected C.SeriesText CreateSeriesText(string Formula, ChartData[] Cells)
     {
         return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
     }
-
+    /// <summary>
+    /// Create Shape Properties for the chart
+    /// </summary>
+    /// <returns></returns>
     protected C.ShapeProperties CreateShapeProperties()
     {
         return new();
     }
-
+    /// <summary>
+    /// Create Value Axis for the chart
+    /// </summary>
+    /// <param name="ValueAxisSetting"></param>
+    /// <returns></returns>
     protected C.ValueAxis CreateValueAxis(ValueAxisSetting ValueAxisSetting)
     {
         C.ValueAxis ValueAxis = new(
@@ -307,7 +373,13 @@ public class ChartBase : CommonProperties
         ValueAxis.Append(ShapeProperties);
         return ValueAxis;
     }
-
+    /// <summary>
+    /// Create Value Axis Data for the chart
+    /// </summary>
+    /// <param name="Formula"></param>
+    /// <param name="Cells"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))
@@ -316,7 +388,13 @@ public class ChartBase : CommonProperties
         }
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
     }
-
+    /// <summary>
+    /// Create X Axis Data for the chart
+    /// </summary>
+    /// <param name="Formula"></param>
+    /// <param name="Cells"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))
@@ -325,7 +403,13 @@ public class ChartBase : CommonProperties
         }
         return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
     }
-
+    /// <summary>
+    /// Create Y Axis Data for the chart
+    /// </summary>
+    /// <param name="Formula"></param>
+    /// <param name="Cells"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells)
     {
         if (Cells.All(v => v.DataType != DataType.NUMBER))

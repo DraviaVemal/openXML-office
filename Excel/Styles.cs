@@ -8,6 +8,9 @@ using LiteDB;
 
 namespace OpenXMLOffice.Excel
 {
+    /// <summary>
+    /// This class serves as a versatile tool for working with Excel spreadsheets, styles component
+    /// </summary>
     public class Styles
     {
         #region Private Fields
@@ -34,7 +37,11 @@ namespace OpenXMLOffice.Excel
         #endregion Internal Constructors
 
         #region Public Methods
-
+        /// <summary>
+        /// Get the Cell Style Id based on user specified CellStyleSetting
+        /// </summary>
+        /// <param name="CellStyleSetting"></param>
+        /// <returns></returns>
         public int GetCellStyleId(CellStyleSetting CellStyleSetting)
         {
             return 0;

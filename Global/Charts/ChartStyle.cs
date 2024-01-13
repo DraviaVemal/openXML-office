@@ -9,6 +9,9 @@ using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global;
 
+/// <summary>
+/// Represents the chart style used for creating various chart elements.
+/// </summary>
 internal class ChartStyle
 {
     #region Public Methods

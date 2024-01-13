@@ -9,6 +9,9 @@ using OpenXMLOffice.Presentation;
 
 namespace OpenXMLOffice.Tests
 {
+    /// <summary>
+    /// Presentation Test Class
+    /// </summary>
     [TestClass]
     public class Presentation
     {
@@ -19,19 +22,26 @@ namespace OpenXMLOffice.Tests
         #endregion Private Fields
 
         #region Public Methods
-
+        /// <summary>
+        /// Save Presenation on text completion cleanup
+        /// </summary>
         [ClassCleanup]
         public static void ClassCleanup()
         {
             powerPoint.Save();
         }
-
+        /// <summary>
+        /// Initialize Presentation For Test
+        /// </summary>
+        /// <param name="context"></param>
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
             powerPoint = new(string.Format("../../test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), null);
         }
-
+        /// <summary>
+        /// Add All Chart Types to Slide
+        /// </summary>
         [TestMethod]
         public void AddAllChartTypesToSlide()
         {
@@ -166,14 +176,18 @@ namespace OpenXMLOffice.Tests
             });
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Add Blank Slide to the PPT
+        /// </summary>
         [TestMethod]
         public void AddBlankSlide()
         {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Add Single Chart to the Slide
+        /// </summary>
         [TestMethod]
         public void AddDevChart()
         {
@@ -204,7 +218,9 @@ namespace OpenXMLOffice.Tests
             });
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Add Picture to the slide
+        /// </summary>
         [TestMethod]
         public void AddPicture()
         {
@@ -212,7 +228,9 @@ namespace OpenXMLOffice.Tests
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new PictureSetting());
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Add All type of sctter charts
+        /// </summary>
         [TestMethod]
         public void AddScatterPlot()
         {
@@ -252,7 +270,9 @@ namespace OpenXMLOffice.Tests
             });
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Add Table To the Slide
+        /// </summary>
         [TestMethod]
         public void AddTable()
         {
@@ -261,11 +281,13 @@ namespace OpenXMLOffice.Tests
             {
                 Name = "New Table",
                 WidthType = TableSetting.WidthOptionValues.AUTO,
-                TableColumnwidth = new() { 100, 100 }
+                TableColumnWidth = new() { 100, 100 }
             });
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Open and Edit Existing Presentation
+        /// </summary>
         [TestMethod]
         public void OpenExistingPresentationEdit()
         {
@@ -297,7 +319,9 @@ namespace OpenXMLOffice.Tests
             powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Open and Edit Existing Presentation with Chart
+        /// </summary>
         [TestMethod]
         public void OpenExistingPresentationEditBarChart()
         {
@@ -349,7 +373,9 @@ namespace OpenXMLOffice.Tests
             powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Open and close Presentation without editing
+        /// </summary>
         [TestMethod]
         public void OpenExistingPresentationNonEdit()
         {
@@ -357,7 +383,9 @@ namespace OpenXMLOffice.Tests
             powerPoint1.Save();
             Assert.IsTrue(true);
         }
-
+        /// <summary>
+        /// Check PPT File creation
+        /// </summary>
         [TestMethod]
         public void SheetConstructorFile()
         {
@@ -371,7 +399,7 @@ namespace OpenXMLOffice.Tests
 
         #region Private Methods
 
-        private DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
+        private static DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
         {
             Random random = new();
             DataCell[][] data = new DataCell[payloadSize][];
@@ -407,7 +435,7 @@ namespace OpenXMLOffice.Tests
             return data;
         }
 
-        private TableRow[] CreateTableRowPayload(int rowCount)
+        private static TableRow[] CreateTableRowPayload(int rowCount)
         {
             TableRow[] data = new TableRow[rowCount];
             for (int i = 0; i < rowCount; i++)

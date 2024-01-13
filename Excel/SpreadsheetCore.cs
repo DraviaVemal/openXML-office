@@ -10,6 +10,9 @@ using OpenXMLOffice.Global;
 
 namespace OpenXMLOffice.Excel
 {
+    /// <summary>
+    /// Spreadsheet Core class for initializing the Spreadsheet
+    /// </summary>
     public class SpreadsheetCore
     {
         private Styles? Styles;
@@ -19,7 +22,9 @@ namespace OpenXMLOffice.Excel
         /// Maintain the master OpenXML Spreadsheet document
         /// </summary>
         protected readonly SpreadsheetDocument spreadsheetDocument;
-
+        /// <summary>
+        /// Maintain the Spreadsheet Properties
+        /// </summary>
         protected readonly SpreadsheetProperties SpreadsheetProperties;
 
         #endregion Protected Fields
@@ -32,15 +37,6 @@ namespace OpenXMLOffice.Excel
         /// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding
         /// SpreadsheetDocument. This is also used to update as template.
         /// </summary>
-        /// <param name="filePath">
-        /// Excel File path location
-        /// </param>
-        /// <param name="spreadsheetDocumentType">
-        /// Excel File Type
-        /// </param>
-        /// <param name="autoSave">
-        /// Defaults to true. The source document gets updated automatically
-        /// </param>
         protected SpreadsheetCore(string filePath, SpreadsheetProperties? spreadsheetProperties = null)
         {
             SpreadsheetProperties = spreadsheetProperties ?? new();
@@ -50,13 +46,8 @@ namespace OpenXMLOffice.Excel
         }
 
         /// <summary>
+        /// This public constructor method initializes a new instance of the Spreadsheet class.
         /// </summary>
-        /// <param name="filePath">
-        /// </param>
-        /// <param name="isEditable">
-        /// </param>
-        /// <param name="autoSave">
-        /// </param>
         protected SpreadsheetCore(string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
         {
             SpreadsheetProperties = spreadsheetProperties ?? new();
@@ -73,15 +64,6 @@ namespace OpenXMLOffice.Excel
         /// allowing you to work with Excel spreadsheet It accepts a Stream object and a
         /// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding SpreadsheetDocument.
         /// </summary>
-        /// <param name="stream">
-        /// Memory stream to use
-        /// </param>
-        /// <param name="spreadsheetDocumentType">
-        /// Excel File Type
-        /// </param>
-        /// <param name="autoSave">
-        /// Defaults to true. The source document gets updated automatically
-        /// </param>
         protected SpreadsheetCore(Stream stream, SpreadsheetProperties? spreadsheetProperties = null)
         {
             SpreadsheetProperties = spreadsheetProperties ?? new();
@@ -91,14 +73,8 @@ namespace OpenXMLOffice.Excel
         }
 
         /// <summary>
+        /// This public constructor method initializes a new instance of the Spreadsheet class
         /// </summary>
-        /// <param name="stream">
-        /// Memory stream to use
-        /// </param>
-        /// <param name="isEditable">
-        /// </param>
-        /// <param name="autoSave">
-        /// </param>
         protected SpreadsheetCore(Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
         {
             SpreadsheetProperties = spreadsheetProperties ?? new();
@@ -111,17 +87,26 @@ namespace OpenXMLOffice.Excel
         }
 
         #endregion Protected Constructors
+        /// <summary>
+        /// Return the style object for the Spreadsheet
+        /// </summary>
+        /// <returns></returns>
         public Styles GetStyles()
         {
             return Styles!;
         }
         #region Protected Methods
-
+        /// <summary>
+        /// Return the next relation id for the Spreadsheet
+        /// </summary>
+        /// <returns></returns>
         protected string GetNextSpreadSheetRelationId()
         {
             return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + 1);
         }
-
+        /// <summary>
+        /// Return the Shared String Table for the Spreadsheet
+        /// </summary>
         protected SharedStringTable GetShareString()
         {
             SharedStringTablePart? sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
@@ -132,7 +117,9 @@ namespace OpenXMLOffice.Excel
             }
             return sharedStringPart.SharedStringTable;
         }
-
+        /// <summary>
+        /// Return the Sheets for the Spreadsheet
+        /// </summary>
         protected Sheets GetSheets()
         {
             Sheets? Sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
@@ -143,7 +130,9 @@ namespace OpenXMLOffice.Excel
             }
             return Sheets;
         }
-
+        /// <summary>
+        /// Return Woorkbook Part for the Spreadsheet
+        /// </summary>
         protected WorkbookPart GetWorkbookPart()
         {
             if (spreadsheetDocument.WorkbookPart == null)
@@ -152,7 +141,9 @@ namespace OpenXMLOffice.Excel
             }
             return spreadsheetDocument.WorkbookPart;
         }
-
+        /// <summary>
+        /// Load the Shared String to the Cache (aka in memeory database lightdb)
+        /// </summary>
         protected void LoadShareStringToCache()
         {
             List<string> Records = new();
@@ -163,7 +154,9 @@ namespace OpenXMLOffice.Excel
             });
             ShareString.Instance.InsertBulk(Records);
         }
-
+        /// <summary>
+        /// Update the cache data into spreadsheet
+        /// </summary>
         protected void UpdateSharedString()
         {
             ShareString.Instance.GetRecords().ForEach(Value =>

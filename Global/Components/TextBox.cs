@@ -8,6 +8,9 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Global
 {
+    /// <summary>
+    /// Represents Textbox base class to build on
+    /// </summary>
     public class TextBoxBase : CommonProperties
     {
         #region Private Fields
@@ -17,27 +20,40 @@ namespace OpenXMLOffice.Global
 
         #endregion Private Fields
 
-        #region Public Constructors
-
+        #region protected Constructors
+        /// <summary>
+        /// Create Textbox with provided settings
+        /// </summary>
+        /// <param name="TextBoxSetting"></param>
         public TextBoxBase(TextBoxSetting TextBoxSetting)
         {
             this.TextBoxSetting = TextBoxSetting;
         }
 
-        #endregion Public Constructors
+        #endregion protected Constructors
 
-        #region Public Methods
-
+        #region protected Methods
+        /// <summary>
+        /// Get Textbox Run
+        /// </summary>
+        /// <returns></returns>
         public A.Run GetTextBoxRun()
         {
             return CreateTextRun();
         }
-
+        /// <summary>
+        /// Get Textbox Shape
+        /// </summary>
+        /// <returns></returns>
         public P.Shape GetTextBoxShape()
         {
             return CreateTextBox();
         }
-
+        /// <summary>
+        /// Update Textbox Position
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
         public void UpdatePosition(uint X, uint Y)
         {
             TextBoxSetting.X = X;
@@ -51,7 +67,11 @@ namespace OpenXMLOffice.Global
                 };
             }
         }
-
+        /// <summary>
+        /// Update Textbox Size
+        /// </summary>
+        /// <param name="Width"></param>
+        /// <param name="Height"></param>
         public void UpdateSize(uint Width, uint Height)
         {
             TextBoxSetting.Width = Width;
@@ -66,7 +86,7 @@ namespace OpenXMLOffice.Global
             }
         }
 
-        #endregion Public Methods
+        #endregion protected Methods
 
         #region Private Methods
 

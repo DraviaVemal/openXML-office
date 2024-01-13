@@ -9,23 +9,32 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
 {
+    /// <summary>
+    /// Represents the settings for a bar chart.
+    /// </summary>
     public class BarFamilyChart : ChartBase
     {
         #region Protected Fields
-
+        /// <summary>
+        /// Bar Chart Setting
+        /// </summary>
         protected readonly BarChartSetting BarChartSetting;
 
         #endregion Protected Fields
 
-        #region Public Constructors
-
-        public BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
+        #region protected Constructors
+        /// <summary>
+        /// Create Bar Chart with provided settings
+        /// </summary>
+        /// <param name="BarChartSetting"></param>
+        /// <param name="DataCols"></param>
+        protected BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
         {
             this.BarChartSetting = BarChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
 
-        #endregion Public Constructors
+        #endregion protected Constructors
 
         #region Private Methods
 

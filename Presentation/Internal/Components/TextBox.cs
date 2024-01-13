@@ -10,13 +10,17 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
+    /// <summary>
+    /// Textbox Class
+    /// </summary>
     public class TextBox : TextBoxBase
     {
         #region Public Constructors
-
-        public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting)
-        {
-        }
+        /// <summary>
+        /// Create Textbox with provided settings
+        /// </summary>
+        /// <param name="TextBoxSetting"></param>
+        public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting) { }
 
         #endregion Public Constructors
 
