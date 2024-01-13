@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <returns>
         /// </returns>
-        public A.Run GetTextBoxRun()
+        public A.Run GetTextBoxBaseRun()
         {
             return CreateTextRun();
         }
@@ -51,7 +51,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <returns>
         /// </returns>
-        public P.Shape GetTextBoxShape()
+        public P.Shape GetTextBoxBaseShape()
         {
             return CreateTextBox();
         }

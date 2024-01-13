@@ -4,11 +4,18 @@
 */
 
 namespace OpenXMLOffice.Presentation;
-
+/// <summary>
+/// Common Tools useful across presentation library
+/// </summary>
 public class CommonTools
 {
     #region Public Methods
-
+    /// <summary>
+    /// Transpose a 2D array
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <returns></returns>
     public static T[][] TransposeArray<T>(T[][] array)
     {
         int vec1 = array.Length;

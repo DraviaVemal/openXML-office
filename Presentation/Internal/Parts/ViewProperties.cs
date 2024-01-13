@@ -8,6 +8,9 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
+    /// <summary>
+    /// PPT View Properties Part Handling
+    /// </summary>
     public class ViewProperties
     {
         #region Private Fields
@@ -17,7 +20,9 @@ namespace OpenXMLOffice.Presentation
         #endregion Private Fields
 
         #region Public Constructors
-
+        /// <summary>
+        /// Create New View Properties
+        /// </summary>
         public ViewProperties()
         {
             OpenXMLViewProperties.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
@@ -36,7 +41,10 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Constructors
 
         #region Public Methods
-
+        /// <summary>
+        /// Return OpenXML View Properties
+        /// </summary>
+        /// <returns></returns>
         public P.ViewProperties GetViewProperties()
         {
             return OpenXMLViewProperties;

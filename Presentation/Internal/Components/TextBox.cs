@@ -26,15 +26,21 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Constructors
 
         #region Internal Methods
-
+        /// <summary>
+        /// Return OpenXML Run
+        /// </summary>
+        /// <returns></returns>
         internal A.Run GetTextBoxRun()
         {
-            return base.GetTextBoxRun();
+            return base.GetTextBoxBaseRun();
         }
-
+        /// <summary>
+        /// Return OpenXML Shape
+        /// </summary>
+        /// <returns></returns>
         internal P.Shape GetTextBoxShape()
         {
-            return base.GetTextBoxShape();
+            return base.GetTextBoxBaseShape();
         }
 
         #endregion Internal Methods

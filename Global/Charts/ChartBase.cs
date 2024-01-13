@@ -220,7 +220,7 @@ public class ChartBase : CommonProperties
                 Paragraph.Append(new TextBoxBase(new TextBoxSetting()
                 {
                     Text = ChartDataLabel.Separator
-                }).GetTextBoxRun());
+                }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
             }
             if (ChartDataLabel.ShowCategoryName)
@@ -228,7 +228,7 @@ public class ChartBase : CommonProperties
                 Paragraph.Append(new TextBoxBase(new TextBoxSetting()
                 {
                     Text = ChartDataLabel.Separator
-                }).GetTextBoxRun());
+                }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
             }
             if (ChartDataLabel.ShowValue)
@@ -236,7 +236,7 @@ public class ChartBase : CommonProperties
                 Paragraph.Append(new TextBoxBase(new TextBoxSetting()
                 {
                     Text = ChartDataLabel.Separator
-                }).GetTextBoxRun());
+                }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("VALUE", "[VALUE]"));
             }
             Paragraph.Append(new A.EndParagraphRunProperties(
@@ -770,7 +770,7 @@ public class ChartBase : CommonProperties
             new TextBoxBase(new TextBoxSetting()
             {
                 Text = strTitle ?? "Chart Title"
-            }).GetTextBoxRun()));
+            }).GetTextBoxBaseRun()));
         C.Title title = new(new C.ChartText(RichText));
         title.Append(new C.Overlay { Val = false });
         C.ShapeProperties ShapeProperties = CreateShapeProperties();

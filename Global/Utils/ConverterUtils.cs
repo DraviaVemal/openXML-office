@@ -7,7 +7,9 @@ using System.Text;
 
 namespace OpenXMLOffice.Global
 {
-    // Define a simple model class
+    /// <summary>
+    /// Converter Utils
+    /// </summary>
     public static class ConverterUtils
     {
         #region Public Methods
@@ -102,12 +104,20 @@ namespace OpenXMLOffice.Global
             { throw new ArgumentException("Row and column indices must be positive integers."); }
             return ConvertIntToColumnName(column) + row;
         }
-
+        /// <summary>
+        /// Convert Emu to Pixels
+        /// </summary>
+        /// <param name="emuValue"></param>
+        /// <returns></returns>
         public static int EmuToPixels(long emuValue)
         {
             return (int)Math.Round((double)emuValue / 914400 * GlobalConstants.DefaultDPI);
         }
-
+        /// <summary>
+        /// Convert Pixels to Emu
+        /// </summary>
+        /// <param name="pixels"></param>
+        /// <returns></returns>
         public static long PixelsToEmu(int pixels)
         {
             return (long)Math.Round((double)pixels / GlobalConstants.DefaultDPI * 914400);
