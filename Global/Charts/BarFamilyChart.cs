@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, BarChartSeriesSetting BarChartSeriesSetting, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -59,7 +59,7 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreateBarDataLabels(BarChartDataLabel BarChartDataLabel, int? DataLabelCounter = 0)
         {
-            if (BarChartDataLabel.ShowValue || BarChartDataLabel.ShowCategoryName || BarChartDataLabel.ShowLegendKey || BarChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
+            if (BarChartDataLabel.ShowValue || BarChartDataLabel.ShowValueFromColumn || BarChartDataLabel.ShowCategoryName || BarChartDataLabel.ShowLegendKey || BarChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
             {
                 C.DataLabels DataLabels = CreateDataLabels(BarChartDataLabel, DataLabelCounter);
                 if (BarChartSetting.BarChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.DataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
@@ -137,10 +137,10 @@ namespace OpenXMLOffice.Global
                     }
                     return null;
                 }
-                BarChart.Append(CreateBarChartSeries(seriesIndex, Series, BarChartSetting.BarChartSeriesSettings.Count > seriesIndex ? BarChartSetting.BarChartSeriesSettings[seriesIndex] : new BarChartSeriesSetting(),
+                BarChart.Append(CreateBarChartSeries(seriesIndex, Series,
                     CreateSolidFill(BarChartSetting.BarChartSeriesSettings
-                            .Where(item => item.FillColor != null)
-                            .Select(item => item.FillColor!)
+                            .Where(item => item?.FillColor != null)
+                            .Select(item => item?.FillColor!)
                             .ToList(), seriesIndex),
                     GetDataLabels()));
                 seriesIndex++;

@@ -67,7 +67,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public LineChartDataLabel LineChartDataLabel = new();
 
-        public List<LineChartSeriesSetting> LineChartSeriesSettings = new();
+        public List<LineChartSeriesSetting?> LineChartSeriesSettings = new();
         public LineChartTypes LineChartTypes = LineChartTypes.CLUSTERED;
 
         #endregion Public Fields

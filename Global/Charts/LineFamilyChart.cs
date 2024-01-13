@@ -70,10 +70,10 @@ namespace OpenXMLOffice.Global
                     {
                         Val = C.MarkerStyleValues.None
                     });
-                LineChart.Append(CreateLineChartSeries(seriesIndex, Series, LineChartSetting.LineChartSeriesSettings.Count > seriesIndex ? LineChartSetting.LineChartSeriesSettings[seriesIndex] : new LineChartSeriesSetting(), Marker,
+                LineChart.Append(CreateLineChartSeries(seriesIndex, Series, Marker,
                      CreateSolidFill(LineChartSetting.LineChartSeriesSettings
-                            .Where(item => item.FillColor != null)
-                            .Select(item => item.FillColor!)
+                            .Where(item => item?.FillColor != null)
+                            .Select(item => item?.FillColor!)
                             .ToList(), seriesIndex),
                     GetDataLabels()));
                 seriesIndex++;
@@ -104,7 +104,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, LineChartSeriesSetting LineChartSeriesSetting, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.LineChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -133,7 +133,7 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreateLineDataLabels(LineChartDataLabel LineChartDataLabel, int? DataLabelCounter = 0)
         {
-            if (LineChartDataLabel.ShowValue || LineChartDataLabel.ShowCategoryName || LineChartDataLabel.ShowLegendKey || LineChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
+            if (LineChartDataLabel.ShowValue || LineChartDataLabel.ShowValueFromColumn || LineChartDataLabel.ShowCategoryName || LineChartDataLabel.ShowLegendKey || LineChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
             {
                 C.DataLabels DataLabels = CreateDataLabels(LineChartDataLabel, DataLabelCounter);
                 DataLabels.InsertAt(new C.DataLabelPosition()

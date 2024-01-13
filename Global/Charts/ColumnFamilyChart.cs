@@ -57,10 +57,10 @@ namespace OpenXMLOffice.Global
                     }
                     return null;
                 }
-                ColumnChart.Append(CreateColumnChartSeries(SeriesIndex, Series, ColumnChartSetting.ColumnChartSeriesSettings.Count > SeriesIndex ? ColumnChartSetting.ColumnChartSeriesSettings[SeriesIndex] : new ColumnChartSeriesSetting(),
+                ColumnChart.Append(CreateColumnChartSeries(SeriesIndex, Series,
                                     CreateSolidFill(ColumnChartSetting.ColumnChartSeriesSettings
-                                            .Where(item => item.FillColor != null)
-                                            .Select(item => item.FillColor!)
+                                            .Where(item => item?.FillColor != null)
+                                            .Select(item => item?.FillColor!)
                                             .ToList(), SeriesIndex),
                                     GetDataLabels()));
                 SeriesIndex++;
@@ -101,7 +101,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.BarChartSeries CreateColumnChartSeries(int SeriesIndex, ChartDataGrouping ChartDataGrouping, ColumnChartSeriesSetting ColumnChartSeriesSetting, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.BarChartSeries CreateColumnChartSeries(int SeriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)SeriesIndex) },
@@ -131,7 +131,7 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreateColumnDataLabels(ColumnChartDataLabel ColumnChartDataLabel, int? DataLabelCounter = 0)
         {
-            if (ColumnChartDataLabel.ShowValue || ColumnChartDataLabel.ShowCategoryName || ColumnChartDataLabel.ShowLegendKey || ColumnChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
+            if (ColumnChartDataLabel.ShowValue || ColumnChartDataLabel.ShowValueFromColumn || ColumnChartDataLabel.ShowCategoryName || ColumnChartDataLabel.ShowLegendKey || ColumnChartDataLabel.ShowSeriesName || DataLabelCounter > 0)
             {
                 C.DataLabels DataLabels = CreateDataLabels(ColumnChartDataLabel, DataLabelCounter);
                 DataLabels.InsertAt(new C.DataLabelPosition()

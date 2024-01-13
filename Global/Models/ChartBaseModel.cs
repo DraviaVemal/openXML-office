@@ -74,6 +74,7 @@ namespace OpenXMLOffice.Global
         public bool ShowCategoryName = false;
         public bool ShowLegendKey = false;
         public bool ShowSeriesName = false;
+        public bool ShowValueFromColumn = false;
         public bool ShowValue = false;
 
         #endregion Public Fields

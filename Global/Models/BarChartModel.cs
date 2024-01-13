@@ -64,7 +64,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public BarChartDataLabel BarChartDataLabel = new();
 
-        public List<BarChartSeriesSetting> BarChartSeriesSettings = new();
+        public List<BarChartSeriesSetting?> BarChartSeriesSettings = new();
         public BarChartTypes BarChartTypes = BarChartTypes.CLUSTERED;
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();

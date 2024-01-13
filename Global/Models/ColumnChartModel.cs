@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public ColumnChartDataLabel ColumnChartDataLabel = new();
 
-        public List<ColumnChartSeriesSetting> ColumnChartSeriesSettings = new();
+        public List<ColumnChartSeriesSetting?> ColumnChartSeriesSettings = new();
         public ColumnChartTypes ColumnChartTypes = ColumnChartTypes.CLUSTERED;
 
         #endregion Public Fields

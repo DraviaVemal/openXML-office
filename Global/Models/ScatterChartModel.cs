@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public ScatterChartDataLabel ScatterChartDataLabel = new();
 
-        public List<ScatterChartSeriesSetting> ScatterChartSeriesSettings = new();
+        public List<ScatterChartSeriesSetting?> ScatterChartSeriesSettings = new();
         public ScatterChartTypes ScatterChartTypes = ScatterChartTypes.SCATTER;
 
         #endregion Public Fields

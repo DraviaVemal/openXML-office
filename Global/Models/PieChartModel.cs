@@ -65,7 +65,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public PieChartDataLabel PieChartDataLabel = new();
 
-        public List<PieChartSeriesSetting> PieChartSeriesSettings = new();
+        public List<PieChartSeriesSetting?> PieChartSeriesSettings = new();
         public PieChartTypes PieChartTypes = PieChartTypes.PIE;
 
         #endregion Public Fields

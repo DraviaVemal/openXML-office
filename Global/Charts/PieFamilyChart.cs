@@ -56,10 +56,10 @@ namespace OpenXMLOffice.Global
                     }
                     return null;
                 }
-                Chart.Append(CreateChartSeries(seriesIndex, Series, PieChartSetting.PieChartSeriesSettings.Count > seriesIndex ? PieChartSetting.PieChartSeriesSettings[seriesIndex] : new PieChartSeriesSetting(),
+                Chart.Append(CreateChartSeries(seriesIndex, Series,
                     CreateSolidFill(PieChartSetting.PieChartSeriesSettings
-                            .Where(item => item.FillColor != null)
-                            .Select(item => item.FillColor!)
+                            .Where(item => item?.FillColor != null)
+                            .Select(item => item?.FillColor!)
                             .ToList(), seriesIndex),
                     GetDataLabels()));
                 seriesIndex++;
@@ -80,7 +80,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, PieChartSeriesSetting PieChartSeriesSetting, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },

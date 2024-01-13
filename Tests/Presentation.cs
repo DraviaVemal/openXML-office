@@ -52,13 +52,15 @@ namespace OpenXMLOffice.Tests
             {
                 BarChartDataLabel = new BarChartDataLabel()
                 {
-                    DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END
+                    DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END,
+                    ShowValue = true
                 },
-                BarChartSeriesSettings = new List<BarChartSeriesSetting>(){
+                BarChartSeriesSettings = new(){
                     new(),
                     new(){
                         BarChartDataLabel = new BarChartDataLabel(){
-                            DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END
+                            DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END,
+                            ShowCategoryName= true
                         }
                     }
                 }
@@ -82,7 +84,7 @@ namespace OpenXMLOffice.Tests
                 {
                     LegendPosition = ChartLegendOptions.LegendPositionValues.TOP
                 },
-                ColumnChartSeriesSettings = new List<ColumnChartSeriesSetting>(){
+                ColumnChartSeriesSettings = new(){
                     new(){
                         FillColor= "AABBCC"
                     },
@@ -191,8 +193,8 @@ namespace OpenXMLOffice.Tests
                         {2,4}
                     }
                 },
-                LineChartSeriesSettings = new List<LineChartSeriesSetting>(){
-                    new(),
+                LineChartSeriesSettings = new(){
+                    null,
                     new(){
                         LineChartDataLabel = new LineChartDataLabel(){
                             DataLabelPosition = LineChartDataLabel.DataLabelPositionValues.RIGHT

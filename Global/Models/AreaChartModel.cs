@@ -56,7 +56,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public AreaChartDataLabel AreaChartDataLabel = new();
 
-        public List<AreaChartSeriesSetting> AreaChartSeriesSettings = new();
+        public List<AreaChartSeriesSetting?> AreaChartSeriesSettings = new();
         public AreaChartTypes AreaChartTypes = AreaChartTypes.CLUSTERED;
         public ChartAxesOptions ChartAxesOptions = new();
         public ChartAxisOptions ChartAxisOptions = new();
