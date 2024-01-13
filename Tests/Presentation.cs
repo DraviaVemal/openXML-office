@@ -397,7 +397,7 @@ namespace OpenXMLOffice.Tests
                     {
                         CellValue = random.Next(1, 100).ToString(),
                         DataType = CellDataType.NUMBER,
-                        NumberFormat = "General",
+                        NumberFormat = "0.00",
                         StyleId = 1
                     };
                 }
