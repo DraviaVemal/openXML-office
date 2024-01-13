@@ -39,6 +39,7 @@ namespace OpenXMLOffice.Excel
         /// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding SpreadsheetDocument.
         /// </summary>
         public Spreadsheet(Stream stream) : base(stream) { }
+
         /// <summary>
         /// This public constructor method initializes a new instance of the Spreadsheet class
         /// </summary>
@@ -49,7 +50,8 @@ namespace OpenXMLOffice.Excel
         #region Public Methods
 
         /// <summary>
-        /// Adds a new sheet to the OpenXMLOffice with the specified name. Throws an exception if SheetName already exist.
+        /// Adds a new sheet to the OpenXMLOffice with the specified name. Throws an exception if
+        /// SheetName already exist.
         /// </summary>
         public Worksheet AddSheet(string? sheetName = null)
         {
@@ -103,11 +105,14 @@ namespace OpenXMLOffice.Excel
             }
             return null;
         }
+
         /// <summary>
         /// Retrieves a Worksheet object from an OpenXMLOffice, allowing manipulation of the worksheet.
         /// </summary>
-        /// <param name="sheetName"></param>
-        /// <returns></returns>
+        /// <param name="sheetName">
+        /// </param>
+        /// <returns>
+        /// </returns>
         public Worksheet? GetWorksheet(string sheetName)
         {
             Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;

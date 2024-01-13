@@ -15,6 +15,7 @@ namespace OpenXMLOffice.Global
     public class ColumnFamilyChart : ChartBase
     {
         #region Protected Fields
+
         /// <summary>
         /// Column Chart Setting
         /// </summary>
@@ -22,19 +23,22 @@ namespace OpenXMLOffice.Global
 
         #endregion Protected Fields
 
-        #region protected Constructors
+        #region Protected Constructors
+
         /// <summary>
         /// Create Column Chart with provided settings
         /// </summary>
-        /// <param name="ColumnChartSetting"></param>
-        /// <param name="DataCols"></param>
+        /// <param name="ColumnChartSetting">
+        /// </param>
+        /// <param name="DataCols">
+        /// </param>
         protected ColumnFamilyChart(ColumnChartSetting ColumnChartSetting, ChartData[][] DataCols) : base(ColumnChartSetting)
         {
             this.ColumnChartSetting = ColumnChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
 
-        #endregion protected Constructors
+        #endregion Protected Constructors
 
         #region Private Methods
 

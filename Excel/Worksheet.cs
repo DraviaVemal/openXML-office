@@ -16,15 +16,10 @@ namespace OpenXMLOffice.Excel
     /// </summary>
     public class Worksheet
     {
-        #region Public Fields
-
-
-        #endregion Public Fields
-
         #region Private Fields
-        private readonly Sheet sheet;
 
         private readonly S.Worksheet openXMLworksheet;
+        private readonly Sheet sheet;
 
         #endregion Private Fields
 
@@ -33,8 +28,12 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Initializes a new instance of the <see cref="Worksheet"/> class.
         /// </summary>
-        /// <param name="worksheet">The OpenXML worksheet.</param>
-        /// <param name="_sheet">The sheet associated with the worksheet.</param>
+        /// <param name="worksheet">
+        /// The OpenXML worksheet.
+        /// </param>
+        /// <param name="_sheet">
+        /// The sheet associated with the worksheet.
+        /// </param>
         public Worksheet(S.Worksheet worksheet, Sheet _sheet)
         {
             openXMLworksheet = worksheet;
@@ -48,7 +47,9 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Returns the sheet ID of the current worksheet.
         /// </summary>
-        /// <returns>The sheet ID.</returns>
+        /// <returns>
+        /// The sheet ID.
+        /// </returns>
         public int GetSheetId()
         {
             return int.Parse(sheet.Id!.Value!);
@@ -57,7 +58,9 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Returns the sheet name of the current worksheet.
         /// </summary>
-        /// <returns>The sheet name.</returns>
+        /// <returns>
+        /// The sheet name.
+        /// </returns>
         public string GetSheetName()
         {
             return sheet.Name!;
@@ -66,8 +69,12 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Sets the properties for a column based on a starting cell ID in a worksheet.
         /// </summary>
-        /// <param name="cellId">The cell ID (e.g., "A1") in the desired column.</param>
-        /// <param name="ColumnProperties">Optional column properties to be applied (e.g., width, hidden).</param>
+        /// <param name="cellId">
+        /// The cell ID (e.g., "A1") in the desired column.
+        /// </param>
+        /// <param name="ColumnProperties">
+        /// Optional column properties to be applied (e.g., width, hidden).
+        /// </param>
         public void SetColumn(string cellId, ColumnProperties ColumnProperties)
         {
             (int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
@@ -77,8 +84,12 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Sets the properties for a column at the specified column index in a worksheet.
         /// </summary>
-        /// <param name="col">The zero-based column index where properties will be applied.</param>
-        /// <param name="ColumnProperties">Optional column properties to be applied (e.g., width, hidden).</param>
+        /// <param name="col">
+        /// The zero-based column index where properties will be applied.
+        /// </param>
+        /// <param name="ColumnProperties">
+        /// Optional column properties to be applied (e.g., width, hidden).
+        /// </param>
         public void SetColumn(int col, ColumnProperties ColumnProperties)
         {
             Columns? columns = openXMLworksheet.GetFirstChild<Columns>();
@@ -123,21 +134,36 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Sets the data and properties for a specific row and its cells in a worksheet.
         /// </summary>
-        /// <param name="row">The row index (non zero-based) where the data and properties will be applied.</param>
-        /// <param name="col">The starting column index (non zero-based) for adding data cells.</param>
-        /// <param name="dataCells">An array of data cells to be added to the row.</param>
-        /// <param name="RowProperties">Optional row properties to be applied to the row (e.g., height, custom formatting).</param>
+        /// <param name="row">
+        /// The row index (non zero-based) where the data and properties will be applied.
+        /// </param>
+        /// <param name="col">
+        /// The starting column index (non zero-based) for adding data cells.
+        /// </param>
+        /// <param name="dataCells">
+        /// An array of data cells to be added to the row.
+        /// </param>
+        /// <param name="RowProperties">
+        /// Optional row properties to be applied to the row (e.g., height, custom formatting).
+        /// </param>
         public void SetRow(int row, int col, DataCell[] dataCells, RowProperties RowProperties)
         {
             SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), dataCells, RowProperties);
         }
 
         /// <summary>
-        /// Sets the data and properties for a row based on a starting cell ID and its data cells in a worksheet.
+        /// Sets the data and properties for a row based on a starting cell ID and its data cells in
+        /// a worksheet.
         /// </summary>
-        /// <param name="cellId">The cell ID (e.g., "A1") from which the row will be determined.</param>
-        /// <param name="DataCells">An array of data cells to be added to the row.</param>
-        /// <param name="RowProperties">Optional row properties to be applied to the row (e.g., height, custom formatting).</param>
+        /// <param name="cellId">
+        /// The cell ID (e.g., "A1") from which the row will be determined.
+        /// </param>
+        /// <param name="DataCells">
+        /// An array of data cells to be added to the row.
+        /// </param>
+        /// <param name="RowProperties">
+        /// Optional row properties to be applied to the row (e.g., height, custom formatting).
+        /// </param>
         public void SetRow(string cellId, DataCell[] DataCells, RowProperties RowProperties)
         {
             SheetData sheetData = openXMLworksheet.Elements<SheetData>().First();
@@ -202,8 +228,12 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Gets the CellValues enumeration corresponding to the specified cell data type.
         /// </summary>
-        /// <param name="cellDataType">The data type of the cell.</param>
-        /// <returns>The CellValues enumeration representing the cell data type.</returns>
+        /// <param name="cellDataType">
+        /// The data type of the cell.
+        /// </param>
+        /// <returns>
+        /// The CellValues enumeration representing the cell data type.
+        /// </returns>
         private CellValues GetCellValues(CellDataType cellDataType)
         {
             return cellDataType switch

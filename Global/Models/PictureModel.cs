@@ -14,18 +14,22 @@ namespace OpenXMLOffice.Global
         /// JPEG image Format.
         /// </summary>
         JPEG,
+
         /// <summary>
         /// PNG image Format.
         /// </summary>
         PNG,
+
         /// <summary>
         /// GIF image Format.
         /// </summary>
         GIF,
+
         /// <summary>
         /// BMP image Format.
         /// </summary>
         BMP,
+
         /// <summary>
         /// TIFF image Format.
         /// </summary>

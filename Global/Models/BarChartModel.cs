@@ -14,17 +14,18 @@ namespace OpenXMLOffice.Global
         /// Clustered Bar Chart
         /// </summary>
         CLUSTERED,
+
         /// <summary>
         /// Stacked Bar Chart
         /// </summary>
         STACKED,
+
         /// <summary>
         /// Percent Stacked Bar Chart
         /// </summary>
         PERCENT_STACKED,
-        // CLUSTERED_3D,
-        // STACKED_3D,
-        // PERCENT_STACKED_3D
+
+        // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
     }
 
     /// <summary>
@@ -52,18 +53,22 @@ namespace OpenXMLOffice.Global
             /// Center
             /// </summary>
             CENTER,
+
             /// <summary>
             /// Inside end
             /// </summary>
             INSIDE_END,
+
             /// <summary>
             /// Inside base
             /// </summary>
             INSIDE_BASE,
+
             /// <summary>
             /// This option is only for Cluster type chart.
             /// </summary>
             OUTSIDE_END,
+
             /// <summary>
             /// Data Callout
             /// </summary>

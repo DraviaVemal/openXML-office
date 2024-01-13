@@ -42,7 +42,8 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Creates a new theme with the given pallet.
         /// </summary>
-        /// <param name="ThemePallet"></param>
+        /// <param name="ThemePallet">
+        /// </param>
         public Theme(ThemePallet? ThemePallet = null)
         {
             CreateTheme(ThemePallet);
@@ -55,7 +56,8 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Returns the OpenXML Theme Object.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public A.Theme GetTheme()
         {
             return OpenXMLTheme;

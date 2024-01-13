@@ -26,12 +26,16 @@ namespace OpenXMLOffice.Presentation
         #endregion Private Fields
 
         #region Public Constructors
+
         /// <summary>
         /// Create Picture Object with provided settings
         /// </summary>
-        /// <param name="Stream"></param>
-        /// <param name="Slide"></param>
-        /// <param name="PictureSetting"></param>
+        /// <param name="Stream">
+        /// </param>
+        /// <param name="Slide">
+        /// </param>
+        /// <param name="PictureSetting">
+        /// </param>
         public Picture(Stream Stream, Slide Slide, PictureSetting PictureSetting)
         {
             CurrentSlide = Slide;
@@ -48,12 +52,16 @@ namespace OpenXMLOffice.Presentation
             }, EmbedId);
             ImagePart.FeedData(Stream);
         }
+
         /// <summary>
         /// Create Picture Object with provided settings
         /// </summary>
-        /// <param name="FilePath"></param>
-        /// <param name="Slide"></param>
-        /// <param name="PictureSetting"></param>
+        /// <param name="FilePath">
+        /// </param>
+        /// <param name="Slide">
+        /// </param>
+        /// <param name="PictureSetting">
+        /// </param>
         public Picture(string FilePath, Slide Slide, PictureSetting PictureSetting)
         {
             CurrentSlide = Slide;
@@ -94,11 +102,14 @@ namespace OpenXMLOffice.Presentation
         {
             return (PictureSetting.Width, PictureSetting.Height);
         }
+
         /// <summary>
         /// Update Picture Position
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
+        /// <param name="X">
+        /// </param>
+        /// <param name="Y">
+        /// </param>
         public void UpdatePosition(uint X, uint Y)
         {
             PictureSetting.X = X;
@@ -112,11 +123,14 @@ namespace OpenXMLOffice.Presentation
                 };
             }
         }
+
         /// <summary>
         /// Update Picture Size
         /// </summary>
-        /// <param name="Width"></param>
-        /// <param name="Height"></param>
+        /// <param name="Width">
+        /// </param>
+        /// <param name="Height">
+        /// </param>
         public void UpdateSize(uint Width, uint Height)
         {
             PictureSetting.Width = Width;

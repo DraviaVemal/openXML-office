@@ -47,14 +47,17 @@ namespace OpenXMLOffice.Global
             /// Center
             /// </summary>
             CENTER,
+
             /// <summary>
             /// Inside End
             /// </summary>
             INSIDE_END,
+
             /// <summary>
             /// Outside End
             /// </summary>
             OUTSIDE_END,
+
             /// <summary>
             /// Best Fit
             /// </summary>
@@ -64,6 +67,7 @@ namespace OpenXMLOffice.Global
             /// Option only for doughnut chart type
             /// </summary>
             SHOW,
+
             /// <summary>
             /// Data Callout
             /// </summary>

@@ -14,18 +14,18 @@ namespace OpenXMLOffice.Global
         /// Clustered Column Chart
         /// </summary>
         CLUSTERED,
+
         /// <summary>
         /// Stacked Column Chart
         /// </summary>
         STACKED,
+
         /// <summary>
         /// Percent Stacked Column Chart
         /// </summary>
         PERCENT_STACKED,
-        // CLUSTERED_3D, 
-        // STACKED_3D,
-        // PERCENT_STACKED_3D,
-        // COLUMN_3D
+
+        // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D, COLUMN_3D
     }
 
     /// <summary>
@@ -53,18 +53,22 @@ namespace OpenXMLOffice.Global
             /// Center
             /// </summary>
             CENTER,
+
             /// <summary>
             /// Inside End
             /// </summary>
             INSIDE_END,
+
             /// <summary>
             /// Inside Base
             /// </summary>
             INSIDE_BASE,
+
             /// <summary>
             /// This option is only for Cluster type chart.
             /// </summary>
             OUTSIDE_END,
+
             /// <summary>
             /// Data Callout
             /// </summary>
@@ -82,13 +86,15 @@ namespace OpenXMLOffice.Global
         #region Public Fields
 
         /// <summary>
-        /// Option to customize specific data series. Will override chart level setting.
-        /// </summary>
-        public ColumnChartDataLabel ColumnChartDataLabel = new();
-        /// <summary>
         /// Chart Stick Border Color
         /// </summary>
         public string? BorderColor;
+
+        /// <summary>
+        /// Option to customize specific data series. Will override chart level setting.
+        /// </summary>
+        public ColumnChartDataLabel ColumnChartDataLabel = new();
+
         /// <summary>
         /// Chart Stick Fill Color
         /// </summary>
@@ -103,10 +109,12 @@ namespace OpenXMLOffice.Global
     public class ColumnChartSetting : ChartSetting
     {
         #region Public Fields
+
         /// <summary>
         /// Chart Axes Options
         /// </summary>
         public ChartAxesOptions ChartAxesOptions = new();
+
         /// <summary>
         /// Chart Axis Options
         /// </summary>
@@ -116,10 +124,12 @@ namespace OpenXMLOffice.Global
         /// Will get overridden by series level setting.
         /// </summary>
         public ColumnChartDataLabel ColumnChartDataLabel = new();
+
         /// <summary>
         /// Chart Series Settings
         /// </summary>
         public List<ColumnChartSeriesSetting?> ColumnChartSeriesSettings = new();
+
         /// <summary>
         /// Chart Type. default is CLUSTERED
         /// </summary>

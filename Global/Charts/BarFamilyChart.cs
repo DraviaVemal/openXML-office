@@ -15,6 +15,7 @@ namespace OpenXMLOffice.Global
     public class BarFamilyChart : ChartBase
     {
         #region Protected Fields
+
         /// <summary>
         /// Bar Chart Setting
         /// </summary>
@@ -22,19 +23,22 @@ namespace OpenXMLOffice.Global
 
         #endregion Protected Fields
 
-        #region protected Constructors
+        #region Protected Constructors
+
         /// <summary>
         /// Create Bar Chart with provided settings
         /// </summary>
-        /// <param name="BarChartSetting"></param>
-        /// <param name="DataCols"></param>
+        /// <param name="BarChartSetting">
+        /// </param>
+        /// <param name="DataCols">
+        /// </param>
         protected BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
         {
             this.BarChartSetting = BarChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
 
-        #endregion protected Constructors
+        #endregion Protected Constructors
 
         #region Private Methods
 

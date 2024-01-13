@@ -35,16 +35,6 @@ namespace OpenXMLOffice.Excel
         #endregion Public Fields
     }
 
-    public class RowProperties
-    {
-        #region Public Fields
-
-        public double? Height;
-        public bool Hidden;
-
-        #endregion Public Fields
-    }
-
     public class Record
     {
         #region Public Constructors
@@ -62,5 +52,15 @@ namespace OpenXMLOffice.Excel
         public string Value { get; set; }
 
         #endregion Public Properties
+    }
+
+    public class RowProperties
+    {
+        #region Public Fields
+
+        public double? Height;
+        public bool Hidden;
+
+        #endregion Public Fields
     }
 }

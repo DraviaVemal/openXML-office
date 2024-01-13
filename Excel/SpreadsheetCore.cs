@@ -15,19 +15,25 @@ namespace OpenXMLOffice.Excel
     /// </summary>
     public class SpreadsheetCore
     {
-        private Styles? Styles;
         #region Protected Fields
 
         /// <summary>
         /// Maintain the master OpenXML Spreadsheet document
         /// </summary>
         protected readonly SpreadsheetDocument spreadsheetDocument;
+
         /// <summary>
         /// Maintain the Spreadsheet Properties
         /// </summary>
         protected readonly SpreadsheetProperties SpreadsheetProperties;
 
         #endregion Protected Fields
+
+        #region Private Fields
+
+        private Styles? Styles;
+
+        #endregion Private Fields
 
         #region Protected Constructors
 
@@ -87,23 +93,33 @@ namespace OpenXMLOffice.Excel
         }
 
         #endregion Protected Constructors
+
+        #region Public Methods
+
         /// <summary>
         /// Return the style object for the Spreadsheet
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public Styles GetStyles()
         {
             return Styles!;
         }
+
+        #endregion Public Methods
+
         #region Protected Methods
+
         /// <summary>
         /// Return the next relation id for the Spreadsheet
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         protected string GetNextSpreadSheetRelationId()
         {
             return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + 1);
         }
+
         /// <summary>
         /// Return the Shared String Table for the Spreadsheet
         /// </summary>
@@ -117,6 +133,7 @@ namespace OpenXMLOffice.Excel
             }
             return sharedStringPart.SharedStringTable;
         }
+
         /// <summary>
         /// Return the Sheets for the Spreadsheet
         /// </summary>
@@ -130,6 +147,7 @@ namespace OpenXMLOffice.Excel
             }
             return Sheets;
         }
+
         /// <summary>
         /// Return Woorkbook Part for the Spreadsheet
         /// </summary>
@@ -141,6 +159,7 @@ namespace OpenXMLOffice.Excel
             }
             return spreadsheetDocument.WorkbookPart;
         }
+
         /// <summary>
         /// Load the Shared String to the Cache (aka in memeory database lightdb)
         /// </summary>
@@ -154,6 +173,7 @@ namespace OpenXMLOffice.Excel
             });
             ShareString.Instance.InsertBulk(Records);
         }
+
         /// <summary>
         /// Update the cache data into spreadsheet
         /// </summary>

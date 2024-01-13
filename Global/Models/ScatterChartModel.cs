@@ -14,26 +14,32 @@ namespace OpenXMLOffice.Global
         /// Scatter Chart
         /// </summary>
         SCATTER,
+
         /// <summary>
         /// Scatter Chart with Smooth Lines
         /// </summary>
         SCATTER_SMOOTH,
+
         /// <summary>
         /// Scatter Chart with Smooth Lines and Markers
         /// </summary>
         SCATTER_SMOOTH_MARKER,
+
         /// <summary>
         /// Scatter Chart with Straight Lines
         /// </summary>
         SCATTER_STRIGHT,
+
         /// <summary>
         /// Scatter Chart with Straight Lines and Markers
         /// </summary>
         SCATTER_STRIGHT_MARKER,
+
         /// <summary>
         /// Bubble Chart
         /// </summary>
         BUBBLE,
+
         // BUBBLE_3D
     }
 
@@ -67,22 +73,27 @@ namespace OpenXMLOffice.Global
             /// Left Side
             /// </summary>
             LEFT,
+
             /// <summary>
             /// Right Side
             /// </summary>
             RIGHT,
+
             /// <summary>
             /// Center Placement
             /// </summary>
             CENTER,
+
             /// <summary>
             /// Above content
             /// </summary>
             ABOVE,
+
             /// <summary>
             /// Below content
             /// </summary>
             BELOW,
+
             /// <summary>
             /// Data Callout Style
             /// </summary>
@@ -110,8 +121,8 @@ namespace OpenXMLOffice.Global
         public string? FillColor;
 
         /// <summary>
-        /// Custom data label settings for the specific data series.
-        /// This will override the chart level setting.
+        /// Custom data label settings for the specific data series. This will override the chart
+        /// level setting.
         /// </summary>
         public ScatterChartDataLabel ScatterChartDataLabel = new();
 
@@ -136,8 +147,8 @@ namespace OpenXMLOffice.Global
         public ChartAxisOptions ChartAxisOptions = new();
 
         /// <summary>
-        /// The data label settings for the scatter chart.
-        /// This will get overridden by the series level setting.
+        /// The data label settings for the scatter chart. This will get overridden by the series
+        /// level setting.
         /// </summary>
         public ScatterChartDataLabel ScatterChartDataLabel = new();
 

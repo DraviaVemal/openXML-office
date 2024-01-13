@@ -18,7 +18,9 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Creates the color styles for charts.
         /// </summary>
-        /// <returns>The color style object.</returns>
+        /// <returns>
+        /// The color style object.
+        /// </returns>
         public CS.ColorStyle CreateColorStyles()
         {
             CS.ColorStyle colorStyle = new() { Method = "cycle", Id = 10 };

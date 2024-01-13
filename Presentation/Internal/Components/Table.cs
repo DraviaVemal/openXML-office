@@ -23,11 +23,14 @@ namespace OpenXMLOffice.Presentation
         #endregion Private Fields
 
         #region Public Constructors
+
         /// <summary>
         /// Create Table with provided settings
         /// </summary>
-        /// <param name="TableRows"></param>
-        /// <param name="TableSetting"></param>
+        /// <param name="TableRows">
+        /// </param>
+        /// <param name="TableSetting">
+        /// </param>
         public Table(TableRow[] TableRows, TableSetting TableSetting)
         {
             this.TableSetting = TableSetting;
@@ -57,19 +60,24 @@ namespace OpenXMLOffice.Presentation
         {
             return (TableSetting.Width, TableSetting.Height);
         }
+
         /// <summary>
         /// Get Table Graphic Frame
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public P.GraphicFrame GetTableGraphicFrame()
         {
             return GraphicFrame;
         }
+
         /// <summary>
         /// Update Table Position
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
+        /// <param name="X">
+        /// </param>
+        /// <param name="Y">
+        /// </param>
         public void UpdatePosition(uint X, uint Y)
         {
             TableSetting.X = X;
@@ -83,11 +91,14 @@ namespace OpenXMLOffice.Presentation
                 };
             }
         }
+
         /// <summary>
         /// Update Table Size
         /// </summary>
-        /// <param name="Width"></param>
-        /// <param name="Height"></param>
+        /// <param name="Width">
+        /// </param>
+        /// <param name="Height">
+        /// </param>
         public void UpdateSize(uint Width, uint Height)
         {
             ReCalculateColumnWidth();

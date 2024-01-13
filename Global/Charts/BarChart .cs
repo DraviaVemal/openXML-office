@@ -13,11 +13,14 @@ namespace OpenXMLOffice.Global
     public class BarChart : BarFamilyChart
     {
         #region Public Constructors
+
         /// <summary>
         /// Create Bar Chart with provided settings
         /// </summary>
-        /// <param name="BarChartSetting"></param>
-        /// <param name="DataCols"></param>
+        /// <param name="BarChartSetting">
+        /// </param>
+        /// <param name="DataCols">
+        /// </param>
         public BarChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting, DataCols)
         {
         }
@@ -25,18 +28,22 @@ namespace OpenXMLOffice.Global
         #endregion Public Constructors
 
         #region Public Methods
+
         /// <summary>
         /// Get Chart Style
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public CS.ChartStyle GetChartStyle()
         {
             return CreateChartStyles();
         }
+
         /// <summary>
         /// Get Color Style
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public CS.ColorStyle GetColorStyle()
         {
             return CreateColorStyles();

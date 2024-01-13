@@ -2,7 +2,6 @@
 * Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
 * See License in the project root for license information.
 */
-#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
 
 using OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -16,10 +15,12 @@ namespace OpenXMLOffice.Presentation
     public class TextBox : TextBoxBase
     {
         #region Public Constructors
+
         /// <summary>
         /// Create Textbox with provided settings
         /// </summary>
-        /// <param name="TextBoxSetting"></param>
+        /// <param name="TextBoxSetting">
+        /// </param>
         public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting) { }
 
         #endregion Public Constructors

@@ -8,7 +8,7 @@ using OpenXMLOffice.Excel;
 namespace OpenXMLOffice.Tests
 {
     /// <summary>
-    /// Excel Test 
+    /// Excel Test
     /// </summary>
     [TestClass]
     public class Excel
@@ -20,6 +20,7 @@ namespace OpenXMLOffice.Tests
         #endregion Private Fields
 
         #region Public Methods
+
         /// <summary>
         /// Save the Test File After execution
         /// </summary>
@@ -28,15 +29,18 @@ namespace OpenXMLOffice.Tests
         {
             spreadsheet.Save();
         }
+
         /// <summary>
         /// Initialize Spreadsheet Test
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">
+        /// </param>
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
             spreadsheet = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         }
+
         /// <summary>
         /// Add Sheet Test
         /// </summary>
@@ -47,6 +51,7 @@ namespace OpenXMLOffice.Tests
             Assert.IsNotNull(worksheet);
             Assert.AreEqual("Sheet1", worksheet.GetSheetName());
         }
+
         /// <summary>
         /// Rename Sheet Based on Index Test
         /// </summary>
@@ -57,6 +62,7 @@ namespace OpenXMLOffice.Tests
             Assert.IsNotNull(worksheet);
             Assert.IsTrue(spreadsheet.RenameSheet("Sheet11", "Data1"));
         }
+
         /// <summary>
         /// Set Cell Test
         /// </summary>
@@ -80,6 +86,7 @@ namespace OpenXMLOffice.Tests
             });
             Assert.IsTrue(true);
         }
+
         /// <summary>
         /// Set Row Test
         /// </summary>
@@ -124,6 +131,7 @@ namespace OpenXMLOffice.Tests
             });
             Assert.IsTrue(true);
         }
+
         /// <summary>
         /// Create Xslx File Based on File Test
         /// </summary>
@@ -135,6 +143,7 @@ namespace OpenXMLOffice.Tests
             spreadsheet1.Save();
             File.Delete("../try.xlsx");
         }
+
         /// <summary>
         /// Create Xslx File Based on Stream Test
         /// </summary>

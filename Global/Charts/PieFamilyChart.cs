@@ -15,6 +15,7 @@ namespace OpenXMLOffice.Global
     public class PieFamilyChart : ChartBase
     {
         #region Protected Fields
+
         /// <summary>
         /// The settings for the pie chart.
         /// </summary>
@@ -23,11 +24,14 @@ namespace OpenXMLOffice.Global
         #endregion Protected Fields
 
         #region Protected Constructors
+
         /// <summary>
         /// Create Pie Chart with provided settings
         /// </summary>
-        /// <param name="PieChartSetting"></param>
-        /// <param name="DataCols"></param>
+        /// <param name="PieChartSetting">
+        /// </param>
+        /// <param name="DataCols">
+        /// </param>
         protected PieFamilyChart(PieChartSetting PieChartSetting, ChartData[][] DataCols) : base(PieChartSetting)
         {
             this.PieChartSetting = PieChartSetting;

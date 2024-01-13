@@ -18,13 +18,15 @@ namespace OpenXMLOffice.Presentation
         public enum CommonSlideDataType
         {
             /// <summary>
-            /// Generate Common Slide Data for a Slide Master Specification 
+            /// Generate Common Slide Data for a Slide Master Specification
             /// </summary>
             SLIDE_MASTER,
+
             /// <summary>
             /// Generate Common Slide Data for a Slide Layout Specification
             /// </summary>
             SLIDE_LAYOUT,
+
             /// <summary>
             /// Generate Common Slide Data for a Slide Specification
             /// </summary>
@@ -49,8 +51,12 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// Gets the string representation of the specified slide layout type.
         /// </summary>
-        /// <param name="value">The slide layout type.</param>
-        /// <returns>The string representation of the slide layout type.</returns>
+        /// <param name="value">
+        /// The slide layout type.
+        /// </param>
+        /// <returns>
+        /// The string representation of the slide layout type.
+        /// </returns>
         public static string GetSlideLayoutType(SlideLayoutType value)
         {
             return value switch

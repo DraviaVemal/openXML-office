@@ -16,7 +16,6 @@ namespace OpenXMLOffice.Excel
 
         private static readonly LiteDatabase LiteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
         private static ShareString? instance = null;
-
         private readonly ILiteCollection<Record> Collection;
 
         #endregion Private Fields
@@ -63,8 +62,12 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Gets the index of the specified value in the shared string collection.
         /// </summary>
-        /// <param name="Value">The value to search for.</param>
-        /// <returns>The index of the value if found; otherwise, null.</returns>
+        /// <param name="Value">
+        /// The value to search for.
+        /// </param>
+        /// <returns>
+        /// The index of the value if found; otherwise, null.
+        /// </returns>
         public int? GetIndex(string Value)
         {
             return Collection.Query().Where(col => col.Value == Value).FirstOrDefault()?.Id - 1;
@@ -73,7 +76,9 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Gets all the records in the shared string collection.
         /// </summary>
-        /// <returns>A list of all the records.</returns>
+        /// <returns>
+        /// A list of all the records.
+        /// </returns>
         public List<string> GetRecords()
         {
             return Collection.Query().OrderBy(x => x.Id).Select(x => x.Value).ToList();
@@ -82,8 +87,12 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Gets the value at the specified index in the shared string collection.
         /// </summary>
-        /// <param name="Index">The index of the value to retrieve.</param>
-        /// <returns>The value at the specified index if found; otherwise, null.</returns>
+        /// <param name="Index">
+        /// The index of the value to retrieve.
+        /// </param>
+        /// <returns>
+        /// The value at the specified index if found; otherwise, null.
+        /// </returns>
         public string? GetValue(int Index)
         {
             return Collection.Query().Where(col => col.Id == Index).FirstOrDefault()?.Value;
@@ -92,7 +101,9 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Inserts a new value into the shared string collection.
         /// </summary>
-        /// <param name="Data">The value to insert.</param>
+        /// <param name="Data">
+        /// The value to insert.
+        /// </param>
         public void Insert(string Data)
         {
             Collection.Insert(new Record(Data));
@@ -101,7 +112,9 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Inserts multiple values into the shared string collection.
         /// </summary>
-        /// <param name="Data">The list of values to insert.</param>
+        /// <param name="Data">
+        /// The list of values to insert.
+        /// </param>
         public void InsertBulk(List<string> Data)
         {
             Collection.InsertBulk(Data.Select(item => new Record(item)));
@@ -110,8 +123,12 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Inserts a unique value into the shared string collection.
         /// </summary>
-        /// <param name="Data">The value to insert.</param>
-        /// <returns>The index of the inserted value.</returns>
+        /// <param name="Data">
+        /// The value to insert.
+        /// </param>
+        /// <returns>
+        /// The index of the inserted value.
+        /// </returns>
         public int InsertUnique(string Data)
         {
             int? Index = GetIndex(Data);

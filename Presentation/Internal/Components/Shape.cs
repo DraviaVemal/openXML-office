@@ -32,6 +32,7 @@ namespace OpenXMLOffice.Presentation
         #endregion Internal Constructors
 
         #region Public Methods
+
         /// <summary>
         /// Remove Found Shape
         /// </summary>
@@ -39,12 +40,16 @@ namespace OpenXMLOffice.Presentation
         {
             OpenXMLShape.Remove();
         }
+
         /// <summary>
         /// Replace Chart for the source Shape
         /// </summary>
-        /// <param name="Chart"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <param name="Chart">
+        /// </param>
+        /// <returns>
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public Chart ReplaceChart(Chart Chart)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
@@ -61,12 +66,16 @@ namespace OpenXMLOffice.Presentation
             OpenXMLShape.Remove();
             return Chart;
         }
+
         /// <summary>
         /// Replace Picture for the source Shape
         /// </summary>
-        /// <param name="Picture"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <param name="Picture">
+        /// </param>
+        /// <returns>
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public Picture ReplacePicture(Picture Picture)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
@@ -83,12 +92,16 @@ namespace OpenXMLOffice.Presentation
             OpenXMLShape.Remove();
             return Picture;
         }
+
         /// <summary>
         /// Replace Table for the source Shape
         /// </summary>
-        /// <param name="Table"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <param name="Table">
+        /// </param>
+        /// <returns>
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public Table ReplaceTable(Table Table)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
@@ -105,12 +118,16 @@ namespace OpenXMLOffice.Presentation
             OpenXMLShape.Remove();
             return Table;
         }
+
         /// <summary>
         /// Replace Textbox for the source Shape
         /// </summary>
-        /// <param name="TextBox"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <param name="TextBox">
+        /// </param>
+        /// <returns>
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public TextBox ReplaceTextBox(TextBox TextBox)
         {
             DocumentFormat.OpenXml.OpenXmlElement? parent = OpenXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");

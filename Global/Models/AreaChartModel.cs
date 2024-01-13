@@ -14,17 +14,18 @@ namespace OpenXMLOffice.Global
         /// Clustered area chart.
         /// </summary>
         CLUSTERED,
+
         /// <summary>
         /// Stacked area chart.
         /// </summary>
         STACKED,
+
         /// <summary>
         /// Percent stacked area chart.
         /// </summary>
         PERCENT_STACKED,
-        // CLUSTERED_3D, 
-        // STACKED_3D,
-        // PERCENT_STACKED_3D
+
+        // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
     }
 
     /// <summary>
@@ -49,9 +50,10 @@ namespace OpenXMLOffice.Global
         public enum DataLabelPositionValues
         {
             /// <summary>
-            /// Data Label option display type 
+            /// Data Label option display type
             /// </summary>
             SHOW,
+
             /// <summary>
             /// Select Data Callout as Data label style
             /// </summary>

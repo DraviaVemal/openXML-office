@@ -37,11 +37,14 @@ namespace OpenXMLOffice.Excel
         #endregion Internal Constructors
 
         #region Public Methods
+
         /// <summary>
         /// Get the Cell Style Id based on user specified CellStyleSetting
         /// </summary>
-        /// <param name="CellStyleSetting"></param>
-        /// <returns></returns>
+        /// <param name="CellStyleSetting">
+        /// </param>
+        /// <returns>
+        /// </returns>
         public int GetCellStyleId(CellStyleSetting CellStyleSetting)
         {
             return 0;

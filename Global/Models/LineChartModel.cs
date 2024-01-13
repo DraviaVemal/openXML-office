@@ -14,26 +14,32 @@ namespace OpenXMLOffice.Global
         /// Clustered Line Chart
         /// </summary>
         CLUSTERED,
+
         /// <summary>
         /// Stacked Line Chart
         /// </summary>
         STACKED,
+
         /// <summary>
         /// Percent Stacked Line Chart
         /// </summary>
         PERCENT_STACKED,
+
         /// <summary>
         /// Clustered Marker Line Chart
         /// </summary>
         CLUSTERED_MARKER,
+
         /// <summary>
         /// Stacked Marker Line Chart
         /// </summary>
         STACKED_MARKER,
+
         /// <summary>
         /// Percent Stacked Marker Line Chart
         /// </summary>
         PERCENT_STACKED_MARKER,
+
         // CLUSTERED_3D
     }
 
@@ -62,22 +68,27 @@ namespace OpenXMLOffice.Global
             /// Left Side
             /// </summary>
             LEFT,
+
             /// <summary>
             /// Right Side
             /// </summary>
             RIGHT,
+
             /// <summary>
             /// Center
             /// </summary>
             CENTER,
+
             /// <summary>
             /// Above
             /// </summary>
             ABOVE,
+
             /// <summary>
             /// Below
             /// </summary>
             BELOW,
+
             /// <summary>
             /// Data Callout
             /// </summary>

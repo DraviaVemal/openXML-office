@@ -20,40 +20,49 @@ namespace OpenXMLOffice.Global
 
         #endregion Private Fields
 
-        #region protected Constructors
+        #region Public Constructors
+
         /// <summary>
         /// Create Textbox with provided settings
         /// </summary>
-        /// <param name="TextBoxSetting"></param>
+        /// <param name="TextBoxSetting">
+        /// </param>
         public TextBoxBase(TextBoxSetting TextBoxSetting)
         {
             this.TextBoxSetting = TextBoxSetting;
         }
 
-        #endregion protected Constructors
+        #endregion Public Constructors
 
-        #region protected Methods
+        #region Public Methods
+
         /// <summary>
         /// Get Textbox Run
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public A.Run GetTextBoxRun()
         {
             return CreateTextRun();
         }
+
         /// <summary>
         /// Get Textbox Shape
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public P.Shape GetTextBoxShape()
         {
             return CreateTextBox();
         }
+
         /// <summary>
         /// Update Textbox Position
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
+        /// <param name="X">
+        /// </param>
+        /// <param name="Y">
+        /// </param>
         public void UpdatePosition(uint X, uint Y)
         {
             TextBoxSetting.X = X;
@@ -67,11 +76,14 @@ namespace OpenXMLOffice.Global
                 };
             }
         }
+
         /// <summary>
         /// Update Textbox Size
         /// </summary>
-        /// <param name="Width"></param>
-        /// <param name="Height"></param>
+        /// <param name="Width">
+        /// </param>
+        /// <param name="Height">
+        /// </param>
         public void UpdateSize(uint Width, uint Height)
         {
             TextBoxSetting.Width = Width;
@@ -86,7 +98,7 @@ namespace OpenXMLOffice.Global
             }
         }
 
-        #endregion protected Methods
+        #endregion Public Methods
 
         #region Private Methods
 

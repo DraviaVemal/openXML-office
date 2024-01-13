@@ -13,28 +13,35 @@ namespace OpenXMLOffice.Global
     public class LineChart : LineFamilyChart
     {
         #region Public Constructors
+
         /// <summary>
         /// Create Line Chart with provided settings
         /// </summary>
-        /// <param name="LineChartSetting"></param>
-        /// <param name="DataCols"></param>
+        /// <param name="LineChartSetting">
+        /// </param>
+        /// <param name="DataCols">
+        /// </param>
         public LineChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting, DataCols) { }
 
         #endregion Public Constructors
 
         #region Public Methods
+
         /// <summary>
         /// Get Chart Style
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public CS.ChartStyle GetChartStyle()
         {
             return CreateChartStyles();
         }
+
         /// <summary>
         /// Get Color Style
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public CS.ColorStyle GetColorStyle()
         {
             return CreateColorStyles();

@@ -14,14 +14,17 @@ namespace OpenXMLOffice.Global
         /// Top
         /// </summary>
         TOP,
+
         /// <summary>
         /// Bottom
         /// </summary>
         BOTTOM,
+
         /// <summary>
         /// Left
         /// </summary>
         LEFT,
+
         /// <summary>
         /// Right
         /// </summary>
@@ -48,10 +51,12 @@ namespace OpenXMLOffice.Global
     public class ChartAxesOptions
     {
         #region Public Fields
+
         /// <summary>
         /// Is Horizontal Axes Enabled
         /// </summary>
         public bool IsHorizontalAxesEnabled = true;
+
         /// <summary>
         /// Is Vertical Axes Enabled
         /// </summary>
@@ -66,10 +71,12 @@ namespace OpenXMLOffice.Global
     public class ChartAxisOptions
     {
         #region Public Fields
+
         /// <summary>
         /// Horizontal Axis Title
         /// </summary>
         public string? HorizontalAxisTitle;
+
         /// <summary>
         /// Vertical Axis Title
         /// </summary>
@@ -101,14 +108,14 @@ namespace OpenXMLOffice.Global
         public ChartData? SeriesHeaderCells;
 
         /// <summary>
-        /// Gets or sets the series header formula.
-        /// </summary>
-        public string? SeriesHeaderFormula;
-
-        /// <summary>
         /// Gets or sets the series header format.
         /// </summary>
         public string? SeriesHeaderFormat;
+
+        /// <summary>
+        /// Gets or sets the series header formula.
+        /// </summary>
+        public string? SeriesHeaderFormula;
 
         /// <summary>
         /// Gets or sets the X-axis cells.
@@ -116,14 +123,14 @@ namespace OpenXMLOffice.Global
         public ChartData[]? XaxisCells;
 
         /// <summary>
-        /// Gets or sets the X-axis formula.
-        /// </summary>
-        public string? XaxisFormula;
-
-        /// <summary>
         /// Gets or sets the X-axis format.
         /// </summary>
         public string? XaxisFormat;
+
+        /// <summary>
+        /// Gets or sets the X-axis formula.
+        /// </summary>
+        public string? XaxisFormula;
 
         /// <summary>
         /// Gets or sets the Y-axis cells.
@@ -131,14 +138,14 @@ namespace OpenXMLOffice.Global
         public ChartData[]? YaxisCells;
 
         /// <summary>
-        /// Gets or sets the Y-axis formula.
-        /// </summary>
-        public string? YaxisFormula;
-
-        /// <summary>
         /// Gets or sets the Y-axis format.
         /// </summary>
         public string? YaxisFormat;
+
+        /// <summary>
+        /// Gets or sets the Y-axis formula.
+        /// </summary>
+        public string? YaxisFormula;
 
         /// <summary>
         /// Gets or sets the Z-axis cells.
@@ -146,14 +153,14 @@ namespace OpenXMLOffice.Global
         public ChartData[]? ZaxisCells;
 
         /// <summary>
-        /// Gets or sets the Z-axis formula.
-        /// </summary>
-        public string? ZaxisFormula;
-
-        /// <summary>
         /// Gets or sets the Z-axis format.
         /// </summary>
         public string? ZaxisFormat;
+
+        /// <summary>
+        /// Gets or sets the Z-axis formula.
+        /// </summary>
+        public string? ZaxisFormula;
 
         #endregion Public Fields
     }
@@ -186,14 +193,14 @@ namespace OpenXMLOffice.Global
         public bool ShowSeriesName = false;
 
         /// <summary>
-        /// Determines whether to show the value from a column in the chart.
-        /// </summary>
-        public bool ShowValueFromColumn = false;
-
-        /// <summary>
         /// Determines whether to show the value in the chart.
         /// </summary>
         public bool ShowValue = false;
+
+        /// <summary>
+        /// Determines whether to show the value from a column in the chart.
+        /// </summary>
+        public bool ShowValueFromColumn = false;
 
         #endregion Public Fields
     }
@@ -209,6 +216,7 @@ namespace OpenXMLOffice.Global
         /// Set 0 To Use Till End
         /// </summary>
         public uint ChartDataColumnEnd = 0;
+
         /// <summary>
         /// Chart data Start column 0 based
         /// </summary>
@@ -218,14 +226,17 @@ namespace OpenXMLOffice.Global
         /// Set 0 To Use Till End
         /// </summary>
         public uint ChartDataRowEnd = 0;
+
         /// <summary>
         /// Chart data Start Row 0 based
         /// </summary>
         public uint ChartDataRowStart = 0;
+
         /// <summary>
         /// Is Data is used in 3D chart type
         /// </summary>
         public bool Is3Ddata;
+
         /// <summary>
         /// Key For Data Column Value For Data Label Column If Data Label Column Are Present
         /// Inbetween and Used in the list it will be auto skipped By Data Column
@@ -241,18 +252,22 @@ namespace OpenXMLOffice.Global
     public class ChartGridLinesOptions
     {
         #region Public Fields
+
         /// <summary>
         /// Is Major Category Lines Enabled
         /// </summary>
         public bool IsMajorCategoryLinesEnabled = false;
+
         /// <summary>
         /// Is Major Value Lines Enabled
         /// </summary>
         public bool IsMajorValueLinesEnabled = true;
+
         /// <summary>
         /// Is Minor Category Lines Enabled
         /// </summary>
         public bool IsMinorCategoryLinesEnabled = false;
+
         /// <summary>
         /// Is Minor Value Lines Enabled
         /// </summary>
@@ -267,14 +282,17 @@ namespace OpenXMLOffice.Global
     public class ChartLegendOptions
     {
         #region Public Fields
+
         /// <summary>
         /// Is Legend Enabled
         /// </summary>
         public bool IsEnableLegend = true;
+
         /// <summary>
         /// Is Legend Chart OverLap
         /// </summary>
         public bool IsLegendChartOverLap = false;
+
         /// <summary>
         /// Legend Position
         /// </summary>
@@ -283,6 +301,7 @@ namespace OpenXMLOffice.Global
         #endregion Public Fields
 
         #region Public Enums
+
         /// <summary>
         /// Legend Position Values
         /// </summary>
@@ -292,18 +311,22 @@ namespace OpenXMLOffice.Global
             /// Bottom
             /// </summary>
             BOTTOM,
+
             /// <summary>
             /// Top
             /// </summary>
             TOP,
+
             /// <summary>
             /// Left
             /// </summary>
             LEFT,
+
             /// <summary>
             /// Right
             /// </summary>
             RIGHT,
+
             /// <summary>
             /// Top Right
             /// </summary>
@@ -318,10 +341,6 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class ChartSeriesSetting
     {
-        #region Public Fields
-
-        #endregion Public Fields
-
         #region Internal Constructors
 
         internal ChartSeriesSetting()
@@ -336,34 +355,42 @@ namespace OpenXMLOffice.Global
     public class ChartSetting
     {
         #region Public Fields
+
         /// <summary>
         /// Chart Data Setting
         /// </summary>
         public ChartDataSetting ChartDataSetting = new();
+
         /// <summary>
         /// Chart Grid Line Options
         /// </summary>
         public ChartGridLinesOptions ChartGridLinesOptions = new();
+
         /// <summary>
         /// Chart Legend Options
         /// </summary>
         public ChartLegendOptions ChartLegendOptions = new();
+
         /// <summary>
         /// Chart Height in EMU
         /// </summary>
         public uint Height = 6858000;
+
         /// <summary>
         /// Chart Title
         /// </summary>
         public string? Title;
+
         /// <summary>
         /// Chart Width in EMU
         /// </summary>
         public uint Width = 12192000;
+
         /// <summary>
         /// Chart X Position in EMU
         /// </summary>
         public uint X = 0;
+
         /// <summary>
         /// Chart Y Position in EMU
         /// </summary>
