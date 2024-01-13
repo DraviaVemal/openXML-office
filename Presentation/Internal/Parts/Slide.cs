@@ -107,6 +107,14 @@ namespace OpenXMLOffice.Presentation
             return Table;
         }
 
+        public TextBox AddTextBox(TextBoxSetting TextBoxSetting)
+        {
+            TextBox TextBox = new(TextBoxSetting);
+            P.Shape Shape = TextBox.GetTextBoxShape();
+            GetSlide().CommonSlideData!.ShapeTree!.Append(Shape);
+            return TextBox;
+        }
+
         public IEnumerable<Shape> FindShapeByText(string searchText)
         {
             IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape =>

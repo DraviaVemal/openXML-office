@@ -274,7 +274,7 @@ namespace OpenXMLOffice.Tests
             List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
             List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
             List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
-            shapes1[0].ReplaceTextBox(new TextBox(new TextBoxSetting()
+            shapes1[0].ReplaceTextBox(slide.AddTextBox(new TextBoxSetting()
             {
                 Text = "Dravia Vemal",
                 FontFamily = "Bernard MT Condensed"

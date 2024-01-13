@@ -95,7 +95,7 @@ namespace OpenXMLOffice.Presentation
                 TextBox.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
                 TextBox.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
             }
-            if (TextBox.GetTextBoxShape() == null)
+            if (TextBox.GetTextBoxShape().Parent == null)
             {
                 parent.InsertBefore(TextBox.GetTextBoxShape(), OpenXMLShape);
             }
