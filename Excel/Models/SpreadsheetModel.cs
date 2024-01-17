@@ -13,10 +13,12 @@ namespace OpenXMLOffice.Excel
     public class SpreadsheetProperties
     {
         #region Public Fields
+
         /// <summary>
         /// Spreadsheet settings
         /// </summary>
         public SpreadsheetSettings Settings = new();
+
         /// <summary>
         /// Spreadsheet theme settings
         /// </summary>
@@ -24,6 +26,7 @@ namespace OpenXMLOffice.Excel
 
         #endregion Public Fields
     }
+
     /// <summary>
     /// Represents the settings of a spreadsheet.
     /// </summary>

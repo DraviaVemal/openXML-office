@@ -16,12 +16,11 @@ namespace OpenXMLOffice.Excel
         #region Private Fields
 
         private static readonly LiteDatabase LiteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
-        private readonly ILiteCollection<NumberFormats> NumberFormatCollection;
-        private readonly ILiteCollection<FontStyle> FontStyleCollection;
-        private readonly ILiteCollection<FillStyle> FillStyleCollection;
         private readonly ILiteCollection<BorderStyle> BorderStyleCollection;
         private readonly ILiteCollection<CellXfs> CellXfsCollection;
-
+        private readonly ILiteCollection<FillStyle> FillStyleCollection;
+        private readonly ILiteCollection<FontStyle> FontStyleCollection;
+        private readonly ILiteCollection<NumberFormats> NumberFormatCollection;
         private readonly Stylesheet Stylesheet;
 
         #endregion Private Fields
@@ -95,38 +94,16 @@ namespace OpenXMLOffice.Excel
 
         #endregion Public Methods
 
-        #region Private Methods
+        #region Internal Methods
 
-        private int GetFontId(CellStyleSetting CellStyleSetting)
+        internal void SaveStyleProps()
         {
-            FontStyle? FontStyle = FontStyleCollection.Query().Where(item =>
-                item.IsBold == CellStyleSetting.IsBold &&
-                item.IsItalic == CellStyleSetting.IsItalic &&
-                item.IsUnderline == CellStyleSetting.IsUnderline &&
-                item.IsDoubleUnderline == CellStyleSetting.IsDoubleUnderline &&
-                item.Size == CellStyleSetting.FontSize &&
-                item.Color == CellStyleSetting.TextColor &&
-                item.Name == CellStyleSetting.FontFamily)
-            .FirstOrDefault();
-            if (FontStyle != null)
-            {
-                return FontStyle.Id;
-            }
-            else
-            {
-                BsonValue Result = FontStyleCollection.Insert(new FontStyle()
-                {
-                    IsBold = CellStyleSetting.IsBold,
-                    IsItalic = CellStyleSetting.IsItalic,
-                    IsUnderline = CellStyleSetting.IsUnderline,
-                    IsDoubleUnderline = CellStyleSetting.IsDoubleUnderline,
-                    Size = CellStyleSetting.FontSize,
-                    Color = CellStyleSetting.TextColor,
-                    Name = CellStyleSetting.FontFamily
-                });
-                return Result.AsInt32;
-            }
+            throw new NotImplementedException();
         }
+
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private int GetBorderId(CellStyleSetting CellStyleSetting)
         {
@@ -169,6 +146,37 @@ namespace OpenXMLOffice.Excel
                 {
                     BackgroundColor = CellStyleSetting.BackgroundColor,
                     ForegroundColor = CellStyleSetting.ForegroundColor
+                });
+                return Result.AsInt32;
+            }
+        }
+
+        private int GetFontId(CellStyleSetting CellStyleSetting)
+        {
+            FontStyle? FontStyle = FontStyleCollection.Query().Where(item =>
+                item.IsBold == CellStyleSetting.IsBold &&
+                item.IsItalic == CellStyleSetting.IsItalic &&
+                item.IsUnderline == CellStyleSetting.IsUnderline &&
+                item.IsDoubleUnderline == CellStyleSetting.IsDoubleUnderline &&
+                item.Size == CellStyleSetting.FontSize &&
+                item.Color == CellStyleSetting.TextColor &&
+                item.Name == CellStyleSetting.FontFamily)
+            .FirstOrDefault();
+            if (FontStyle != null)
+            {
+                return FontStyle.Id;
+            }
+            else
+            {
+                BsonValue Result = FontStyleCollection.Insert(new FontStyle()
+                {
+                    IsBold = CellStyleSetting.IsBold,
+                    IsItalic = CellStyleSetting.IsItalic,
+                    IsUnderline = CellStyleSetting.IsUnderline,
+                    IsDoubleUnderline = CellStyleSetting.IsDoubleUnderline,
+                    Size = CellStyleSetting.FontSize,
+                    Color = CellStyleSetting.TextColor,
+                    Name = CellStyleSetting.FontFamily
                 });
                 return Result.AsInt32;
             }
@@ -232,11 +240,6 @@ namespace OpenXMLOffice.Excel
                 new CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
             { Count = 1 };//cellStyles
             Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
-        }
-
-        internal void SaveStyleProps()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion Private Methods

@@ -63,49 +63,63 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Constructors
 
         #region Public Methods
+
         /// <summary>
         /// Add new slide to the presentation
         /// </summary>
-        /// <param name="slideLayoutType"></param>
-        /// <returns></returns>
+        /// <param name="slideLayoutType">
+        /// </param>
+        /// <returns>
+        /// </returns>
         public Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
         {
             return presentation.AddSlide(slideLayoutType);
         }
+
         /// <summary>
         /// Get Slide by index
         /// </summary>
-        /// <param name="SlideIndex"></param>
-        /// <returns></returns>
+        /// <param name="SlideIndex">
+        /// </param>
+        /// <returns>
+        /// </returns>
         public Slide GetSlideByIndex(int SlideIndex)
         {
             return presentation.GetSlideByIndex(SlideIndex);
         }
+
         /// <summary>
         /// Get Slide count
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public int GetSlideCount()
         {
             return presentation.GetSlideCount();
         }
+
         /// <summary>
         /// Move slide by index
         /// </summary>
-        /// <param name="SourceIndex"></param>
-        /// <param name="TargetIndex"></param>
+        /// <param name="SourceIndex">
+        /// </param>
+        /// <param name="TargetIndex">
+        /// </param>
         public void MoveSlideByIndex(int SourceIndex, int TargetIndex)
         {
             presentation.MoveSlideByIndex(SourceIndex, TargetIndex);
         }
+
         /// <summary>
         /// Remove slide by index
         /// </summary>
-        /// <param name="SlideIndex"></param>
+        /// <param name="SlideIndex">
+        /// </param>
         public void RemoveSlideByIndex(int SlideIndex)
         {
             presentation.RemoveSlideByIndex(SlideIndex);
         }
+
         /// <summary>
         /// Save the file
         /// </summary>
@@ -113,10 +127,12 @@ namespace OpenXMLOffice.Presentation
         {
             presentation.Save();
         }
+
         /// <summary>
         /// Save the file as new file
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">
+        /// </param>
         public void SaveAs(string filePath)
         {
             presentation.SaveAs(filePath);

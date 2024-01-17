@@ -159,13 +159,6 @@ namespace OpenXMLOffice.Excel
             });
             ShareString.Instance.InsertBulk(Records);
         }
-        /// <summary>
-        /// Load The DB Style Cache to Style Sheet
-        /// </summary>
-        protected void UpdateStyle()
-        {
-            GetStyles().SaveStyleProps();
-        }
 
         /// <summary>
         /// Update the cache data into spreadsheet
@@ -178,6 +171,14 @@ namespace OpenXMLOffice.Excel
             });
             GetShareString().Count = (uint)GetShareString().ChildElements.Count;
             GetShareString().UniqueCount = (uint)GetShareString().ChildElements.Count;
+        }
+
+        /// <summary>
+        /// Load The DB Style Cache to Style Sheet
+        /// </summary>
+        protected void UpdateStyle()
+        {
+            GetStyles().SaveStyleProps();
         }
 
         #endregion Protected Methods

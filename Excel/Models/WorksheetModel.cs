@@ -14,10 +14,12 @@ namespace OpenXMLOffice.Excel
         /// Represents a date cell.
         /// </summary>
         DATE,
+
         /// <summary>
         /// Represents a number cell.
         /// </summary>
         NUMBER,
+
         /// <summary>
         /// Represents a string cell.
         /// </summary>
@@ -32,7 +34,8 @@ namespace OpenXMLOffice.Excel
         #region Public Fields
 
         /// <summary>
-        /// Gets or sets a value indicating whether the column width should be automatically adjusted to fit the contents.
+        /// Gets or sets a value indicating whether the column width should be automatically
+        /// adjusted to fit the contents.
         /// </summary>
         public bool BestFit;
 
@@ -89,7 +92,9 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Initializes a new instance of the <see cref="Record"/> class with the specified value.
         /// </summary>
-        /// <param name="Value">The value of the record.</param>
+        /// <param name="Value">
+        /// The value of the record.
+        /// </param>
         public Record(string Value)
         {
             this.Value = Value;
