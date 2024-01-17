@@ -431,8 +431,7 @@ namespace OpenXMLOffice.Tests
                 data[row][0] = new DataCell
                 {
                     CellValue = $"Category {row}",
-                    DataType = CellDataType.STRING,
-                    StyleId = 1
+                    DataType = CellDataType.STRING
                 };
                 for (int col = IsValueAxis ? 0 : 1; col < payloadSize; col++)
                 {
@@ -440,8 +439,11 @@ namespace OpenXMLOffice.Tests
                     {
                         CellValue = random.Next(1, 100).ToString(),
                         DataType = CellDataType.NUMBER,
-                        NumberFormat = "0.00",
-                        StyleId = 1
+                        StyleSetting = new()
+                        {
+                            NumberFormat = "0.00",
+                            FontSize = 20
+                        }
                     };
                 }
             }

@@ -70,7 +70,7 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         public int? GetIndex(string Value)
         {
-            return Collection.Query().Where(col => col.Value == Value).FirstOrDefault()?.Id - 1;
+            return Collection.FindOne(col => col.Value == Value)?.Id - 1;
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace OpenXMLOffice.Excel
         /// </returns>
         public string? GetValue(int Index)
         {
-            return Collection.Query().Where(col => col.Id == Index).FirstOrDefault()?.Value;
+            return Collection.FindOne(col => col.Id == Index)?.Value;
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace OpenXMLOffice.Excel
                 return (int)Index;
             }
             BsonValue DocId = Collection.Insert(new Record(Data));
-            return DocId.AsInt32 - 1;
+            return (int)DocId.AsInt64 - 1;
         }
 
         #endregion Public Methods

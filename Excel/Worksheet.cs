@@ -206,6 +206,7 @@ namespace OpenXMLOffice.Excel
                         row.AppendChild(cell);
                     }
                     CellValues DataType = GetCellValues(DataCell.DataType);
+                    cell.StyleIndex = Styles.Instance.GetCellStyleId(DataCell.StyleSetting);
                     if (DataType == CellValues.String)
                     {
                         cell.DataType = CellValues.SharedString;

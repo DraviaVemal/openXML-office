@@ -95,7 +95,7 @@ namespace OpenXMLOffice.Tests
         {
             Worksheet worksheet = spreadsheet.AddSheet("Data2");
             Assert.IsNotNull(worksheet);
-            worksheet.SetRow("A1", new DataCell[5]{
+            worksheet.SetRow("A1", new DataCell[6]{
                 new(){
                     CellValue = "test1",
                     DataType = CellDataType.STRING
@@ -110,11 +110,23 @@ namespace OpenXMLOffice.Tests
                 },
                  new(){
                     CellValue = "test4",
-                    DataType = CellDataType.STRING
+                    DataType = CellDataType.STRING,
+                    StyleSetting = new(){
+                        FontSize = 20
+                    }
                 },
                  new(){
-                    CellValue = "test5",
-                    DataType = CellDataType.STRING
+                    CellValue = "2.51",
+                    DataType = CellDataType.NUMBER,
+                    StyleSetting = new(){
+                        NumberFormat = "00.000",
+                    }
+                },new(){
+                    CellValue = "5.51",
+                    DataType = CellDataType.NUMBER,
+                    StyleSetting = new(){
+                        NumberFormat = "₹ #,##0.00;₹ -#,##0.00",
+                    }
                 }
             }, new RowProperties()
             {

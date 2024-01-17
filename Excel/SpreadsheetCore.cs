@@ -29,12 +29,6 @@ namespace OpenXMLOffice.Excel
 
         #endregion Protected Fields
 
-        #region Private Fields
-
-        private Styles? Styles;
-
-        #endregion Private Fields
-
         #region Protected Constructors
 
         /// <summary>
@@ -49,6 +43,7 @@ namespace OpenXMLOffice.Excel
             spreadsheetDocument = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook, true);
             PrepareSpreadsheet(SpreadsheetProperties);
             InitialiseStyle();
+            LoadStyle();
         }
 
         /// <summary>
@@ -63,6 +58,7 @@ namespace OpenXMLOffice.Excel
             });
             PrepareSpreadsheet(SpreadsheetProperties);
             InitialiseStyle();
+            LoadStyle();
         }
 
         /// <summary>
@@ -76,23 +72,10 @@ namespace OpenXMLOffice.Excel
             spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
             PrepareSpreadsheet(SpreadsheetProperties);
             InitialiseStyle();
+            LoadStyle();
         }
 
         #endregion Protected Constructors
-
-        #region Public Methods
-
-        /// <summary>
-        /// Return the style object for the Spreadsheet
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        public Styles GetStyles()
-        {
-            return Styles!;
-        }
-
-        #endregion Public Methods
 
         #region Protected Methods
 
@@ -178,7 +161,14 @@ namespace OpenXMLOffice.Excel
         /// </summary>
         protected void UpdateStyle()
         {
-            GetStyles().SaveStyleProps();
+            Styles.Instance.SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+        }
+        /// <summary>
+        /// Load Exisiting Style from the Sheet
+        /// </summary>
+        protected void LoadStyle()
+        {
+            Styles.Instance.LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
         }
 
         #endregion Protected Methods
@@ -196,7 +186,6 @@ namespace OpenXMLOffice.Excel
             {
                 GetWorkbookPart().WorkbookStylesPart!.Stylesheet ??= new();
             }
-            Styles = new(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
         }
 
         /// <summary>

@@ -96,45 +96,54 @@ namespace OpenXMLOffice.Excel
             /// <summary>
             /// Medium Border option
             /// </summary>
-            THICK
+            THICK,
+            /// <summary>
+            /// Dotted Border option
+            /// </summary>
+            DOTTED,
+            /// <summary>
+            /// Double Border option
+            /// </summary>
+            DOUBLE,
+            /// <summary>
+            /// Dashed Border option
+            /// </summary>
+            DASHED,
+            /// <summary>
+            /// Dash Dot Border option
+            /// </summary>
+            DASH_DOT,
+            /// <summary>
+            /// Dash Dot Dot Border option
+            /// </summary>
+            DASH_DOT_DOT,
+            /// <summary>
+            /// Medium Border option
+            /// </summary>
+            MEDIUM,
+            /// <summary>
+            /// Medium Dashed Border option
+            /// </summary>
+            MEDIUM_DASHED,
+            /// <summary>
+            /// Medium Dash Dot Border option
+            /// </summary>
+            MEDIUM_DASH_DOT,
+            /// <summary>
+            /// Medium Dash Dot Dot Border option
+            /// </summary>
+            MEDIUM_DASH_DOT_DOT,
+            /// <summary>
+            /// Slant Dash Dot Border option
+            /// </summary>
+            SLANT_DASH_DOT,
+            /// <summary>
+            /// Hair Border option
+            /// </summary>
+            HAIR
         }
 
         #endregion Public Enums
-    }
-
-    /// <summary>
-    /// Represents the border style of a cell in a worksheet.
-    /// </summary>
-    public class BorderStyle
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Bottom border style
-        /// </summary>
-        public BorderSetting Bottom = new();
-
-        /// <summary>
-        /// Gets or sets the ID of the border style.
-        /// </summary>
-        public int Id;
-
-        /// <summary>
-        /// Left border style
-        /// </summary>
-        public BorderSetting Left = new();
-
-        /// <summary>
-        /// Right border style
-        /// </summary>
-        public BorderSetting Right = new();
-
-        /// <summary>
-        /// Top border style
-        /// </summary>
-        public BorderSetting Top = new();
-
-        #endregion Public Fields
     }
 
     /// <summary>
@@ -152,7 +161,7 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Bottom border style
         /// </summary>
-        public BorderSetting Bottom = new();
+        public BorderSetting BorderBottom = new();
 
         /// <summary>
         /// Gets or sets the font family of the cell. default is Calibri
@@ -162,7 +171,7 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Gets or sets the font size of the cell. default is 11
         /// </summary>
-        public int FontSize = 11;
+        public uint FontSize = 11;
 
         /// <summary>
         /// Get or Set Foreground Color
@@ -202,7 +211,7 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Left border style
         /// </summary>
-        public BorderSetting Left = new();
+        public BorderSetting BorderLeft = new();
 
         /// <summary>
         /// Gets or sets the number format of the cell. default is General
@@ -212,7 +221,7 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Right border style
         /// </summary>
-        public BorderSetting Right = new();
+        public BorderSetting BorderRight = new();
 
         /// <summary>
         /// Gets or sets the text color of the cell. default is 000000
@@ -222,12 +231,57 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Top border style
         /// </summary>
-        public BorderSetting Top = new();
+        public BorderSetting BorderTop = new();
 
         /// <summary>
         /// Vertical alignment of the cell. default is bottom
         /// </summary>
         public VerticalAlignmentValues VerticalAlignment = VerticalAlignmentValues.NONE;
+
+        #endregion Public Fields
+    }
+
+    /// <summary>
+    /// Represents the border style of a cell in a worksheet.
+    /// </summary>
+    public class BorderStyle
+    {
+        #region Public Fields
+
+        /// <summary>
+        /// Gets or sets the ID of the border style.
+        /// </summary>
+        public uint Id { get; set; }
+
+        /// <summary>
+        /// Bottom border style
+        /// </summary>
+        public BorderSetting Bottom { get; set; }
+
+        /// <summary>
+        /// Left border style
+        /// </summary>
+        public BorderSetting Left { get; set; }
+
+        /// <summary>
+        /// Right border style
+        /// </summary>
+        public BorderSetting Right { get; set; }
+
+        /// <summary>
+        /// Top border style
+        /// </summary>
+        public BorderSetting Top { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BorderStyle"/> class.
+        /// </summary>
+        public BorderStyle()
+        {
+            Bottom = new();
+            Left = new();
+            Right = new();
+            Top = new();
+        }
 
         #endregion Public Fields
     }
@@ -240,66 +294,77 @@ namespace OpenXMLOffice.Excel
         #region Public Fields
 
         /// <summary>
-        /// Apply Alignment
-        /// </summary>
-        public bool ApplyAlignment = false;
-
-        /// <summary>
-        /// Apply Border style
-        /// </summary>
-        public bool ApplyBorder = false;
-
-        /// <summary>
-        /// Apply Fill style
-        /// </summary>
-        public bool ApplyFill = false;
-
-        /// <summary>
-        /// Apply Font style
-        /// </summary>
-        public bool ApplyFont = false;
-
-        /// <summary>
-        /// Apply Number Format
-        /// </summary>
-        public bool ApplyNumberFormat = false;
-
-        /// <summary>
-        /// Border Id from collection
-        /// </summary>
-        public int BorderId;
-
-        /// <summary>
-        /// Fill Id from collection
-        /// </summary>
-        public int FillId;
-
-        /// <summary>
-        /// Font Id from collection
-        /// </summary>
-        public int FontId;
-
-        /// <summary>
-        /// Horizontal alignment of the cell. default is left
-        /// </summary>
-        public HorizontalAlignmentValues HorizontalAlignment = HorizontalAlignmentValues.NONE;
-
-        /// <summary>
         /// CellXfs ID
         /// </summary>
-        public int Id;
+        public uint Id { get; set; }
 
         /// <summary>
         /// Number Format Id from collection
         /// </summary>
-        public int NumberFormatId;
+        public uint NumberFormatId { get; set; }
+        /// <summary>
+        /// Apply Alignment
+        /// </summary>
+        public bool ApplyAlignment { get; set; }
+
+        /// <summary>
+        /// Apply Border style
+        /// </summary>
+        public bool ApplyBorder { get; set; }
+
+        /// <summary>
+        /// Apply Fill style
+        /// </summary>
+        public bool ApplyFill { get; set; }
+
+        /// <summary>
+        /// Apply Font style
+        /// </summary>
+        public bool ApplyFont { get; set; }
+
+        /// <summary>
+        /// Apply Number Format
+        /// </summary>
+        public bool ApplyNumberFormat { get; set; }
+
+        /// <summary>
+        /// Border Id from collection
+        /// </summary>
+        public uint BorderId { get; set; }
+
+        /// <summary>
+        /// Fill Id from collection
+        /// </summary>
+        public uint FillId { get; set; }
+
+        /// <summary>
+        /// Font Id from collection
+        /// </summary>
+        public uint FontId { get; set; }
+        /// <summary>
+        /// Is Wrap Text. default is false
+        /// </summary>
+        public bool IsWrapetext { get; internal set; }
+
+        /// <summary>
+        /// Horizontal alignment of the cell. default is left
+        /// </summary>
+        public HorizontalAlignmentValues HorizontalAlignment { get; set; }
 
         /// <summary>
         /// Vertical alignment of the cell. default is bottom
         /// </summary>
-        public VerticalAlignmentValues VerticalAlignment = VerticalAlignmentValues.NONE;
+        public VerticalAlignmentValues VerticalAlignment { get; set; }
 
         #endregion Public Fields
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CellXfs"/> class.
+        /// </summary>
+        public CellXfs()
+        {
+            HorizontalAlignment = HorizontalAlignmentValues.NONE;
+            VerticalAlignment = VerticalAlignmentValues.NONE;
+        }
     }
 
     /// <summary>
@@ -310,21 +375,46 @@ namespace OpenXMLOffice.Excel
         #region Public Fields
 
         /// <summary>
+        /// Fill style ID
+        /// </summary>
+        public uint Id { get; set; }
+        /// <summary>
+        /// Pattern Type
+        /// </summary>
+        public PatternTypeValues PatternType { get; set; }
+        /// <summary>
         /// Gets or sets the background color of the cell.
         /// </summary>
-        public string? BackgroundColor;
+        public string? BackgroundColor { get; set; }
 
         /// <summary>
         /// Gets or sets the foreground color of the cell.
         /// </summary>
-        public string? ForegroundColor;
-
-        /// <summary>
-        /// Fill style ID
-        /// </summary>
-        public int Id;
+        public string? ForegroundColor { get; set; }
 
         #endregion Public Fields
+        /// <summary>
+        /// Color Pattern Type
+        /// TODO: Add more pattern types
+        /// </summary>
+        public enum PatternTypeValues
+        {
+            /// <summary>
+            /// None Pattern
+            /// </summary>
+            NONE,
+            /// <summary>
+            /// Solid Pattern Type
+            /// </summary>
+            SOLID
+        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FillStyle"/> class.
+        /// </summary>
+        public FillStyle()
+        {
+            PatternType = PatternTypeValues.NONE;
+        }
     }
 
     /// <summary>
@@ -335,57 +425,66 @@ namespace OpenXMLOffice.Excel
         #region Public Fields
 
         /// <summary>
+        /// Font style ID
+        /// </summary>
+        public uint Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the color of the font. default is accent1
         /// </summary>
-        public string Color = "accent1";
+        public string Color { get; set; }
 
         /// <summary>
         /// Gets or sets the font family of the font.
         /// </summary>
-        public string Family = "2";
+        public int Family { get; set; }
 
         /// <summary>
         /// Configure Font Scheme
         /// </summary>
-        public SchemeValues FontScheme = SchemeValues.NONE;
-
-        /// <summary>
-        /// Font style ID
-        /// </summary>
-        public int Id;
+        public SchemeValues FontScheme { get; set; }
 
         /// <summary>
         /// Is Cell Bold
         /// </summary>
-        public bool IsBold = false;
-
+        public bool IsBold { get; set; }
         /// <summary>
         /// Is Cell Double Underline. default is false
         /// </summary>
-        public bool IsDoubleUnderline = false;
+        public bool IsDoubleUnderline { get; set; }
 
         /// <summary>
         /// Is Cell Italic. default is false
         /// </summary>
-        public bool IsItalic = false;
+        public bool IsItalic { get; set; }
 
         /// <summary>
         /// Is Cell Underline. default is false
         /// </summary>
-        public bool IsUnderline = false;
+        public bool IsUnderline { get; set; }
 
         /// <summary>
         /// Font name default is Calibri
         /// </summary>
-        public string Name = "Calibri";
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the font. default is 11
         /// </summary>
-        public int Size = 11;
+        public uint Size { get; set; }
 
         #endregion Public Fields
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FontStyle"/> class.
+        /// </summary>
+        public FontStyle()
+        {
+            Color = "accent1";
+            Family = 2;
+            Size = 11;
+            Name = "Calibri";
+            FontScheme = SchemeValues.NONE;
+        }
         #region Public Enums
 
         /// <summary>
@@ -420,15 +519,21 @@ namespace OpenXMLOffice.Excel
         #region Public Fields
 
         /// <summary>
-        /// Number format code
-        /// </summary>
-        public string? FormatCode;
-
-        /// <summary>
         /// Number format ID
         /// </summary>
-        public int Id;
+        public uint Id { get; set; }
 
+        /// <summary>
+        /// Number format code
+        /// </summary>
+        public string FormatCode { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NumberFormats"/> class.
+        /// </summary>
+        public NumberFormats()
+        {
+            FormatCode = "General";
+        }
         #endregion Public Fields
     }
 }
