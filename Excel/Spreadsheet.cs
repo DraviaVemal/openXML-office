@@ -40,11 +40,6 @@ namespace OpenXMLOffice.Excel
         /// </summary>
         public Spreadsheet(Stream stream) : base(stream) { }
 
-        /// <summary>
-        /// This public constructor method initializes a new instance of the Spreadsheet class
-        /// </summary>
-        public Spreadsheet(Stream stream, bool isEditable) : base(stream, isEditable) { }
-
         #endregion Public Constructors
 
         #region Public Methods

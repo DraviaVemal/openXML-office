@@ -78,20 +78,6 @@ namespace OpenXMLOffice.Excel
             InitialiseStyle();
         }
 
-        /// <summary>
-        /// This public constructor method initializes a new instance of the Spreadsheet class
-        /// </summary>
-        protected SpreadsheetCore(Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
-        {
-            SpreadsheetProperties = spreadsheetProperties ?? new();
-            spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings
-            {
-                AutoSave = true
-            });
-            PrepareSpreadsheet(SpreadsheetProperties);
-            InitialiseStyle();
-        }
-
         #endregion Protected Constructors
 
         #region Public Methods

@@ -151,7 +151,7 @@ namespace OpenXMLOffice.Tests
         public void SheetConstructorStream()
         {
             MemoryStream memoryStream = new();
-            Spreadsheet spreadsheet1 = new(memoryStream, true);
+            Spreadsheet spreadsheet1 = new(memoryStream);
             Assert.IsNotNull(spreadsheet1);
         }
 
