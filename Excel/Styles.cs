@@ -3,8 +3,8 @@
 * See License in the project root for license information.
 */
 
-using X = DocumentFormat.OpenXml.Spreadsheet;
 using LiteDB;
+using X = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace OpenXMLOffice.Excel
 {
@@ -16,16 +16,17 @@ namespace OpenXMLOffice.Excel
         #region Private Fields
 
         private static readonly LiteDatabase LiteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
+        private static Styles? instance = null;
         private readonly ILiteCollection<BorderStyle> BorderStyleCollection;
         private readonly ILiteCollection<CellXfs> CellXfsCollection;
         private readonly ILiteCollection<FillStyle> FillStyleCollection;
         private readonly ILiteCollection<FontStyle> FontStyleCollection;
         private readonly ILiteCollection<NumberFormats> NumberFormatCollection;
-        private static Styles? instance = null;
 
         #endregion Private Fields
 
-        #region Internal Constructors
+        #region Private Constructors
+
         private Styles()
         {
             NumberFormatCollection = LiteDatabase.GetCollection<NumberFormats>("NumberFormats");
@@ -35,9 +36,10 @@ namespace OpenXMLOffice.Excel
             CellXfsCollection = LiteDatabase.GetCollection<CellXfs>("CellXfs");
         }
 
-        #endregion Internal Constructors
+        #endregion Private Constructors
 
-        #region Public Methods
+        #region Public Properties
+
         /// <summary>
         /// Get the Cell Style Id based on user specified CellStyleSetting
         /// </summary>
@@ -49,6 +51,11 @@ namespace OpenXMLOffice.Excel
                 return instance;
             }
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         /// <summary>
         /// Get the Cell Style Id based on user specified CellStyleSetting
         /// </summary>
@@ -106,10 +113,22 @@ namespace OpenXMLOffice.Excel
         #endregion Public Methods
 
         #region Internal Methods
+
+        /// <summary>
+        /// Load the style from the Exisiting Sheet
+        /// TODO: Load Exisiting Style from the Excel Sheet For Update
+        /// </summary>
+        /// <exception cref="NotImplementedException">
+        /// </exception>
+        internal void LoadStyleFromSheet(X.Stylesheet Stylesheet)
+        {
+        }
+
         /// <summary>
         /// Save the style properties to the xlsx file
         /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="NotImplementedException">
+        /// </exception>
         internal void SaveStyleProps(X.Stylesheet Stylesheet)
         {
             Stylesheet.Fonts = new(FontStyleCollection.FindAll().ToList().Select(item =>
@@ -321,16 +340,6 @@ namespace OpenXMLOffice.Excel
                 return NumberingFormat;
             }))
             { Count = (uint)NumberFormatCollection.Count() };//numFmts
-        }
-
-        /// <summary>
-        /// Load the style from the Exisiting Sheet
-        /// TODO: Load Exisiting Style from the Excel Sheet For Update
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        internal void LoadStyleFromSheet(X.Stylesheet Stylesheet)
-        {
-
         }
 
         #endregion Internal Methods

@@ -68,10 +68,12 @@ namespace OpenXMLOffice.Excel
         /// Gets or sets the data type of the cell.
         /// </summary>
         public CellDataType DataType;
+
         /// <summary>
         /// Gets or sets the style of the cell.
         /// </summary>
         public CellStyleSetting StyleSetting = new();
+
         #endregion Public Fields
     }
 

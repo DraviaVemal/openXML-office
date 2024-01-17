@@ -144,6 +144,14 @@ namespace OpenXMLOffice.Excel
         }
 
         /// <summary>
+        /// Load Exisiting Style from the Sheet
+        /// </summary>
+        protected void LoadStyle()
+        {
+            Styles.Instance.LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+        }
+
+        /// <summary>
         /// Update the cache data into spreadsheet
         /// </summary>
         protected void UpdateSharedString()
@@ -162,13 +170,6 @@ namespace OpenXMLOffice.Excel
         protected void UpdateStyle()
         {
             Styles.Instance.SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
-        }
-        /// <summary>
-        /// Load Exisiting Style from the Sheet
-        /// </summary>
-        protected void LoadStyle()
-        {
-            Styles.Instance.LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
         }
 
         #endregion Protected Methods
