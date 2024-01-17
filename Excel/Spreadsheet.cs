@@ -204,6 +204,7 @@ namespace OpenXMLOffice.Excel
         /// </summary>
         public void Save()
         {
+            UpdateStyle();
             UpdateSharedString();
             spreadsheetDocument.Save();
             spreadsheetDocument.Dispose();
