@@ -205,12 +205,12 @@ namespace OpenXMLOffice.Presentation
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-                Cell.BottomBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.TopLeftToBottomRightBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-                Cell.BottomBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.BottomLeftToTopRightBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });

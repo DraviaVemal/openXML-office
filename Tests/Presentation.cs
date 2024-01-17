@@ -289,8 +289,8 @@ namespace OpenXMLOffice.Tests
             slide.AddTable(CreateTableRowPayload(5), new TableSetting()
             {
                 Name = "New Table",
-                WidthType = TableSetting.WidthOptionValues.AUTO,
-                TableColumnWidth = new() { 100, 100 }
+                WidthType = TableSetting.WidthOptionValues.PERCENTAGE,
+                TableColumnWidth = new() { 80, 20 }
             });
             Assert.IsTrue(true);
         }
@@ -462,11 +462,22 @@ namespace OpenXMLOffice.Tests
                 {
                     new() {
                         Value = $"Row {i + 1}, Cell 1",
-                        TextColor = "FF0000"
+                        TextColor = "FF0000",
+                        BottomBorder = true,
+                        FontSize=22,
+                        LeftBorder = true,
+                        TopBorder = true,
+                        RightBorder =true,
                     },
                     new() {
                         Value = $"Row {i + 1}, Cell 2",
-                        TextColor = "00FF00"
+                        TextColor = "00FF00",
+                        IsBold = true,
+                        BottomBorder = true,
+                        LeftBorder = true,
+                        TopBorder = true,
+                        RightBorder =true,
+                        IsItalic = true
                     },
                 }
                 };

@@ -16,6 +16,14 @@ namespace OpenXMLOffice.Presentation
         /// Enable Bottom Border
         /// </summary>
         public bool BottomBorder = false;
+        /// <summary>
+        /// Enable Top Left to Bottom Right Border
+        /// </summary>
+        public bool TopLeftToBottomRightBorder = false;
+        /// <summary>
+        /// Enable Bottom Left to Top Right Border
+        /// </summary>
+        public bool BottomLeftToTopRightBorder = false;
 
         /// <summary>
         /// Cell Background Color
