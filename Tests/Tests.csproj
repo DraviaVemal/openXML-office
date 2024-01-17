@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <PropertyGroup Condition="'$(OS)' == 'Windows'">
+    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
       <CopyCommand>xcopy /E /I /Y</CopyCommand>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(OS)' != 'Windows'">
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
       <CopyCommand>cp -r </CopyCommand>
     </PropertyGroup>
     <Exec Command="$(CopyCommand) $(ProjectDir)TestFiles $(TargetDir)TestFiles" />
