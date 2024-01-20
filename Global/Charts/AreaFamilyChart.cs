@@ -86,9 +86,9 @@ namespace OpenXMLOffice.Global
                     new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
                     new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
                 {
-                    FontSize = 1197,
-                    Bold = false,
-                    Italic = false,
+                    FontSize = (int)AreaChartDataLabel.FontSize * 100,
+                    Bold = AreaChartDataLabel.IsBold,
+                    Italic = AreaChartDataLabel.IsItalic,
                     Underline = A.TextUnderlineValues.None,
                     Strike = A.TextStrikeValues.NoStrike,
                     Kerning = 1200,

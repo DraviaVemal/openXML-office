@@ -8,7 +8,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>0.2.5-alpha.3</Version>
+        <Version>0.2.5-alpha.4</Version>
         <Company>DraviaVemal</Company>
         <Copyright>Copyright (c) 2023 DraviaVemal
 

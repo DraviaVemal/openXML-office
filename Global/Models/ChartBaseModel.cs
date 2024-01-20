@@ -234,6 +234,18 @@ namespace OpenXMLOffice.Global
         /// Determines whether to show the value from a column in the chart.
         /// </summary>
         public bool ShowValueFromColumn = false;
+        /// <summary>
+        /// Is Font Bold
+        /// </summary>
+        public bool IsBold = false;
+        /// <summary>
+        /// Is Font Italic
+        /// </summary>
+        internal bool IsItalic = false;
+        /// <summary>
+        /// Font Size
+        /// </summary>
+        public float FontSize = 11.97F;
 
         #endregion Public Fields
     }
