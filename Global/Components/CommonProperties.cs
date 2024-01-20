@@ -1,7 +1,4 @@
-/*
-* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
-* See License in the project root for license information.
-*/
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using A = DocumentFormat.OpenXml.Drawing;
 
@@ -17,7 +14,8 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Class is only for inheritance purposes.
         /// </summary>
-        protected CommonProperties() { }
+        protected CommonProperties()
+        { }
 
         #endregion Protected Constructors
 

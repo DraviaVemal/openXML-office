@@ -1,7 +1,4 @@
-/*
-* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
-* See License in the project root for license information.
-*/
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using LiteDB;
 using X = DocumentFormat.OpenXml.Spreadsheet;
@@ -145,69 +142,33 @@ namespace OpenXMLOffice.Excel
             Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
         }
 
-        private X.NumberingFormats GetNumberFormats()
-        {
-            return new(NumberFormatCollection.FindAll().ToList().Select(item =>
-            {
-                X.NumberingFormat NumberingFormat = new()
-                {
-                    NumberFormatId = item.Id,
-                    FormatCode = item.FormatCode
-                };
-                return NumberingFormat;
-            }))
-            { Count = (uint)NumberFormatCollection.Count() };
-        }
+        #endregion Internal Methods
 
-        private X.CellFormats GetCellFormats()
+        #region Private Methods
+
+        private uint GetBorderId(CellStyleSetting CellStyleSetting)
         {
-            return new(
-                            CellXfsCollection.FindAll().ToList().Select(item =>
-                            {
-                                X.CellFormat CellFormat = new()
-                                {
-                                    NumberFormatId = item.NumberFormatId,
-                                    FontId = item.FontId,
-                                    FillId = item.FillId,
-                                    BorderId = item.BorderId,
-                                    FormatId = 0,
-                                    ApplyAlignment = item.ApplyAlignment,
-                                    ApplyBorder = item.ApplyBorder,
-                                    ApplyNumberFormat = item.ApplyNumberFormat,
-                                    ApplyFill = item.ApplyFill,
-                                    ApplyFont = item.ApplyFont,
-                                };
-                                if (item.VerticalAlignment != VerticalAlignmentValues.NONE ||
-                                    item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
-                                    item.IsWrapetext)
-                                {
-                                    CellFormat.Alignment = new();
-                                    if (item.VerticalAlignment != VerticalAlignmentValues.NONE)
-                                    {
-                                        CellFormat.Alignment.Vertical = item.VerticalAlignment switch
-                                        {
-                                            VerticalAlignmentValues.TOP => X.VerticalAlignmentValues.Top,
-                                            VerticalAlignmentValues.MIDDLE => X.VerticalAlignmentValues.Center,
-                                            _ => X.VerticalAlignmentValues.Bottom
-                                        };
-                                    }
-                                    if (item.HorizontalAlignment != HorizontalAlignmentValues.NONE)
-                                    {
-                                        CellFormat.Alignment.Horizontal = item.HorizontalAlignment switch
-                                        {
-                                            HorizontalAlignmentValues.LEFT => X.HorizontalAlignmentValues.Left,
-                                            HorizontalAlignmentValues.CENTER => X.HorizontalAlignmentValues.Center,
-                                            _ => X.HorizontalAlignmentValues.Right
-                                        };
-                                    }
-                                    if (item.IsWrapetext)
-                                    {
-                                        CellFormat.Alignment.WrapText = true;
-                                    }
-                                }
-                                return CellFormat;
-                            }))
-            { Count = (uint)CellXfsCollection.Count() };
+            BorderStyle? BorderStyle = BorderStyleCollection.FindOne(item =>
+                item.Left == CellStyleSetting.BorderLeft &&
+                item.Right == CellStyleSetting.BorderRight &&
+                item.Top == CellStyleSetting.BorderTop &&
+                item.Bottom == CellStyleSetting.BorderBottom);
+            if (BorderStyle != null)
+            {
+                return BorderStyle.Id;
+            }
+            else
+            {
+                BsonValue Result = BorderStyleCollection.Insert(new BorderStyle()
+                {
+                    Id = (uint)BorderStyleCollection.Count(),
+                    Left = CellStyleSetting.BorderLeft,
+                    Right = CellStyleSetting.BorderRight,
+                    Top = CellStyleSetting.BorderTop,
+                    Bottom = CellStyleSetting.BorderBottom
+                });
+                return (uint)Result.AsInt64;
+            }
         }
 
         private X.Borders GetBorders()
@@ -266,6 +227,78 @@ namespace OpenXMLOffice.Excel
             { Count = (uint)BorderStyleCollection.Count() };
         }
 
+        private X.CellFormats GetCellFormats()
+        {
+            return new(
+                        CellXfsCollection.FindAll().ToList().Select(item =>
+                        {
+                            X.CellFormat CellFormat = new()
+                            {
+                                NumberFormatId = item.NumberFormatId,
+                                FontId = item.FontId,
+                                FillId = item.FillId,
+                                BorderId = item.BorderId,
+                                FormatId = 0,
+                                ApplyAlignment = item.ApplyAlignment,
+                                ApplyBorder = item.ApplyBorder,
+                                ApplyNumberFormat = item.ApplyNumberFormat,
+                                ApplyFill = item.ApplyFill,
+                                ApplyFont = item.ApplyFont,
+                            };
+                            if (item.VerticalAlignment != VerticalAlignmentValues.NONE ||
+                                item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
+                                item.IsWrapetext)
+                            {
+                                CellFormat.Alignment = new();
+                                if (item.VerticalAlignment != VerticalAlignmentValues.NONE)
+                                {
+                                    CellFormat.Alignment.Vertical = item.VerticalAlignment switch
+                                    {
+                                        VerticalAlignmentValues.TOP => X.VerticalAlignmentValues.Top,
+                                        VerticalAlignmentValues.MIDDLE => X.VerticalAlignmentValues.Center,
+                                        _ => X.VerticalAlignmentValues.Bottom
+                                    };
+                                }
+                                if (item.HorizontalAlignment != HorizontalAlignmentValues.NONE)
+                                {
+                                    CellFormat.Alignment.Horizontal = item.HorizontalAlignment switch
+                                    {
+                                        HorizontalAlignmentValues.LEFT => X.HorizontalAlignmentValues.Left,
+                                        HorizontalAlignmentValues.CENTER => X.HorizontalAlignmentValues.Center,
+                                        _ => X.HorizontalAlignmentValues.Right
+                                    };
+                                }
+                                if (item.IsWrapetext)
+                                {
+                                    CellFormat.Alignment.WrapText = true;
+                                }
+                            }
+                            return CellFormat;
+                        }))
+            { Count = (uint)CellXfsCollection.Count() };
+        }
+
+        private uint GetFillId(CellStyleSetting CellStyleSetting)
+        {
+            FillStyle? FillStyle = FillStyleCollection.FindOne(item =>
+                item.BackgroundColor == CellStyleSetting.BackgroundColor &&
+                item.ForegroundColor == CellStyleSetting.ForegroundColor);
+            if (FillStyle != null)
+            {
+                return FillStyle.Id;
+            }
+            else
+            {
+                BsonValue Result = FillStyleCollection.Insert(new FillStyle()
+                {
+                    Id = (uint)FillStyleCollection.Count(),
+                    BackgroundColor = CellStyleSetting.BackgroundColor,
+                    ForegroundColor = CellStyleSetting.ForegroundColor
+                });
+                return (uint)Result.AsInt64;
+            }
+        }
+
         private X.Fills GetFills()
         {
             return new(FillStyleCollection.FindAll().ToList().Select(item =>
@@ -292,84 +325,6 @@ namespace OpenXMLOffice.Excel
                 return Fill;
             }))
             { Count = (uint)FillStyleCollection.Count() };
-        }
-
-        private X.Fonts GetFonts()
-        {
-            return new(FontStyleCollection.FindAll().ToList().Select(item =>
-            {
-                X.Font Font = new()
-                {
-                    FontSize = new() { Val = item.Size },
-                    FontName = new() { Val = item.Name },
-                    FontFamilyNumbering = new() { Val = item.Family },
-                    FontScheme = new()
-                    {
-                        Val = item.FontScheme switch
-                        {
-                            FontStyle.SchemeValues.MINOR => X.FontSchemeValues.Minor,
-                            FontStyle.SchemeValues.MAJOR => X.FontSchemeValues.Major,
-                            _ => X.FontSchemeValues.None
-                        }
-                    }
-                };
-                if (item.Color != null)
-                {
-                    Font.Color = new() { Rgb = item.Color };
-                }
-                return Font;
-            }))
-            { Count = (uint)FontStyleCollection.Count() };
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private uint GetBorderId(CellStyleSetting CellStyleSetting)
-        {
-            BorderStyle? BorderStyle = BorderStyleCollection.FindOne(item =>
-                item.Left == CellStyleSetting.BorderLeft &&
-                item.Right == CellStyleSetting.BorderRight &&
-                item.Top == CellStyleSetting.BorderTop &&
-                item.Bottom == CellStyleSetting.BorderBottom);
-            if (BorderStyle != null)
-            {
-                return BorderStyle.Id;
-            }
-            else
-            {
-                BsonValue Result = BorderStyleCollection.Insert(new BorderStyle()
-                {
-                    Id = (uint)BorderStyleCollection.Count(),
-                    Left = CellStyleSetting.BorderLeft,
-                    Right = CellStyleSetting.BorderRight,
-                    Top = CellStyleSetting.BorderTop,
-                    Bottom = CellStyleSetting.BorderBottom
-                });
-                return (uint)Result.AsInt64;
-            }
-        }
-
-        private uint GetFillId(CellStyleSetting CellStyleSetting)
-        {
-            FillStyle? FillStyle = FillStyleCollection.FindOne(item =>
-                item.BackgroundColor == CellStyleSetting.BackgroundColor &&
-                item.ForegroundColor == CellStyleSetting.ForegroundColor);
-            if (FillStyle != null)
-            {
-                return FillStyle.Id;
-            }
-            else
-            {
-                BsonValue Result = FillStyleCollection.Insert(new FillStyle()
-                {
-                    Id = (uint)FillStyleCollection.Count(),
-                    BackgroundColor = CellStyleSetting.BackgroundColor,
-                    ForegroundColor = CellStyleSetting.ForegroundColor
-                });
-                return (uint)Result.AsInt64;
-            }
         }
 
         private uint GetFontId(CellStyleSetting CellStyleSetting)
@@ -403,6 +358,34 @@ namespace OpenXMLOffice.Excel
             }
         }
 
+        private X.Fonts GetFonts()
+        {
+            return new(FontStyleCollection.FindAll().ToList().Select(item =>
+            {
+                X.Font Font = new()
+                {
+                    FontSize = new() { Val = item.Size },
+                    FontName = new() { Val = item.Name },
+                    FontFamilyNumbering = new() { Val = item.Family },
+                    FontScheme = new()
+                    {
+                        Val = item.FontScheme switch
+                        {
+                            FontStyle.SchemeValues.MINOR => X.FontSchemeValues.Minor,
+                            FontStyle.SchemeValues.MAJOR => X.FontSchemeValues.Major,
+                            _ => X.FontSchemeValues.None
+                        }
+                    }
+                };
+                if (item.Color != null)
+                {
+                    Font.Color = new() { Rgb = item.Color };
+                }
+                return Font;
+            }))
+            { Count = (uint)FontStyleCollection.Count() };
+        }
+
         private uint GetNumberFormat(CellStyleSetting CellStyleSetting)
         {
             NumberFormats? NumberFormats = NumberFormatCollection.FindOne(item =>
@@ -420,6 +403,20 @@ namespace OpenXMLOffice.Excel
                 });
                 return (uint)Result.AsInt64;
             }
+        }
+
+        private X.NumberingFormats GetNumberFormats()
+        {
+            return new(NumberFormatCollection.FindAll().ToList().Select(item =>
+            {
+                X.NumberingFormat NumberingFormat = new()
+                {
+                    NumberFormatId = item.Id,
+                    FormatCode = item.FormatCode
+                };
+                return NumberingFormat;
+            }))
+            { Count = (uint)NumberFormatCollection.Count() };
         }
 
         #endregion Private Methods

@@ -1,7 +1,4 @@
-/*
-* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
-* See License in the project root for license information.
-*/
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using System.Text;
 
@@ -104,20 +101,26 @@ namespace OpenXMLOffice.Global
             { throw new ArgumentException("Row and column indices must be positive integers."); }
             return ConvertIntToColumnName(column) + row;
         }
+
         /// <summary>
         /// Convert Emu to Pixels
         /// </summary>
-        /// <param name="emuValue"></param>
-        /// <returns></returns>
+        /// <param name="emuValue">
+        /// </param>
+        /// <returns>
+        /// </returns>
         public static int EmuToPixels(long emuValue)
         {
             return (int)Math.Round((double)emuValue / 914400 * GlobalConstants.DefaultDPI);
         }
+
         /// <summary>
         /// Convert Pixels to Emu
         /// </summary>
-        /// <param name="pixels"></param>
-        /// <returns></returns>
+        /// <param name="pixels">
+        /// </param>
+        /// <returns>
+        /// </returns>
         public static long PixelsToEmu(int pixels)
         {
             return (long)Math.Round((double)pixels / GlobalConstants.DefaultDPI * 914400);

@@ -1,7 +1,4 @@
-﻿/*
-* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
-* See License in the project root for license information.
-*/
+﻿// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -45,12 +42,20 @@ namespace OpenXMLOffice.Excel
         #region Public Methods
 
         /// <summary>
+        /// Adds a new sheet to the OpenXMLOffice with the Default Sheet Name Pattern
+        /// </summary>
+        public Worksheet AddSheet()
+        {
+            return AddSheet(string.Format("Sheet{0}", GetMaxSheetId() + 1));
+        }
+
+        /// <summary>
         /// Adds a new sheet to the OpenXMLOffice with the specified name. Throws an exception if
         /// SheetName already exist.
         /// </summary>
-        public Worksheet AddSheet(string? sheetName = null)
+        public Worksheet AddSheet(string sheetName)
         {
-            if (!string.IsNullOrEmpty(sheetName) && CheckIfSheetNameExist(sheetName))
+            if (CheckIfSheetNameExist(sheetName))
             {
                 throw new ArgumentException("Sheet with name already exist.");
             }
@@ -60,7 +65,7 @@ namespace OpenXMLOffice.Excel
             {
                 Id = GetWorkbookPart().GetIdOfPart(worksheetPart),
                 SheetId = GetMaxSheetId() + 1,
-                Name = string.IsNullOrEmpty(sheetName) ? string.Format("Sheet{0}", GetMaxSheetId() + 1) : sheetName
+                Name = sheetName
             };
             GetSheets().Append(sheet);
             worksheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(new SheetData());
@@ -178,7 +183,9 @@ namespace OpenXMLOffice.Excel
             }
             Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == oldSheetName) as Sheet;
             if (sheet == null)
+            {
                 return false;
+            }
             sheet.Name = newSheetName;
             return true;
         }
@@ -194,7 +201,9 @@ namespace OpenXMLOffice.Excel
             }
             Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId.ToString()) as Sheet;
             if (sheet == null)
+            {
                 return false;
+            }
             sheet.Name = newSheetName;
             return true;
         }

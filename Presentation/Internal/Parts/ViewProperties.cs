@@ -1,7 +1,4 @@
-/*
-* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
-* See License in the project root for license information.
-*/
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -20,6 +17,7 @@ namespace OpenXMLOffice.Presentation
         #endregion Private Fields
 
         #region Public Constructors
+
         /// <summary>
         /// Create New View Properties
         /// </summary>
@@ -41,10 +39,12 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Constructors
 
         #region Public Methods
+
         /// <summary>
         /// Return OpenXML View Properties
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public P.ViewProperties GetViewProperties()
         {
             return OpenXMLViewProperties;

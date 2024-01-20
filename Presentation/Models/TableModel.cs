@@ -1,7 +1,4 @@
-/*
-* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
-* See License in the project root for license information.
-*/
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 namespace OpenXMLOffice.Presentation
 {
@@ -13,13 +10,15 @@ namespace OpenXMLOffice.Presentation
         #region Public Fields
 
         /// <summary>
+        /// Cell Alignment Option
+        /// </summary>
+        public AlignmentValues? Alignment;
+
+        /// <summary>
         /// Enable Bottom Border
         /// </summary>
         public bool BottomBorder = false;
-        /// <summary>
-        /// Enable Top Left to Bottom Right Border
-        /// </summary>
-        public bool TopLeftToBottomRightBorder = false;
+
         /// <summary>
         /// Enable Bottom Left to Top Right Border
         /// </summary>
@@ -82,14 +81,18 @@ namespace OpenXMLOffice.Presentation
         public bool TopBorder = false;
 
         /// <summary>
+        /// Enable Top Left to Bottom Right Border
+        /// </summary>
+        public bool TopLeftToBottomRightBorder = false;
+
+        /// <summary>
         /// Cell Value
         /// </summary>
         public string? Value;
 
-        /// <summary>
-        /// Cell Alignment Option
-        /// </summary>
-        public AlignmentValues? Alignment;
+        #endregion Public Fields
+
+        #region Public Enums
 
         /// <summary>
         /// Cell Vertical Alignment Option
@@ -110,13 +113,14 @@ namespace OpenXMLOffice.Presentation
             /// Align Right
             /// </summary>
             RIGHT,
+
             /// <summary>
             /// Align Justify
             /// </summary>
             JUSTIFY
         }
 
-        #endregion Public Fields
+        #endregion Public Enums
     }
 
     /// <summary>

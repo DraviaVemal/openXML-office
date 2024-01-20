@@ -1,7 +1,4 @@
-/*
-* Copyright (c) DraviaVemal. All Rights Reserved. Licensed under the MIT License.
-* See License in the project root for license information.
-*/
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -26,18 +23,22 @@ namespace OpenXMLOffice.Presentation
         #endregion Public Constructors
 
         #region Internal Methods
+
         /// <summary>
         /// Return OpenXML Run
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         internal A.Run GetTextBoxRun()
         {
             return GetTextBoxBaseRun();
         }
+
         /// <summary>
         /// Return OpenXML Shape
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         internal P.Shape GetTextBoxShape()
         {
             return GetTextBoxBaseShape();
