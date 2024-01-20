@@ -135,10 +135,6 @@ namespace OpenXMLOffice.Global
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!, new[] { ChartDataGrouping.seriesHeaderCells! }));
-            if (Marker != null)
-            {
-                series.Append(Marker);
-            }
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
             {
@@ -151,11 +147,15 @@ namespace OpenXMLOffice.Global
                 ShapeProperties.Append(Outline);
                 ShapeProperties.Append(new A.EffectList());
             }
+            series.Append(ShapeProperties);
+            if (Marker != null)
+            {
+                series.Append(Marker);
+            }
             if (DataLabels != null)
             {
                 series.Append(DataLabels);
             }
-            series.Append(ShapeProperties);
             series.Append(CreateXValueAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));
             series.Append(CreateYValueAxisData(ChartDataGrouping.yAxisFormula!, ChartDataGrouping.yAxisCells!));
             if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)

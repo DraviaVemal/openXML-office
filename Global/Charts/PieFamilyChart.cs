@@ -66,12 +66,7 @@ namespace OpenXMLOffice.Global
                     }
                     return null;
                 }
-                Chart.Append(CreateChartSeries(seriesIndex, Series,
-                    CreateSolidFill(pieChartSetting.pieChartSeriesSettings
-                            .Where(item => item?.fillColor != null)
-                            .Select(item => item?.fillColor!)
-                            .ToList(), seriesIndex),
-                    GetDataLabels()));
+                Chart.Append(CreateChartSeries(seriesIndex, Series, GetDataLabels()));
                 seriesIndex++;
             });
             C.DataLabels? DataLabels = CreatePieDataLabels(pieChartSetting.pieChartDataLabel);
@@ -90,7 +85,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.DataLabels? DataLabels)
         {
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
@@ -110,8 +105,11 @@ namespace OpenXMLOffice.Global
                     ShapeProperties.Append(new A.Outline(new A.SolidFill(new A.SchemeColor { Val = A.SchemeColorValues.Light1 })) { Width = 19050 });
                 }
                 ShapeProperties.Append(new A.EffectList());
-                // series.Append(DataLabels);
                 DataPoint.Append(ShapeProperties);
+                if (DataLabels != null)
+                {
+                    series.Append(DataLabels);
+                }
                 series.Append(DataPoint);
             }
             series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));

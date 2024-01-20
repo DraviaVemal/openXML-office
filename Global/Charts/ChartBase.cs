@@ -116,13 +116,7 @@ public class ChartBase : CommonProperties
             },
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
-            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = CategoryAxisSetting.crossAxisId },
-            new C.Crosses { Val = C.CrossesValues.AutoZero },
-            new C.AutoLabeled { Val = true },
-            new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
-            new C.LabelOffset { Val = 100 },
-            new C.NoMultiLevelLabels { Val = false });
+            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
         C.ShapeProperties ShapeProperties = CreateShapeProperties();
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
@@ -135,7 +129,6 @@ public class ChartBase : CommonProperties
         {
             CategoryAxis.Append(CreateMinorGridLine());
         }
-        CategoryAxis.Append(ShapeProperties);
         C.TextProperties TextProperties = new(
             new A.BodyProperties(),
             new A.ListStyle(),
@@ -152,7 +145,15 @@ public class ChartBase : CommonProperties
                 new A.EndParagraphRunProperties { Language = "en-US" }
             )
         );
+        CategoryAxis.Append(ShapeProperties);
         CategoryAxis.Append(TextProperties);
+        CategoryAxis.Append(
+            new C.CrossingAxis { Val = CategoryAxisSetting.crossAxisId },
+            new C.Crosses { Val = C.CrossesValues.AutoZero },
+            new C.AutoLabeled { Val = true },
+            new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
+            new C.LabelOffset { Val = 100 },
+            new C.NoMultiLevelLabels { Val = false });
         return CategoryAxis;
     }
 
@@ -213,21 +214,21 @@ public class ChartBase : CommonProperties
         C.ExtensionList ExtensionList = new(
             new C.Extension(
                 new C15.DataLabelFieldTable(),
+                new C15.ExceptionForSave() { Val = true },
                 new C15.ShowDataLabelsRange() { Val = true }
+            )
+            {
+                Uri = GeneratorUtils.GenerateNewGUID()
+            },
+            new C.Extension(
+                new C15.ShowDataLabelsRange() { Val = true },
+                new C15.ShowLeaderLines() { Val = false }
             )
             {
                 Uri = GeneratorUtils.GenerateNewGUID()
             }
         );
-        C.DataLabels DataLabels = new(
-            new C.ShowLegendKey { Val = ChartDataLabel.showLegendKey },
-            new C.ShowValue { Val = ChartDataLabel.showValue },
-            new C.ShowCategoryName { Val = ChartDataLabel.showCategoryName },
-            new C.ShowSeriesName { Val = ChartDataLabel.showSeriesName },
-            new C.ShowPercent { Val = false },
-            new C.ShowLeaderLines() { Val = false },
-            new C.Separator(ChartDataLabel.separator),
-            (OpenXmlElement)ExtensionList.Clone());
+        C.DataLabels DataLabels = new();
         for (int i = 0; i < DataLabelCount; i++)
         {
             A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
@@ -258,18 +259,7 @@ public class ChartBase : CommonProperties
                     }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("VALUE", "[VALUE]"));
             }
-            Paragraph.Append(new A.EndParagraphRunProperties(
-                    new A.SolidFill(
-                        new A.RgbColorModelHex() { Val = "000000" }
-                    ),
-                    new A.Highlight(
-                        new A.RgbColorModelHex() { Val = "FFFFFF" }
-                    ),
-                    new A.LatinFont() { Typeface = "Calibri (Body)" },
-                    new A.EastAsianFont() { Typeface = "Calibri (Body)" },
-                    new A.ComplexScriptFont() { Typeface = "Calibri (Body)" }
-                )
-            { Language = "", FontSize = 1800, Bold = false, Italic = false, Underline = A.TextUnderlineValues.None, Dirty = false });
+            Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-US" });
             DataLabels.Append(new C.DataLabel(
                 new C.Index() { Val = (uint)i },
                 new C.SeriesText(
@@ -283,10 +273,21 @@ public class ChartBase : CommonProperties
                 new C.ShowValue { Val = ChartDataLabel.showValue },
                 new C.ShowCategoryName { Val = ChartDataLabel.showCategoryName },
                 new C.ShowSeriesName { Val = ChartDataLabel.showSeriesName },
+                new C.ShowPercent() { Val = true },
+                new C.ShowBubbleSize() { Val = true },
                 new C.Separator(ChartDataLabel.separator),
                 (OpenXmlElement)ExtensionList.Clone()
             ));
         }
+        DataLabels.Append(new C.ShowLegendKey { Val = ChartDataLabel.showLegendKey },
+            new C.ShowValue { Val = ChartDataLabel.showValue },
+            new C.ShowCategoryName { Val = ChartDataLabel.showCategoryName },
+            new C.ShowSeriesName { Val = ChartDataLabel.showSeriesName },
+            new C.ShowPercent { Val = false },
+            new C.ShowBubbleSize() { Val = true },
+            new C.Separator(ChartDataLabel.separator),
+            new C.ShowLeaderLines() { Val = false });
+        DataLabels.Append((OpenXmlElement)ExtensionList.Clone());
         return DataLabels;
     }
 
@@ -301,7 +302,7 @@ public class ChartBase : CommonProperties
     /// </returns>
     protected C15.DataLabelsRange CreateDataLabelsRange(string Formula, ChartData[] Cells)
     {
-        return new(new C.Formula(Formula), AddDataLabelCacheValue(Cells));
+        return new(new C15.Formula(Formula), AddDataLabelCacheValue(Cells));
     }
 
     /// <summary>
@@ -405,14 +406,7 @@ public class ChartBase : CommonProperties
                     AxisPosition.TOP => C.AxisPositionValues.Top,
                     _ => C.AxisPositionValues.Bottom
                 }
-            },
-            new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
-            new C.MajorTickMark { Val = C.TickMarkValues.None },
-            new C.MinorTickMark { Val = C.TickMarkValues.None },
-            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = ValueAxisSetting.crossAxisId },
-            new C.Crosses { Val = C.CrossesValues.AutoZero },
-            new C.CrossBetween { Val = C.CrossBetweenValues.Between });
+            });
         if (chartSetting.chartGridLinesOptions.isMajorValueLinesEnabled)
         {
             ValueAxis.Append(CreateMajorGridLine());
@@ -425,7 +419,6 @@ public class ChartBase : CommonProperties
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
         ShapeProperties.Append(new A.EffectList());
-        ValueAxis.Append(ShapeProperties);
         C.TextProperties TextProperties = new(
             new A.BodyProperties(),
             new A.ListStyle(),
@@ -442,7 +435,17 @@ public class ChartBase : CommonProperties
                 new A.EndParagraphRunProperties { Language = "en-US" }
             )
         );
+        ValueAxis.Append(
+            new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
+            new C.MajorTickMark { Val = C.TickMarkValues.None },
+            new C.MinorTickMark { Val = C.TickMarkValues.None },
+            new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
+        ValueAxis.Append(ShapeProperties);
         ValueAxis.Append(TextProperties);
+        ValueAxis.Append(
+            new C.CrossingAxis { Val = ValueAxisSetting.crossAxisId },
+            new C.Crosses { Val = C.CrossesValues.AutoZero },
+            new C.CrossBetween { Val = C.CrossBetweenValues.Between });
         return ValueAxis;
     }
 

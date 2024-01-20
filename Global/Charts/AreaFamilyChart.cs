@@ -48,11 +48,11 @@ namespace OpenXMLOffice.Global
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.Outline(SolidFill, new A.Outline(new A.NoFill())));
             ShapeProperties.Append(new A.EffectList());
+            series.Append(ShapeProperties);
             if (DataLabels != null)
             {
                 series.Append(DataLabels);
             }
-            series.Append(ShapeProperties);
             series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));
             series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!, ChartDataGrouping.yAxisCells!));
             if (ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null)

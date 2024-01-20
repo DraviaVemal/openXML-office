@@ -1,6 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
+using C16 = DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
@@ -122,19 +123,23 @@ namespace OpenXMLOffice.Global
 
         private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
+            C.Extension extension = new(
+                new C16.UniqueID() { Val = GeneratorUtils.GenerateNewGUID() }
+            )
+            { Uri = GeneratorUtils.GenerateNewGUID() };
             C.LineChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!, new[] { ChartDataGrouping.seriesHeaderCells! }),
-                Marker);
+                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!, new[] { ChartDataGrouping.seriesHeaderCells! }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.Outline(SolidFill, new A.Round()));
             ShapeProperties.Append(new A.EffectList());
+            series.Append(ShapeProperties);
+            series.Append(Marker);
             if (DataLabels != null)
             {
                 series.Append(DataLabels);
             }
-            series.Append(ShapeProperties);
             series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));
             series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!, ChartDataGrouping.yAxisCells!));
             if (ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null)
