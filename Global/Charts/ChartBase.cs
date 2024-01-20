@@ -139,6 +139,23 @@ public class ChartBase : CommonProperties
             CategoryAxis.Append(CreateMinorGridLine());
         }
         CategoryAxis.Append(ShapeProperties);
+        C.TextProperties TextProperties = new(
+            new A.BodyProperties(),
+            new A.ListStyle(),
+            new A.Paragraph(
+                new A.ParagraphProperties(
+                    new A.DefaultRunProperties()
+                    {
+                        FontSize = (int)CategoryAxisSetting.FontSize * 100,
+                        Bold = CategoryAxisSetting.IsBold,
+                        Italic = CategoryAxisSetting.IsItalic,
+                        Baseline = 0
+                    }
+                ),
+                new A.EndParagraphRunProperties { Language = "en-US" }
+            )
+        );
+        CategoryAxis.Append(TextProperties);
         return CategoryAxis;
     }
 
@@ -412,6 +429,23 @@ public class ChartBase : CommonProperties
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
         ShapeProperties.Append(new A.EffectList());
         ValueAxis.Append(ShapeProperties);
+        C.TextProperties TextProperties = new(
+            new A.BodyProperties(),
+            new A.ListStyle(),
+            new A.Paragraph(
+                new A.ParagraphProperties(
+                    new A.DefaultRunProperties()
+                    {
+                        FontSize = (int)ValueAxisSetting.FontSize * 100,
+                        Bold = ValueAxisSetting.IsBold,
+                        Italic = ValueAxisSetting.IsItalic,
+                        Baseline = 0
+                    }
+                ),
+                new A.EndParagraphRunProperties { Language = "en-US" }
+            )
+        );
+        ValueAxis.Append(TextProperties);
         return ValueAxis;
     }
 
@@ -651,9 +685,9 @@ public class ChartBase : CommonProperties
         A.ParagraphProperties ParagraphProperties = new();
         A.DefaultRunProperties DefaultRunProperties = new()
         {
-            FontSize = 1197,
-            Bold = false,
-            Italic = false,
+            FontSize = (int)objChartLegendOptions.FontSize * 100,
+            Bold = objChartLegendOptions.IsBold,
+            Italic = objChartLegendOptions.IsItalic,
             Underline = A.TextUnderlineValues.None,
             Strike = A.TextStrikeValues.NoStrike,
             Kerning = 1200,

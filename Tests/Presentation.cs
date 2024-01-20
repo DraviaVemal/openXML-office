@@ -54,7 +54,12 @@ namespace OpenXMLOffice.Tests
             //2
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting()
             {
-                AreaChartTypes = AreaChartTypes.STACKED
+                AreaChartTypes = AreaChartTypes.STACKED,
+                ChartAxesOptions = new()
+                {
+                    HorizontalFontSize = 20,
+                    VerticalFontSize = 25
+                }
             });
             //3
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting()
@@ -67,7 +72,7 @@ namespace OpenXMLOffice.Tests
                 BarChartDataLabel = new BarChartDataLabel()
                 {
                     DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END,
-                    ShowValue = true
+                    ShowValue = true,
                 },
                 BarChartSeriesSettings = new(){
                     new(),
@@ -96,7 +101,8 @@ namespace OpenXMLOffice.Tests
                 Title = "Color Change Chart",
                 ChartLegendOptions = new ChartLegendOptions()
                 {
-                    LegendPosition = ChartLegendOptions.LegendPositionValues.TOP
+                    LegendPosition = ChartLegendOptions.LegendPositionValues.TOP,
+                    FontSize = 5
                 },
                 ColumnChartSeriesSettings = new(){
                     new(){

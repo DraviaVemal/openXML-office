@@ -180,13 +180,19 @@ namespace OpenXMLOffice.Global
             {
                 Id = 1362418656,
                 AxisPosition = AxisPosition.LEFT,
-                CrossAxisId = 1358349936
+                CrossAxisId = 1358349936,
+                FontSize = BarChartSetting.ChartAxesOptions.VerticalFontSize,
+                IsBold = BarChartSetting.ChartAxesOptions.IsVerticalBold,
+                IsItalic = BarChartSetting.ChartAxesOptions.IsVerticalItalic,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
                 Id = 1358349936,
                 AxisPosition = AxisPosition.BOTTOM,
-                CrossAxisId = 1362418656
+                CrossAxisId = 1362418656,
+                FontSize = BarChartSetting.ChartAxesOptions.HorizontalFontSize,
+                IsBold = BarChartSetting.ChartAxesOptions.IsHorizontalBold,
+                IsItalic = BarChartSetting.ChartAxesOptions.IsHorizontalItalic,
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());

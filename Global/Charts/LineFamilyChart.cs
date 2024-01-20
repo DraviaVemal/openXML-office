@@ -103,11 +103,17 @@ namespace OpenXMLOffice.Global
             {
                 Id = 1362418656,
                 CrossAxisId = 1358349936,
+                FontSize = LineChartSetting.ChartAxesOptions.HorizontalFontSize,
+                IsBold = LineChartSetting.ChartAxesOptions.IsHorizontalBold,
+                IsItalic = LineChartSetting.ChartAxesOptions.IsHorizontalItalic,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
                 Id = 1358349936,
-                CrossAxisId = 1362418656
+                CrossAxisId = 1362418656,
+                FontSize = LineChartSetting.ChartAxesOptions.VerticalFontSize,
+                IsBold = LineChartSetting.ChartAxesOptions.IsVerticalBold,
+                IsItalic = LineChartSetting.ChartAxesOptions.IsVerticalItalic,
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());

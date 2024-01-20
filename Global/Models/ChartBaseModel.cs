@@ -37,11 +37,21 @@ namespace OpenXMLOffice.Global
     public class CategoryAxisSetting
     {
         #region Internal Fields
-
+        internal uint Id;
         internal AxisPosition AxisPosition = AxisPosition.BOTTOM;
         internal uint CrossAxisId;
-        internal uint Id;
-
+        /// <summary>
+        /// Is Font Bold
+        /// </summary>
+        internal bool IsBold = false;
+        /// <summary>
+        /// Is Font Italic
+        /// </summary>
+        internal bool IsItalic = false;
+        /// <summary>
+        ///  Font Size
+        /// </summary>
+        public float FontSize = 11.97F;
         #endregion Internal Fields
     }
 
@@ -56,7 +66,30 @@ namespace OpenXMLOffice.Global
         /// Is Horizontal Axes Enabled
         /// </summary>
         public bool IsHorizontalAxesEnabled = true;
-
+        /// <summary>
+        /// Is Font Bold
+        /// </summary>
+        public bool IsHorizontalBold = false;
+        /// <summary>
+        /// Is Font Italic
+        /// </summary>
+        public bool IsHorizontalItalic = false;
+        /// <summary>
+        ///  Font Size
+        /// </summary>
+        public float HorizontalFontSize = 11.97F;
+        /// <summary>
+        /// Is Font Bold
+        /// </summary>
+        public bool IsVerticalBold = false;
+        /// <summary>
+        /// Is Font Italic
+        /// </summary>
+        public bool IsVerticalItalic = false;
+        /// <summary>
+        ///  Font Size
+        /// </summary>
+        public float VerticalFontSize = 11.97F;
         /// <summary>
         /// Is Vertical Axes Enabled
         /// </summary>
@@ -292,6 +325,18 @@ namespace OpenXMLOffice.Global
         /// Is Legend Chart OverLap
         /// </summary>
         public bool IsLegendChartOverLap = false;
+        /// <summary>
+        /// Is Font Bold
+        /// </summary>
+        public bool IsBold = false;
+        /// <summary>
+        /// Is Font Italic
+        /// </summary>
+        internal bool IsItalic = false;
+        /// <summary>
+        /// Font Size
+        /// </summary>
+        public float FontSize = 11.97F;
 
         /// <summary>
         /// Legend Position
@@ -412,10 +457,21 @@ namespace OpenXMLOffice.Global
     public class ValueAxisSetting
     {
         #region Internal Fields
-
+        internal uint Id;
         internal AxisPosition AxisPosition = AxisPosition.LEFT;
         internal uint CrossAxisId;
-        internal uint Id;
+        /// <summary>
+        /// Is Font Bold
+        /// </summary>
+        public bool IsBold = false;
+        /// <summary>
+        /// Is Font Italic
+        /// </summary>
+        internal bool IsItalic = false;
+        /// <summary>
+        /// Font Size
+        /// </summary>
+        public float FontSize = 11.97F;
 
         #endregion Internal Fields
     }
