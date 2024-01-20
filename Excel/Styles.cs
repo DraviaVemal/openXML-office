@@ -131,31 +131,144 @@ namespace OpenXMLOffice.Excel
         /// </exception>
         internal void SaveStyleProps(X.Stylesheet Stylesheet)
         {
-            Stylesheet.Fonts = new(FontStyleCollection.FindAll().ToList().Select(item =>
+            Stylesheet.Fonts = GetFonts();
+            Stylesheet.Fills = GetFills();
+            Stylesheet.Borders = GetBorders();
+            Stylesheet.CellStyleFormats ??= new(
+                new X.CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0 })
+            { Count = 1 };//cellStyleXfs
+            Stylesheet.CellFormats = GetCellFormats();//cellXfs
+            Stylesheet.CellStyles ??= new(
+                new X.CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
+            { Count = 1 };//cellStyles
+            Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
+            Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
+        }
+
+        private X.NumberingFormats GetNumberFormats()
+        {
+            return new(NumberFormatCollection.FindAll().ToList().Select(item =>
             {
-                X.Font Font = new()
+                X.NumberingFormat NumberingFormat = new()
                 {
-                    FontSize = new() { Val = item.Size },
-                    FontName = new() { Val = item.Name },
-                    FontFamilyNumbering = new() { Val = item.Family },
-                    FontScheme = new()
-                    {
-                        Val = item.FontScheme switch
-                        {
-                            FontStyle.SchemeValues.MINOR => X.FontSchemeValues.Minor,
-                            FontStyle.SchemeValues.MAJOR => X.FontSchemeValues.Major,
-                            _ => X.FontSchemeValues.None
-                        }
-                    }
+                    NumberFormatId = item.Id,
+                    FormatCode = item.FormatCode
                 };
-                if (item.Color != null)
-                {
-                    Font.Color = new() { Rgb = item.Color };
-                }
-                return Font;
+                return NumberingFormat;
             }))
-            { Count = (uint)FontStyleCollection.Count() };
-            Stylesheet.Fills = new(FillStyleCollection.FindAll().ToList().Select(item =>
+            { Count = (uint)NumberFormatCollection.Count() };
+        }
+
+        private X.CellFormats GetCellFormats()
+        {
+            return new(
+                            CellXfsCollection.FindAll().ToList().Select(item =>
+                            {
+                                X.CellFormat CellFormat = new()
+                                {
+                                    NumberFormatId = item.NumberFormatId,
+                                    FontId = item.FontId,
+                                    FillId = item.FillId,
+                                    BorderId = item.BorderId,
+                                    FormatId = 0,
+                                    ApplyAlignment = item.ApplyAlignment,
+                                    ApplyBorder = item.ApplyBorder,
+                                    ApplyNumberFormat = item.ApplyNumberFormat,
+                                    ApplyFill = item.ApplyFill,
+                                    ApplyFont = item.ApplyFont,
+                                };
+                                if (item.VerticalAlignment != VerticalAlignmentValues.NONE ||
+                                    item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
+                                    item.IsWrapetext)
+                                {
+                                    CellFormat.Alignment = new();
+                                    if (item.VerticalAlignment != VerticalAlignmentValues.NONE)
+                                    {
+                                        CellFormat.Alignment.Vertical = item.VerticalAlignment switch
+                                        {
+                                            VerticalAlignmentValues.TOP => X.VerticalAlignmentValues.Top,
+                                            VerticalAlignmentValues.MIDDLE => X.VerticalAlignmentValues.Center,
+                                            _ => X.VerticalAlignmentValues.Bottom
+                                        };
+                                    }
+                                    if (item.HorizontalAlignment != HorizontalAlignmentValues.NONE)
+                                    {
+                                        CellFormat.Alignment.Horizontal = item.HorizontalAlignment switch
+                                        {
+                                            HorizontalAlignmentValues.LEFT => X.HorizontalAlignmentValues.Left,
+                                            HorizontalAlignmentValues.CENTER => X.HorizontalAlignmentValues.Center,
+                                            _ => X.HorizontalAlignmentValues.Right
+                                        };
+                                    }
+                                    if (item.IsWrapetext)
+                                    {
+                                        CellFormat.Alignment.WrapText = true;
+                                    }
+                                }
+                                return CellFormat;
+                            }))
+            { Count = (uint)CellXfsCollection.Count() };
+        }
+
+        private X.Borders GetBorders()
+        {
+            return new(BorderStyleCollection.FindAll().ToList().Select(item =>
+            {
+                static X.BorderStyleValues GetBorderStyle(BorderSetting.StyleValues Style)
+                {
+                    return Style switch
+                    {
+                        BorderSetting.StyleValues.THIN => X.BorderStyleValues.Thin,
+                        BorderSetting.StyleValues.THICK => X.BorderStyleValues.Thick,
+                        BorderSetting.StyleValues.DOTTED => X.BorderStyleValues.Dotted,
+                        BorderSetting.StyleValues.DOUBLE => X.BorderStyleValues.Double,
+                        BorderSetting.StyleValues.DASHED => X.BorderStyleValues.Dashed,
+                        BorderSetting.StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
+                        BorderSetting.StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
+                        BorderSetting.StyleValues.MEDIUM => X.BorderStyleValues.Medium,
+                        BorderSetting.StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
+                        BorderSetting.StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
+                        BorderSetting.StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
+                        BorderSetting.StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
+                        BorderSetting.StyleValues.HAIR => X.BorderStyleValues.Hair,
+                        _ => X.BorderStyleValues.None
+                    };
+                }
+                X.Border Border = new()
+                {
+                    LeftBorder = new(),
+                    RightBorder = new(),
+                    BottomBorder = new(),
+                    TopBorder = new(),
+                };
+                if (item.Left.Style != BorderSetting.StyleValues.NONE)
+                {
+                    Border.LeftBorder.Style = GetBorderStyle(item.Left.Style);
+                    Border.LeftBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
+                }
+                if (item.Right.Style != BorderSetting.StyleValues.NONE)
+                {
+                    Border.RightBorder.Style = GetBorderStyle(item.Right.Style);
+                    Border.RightBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
+                }
+                if (item.Top.Style != BorderSetting.StyleValues.NONE)
+                {
+                    Border.TopBorder.Style = GetBorderStyle(item.Top.Style);
+                    Border.TopBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
+                }
+                if (item.Bottom.Style != BorderSetting.StyleValues.NONE)
+                {
+                    Border.BottomBorder.Style = GetBorderStyle(item.Bottom.Style);
+                    Border.BottomBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
+                }
+                return Border;
+            }))
+            { Count = (uint)BorderStyleCollection.Count() };
+        }
+
+        private X.Fills GetFills()
+        {
+            return new(FillStyleCollection.FindAll().ToList().Select(item =>
             {
                 X.Fill Fill = new()
                 {
@@ -179,167 +292,34 @@ namespace OpenXMLOffice.Excel
                 return Fill;
             }))
             { Count = (uint)FillStyleCollection.Count() };
-            Stylesheet.Borders = new(BorderStyleCollection.FindAll().ToList().Select(item =>
-            {
-                X.Border Border = new()
-                {
-                    LeftBorder = new(),
-                    RightBorder = new(),
-                    BottomBorder = new(),
-                    TopBorder = new(),
-                };
-                if (item.Left.Style != BorderSetting.StyleValues.NONE)
-                {
-                    Border.LeftBorder.Style = item.Left.Style switch
-                    {
-                        BorderSetting.StyleValues.THIN => X.BorderStyleValues.Thin,
-                        BorderSetting.StyleValues.THICK => X.BorderStyleValues.Thick,
-                        BorderSetting.StyleValues.DOTTED => X.BorderStyleValues.Dotted,
-                        BorderSetting.StyleValues.DOUBLE => X.BorderStyleValues.Double,
-                        BorderSetting.StyleValues.DASHED => X.BorderStyleValues.Dashed,
-                        BorderSetting.StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
-                        BorderSetting.StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
-                        BorderSetting.StyleValues.MEDIUM => X.BorderStyleValues.Medium,
-                        BorderSetting.StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
-                        BorderSetting.StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
-                        BorderSetting.StyleValues.HAIR => X.BorderStyleValues.Hair,
-                        _ => X.BorderStyleValues.None
-                    };
-                    Border.LeftBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
-                }
-                if (item.Right.Style != BorderSetting.StyleValues.NONE)
-                {
-                    Border.RightBorder.Style = item.Right.Style switch
-                    {
-                        BorderSetting.StyleValues.THIN => X.BorderStyleValues.Thin,
-                        BorderSetting.StyleValues.THICK => X.BorderStyleValues.Thick,
-                        BorderSetting.StyleValues.DOTTED => X.BorderStyleValues.Dotted,
-                        BorderSetting.StyleValues.DOUBLE => X.BorderStyleValues.Double,
-                        BorderSetting.StyleValues.DASHED => X.BorderStyleValues.Dashed,
-                        BorderSetting.StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
-                        BorderSetting.StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
-                        BorderSetting.StyleValues.MEDIUM => X.BorderStyleValues.Medium,
-                        BorderSetting.StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
-                        BorderSetting.StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
-                        BorderSetting.StyleValues.HAIR => X.BorderStyleValues.Hair,
-                        _ => X.BorderStyleValues.None
-                    };
-                    Border.RightBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
-                }
-                if (item.Top.Style != BorderSetting.StyleValues.NONE)
-                {
-                    Border.TopBorder.Style = item.Top.Style switch
-                    {
-                        BorderSetting.StyleValues.THIN => X.BorderStyleValues.Thin,
-                        BorderSetting.StyleValues.THICK => X.BorderStyleValues.Thick,
-                        BorderSetting.StyleValues.DOTTED => X.BorderStyleValues.Dotted,
-                        BorderSetting.StyleValues.DOUBLE => X.BorderStyleValues.Double,
-                        BorderSetting.StyleValues.DASHED => X.BorderStyleValues.Dashed,
-                        BorderSetting.StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
-                        BorderSetting.StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
-                        BorderSetting.StyleValues.MEDIUM => X.BorderStyleValues.Medium,
-                        BorderSetting.StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
-                        BorderSetting.StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
-                        BorderSetting.StyleValues.HAIR => X.BorderStyleValues.Hair,
-                        _ => X.BorderStyleValues.None
-                    };
-                    Border.TopBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
-                }
-                if (item.Bottom.Style != BorderSetting.StyleValues.NONE)
-                {
-                    Border.BottomBorder.Style = item.Bottom.Style switch
-                    {
-                        BorderSetting.StyleValues.THIN => X.BorderStyleValues.Thin,
-                        BorderSetting.StyleValues.THICK => X.BorderStyleValues.Thick,
-                        BorderSetting.StyleValues.DOTTED => X.BorderStyleValues.Dotted,
-                        BorderSetting.StyleValues.DOUBLE => X.BorderStyleValues.Double,
-                        BorderSetting.StyleValues.DASHED => X.BorderStyleValues.Dashed,
-                        BorderSetting.StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
-                        BorderSetting.StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
-                        BorderSetting.StyleValues.MEDIUM => X.BorderStyleValues.Medium,
-                        BorderSetting.StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
-                        BorderSetting.StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
-                        BorderSetting.StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
-                        BorderSetting.StyleValues.HAIR => X.BorderStyleValues.Hair,
-                        _ => X.BorderStyleValues.None
-                    };
-                    Border.BottomBorder.AppendChild(new X.Color() { Rgb = item.Left.Color });
-                }
-                return Border;
-            }))
-            { Count = (uint)BorderStyleCollection.Count() };
+        }
 
-            Stylesheet.CellStyleFormats ??= new(
-                new X.CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0 })
-            { Count = 1 };//cellStyleXfs
-            Stylesheet.CellFormats = new(
-                CellXfsCollection.FindAll().ToList().Select(item =>
+        private X.Fonts GetFonts()
+        {
+            return new(FontStyleCollection.FindAll().ToList().Select(item =>
+            {
+                X.Font Font = new()
                 {
-                    X.CellFormat CellFormat = new()
+                    FontSize = new() { Val = item.Size },
+                    FontName = new() { Val = item.Name },
+                    FontFamilyNumbering = new() { Val = item.Family },
+                    FontScheme = new()
                     {
-                        NumberFormatId = item.NumberFormatId,
-                        FontId = item.FontId,
-                        FillId = item.FillId,
-                        BorderId = item.BorderId,
-                        FormatId = 0,
-                        ApplyAlignment = item.ApplyAlignment,
-                        ApplyBorder = item.ApplyBorder,
-                        ApplyNumberFormat = item.ApplyNumberFormat,
-                        ApplyFill = item.ApplyFill,
-                        ApplyFont = item.ApplyFont,
-                    };
-                    if (item.VerticalAlignment != VerticalAlignmentValues.NONE ||
-                        item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
-                        item.IsWrapetext)
-                    {
-                        CellFormat.Alignment = new();
-                        if (item.VerticalAlignment != VerticalAlignmentValues.NONE)
+                        Val = item.FontScheme switch
                         {
-                            CellFormat.Alignment.Vertical = item.VerticalAlignment switch
-                            {
-                                VerticalAlignmentValues.TOP => X.VerticalAlignmentValues.Top,
-                                VerticalAlignmentValues.MIDDLE => X.VerticalAlignmentValues.Center,
-                                _ => X.VerticalAlignmentValues.Bottom
-                            };
-                        }
-                        if (item.HorizontalAlignment != HorizontalAlignmentValues.NONE)
-                        {
-                            CellFormat.Alignment.Horizontal = item.HorizontalAlignment switch
-                            {
-                                HorizontalAlignmentValues.LEFT => X.HorizontalAlignmentValues.Left,
-                                HorizontalAlignmentValues.CENTER => X.HorizontalAlignmentValues.Center,
-                                _ => X.HorizontalAlignmentValues.Right
-                            };
-                        }
-                        if (item.IsWrapetext)
-                        {
-                            CellFormat.Alignment.WrapText = true;
+                            FontStyle.SchemeValues.MINOR => X.FontSchemeValues.Minor,
+                            FontStyle.SchemeValues.MAJOR => X.FontSchemeValues.Major,
+                            _ => X.FontSchemeValues.None
                         }
                     }
-                    return CellFormat;
-                }))
-            { Count = (uint)CellXfsCollection.Count() };//cellXfs
-            Stylesheet.CellStyles ??= new(
-                new X.CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
-            { Count = 1 };//cellStyles
-            Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
-            Stylesheet.NumberingFormats = new(NumberFormatCollection.FindAll().ToList().Select(item =>
-            {
-                X.NumberingFormat NumberingFormat = new()
-                {
-                    NumberFormatId = item.Id,
-                    FormatCode = item.FormatCode
                 };
-                return NumberingFormat;
+                if (item.Color != null)
+                {
+                    Font.Color = new() { Rgb = item.Color };
+                }
+                return Font;
             }))
-            { Count = (uint)NumberFormatCollection.Count() };//numFmts
+            { Count = (uint)FontStyleCollection.Count() };
         }
 
         #endregion Internal Methods

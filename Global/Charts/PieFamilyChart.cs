@@ -136,17 +136,20 @@ namespace OpenXMLOffice.Global
                 C.DataLabels DataLabels = CreateDataLabels(PieChartDataLabel, DataLabelCounter);
                 if (PieChartSetting.PieChartTypes == PieChartTypes.DOUGHNUT &&
                     new[] { PieChartDataLabel.DataLabelPositionValues.CENTER, PieChartDataLabel.DataLabelPositionValues.INSIDE_END, PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END, PieChartDataLabel.DataLabelPositionValues.BEST_FIT }.Contains(PieChartDataLabel.DataLabelPosition))
-                    DataLabels.InsertAt(new C.DataLabelPosition()
+                {
+                    throw new ArgumentException("DataLabelPosition is not supported for Doughnut Chart.");
+                }
+                DataLabels.InsertAt(new C.DataLabelPosition()
+                {
+                    Val = PieChartDataLabel.DataLabelPosition switch
                     {
-                        Val = PieChartDataLabel.DataLabelPosition switch
-                        {
-                            PieChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
-                            PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
-                            PieChartDataLabel.DataLabelPositionValues.BEST_FIT => C.DataLabelPositionValues.BestFit,
-                            //Center
-                            _ => C.DataLabelPositionValues.Center,
-                        }
-                    }, 0);
+                        PieChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                        PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
+                        PieChartDataLabel.DataLabelPositionValues.BEST_FIT => C.DataLabelPositionValues.BestFit,
+                        //Center
+                        _ => C.DataLabelPositionValues.Center,
+                    }
+                }, 0);
                 DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
                     new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),

@@ -51,7 +51,9 @@ public class ChartBase : CommonProperties
         OpenXMLChartSpace = CreateChartSpace();
         Chart = CreateChart();
         GetChartSpace().Append(Chart);
-        GetChartSpace().Append(new C.ExternalData(new C.AutoUpdate() { Val = false }) { Id = "rId1" });
+        GetChartSpace().Append(new C.ExternalData(
+            new C.AutoUpdate() { Val = false })
+        { Id = "rId1" });
     }
 
     #endregion Protected Constructors
@@ -217,26 +219,29 @@ public class ChartBase : CommonProperties
             A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
             if (ChartDataLabel.ShowSeriesName)
             {
-                Paragraph.Append(new TextBoxBase(new TextBoxSetting()
-                {
-                    Text = ChartDataLabel.Separator
-                }).GetTextBoxBaseRun());
+                Paragraph.Append(new TextBoxBase(
+                    new TextBoxSetting()
+                    {
+                        Text = ChartDataLabel.Separator
+                    }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
             }
             if (ChartDataLabel.ShowCategoryName)
             {
-                Paragraph.Append(new TextBoxBase(new TextBoxSetting()
-                {
-                    Text = ChartDataLabel.Separator
-                }).GetTextBoxBaseRun());
+                Paragraph.Append(new TextBoxBase(
+                    new TextBoxSetting()
+                    {
+                        Text = ChartDataLabel.Separator
+                    }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
             }
             if (ChartDataLabel.ShowValue)
             {
-                Paragraph.Append(new TextBoxBase(new TextBoxSetting()
-                {
-                    Text = ChartDataLabel.Separator
-                }).GetTextBoxBaseRun());
+                Paragraph.Append(new TextBoxBase(
+                    new TextBoxSetting()
+                    {
+                        Text = ChartDataLabel.Separator
+                    }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("VALUE", "[VALUE]"));
             }
             Paragraph.Append(new A.EndParagraphRunProperties(
