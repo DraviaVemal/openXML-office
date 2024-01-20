@@ -86,7 +86,7 @@ namespace OpenXMLOffice.Global
                         _ => C.DataLabelPositionValues.Center
                     }
                 }, 0);
-                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
+                DataLabels.Append(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()));
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
                     new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
                     new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
@@ -99,7 +99,7 @@ namespace OpenXMLOffice.Global
                     Kerning = 1200,
                     Baseline = 0
                 }), new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                DataLabels.Append(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
                 {
                     Rotation = 0,
                     UseParagraphSpacing = true,
@@ -113,7 +113,7 @@ namespace OpenXMLOffice.Global
                     Anchor = A.TextAnchoringTypeValues.Center,
                     AnchorCenter = true
                 }, new A.ListStyle(),
-               Paragraph), 0);
+               Paragraph));
                 return DataLabels;
             }
             return null;
