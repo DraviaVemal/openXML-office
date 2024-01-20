@@ -128,12 +128,11 @@ namespace OpenXMLOffice.Global {
                 },0);
                 DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(),new A.Outline(new A.NoFill()),new A.EffectList()),0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-                {
-                    FontSize = (int)PieChartDataLabel.FontSize * 100,
-                    Bold = PieChartDataLabel.IsBold,
-                    Italic = PieChartDataLabel.IsItalic,
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 },new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" },new A.EastAsianFont() { Typeface = "+mn-ea" },new A.ComplexScriptFont() { Typeface = "+mn-cs" }) {
+                    FontSize = (int)PieChartDataLabel.fontSize * 100,
+                    Bold = PieChartDataLabel.isBold,
+                    Italic = PieChartDataLabel.isItalic,
                     Underline = A.TextUnderlineValues.None,
                     Strike = A.TextStrikeValues.NoStrike,
                     Kerning = 1200,

@@ -66,13 +66,10 @@ namespace OpenXMLOffice.Global {
                                     GetDataLabels()));
                 SeriesIndex++;
             });
-            if (ColumnChartSetting.ColumnChartTypes == ColumnChartTypes.CLUSTERED)
-            {
-                ColumnChart.Append(new C.GapWidth { Val = (UInt16Value)ColumnChartSetting.ColumnGraphicsSetting.CategoryGap });
-                ColumnChart.Append(new C.Overlap { Val = (SByteValue)ColumnChartSetting.ColumnGraphicsSetting.SeriesGap });
-            }
-            else
-            {
+            if(columnChartSetting.columnChartTypes == ColumnChartTypes.CLUSTERED) {
+                ColumnChart.Append(new C.GapWidth { Val = (UInt16Value)columnChartSetting.columnGraphicsSetting.categoryGap });
+                ColumnChart.Append(new C.Overlap { Val = (SByteValue)columnChartSetting.columnGraphicsSetting.seriesGap });
+            } else {
                 ColumnChart.Append(new C.GapWidth { Val = 150 });
                 ColumnChart.Append(new C.Overlap { Val = 100 });
             }
@@ -83,21 +80,19 @@ namespace OpenXMLOffice.Global {
             ColumnChart.Append(new C.AxisId { Val = 1362418656 });
             ColumnChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(ColumnChart);
-            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
-            {
-                Id = 1362418656,
-                CrossAxisId = 1358349936,
-                FontSize = ColumnChartSetting.ChartAxesOptions.HorizontalFontSize,
-                IsBold = ColumnChartSetting.ChartAxesOptions.IsHorizontalBold,
-                IsItalic = ColumnChartSetting.ChartAxesOptions.IsHorizontalItalic,
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting() {
+                id = 1362418656,
+                crossAxisId = 1358349936,
+                fontSize = columnChartSetting.chartAxesOptions.horizontalFontSize,
+                isBold = columnChartSetting.chartAxesOptions.isVerticalItalic,
+                isItalic = columnChartSetting.chartAxesOptions.isVerticalItalic,
             }));
-            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
-            {
-                Id = 1358349936,
-                CrossAxisId = 1362418656,
-                FontSize = ColumnChartSetting.ChartAxesOptions.VerticalFontSize,
-                IsBold = ColumnChartSetting.ChartAxesOptions.IsVerticalBold,
-                IsItalic = ColumnChartSetting.ChartAxesOptions.IsVerticalItalic,
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting() {
+                id = 1358349936,
+                crossAxisId = 1362418656,
+                fontSize = columnChartSetting.chartAxesOptions.verticalFontSize,
+                isBold = columnChartSetting.chartAxesOptions.isVerticalBold,
+                isItalic = columnChartSetting.chartAxesOptions.isVerticalItalic,
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
@@ -141,20 +136,19 @@ namespace OpenXMLOffice.Global {
                         ColumnChartDataLabel.DataLabelPositionValues.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
                         _ => C.DataLabelPositionValues.Center
                     }
-                }, 0);
-                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
+                },0);
+                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(),new A.Outline(new A.NoFill()),new A.EffectList()),0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-                {
-                    FontSize = (int)ColumnChartDataLabel.FontSize * 100,
-                    Bold = ColumnChartDataLabel.IsBold,
-                    Italic = ColumnChartDataLabel.IsItalic,
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 },new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" },new A.EastAsianFont() { Typeface = "+mn-ea" },new A.ComplexScriptFont() { Typeface = "+mn-cs" }) {
+                    FontSize = (int)ColumnChartDataLabel.fontSize * 100,
+                    Bold = ColumnChartDataLabel.isBold,
+                    Italic = ColumnChartDataLabel.isItalic,
                     Underline = A.TextUnderlineValues.None,
                     Strike = A.TextStrikeValues.NoStrike,
                     Kerning = 1200,
                     Baseline = 0
-                }), new A.EndParagraphRunProperties() { Language = "en-US" });
+                }),new A.EndParagraphRunProperties() { Language = "en-US" });
                 DataLabels.InsertAt(
                     new C.TextProperties(
                         new A.BodyProperties(

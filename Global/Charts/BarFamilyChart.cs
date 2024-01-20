@@ -76,12 +76,11 @@ namespace OpenXMLOffice.Global {
                 },0);
                 DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(),new A.Outline(new A.NoFill()),new A.EffectList()),0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-                {
-                    FontSize = (int)BarChartDataLabel.FontSize * 100,
-                    Bold = BarChartDataLabel.IsBold,
-                    Italic = BarChartDataLabel.IsItalic,
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 },new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" },new A.EastAsianFont() { Typeface = "+mn-ea" },new A.ComplexScriptFont() { Typeface = "+mn-cs" }) {
+                    FontSize = (int)BarChartDataLabel.fontSize * 100,
+                    Bold = BarChartDataLabel.isBold,
+                    Italic = BarChartDataLabel.isItalic,
                     Underline = A.TextUnderlineValues.None,
                     Strike = A.TextStrikeValues.NoStrike,
                     Kerning = 1200,
@@ -136,13 +135,10 @@ namespace OpenXMLOffice.Global {
                     GetDataLabels()));
                 seriesIndex++;
             });
-            if (BarChartSetting.BarChartTypes == BarChartTypes.CLUSTERED)
-            {
-                BarChart.Append(new C.GapWidth { Val = (UInt16Value)BarChartSetting.BarGraphicsSetting.CategoryGap });
-                BarChart.Append(new C.Overlap { Val = (SByteValue)BarChartSetting.BarGraphicsSetting.SeriesGap });
-            }
-            else
-            {
+            if(barChartSetting.barChartTypes == BarChartTypes.CLUSTERED) {
+                BarChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
+                BarChart.Append(new C.Overlap { Val = (SByteValue)barChartSetting.barGraphicsSetting.seriesGap });
+            } else {
                 BarChart.Append(new C.GapWidth { Val = 150 });
                 BarChart.Append(new C.Overlap { Val = 100 });
             }
@@ -153,23 +149,21 @@ namespace OpenXMLOffice.Global {
             BarChart.Append(new C.AxisId { Val = 1362418656 });
             BarChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(BarChart);
-            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
-            {
-                Id = 1362418656,
-                AxisPosition = AxisPosition.LEFT,
-                CrossAxisId = 1358349936,
-                FontSize = BarChartSetting.ChartAxesOptions.VerticalFontSize,
-                IsBold = BarChartSetting.ChartAxesOptions.IsVerticalBold,
-                IsItalic = BarChartSetting.ChartAxesOptions.IsVerticalItalic,
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting() {
+                id = 1362418656,
+                axisPosition = AxisPosition.LEFT,
+                crossAxisId = 1358349936,
+                fontSize = barChartSetting.chartAxesOptions.verticalFontSize,
+                isBold = barChartSetting.chartAxesOptions.isVerticalBold,
+                isItalic = barChartSetting.chartAxesOptions.isVerticalItalic,
             }));
-            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
-            {
-                Id = 1358349936,
-                AxisPosition = AxisPosition.BOTTOM,
-                CrossAxisId = 1362418656,
-                FontSize = BarChartSetting.ChartAxesOptions.HorizontalFontSize,
-                IsBold = BarChartSetting.ChartAxesOptions.IsHorizontalBold,
-                IsItalic = BarChartSetting.ChartAxesOptions.IsHorizontalItalic,
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting() {
+                id = 1358349936,
+                axisPosition = AxisPosition.BOTTOM,
+                crossAxisId = 1362418656,
+                fontSize = barChartSetting.chartAxesOptions.horizontalFontSize,
+                isBold = barChartSetting.chartAxesOptions.isHorizontalBold,
+                isItalic = barChartSetting.chartAxesOptions.isHorizontalItalic,
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());

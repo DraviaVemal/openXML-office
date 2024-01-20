@@ -130,11 +130,10 @@ public class ChartBase : CommonProperties {
             new A.ListStyle(),
             new A.Paragraph(
                 new A.ParagraphProperties(
-                    new A.DefaultRunProperties()
-                    {
-                        FontSize = (int)CategoryAxisSetting.FontSize * 100,
-                        Bold = CategoryAxisSetting.IsBold,
-                        Italic = CategoryAxisSetting.IsItalic,
+                    new A.DefaultRunProperties() {
+                        FontSize = (int)CategoryAxisSetting.fontSize * 100,
+                        Bold = CategoryAxisSetting.isBold,
+                        Italic = CategoryAxisSetting.isItalic,
                         Baseline = 0
                     }
                 ),
@@ -389,11 +388,10 @@ public class ChartBase : CommonProperties {
             new A.ListStyle(),
             new A.Paragraph(
                 new A.ParagraphProperties(
-                    new A.DefaultRunProperties()
-                    {
-                        FontSize = (int)ValueAxisSetting.FontSize * 100,
-                        Bold = ValueAxisSetting.IsBold,
-                        Italic = ValueAxisSetting.IsItalic,
+                    new A.DefaultRunProperties() {
+                        FontSize = (int)ValueAxisSetting.fontSize * 100,
+                        Bold = ValueAxisSetting.isBold,
+                        Italic = ValueAxisSetting.isItalic,
                         Baseline = 0
                     }
                 ),
@@ -595,11 +593,10 @@ public class ChartBase : CommonProperties {
         TextProperties.Append(new A.ListStyle());
         A.Paragraph Paragraph = new();
         A.ParagraphProperties ParagraphProperties = new();
-        A.DefaultRunProperties DefaultRunProperties = new()
-        {
-            FontSize = (int)objChartLegendOptions.FontSize * 100,
-            Bold = objChartLegendOptions.IsBold,
-            Italic = objChartLegendOptions.IsItalic,
+        A.DefaultRunProperties DefaultRunProperties = new() {
+            FontSize = (int)objChartLegendOptions.fontSize * 100,
+            Bold = objChartLegendOptions.isBold,
+            Italic = objChartLegendOptions.isItalic,
             Underline = A.TextUnderlineValues.None,
             Strike = A.TextStrikeValues.NoStrike,
             Kerning = 1200,

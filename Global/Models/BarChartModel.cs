@@ -25,16 +25,15 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the graphics settings for a bar chart.
     /// </summary>
-    public class BarGraphicsSetting
-    {
+    public class BarGraphicsSetting {
         /// <summary>
         /// The gap width between the bars.
         /// </summary>
-        public int CategoryGap = 219;
+        public int categoryGap = 219;
         /// <summary>
         /// The gap between the series bars.
         /// </summary>
-        public int SeriesGap = -27;
+        public int seriesGap = -27;
     }
     /// <summary>
     /// Represents the data label settings for a bar chart.
@@ -137,11 +136,11 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// The options for the chart axis.
         /// </summary>
-        public ChartAxisOptions ChartAxisOptions = new();
+        public ChartAxisOptions chartAxisOptions = new();
         /// <summary>
         /// The graphics settings for the bar chart.
         /// </summary>
-        public BarGraphicsSetting BarGraphicsSetting = new();
+        public BarGraphicsSetting barGraphicsSetting = new();
 
         #endregion Public Fields
     }

@@ -44,13 +44,11 @@ namespace OpenXMLOffice.Tests {
             //1
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new AreaChartSetting());
             //2
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting()
-            {
-                AreaChartTypes = AreaChartTypes.STACKED,
-                ChartAxesOptions = new()
-                {
-                    HorizontalFontSize = 20,
-                    VerticalFontSize = 25
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new AreaChartSetting() {
+                areaChartTypes = AreaChartTypes.STACKED,
+                chartAxesOptions = new() {
+                    horizontalFontSize = 20,
+                    verticalFontSize = 25
                 }
             });
             //3
@@ -61,7 +59,7 @@ namespace OpenXMLOffice.Tests {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new BarChartSetting() {
                 barChartDataLabel = new BarChartDataLabel() {
                     dataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END,
-                    showValue = true
+                    showValue = true,
                 },
                 barChartSeriesSettings = new(){
                     new(),
@@ -86,7 +84,8 @@ namespace OpenXMLOffice.Tests {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new ColumnChartSetting() {
                 title = "Color Change Chart",
                 chartLegendOptions = new ChartLegendOptions() {
-                    legendPosition = ChartLegendOptions.LegendPositionValues.TOP
+                    legendPosition = ChartLegendOptions.LegendPositionValues.TOP,
+                    fontSize = 5
                 },
                 columnChartSeriesSettings = new(){
                     new(){

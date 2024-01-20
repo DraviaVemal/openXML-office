@@ -145,7 +145,7 @@ namespace OpenXMLOffice.Presentation {
         /// X,Y
         /// </returns>
         public (uint, uint) GetPosition() {
-            return (chartSetting.X, chartSetting.Y);
+            return (chartSetting.x, chartSetting.y);
         }
 
         /// <summary>
@@ -172,11 +172,11 @@ namespace OpenXMLOffice.Presentation {
         /// <param name="Y">
         /// </param>
         public void UpdatePosition(uint X,uint Y) {
-            chartSetting.X = X;
-            chartSetting.Y = Y;
+            chartSetting.x = X;
+            chartSetting.y = Y;
             if(graphicFrame != null) {
                 graphicFrame.Transform = new P.Transform {
-                    Offset = new A.Offset { X = chartSetting.X,Y = chartSetting.Y },
+                    Offset = new A.Offset { X = chartSetting.x,Y = chartSetting.y },
                     Extents = new A.Extents { Cx = chartSetting.width,Cy = chartSetting.height }
                 };
             }
@@ -194,7 +194,7 @@ namespace OpenXMLOffice.Presentation {
             chartSetting.height = Height;
             if(graphicFrame != null) {
                 graphicFrame.Transform = new P.Transform {
-                    Offset = new A.Offset { X = chartSetting.X,Y = chartSetting.Y },
+                    Offset = new A.Offset { X = chartSetting.x,Y = chartSetting.y },
                     Extents = new A.Extents { Cx = chartSetting.width,Cy = chartSetting.height }
                 };
             }
@@ -348,8 +348,8 @@ namespace OpenXMLOffice.Presentation {
                 NonVisualGraphicFrameProperties = NonVisualProperties,
                 Transform = new P.Transform(
                    new A.Offset {
-                       X = chartSetting.X,
-                       Y = chartSetting.Y
+                       X = chartSetting.x,
+                       Y = chartSetting.y
                    },
                    new A.Extents {
                        Cx = chartSetting.width,

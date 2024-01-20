@@ -69,12 +69,11 @@ namespace OpenXMLOffice.Global {
                 },0);
                 DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(),new A.Outline(new A.NoFill()),new A.EffectList()),0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-                {
-                    FontSize = (int)AreaChartDataLabel.FontSize * 100,
-                    Bold = AreaChartDataLabel.IsBold,
-                    Italic = AreaChartDataLabel.IsItalic,
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 },new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" },new A.EastAsianFont() { Typeface = "+mn-ea" },new A.ComplexScriptFont() { Typeface = "+mn-cs" }) {
+                    FontSize = (int)AreaChartDataLabel.fontSize * 100,
+                    Bold = AreaChartDataLabel.isBold,
+                    Italic = AreaChartDataLabel.isItalic,
                     Underline = A.TextUnderlineValues.None,
                     Strike = A.TextStrikeValues.NoStrike,
                     Kerning = 1200,
@@ -135,21 +134,19 @@ namespace OpenXMLOffice.Global {
             AreaChart.Append(new C.AxisId { Val = 1362418656 });
             AreaChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(AreaChart);
-            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
-            {
-                Id = 1362418656,
-                CrossAxisId = 1358349936,
-                FontSize = AreaChartSetting.ChartAxesOptions.HorizontalFontSize,
-                IsBold = AreaChartSetting.ChartAxesOptions.IsHorizontalBold,
-                IsItalic = AreaChartSetting.ChartAxesOptions.IsHorizontalItalic,
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting() {
+                id = 1362418656,
+                crossAxisId = 1358349936,
+                fontSize = areaChartSetting.chartAxesOptions.horizontalFontSize,
+                isBold = areaChartSetting.chartAxesOptions.isHorizontalBold,
+                isItalic = areaChartSetting.chartAxesOptions.isHorizontalItalic,
             }));
-            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
-            {
-                Id = 1358349936,
-                CrossAxisId = 1362418656,
-                FontSize = AreaChartSetting.ChartAxesOptions.VerticalFontSize,
-                IsBold = AreaChartSetting.ChartAxesOptions.IsVerticalBold,
-                IsItalic = AreaChartSetting.ChartAxesOptions.IsVerticalItalic,
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting() {
+                id = 1358349936,
+                crossAxisId = 1362418656,
+                fontSize = areaChartSetting.chartAxesOptions.verticalFontSize,
+                isBold = areaChartSetting.chartAxesOptions.isVerticalBold,
+                isItalic = areaChartSetting.chartAxesOptions.isVerticalItalic,
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());

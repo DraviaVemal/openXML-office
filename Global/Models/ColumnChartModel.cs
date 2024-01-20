@@ -26,16 +26,15 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the graphics settings for a column chart.
     /// </summary>
-    public class ColumnGraphicsSetting
-    {
+    public class ColumnGraphicsSetting {
         /// <summary>
         /// The gap width between the Column.
         /// </summary>
-        public int CategoryGap = 219;
+        public int categoryGap = 219;
         /// <summary>
         /// The gap between the series column.
         /// </summary>
-        public int SeriesGap = -27;
+        public int seriesGap = -27;
     }
 
     /// <summary>
@@ -139,11 +138,11 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Chart Type. default is CLUSTERED
         /// </summary>
-        public ColumnChartTypes ColumnChartTypes = ColumnChartTypes.CLUSTERED;
+        public ColumnChartTypes columnChartTypes = ColumnChartTypes.CLUSTERED;
         /// <summary>
         /// The graphics settings for the column chart.
         /// </summary>
-        public ColumnGraphicsSetting ColumnGraphicsSetting = new();
+        public ColumnGraphicsSetting columnGraphicsSetting = new();
 
         #endregion Public Fields
     }

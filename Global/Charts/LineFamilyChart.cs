@@ -85,21 +85,19 @@ namespace OpenXMLOffice.Global {
             LineChart.Append(new C.AxisId { Val = 1362418656 });
             LineChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(LineChart);
-            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
-            {
-                Id = 1362418656,
-                CrossAxisId = 1358349936,
-                FontSize = LineChartSetting.ChartAxesOptions.HorizontalFontSize,
-                IsBold = LineChartSetting.ChartAxesOptions.IsHorizontalBold,
-                IsItalic = LineChartSetting.ChartAxesOptions.IsHorizontalItalic,
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting() {
+                id = 1362418656,
+                crossAxisId = 1358349936,
+                fontSize = lineChartSetting.chartAxesOptions.horizontalFontSize,
+                isBold = lineChartSetting.chartAxesOptions.isHorizontalBold,
+                isItalic = lineChartSetting.chartAxesOptions.isHorizontalItalic,
             }));
-            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
-            {
-                Id = 1358349936,
-                CrossAxisId = 1362418656,
-                FontSize = LineChartSetting.ChartAxesOptions.VerticalFontSize,
-                IsBold = LineChartSetting.ChartAxesOptions.IsVerticalBold,
-                IsItalic = LineChartSetting.ChartAxesOptions.IsVerticalItalic,
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting() {
+                id = 1358349936,
+                crossAxisId = 1362418656,
+                fontSize = lineChartSetting.chartAxesOptions.verticalFontSize,
+                isBold = lineChartSetting.chartAxesOptions.isVerticalBold,
+                isItalic = lineChartSetting.chartAxesOptions.isVerticalItalic,
             }));
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.NoFill());
@@ -147,12 +145,11 @@ namespace OpenXMLOffice.Global {
                 },0);
                 DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(),new A.Outline(new A.NoFill()),new A.EffectList()),0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
-                {
-                    FontSize = (int)LineChartDataLabel.FontSize * 100,
-                    Bold = LineChartDataLabel.IsBold,
-                    Italic = LineChartDataLabel.IsItalic,
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 },new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" },new A.EastAsianFont() { Typeface = "+mn-ea" },new A.ComplexScriptFont() { Typeface = "+mn-cs" }) {
+                    FontSize = (int)LineChartDataLabel.fontSize * 100,
+                    Bold = LineChartDataLabel.isBold,
+                    Italic = LineChartDataLabel.isItalic,
                     Underline = A.TextUnderlineValues.None,
                     Strike = A.TextStrikeValues.NoStrike,
                     Kerning = 1200,
