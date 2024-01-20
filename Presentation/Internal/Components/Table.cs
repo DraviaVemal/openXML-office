@@ -156,10 +156,22 @@ namespace OpenXMLOffice.Presentation
             return Table;
         }
 
-        private A.TableCell CreateTableCell(TableCell Cell)
+        private A.TableCell CreateTableCell(TableCell Cell, TableRow Row)
         {
-            A.TableCell TableCell = new();
             A.Paragraph Paragraph = new();
+            if (Cell.Alignment != null)
+            {
+                Paragraph.Append(new A.ParagraphProperties()
+                {
+                    Alignment = Cell.Alignment switch
+                    {
+                        TableCell.AlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
+                        TableCell.AlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
+                        TableCell.AlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+                        _ => A.TextAlignmentTypeValues.Left
+                    }
+                });
+            }
             if (Cell.Value == null)
             {
                 Paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-IN" });
@@ -178,7 +190,8 @@ namespace OpenXMLOffice.Presentation
                     IsUnderline = Cell.IsUnderline,
                 }).GetTextBoxRun());
             }
-            TableCell.Append(new A.TextBody(
+            A.TableCell TableCellXML = new();
+            TableCellXML.Append(new A.TextBody(
                 new A.BodyProperties(),
                 new A.ListStyle(),
                 Paragraph
@@ -214,9 +227,9 @@ namespace OpenXMLOffice.Presentation
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(Cell.CellBackground != null ? CreateSolidFill(new List<string>() { Cell.CellBackground }, 0) : new A.NoFill());
-            TableCell.Append(TableCellProperties);
-            return TableCell;
+            TableCellProperties.Append((Cell.CellBackground != null || Row.RowBackground != null) ? CreateSolidFill(new List<string>() { Cell.CellBackground ?? Row.RowBackground! }, 0) : new A.NoFill());
+            TableCellXML.Append(TableCellProperties);
+            return TableCellXML;
         }
 
         private void CreateTableGraphicFrame(TableRow[] TableRows)
@@ -280,7 +293,7 @@ namespace OpenXMLOffice.Presentation
             };
             foreach (TableCell cell in Row.TableCells)
             {
-                TableRow.Append(CreateTableCell(cell));
+                TableRow.Append(CreateTableCell(cell, Row));
             }
             return TableRow;
         }

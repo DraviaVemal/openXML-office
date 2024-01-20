@@ -17,8 +17,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Class is only for inheritance purposes.
         /// </summary>
-        protected CommonProperties()
-        { }
+        protected CommonProperties() { }
 
         #endregion Protected Constructors
 

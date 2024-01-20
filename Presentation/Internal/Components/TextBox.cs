@@ -32,7 +32,7 @@ namespace OpenXMLOffice.Presentation
         /// <returns></returns>
         internal A.Run GetTextBoxRun()
         {
-            return base.GetTextBoxBaseRun();
+            return GetTextBoxBaseRun();
         }
         /// <summary>
         /// Return OpenXML Shape
@@ -40,7 +40,7 @@ namespace OpenXMLOffice.Presentation
         /// <returns></returns>
         internal P.Shape GetTextBoxShape()
         {
-            return base.GetTextBoxBaseShape();
+            return GetTextBoxBaseShape();
         }
 
         #endregion Internal Methods

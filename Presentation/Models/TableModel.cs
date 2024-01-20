@@ -86,6 +86,36 @@ namespace OpenXMLOffice.Presentation
         /// </summary>
         public string? Value;
 
+        /// <summary>
+        /// Cell Alignment Option
+        /// </summary>
+        public AlignmentValues? Alignment;
+
+        /// <summary>
+        /// Cell Vertical Alignment Option
+        /// </summary>
+        public enum AlignmentValues
+        {
+            /// <summary>
+            /// Align Left
+            /// </summary>
+            LEFT,
+
+            /// <summary>
+            /// Align Center
+            /// </summary>
+            CENTER,
+
+            /// <summary>
+            /// Align Right
+            /// </summary>
+            RIGHT,
+            /// <summary>
+            /// Align Justify
+            /// </summary>
+            JUSTIFY
+        }
+
         #endregion Public Fields
     }
 
