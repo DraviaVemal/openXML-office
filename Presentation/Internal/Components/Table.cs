@@ -5,17 +5,15 @@ using A = DocumentFormat.OpenXml.Drawing;
 using G = OpenXMLOffice.Global;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
-{
+namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Represents Table Class
     /// </summary>
-    public class Table : G.CommonProperties
-    {
+    public class Table : G.CommonProperties {
         #region Private Fields
 
-        private readonly P.GraphicFrame GraphicFrame = new();
-        private readonly TableSetting TableSetting;
+        private readonly P.GraphicFrame graphicFrame = new();
+        private readonly TableSetting tableSetting;
 
         #endregion Private Fields
 
@@ -28,9 +26,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="TableSetting">
         /// </param>
-        public Table(TableRow[] TableRows, TableSetting TableSetting)
-        {
-            this.TableSetting = TableSetting;
+        public Table(TableRow[] TableRows,TableSetting TableSetting) {
+            this.tableSetting = TableSetting;
             CreateTableGraphicFrame(TableRows);
         }
 
@@ -43,9 +40,8 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// X,Y
         /// </returns>
-        public (uint, uint) GetPosition()
-        {
-            return (TableSetting.X, TableSetting.Y);
+        public (uint, uint) GetPosition() {
+            return (tableSetting.x, tableSetting.y);
         }
 
         /// <summary>
@@ -53,9 +49,8 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// Width,Height
         /// </returns>
-        public (uint, uint) GetSize()
-        {
-            return (TableSetting.Width, TableSetting.Height);
+        public (uint, uint) GetSize() {
+            return (tableSetting.width, tableSetting.height);
         }
 
         /// <summary>
@@ -63,9 +58,8 @@ namespace OpenXMLOffice.Presentation
         /// </summary>
         /// <returns>
         /// </returns>
-        public P.GraphicFrame GetTableGraphicFrame()
-        {
-            return GraphicFrame;
+        public P.GraphicFrame GetTableGraphicFrame() {
+            return graphicFrame;
         }
 
         /// <summary>
@@ -75,16 +69,13 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="Y">
         /// </param>
-        public void UpdatePosition(uint X, uint Y)
-        {
-            TableSetting.X = X;
-            TableSetting.Y = Y;
-            if (GraphicFrame != null)
-            {
-                GraphicFrame.Transform = new P.Transform
-                {
-                    Offset = new A.Offset { X = TableSetting.X, Y = TableSetting.Y },
-                    Extents = new A.Extents { Cx = TableSetting.Width, Cy = TableSetting.Height }
+        public void UpdatePosition(uint X,uint Y) {
+            tableSetting.x = X;
+            tableSetting.y = Y;
+            if(graphicFrame != null) {
+                graphicFrame.Transform = new P.Transform {
+                    Offset = new A.Offset { X = tableSetting.x,Y = tableSetting.y },
+                    Extents = new A.Extents { Cx = tableSetting.width,Cy = tableSetting.height }
                 };
             }
         }
@@ -96,17 +87,14 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="Height">
         /// </param>
-        public void UpdateSize(uint Width, uint Height)
-        {
+        public void UpdateSize(uint Width,uint Height) {
             ReCalculateColumnWidth();
-            TableSetting.Width = Width;
-            TableSetting.Height = Height;
-            if (GraphicFrame != null)
-            {
-                GraphicFrame.Transform = new P.Transform
-                {
-                    Offset = new A.Offset { X = TableSetting.X, Y = TableSetting.Y },
-                    Extents = new A.Extents { Cx = TableSetting.Width, Cy = TableSetting.Height }
+            tableSetting.width = Width;
+            tableSetting.height = Height;
+            if(graphicFrame != null) {
+                graphicFrame.Transform = new P.Transform {
+                    Offset = new A.Offset { X = tableSetting.x,Y = tableSetting.y },
+                    Extents = new A.Extents { Cx = tableSetting.width,Cy = tableSetting.height }
                 };
             }
         }
@@ -115,53 +103,41 @@ namespace OpenXMLOffice.Presentation
 
         #region Private Methods
 
-        private long CalculateColumnWidth(TableSetting.WidthOptionValues widthType, float InputWidth)
-        {
-            return widthType switch
-            {
+        private long CalculateColumnWidth(TableSetting.WidthOptionValues widthType,float InputWidth) {
+            return widthType switch {
                 TableSetting.WidthOptionValues.PIXEL => G.ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
-                TableSetting.WidthOptionValues.PERCENTAGE => Convert.ToInt32(TableSetting.Width / 100 * InputWidth),
-                TableSetting.WidthOptionValues.RATIO => Convert.ToInt32(TableSetting.Width / 100 * (InputWidth * 10)),
+                TableSetting.WidthOptionValues.PERCENTAGE => Convert.ToInt32(tableSetting.width / 100 * InputWidth),
+                TableSetting.WidthOptionValues.RATIO => Convert.ToInt32(tableSetting.width / 100 * (InputWidth * 10)),
                 _ => Convert.ToInt32(InputWidth)
             };
         }
 
-        private A.Table CreateTable(TableRow[] TableRows)
-        {
-            if (TableRows.Length < 1 || TableRows[0].TableCells.Count < 1)
-            {
+        private A.Table CreateTable(TableRow[] TableRows) {
+            if(TableRows.Length < 1 || TableRows[0].tableCells.Count < 1) {
                 throw new DataException("No Table Data Provided");
             }
-            if (TableSetting.WidthType != TableSetting.WidthOptionValues.AUTO && TableSetting.TableColumnWidth.Count != TableRows[0].TableCells.Count)
-            {
+            if(tableSetting.widthType != TableSetting.WidthOptionValues.AUTO && tableSetting.tableColumnWidth.Count != TableRows[0].tableCells.Count) {
                 throw new ArgumentException("Column With Setting Does Not Match Data");
             }
-            A.Table Table = new()
-            {
-                TableProperties = new A.TableProperties()
-                {
+            A.Table Table = new() {
+                TableProperties = new A.TableProperties() {
                     FirstRow = true,
                     BandRow = true
                 },
-                TableGrid = CreateTableGrid(TableRows[0].TableCells.Count)
+                TableGrid = CreateTableGrid(TableRows[0].tableCells.Count)
             };
             // Add Table Data Row
-            foreach (TableRow row in TableRows)
-            {
+            foreach(TableRow row in TableRows) {
                 Table.Append(CreateTableRow(row));
             }
             return Table;
         }
 
-        private A.TableCell CreateTableCell(TableCell Cell, TableRow Row)
-        {
+        private A.TableCell CreateTableCell(TableCell Cell,TableRow Row) {
             A.Paragraph Paragraph = new();
-            if (Cell.Alignment != null)
-            {
-                Paragraph.Append(new A.ParagraphProperties()
-                {
-                    Alignment = Cell.Alignment switch
-                    {
+            if(Cell.alignment != null) {
+                Paragraph.Append(new A.ParagraphProperties() {
+                    Alignment = Cell.alignment switch {
                         TableCell.AlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
                         TableCell.AlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
                         TableCell.AlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
@@ -169,22 +145,18 @@ namespace OpenXMLOffice.Presentation
                     }
                 });
             }
-            if (Cell.Value == null)
-            {
+            if(Cell.value == null) {
                 Paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-IN" });
-            }
-            else
-            {
-                Paragraph.Append(new TextBox(new G.TextBoxSetting()
-                {
-                    Text = Cell.Value,
-                    TextBackground = Cell.TextBackground,
-                    TextColor = Cell.TextColor,
-                    FontFamily = Cell.FontFamily,
-                    FontSize = Cell.FontSize,
-                    IsBold = Cell.IsBold,
-                    IsItalic = Cell.IsItalic,
-                    IsUnderline = Cell.IsUnderline,
+            } else {
+                Paragraph.Append(new TextBox(new G.TextBoxSetting() {
+                    text = Cell.value,
+                    textBackground = Cell.textBackground,
+                    textColor = Cell.textColor,
+                    fontFamily = Cell.fontFamily,
+                    fontSize = Cell.fontSize,
+                    isBold = Cell.isBold,
+                    isItalic = Cell.isItalic,
+                    isUnderline = Cell.isUnderline,
                 }).GetTextBoxRun());
             }
             A.TableCell TableCellXML = new();
@@ -195,120 +167,93 @@ namespace OpenXMLOffice.Presentation
             ));
             A.TableCellProperties TableCellProperties = new();
             TableCellProperties.Append(new A.LeftBorderLineProperties(
-                Cell.LeftBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.leftBorder ? CreateSolidFill(new List<string>() { "000000" },0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            ) { Width = 12700,CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.RightBorderLineProperties(
-                Cell.RightBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.rightBorder ? CreateSolidFill(new List<string>() { "000000" },0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            ) { Width = 12700,CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.TopBorderLineProperties(
-                Cell.TopBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.topBorder ? CreateSolidFill(new List<string>() { "000000" },0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            ) { Width = 12700,CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.BottomBorderLineProperties(
-                Cell.BottomBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.bottomBorder ? CreateSolidFill(new List<string>() { "000000" },0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            ) { Width = 12700,CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-                Cell.TopLeftToBottomRightBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.topLeftToBottomRightBorder ? CreateSolidFill(new List<string>() { "000000" },0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            ) { Width = 12700,CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-                Cell.BottomLeftToTopRightBorder ? CreateSolidFill(new List<string>() { "000000" }, 0) : new A.NoFill(),
+                Cell.bottomLeftToTopRightBorder ? CreateSolidFill(new List<string>() { "000000" },0) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append((Cell.CellBackground != null || Row.RowBackground != null) ? CreateSolidFill(new List<string>() { Cell.CellBackground ?? Row.RowBackground! }, 0) : new A.NoFill());
+            ) { Width = 12700,CompoundLineType = A.CompoundLineValues.Single });
+            TableCellProperties.Append((Cell.cellBackground != null || Row.rowBackground != null) ? CreateSolidFill(new List<string>() { Cell.cellBackground ?? Row.rowBackground! },0) : new A.NoFill());
             TableCellXML.Append(TableCellProperties);
             return TableCellXML;
         }
 
-        private void CreateTableGraphicFrame(TableRow[] TableRows)
-        {
-            A.GraphicData GraphicData = new(CreateTable(TableRows))
-            {
+        private void CreateTableGraphicFrame(TableRow[] TableRows) {
+            A.GraphicData GraphicData = new(CreateTable(TableRows)) {
                 Uri = "http://schemas.openxmlformats.org/drawingml/2006/table"
             };
-            GraphicFrame.NonVisualGraphicFrameProperties = new P.NonVisualGraphicFrameProperties(
-               new P.NonVisualDrawingProperties()
-               {
+            graphicFrame.NonVisualGraphicFrameProperties = new P.NonVisualGraphicFrameProperties(
+               new P.NonVisualDrawingProperties() {
                    Id = 1,
                    Name = "Table 1"
                },
                new P.NonVisualGraphicFrameDrawingProperties(new A.GraphicFrameLocks() { NoGrouping = true }),
                new P.ApplicationNonVisualDrawingProperties());
-            GraphicFrame.Graphic = new A.Graphic()
-            {
+            graphicFrame.Graphic = new A.Graphic() {
                 GraphicData = GraphicData
             };
-            GraphicFrame.Transform = new P.Transform()
-            {
-                Offset = new A.Offset()
-                {
-                    X = TableSetting.X,
-                    Y = TableSetting.Y
+            graphicFrame.Transform = new P.Transform() {
+                Offset = new A.Offset() {
+                    X = tableSetting.x,
+                    Y = tableSetting.y
                 },
-                Extents = new A.Extents()
-                {
-                    Cx = TableSetting.Width,
-                    Cy = TableSetting.Height
+                Extents = new A.Extents() {
+                    Cx = tableSetting.width,
+                    Cy = tableSetting.height
                 }
             };
         }
 
-        private A.TableGrid CreateTableGrid(int ColumnCount)
-        {
+        private A.TableGrid CreateTableGrid(int ColumnCount) {
             A.TableGrid TableGrid = new();
-            if (TableSetting.WidthType == TableSetting.WidthOptionValues.AUTO)
-            {
-                for (int i = 0; i < ColumnCount; i++)
-                {
-                    TableGrid.Append(new A.GridColumn() { Width = TableSetting.Width / ColumnCount });
+            if(tableSetting.widthType == TableSetting.WidthOptionValues.AUTO) {
+                for(int i = 0;i < ColumnCount;i++) {
+                    TableGrid.Append(new A.GridColumn() { Width = tableSetting.width / ColumnCount });
                 }
-            }
-            else
-            {
-                for (int i = 0; i < ColumnCount; i++)
-                {
-                    TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnWidth[i]) });
+            } else {
+                for(int i = 0;i < ColumnCount;i++) {
+                    TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(tableSetting.widthType,tableSetting.tableColumnWidth[i]) });
                 }
             }
             return TableGrid;
         }
 
-        private A.TableRow CreateTableRow(TableRow Row)
-        {
-            A.TableRow TableRow = new()
-            {
-                Height = Row.Height
+        private A.TableRow CreateTableRow(TableRow Row) {
+            A.TableRow TableRow = new() {
+                Height = Row.height
             };
-            foreach (TableCell cell in Row.TableCells)
-            {
-                TableRow.Append(CreateTableCell(cell, Row));
+            foreach(TableCell cell in Row.tableCells) {
+                TableRow.Append(CreateTableCell(cell,Row));
             }
             return TableRow;
         }
 
-        private void ReCalculateColumnWidth()
-        {
-            A.Table? Table = GraphicFrame!.Graphic!.GraphicData!.GetFirstChild<A.Table>();
-            if (Table != null)
-            {
+        private void ReCalculateColumnWidth() {
+            A.Table? Table = graphicFrame!.Graphic!.GraphicData!.GetFirstChild<A.Table>();
+            if(Table != null) {
                 List<A.GridColumn> GridColumn = Table.TableGrid!.Elements<A.GridColumn>().ToList();
-                if (TableSetting.WidthType == TableSetting.WidthOptionValues.AUTO)
-                {
-                    GridColumn.ForEach(Column => Column.Width = TableSetting.Width / GridColumn.Count);
-                }
-                else
-                {
-                    GridColumn.Select((item, index) => (item, index)).ToList().ForEach(Column =>
-                        Column.item.Width = CalculateColumnWidth(TableSetting.WidthType, TableSetting.TableColumnWidth[Column.index]));
+                if(tableSetting.widthType == TableSetting.WidthOptionValues.AUTO) {
+                    GridColumn.ForEach(Column => Column.Width = tableSetting.width / GridColumn.Count);
+                } else {
+                    GridColumn.Select((item,index) => (item, index)).ToList().ForEach(Column =>
+                        Column.item.Width = CalculateColumnWidth(tableSetting.widthType,tableSetting.tableColumnWidth[Column.index]));
                 }
             }
         }

@@ -2,18 +2,16 @@
 
 using LiteDB;
 
-namespace OpenXMLOffice.Excel
-{
+namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents a class that manages shared string values in Excel.
     /// </summary>
-    internal class ShareString : IDisposable
-    {
+    internal class ShareString : IDisposable {
         #region Private Fields
 
-        private static readonly LiteDatabase LiteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
+        private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(),"db"));
         private static ShareString? instance = null;
-        private readonly ILiteCollection<Record> Collection;
+        private readonly ILiteCollection<Record> collection;
 
         #endregion Private Fields
 
@@ -22,10 +20,9 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Initializes a new instance of the <see cref="ShareString"/> class.
         /// </summary>
-        private ShareString()
-        {
-            Collection = LiteDatabase.GetCollection<Record>("Records");
-            Collection.EnsureIndex("Record.Value");
+        private ShareString() {
+            collection = liteDatabase.GetCollection<Record>("Records");
+            collection.EnsureIndex("Record.Value");
         }
 
         #endregion Private Constructors
@@ -35,10 +32,8 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Gets the instance of the <see cref="ShareString"/> class.
         /// </summary>
-        public static ShareString Instance
-        {
-            get
-            {
+        public static ShareString Instance {
+            get {
                 instance ??= new ShareString();
                 return instance;
             }
@@ -51,9 +46,8 @@ namespace OpenXMLOffice.Excel
         /// <summary>
         /// Releases all resources used by the <see cref="ShareString"/> class.
         /// </summary>
-        public void Dispose()
-        {
-            LiteDatabase.Dispose();
+        public void Dispose() {
+            liteDatabase.Dispose();
         }
 
         /// <summary>
@@ -65,9 +59,8 @@ namespace OpenXMLOffice.Excel
         /// <returns>
         /// The index of the value if found; otherwise, null.
         /// </returns>
-        public int? GetIndex(string Value)
-        {
-            return Collection.FindOne(col => col.Value == Value)?.Id - 1;
+        public int? GetIndex(string Value) {
+            return collection.FindOne(col => col.Value == Value)?.Id - 1;
         }
 
         /// <summary>
@@ -76,9 +69,8 @@ namespace OpenXMLOffice.Excel
         /// <returns>
         /// A list of all the records.
         /// </returns>
-        public List<string> GetRecords()
-        {
-            return Collection.Query().OrderBy(x => x.Id).Select(x => x.Value).ToList();
+        public List<string> GetRecords() {
+            return collection.Query().OrderBy(x => x.Id).Select(x => x.Value).ToList();
         }
 
         /// <summary>
@@ -90,9 +82,8 @@ namespace OpenXMLOffice.Excel
         /// <returns>
         /// The value at the specified index if found; otherwise, null.
         /// </returns>
-        public string? GetValue(int Index)
-        {
-            return Collection.FindOne(col => col.Id == Index)?.Value;
+        public string? GetValue(int Index) {
+            return collection.FindOne(col => col.Id == Index)?.Value;
         }
 
         /// <summary>
@@ -101,9 +92,8 @@ namespace OpenXMLOffice.Excel
         /// <param name="Data">
         /// The value to insert.
         /// </param>
-        public void Insert(string Data)
-        {
-            Collection.Insert(new Record(Data));
+        public void Insert(string Data) {
+            collection.Insert(new Record(Data));
         }
 
         /// <summary>
@@ -112,9 +102,8 @@ namespace OpenXMLOffice.Excel
         /// <param name="Data">
         /// The list of values to insert.
         /// </param>
-        public void InsertBulk(List<string> Data)
-        {
-            Collection.InsertBulk(Data.Select(item => new Record(item)));
+        public void InsertBulk(List<string> Data) {
+            collection.InsertBulk(Data.Select(item => new Record(item)));
         }
 
         /// <summary>
@@ -126,14 +115,12 @@ namespace OpenXMLOffice.Excel
         /// <returns>
         /// The index of the inserted value.
         /// </returns>
-        public int InsertUnique(string Data)
-        {
+        public int InsertUnique(string Data) {
             int? Index = GetIndex(Data);
-            if (Index != null)
-            {
+            if(Index != null) {
                 return (int)Index;
             }
-            BsonValue DocId = Collection.Insert(new Record(Data));
+            BsonValue DocId = collection.Insert(new Record(Data));
             return (int)DocId.AsInt64 - 1;
         }
 

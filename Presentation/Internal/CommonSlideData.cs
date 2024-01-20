@@ -5,33 +5,28 @@ using A = DocumentFormat.OpenXml.Drawing;
 
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
-{
+namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Common Slide Data Class used to create the base components of a slide, slidemaster.
     /// </summary>
-    public class CommonSlideData
-    {
+    public class CommonSlideData {
         #region Private Fields
 
-        private P.CommonSlideData OpenXMLCommonSlideData;
+        private readonly P.CommonSlideData openXMLCommonSlideData;
 
         #endregion Private Fields
 
         #region Internal Constructors
 
-        internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
-        {
-            OpenXMLCommonSlideData = new()
-            {
+        internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType,PresentationConstants.SlideLayoutType layoutType) {
+            openXMLCommonSlideData = new() {
                 Name = PresentationConstants.GetSlideLayoutType(layoutType)
             };
             CreateCommonSlideData(commonSlideDataType);
         }
 
-        internal CommonSlideData(P.CommonSlideData commonSlideData)
-        {
-            OpenXMLCommonSlideData = commonSlideData;
+        internal CommonSlideData(P.CommonSlideData commonSlideData) {
+            openXMLCommonSlideData = commonSlideData;
         }
 
         #endregion Internal Constructors
@@ -39,93 +34,79 @@ namespace OpenXMLOffice.Presentation
         #region Internal Methods
 
         // Return OpenXML CommonSlideData Object
-        internal P.CommonSlideData GetCommonSlideData()
-        {
-            return OpenXMLCommonSlideData;
+        internal P.CommonSlideData GetCommonSlideData() {
+            return openXMLCommonSlideData;
         }
 
         #endregion Internal Methods
 
         #region Private Methods
 
-        private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
-        {
-            Background background = new()
-            {
-                BackgroundStyleReference = new BackgroundStyleReference(new A.SchemeColor()
-                {
+        private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType) {
+            Background background = new() {
+                BackgroundStyleReference = new BackgroundStyleReference(new A.SchemeColor() {
                     Val = A.SchemeColorValues.Background1
-                })
-                {
+                }) {
                     Index = 1001
                 }
             };
-            ShapeTree shapeTree = new()
-            {
-                GroupShapeProperties = new GroupShapeProperties()
-                {
-                    TransformGroup = new A.TransformGroup()
-                    {
-                        Offset = new A.Offset()
-                        {
+            ShapeTree shapeTree = new() {
+                GroupShapeProperties = new GroupShapeProperties() {
+                    TransformGroup = new A.TransformGroup() {
+                        Offset = new A.Offset() {
                             X = 0,
                             Y = 0
                         },
-                        Extents = new A.Extents()
-                        {
+                        Extents = new A.Extents() {
                             Cx = 0,
                             Cy = 0
                         },
-                        ChildOffset = new A.ChildOffset()
-                        {
+                        ChildOffset = new A.ChildOffset() {
                             X = 0,
                             Y = 0
                         },
-                        ChildExtents = new A.ChildExtents()
-                        {
+                        ChildExtents = new A.ChildExtents() {
                             Cx = 0,
                             Cy = 0
                         }
                     }
                 },
                 NonVisualGroupShapeProperties = new NonVisualGroupShapeProperties(
-                                new NonVisualDrawingProperties { Id = 1, Name = "" },
+                                new NonVisualDrawingProperties { Id = 1,Name = "" },
                                 new NonVisualGroupShapeDrawingProperties(),
                                 new ApplicationNonVisualDrawingProperties()
                             )
             };
 
-            switch (commonSlideDataType)
-            {
+            switch(commonSlideDataType) {
                 case PresentationConstants.CommonSlideDataType.SLIDE_MASTER:
-                    OpenXMLCommonSlideData.AppendChild(background);
-                    OpenXMLCommonSlideData.AppendChild(shapeTree);
+                    openXMLCommonSlideData.AppendChild(background);
+                    openXMLCommonSlideData.AppendChild(shapeTree);
                     break;
 
                 case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
                     shapeTree.AppendChild(CreateShape1());
                     shapeTree.AppendChild(CreateShape2());
-                    OpenXMLCommonSlideData.AppendChild(shapeTree);
+                    openXMLCommonSlideData.AppendChild(shapeTree);
                     break;
 
                 default: // slide
-                    OpenXMLCommonSlideData.AppendChild(shapeTree);
+                    openXMLCommonSlideData.AppendChild(shapeTree);
                     break;
             }
         }
 
-        private P.Shape CreateShape1()
-        {
+        private P.Shape CreateShape1() {
             P.Shape shape = new();
             NonVisualShapeProperties nonVisualShapeProperties = new(
-                new NonVisualDrawingProperties { Id = 2, Name = "Title 1" },
+                new NonVisualDrawingProperties { Id = 2,Name = "Title 1" },
                 new NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
                 new ApplicationNonVisualDrawingProperties(new PlaceholderShape { Type = PlaceholderValues.Title })
             );
             ShapeProperties shapeProperties = new(
                 new A.Transform2D(
-                    new A.Offset { X = 838200L, Y = 365125L },
-                    new A.Extents { Cx = 10515600L, Cy = 1325563L }
+                    new A.Offset { X = 838200L,Y = 365125L },
+                    new A.Extents { Cx = 10515600L,Cy = 1325563L }
                 ),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
             );
@@ -146,19 +127,18 @@ namespace OpenXMLOffice.Presentation
             return shape;
         }
 
-        private P.Shape CreateShape2()
-        {
+        private P.Shape CreateShape2() {
             P.Shape shape = new();
             NonVisualShapeProperties nonVisualShapeProperties = new(
-                new NonVisualDrawingProperties { Id = 3U, Name = "Text Placeholder 2" },
+                new NonVisualDrawingProperties { Id = 3U,Name = "Text Placeholder 2" },
                 new NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
                 new ApplicationNonVisualDrawingProperties(
-                    new PlaceholderShape { Index = 1U, Type = PlaceholderValues.Body })
+                    new PlaceholderShape { Index = 1U,Type = PlaceholderValues.Body })
             );
             ShapeProperties shapeProperties = new(
                 new A.Transform2D(
-                    new A.Offset { X = 838200L, Y = 1825625L },
-                    new A.Extents { Cx = 10515600L, Cy = 4351338L }
+                    new A.Offset { X = 838200L,Y = 1825625L },
+                    new A.Extents { Cx = 10515600L,Cy = 4351338L }
                 ),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
             );
@@ -199,8 +179,7 @@ namespace OpenXMLOffice.Presentation
                         new A.RunProperties { Language = "en-US" },
                         new A.Text("Fifth Level")
                     ),
-                    new A.EndParagraphRunProperties()
-                    {
+                    new A.EndParagraphRunProperties() {
                         Language = "en-IN"
                     }
                 )

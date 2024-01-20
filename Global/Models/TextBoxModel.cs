@@ -1,78 +1,76 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a text box.
     /// </summary>
-    public class TextBoxSetting
-    {
+    public class TextBoxSetting {
         #region Public Fields
 
         /// <summary>
         /// Gets or sets the font family of the text.
         /// </summary>
-        public string FontFamily = "Calibri (Body)";
+        public string fontFamily = "Calibri (Body)";
 
         /// <summary>
         /// Gets or sets the font size of the text.
         /// </summary>
-        public int FontSize = 18;
+        public int fontSize = 18;
 
         /// <summary>
         /// Gets or sets the height of the text box.
         /// </summary>
-        public uint Height = 100;
+        public uint height = 100;
 
         /// <summary>
         /// Gets or sets a value indicating whether the text is bold.
         /// </summary>
-        public bool IsBold = false;
+        public bool isBold = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether the text is italic.
         /// </summary>
-        public bool IsItalic = false;
+        public bool isItalic = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether the text is underlined.
         /// </summary>
-        public bool IsUnderline = false;
+        public bool isUnderline = false;
 
         /// <summary>
         /// Gets or sets the background color of the text box shape.
         /// </summary>
-        public string? ShapeBackground;
+        public string? shapeBackground;
 
         /// <summary>
         /// Gets or sets the text content of the text box.
         /// </summary>
-        public string Text = "Text Box";
+        public string text = "Text Box";
 
         /// <summary>
         /// Gets or sets the background color of the text.
         /// </summary>
-        public string? TextBackground;
+        public string? textBackground;
 
         /// <summary>
         /// Gets or sets the color of the text.
         /// </summary>
-        public string TextColor = "000000";
+        public string textColor = "000000";
 
         /// <summary>
         /// Gets or sets the width of the text box.
         /// </summary>
-        public uint Width = 100;
+        public uint width = 100;
 
         /// <summary>
         /// Gets or sets the X-coordinate of the text box.
         /// </summary>
-        public uint X = 0;
+        public uint x = 0;
 
         /// <summary>
         /// Gets or sets the Y-coordinate of the text box.
         /// </summary>
-        public uint Y = 0;
+        public uint y = 0;
 
         #endregion Public Fields
     }

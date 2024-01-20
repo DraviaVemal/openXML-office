@@ -1,12 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the types of column charts.
     /// </summary>
-    public enum ColumnChartTypes
-    {
+    public enum ColumnChartTypes {
         /// <summary>
         /// Clustered Column Chart
         /// </summary>
@@ -43,14 +41,13 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the data label settings for a column chart.
     /// </summary>
-    public class ColumnChartDataLabel : ChartDataLabel
-    {
+    public class ColumnChartDataLabel : ChartDataLabel {
         #region Public Fields
 
         /// <summary>
         /// The position of the data label.
         /// </summary>
-        public DataLabelPositionValues DataLabelPosition = DataLabelPositionValues.CENTER;
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 
         #endregion Public Fields
 
@@ -59,8 +56,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// The possible positions for the data label.
         /// </summary>
-        public enum DataLabelPositionValues
-        {
+        public enum DataLabelPositionValues {
             /// <summary>
             /// Center
             /// </summary>
@@ -93,24 +89,23 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the series settings for a column chart.
     /// </summary>
-    public class ColumnChartSeriesSetting : ChartSeriesSetting
-    {
+    public class ColumnChartSeriesSetting : ChartSeriesSetting {
         #region Public Fields
 
         /// <summary>
         /// Chart Stick Border Color
         /// </summary>
-        public string? BorderColor;
+        public string? borderColor;
 
         /// <summary>
         /// Option to customize specific data series. Will override chart level setting.
         /// </summary>
-        public ColumnChartDataLabel ColumnChartDataLabel = new();
+        public ColumnChartDataLabel columnChartDataLabel = new();
 
         /// <summary>
         /// Chart Stick Fill Color
         /// </summary>
-        public string? FillColor;
+        public string? fillColor;
 
         #endregion Public Fields
     }
@@ -118,29 +113,28 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the settings for a column chart.
     /// </summary>
-    public class ColumnChartSetting : ChartSetting
-    {
+    public class ColumnChartSetting : ChartSetting {
         #region Public Fields
 
         /// <summary>
         /// Chart Axes Options
         /// </summary>
-        public ChartAxesOptions ChartAxesOptions = new();
+        public ChartAxesOptions chartAxesOptions = new();
 
         /// <summary>
         /// Chart Axis Options
         /// </summary>
-        public ChartAxisOptions ChartAxisOptions = new();
+        public ChartAxisOptions chartAxisOptions = new();
 
         /// <summary>
         /// Will get overridden by series level setting.
         /// </summary>
-        public ColumnChartDataLabel ColumnChartDataLabel = new();
+        public ColumnChartDataLabel columnChartDataLabel = new();
 
         /// <summary>
         /// Chart Series Settings
         /// </summary>
-        public List<ColumnChartSeriesSetting?> ColumnChartSeriesSettings = new();
+        public List<ColumnChartSeriesSetting?> columnChartSeriesSettings = new();
 
         /// <summary>
         /// Chart Type. default is CLUSTERED

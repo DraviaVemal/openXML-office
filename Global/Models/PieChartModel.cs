@@ -1,12 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the types of pie charts.
     /// </summary>
-    public enum PieChartTypes
-    {
+    public enum PieChartTypes {
         /// <summary>
         /// Pie Chart
         /// </summary>
@@ -22,14 +20,13 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the data label for a pie chart.
     /// </summary>
-    public class PieChartDataLabel : ChartDataLabel
-    {
+    public class PieChartDataLabel : ChartDataLabel {
         #region Public Fields
 
         /// <summary>
         /// The position of the data label.
         /// </summary>
-        public DataLabelPositionValues DataLabelPosition = DataLabelPositionValues.CENTER;
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 
         #endregion Public Fields
 
@@ -38,8 +35,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Represents the possible positions of the data label.
         /// </summary>
-        public enum DataLabelPositionValues
-        {
+        public enum DataLabelPositionValues {
             /// <summary>
             /// Center
             /// </summary>
@@ -77,24 +73,23 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the series setting for a pie chart.
     /// </summary>
-    public class PieChartSeriesSetting : ChartSeriesSetting
-    {
+    public class PieChartSeriesSetting : ChartSeriesSetting {
         #region Public Fields
 
         /// <summary>
         /// The color of the border.
         /// </summary>
-        public string? BorderColor;
+        public string? borderColor;
 
         /// <summary>
         /// The color of the fill.
         /// </summary>
-        public string? FillColor;
+        public string? fillColor;
 
         /// <summary>
         /// Option to customize specific data series, will override chart level setting.
         /// </summary>
-        public PieChartDataLabel PieChartDataLabel = new();
+        public PieChartDataLabel pieChartDataLabel = new();
 
         #endregion Public Fields
     }
@@ -102,24 +97,23 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the setting for a pie chart.
     /// </summary>
-    public class PieChartSetting : ChartSetting
-    {
+    public class PieChartSetting : ChartSetting {
         #region Public Fields
 
         /// <summary>
         /// Will get overridden by series level setting.
         /// </summary>
-        public PieChartDataLabel PieChartDataLabel = new();
+        public PieChartDataLabel pieChartDataLabel = new();
 
         /// <summary>
         /// The list of series settings for the pie chart.
         /// </summary>
-        public List<PieChartSeriesSetting?> PieChartSeriesSettings = new();
+        public List<PieChartSeriesSetting?> pieChartSeriesSettings = new();
 
         /// <summary>
         /// The type of the pie chart.
         /// </summary>
-        public PieChartTypes PieChartTypes = PieChartTypes.PIE;
+        public PieChartTypes pieChartTypes = PieChartTypes.PIE;
 
         #endregion Public Fields
     }

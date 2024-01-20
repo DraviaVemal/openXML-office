@@ -1,12 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the types of line charts.
     /// </summary>
-    public enum LineChartTypes
-    {
+    public enum LineChartTypes {
         /// <summary>
         /// Clustered Line Chart
         /// </summary>
@@ -43,14 +41,13 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the data label settings for a line chart.
     /// </summary>
-    public class LineChartDataLabel : ChartDataLabel
-    {
+    public class LineChartDataLabel : ChartDataLabel {
         #region Public Fields
 
         /// <summary>
         /// The position of the data labels.
         /// </summary>
-        public DataLabelPositionValues DataLabelPosition = DataLabelPositionValues.CENTER;
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 
         #endregion Public Fields
 
@@ -59,8 +56,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// The possible positions for the data labels.
         /// </summary>
-        public enum DataLabelPositionValues
-        {
+        public enum DataLabelPositionValues {
             /// <summary>
             /// Left Side
             /// </summary>
@@ -98,24 +94,23 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the series settings for a line chart.
     /// </summary>
-    public class LineChartSeriesSetting : ChartSeriesSetting
-    {
+    public class LineChartSeriesSetting : ChartSeriesSetting {
         #region Public Fields
 
         /// <summary>
         /// The color of the series border.
         /// </summary>
-        public string? BorderColor;
+        public string? borderColor;
 
         /// <summary>
         /// The color of the series fill.
         /// </summary>
-        public string? FillColor;
+        public string? fillColor;
 
         /// <summary>
         /// Option to customize specific data series, which will override the chart level setting.
         /// </summary>
-        public LineChartDataLabel LineChartDataLabel = new();
+        public LineChartDataLabel lineChartDataLabel = new();
 
         #endregion Public Fields
     }
@@ -123,34 +118,33 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the settings for a line chart.
     /// </summary>
-    public class LineChartSetting : ChartSetting
-    {
+    public class LineChartSetting : ChartSetting {
         #region Public Fields
 
         /// <summary>
         /// The options for the chart axes.
         /// </summary>
-        public ChartAxesOptions ChartAxesOptions = new();
+        public ChartAxesOptions chartAxesOptions = new();
 
         /// <summary>
         /// The options for the chart axis.
         /// </summary>
-        public ChartAxisOptions ChartAxisOptions = new();
+        public ChartAxisOptions chartAxisOptions = new();
 
         /// <summary>
         /// The data label settings for the line chart, which will get overridden by series level setting.
         /// </summary>
-        public LineChartDataLabel LineChartDataLabel = new();
+        public LineChartDataLabel lineChartDataLabel = new();
 
         /// <summary>
         /// The series settings for the line chart.
         /// </summary>
-        public List<LineChartSeriesSetting?> LineChartSeriesSettings = new();
+        public List<LineChartSeriesSetting?> lineChartSeriesSettings = new();
 
         /// <summary>
         /// The type of the line chart.
         /// </summary>
-        public LineChartTypes LineChartTypes = LineChartTypes.CLUSTERED;
+        public LineChartTypes lineChartTypes = LineChartTypes.CLUSTERED;
 
         #endregion Public Fields
     }

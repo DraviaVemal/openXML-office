@@ -1,12 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the types of scatter charts.
     /// </summary>
-    public enum ScatterChartTypes
-    {
+    public enum ScatterChartTypes {
         /// <summary>
         /// Scatter Chart
         /// </summary>
@@ -43,19 +41,18 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the data label settings for a scatter chart.
     /// </summary>
-    public class ScatterChartDataLabel : ChartDataLabel
-    {
+    public class ScatterChartDataLabel : ChartDataLabel {
         #region Public Fields
 
         /// <summary>
         /// The position of the data labels.
         /// </summary>
-        public DataLabelPositionValues DataLabelPosition = DataLabelPositionValues.CENTER;
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 
         /// <summary>
         /// Determines whether to show the bubble size in the data labels.
         /// </summary>
-        public bool ShowBubbleSize = false;
+        public bool showBubbleSize = false;
 
         #endregion Public Fields
 
@@ -64,8 +61,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// The possible positions for the data labels.
         /// </summary>
-        public enum DataLabelPositionValues
-        {
+        public enum DataLabelPositionValues {
             /// <summary>
             /// Left Side
             /// </summary>
@@ -103,25 +99,24 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the series settings for a scatter chart.
     /// </summary>
-    public class ScatterChartSeriesSetting : ChartSeriesSetting
-    {
+    public class ScatterChartSeriesSetting : ChartSeriesSetting {
         #region Public Fields
 
         /// <summary>
         /// The color of the series border.
         /// </summary>
-        public string? BorderColor;
+        public string? borderColor;
 
         /// <summary>
         /// The color of the series fill.
         /// </summary>
-        public string? FillColor;
+        public string? fillColor;
 
         /// <summary>
         /// Custom data label settings for the specific data series. This will override the chart
         /// level setting.
         /// </summary>
-        public ScatterChartDataLabel ScatterChartDataLabel = new();
+        public ScatterChartDataLabel scatterChartDataLabel = new();
 
         #endregion Public Fields
     }
@@ -129,35 +124,34 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the settings for a scatter chart.
     /// </summary>
-    public class ScatterChartSetting : ChartSetting
-    {
+    public class ScatterChartSetting : ChartSetting {
         #region Public Fields
 
         /// <summary>
         /// The options for the chart axes.
         /// </summary>
-        public ChartAxesOptions ChartAxesOptions = new();
+        public ChartAxesOptions chartAxesOptions = new();
 
         /// <summary>
         /// The options for the chart axis.
         /// </summary>
-        public ChartAxisOptions ChartAxisOptions = new();
+        public ChartAxisOptions chartAxisOptions = new();
 
         /// <summary>
         /// The data label settings for the scatter chart. This will get overridden by the series
         /// level setting.
         /// </summary>
-        public ScatterChartDataLabel ScatterChartDataLabel = new();
+        public ScatterChartDataLabel scatterChartDataLabel = new();
 
         /// <summary>
         /// The list of series settings for the scatter chart.
         /// </summary>
-        public List<ScatterChartSeriesSetting?> ScatterChartSeriesSettings = new();
+        public List<ScatterChartSeriesSetting?> scatterChartSeriesSettings = new();
 
         /// <summary>
         /// The type of scatter chart.
         /// </summary>
-        public ScatterChartTypes ScatterChartTypes = ScatterChartTypes.SCATTER;
+        public ScatterChartTypes scatterChartTypes = ScatterChartTypes.SCATTER;
 
         #endregion Public Fields
     }

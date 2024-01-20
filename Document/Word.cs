@@ -5,6 +5,5 @@ namespace OpenXMLOffice.Document;
 /// <summary>
 /// Word Class
 /// </summary>
-public class Word
-{
+public class Word {
 }

@@ -1,12 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Excel
-{
+namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the data type of a cell in a worksheet.
     /// </summary>
-    public enum CellDataType
-    {
+    public enum CellDataType {
         /// <summary>
         /// Represents a date cell.
         /// </summary>
@@ -26,25 +24,24 @@ namespace OpenXMLOffice.Excel
     /// <summary>
     /// Represents the properties of a column in a worksheet.
     /// </summary>
-    public class ColumnProperties
-    {
+    public class ColumnProperties {
         #region Public Fields
 
         /// <summary>
         /// Gets or sets a value indicating whether the column width should be automatically
         /// adjusted to fit the contents.
         /// </summary>
-        public bool BestFit;
+        public bool bestFit;
 
         /// <summary>
         /// Gets or sets a value indicating whether the column is hidden.
         /// </summary>
-        public bool Hidden;
+        public bool hidden;
 
         /// <summary>
         /// Gets or sets the width of the column.
         /// </summary>
-        public double? Width;
+        public double? width;
 
         #endregion Public Fields
     }
@@ -52,24 +49,23 @@ namespace OpenXMLOffice.Excel
     /// <summary>
     /// Represents a data cell in a worksheet.
     /// </summary>
-    public class DataCell
-    {
+    public class DataCell {
         #region Public Fields
 
         /// <summary>
         /// Gets or sets the value of the cell.
         /// </summary>
-        public string? CellValue;
+        public string? cellValue;
 
         /// <summary>
         /// Gets or sets the data type of the cell.
         /// </summary>
-        public CellDataType DataType;
+        public CellDataType dataType;
 
         /// <summary>
         /// Gets or sets the style of the cell.
         /// </summary>
-        public CellStyleSetting StyleSetting = new();
+        public CellStyleSetting styleSetting = new();
 
         #endregion Public Fields
     }
@@ -77,8 +73,7 @@ namespace OpenXMLOffice.Excel
     /// <summary>
     /// Represents a record in a worksheet.
     /// </summary>
-    public class Record
-    {
+    public class Record {
         #region Public Constructors
 
         /// <summary>
@@ -87,8 +82,7 @@ namespace OpenXMLOffice.Excel
         /// <param name="Value">
         /// The value of the record.
         /// </param>
-        public Record(string Value)
-        {
+        public Record(string Value) {
             this.Value = Value;
         }
 
@@ -112,19 +106,18 @@ namespace OpenXMLOffice.Excel
     /// <summary>
     /// Represents the properties of a row in a worksheet.
     /// </summary>
-    public class RowProperties
-    {
+    public class RowProperties {
         #region Public Fields
 
         /// <summary>
         /// Gets or sets the height of the row.
         /// </summary>
-        public double? Height;
+        public double? height;
 
         /// <summary>
         /// Gets or sets a value indicating whether the row is hidden.
         /// </summary>
-        public bool Hidden;
+        public bool hidden;
 
         #endregion Public Fields
     }

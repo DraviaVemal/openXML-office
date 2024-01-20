@@ -5,20 +5,18 @@ using OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
-{
+namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Picture Import Class
     /// </summary>
-    public class Picture : CommonProperties
-    {
+    public class Picture : CommonProperties {
         #region Private Fields
 
-        private readonly Slide CurrentSlide;
+        private readonly Slide currentSlide;
 
-        private readonly P.Picture OpenXMLPicture;
+        private readonly P.Picture openXMLPicture;
 
-        private readonly PictureSetting PictureSetting;
+        private readonly PictureSetting pictureSetting;
 
         #endregion Private Fields
 
@@ -33,20 +31,18 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="PictureSetting">
         /// </param>
-        public Picture(Stream Stream, Slide Slide, PictureSetting PictureSetting)
-        {
-            CurrentSlide = Slide;
-            string EmbedId = CurrentSlide.GetNextSlideRelationId();
-            this.PictureSetting = PictureSetting;
-            OpenXMLPicture = new();
+        public Picture(Stream Stream,Slide Slide,PictureSetting PictureSetting) {
+            currentSlide = Slide;
+            string EmbedId = currentSlide.GetNextSlideRelationId();
+            this.pictureSetting = PictureSetting;
+            openXMLPicture = new();
             CreatePicture(EmbedId);
-            ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.ImageType switch
-            {
+            ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.imageType switch {
                 ImageType.PNG => "image/png",
                 ImageType.GIF => "image/gif",
                 ImageType.TIFF => "image/tiff",
                 _ => "image/jpeg"
-            }, EmbedId);
+            },EmbedId);
             ImagePart.FeedData(Stream);
         }
 
@@ -59,21 +55,19 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="PictureSetting">
         /// </param>
-        public Picture(string FilePath, Slide Slide, PictureSetting PictureSetting)
-        {
-            CurrentSlide = Slide;
-            string EmbedId = CurrentSlide.GetNextSlideRelationId();
-            this.PictureSetting = PictureSetting;
-            OpenXMLPicture = new();
+        public Picture(string FilePath,Slide Slide,PictureSetting PictureSetting) {
+            currentSlide = Slide;
+            string EmbedId = currentSlide.GetNextSlideRelationId();
+            this.pictureSetting = PictureSetting;
+            openXMLPicture = new();
             CreatePicture(EmbedId);
-            ImagePart ImagePart = CurrentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.ImageType switch
-            {
+            ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.imageType switch {
                 ImageType.PNG => "image/png",
                 ImageType.GIF => "image/gif",
                 ImageType.TIFF => "image/tiff",
                 _ => "image/jpeg"
-            }, EmbedId);
-            ImagePart.FeedData(new FileStream(FilePath, FileMode.Open, FileAccess.Read));
+            },EmbedId);
+            ImagePart.FeedData(new FileStream(FilePath,FileMode.Open,FileAccess.Read));
         }
 
         #endregion Public Constructors
@@ -85,9 +79,8 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// X,Y
         /// </returns>
-        public (uint, uint) GetPosition()
-        {
-            return (PictureSetting.X, PictureSetting.Y);
+        public (uint, uint) GetPosition() {
+            return (pictureSetting.x, pictureSetting.y);
         }
 
         /// <summary>
@@ -95,9 +88,8 @@ namespace OpenXMLOffice.Presentation
         /// <returns>
         /// Width,Height
         /// </returns>
-        public (uint, uint) GetSize()
-        {
-            return (PictureSetting.Width, PictureSetting.Height);
+        public (uint, uint) GetSize() {
+            return (pictureSetting.width, pictureSetting.height);
         }
 
         /// <summary>
@@ -107,16 +99,13 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="Y">
         /// </param>
-        public void UpdatePosition(uint X, uint Y)
-        {
-            PictureSetting.X = X;
-            PictureSetting.Y = Y;
-            if (OpenXMLPicture != null)
-            {
-                OpenXMLPicture.ShapeProperties!.Transform2D = new A.Transform2D
-                {
-                    Offset = new A.Offset { X = PictureSetting.X, Y = PictureSetting.Y },
-                    Extents = new A.Extents { Cx = PictureSetting.Width, Cy = PictureSetting.Height }
+        public void UpdatePosition(uint X,uint Y) {
+            pictureSetting.x = X;
+            pictureSetting.y = Y;
+            if(openXMLPicture != null) {
+                openXMLPicture.ShapeProperties!.Transform2D = new A.Transform2D {
+                    Offset = new A.Offset { X = pictureSetting.x,Y = pictureSetting.y },
+                    Extents = new A.Extents { Cx = pictureSetting.width,Cy = pictureSetting.height }
                 };
             }
         }
@@ -128,16 +117,13 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="Height">
         /// </param>
-        public void UpdateSize(uint Width, uint Height)
-        {
-            PictureSetting.Width = Width;
-            PictureSetting.Height = Height;
-            if (OpenXMLPicture != null)
-            {
-                OpenXMLPicture.ShapeProperties!.Transform2D = new A.Transform2D
-                {
-                    Offset = new A.Offset { X = PictureSetting.X, Y = PictureSetting.Y },
-                    Extents = new A.Extents { Cx = PictureSetting.Width, Cy = PictureSetting.Height }
+        public void UpdateSize(uint Width,uint Height) {
+            pictureSetting.width = Width;
+            pictureSetting.height = Height;
+            if(openXMLPicture != null) {
+                openXMLPicture.ShapeProperties!.Transform2D = new A.Transform2D {
+                    Offset = new A.Offset { X = pictureSetting.x,Y = pictureSetting.y },
+                    Extents = new A.Extents { Cx = pictureSetting.width,Cy = pictureSetting.height }
                 };
             }
         }
@@ -146,26 +132,22 @@ namespace OpenXMLOffice.Presentation
 
         #region Internal Methods
 
-        internal P.Picture GetPicture()
-        {
-            return OpenXMLPicture;
+        internal P.Picture GetPicture() {
+            return openXMLPicture;
         }
 
         #endregion Internal Methods
 
         #region Private Methods
 
-        private void CreatePicture(string EmbedId)
-        {
+        private void CreatePicture(string EmbedId) {
             GetPicture().NonVisualPictureProperties = new P.NonVisualPictureProperties(
-                new P.NonVisualDrawingProperties()
-                {
+                new P.NonVisualDrawingProperties() {
                     Id = 1,
                     Name = "Picture"
                 },
                 new P.NonVisualPictureDrawingProperties(
-                    new A.PictureLocks()
-                    {
+                    new A.PictureLocks() {
                         NoChangeAspect = true
                     }
                 ),
@@ -173,16 +155,13 @@ namespace OpenXMLOffice.Presentation
             );
             GetPicture().ShapeProperties = new P.ShapeProperties(
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
-            )
-            {
-                Transform2D = new A.Transform2D()
-                {
-                    Offset = new A.Offset() { X = PictureSetting.X, Y = PictureSetting.Y },
-                    Extents = new A.Extents() { Cx = PictureSetting.Width, Cy = PictureSetting.Height }
+            ) {
+                Transform2D = new A.Transform2D() {
+                    Offset = new A.Offset() { X = pictureSetting.x,Y = pictureSetting.y },
+                    Extents = new A.Extents() { Cx = pictureSetting.width,Cy = pictureSetting.height }
                 }
             };
-            GetPicture().BlipFill = new()
-            {
+            GetPicture().BlipFill = new() {
                 Blip = new A.Blip() { Embed = EmbedId }
             };
             GetPicture().BlipFill!.Append(new A.Stretch(new A.FillRectangle()));

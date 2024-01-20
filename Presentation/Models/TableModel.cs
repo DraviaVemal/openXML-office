@@ -1,94 +1,92 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Presentation
-{
+namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Presentation Table Cell Class for setting the cell properties.
     /// </summary>
-    public class TableCell
-    {
+    public class TableCell {
         #region Public Fields
 
         /// <summary>
         /// Cell Alignment Option
         /// </summary>
-        public AlignmentValues? Alignment;
+        public AlignmentValues? alignment;
 
         /// <summary>
         /// Enable Bottom Border
         /// </summary>
-        public bool BottomBorder = false;
+        public bool bottomBorder = false;
 
         /// <summary>
         /// Enable Bottom Left to Top Right Border
         /// </summary>
-        public bool BottomLeftToTopRightBorder = false;
+        public bool bottomLeftToTopRightBorder = false;
 
         /// <summary>
         /// Cell Background Color
         /// </summary>
-        public string? CellBackground;
+        public string? cellBackground;
 
         /// <summary>
         /// Cell Font Family
         /// Default: Calibri (Body)
         /// </summary>
-        public string FontFamily = "Calibri (Body)";
+        public string fontFamily = "Calibri (Body)";
 
         /// <summary>
         /// Cell Font Size
         /// </summary>
-        public int FontSize = 16;
+        public int fontSize = 16;
 
         /// <summary>
         /// Is Bold text
         /// </summary>
-        public bool IsBold = false;
+        public bool isBold = false;
 
         /// <summary>
         /// Is Italic text
         /// </summary>
-        public bool IsItalic = false;
+        public bool isItalic = false;
 
         /// <summary>
         /// Is Underline text
         /// </summary>
-        public bool IsUnderline = false;
+        public bool isUnderline = false;
 
         /// <summary>
         /// Enable Left Border
         /// </summary>
-        public bool LeftBorder = false;
+        public bool leftBorder = false;
 
         /// <summary>
         /// Enable Right Border
         /// </summary>
-        public bool RightBorder = false;
+        public bool rightBorder = false;
 
         /// <summary>
         /// Text Background Color aka Highlight Color
         /// </summary>
-        public string? TextBackground;
+        public string? textBackground;
 
         /// <summary>
         /// Text Color
         /// </summary>
-        public string TextColor = "000000";
+        public string textColor = "000000";
 
         /// <summary>
         /// Enable Top Border
         /// </summary>
-        public bool TopBorder = false;
+        public bool topBorder = false;
 
         /// <summary>
         /// Enable Top Left to Bottom Right Border
         /// </summary>
-        public bool TopLeftToBottomRightBorder = false;
+        public bool topLeftToBottomRightBorder = false;
 
         /// <summary>
         /// Cell Value
         /// </summary>
-        public string? Value;
+        public string? value;
 
         #endregion Public Fields
 
@@ -97,8 +95,7 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// Cell Vertical Alignment Option
         /// </summary>
-        public enum AlignmentValues
-        {
+        public enum AlignmentValues {
             /// <summary>
             /// Align Left
             /// </summary>
@@ -126,29 +123,28 @@ namespace OpenXMLOffice.Presentation
     /// <summary>
     /// Table Row Customisation Properties
     /// </summary>
-    public class TableRow
-    {
+    public class TableRow {
         #region Public Fields
 
         /// <summary>
         /// Row Height
         /// </summary>
-        public int Height = 370840;
+        public int height = 370840;
 
         /// <summary>
         /// Row Background Color.Will get overriden by TableCell.CellBackground
         /// </summary>
-        public string? RowBackground;
+        public string? rowBackground;
 
         /// <summary>
         /// Table Cell List
         /// </summary>
-        public List<TableCell> TableCells = new();
+        public List<TableCell> tableCells = new();
 
         /// <summary>
         /// Default Text Color for the row. Will get overriden by TableCell.TextColor
         /// </summary>
-        public string TextColor = "000000";
+        public string textColor = "000000";
 
         #endregion Public Fields
     }
@@ -156,29 +152,28 @@ namespace OpenXMLOffice.Presentation
     /// <summary>
     /// Table Customisation Properties
     /// </summary>
-    public class TableSetting
-    {
+    public class TableSetting {
         #region Public Fields
 
         /// <summary>
         /// Overall Table Height
         /// </summary>
-        public uint Height = 741680;
+        public uint height = 741680;
 
         /// <summary>
         /// Table Name. Default: Table 1
         /// </summary>
-        public string Name = "Table 1";
+        public string name = "Table 1";
 
         /// <summary>
         /// Table Column Width List.Works based on WidthType Setting
         /// </summary>
-        public List<float> TableColumnWidth = new();
+        public List<float> tableColumnWidth = new();
 
         /// <summary>
         /// Overall Table Width
         /// </summary>
-        public uint Width = 8128000;
+        public uint width = 8128000;
 
         /// <summary>
         /// AUTO - Ignore User Width value and space the colum equally EMU - (English Metric Units)
@@ -186,17 +181,17 @@ namespace OpenXMLOffice.Presentation
         /// is converted to EMU and used when running PERCENTAGE - 0-100 Width percentage split for
         /// each column RATIO - 0-10 Width ratio of each column
         /// </summary>
-        public WidthOptionValues WidthType = WidthOptionValues.AUTO;
+        public WidthOptionValues widthType = WidthOptionValues.AUTO;
 
         /// <summary>
         /// Table X Position in the slide
         /// </summary>
-        public uint X = 0;
+        public uint x = 0;
 
         /// <summary>
         /// Table Y Position in the slide
         /// </summary>
-        public uint Y = 0;
+        public uint y = 0;
 
         #endregion Public Fields
 
@@ -205,8 +200,7 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// Width Option Values
         /// </summary>
-        public enum WidthOptionValues
-        {
+        public enum WidthOptionValues {
             /// <summary>
             /// AUTO - Ignore User Width value and space the colum equally
             /// </summary>

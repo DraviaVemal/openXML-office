@@ -1,12 +1,10 @@
 ﻿// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Presentation
-{
+namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// PowerPoint class to work with PowerPoint files
     /// </summary>
-    public class PowerPoint
-    {
+    public class PowerPoint {
         #region Private Fields
 
         private readonly Presentation presentation;
@@ -22,9 +20,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="powerPointProperties">
         /// </param>
-        public PowerPoint(string filePath, PresentationProperties? powerPointProperties = null)
-        {
-            presentation = new(filePath, powerPointProperties);
+        public PowerPoint(string filePath,PresentationProperties? powerPointProperties = null) {
+            presentation = new(filePath,powerPointProperties);
         }
 
         /// <summary>
@@ -36,25 +33,22 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="powerPointProperties">
         /// </param>
-        public PowerPoint(string filePath, bool isEditable, PresentationProperties? powerPointProperties = null)
-        {
-            presentation = new(filePath, isEditable, powerPointProperties);
+        public PowerPoint(string filePath,bool isEditable,PresentationProperties? powerPointProperties = null) {
+            presentation = new(filePath,isEditable,powerPointProperties);
         }
 
         /// <summary>
         /// Works with in memory object can be saved to file at later point
         /// </summary>
-        public PowerPoint(Stream Stream, PresentationProperties? powerPointProperties = null)
-        {
-            presentation = new(Stream, powerPointProperties);
+        public PowerPoint(Stream Stream,PresentationProperties? powerPointProperties = null) {
+            presentation = new(Stream,powerPointProperties);
         }
 
         /// <summary>
         /// Works with in memory object can be saved to file at later point
         /// </summary>
-        public PowerPoint(Stream Stream, bool IsEditable, PresentationProperties? powerPointProperties = null)
-        {
-            presentation = new(Stream, IsEditable, powerPointProperties);
+        public PowerPoint(Stream Stream,bool IsEditable,PresentationProperties? powerPointProperties = null) {
+            presentation = new(Stream,IsEditable,powerPointProperties);
         }
 
         #endregion Public Constructors
@@ -68,8 +62,7 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
-        {
+        public Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType) {
             return presentation.AddSlide(slideLayoutType);
         }
 
@@ -80,8 +73,7 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Slide GetSlideByIndex(int SlideIndex)
-        {
+        public Slide GetSlideByIndex(int SlideIndex) {
             return presentation.GetSlideByIndex(SlideIndex);
         }
 
@@ -90,8 +82,7 @@ namespace OpenXMLOffice.Presentation
         /// </summary>
         /// <returns>
         /// </returns>
-        public int GetSlideCount()
-        {
+        public int GetSlideCount() {
             return presentation.GetSlideCount();
         }
 
@@ -102,9 +93,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <param name="TargetIndex">
         /// </param>
-        public void MoveSlideByIndex(int SourceIndex, int TargetIndex)
-        {
-            presentation.MoveSlideByIndex(SourceIndex, TargetIndex);
+        public void MoveSlideByIndex(int SourceIndex,int TargetIndex) {
+            presentation.MoveSlideByIndex(SourceIndex,TargetIndex);
         }
 
         /// <summary>
@@ -112,16 +102,14 @@ namespace OpenXMLOffice.Presentation
         /// </summary>
         /// <param name="SlideIndex">
         /// </param>
-        public void RemoveSlideByIndex(int SlideIndex)
-        {
+        public void RemoveSlideByIndex(int SlideIndex) {
             presentation.RemoveSlideByIndex(SlideIndex);
         }
 
         /// <summary>
         /// Save the file
         /// </summary>
-        public void Save()
-        {
+        public void Save() {
             presentation.Save();
         }
 
@@ -130,8 +118,7 @@ namespace OpenXMLOffice.Presentation
         /// </summary>
         /// <param name="filePath">
         /// </param>
-        public void SaveAs(string filePath)
-        {
+        public void SaveAs(string filePath) {
             presentation.SaveAs(filePath);
         }
 

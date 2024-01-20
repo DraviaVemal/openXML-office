@@ -2,13 +2,11 @@
 
 using System.Text;
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Converter Utils
     /// </summary>
-    public static class ConverterUtils
-    {
+    public static class ConverterUtils {
         #region Public Methods
 
         /// <summary>
@@ -22,34 +20,24 @@ namespace OpenXMLOffice.Global
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        public static (int, int) ConvertFromExcelCellReference(string cellReference)
-        {
-            if (string.IsNullOrEmpty(cellReference))
-            { throw new ArgumentException("Cell reference cannot be empty."); }
+        public static (int, int) ConvertFromExcelCellReference(string cellReference) {
+            if(string.IsNullOrEmpty(cellReference)) { throw new ArgumentException("Cell reference cannot be empty."); }
             StringBuilder columnName = new();
             int rowIndex = 0;
             int columnIndex = 0;
-            foreach (char c in cellReference)
-            {
-                if (char.IsLetter(c))
-                {
+            foreach(char c in cellReference) {
+                if(char.IsLetter(c)) {
                     columnName.Append(c);
-                }
-                else if (char.IsDigit(c))
-                {
+                } else if(char.IsDigit(c)) {
                     rowIndex = (rowIndex * 10) + (c - '0');
-                }
-                else
-                {
+                } else {
                     throw new ArgumentException("Invalid character in cell reference.");
                 }
             }
-            for (int i = 0; i < columnName.Length; i++)
-            {
+            for(int i = 0;i < columnName.Length;i++) {
                 columnIndex = (columnIndex * 26) + columnName[i] - 'A' + 1;
             }
-            if (rowIndex < 1 || columnIndex < 1)
-            {
+            if(rowIndex < 1 || columnIndex < 1) {
                 throw new ArgumentException("Invalid row or column index in cell reference.");
             }
             return (rowIndex, columnIndex);
@@ -67,14 +55,11 @@ namespace OpenXMLOffice.Global
         /// <exception cref="ArgumentException">
         /// Thrown when the column index is less than 1.
         /// </exception>
-        public static string ConvertIntToColumnName(int column)
-        {
-            if (column < 1)
-            { throw new ArgumentException("Column indices must be positive integers."); }
+        public static string ConvertIntToColumnName(int column) {
+            if(column < 1) { throw new ArgumentException("Column indices must be positive integers."); }
             int dividend = column;
             string columnName = string.Empty;
-            while (dividend > 0)
-            {
+            while(dividend > 0) {
                 int modulo = (dividend - 1) % 26;
                 columnName = Convert.ToChar(65 + modulo) + columnName;
                 dividend = (dividend - modulo) / 26;
@@ -95,10 +80,8 @@ namespace OpenXMLOffice.Global
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        public static string ConvertToExcelCellReference(int row, int column)
-        {
-            if (row < 1 || column < 1)
-            { throw new ArgumentException("Row and column indices must be positive integers."); }
+        public static string ConvertToExcelCellReference(int row,int column) {
+            if(row < 1 || column < 1) { throw new ArgumentException("Row and column indices must be positive integers."); }
             return ConvertIntToColumnName(column) + row;
         }
 
@@ -109,9 +92,8 @@ namespace OpenXMLOffice.Global
         /// </param>
         /// <returns>
         /// </returns>
-        public static int EmuToPixels(long emuValue)
-        {
-            return (int)Math.Round((double)emuValue / 914400 * GlobalConstants.DefaultDPI);
+        public static int EmuToPixels(long emuValue) {
+            return (int)Math.Round((double)emuValue / 914400 * GlobalConstants.defaultDPI);
         }
 
         /// <summary>
@@ -121,9 +103,8 @@ namespace OpenXMLOffice.Global
         /// </param>
         /// <returns>
         /// </returns>
-        public static long PixelsToEmu(int pixels)
-        {
-            return (long)Math.Round((double)pixels / GlobalConstants.DefaultDPI * 914400);
+        public static long PixelsToEmu(int pixels) {
+            return (long)Math.Round((double)pixels / GlobalConstants.defaultDPI * 914400);
         }
 
         #endregion Public Methods

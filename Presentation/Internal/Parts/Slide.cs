@@ -5,37 +5,30 @@ using OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
-{
+namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Represents a slide in a presentation.
     /// </summary>
-    public class Slide
-    {
+    public class Slide {
         #region Private Fields
 
-        private readonly P.Slide OpenXMLSlide = new();
+        private readonly P.Slide openXMLSlide = new();
 
         #endregion Private Fields
 
         #region Internal Constructors
 
-        internal Slide(P.Slide? OpenXMLSlide = null)
-        {
-            if (OpenXMLSlide != null)
-            {
-                this.OpenXMLSlide = OpenXMLSlide;
-            }
-            else
-            {
-                CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE, PresentationConstants.SlideLayoutType.BLANK);
-                this.OpenXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
-                this.OpenXMLSlide.ColorMapOverride = new P.ColorMapOverride()
-                {
+        internal Slide(P.Slide? OpenXMLSlide = null) {
+            if(OpenXMLSlide != null) {
+                this.openXMLSlide = OpenXMLSlide;
+            } else {
+                CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE,PresentationConstants.SlideLayoutType.BLANK);
+                this.openXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
+                this.openXMLSlide.ColorMapOverride = new P.ColorMapOverride() {
                     MasterColorMapping = new A.MasterColorMapping()
                 };
-                this.OpenXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-                this.OpenXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                this.openXMLSlide.AddNamespaceDeclaration("a","http://schemas.openxmlformats.org/drawingml/2006/main");
+                this.openXMLSlide.AddNamespaceDeclaration("r","http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             }
         }
 
@@ -52,9 +45,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Chart AddChart(Excel.DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
-        {
-            Chart Chart = new(this, DataCells, AreaChartSetting);
+        public Chart AddChart(Excel.DataCell[][] DataCells,AreaChartSetting AreaChartSetting) {
+            Chart Chart = new(this,DataCells,AreaChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
             return Chart;
         }
@@ -68,9 +60,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Chart AddChart(Excel.DataCell[][] DataCells, BarChartSetting BarChartSetting)
-        {
-            Chart Chart = new(this, DataCells, BarChartSetting);
+        public Chart AddChart(Excel.DataCell[][] DataCells,BarChartSetting BarChartSetting) {
+            Chart Chart = new(this,DataCells,BarChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
             return Chart;
         }
@@ -84,9 +75,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Chart AddChart(Excel.DataCell[][] DataCells, ColumnChartSetting ColumnChartSetting)
-        {
-            Chart Chart = new(this, DataCells, ColumnChartSetting);
+        public Chart AddChart(Excel.DataCell[][] DataCells,ColumnChartSetting ColumnChartSetting) {
+            Chart Chart = new(this,DataCells,ColumnChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
             return Chart;
         }
@@ -100,9 +90,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Chart AddChart(Excel.DataCell[][] DataCells, LineChartSetting LineChartSetting)
-        {
-            Chart Chart = new(this, DataCells, LineChartSetting);
+        public Chart AddChart(Excel.DataCell[][] DataCells,LineChartSetting LineChartSetting) {
+            Chart Chart = new(this,DataCells,LineChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
             return Chart;
         }
@@ -116,9 +105,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Chart AddChart(Excel.DataCell[][] DataCells, PieChartSetting PieChartSetting)
-        {
-            Chart Chart = new(this, DataCells, PieChartSetting);
+        public Chart AddChart(Excel.DataCell[][] DataCells,PieChartSetting PieChartSetting) {
+            Chart Chart = new(this,DataCells,PieChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
             return Chart;
         }
@@ -132,9 +120,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Chart AddChart(Excel.DataCell[][] DataCells, ScatterChartSetting ScatterChartSetting)
-        {
-            Chart Chart = new(this, DataCells, ScatterChartSetting);
+        public Chart AddChart(Excel.DataCell[][] DataCells,ScatterChartSetting ScatterChartSetting) {
+            Chart Chart = new(this,DataCells,ScatterChartSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
             return Chart;
         }
@@ -148,9 +135,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Picture AddPicture(string FilePath, PictureSetting PictureSetting)
-        {
-            Picture Picture = new(FilePath, this, PictureSetting);
+        public Picture AddPicture(string FilePath,PictureSetting PictureSetting) {
+            Picture Picture = new(FilePath,this,PictureSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Picture.GetPicture());
             return Picture;
         }
@@ -164,9 +150,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Picture AddPicture(Stream Stream, PictureSetting PictureSetting)
-        {
-            Picture Picture = new(Stream, this, PictureSetting);
+        public Picture AddPicture(Stream Stream,PictureSetting PictureSetting) {
+            Picture Picture = new(Stream,this,PictureSetting);
             GetSlide().CommonSlideData!.ShapeTree!.Append(Picture.GetPicture());
             return Picture;
         }
@@ -180,9 +165,8 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public Table AddTable(TableRow[] DataCells, TableSetting TableSetting)
-        {
-            Table Table = new(DataCells, TableSetting);
+        public Table AddTable(TableRow[] DataCells,TableSetting TableSetting) {
+            Table Table = new(DataCells,TableSetting);
             P.GraphicFrame GraphicFrame = Table.GetTableGraphicFrame();
             GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
             return Table;
@@ -195,8 +179,7 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public TextBox AddTextBox(TextBoxSetting TextBoxSetting)
-        {
+        public TextBox AddTextBox(TextBoxSetting TextBoxSetting) {
             TextBox TextBox = new(TextBoxSetting);
             P.Shape Shape = TextBox.GetTextBoxShape();
             GetSlide().CommonSlideData!.ShapeTree!.Append(Shape);
@@ -210,14 +193,11 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         /// <returns>
         /// </returns>
-        public IEnumerable<Shape> FindShapeByText(string searchText)
-        {
-            IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape =>
-            {
+        public IEnumerable<Shape> FindShapeByText(string searchText) {
+            IEnumerable<P.Shape> searchResults = GetCommonSlideData().ShapeTree!.Elements<P.Shape>().Where(shape => {
                 return shape.InnerText == searchText;
             });
-            return searchResults.Select(shape =>
-            {
+            return searchResults.Select(shape => {
                 return new Shape(shape);
             });
         }
@@ -226,28 +206,24 @@ namespace OpenXMLOffice.Presentation
 
         #region Internal Methods
 
-        internal string GetNextSlideRelationId()
-        {
-            return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
+        internal string GetNextSlideRelationId() {
+            return string.Format("rId{0}",GetSlidePart().Parts.Count() + 1);
         }
 
-        internal P.Slide GetSlide()
-        {
-            return OpenXMLSlide;
+        internal P.Slide GetSlide() {
+            return openXMLSlide;
         }
 
-        internal SlidePart GetSlidePart()
-        {
-            return OpenXMLSlide.SlidePart!;
+        internal SlidePart GetSlidePart() {
+            return openXMLSlide.SlidePart!;
         }
 
         #endregion Internal Methods
 
         #region Private Methods
 
-        private P.CommonSlideData GetCommonSlideData()
-        {
-            return OpenXMLSlide.CommonSlideData!;
+        private P.CommonSlideData GetCommonSlideData() {
+            return openXMLSlide.CommonSlideData!;
         }
 
         #endregion Private Methods

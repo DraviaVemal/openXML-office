@@ -2,24 +2,22 @@
 
 using OpenXMLOffice.Global;
 
-namespace OpenXMLOffice.Excel
-{
+namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the properties of a column in a worksheet.
     /// </summary>
-    public class SpreadsheetProperties
-    {
+    public class SpreadsheetProperties {
         #region Public Fields
 
         /// <summary>
         /// Spreadsheet settings
         /// </summary>
-        public SpreadsheetSettings Settings = new();
+        public SpreadsheetSettings settings = new();
 
         /// <summary>
         /// Spreadsheet theme settings
         /// </summary>
-        public ThemePallet Theme = new();
+        public ThemePallet theme = new();
 
         #endregion Public Fields
     }
@@ -27,7 +25,6 @@ namespace OpenXMLOffice.Excel
     /// <summary>
     /// Represents the settings of a spreadsheet.
     /// </summary>
-    public class SpreadsheetSettings
-    {
+    public class SpreadsheetSettings {
     }
 }

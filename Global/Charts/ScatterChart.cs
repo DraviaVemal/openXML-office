@@ -2,13 +2,11 @@
 
 using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a scatter chart.
     /// </summary>
-    public class ScatterChart : ScatterFamilyChart
-    {
+    public class ScatterChart : ScatterFamilyChart {
         #region Public Constructors
 
         /// <summary>
@@ -18,8 +16,7 @@ namespace OpenXMLOffice.Global
         /// </param>
         /// <param name="DataCols">
         /// </param>
-        public ScatterChart(ScatterChartSetting ScatterChartSetting, ChartData[][] DataCols) : base(ScatterChartSetting, DataCols)
-        {
+        public ScatterChart(ScatterChartSetting ScatterChartSetting,ChartData[][] DataCols) : base(ScatterChartSetting,DataCols) {
         }
 
         #endregion Public Constructors
@@ -31,8 +28,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <returns>
         /// </returns>
-        public CS.ChartStyle GetChartStyle()
-        {
+        public CS.ChartStyle GetChartStyle() {
             return CreateChartStyles();
         }
 
@@ -41,8 +37,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <returns>
         /// </returns>
-        public CS.ColorStyle GetColorStyle()
-        {
+        public CS.ColorStyle GetColorStyle() {
             return CreateColorStyles();
         }
 

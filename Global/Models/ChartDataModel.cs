@@ -1,12 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the Data type of the chart data.
     /// </summary>
-    public enum DataType
-    {
+    public enum DataType {
         /// <summary>
         /// Date Data Type
         /// </summary>
@@ -26,24 +24,23 @@ namespace OpenXMLOffice.Global
     /// <summary>
     /// Represents the settings for a chart data.
     /// </summary>
-    public class ChartData
-    {
+    public class ChartData {
         #region Public Fields
 
         /// <summary>
         /// The data type of the chart data.
         /// </summary>
-        public DataType DataType = DataType.STRING;
+        public DataType dataType = DataType.STRING;
 
         /// <summary>
         /// Number Format for Chart Data (Default: General)
         /// </summary>
-        public string NumberFormat = "General";
+        public string numberFormat = "General";
 
         /// <summary>
         /// The value of the chart data.
         /// </summary>
-        public string? Value;
+        public string? value;
 
         #endregion Public Fields
     }

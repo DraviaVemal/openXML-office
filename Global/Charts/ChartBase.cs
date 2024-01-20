@@ -11,8 +11,7 @@ namespace OpenXMLOffice.Global;
 /// <summary>
 /// Chart Base Class Common to all charts. Class is only intended to get created by inherited classes
 /// </summary>
-public class ChartBase : CommonProperties
-{
+public class ChartBase : CommonProperties {
     #region Protected Fields
 
     /// <summary>
@@ -29,9 +28,9 @@ public class ChartBase : CommonProperties
 
     #region Private Fields
 
-    private readonly C.Chart Chart;
+    private readonly C.Chart chart;
 
-    private readonly C.ChartSpace OpenXMLChartSpace;
+    private readonly C.ChartSpace openXMLChartSpace;
 
     #endregion Private Fields
 
@@ -42,15 +41,13 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <param name="ChartSetting">
     /// </param>
-    protected ChartBase(ChartSetting ChartSetting)
-    {
+    protected ChartBase(ChartSetting ChartSetting) {
         this.ChartSetting = ChartSetting;
-        OpenXMLChartSpace = CreateChartSpace();
-        Chart = CreateChart();
-        GetChartSpace().Append(Chart);
+        openXMLChartSpace = CreateChartSpace();
+        chart = CreateChart();
+        GetChartSpace().Append(chart);
         GetChartSpace().Append(new C.ExternalData(
-            new C.AutoUpdate() { Val = false })
-        { Id = "rId1" });
+            new C.AutoUpdate() { Val = false }) { Id = "rId1" });
     }
 
     #endregion Protected Constructors
@@ -62,9 +59,8 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <returns>
     /// </returns>
-    public C.ChartSpace GetChartSpace()
-    {
-        return OpenXMLChartSpace;
+    public C.ChartSpace GetChartSpace() {
+        return openXMLChartSpace;
     }
 
     #endregion Public Methods
@@ -82,13 +78,11 @@ public class ChartBase : CommonProperties
     /// </returns>
     /// <exception cref="ArgumentException">
     /// </exception>
-    protected C.BubbleSize CreateBubbleSizeAxisData(string Formula, ChartData[] Cells)
-    {
-        if (Cells.All(v => v.DataType != DataType.NUMBER))
-        {
+    protected C.BubbleSize CreateBubbleSizeAxisData(string Formula,ChartData[] Cells) {
+        if(Cells.All(v => v.dataType != DataType.NUMBER)) {
             throw new ArgumentException("Bubble Size Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
+        return new(new C.NumberReference(new C.Formula(Formula),AddNumberCacheValue(Cells)));
     }
 
     /// <summary>
@@ -98,16 +92,13 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting CategoryAxisSetting)
-    {
+    protected C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting CategoryAxisSetting) {
         C.CategoryAxis CategoryAxis = new(
-            new C.AxisId { Val = CategoryAxisSetting.Id },
+            new C.AxisId { Val = CategoryAxisSetting.id },
             new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
             new C.Delete { Val = false },
-            new C.AxisPosition
-            {
-                Val = CategoryAxisSetting.AxisPosition switch
-                {
+            new C.AxisPosition {
+                Val = CategoryAxisSetting.axisPosition switch {
                     AxisPosition.LEFT => C.AxisPositionValues.Left,
                     AxisPosition.RIGHT => C.AxisPositionValues.Right,
                     AxisPosition.TOP => C.AxisPositionValues.Top,
@@ -117,7 +108,7 @@ public class ChartBase : CommonProperties
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = CategoryAxisSetting.CrossAxisId },
+            new C.CrossingAxis { Val = CategoryAxisSetting.crossAxisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
             new C.AutoLabeled { Val = true },
             new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
@@ -127,12 +118,10 @@ public class ChartBase : CommonProperties
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
         ShapeProperties.Append(new A.EffectList());
-        if (ChartSetting.ChartGridLinesOptions.IsMajorCategoryLinesEnabled)
-        {
+        if(ChartSetting.ChartGridLinesOptions.IsMajorCategoryLinesEnabled) {
             CategoryAxis.Append(CreateMajorGridLine());
         }
-        if (ChartSetting.ChartGridLinesOptions.IsMinorCategoryLinesEnabled)
-        {
+        if(ChartSetting.ChartGridLinesOptions.IsMinorCategoryLinesEnabled) {
             CategoryAxis.Append(CreateMinorGridLine());
         }
         CategoryAxis.Append(ShapeProperties);
@@ -165,15 +154,11 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C.CategoryAxisData CreateCategoryAxisData(string Formula, ChartData[] Cells)
-    {
-        if (Cells.All(v => v.DataType == DataType.NUMBER))
-        {
-            return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
-        }
-        else
-        {
-            return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
+    protected C.CategoryAxisData CreateCategoryAxisData(string Formula,ChartData[] Cells) {
+        if(Cells.All(v => v.dataType == DataType.NUMBER)) {
+            return new(new C.NumberReference(new C.Formula(Formula),AddNumberCacheValue(Cells)));
+        } else {
+            return new(new C.StringReference(new C.Formula(Formula),AddStringCacheValue(Cells)));
         }
     }
 
@@ -182,8 +167,7 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <returns>
     /// </returns>
-    protected CS.ChartStyle CreateChartStyles()
-    {
+    protected CS.ChartStyle CreateChartStyles() {
         ChartStyle ChartStyle = new();
         return ChartStyle.CreateChartStyles();
     }
@@ -193,8 +177,7 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <returns>
     /// </returns>
-    protected CS.ColorStyle CreateColorStyles()
-    {
+    protected CS.ColorStyle CreateColorStyles() {
         ChartColor ChartColor = new();
         return ChartColor.CreateColorStyles();
     }
@@ -208,14 +191,12 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C.DataLabels CreateDataLabels(ChartDataLabel ChartDataLabel, int? DataLabelCount = 0)
-    {
+    protected C.DataLabels CreateDataLabels(ChartDataLabel ChartDataLabel,int? DataLabelCount = 0) {
         C.ExtensionList ExtensionList = new(
             new C.Extension(
                 new C15.DataLabelFieldTable(),
                 new C15.ShowDataLabelsRange() { Val = true }
-            )
-            {
+            ) {
                 Uri = GeneratorUtils.GenerateNewGUID()
             }
         );
@@ -228,35 +209,28 @@ public class ChartBase : CommonProperties
             new C.ShowLeaderLines() { Val = false },
             new C.Separator(ChartDataLabel.Separator),
             (OpenXmlElement)ExtensionList.Clone());
-        for (int i = 0; i < DataLabelCount; i++)
-        {
-            A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
-            if (ChartDataLabel.ShowSeriesName)
-            {
+        for(int i = 0;i < DataLabelCount;i++) {
+            A.Paragraph Paragraph = new(CreateField("CELLRANGE","[CELLRANGE]"));
+            if(ChartDataLabel.ShowSeriesName) {
                 Paragraph.Append(new TextBoxBase(
-                    new TextBoxSetting()
-                    {
-                        Text = ChartDataLabel.Separator
+                    new TextBoxSetting() {
+                        text = ChartDataLabel.Separator
                     }).GetTextBoxBaseRun());
-                Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
+                Paragraph.Append(CreateField("SERIESNAME","[SERIES NAME]"));
             }
-            if (ChartDataLabel.ShowCategoryName)
-            {
+            if(ChartDataLabel.ShowCategoryName) {
                 Paragraph.Append(new TextBoxBase(
-                    new TextBoxSetting()
-                    {
-                        Text = ChartDataLabel.Separator
+                    new TextBoxSetting() {
+                        text = ChartDataLabel.Separator
                     }).GetTextBoxBaseRun());
-                Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
+                Paragraph.Append(CreateField("CATEGORYNAME","[CATEGORY NAME]"));
             }
-            if (ChartDataLabel.ShowValue)
-            {
+            if(ChartDataLabel.ShowValue) {
                 Paragraph.Append(new TextBoxBase(
-                    new TextBoxSetting()
-                    {
-                        Text = ChartDataLabel.Separator
+                    new TextBoxSetting() {
+                        text = ChartDataLabel.Separator
                     }).GetTextBoxBaseRun());
-                Paragraph.Append(CreateField("VALUE", "[VALUE]"));
+                Paragraph.Append(CreateField("VALUE","[VALUE]"));
             }
             Paragraph.Append(new A.EndParagraphRunProperties(
                     new A.SolidFill(
@@ -268,8 +242,7 @@ public class ChartBase : CommonProperties
                     new A.LatinFont() { Typeface = "Calibri (Body)" },
                     new A.EastAsianFont() { Typeface = "Calibri (Body)" },
                     new A.ComplexScriptFont() { Typeface = "Calibri (Body)" }
-                )
-            { Language = "", FontSize = 1800, Bold = false, Italic = false, Underline = A.TextUnderlineValues.None, Dirty = false });
+                ) { Language = "",FontSize = 1800,Bold = false,Italic = false,Underline = A.TextUnderlineValues.None,Dirty = false });
             DataLabels.Append(new C.DataLabel(
                 new C.Index() { Val = (uint)i },
                 new C.SeriesText(
@@ -299,9 +272,8 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C15.DataLabelsRange CreateDataLabelsRange(string Formula, ChartData[] Cells)
-    {
-        return new(new C.Formula(Formula), AddDataLabelCacheValue(Cells));
+    protected C15.DataLabelsRange CreateDataLabelsRange(string Formula,ChartData[] Cells) {
+        return new(new C.Formula(Formula),AddDataLabelCacheValue(Cells));
     }
 
     /// <summary>
@@ -315,24 +287,19 @@ public class ChartBase : CommonProperties
     /// </returns>
     /// <exception cref="ArgumentException">
     /// </exception>
-    protected List<ChartDataGrouping> CreateDataSeries(ChartData[][] DataCols, ChartDataSetting ChartDataSetting)
-    {
+    protected List<ChartDataGrouping> CreateDataSeries(ChartData[][] DataCols,ChartDataSetting ChartDataSetting) {
         List<uint> SeriesColumns = new();
-        for (uint col = ChartDataSetting.ChartDataColumnStart + 1; col <= (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length - 1 : ChartDataSetting.ChartDataColumnEnd); col++)
-        {
+        for(uint col = ChartDataSetting.ChartDataColumnStart + 1;col <= (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length - 1 : ChartDataSetting.ChartDataColumnEnd);col++) {
             SeriesColumns.Add(col);
         }
-        if ((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : ChartDataSetting.ChartDataRowEnd) - ChartDataSetting.ChartDataRowStart < 1 || (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.ChartDataColumnEnd) - ChartDataSetting.ChartDataColumnStart < 1)
-        {
+        if((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : ChartDataSetting.ChartDataRowEnd) - ChartDataSetting.ChartDataRowStart < 1 || (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.ChartDataColumnEnd) - ChartDataSetting.ChartDataColumnStart < 1) {
             throw new ArgumentException("Data Series Invalid Range");
         }
-        for (int i = 0; i < SeriesColumns.Count; i++)
-        {
+        for(int i = 0;i < SeriesColumns.Count;i++) {
             uint Column = SeriesColumns[i];
             List<ChartData> XaxisCells = ((ChartData[]?)DataCols[ChartDataSetting.ChartDataColumnStart].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
             List<ChartData> YaxisCells = ((ChartData[]?)DataCols[Column].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
-            ChartDataGrouping ChartDataGrouping = new()
-            {
+            ChartDataGrouping ChartDataGrouping = new() {
                 SeriesHeaderFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 1}",
                 SeriesHeaderCells = ((ChartData[]?)DataCols[Column].Clone()!)[ChartDataSetting.ChartDataRowStart],
                 XaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.ChartDataColumnStart + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.ChartDataColumnStart + 1)}${ChartDataSetting.ChartDataRowStart + XaxisCells.Count + 1}",
@@ -340,16 +307,14 @@ public class ChartBase : CommonProperties
                 YaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + YaxisCells.Count + 1}",
                 YaxisCells = YaxisCells.ToArray(),
             };
-            if (ChartDataSetting.Is3Ddata)
-            {
+            if(ChartDataSetting.Is3Ddata) {
                 i++;
                 Column = SeriesColumns[i];
                 List<ChartData> ZaxisCells = ((ChartData[]?)DataCols[Column].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
                 ChartDataGrouping.ZaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + ZaxisCells.Count + 1}";
                 ChartDataGrouping.ZaxisCells = ZaxisCells.ToArray();
             }
-            if (ChartDataSetting.ValueFromColumn.TryGetValue(Column, out uint DataValueColumn))
-            {
+            if(ChartDataSetting.ValueFromColumn.TryGetValue(Column,out uint DataValueColumn)) {
                 List<ChartData> DataLabelCells = ((ChartData[]?)DataCols[DataValueColumn].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
                 ChartDataGrouping.DataLabelFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.ChartDataRowStart + DataLabelCells.Count + 1}";
                 ChartDataGrouping.DataLabelCells = DataLabelCells.ToArray();
@@ -368,9 +333,8 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C.SeriesText CreateSeriesText(string Formula, ChartData[] Cells)
-    {
-        return new(new C.StringReference(new C.Formula(Formula), AddStringCacheValue(Cells)));
+    protected C.SeriesText CreateSeriesText(string Formula,ChartData[] Cells) {
+        return new(new C.StringReference(new C.Formula(Formula),AddStringCacheValue(Cells)));
     }
 
     /// <summary>
@@ -378,8 +342,7 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <returns>
     /// </returns>
-    protected C.ShapeProperties CreateShapeProperties()
-    {
+    protected C.ShapeProperties CreateShapeProperties() {
         return new();
     }
 
@@ -390,35 +353,30 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C.ValueAxis CreateValueAxis(ValueAxisSetting ValueAxisSetting)
-    {
+    protected C.ValueAxis CreateValueAxis(ValueAxisSetting ValueAxisSetting) {
         C.ValueAxis ValueAxis = new(
-            new C.AxisId { Val = ValueAxisSetting.Id },
+            new C.AxisId { Val = ValueAxisSetting.id },
             new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
             new C.Delete { Val = false },
-            new C.AxisPosition
-            {
-                Val = ValueAxisSetting.AxisPosition switch
-                {
+            new C.AxisPosition {
+                Val = ValueAxisSetting.axisPosition switch {
                     AxisPosition.LEFT => C.AxisPositionValues.Left,
                     AxisPosition.RIGHT => C.AxisPositionValues.Right,
                     AxisPosition.TOP => C.AxisPositionValues.Top,
                     _ => C.AxisPositionValues.Bottom
                 }
             },
-            new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
+            new C.NumberingFormat { FormatCode = "General",SourceLinked = true },
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo },
-            new C.CrossingAxis { Val = ValueAxisSetting.CrossAxisId },
+            new C.CrossingAxis { Val = ValueAxisSetting.crossAxisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
             new C.CrossBetween { Val = C.CrossBetweenValues.Between });
-        if (ChartSetting.ChartGridLinesOptions.IsMajorValueLinesEnabled)
-        {
+        if(ChartSetting.ChartGridLinesOptions.IsMajorValueLinesEnabled) {
             ValueAxis.Append(CreateMajorGridLine());
         }
-        if (ChartSetting.ChartGridLinesOptions.IsMinorValueLinesEnabled)
-        {
+        if(ChartSetting.ChartGridLinesOptions.IsMinorValueLinesEnabled) {
             ValueAxis.Append(CreateMinorGridLine());
         }
         C.ShapeProperties ShapeProperties = CreateShapeProperties();
@@ -457,13 +415,11 @@ public class ChartBase : CommonProperties
     /// </returns>
     /// <exception cref="ArgumentException">
     /// </exception>
-    protected C.Values CreateValueAxisData(string Formula, ChartData[] Cells)
-    {
-        if (Cells.All(v => v.DataType != DataType.NUMBER))
-        {
+    protected C.Values CreateValueAxisData(string Formula,ChartData[] Cells) {
+        if(Cells.All(v => v.dataType != DataType.NUMBER)) {
             throw new ArgumentException("Value Axis Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
+        return new(new C.NumberReference(new C.Formula(Formula),AddNumberCacheValue(Cells)));
     }
 
     /// <summary>
@@ -477,13 +433,11 @@ public class ChartBase : CommonProperties
     /// </returns>
     /// <exception cref="ArgumentException">
     /// </exception>
-    protected C.XValues CreateXValueAxisData(string Formula, ChartData[] Cells)
-    {
-        if (Cells.All(v => v.DataType != DataType.NUMBER))
-        {
+    protected C.XValues CreateXValueAxisData(string Formula,ChartData[] Cells) {
+        if(Cells.All(v => v.dataType != DataType.NUMBER)) {
             throw new ArgumentException("X Axis Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
+        return new(new C.NumberReference(new C.Formula(Formula),AddNumberCacheValue(Cells)));
     }
 
     /// <summary>
@@ -497,13 +451,11 @@ public class ChartBase : CommonProperties
     /// </returns>
     /// <exception cref="ArgumentException">
     /// </exception>
-    protected C.YValues CreateYValueAxisData(string Formula, ChartData[] Cells)
-    {
-        if (Cells.All(v => v.DataType != DataType.NUMBER))
-        {
+    protected C.YValues CreateYValueAxisData(string Formula,ChartData[] Cells) {
+        if(Cells.All(v => v.dataType != DataType.NUMBER)) {
             throw new ArgumentException("Y Axis Data Should Be numaric");
         }
-        return new(new C.NumberReference(new C.Formula(Formula), AddNumberCacheValue(Cells)));
+        return new(new C.NumberReference(new C.Formula(Formula),AddNumberCacheValue(Cells)));
     }
 
     /// <summary>
@@ -511,145 +463,109 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <param name="PlotArea">
     /// </param>
-    protected void SetChartPlotArea(C.PlotArea PlotArea)
-    {
-        Chart.PlotArea = PlotArea;
+    protected void SetChartPlotArea(C.PlotArea PlotArea) {
+        chart.PlotArea = PlotArea;
     }
 
     #endregion Protected Methods
 
     #region Private Methods
 
-    private C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] Cells)
-    {
-        try
-        {
-            C15.DataLabelsRangeChache DataLabelsRangeChache = new()
-            {
-                PointCount = new C.PointCount()
-                {
+    private C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] Cells) {
+        try {
+            C15.DataLabelsRangeChache DataLabelsRangeChache = new() {
+                PointCount = new C.PointCount() {
                     Val = (UInt32Value)(uint)Cells.Length
                 },
             };
             int count = 0;
-            foreach (ChartData Cell in Cells)
-            {
-                C.StringPoint StringPoint = new()
-                {
+            foreach(ChartData Cell in Cells) {
+                C.StringPoint StringPoint = new() {
                     Index = (UInt32Value)(uint)count
                 };
-                StringPoint.AppendChild(new C.NumericValue(Cell.Value ?? ""));
+                StringPoint.AppendChild(new C.NumericValue(Cell.value ?? ""));
                 DataLabelsRangeChache.AppendChild(StringPoint);
                 ++count;
             }
             return DataLabelsRangeChache;
-        }
-        catch
-        {
+        } catch {
             throw new Exception("Chart. Data Label Ref Error");
         }
     }
 
-    private C.NumberingCache AddNumberCacheValue(ChartData[] Cells)
-    {
-        try
-        {
-            C.NumberingCache NumberingCache = new()
-            {
-                PointCount = new C.PointCount()
-                {
+    private C.NumberingCache AddNumberCacheValue(ChartData[] Cells) {
+        try {
+            C.NumberingCache NumberingCache = new() {
+                PointCount = new C.PointCount() {
                     Val = (UInt32Value)(uint)Cells.Length
                 },
             };
             int count = 0;
-            foreach (ChartData Cell in Cells)
-            {
-                C.NumericPoint StringPoint = new()
-                {
+            foreach(ChartData Cell in Cells) {
+                C.NumericPoint StringPoint = new() {
                     Index = (UInt32Value)(uint)count,
-                    FormatCode = Cell.NumberFormat
+                    FormatCode = Cell.numberFormat
                 };
-                StringPoint.AppendChild(new C.NumericValue(Cell.Value ?? ""));
+                StringPoint.AppendChild(new C.NumericValue(Cell.value ?? ""));
                 NumberingCache.AppendChild(StringPoint);
                 ++count;
             }
             return NumberingCache;
-        }
-        catch
-        {
+        } catch {
             throw new Exception("Chart. Numeric Ref Error");
         }
     }
 
-    private C.StringCache AddStringCacheValue(ChartData[] Cells)
-    {
-        try
-        {
-            C.StringCache StringCache = new()
-            {
-                PointCount = new C.PointCount()
-                {
+    private C.StringCache AddStringCacheValue(ChartData[] Cells) {
+        try {
+            C.StringCache StringCache = new() {
+                PointCount = new C.PointCount() {
                     Val = (UInt32Value)(uint)Cells.Length
                 },
             };
             int count = 0;
-            foreach (ChartData Cell in Cells)
-            {
-                C.StringPoint StringPoint = new()
-                {
+            foreach(ChartData Cell in Cells) {
+                C.StringPoint StringPoint = new() {
                     Index = (UInt32Value)(uint)count
                 };
-                StringPoint.AppendChild(new C.NumericValue(Cell.Value ?? ""));
+                StringPoint.AppendChild(new C.NumericValue(Cell.value ?? ""));
                 StringCache.AppendChild(StringPoint);
                 ++count;
             }
             return StringCache;
-        }
-        catch
-        {
+        } catch {
             throw new Exception("Chart. String Ref Error");
         }
     }
 
-    private C.Chart CreateChart()
-    {
-        C.Chart Chart = new()
-        {
-            PlotVisibleOnly = new C.PlotVisibleOnly()
-            {
+    private C.Chart CreateChart() {
+        C.Chart Chart = new() {
+            PlotVisibleOnly = new C.PlotVisibleOnly() {
                 Val = true
             },
-            AutoTitleDeleted = new C.AutoTitleDeleted()
-            {
+            AutoTitleDeleted = new C.AutoTitleDeleted() {
                 Val = false
             },
-            DisplayBlanksAs = new C.DisplayBlanksAs()
-            {
+            DisplayBlanksAs = new C.DisplayBlanksAs() {
                 Val = C.DisplayBlanksAsValues.Gap
             },
-            ShowDataLabelsOverMaximum = new C.ShowDataLabelsOverMaximum()
-            {
+            ShowDataLabelsOverMaximum = new C.ShowDataLabelsOverMaximum() {
                 Val = false
             }
         };
-        if (ChartSetting.ChartLegendOptions.IsEnableLegend)
-        {
+        if(ChartSetting.ChartLegendOptions.IsEnableLegend) {
             Chart.Legend = CreateChartLegend(ChartSetting.ChartLegendOptions);
         }
-        if (ChartSetting.Title != null)
-        {
+        if(ChartSetting.Title != null) {
             Chart.Title = CreateTitle(ChartSetting.Title);
         }
         return Chart;
     }
 
-    private C.Legend CreateChartLegend(ChartLegendOptions objChartLegendOptions)
-    {
+    private C.Legend CreateChartLegend(ChartLegendOptions objChartLegendOptions) {
         C.Legend legend = new();
-        legend.Append(new C.LegendPosition()
-        {
-            Val = objChartLegendOptions.LegendPosition switch
-            {
+        legend.Append(new C.LegendPosition() {
+            Val = objChartLegendOptions.LegendPosition switch {
                 ChartLegendOptions.LegendPositionValues.TOP_RIGHT => C.LegendPositionValues.TopRight,
                 ChartLegendOptions.LegendPositionValues.TOP => C.LegendPositionValues.Top,
                 ChartLegendOptions.LegendPositionValues.BOTTOM => C.LegendPositionValues.Bottom,
@@ -667,8 +583,7 @@ public class ChartBase : CommonProperties
         ShapeProperties.Append(new A.EffectList());
         legend.Append(ShapeProperties);
         C.TextProperties TextProperties = new();
-        TextProperties.Append(new A.BodyProperties()
-        {
+        TextProperties.Append(new A.BodyProperties() {
             Rotation = 0,
             UseParagraphSpacing = true,
             VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
@@ -692,8 +607,7 @@ public class ChartBase : CommonProperties
         };
         DefaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(
         new A.LuminanceModulation { Val = 65000 },
-        new A.LuminanceOffset { Val = 35000 })
-        { Val = A.SchemeColorValues.Text1 }));
+        new A.LuminanceOffset { Val = 35000 }) { Val = A.SchemeColorValues.Text1 }));
         DefaultRunProperties.Append(new A.LatinFont { Typeface = "+mn-lt" });
         DefaultRunProperties.Append(new A.EastAsianFont { Typeface = "+mn-ea" });
         DefaultRunProperties.Append(new A.ComplexScriptFont { Typeface = "+mn-cs" });
@@ -705,53 +619,43 @@ public class ChartBase : CommonProperties
         return legend;
     }
 
-    private C.ChartSpace CreateChartSpace()
-    {
+    private C.ChartSpace CreateChartSpace() {
         C.ChartSpace ChartSpace = new();
-        ChartSpace.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-        ChartSpace.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
-        ChartSpace.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-        ChartSpace.AddNamespaceDeclaration("c15", "http://schemas.microsoft.com/office/drawing/2012/chart");
-        ChartSpace.RoundedCorners = new C.RoundedCorners()
-        {
+        ChartSpace.AddNamespaceDeclaration("a","http://schemas.openxmlformats.org/drawingml/2006/main");
+        ChartSpace.AddNamespaceDeclaration("c","http://schemas.openxmlformats.org/drawingml/2006/chart");
+        ChartSpace.AddNamespaceDeclaration("r","http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+        ChartSpace.AddNamespaceDeclaration("c15","http://schemas.microsoft.com/office/drawing/2012/chart");
+        ChartSpace.RoundedCorners = new C.RoundedCorners() {
             Val = false
         };
-        ChartSpace.Date1904 = new C.Date1904()
-        {
+        ChartSpace.Date1904 = new C.Date1904() {
             Val = false
         };
-        ChartSpace.EditingLanguage = new C.EditingLanguage()
-        {
+        ChartSpace.EditingLanguage = new C.EditingLanguage() {
             Val = "en-US"
         };
         return ChartSpace;
     }
 
-    private A.Field CreateField(string type, string text)
-    {
+    private A.Field CreateField(string type,string text) {
         return new A.Field(
             new A.RunProperties() { Language = "en-US" },
             new A.ParagraphProperties(),
-            new A.Text()
-            {
+            new A.Text() {
                 Text = text
             }
-        )
-        { Type = type, Id = GeneratorUtils.GenerateNewGUID() };
+        ) { Type = type,Id = GeneratorUtils.GenerateNewGUID() };
     }
 
-    private C.MajorGridlines CreateMajorGridLine()
-    {
+    private C.MajorGridlines CreateMajorGridLine() {
         return new(new C.ShapeProperties(
                         new A.Outline(
                             new A.SolidFill(
                                 new A.SchemeColor(
                                     new A.LuminanceModulation { Val = 15000 },
-                                    new A.LuminanceOffset { Val = 85000 })
-                                { Val = A.SchemeColorValues.Text1 }
+                                    new A.LuminanceOffset { Val = 85000 }) { Val = A.SchemeColorValues.Text1 }
                             )
-                        )
-                        {
+                        ) {
                             Width = 9525,
                             CapType = A.LineCapValues.Flat,
                             CompoundLineType = A.CompoundLineValues.Single,
@@ -761,18 +665,15 @@ public class ChartBase : CommonProperties
                 );
     }
 
-    private C.MinorGridlines CreateMinorGridLine()
-    {
+    private C.MinorGridlines CreateMinorGridLine() {
         return new(new C.ShapeProperties(
                         new A.Outline(
                             new A.SolidFill(
                                 new A.SchemeColor(
                                     new A.LuminanceModulation { Val = 5000 },
-                                    new A.LuminanceOffset { Val = 95000 })
-                                { Val = A.SchemeColorValues.Text1 }
+                                    new A.LuminanceOffset { Val = 95000 }) { Val = A.SchemeColorValues.Text1 }
                             )
-                        )
-                        {
+                        ) {
                             Width = 9525,
                             CapType = A.LineCapValues.Flat,
                             CompoundLineType = A.CompoundLineValues.Single,
@@ -782,11 +683,9 @@ public class ChartBase : CommonProperties
                 );
     }
 
-    private C.Title CreateTitle(string strTitle)
-    {
+    private C.Title CreateTitle(string strTitle) {
         C.RichText RichText = new();
-        RichText.Append(new A.BodyProperties()
-        {
+        RichText.Append(new A.BodyProperties() {
             Anchor = A.TextAnchoringTypeValues.Center,
             AnchorCenter = true,
             Rotation = 0,
@@ -797,15 +696,14 @@ public class ChartBase : CommonProperties
         });
         RichText.Append(new A.ListStyle());
         A.DefaultRunProperties DefaultRunProperties = new();
-        DefaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation { Val = 65000 }, new A.LuminanceOffset { Val = 35000 }) { Val = A.SchemeColorValues.Text1 }));
+        DefaultRunProperties.Append(new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation { Val = 65000 },new A.LuminanceOffset { Val = 35000 }) { Val = A.SchemeColorValues.Text1 }));
         DefaultRunProperties.Append(new A.LatinFont { Typeface = "+mn-lt" });
         DefaultRunProperties.Append(new A.EastAsianFont { Typeface = "+mn-ea" });
         DefaultRunProperties.Append(new A.ComplexScriptFont { Typeface = "+mn-cs" });
         RichText.Append(
             new A.Paragraph(new A.ParagraphProperties(DefaultRunProperties),
-            new TextBoxBase(new TextBoxSetting()
-            {
-                Text = strTitle ?? "Chart Title"
+            new TextBoxBase(new TextBoxSetting() {
+                text = strTitle ?? "Chart Title"
             }).GetTextBoxBaseRun()));
         C.Title title = new(new C.ChartText(RichText));
         title.Append(new C.Overlay { Val = false });

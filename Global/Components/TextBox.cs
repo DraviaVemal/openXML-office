@@ -3,17 +3,15 @@
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Global
-{
+namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents Textbox base class to build on
     /// </summary>
-    public class TextBoxBase : CommonProperties
-    {
+    public class TextBoxBase : CommonProperties {
         #region Private Fields
 
-        private readonly TextBoxSetting TextBoxSetting;
-        private P.Shape? OpenXMLShape;
+        private readonly TextBoxSetting textBoxSetting;
+        private P.Shape? openXMLShape;
 
         #endregion Private Fields
 
@@ -24,9 +22,8 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <param name="TextBoxSetting">
         /// </param>
-        public TextBoxBase(TextBoxSetting TextBoxSetting)
-        {
-            this.TextBoxSetting = TextBoxSetting;
+        public TextBoxBase(TextBoxSetting TextBoxSetting) {
+            this.textBoxSetting = TextBoxSetting;
         }
 
         #endregion Public Constructors
@@ -38,8 +35,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <returns>
         /// </returns>
-        public A.Run GetTextBoxBaseRun()
-        {
+        public A.Run GetTextBoxBaseRun() {
             return CreateTextRun();
         }
 
@@ -48,8 +44,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <returns>
         /// </returns>
-        public P.Shape GetTextBoxBaseShape()
-        {
+        public P.Shape GetTextBoxBaseShape() {
             return CreateTextBox();
         }
 
@@ -60,16 +55,13 @@ namespace OpenXMLOffice.Global
         /// </param>
         /// <param name="Y">
         /// </param>
-        public void UpdatePosition(uint X, uint Y)
-        {
-            TextBoxSetting.X = X;
-            TextBoxSetting.Y = Y;
-            if (OpenXMLShape != null)
-            {
-                OpenXMLShape.ShapeProperties!.Transform2D = new A.Transform2D
-                {
-                    Offset = new A.Offset { X = TextBoxSetting.X, Y = TextBoxSetting.Y },
-                    Extents = new A.Extents { Cx = TextBoxSetting.Width, Cy = TextBoxSetting.Height }
+        public void UpdatePosition(uint X,uint Y) {
+            textBoxSetting.x = X;
+            textBoxSetting.y = Y;
+            if(openXMLShape != null) {
+                openXMLShape.ShapeProperties!.Transform2D = new A.Transform2D {
+                    Offset = new A.Offset { X = textBoxSetting.x,Y = textBoxSetting.y },
+                    Extents = new A.Extents { Cx = textBoxSetting.width,Cy = textBoxSetting.height }
                 };
             }
         }
@@ -81,16 +73,13 @@ namespace OpenXMLOffice.Global
         /// </param>
         /// <param name="Height">
         /// </param>
-        public void UpdateSize(uint Width, uint Height)
-        {
-            TextBoxSetting.Width = Width;
-            TextBoxSetting.Height = Height;
-            if (OpenXMLShape != null)
-            {
-                OpenXMLShape.ShapeProperties!.Transform2D = new A.Transform2D
-                {
-                    Offset = new A.Offset { X = TextBoxSetting.X, Y = TextBoxSetting.Y },
-                    Extents = new A.Extents { Cx = TextBoxSetting.Width, Cy = TextBoxSetting.Height }
+        public void UpdateSize(uint Width,uint Height) {
+            textBoxSetting.width = Width;
+            textBoxSetting.height = Height;
+            if(openXMLShape != null) {
+                openXMLShape.ShapeProperties!.Transform2D = new A.Transform2D {
+                    Offset = new A.Offset { X = textBoxSetting.x,Y = textBoxSetting.y },
+                    Extents = new A.Extents { Cx = textBoxSetting.width,Cy = textBoxSetting.height }
                 };
             }
         }
@@ -99,13 +88,10 @@ namespace OpenXMLOffice.Global
 
         #region Private Methods
 
-        private P.Shape CreateTextBox()
-        {
-            OpenXMLShape = new()
-            {
+        private P.Shape CreateTextBox() {
+            openXMLShape = new() {
                 NonVisualShapeProperties = new P.NonVisualShapeProperties(
-                new P.NonVisualDrawingProperties()
-                {
+                new P.NonVisualDrawingProperties() {
                     Id = 10,
                     Name = "Text Box"
                 },
@@ -113,34 +99,31 @@ namespace OpenXMLOffice.Global
                 new P.ApplicationNonVisualDrawingProperties()),
                 ShapeProperties = new P.ShapeProperties(
                 new A.Transform2D(
-                    new A.Offset { X = TextBoxSetting.X, Y = TextBoxSetting.Y },
-                    new A.Extents { Cx = TextBoxSetting.Width, Cy = TextBoxSetting.Height }),
+                    new A.Offset { X = textBoxSetting.x,Y = textBoxSetting.y },
+                    new A.Extents { Cx = textBoxSetting.width,Cy = textBoxSetting.height }),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
-                TextBoxSetting.ShapeBackground != null ? CreateSolidFill(new List<string>() { TextBoxSetting.ShapeBackground }, 0) : new A.NoFill()),
+                textBoxSetting.shapeBackground != null ? CreateSolidFill(new List<string>() { textBoxSetting.shapeBackground },0) : new A.NoFill()),
                 TextBody = new P.TextBody(
                         new A.BodyProperties(),
                         new A.ListStyle(),
                         new A.Paragraph(CreateTextRun()))
             };
-            return OpenXMLShape;
+            return openXMLShape;
         }
 
-        private A.Run CreateTextRun()
-        {
-            A.Run Run = new(new A.RunProperties(CreateSolidFill(new List<string>() { TextBoxSetting.TextColor }, 0),
-                        new A.LatinFont { Typeface = TextBoxSetting.FontFamily },
-                        new A.EastAsianFont { Typeface = TextBoxSetting.FontFamily },
-                        new A.ComplexScriptFont { Typeface = TextBoxSetting.FontFamily })
-            {
-                FontSize = TextBoxSetting.FontSize * 100,
-                Bold = TextBoxSetting.IsBold,
-                Italic = TextBoxSetting.IsItalic,
-                Underline = TextBoxSetting.IsUnderline ? A.TextUnderlineValues.Single : A.TextUnderlineValues.None,
+        private A.Run CreateTextRun() {
+            A.Run Run = new(new A.RunProperties(CreateSolidFill(new List<string>() { textBoxSetting.textColor },0),
+                        new A.LatinFont { Typeface = textBoxSetting.fontFamily },
+                        new A.EastAsianFont { Typeface = textBoxSetting.fontFamily },
+                        new A.ComplexScriptFont { Typeface = textBoxSetting.fontFamily }) {
+                FontSize = textBoxSetting.fontSize * 100,
+                Bold = textBoxSetting.isBold,
+                Italic = textBoxSetting.isItalic,
+                Underline = textBoxSetting.isUnderline ? A.TextUnderlineValues.Single : A.TextUnderlineValues.None,
                 Dirty = false
-            }, new A.Text(TextBoxSetting.Text));
-            if (TextBoxSetting.TextBackground != null)
-            {
-                Run.Append(new A.Highlight(new A.RgbColorModelHex { Val = TextBoxSetting.TextBackground }));
+            },new A.Text(textBoxSetting.text));
+            if(textBoxSetting.textBackground != null) {
+                Run.Append(new A.Highlight(new A.RgbColorModelHex { Val = textBoxSetting.textBackground }));
             }
             return Run;
         }
