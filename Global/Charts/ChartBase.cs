@@ -211,23 +211,6 @@ public class ChartBase : CommonProperties
     /// </returns>
     protected C.DataLabels CreateDataLabels(ChartDataLabel ChartDataLabel, int? DataLabelCount = 0)
     {
-        C.ExtensionList ExtensionList = new(
-            new C.Extension(
-                new C15.DataLabelFieldTable(),
-                new C15.ExceptionForSave() { Val = true },
-                new C15.ShowDataLabelsRange() { Val = true }
-            )
-            {
-                Uri = GeneratorUtils.GenerateNewGUID()
-            },
-            new C.Extension(
-                new C15.ShowDataLabelsRange() { Val = true },
-                new C15.ShowLeaderLines() { Val = false }
-            )
-            {
-                Uri = GeneratorUtils.GenerateNewGUID()
-            }
-        );
         C.DataLabels DataLabels = new();
         for (int i = 0; i < DataLabelCount; i++)
         {
@@ -275,8 +258,7 @@ public class ChartBase : CommonProperties
                 new C.ShowSeriesName { Val = ChartDataLabel.showSeriesName },
                 new C.ShowPercent() { Val = true },
                 new C.ShowBubbleSize() { Val = true },
-                new C.Separator(ChartDataLabel.separator),
-                (OpenXmlElement)ExtensionList.Clone()
+                new C.Separator(ChartDataLabel.separator)
             ));
         }
         DataLabels.Append(new C.ShowLegendKey { Val = ChartDataLabel.showLegendKey },
@@ -287,7 +269,6 @@ public class ChartBase : CommonProperties
             new C.ShowBubbleSize() { Val = true },
             new C.Separator(ChartDataLabel.separator),
             new C.ShowLeaderLines() { Val = false });
-        DataLabels.Append((OpenXmlElement)ExtensionList.Clone());
         return DataLabels;
     }
 

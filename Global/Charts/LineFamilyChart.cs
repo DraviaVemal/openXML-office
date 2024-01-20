@@ -123,10 +123,6 @@ namespace OpenXMLOffice.Global
 
         private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, C.Marker Marker, A.SolidFill SolidFill, C.DataLabels? DataLabels)
         {
-            C.Extension extension = new(
-                new C16.UniqueID() { Val = GeneratorUtils.GenerateNewGUID() }
-            )
-            { Uri = GeneratorUtils.GenerateNewGUID() };
             C.LineChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },

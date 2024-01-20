@@ -62,7 +62,7 @@ namespace OpenXMLOffice.Global
                 series.Append(new C.ExtensionList(new C.Extension(
                     CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula, ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
                 )
-                { Uri = GeneratorUtils.GenerateNewGUID() }));
+                { Uri = "{02D57815-91ED-43cb-92C2-25804820EDAC}" }));
             }
             return series;
         }
