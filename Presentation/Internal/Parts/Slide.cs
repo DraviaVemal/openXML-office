@@ -24,18 +24,18 @@ namespace OpenXMLOffice.Presentation
         {
             if (OpenXMLSlide != null)
             {
-                this.openXMLSlide = OpenXMLSlide;
+                openXMLSlide = OpenXMLSlide;
             }
             else
             {
                 CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE, PresentationConstants.SlideLayoutType.BLANK);
-                this.openXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
-                this.openXMLSlide.ColorMapOverride = new P.ColorMapOverride()
+                openXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
+                openXMLSlide.ColorMapOverride = new P.ColorMapOverride()
                 {
                     MasterColorMapping = new A.MasterColorMapping()
                 };
-                this.openXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-                this.openXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                openXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+                openXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             }
         }
 

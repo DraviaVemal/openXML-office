@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Global
         /// </param>
         protected PieFamilyChart(PieChartSetting PieChartSetting, ChartData[][] DataCols) : base(PieChartSetting)
         {
-            this.pieChartSetting = PieChartSetting;
+            pieChartSetting = PieChartSetting;
             switch (PieChartSetting.pieChartTypes)
             {
                 case PieChartTypes.DOUGHNUT:

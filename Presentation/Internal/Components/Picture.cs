@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Presentation
         {
             currentSlide = Slide;
             string EmbedId = currentSlide.GetNextSlideRelationId();
-            this.pictureSetting = PictureSetting;
+            pictureSetting = PictureSetting;
             openXMLPicture = new();
             CreatePicture(EmbedId);
             ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.imageType switch
@@ -63,7 +63,7 @@ namespace OpenXMLOffice.Presentation
         {
             currentSlide = Slide;
             string EmbedId = currentSlide.GetNextSlideRelationId();
-            this.pictureSetting = PictureSetting;
+            pictureSetting = PictureSetting;
             openXMLPicture = new();
             CreatePicture(EmbedId);
             ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.imageType switch

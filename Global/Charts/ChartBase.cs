@@ -44,7 +44,7 @@ public class ChartBase : CommonProperties
     /// </param>
     protected ChartBase(ChartSetting ChartSetting)
     {
-        this.chartSetting = ChartSetting;
+        chartSetting = ChartSetting;
         openXMLChartSpace = CreateChartSpace();
         chart = CreateChart();
         GetChartSpace().Append(chart);

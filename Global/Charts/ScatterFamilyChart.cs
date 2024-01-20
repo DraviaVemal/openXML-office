@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Global
         /// </param>
         protected ScatterFamilyChart(ScatterChartSetting ScatterChartSetting, ChartData[][] DataCols) : base(ScatterChartSetting)
         {
-            this.scatterChartSetting = ScatterChartSetting;
+            scatterChartSetting = ScatterChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
 

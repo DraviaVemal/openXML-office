@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Global
         /// </param>
         public TextBoxBase(TextBoxSetting TextBoxSetting)
         {
-            this.textBoxSetting = TextBoxSetting;
+            textBoxSetting = TextBoxSetting;
         }
 
         #endregion Public Constructors

@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Global
         /// </param>
         protected AreaFamilyChart(AreaChartSetting AreaChartSetting, ChartData[][] DataCols) : base(AreaChartSetting)
         {
-            this.areaChartSetting = AreaChartSetting;
+            areaChartSetting = AreaChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
 

@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Presentation
         /// </param>
         public Table(TableRow[] TableRows, TableSetting TableSetting)
         {
-            this.tableSetting = TableSetting;
+            tableSetting = TableSetting;
             CreateTableGraphicFrame(TableRows);
         }
 

@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Global
         /// </param>
         protected BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
         {
-            this.barChartSetting = BarChartSetting;
+            barChartSetting = BarChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
 
