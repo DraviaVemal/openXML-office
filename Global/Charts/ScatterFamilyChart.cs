@@ -52,16 +52,16 @@ namespace OpenXMLOffice.Global {
                 });
             Chart.Append(new C.VaryColors() { Val = false });
             if(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE) {
-                scatterChartSetting.ChartDataSetting.Is3Ddata = true;
+                scatterChartSetting.chartDataSetting.is3Ddata = true;
                 if((DataCols.Length - 1) % 2 != 0) {
                     throw new ArgumentOutOfRangeException("Required 3D Data Size is not met.");
                 }
             }
             int seriesIndex = 0;
-            CreateDataSeries(DataCols,scatterChartSetting.ChartDataSetting).ForEach(Series => {
+            CreateDataSeries(DataCols,scatterChartSetting.chartDataSetting).ForEach(Series => {
                 C.DataLabels? GetDataLabels() {
                     if(seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count) {
-                        return CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(),Series.DataLabelCells?.Length ?? 0);
+                        return CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(),Series.dataLabelCells?.Length ?? 0);
                     }
                     return null;
                 }
@@ -117,7 +117,7 @@ namespace OpenXMLOffice.Global {
             C.ScatterChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.SeriesHeaderFormula!,new[] { ChartDataGrouping.SeriesHeaderCells! }));
+                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!,new[] { ChartDataGrouping.seriesHeaderCells! }));
             if(Marker != null) {
                 series.Append(Marker);
             }
@@ -134,24 +134,24 @@ namespace OpenXMLOffice.Global {
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateXValueAxisData(ChartDataGrouping.XaxisFormula!,ChartDataGrouping.XaxisCells!));
-            series.Append(CreateYValueAxisData(ChartDataGrouping.YaxisFormula!,ChartDataGrouping.YaxisCells!));
+            series.Append(CreateXValueAxisData(ChartDataGrouping.xAxisFormula!,ChartDataGrouping.xAxisCells!));
+            series.Append(CreateYValueAxisData(ChartDataGrouping.yAxisFormula!,ChartDataGrouping.yAxisCells!));
             if(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE) {
-                series.Append(CreateBubbleSizeAxisData(ChartDataGrouping.ZaxisFormula!,ChartDataGrouping.ZaxisCells!));
+                series.Append(CreateBubbleSizeAxisData(ChartDataGrouping.zAxisFormula!,ChartDataGrouping.zAxisCells!));
                 series.Append(new C.Bubble3D() { Val = false });
             } else {
                 series.Append(new C.Smooth() { Val = new[] { ScatterChartTypes.SCATTER_SMOOTH,ScatterChartTypes.SCATTER_SMOOTH_MARKER }.Contains(scatterChartSetting.scatterChartTypes) });
             }
-            if(ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null) {
+            if(ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null) {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula,ChartDataGrouping.DataLabelCells.Skip(1).ToArray())
+                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula,ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
                 ) { Uri = GeneratorUtils.GenerateNewGUID() }));
             }
             return series;
         }
 
         private C.DataLabels? CreateScatterDataLabels(ScatterChartDataLabel ScatterChartDataLabel,int? DataLabelCounter = 0) {
-            if(ScatterChartDataLabel.ShowValue || ScatterChartDataLabel.ShowValueFromColumn || ScatterChartDataLabel.ShowCategoryName || ScatterChartDataLabel.ShowLegendKey || ScatterChartDataLabel.ShowSeriesName || ScatterChartDataLabel.showBubbleSize || DataLabelCounter > 0) {
+            if(ScatterChartDataLabel.showValue || ScatterChartDataLabel.showValueFromColumn || ScatterChartDataLabel.showCategoryName || ScatterChartDataLabel.showLegendKey || ScatterChartDataLabel.showSeriesName || ScatterChartDataLabel.showBubbleSize || DataLabelCounter > 0) {
                 C.DataLabels DataLabels = CreateDataLabels(ScatterChartDataLabel,DataLabelCounter);
                 DataLabels.Append(new C.ShowBubbleSize { Val = ScatterChartDataLabel.showBubbleSize });
                 DataLabels.InsertAt(new C.DataLabelPosition() {

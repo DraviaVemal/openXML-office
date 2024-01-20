@@ -61,7 +61,7 @@ namespace OpenXMLOffice.Global {
         #region Private Methods
 
         private static A.Outline[] GenerateOutlines() {
-            A.Outline AppendNodes(int width) {
+            static A.Outline AppendNodes(int width) {
                 A.Outline outline = new(
                     new A.SolidFill(new A.SchemeColor { Val = A.SchemeColorValues.PhColor }),
                     new A.PresetDash { Val = A.PresetLineDashValues.Solid },

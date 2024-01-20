@@ -86,7 +86,7 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Is Vertical Axes Enabled
         /// </summary>
-        public bool IsVerticalAxesEnabled = true;
+        public bool isVerticalAxesEnabled = true;
 
         #endregion Public Fields
     }
@@ -100,12 +100,12 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Horizontal Axis Title
         /// </summary>
-        public string? HorizontalAxisTitle;
+        public string? horizontalAxisTitle;
 
         /// <summary>
         /// Vertical Axis Title
         /// </summary>
-        public string? VerticalAxisTitle;
+        public string? verticalAxisTitle;
 
         #endregion Public Fields
     }
@@ -119,72 +119,72 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Gets or sets the data label cells.
         /// </summary>
-        public ChartData[]? DataLabelCells;
+        public ChartData[]? dataLabelCells;
 
         /// <summary>
         /// Gets or sets the data label formula.
         /// </summary>
-        public string? DataLabelFormula;
+        public string? dataLabelFormula;
 
         /// <summary>
         /// Gets or sets the series header cells.
         /// </summary>
-        public ChartData? SeriesHeaderCells;
+        public ChartData? seriesHeaderCells;
 
         /// <summary>
         /// Gets or sets the series header format.
         /// </summary>
-        public string? SeriesHeaderFormat;
+        public string? seriesHeaderFormat;
 
         /// <summary>
         /// Gets or sets the series header formula.
         /// </summary>
-        public string? SeriesHeaderFormula;
+        public string? seriesHeaderFormula;
 
         /// <summary>
         /// Gets or sets the X-axis cells.
         /// </summary>
-        public ChartData[]? XaxisCells;
+        public ChartData[]? xAxisCells;
 
         /// <summary>
         /// Gets or sets the X-axis format.
         /// </summary>
-        public string? XaxisFormat;
+        public string? xAxisFormat;
 
         /// <summary>
         /// Gets or sets the X-axis formula.
         /// </summary>
-        public string? XaxisFormula;
+        public string? xAxisFormula;
 
         /// <summary>
         /// Gets or sets the Y-axis cells.
         /// </summary>
-        public ChartData[]? YaxisCells;
+        public ChartData[]? yAxisCells;
 
         /// <summary>
         /// Gets or sets the Y-axis format.
         /// </summary>
-        public string? YaxisFormat;
+        public string? yAxisFormat;
 
         /// <summary>
         /// Gets or sets the Y-axis formula.
         /// </summary>
-        public string? YaxisFormula;
+        public string? yAxisFormula;
 
         /// <summary>
         /// Gets or sets the Z-axis cells.
         /// </summary>
-        public ChartData[]? ZaxisCells;
+        public ChartData[]? zAxisCells;
 
         /// <summary>
         /// Gets or sets the Z-axis format.
         /// </summary>
-        public string? ZaxisFormat;
+        public string? zAxisFormat;
 
         /// <summary>
         /// Gets or sets the Z-axis formula.
         /// </summary>
-        public string? ZaxisFormula;
+        public string? zAxisFormula;
 
         #endregion Public Fields
     }
@@ -198,27 +198,27 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// The separator used for displaying multiple values.
         /// </summary>
-        public string Separator = ", ";
+        public string separator = ", ";
 
         /// <summary>
         /// Determines whether to show the category name in the chart.
         /// </summary>
-        public bool ShowCategoryName = false;
+        public bool showCategoryName = false;
 
         /// <summary>
         /// Determines whether to show the legend key in the chart.
         /// </summary>
-        public bool ShowLegendKey = false;
+        public bool showLegendKey = false;
 
         /// <summary>
         /// Determines whether to show the series name in the chart.
         /// </summary>
-        public bool ShowSeriesName = false;
+        public bool showSeriesName = false;
 
         /// <summary>
         /// Determines whether to show the value in the chart.
         /// </summary>
-        public bool ShowValue = false;
+        public bool showValue = false;
 
         /// <summary>
         /// Determines whether to show the value from a column in the chart.
@@ -249,33 +249,33 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Set 0 To Use Till End
         /// </summary>
-        public uint ChartDataColumnEnd = 0;
+        public uint chartDataColumnEnd = 0;
 
         /// <summary>
         /// Chart data Start column 0 based
         /// </summary>
-        public uint ChartDataColumnStart = 0;
+        public uint chartDataColumnStart = 0;
 
         /// <summary>
         /// Set 0 To Use Till End
         /// </summary>
-        public uint ChartDataRowEnd = 0;
+        public uint chartDataRowEnd = 0;
 
         /// <summary>
         /// Chart data Start Row 0 based
         /// </summary>
-        public uint ChartDataRowStart = 0;
+        public uint chartDataRowStart = 0;
 
         /// <summary>
         /// Is Data is used in 3D chart type
         /// </summary>
-        public bool Is3Ddata;
+        public bool is3Ddata;
 
         /// <summary>
         /// Key For Data Column Value For Data Label Column If Data Label Column Are Present
         /// Inbetween and Used in the list it will be auto skipped By Data Column
         /// </summary>
-        public Dictionary<uint,uint> ValueFromColumn = new();
+        public Dictionary<uint,uint> valueFromColumn = new();
 
         #endregion Public Fields
     }
@@ -289,22 +289,22 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Is Major Category Lines Enabled
         /// </summary>
-        public bool IsMajorCategoryLinesEnabled = false;
+        public bool isMajorCategoryLinesEnabled = false;
 
         /// <summary>
         /// Is Major Value Lines Enabled
         /// </summary>
-        public bool IsMajorValueLinesEnabled = true;
+        public bool isMajorValueLinesEnabled = true;
 
         /// <summary>
         /// Is Minor Category Lines Enabled
         /// </summary>
-        public bool IsMinorCategoryLinesEnabled = false;
+        public bool isMinorCategoryLinesEnabled = false;
 
         /// <summary>
         /// Is Minor Value Lines Enabled
         /// </summary>
-        public bool IsMinorValueLinesEnabled = false;
+        public bool isMinorValueLinesEnabled = false;
 
         #endregion Public Fields
     }
@@ -318,7 +318,7 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Is Legend Enabled
         /// </summary>
-        public bool IsEnableLegend = true;
+        public bool isEnableLegend = true;
 
         /// <summary>
         /// Is Legend Chart OverLap
@@ -340,7 +340,7 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Legend Position
         /// </summary>
-        public LegendPositionValues LegendPosition = LegendPositionValues.BOTTOM;
+        public LegendPositionValues legendPosition = LegendPositionValues.BOTTOM;
 
         #endregion Public Fields
 
@@ -399,42 +399,42 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Chart Data Setting
         /// </summary>
-        public ChartDataSetting ChartDataSetting = new();
+        public ChartDataSetting chartDataSetting = new();
 
         /// <summary>
         /// Chart Grid Line Options
         /// </summary>
-        public ChartGridLinesOptions ChartGridLinesOptions = new();
+        public ChartGridLinesOptions chartGridLinesOptions = new();
 
         /// <summary>
         /// Chart Legend Options
         /// </summary>
-        public ChartLegendOptions ChartLegendOptions = new();
+        public ChartLegendOptions chartLegendOptions = new();
 
         /// <summary>
         /// Chart Height in EMU
         /// </summary>
-        public uint Height = 6858000;
+        public uint height = 6858000;
 
         /// <summary>
         /// Chart Title
         /// </summary>
-        public string? Title;
+        public string? title;
 
         /// <summary>
         /// Chart Width in EMU
         /// </summary>
-        public uint Width = 12192000;
+        public uint width = 12192000;
 
         /// <summary>
         /// Chart X Position in EMU
         /// </summary>
-        public uint X = 0;
+        public uint x = 0;
 
         /// <summary>
         /// Chart Y Position in EMU
         /// </summary>
-        public uint Y = 0;
+        public uint y = 0;
 
         #endregion Public Fields
 

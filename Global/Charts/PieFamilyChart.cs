@@ -51,10 +51,10 @@ namespace OpenXMLOffice.Global {
                 new C.VaryColors { Val = true }) : new C.PieChart(
                 new C.VaryColors { Val = true });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols,pieChartSetting.ChartDataSetting).ForEach(Series => {
+            CreateDataSeries(DataCols,pieChartSetting.chartDataSetting).ForEach(Series => {
                 C.DataLabels? GetDataLabels() {
                     if(seriesIndex < pieChartSetting.pieChartSeriesSettings.Count) {
-                        return CreatePieDataLabels(pieChartSetting.pieChartSeriesSettings?[seriesIndex]?.pieChartDataLabel ?? new PieChartDataLabel(),Series.DataLabelCells?.Length ?? 0);
+                        return CreatePieDataLabels(pieChartSetting.pieChartSeriesSettings?[seriesIndex]?.pieChartDataLabel ?? new PieChartDataLabel(),Series.dataLabelCells?.Length ?? 0);
                     }
                     return null;
                 }
@@ -85,8 +85,8 @@ namespace OpenXMLOffice.Global {
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.SeriesHeaderFormula!,new[] { ChartDataGrouping.SeriesHeaderCells! }));
-            for(uint index = 0;index < ChartDataGrouping.XaxisCells!.Length;index++) {
+                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!,new[] { ChartDataGrouping.seriesHeaderCells! }));
+            for(uint index = 0;index < ChartDataGrouping.xAxisCells!.Length;index++) {
                 C.DataPoint DataPoint = new(new C.Index { Val = index },new C.Bubble3D { Val = false });
                 C.ShapeProperties ShapeProperties = CreateShapeProperties();
                 ShapeProperties.Append(new A.SolidFill(new A.SchemeColor { Val = new A.SchemeColorValues($"accent{(index % 6) + 1}") }));
@@ -100,18 +100,18 @@ namespace OpenXMLOffice.Global {
                 DataPoint.Append(ShapeProperties);
                 series.Append(DataPoint);
             }
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!,ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!,ChartDataGrouping.YaxisCells!));
-            if(ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null) {
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!,ChartDataGrouping.xAxisCells!));
+            series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!,ChartDataGrouping.yAxisCells!));
+            if(ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null) {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula,ChartDataGrouping.DataLabelCells.Skip(1).ToArray())
+                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula,ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
                 ) { Uri = GeneratorUtils.GenerateNewGUID() }));
             }
             return series;
         }
 
         private C.DataLabels? CreatePieDataLabels(PieChartDataLabel PieChartDataLabel,int? DataLabelCounter = 0) {
-            if(PieChartDataLabel.ShowValue || PieChartDataLabel.ShowCategoryName || PieChartDataLabel.ShowLegendKey || PieChartDataLabel.ShowSeriesName || DataLabelCounter > 0) {
+            if(PieChartDataLabel.showValue || PieChartDataLabel.showCategoryName || PieChartDataLabel.showLegendKey || PieChartDataLabel.showSeriesName || DataLabelCounter > 0) {
                 C.DataLabels DataLabels = CreateDataLabels(PieChartDataLabel,DataLabelCounter);
                 if(pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT &&
                     new[] { PieChartDataLabel.DataLabelPositionValues.CENTER,PieChartDataLabel.DataLabelPositionValues.INSIDE_END,PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END,PieChartDataLabel.DataLabelPositionValues.BEST_FIT }.Contains(PieChartDataLabel.dataLabelPosition)) {

@@ -17,12 +17,12 @@ public class ChartBase : CommonProperties {
     /// <summary>
     /// Chart Data Groupings
     /// </summary>
-    protected List<ChartDataGrouping> ChartDataGroupings = new();
+    protected List<ChartDataGrouping> chartDataGroupings = new();
 
     /// <summary>
     /// Core chart settings common for every possible chart
     /// </summary>
-    protected ChartSetting ChartSetting;
+    protected ChartSetting chartSetting;
 
     #endregion Protected Fields
 
@@ -42,7 +42,7 @@ public class ChartBase : CommonProperties {
     /// <param name="ChartSetting">
     /// </param>
     protected ChartBase(ChartSetting ChartSetting) {
-        this.ChartSetting = ChartSetting;
+        this.chartSetting = ChartSetting;
         openXMLChartSpace = CreateChartSpace();
         chart = CreateChart();
         GetChartSpace().Append(chart);
@@ -118,10 +118,10 @@ public class ChartBase : CommonProperties {
         ShapeProperties.Append(new A.NoFill());
         ShapeProperties.Append(new A.Outline(new A.NoFill()));
         ShapeProperties.Append(new A.EffectList());
-        if(ChartSetting.ChartGridLinesOptions.IsMajorCategoryLinesEnabled) {
+        if(chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled) {
             CategoryAxis.Append(CreateMajorGridLine());
         }
-        if(ChartSetting.ChartGridLinesOptions.IsMinorCategoryLinesEnabled) {
+        if(chartSetting.chartGridLinesOptions.isMinorCategoryLinesEnabled) {
             CategoryAxis.Append(CreateMinorGridLine());
         }
         CategoryAxis.Append(ShapeProperties);
@@ -201,34 +201,34 @@ public class ChartBase : CommonProperties {
             }
         );
         C.DataLabels DataLabels = new(
-            new C.ShowLegendKey { Val = ChartDataLabel.ShowLegendKey },
-            new C.ShowValue { Val = ChartDataLabel.ShowValue },
-            new C.ShowCategoryName { Val = ChartDataLabel.ShowCategoryName },
-            new C.ShowSeriesName { Val = ChartDataLabel.ShowSeriesName },
+            new C.ShowLegendKey { Val = ChartDataLabel.showLegendKey },
+            new C.ShowValue { Val = ChartDataLabel.showValue },
+            new C.ShowCategoryName { Val = ChartDataLabel.showCategoryName },
+            new C.ShowSeriesName { Val = ChartDataLabel.showSeriesName },
             new C.ShowPercent { Val = false },
             new C.ShowLeaderLines() { Val = false },
-            new C.Separator(ChartDataLabel.Separator),
+            new C.Separator(ChartDataLabel.separator),
             (OpenXmlElement)ExtensionList.Clone());
         for(int i = 0;i < DataLabelCount;i++) {
             A.Paragraph Paragraph = new(CreateField("CELLRANGE","[CELLRANGE]"));
-            if(ChartDataLabel.ShowSeriesName) {
+            if(ChartDataLabel.showSeriesName) {
                 Paragraph.Append(new TextBoxBase(
                     new TextBoxSetting() {
-                        text = ChartDataLabel.Separator
+                        text = ChartDataLabel.separator
                     }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("SERIESNAME","[SERIES NAME]"));
             }
-            if(ChartDataLabel.ShowCategoryName) {
+            if(ChartDataLabel.showCategoryName) {
                 Paragraph.Append(new TextBoxBase(
                     new TextBoxSetting() {
-                        text = ChartDataLabel.Separator
+                        text = ChartDataLabel.separator
                     }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("CATEGORYNAME","[CATEGORY NAME]"));
             }
-            if(ChartDataLabel.ShowValue) {
+            if(ChartDataLabel.showValue) {
                 Paragraph.Append(new TextBoxBase(
                     new TextBoxSetting() {
-                        text = ChartDataLabel.Separator
+                        text = ChartDataLabel.separator
                     }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("VALUE","[VALUE]"));
             }
@@ -252,11 +252,11 @@ public class ChartBase : CommonProperties {
                         Paragraph
                     )
                 ),
-                new C.ShowLegendKey { Val = ChartDataLabel.ShowLegendKey },
-                new C.ShowValue { Val = ChartDataLabel.ShowValue },
-                new C.ShowCategoryName { Val = ChartDataLabel.ShowCategoryName },
-                new C.ShowSeriesName { Val = ChartDataLabel.ShowSeriesName },
-                new C.Separator(ChartDataLabel.Separator),
+                new C.ShowLegendKey { Val = ChartDataLabel.showLegendKey },
+                new C.ShowValue { Val = ChartDataLabel.showValue },
+                new C.ShowCategoryName { Val = ChartDataLabel.showCategoryName },
+                new C.ShowSeriesName { Val = ChartDataLabel.showSeriesName },
+                new C.Separator(ChartDataLabel.separator),
                 (OpenXmlElement)ExtensionList.Clone()
             ));
         }
@@ -289,39 +289,39 @@ public class ChartBase : CommonProperties {
     /// </exception>
     protected List<ChartDataGrouping> CreateDataSeries(ChartData[][] DataCols,ChartDataSetting ChartDataSetting) {
         List<uint> SeriesColumns = new();
-        for(uint col = ChartDataSetting.ChartDataColumnStart + 1;col <= (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length - 1 : ChartDataSetting.ChartDataColumnEnd);col++) {
+        for(uint col = ChartDataSetting.chartDataColumnStart + 1;col <= (ChartDataSetting.chartDataColumnEnd == 0 ? DataCols.Length - 1 : ChartDataSetting.chartDataColumnEnd);col++) {
             SeriesColumns.Add(col);
         }
-        if((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : ChartDataSetting.ChartDataRowEnd) - ChartDataSetting.ChartDataRowStart < 1 || (ChartDataSetting.ChartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.ChartDataColumnEnd) - ChartDataSetting.ChartDataColumnStart < 1) {
+        if((ChartDataSetting.chartDataRowEnd == 0 ? DataCols[0].Length : ChartDataSetting.chartDataRowEnd) - ChartDataSetting.chartDataRowStart < 1 || (ChartDataSetting.chartDataColumnEnd == 0 ? DataCols.Length : ChartDataSetting.chartDataColumnEnd) - ChartDataSetting.chartDataColumnStart < 1) {
             throw new ArgumentException("Data Series Invalid Range");
         }
         for(int i = 0;i < SeriesColumns.Count;i++) {
             uint Column = SeriesColumns[i];
-            List<ChartData> XaxisCells = ((ChartData[]?)DataCols[ChartDataSetting.ChartDataColumnStart].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
-            List<ChartData> YaxisCells = ((ChartData[]?)DataCols[Column].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
+            List<ChartData> XaxisCells = ((ChartData[]?)DataCols[ChartDataSetting.chartDataColumnStart].Clone()!).Skip((int)ChartDataSetting.chartDataRowStart + 1).Take((ChartDataSetting.chartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.chartDataRowEnd) - (int)ChartDataSetting.chartDataRowStart).ToList();
+            List<ChartData> YaxisCells = ((ChartData[]?)DataCols[Column].Clone()!).Skip((int)ChartDataSetting.chartDataRowStart + 1).Take((ChartDataSetting.chartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.chartDataRowEnd) - (int)ChartDataSetting.chartDataRowStart).ToList();
             ChartDataGrouping ChartDataGrouping = new() {
-                SeriesHeaderFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 1}",
-                SeriesHeaderCells = ((ChartData[]?)DataCols[Column].Clone()!)[ChartDataSetting.ChartDataRowStart],
-                XaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.ChartDataColumnStart + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.ChartDataColumnStart + 1)}${ChartDataSetting.ChartDataRowStart + XaxisCells.Count + 1}",
-                XaxisCells = XaxisCells.ToArray(),
-                YaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + YaxisCells.Count + 1}",
-                YaxisCells = YaxisCells.ToArray(),
+                seriesHeaderFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.chartDataRowStart + 1}",
+                seriesHeaderCells = ((ChartData[]?)DataCols[Column].Clone()!)[ChartDataSetting.chartDataRowStart],
+                xAxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.chartDataColumnStart + 1)}${ChartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)ChartDataSetting.chartDataColumnStart + 1)}${ChartDataSetting.chartDataRowStart + XaxisCells.Count + 1}",
+                xAxisCells = XaxisCells.ToArray(),
+                yAxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.chartDataRowStart + YaxisCells.Count + 1}",
+                yAxisCells = YaxisCells.ToArray(),
             };
-            if(ChartDataSetting.Is3Ddata) {
+            if(ChartDataSetting.is3Ddata) {
                 i++;
                 Column = SeriesColumns[i];
-                List<ChartData> ZaxisCells = ((ChartData[]?)DataCols[Column].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart + 1).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
-                ChartDataGrouping.ZaxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.ChartDataRowStart + ZaxisCells.Count + 1}";
-                ChartDataGrouping.ZaxisCells = ZaxisCells.ToArray();
+                List<ChartData> ZaxisCells = ((ChartData[]?)DataCols[Column].Clone()!).Skip((int)ChartDataSetting.chartDataRowStart + 1).Take((ChartDataSetting.chartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.chartDataRowEnd) - (int)ChartDataSetting.chartDataRowStart).ToList();
+                ChartDataGrouping.zAxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)Column + 1)}${ChartDataSetting.chartDataRowStart + ZaxisCells.Count + 1}";
+                ChartDataGrouping.zAxisCells = ZaxisCells.ToArray();
             }
-            if(ChartDataSetting.ValueFromColumn.TryGetValue(Column,out uint DataValueColumn)) {
-                List<ChartData> DataLabelCells = ((ChartData[]?)DataCols[DataValueColumn].Clone()!).Skip((int)ChartDataSetting.ChartDataRowStart).Take((ChartDataSetting.ChartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.ChartDataRowEnd) - (int)ChartDataSetting.ChartDataRowStart).ToList();
-                ChartDataGrouping.DataLabelFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.ChartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.ChartDataRowStart + DataLabelCells.Count + 1}";
-                ChartDataGrouping.DataLabelCells = DataLabelCells.ToArray();
+            if(ChartDataSetting.valueFromColumn.TryGetValue(Column,out uint DataValueColumn)) {
+                List<ChartData> DataLabelCells = ((ChartData[]?)DataCols[DataValueColumn].Clone()!).Skip((int)ChartDataSetting.chartDataRowStart).Take((ChartDataSetting.chartDataRowEnd == 0 ? DataCols[0].Length : (int)ChartDataSetting.chartDataRowEnd) - (int)ChartDataSetting.chartDataRowStart).ToList();
+                ChartDataGrouping.dataLabelFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${ChartDataSetting.chartDataRowStart + DataLabelCells.Count + 1}";
+                ChartDataGrouping.dataLabelCells = DataLabelCells.ToArray();
             }
-            ChartDataGroupings.Add(ChartDataGrouping);
+            chartDataGroupings.Add(ChartDataGrouping);
         }
-        return ChartDataGroupings;
+        return chartDataGroupings;
     }
 
     /// <summary>
@@ -373,10 +373,10 @@ public class ChartBase : CommonProperties {
             new C.CrossingAxis { Val = ValueAxisSetting.crossAxisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
             new C.CrossBetween { Val = C.CrossBetweenValues.Between });
-        if(ChartSetting.ChartGridLinesOptions.IsMajorValueLinesEnabled) {
+        if(chartSetting.chartGridLinesOptions.isMajorValueLinesEnabled) {
             ValueAxis.Append(CreateMajorGridLine());
         }
-        if(ChartSetting.ChartGridLinesOptions.IsMinorValueLinesEnabled) {
+        if(chartSetting.chartGridLinesOptions.isMinorValueLinesEnabled) {
             ValueAxis.Append(CreateMinorGridLine());
         }
         C.ShapeProperties ShapeProperties = CreateShapeProperties();
@@ -553,11 +553,11 @@ public class ChartBase : CommonProperties {
                 Val = false
             }
         };
-        if(ChartSetting.ChartLegendOptions.IsEnableLegend) {
-            Chart.Legend = CreateChartLegend(ChartSetting.ChartLegendOptions);
+        if(chartSetting.chartLegendOptions.isEnableLegend) {
+            Chart.Legend = CreateChartLegend(chartSetting.chartLegendOptions);
         }
-        if(ChartSetting.Title != null) {
-            Chart.Title = CreateTitle(ChartSetting.Title);
+        if(chartSetting.title != null) {
+            Chart.Title = CreateTitle(chartSetting.title);
         }
         return Chart;
     }
@@ -565,7 +565,7 @@ public class ChartBase : CommonProperties {
     private C.Legend CreateChartLegend(ChartLegendOptions objChartLegendOptions) {
         C.Legend legend = new();
         legend.Append(new C.LegendPosition() {
-            Val = objChartLegendOptions.LegendPosition switch {
+            Val = objChartLegendOptions.legendPosition switch {
                 ChartLegendOptions.LegendPositionValues.TOP_RIGHT => C.LegendPositionValues.TopRight,
                 ChartLegendOptions.LegendPositionValues.TOP => C.LegendPositionValues.Top,
                 ChartLegendOptions.LegendPositionValues.BOTTOM => C.LegendPositionValues.Bottom,

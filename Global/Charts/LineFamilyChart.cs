@@ -52,10 +52,10 @@ namespace OpenXMLOffice.Global {
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols,lineChartSetting.ChartDataSetting).ForEach(Series => {
+            CreateDataSeries(DataCols,lineChartSetting.chartDataSetting).ForEach(Series => {
                 C.DataLabels? GetDataLabels() {
                     if(seriesIndex < lineChartSetting.lineChartSeriesSettings.Count) {
-                        return CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(),Series.DataLabelCells?.Length ?? 0);
+                        return CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(),Series.dataLabelCells?.Length ?? 0);
                     }
                     return null;
                 }
@@ -113,7 +113,7 @@ namespace OpenXMLOffice.Global {
             C.LineChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.SeriesHeaderFormula!,new[] { ChartDataGrouping.SeriesHeaderCells! }),
+                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!,new[] { ChartDataGrouping.seriesHeaderCells! }),
                 Marker);
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(new A.Outline(SolidFill,new A.Round()));
@@ -122,18 +122,18 @@ namespace OpenXMLOffice.Global {
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!,ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!,ChartDataGrouping.YaxisCells!));
-            if(ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null) {
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!,ChartDataGrouping.xAxisCells!));
+            series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!,ChartDataGrouping.yAxisCells!));
+            if(ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null) {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula,ChartDataGrouping.DataLabelCells.Skip(1).ToArray())
+                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula,ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
                 ) { Uri = GeneratorUtils.GenerateNewGUID() }));
             }
             return series;
         }
 
         private C.DataLabels? CreateLineDataLabels(LineChartDataLabel LineChartDataLabel,int? DataLabelCounter = 0) {
-            if(LineChartDataLabel.ShowValue || LineChartDataLabel.ShowValueFromColumn || LineChartDataLabel.ShowCategoryName || LineChartDataLabel.ShowLegendKey || LineChartDataLabel.ShowSeriesName || DataLabelCounter > 0) {
+            if(LineChartDataLabel.showValue || LineChartDataLabel.showValueFromColumn || LineChartDataLabel.showCategoryName || LineChartDataLabel.showLegendKey || LineChartDataLabel.showSeriesName || DataLabelCounter > 0) {
                 C.DataLabels DataLabels = CreateDataLabels(LineChartDataLabel,DataLabelCounter);
                 DataLabels.InsertAt(new C.DataLabelPosition() {
                     Val = LineChartDataLabel.dataLabelPosition switch {

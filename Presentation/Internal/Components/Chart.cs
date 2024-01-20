@@ -154,7 +154,7 @@ namespace OpenXMLOffice.Presentation {
         /// Width,Height
         /// </returns>
         public (uint, uint) GetSize() {
-            return (chartSetting.Width, chartSetting.Height);
+            return (chartSetting.width, chartSetting.height);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace OpenXMLOffice.Presentation {
             if(graphicFrame != null) {
                 graphicFrame.Transform = new P.Transform {
                     Offset = new A.Offset { X = chartSetting.X,Y = chartSetting.Y },
-                    Extents = new A.Extents { Cx = chartSetting.Width,Cy = chartSetting.Height }
+                    Extents = new A.Extents { Cx = chartSetting.width,Cy = chartSetting.height }
                 };
             }
         }
@@ -190,12 +190,12 @@ namespace OpenXMLOffice.Presentation {
         /// <param name="Height">
         /// </param>
         public void UpdateSize(uint Width,uint Height) {
-            chartSetting.Width = Width;
-            chartSetting.Height = Height;
+            chartSetting.width = Width;
+            chartSetting.height = Height;
             if(graphicFrame != null) {
                 graphicFrame.Transform = new P.Transform {
                     Offset = new A.Offset { X = chartSetting.X,Y = chartSetting.Y },
-                    Extents = new A.Extents { Cx = chartSetting.Width,Cy = chartSetting.Height }
+                    Extents = new A.Extents { Cx = chartSetting.width,Cy = chartSetting.height }
                 };
             }
         }
@@ -352,8 +352,8 @@ namespace OpenXMLOffice.Presentation {
                        Y = chartSetting.Y
                    },
                    new A.Extents {
-                       Cx = chartSetting.Width,
-                       Cy = chartSetting.Height
+                       Cx = chartSetting.width,
+                       Cy = chartSetting.height
                    }),
                 Graphic = new A.Graphic(
                    new A.GraphicData(

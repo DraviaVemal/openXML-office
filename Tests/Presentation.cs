@@ -58,26 +58,24 @@ namespace OpenXMLOffice.Tests {
                 areaChartTypes = AreaChartTypes.PERCENT_STACKED
             });
             //4
-            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
-            {
-                BarChartDataLabel = new BarChartDataLabel()
-                {
-                    DataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END,
-                    ShowValue = true,
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new BarChartSetting() {
+                barChartDataLabel = new BarChartDataLabel() {
+                    dataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END,
+                    showValue = true
                 },
                 barChartSeriesSettings = new(){
                     new(),
                     new(){
                         barChartDataLabel = new BarChartDataLabel(){
                             dataLabelPosition = BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END,
-                            ShowCategoryName= true
+                            showCategoryName= true
                         }
                     }
                 }
             });
             //5
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new BarChartSetting() {
-                Title = "Change Data Layout",
+                title = "Change Data Layout",
                 barChartTypes = BarChartTypes.STACKED
             });
             //6
@@ -86,11 +84,9 @@ namespace OpenXMLOffice.Tests {
             });
             //7
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new ColumnChartSetting() {
-                Title = "Color Change Chart",
-                ChartLegendOptions = new ChartLegendOptions()
-                {
-                    LegendPosition = ChartLegendOptions.LegendPositionValues.TOP,
-                    FontSize = 5
+                title = "Color Change Chart",
+                chartLegendOptions = new ChartLegendOptions() {
+                    legendPosition = ChartLegendOptions.LegendPositionValues.TOP
                 },
                 columnChartSeriesSettings = new(){
                     new(){
@@ -179,13 +175,13 @@ namespace OpenXMLOffice.Tests {
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(),new LineChartSetting() {
                 lineChartDataLabel = new LineChartDataLabel() {
                     dataLabelPosition = LineChartDataLabel.DataLabelPositionValues.LEFT,
-                    ShowCategoryName = true,
-                    ShowValue = true,
-                    Separator = ". "
+                    showCategoryName = true,
+                    showValue = true,
+                    separator = ". "
                 },
-                ChartDataSetting = new ChartDataSetting() {
-                    ChartDataColumnEnd = 2,
-                    ValueFromColumn = new Dictionary<uint,uint>(){
+                chartDataSetting = new ChartDataSetting() {
+                    chartDataColumnEnd = 2,
+                    valueFromColumn = new Dictionary<uint,uint>(){
                         {2,4}
                     }
                 },
@@ -218,31 +214,31 @@ namespace OpenXMLOffice.Tests {
         public void AddScatterPlot() {
             //1
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6,true),new ScatterChartSetting() {
-                Title = "Default"
+                title = "Default"
             });
             //2
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6,true),new ScatterChartSetting() {
                 scatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH,
-                Title = "Scatter Smooth"
+                title = "Scatter Smooth"
             });
             //3
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6,true),new ScatterChartSetting() {
                 scatterChartTypes = ScatterChartTypes.SCATTER_SMOOTH_MARKER,
-                Title = "Scatter Smooth Market"
+                title = "Scatter Smooth Market"
             });
             //4
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6,true),new ScatterChartSetting() {
                 scatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT,
-                Title = "Scatter Stright"
+                title = "Scatter Stright"
             });
             //5
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6,true),new ScatterChartSetting() {
                 scatterChartTypes = ScatterChartTypes.SCATTER_STRIGHT_MARKER,
-                Title = "Scatter Straight Marker"
+                title = "Scatter Straight Marker"
             });
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3,true),new ScatterChartSetting() {
                 scatterChartTypes = ScatterChartTypes.BUBBLE,
-                Title = "Scatter  Bubble"
+                title = "Scatter  Bubble"
             });
             Assert.IsTrue(true);
         }
@@ -307,26 +303,26 @@ namespace OpenXMLOffice.Tests {
             List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
             shape1[0].ReplaceChart(new Chart(Slide,CreateDataCellPayload(),
             new ColumnChartSetting() {
-                Title = "Title",
-                ChartLegendOptions = new ChartLegendOptions() {
-                    IsEnableLegend = false
+                title = "Title",
+                chartLegendOptions = new ChartLegendOptions() {
+                    isEnableLegend = false
                 },
             }));
             shape2[0].ReplaceChart(new Chart(Slide,CreateDataCellPayload(),
             new BarChartSetting() {
-                ChartLegendOptions = new ChartLegendOptions() {
-                    LegendPosition = ChartLegendOptions.LegendPositionValues.RIGHT
+                chartLegendOptions = new ChartLegendOptions() {
+                    legendPosition = ChartLegendOptions.LegendPositionValues.RIGHT
                 }
             }));
             shape3[0].ReplaceChart(new Chart(Slide,CreateDataCellPayload(),new LineChartSetting() {
                 chartAxesOptions = new ChartAxesOptions() {
-                    IsHorizontalAxesEnabled = false
+                    isHorizontalAxesEnabled = false
                 },
-                ChartGridLinesOptions = new ChartGridLinesOptions() {
-                    IsMajorCategoryLinesEnabled = true,
-                    IsMajorValueLinesEnabled = true,
-                    IsMinorCategoryLinesEnabled = true,
-                    IsMinorValueLinesEnabled = true,
+                chartGridLinesOptions = new ChartGridLinesOptions() {
+                    isMajorCategoryLinesEnabled = true,
+                    isMajorValueLinesEnabled = true,
+                    isMinorCategoryLinesEnabled = true,
+                    isMinorValueLinesEnabled = true,
                 }
             }));
             shape4[0].ReplaceChart(new Chart(Slide,CreateDataCellPayload(),new LineChartSetting()));

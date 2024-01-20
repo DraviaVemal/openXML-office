@@ -40,7 +40,7 @@ namespace OpenXMLOffice.Global {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.SeriesHeaderFormula!,new[] { ChartDataGrouping.SeriesHeaderCells! }),
+                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!,new[] { ChartDataGrouping.seriesHeaderCells! }),
                 new C.InvertIfNegative { Val = true });
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(SolidFill);
@@ -50,18 +50,18 @@ namespace OpenXMLOffice.Global {
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.XaxisFormula!,ChartDataGrouping.XaxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.YaxisFormula!,ChartDataGrouping.YaxisCells!));
-            if(ChartDataGrouping.DataLabelCells != null && ChartDataGrouping.DataLabelFormula != null) {
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!,ChartDataGrouping.xAxisCells!));
+            series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!,ChartDataGrouping.yAxisCells!));
+            if(ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null) {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.DataLabelFormula,ChartDataGrouping.DataLabelCells.Skip(1).ToArray())
+                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula,ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
                 ) { Uri = GeneratorUtils.GenerateNewGUID() }));
             }
             return series;
         }
 
         private C.DataLabels? CreateBarDataLabels(BarChartDataLabel BarChartDataLabel,int? DataLabelCounter = 0) {
-            if(BarChartDataLabel.ShowValue || BarChartDataLabel.ShowValueFromColumn || BarChartDataLabel.ShowCategoryName || BarChartDataLabel.ShowLegendKey || BarChartDataLabel.ShowSeriesName || DataLabelCounter > 0) {
+            if(BarChartDataLabel.showValue || BarChartDataLabel.showValueFromColumn || BarChartDataLabel.showCategoryName || BarChartDataLabel.showLegendKey || BarChartDataLabel.showSeriesName || DataLabelCounter > 0) {
                 C.DataLabels DataLabels = CreateDataLabels(BarChartDataLabel,DataLabelCounter);
                 if(barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END) {
                     throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
@@ -121,10 +121,10 @@ namespace OpenXMLOffice.Global {
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols,barChartSetting.ChartDataSetting).ForEach(Series => {
+            CreateDataSeries(DataCols,barChartSetting.chartDataSetting).ForEach(Series => {
                 C.DataLabels? GetDataLabels() {
                     if(seriesIndex < barChartSetting.barChartSeriesSettings.Count) {
-                        return CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(),Series.DataLabelCells?.Length ?? 0);
+                        return CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(),Series.dataLabelCells?.Length ?? 0);
                     }
                     return null;
                 }
