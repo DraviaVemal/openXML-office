@@ -160,8 +160,8 @@ namespace OpenXMLOffice.Global
             });
             if (BarChartSetting.BarChartTypes == BarChartTypes.CLUSTERED)
             {
-                BarChart.Append(new C.GapWidth { Val = 219 });
-                BarChart.Append(new C.Overlap { Val = -27 });
+                BarChart.Append(new C.GapWidth { Val = (UInt16Value)BarChartSetting.BarGraphicsSetting.CategoryGap });
+                BarChart.Append(new C.Overlap { Val = (SByteValue)BarChartSetting.BarGraphicsSetting.SeriesGap });
             }
             else
             {

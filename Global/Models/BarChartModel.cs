@@ -27,7 +27,20 @@ namespace OpenXMLOffice.Global
 
         // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
     }
-
+    /// <summary>
+    /// Represents the graphics settings for a bar chart.
+    /// </summary>
+    public class BarGraphicsSetting
+    {
+        /// <summary>
+        /// The gap width between the bars.
+        /// </summary>
+        public int CategoryGap = 219;
+        /// <summary>
+        /// The gap between the series bars.
+        /// </summary>
+        public int SeriesGap = -27;
+    }
     /// <summary>
     /// Represents the data label settings for a bar chart.
     /// </summary>
@@ -134,6 +147,10 @@ namespace OpenXMLOffice.Global
         /// The options for the chart axis.
         /// </summary>
         public ChartAxisOptions ChartAxisOptions = new();
+        /// <summary>
+        /// The graphics settings for the bar chart.
+        /// </summary>
+        public BarGraphicsSetting BarGraphicsSetting = new();
 
         #endregion Public Fields
     }

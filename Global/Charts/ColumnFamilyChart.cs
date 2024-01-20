@@ -80,8 +80,8 @@ namespace OpenXMLOffice.Global
             });
             if (ColumnChartSetting.ColumnChartTypes == ColumnChartTypes.CLUSTERED)
             {
-                ColumnChart.Append(new C.GapWidth { Val = 219 });
-                ColumnChart.Append(new C.Overlap { Val = -27 });
+                ColumnChart.Append(new C.GapWidth { Val = (UInt16Value)ColumnChartSetting.ColumnGraphicsSetting.CategoryGap });
+                ColumnChart.Append(new C.Overlap { Val = (SByteValue)ColumnChartSetting.ColumnGraphicsSetting.SeriesGap });
             }
             else
             {
