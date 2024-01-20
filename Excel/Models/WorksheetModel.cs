@@ -67,9 +67,15 @@ namespace OpenXMLOffice.Excel
         public CellDataType dataType;
 
         /// <summary>
-        /// Gets or sets the style of the cell.
+        /// It is highgly recomended to use styleId instead of styleSetting.
         /// </summary>
-        public CellStyleSetting styleSetting = new();
+        /// warning: styleSetting will be ignored if styleId is not null
+        public CellStyleSetting? styleSetting = new();
+        /// <summary>
+        /// Use file level styleId instead of styleSetting.
+        /// Can get the styleId from spreadsheet.GetCellStyleId(CellStyleSetting)
+        /// </summary>
+        public uint? styleId;
 
         #endregion Public Fields
     }

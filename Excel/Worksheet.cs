@@ -202,7 +202,7 @@ namespace OpenXMLOffice.Excel
                         row.AppendChild(cell);
                     }
                     CellValues DataType = GetCellValues(DataCell.dataType);
-                    cell.StyleIndex = Styles.Instance.GetCellStyleId(DataCell.styleSetting);
+                    cell.StyleIndex = DataCell.styleId ?? Styles.Instance.GetCellStyleId(DataCell.styleSetting ?? new());
                     if (DataType == CellValues.String)
                     {
                         cell.DataType = CellValues.SharedString;

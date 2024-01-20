@@ -88,6 +88,14 @@ namespace OpenXMLOffice.Excel
             }
             return null;
         }
+        /// <summary>
+        /// Use this method to create a new style and get the style id
+        /// Use of Style Id instead of Style Setting directly in Worksheet Cell is highly recommended for performance
+        /// </summary>
+        public uint GetStyleId(CellStyleSetting CellStyleSetting)
+        {
+            return Styles.Instance.GetCellStyleId(CellStyleSetting);
+        }
 
         /// <summary>
         /// Return the Sheet Name for the given Sheet ID
