@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Presentation {
+namespace OpenXMLOffice.Presentation
+{
     /// <summary>
     /// Presentation Table Cell Class for setting the cell properties.
     /// </summary>
-    public class TableCell {
+    public class TableCell
+    {
         #region Public Fields
 
         /// <summary>
@@ -95,7 +97,8 @@ namespace OpenXMLOffice.Presentation {
         /// <summary>
         /// Cell Vertical Alignment Option
         /// </summary>
-        public enum AlignmentValues {
+        public enum AlignmentValues
+        {
             /// <summary>
             /// Align Left
             /// </summary>
@@ -123,7 +126,8 @@ namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Table Row Customisation Properties
     /// </summary>
-    public class TableRow {
+    public class TableRow
+    {
         #region Public Fields
 
         /// <summary>
@@ -152,7 +156,8 @@ namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Table Customisation Properties
     /// </summary>
-    public class TableSetting {
+    public class TableSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -200,7 +205,8 @@ namespace OpenXMLOffice.Presentation {
         /// <summary>
         /// Width Option Values
         /// </summary>
-        public enum WidthOptionValues {
+        public enum WidthOptionValues
+        {
             /// <summary>
             /// AUTO - Ignore User Width value and space the colum equally
             /// </summary>

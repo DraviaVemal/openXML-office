@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Generator Utils
     /// </summary>
-    public static class GeneratorUtils {
+    public static class GeneratorUtils
+    {
         #region Public Methods
 
         /// <summary>
@@ -12,8 +14,9 @@ namespace OpenXMLOffice.Global {
         /// </summary>
         /// <returns>
         /// </returns>
-        public static string GenerateNewGUID() {
-            return string.Format("{{{0}}}",Guid.NewGuid().ToString("D").ToUpper());
+        public static string GenerateNewGUID()
+        {
+            return string.Format("{{{0}}}", Guid.NewGuid().ToString("D").ToUpper());
         }
 
         #endregion Public Methods

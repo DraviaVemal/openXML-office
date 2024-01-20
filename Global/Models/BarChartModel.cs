@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the types of bar charts.
     /// </summary>
-    public enum BarChartTypes {
+    public enum BarChartTypes
+    {
         /// <summary>
         /// Clustered Bar Chart
         /// </summary>
@@ -25,7 +27,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the graphics settings for a bar chart.
     /// </summary>
-    public class BarGraphicsSetting {
+    public class BarGraphicsSetting
+    {
         /// <summary>
         /// The gap width between the bars.
         /// </summary>
@@ -38,7 +41,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the data label settings for a bar chart.
     /// </summary>
-    public class BarChartDataLabel : ChartDataLabel {
+    public class BarChartDataLabel : ChartDataLabel
+    {
         #region Public Fields
 
         /// <summary>
@@ -53,7 +57,8 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// The possible positions for the data labels.
         /// </summary>
-        public enum DataLabelPositionValues {
+        public enum DataLabelPositionValues
+        {
             /// <summary>
             /// Center
             /// </summary>
@@ -86,7 +91,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the series settings for a bar chart.
     /// </summary>
-    public class BarChartSeriesSetting : ChartSeriesSetting {
+    public class BarChartSeriesSetting : ChartSeriesSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -110,7 +116,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a bar chart.
     /// </summary>
-    public class BarChartSetting : ChartSetting {
+    public class BarChartSetting : ChartSetting
+    {
         #region Public Fields
 
         /// <summary>

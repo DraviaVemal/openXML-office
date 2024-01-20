@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the types of area charts.
     /// </summary>
-    public enum AreaChartTypes {
+    public enum AreaChartTypes
+    {
         /// <summary>
         /// Clustered area chart.
         /// </summary>
@@ -26,7 +28,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the data label settings for an area chart.
     /// </summary>
-    public class AreaChartDataLabel : ChartDataLabel {
+    public class AreaChartDataLabel : ChartDataLabel
+    {
         #region Public Fields
 
         /// <summary>
@@ -41,7 +44,8 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// The possible values for the data label position.
         /// </summary>
-        public enum DataLabelPositionValues {
+        public enum DataLabelPositionValues
+        {
             /// <summary>
             /// Data Label option display type
             /// </summary>
@@ -59,7 +63,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the series settings for an area chart.
     /// </summary>
-    public class AreaChartSeriesSetting : ChartSeriesSetting {
+    public class AreaChartSeriesSetting : ChartSeriesSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -83,7 +88,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for an area chart.
     /// </summary>
-    public class AreaChartSetting : ChartSetting {
+    public class AreaChartSetting : ChartSetting
+    {
         #region Public Fields
 
         /// <summary>

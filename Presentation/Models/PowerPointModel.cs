@@ -2,11 +2,13 @@
 
 using OpenXMLOffice.Global;
 
-namespace OpenXMLOffice.Presentation {
+namespace OpenXMLOffice.Presentation
+{
     /// <summary>
     /// Represents the properties of a presentation.
     /// </summary>
-    public class PresentationProperties {
+    public class PresentationProperties
+    {
         #region Public Fields
 
         /// <summary>
@@ -20,7 +22,7 @@ namespace OpenXMLOffice.Presentation {
         /// <remarks>
         /// TODO: Multi Theme Slide Master Support
         /// </remarks>
-        public Dictionary<string,PresentationSlideMaster>? slideMasters;
+        public Dictionary<string, PresentationSlideMaster>? slideMasters;
 
         /// <summary>
         /// Gets or sets the theme of the presentation.
@@ -33,7 +35,8 @@ namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Represents the settings of a presentation.
     /// </summary>
-    public class PresentationSettings {
+    public class PresentationSettings
+    {
         #region Public Fields
 
         /// <summary>
@@ -52,7 +55,8 @@ namespace OpenXMLOffice.Presentation {
     /// <summary>
     /// Represents a slide master in a presentation.
     /// </summary>
-    public class PresentationSlideMaster {
+    public class PresentationSlideMaster
+    {
         #region Public Fields
 
         /// <summary>
@@ -63,7 +67,8 @@ namespace OpenXMLOffice.Presentation {
         #endregion Public Fields
     }
 
-    internal class PresentationInfo {
+    internal class PresentationInfo
+    {
         #region Public Fields
 
         public string? filePath;

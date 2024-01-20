@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the types of scatter charts.
     /// </summary>
-    public enum ScatterChartTypes {
+    public enum ScatterChartTypes
+    {
         /// <summary>
         /// Scatter Chart
         /// </summary>
@@ -41,7 +43,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the data label settings for a scatter chart.
     /// </summary>
-    public class ScatterChartDataLabel : ChartDataLabel {
+    public class ScatterChartDataLabel : ChartDataLabel
+    {
         #region Public Fields
 
         /// <summary>
@@ -61,7 +64,8 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// The possible positions for the data labels.
         /// </summary>
-        public enum DataLabelPositionValues {
+        public enum DataLabelPositionValues
+        {
             /// <summary>
             /// Left Side
             /// </summary>
@@ -99,7 +103,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the series settings for a scatter chart.
     /// </summary>
-    public class ScatterChartSeriesSetting : ChartSeriesSetting {
+    public class ScatterChartSeriesSetting : ChartSeriesSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -124,7 +129,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a scatter chart.
     /// </summary>
-    public class ScatterChartSetting : ChartSetting {
+    public class ScatterChartSetting : ChartSetting
+    {
         #region Public Fields
 
         /// <summary>

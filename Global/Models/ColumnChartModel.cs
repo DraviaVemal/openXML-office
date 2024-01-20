@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the types of column charts.
     /// </summary>
-    public enum ColumnChartTypes {
+    public enum ColumnChartTypes
+    {
         /// <summary>
         /// Clustered Column Chart
         /// </summary>
@@ -26,7 +28,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the graphics settings for a column chart.
     /// </summary>
-    public class ColumnGraphicsSetting {
+    public class ColumnGraphicsSetting
+    {
         /// <summary>
         /// The gap width between the Column.
         /// </summary>
@@ -40,7 +43,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the data label settings for a column chart.
     /// </summary>
-    public class ColumnChartDataLabel : ChartDataLabel {
+    public class ColumnChartDataLabel : ChartDataLabel
+    {
         #region Public Fields
 
         /// <summary>
@@ -55,7 +59,8 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// The possible positions for the data label.
         /// </summary>
-        public enum DataLabelPositionValues {
+        public enum DataLabelPositionValues
+        {
             /// <summary>
             /// Center
             /// </summary>
@@ -88,7 +93,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the series settings for a column chart.
     /// </summary>
-    public class ColumnChartSeriesSetting : ChartSeriesSetting {
+    public class ColumnChartSeriesSetting : ChartSeriesSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -112,7 +118,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a column chart.
     /// </summary>
-    public class ColumnChartSetting : ChartSetting {
+    public class ColumnChartSetting : ChartSetting
+    {
         #region Public Fields
 
         /// <summary>

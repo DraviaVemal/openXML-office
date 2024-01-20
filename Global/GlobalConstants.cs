@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Global Constants
     /// </summary>
-    public static class GlobalConstants {
+    public static class GlobalConstants
+    {
         #region Public Fields
 
         /// <summary>

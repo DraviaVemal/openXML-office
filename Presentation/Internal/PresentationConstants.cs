@@ -1,16 +1,19 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Presentation {
+namespace OpenXMLOffice.Presentation
+{
     /// <summary>
     /// Contains constants related to the presentation functionality.
     /// </summary>
-    public static class PresentationConstants {
+    public static class PresentationConstants
+    {
         #region Public Enums
 
         /// <summary>
         /// Represents the common slide data types.
         /// </summary>
-        public enum CommonSlideDataType {
+        public enum CommonSlideDataType
+        {
             /// <summary>
             /// Generate Common Slide Data for a Slide Master Specification
             /// </summary>
@@ -30,7 +33,8 @@ namespace OpenXMLOffice.Presentation {
         /// <summary>
         /// Represents the slide layout types.
         /// </summary>
-        public enum SlideLayoutType {
+        public enum SlideLayoutType
+        {
             /// <summary>
             /// Slide Layout Blank option
             /// </summary>
@@ -50,8 +54,10 @@ namespace OpenXMLOffice.Presentation {
         /// <returns>
         /// The string representation of the slide layout type.
         /// </returns>
-        public static string GetSlideLayoutType(SlideLayoutType value) {
-            return value switch {
+        public static string GetSlideLayoutType(SlideLayoutType value)
+        {
+            return value switch
+            {
                 _ => "Blank",
             };
         }

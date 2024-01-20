@@ -3,14 +3,16 @@
 using LiteDB;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace OpenXMLOffice.Excel {
+namespace OpenXMLOffice.Excel
+{
     /// <summary>
     /// This class serves as a versatile tool for working with Excel spreadsheets, styles component
     /// </summary>
-    public class Styles {
+    public class Styles
+    {
         #region Private Fields
 
-        private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(),"db"));
+        private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
         private static Styles? instance = null;
         private readonly ILiteCollection<BorderStyle> borderStyleCollection;
         private readonly ILiteCollection<CellXfs> cellXfsCollection;
@@ -22,7 +24,8 @@ namespace OpenXMLOffice.Excel {
 
         #region Private Constructors
 
-        private Styles() {
+        private Styles()
+        {
             numberFormatCollection = liteDatabase.GetCollection<NumberFormats>("NumberFormats");
             fontStyleCollection = liteDatabase.GetCollection<FontStyle>("FontStyle");
             fillStyleCollection = liteDatabase.GetCollection<FillStyle>("FillStyle");
@@ -37,8 +40,10 @@ namespace OpenXMLOffice.Excel {
         /// <summary>
         /// Get the Cell Style Id based on user specified CellStyleSetting
         /// </summary>
-        public static Styles Instance {
-            get {
+        public static Styles Instance
+        {
+            get
+            {
                 instance ??= new Styles();
                 return instance;
             }
@@ -55,7 +60,8 @@ namespace OpenXMLOffice.Excel {
         /// </param>
         /// <returns>
         /// </returns>
-        public uint GetCellStyleId(CellStyleSetting CellStyleSetting) {
+        public uint GetCellStyleId(CellStyleSetting CellStyleSetting)
+        {
             uint FontId = GetFontId(CellStyleSetting);
             uint BorderId = GetBorderId(CellStyleSetting);
             uint FillId = GetFillId(CellStyleSetting);
@@ -77,10 +83,14 @@ namespace OpenXMLOffice.Excel {
                 item.ApplyAlignment == IsAlignment &&
                 item.ApplyNumberFormat == IsNumberFormat &&
                 item.IsWrapetext == CellStyleSetting.isWrapText);
-            if(CellXfs != null) {
+            if (CellXfs != null)
+            {
                 return CellXfs.Id;
-            } else {
-                BsonValue Result = cellXfsCollection.Insert(new CellXfs() {
+            }
+            else
+            {
+                BsonValue Result = cellXfsCollection.Insert(new CellXfs()
+                {
                     Id = (uint)cellXfsCollection.Count(),
                     FontId = FontId,
                     BorderId = BorderId,
@@ -107,7 +117,8 @@ namespace OpenXMLOffice.Excel {
         /// </summary>
         /// <exception cref="NotImplementedException">
         /// </exception>
-        internal void LoadStyleFromSheet(X.Stylesheet Stylesheet) {
+        internal void LoadStyleFromSheet(X.Stylesheet Stylesheet)
+        {
         }
 
         /// <summary>
@@ -115,15 +126,18 @@ namespace OpenXMLOffice.Excel {
         /// </summary>
         /// <exception cref="NotImplementedException">
         /// </exception>
-        internal void SaveStyleProps(X.Stylesheet Stylesheet) {
+        internal void SaveStyleProps(X.Stylesheet Stylesheet)
+        {
             Stylesheet.Fonts = GetFonts();
             Stylesheet.Fills = GetFills();
             Stylesheet.Borders = GetBorders();
             Stylesheet.CellStyleFormats ??= new(
-                new X.CellFormat() { NumberFormatId = 0,FontId = 0,FillId = 0,BorderId = 0 }) { Count = 1 };//cellStyleXfs
+                new X.CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0 })
+            { Count = 1 };//cellStyleXfs
             Stylesheet.CellFormats = GetCellFormats();//cellXfs
             Stylesheet.CellStyles ??= new(
-                new X.CellStyle() { Name = "Normal",FormatId = 0,BuiltinId = 0 }) { Count = 1 };//cellStyles
+                new X.CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
+            { Count = 1 };//cellStyles
             Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
             Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
         }
@@ -132,16 +146,21 @@ namespace OpenXMLOffice.Excel {
 
         #region Private Methods
 
-        private uint GetBorderId(CellStyleSetting CellStyleSetting) {
+        private uint GetBorderId(CellStyleSetting CellStyleSetting)
+        {
             BorderStyle? BorderStyle = borderStyleCollection.FindOne(item =>
                 item.Left == CellStyleSetting.borderLeft &&
                 item.Right == CellStyleSetting.borderRight &&
                 item.Top == CellStyleSetting.borderTop &&
                 item.Bottom == CellStyleSetting.borderBottom);
-            if(BorderStyle != null) {
+            if (BorderStyle != null)
+            {
                 return BorderStyle.Id;
-            } else {
-                BsonValue Result = borderStyleCollection.Insert(new BorderStyle() {
+            }
+            else
+            {
+                BsonValue Result = borderStyleCollection.Insert(new BorderStyle()
+                {
                     Id = (uint)borderStyleCollection.Count(),
                     Left = CellStyleSetting.borderLeft,
                     Right = CellStyleSetting.borderRight,
@@ -152,10 +171,14 @@ namespace OpenXMLOffice.Excel {
             }
         }
 
-        private X.Borders GetBorders() {
-            return new(borderStyleCollection.FindAll().ToList().Select(item => {
-                static X.BorderStyleValues GetBorderStyle(BorderSetting.StyleValues Style) {
-                    return Style switch {
+        private X.Borders GetBorders()
+        {
+            return new(borderStyleCollection.FindAll().ToList().Select(item =>
+            {
+                static X.BorderStyleValues GetBorderStyle(BorderSetting.StyleValues Style)
+                {
+                    return Style switch
+                    {
                         BorderSetting.StyleValues.THIN => X.BorderStyleValues.Thin,
                         BorderSetting.StyleValues.THICK => X.BorderStyleValues.Thick,
                         BorderSetting.StyleValues.DOTTED => X.BorderStyleValues.Dotted,
@@ -172,36 +195,45 @@ namespace OpenXMLOffice.Excel {
                         _ => X.BorderStyleValues.None
                     };
                 }
-                X.Border Border = new() {
+                X.Border Border = new()
+                {
                     LeftBorder = new(),
                     RightBorder = new(),
                     BottomBorder = new(),
                     TopBorder = new(),
                 };
-                if(item.Left.style != BorderSetting.StyleValues.NONE) {
+                if (item.Left.style != BorderSetting.StyleValues.NONE)
+                {
                     Border.LeftBorder.Style = GetBorderStyle(item.Left.style);
                     Border.LeftBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
                 }
-                if(item.Right.style != BorderSetting.StyleValues.NONE) {
+                if (item.Right.style != BorderSetting.StyleValues.NONE)
+                {
                     Border.RightBorder.Style = GetBorderStyle(item.Right.style);
                     Border.RightBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
                 }
-                if(item.Top.style != BorderSetting.StyleValues.NONE) {
+                if (item.Top.style != BorderSetting.StyleValues.NONE)
+                {
                     Border.TopBorder.Style = GetBorderStyle(item.Top.style);
                     Border.TopBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
                 }
-                if(item.Bottom.style != BorderSetting.StyleValues.NONE) {
+                if (item.Bottom.style != BorderSetting.StyleValues.NONE)
+                {
                     Border.BottomBorder.Style = GetBorderStyle(item.Bottom.style);
                     Border.BottomBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
                 }
                 return Border;
-            })) { Count = (uint)borderStyleCollection.Count() };
+            }))
+            { Count = (uint)borderStyleCollection.Count() };
         }
 
-        private X.CellFormats GetCellFormats() {
+        private X.CellFormats GetCellFormats()
+        {
             return new(
-                        cellXfsCollection.FindAll().ToList().Select(item => {
-                            X.CellFormat CellFormat = new() {
+                        cellXfsCollection.FindAll().ToList().Select(item =>
+                        {
+                            X.CellFormat CellFormat = new()
+                            {
                                 NumberFormatId = item.NumberFormatId,
                                 FontId = item.FontId,
                                 FillId = item.FillId,
@@ -213,40 +245,52 @@ namespace OpenXMLOffice.Excel {
                                 ApplyFill = item.ApplyFill,
                                 ApplyFont = item.ApplyFont,
                             };
-                            if(item.VerticalAlignment != VerticalAlignmentValues.NONE ||
+                            if (item.VerticalAlignment != VerticalAlignmentValues.NONE ||
                                 item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
-                                item.IsWrapetext) {
+                                item.IsWrapetext)
+                            {
                                 CellFormat.Alignment = new();
-                                if(item.VerticalAlignment != VerticalAlignmentValues.NONE) {
-                                    CellFormat.Alignment.Vertical = item.VerticalAlignment switch {
+                                if (item.VerticalAlignment != VerticalAlignmentValues.NONE)
+                                {
+                                    CellFormat.Alignment.Vertical = item.VerticalAlignment switch
+                                    {
                                         VerticalAlignmentValues.TOP => X.VerticalAlignmentValues.Top,
                                         VerticalAlignmentValues.MIDDLE => X.VerticalAlignmentValues.Center,
                                         _ => X.VerticalAlignmentValues.Bottom
                                     };
                                 }
-                                if(item.HorizontalAlignment != HorizontalAlignmentValues.NONE) {
-                                    CellFormat.Alignment.Horizontal = item.HorizontalAlignment switch {
+                                if (item.HorizontalAlignment != HorizontalAlignmentValues.NONE)
+                                {
+                                    CellFormat.Alignment.Horizontal = item.HorizontalAlignment switch
+                                    {
                                         HorizontalAlignmentValues.LEFT => X.HorizontalAlignmentValues.Left,
                                         HorizontalAlignmentValues.CENTER => X.HorizontalAlignmentValues.Center,
                                         _ => X.HorizontalAlignmentValues.Right
                                     };
                                 }
-                                if(item.IsWrapetext) {
+                                if (item.IsWrapetext)
+                                {
                                     CellFormat.Alignment.WrapText = true;
                                 }
                             }
                             return CellFormat;
-                        })) { Count = (uint)cellXfsCollection.Count() };
+                        }))
+            { Count = (uint)cellXfsCollection.Count() };
         }
 
-        private uint GetFillId(CellStyleSetting CellStyleSetting) {
+        private uint GetFillId(CellStyleSetting CellStyleSetting)
+        {
             FillStyle? FillStyle = fillStyleCollection.FindOne(item =>
                 item.BackgroundColor == CellStyleSetting.backgroundColor &&
                 item.ForegroundColor == CellStyleSetting.foregroundColor);
-            if(FillStyle != null) {
+            if (FillStyle != null)
+            {
                 return FillStyle.Id;
-            } else {
-                BsonValue Result = fillStyleCollection.Insert(new FillStyle() {
+            }
+            else
+            {
+                BsonValue Result = fillStyleCollection.Insert(new FillStyle()
+                {
                     Id = (uint)fillStyleCollection.Count(),
                     BackgroundColor = CellStyleSetting.backgroundColor,
                     ForegroundColor = CellStyleSetting.foregroundColor
@@ -255,27 +299,36 @@ namespace OpenXMLOffice.Excel {
             }
         }
 
-        private X.Fills GetFills() {
-            return new(fillStyleCollection.FindAll().ToList().Select(item => {
-                X.Fill Fill = new() {
-                    PatternFill = new() {
-                        PatternType = item.PatternType switch {
+        private X.Fills GetFills()
+        {
+            return new(fillStyleCollection.FindAll().ToList().Select(item =>
+            {
+                X.Fill Fill = new()
+                {
+                    PatternFill = new()
+                    {
+                        PatternType = item.PatternType switch
+                        {
                             FillStyle.PatternTypeValues.SOLID => X.PatternValues.Solid,
                             _ => X.PatternValues.None,
                         }
                     }
                 };
-                if(item.BackgroundColor != null) {
+                if (item.BackgroundColor != null)
+                {
                     Fill.PatternFill.BackgroundColor = new() { Rgb = item.BackgroundColor };
                 }
-                if(item.ForegroundColor != null) {
+                if (item.ForegroundColor != null)
+                {
                     Fill.PatternFill.ForegroundColor = new() { Rgb = item.ForegroundColor };
                 }
                 return Fill;
-            })) { Count = (uint)fillStyleCollection.Count() };
+            }))
+            { Count = (uint)fillStyleCollection.Count() };
         }
 
-        private uint GetFontId(CellStyleSetting CellStyleSetting) {
+        private uint GetFontId(CellStyleSetting CellStyleSetting)
+        {
             FontStyle? FontStyle = fontStyleCollection.FindOne(item =>
                 item.IsBold == CellStyleSetting.isBold &&
                 item.IsItalic == CellStyleSetting.isItalic &&
@@ -284,10 +337,14 @@ namespace OpenXMLOffice.Excel {
                 item.Size == CellStyleSetting.fontSize &&
                 item.Color == CellStyleSetting.textColor &&
                 item.Name == CellStyleSetting.fontFamily);
-            if(FontStyle != null) {
+            if (FontStyle != null)
+            {
                 return FontStyle.Id;
-            } else {
-                BsonValue Result = fontStyleCollection.Insert(new FontStyle() {
+            }
+            else
+            {
+                BsonValue Result = fontStyleCollection.Insert(new FontStyle()
+                {
                     Id = (uint)fontStyleCollection.Count(),
                     IsBold = CellStyleSetting.isBold,
                     IsItalic = CellStyleSetting.isItalic,
@@ -301,34 +358,46 @@ namespace OpenXMLOffice.Excel {
             }
         }
 
-        private X.Fonts GetFonts() {
-            return new(fontStyleCollection.FindAll().ToList().Select(item => {
-                X.Font Font = new() {
+        private X.Fonts GetFonts()
+        {
+            return new(fontStyleCollection.FindAll().ToList().Select(item =>
+            {
+                X.Font Font = new()
+                {
                     FontSize = new() { Val = item.Size },
                     FontName = new() { Val = item.Name },
                     FontFamilyNumbering = new() { Val = item.Family },
-                    FontScheme = new() {
-                        Val = item.FontScheme switch {
+                    FontScheme = new()
+                    {
+                        Val = item.FontScheme switch
+                        {
                             FontStyle.SchemeValues.MINOR => X.FontSchemeValues.Minor,
                             FontStyle.SchemeValues.MAJOR => X.FontSchemeValues.Major,
                             _ => X.FontSchemeValues.None
                         }
                     }
                 };
-                if(item.Color != null) {
+                if (item.Color != null)
+                {
                     Font.Color = new() { Rgb = item.Color };
                 }
                 return Font;
-            })) { Count = (uint)fontStyleCollection.Count() };
+            }))
+            { Count = (uint)fontStyleCollection.Count() };
         }
 
-        private uint GetNumberFormat(CellStyleSetting CellStyleSetting) {
+        private uint GetNumberFormat(CellStyleSetting CellStyleSetting)
+        {
             NumberFormats? NumberFormats = numberFormatCollection.FindOne(item =>
                 item.FormatCode == CellStyleSetting.numberFormat);
-            if(NumberFormats != null) {
+            if (NumberFormats != null)
+            {
                 return NumberFormats.Id;
-            } else {
-                BsonValue Result = numberFormatCollection.Insert(new NumberFormats() {
+            }
+            else
+            {
+                BsonValue Result = numberFormatCollection.Insert(new NumberFormats()
+                {
                     Id = (uint)numberFormatCollection.Count(),
                     FormatCode = CellStyleSetting.numberFormat
                 });
@@ -336,14 +405,18 @@ namespace OpenXMLOffice.Excel {
             }
         }
 
-        private X.NumberingFormats GetNumberFormats() {
-            return new(numberFormatCollection.FindAll().ToList().Select(item => {
-                X.NumberingFormat NumberingFormat = new() {
+        private X.NumberingFormats GetNumberFormats()
+        {
+            return new(numberFormatCollection.FindAll().ToList().Select(item =>
+            {
+                X.NumberingFormat NumberingFormat = new()
+                {
                     NumberFormatId = item.Id,
                     FormatCode = item.FormatCode
                 };
                 return NumberingFormat;
-            })) { Count = (uint)numberFormatCollection.Count() };
+            }))
+            { Count = (uint)numberFormatCollection.Count() };
         }
 
         #endregion Private Methods

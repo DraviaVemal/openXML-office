@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the settings for a text box.
     /// </summary>
-    public class TextBoxSetting {
+    public class TextBoxSetting
+    {
         #region Public Fields
 
         /// <summary>

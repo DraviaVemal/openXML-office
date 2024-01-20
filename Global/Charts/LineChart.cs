@@ -2,11 +2,13 @@
 
 using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the settings for a line chart.
     /// </summary>
-    public class LineChart : LineFamilyChart {
+    public class LineChart : LineFamilyChart
+    {
         #region Public Constructors
 
         /// <summary>
@@ -16,7 +18,7 @@ namespace OpenXMLOffice.Global {
         /// </param>
         /// <param name="DataCols">
         /// </param>
-        public LineChart(LineChartSetting LineChartSetting,ChartData[][] DataCols) : base(LineChartSetting,DataCols) { }
+        public LineChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting, DataCols) { }
 
         #endregion Public Constructors
 
@@ -27,7 +29,8 @@ namespace OpenXMLOffice.Global {
         /// </summary>
         /// <returns>
         /// </returns>
-        public CS.ChartStyle GetChartStyle() {
+        public CS.ChartStyle GetChartStyle()
+        {
             return CreateChartStyles();
         }
 
@@ -36,7 +39,8 @@ namespace OpenXMLOffice.Global {
         /// </summary>
         /// <returns>
         /// </returns>
-        public CS.ColorStyle GetColorStyle() {
+        public CS.ColorStyle GetColorStyle()
+        {
             return CreateColorStyles();
         }
 

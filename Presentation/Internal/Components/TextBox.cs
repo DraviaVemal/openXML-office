@@ -4,11 +4,13 @@ using OpenXMLOffice.Global;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation {
+namespace OpenXMLOffice.Presentation
+{
     /// <summary>
     /// Textbox Class
     /// </summary>
-    public class TextBox : TextBoxBase {
+    public class TextBox : TextBoxBase
+    {
         #region Public Constructors
 
         /// <summary>
@@ -27,7 +29,8 @@ namespace OpenXMLOffice.Presentation {
         /// </summary>
         /// <returns>
         /// </returns>
-        internal A.Run GetTextBoxRun() {
+        internal A.Run GetTextBoxRun()
+        {
             return GetTextBoxBaseRun();
         }
 
@@ -36,7 +39,8 @@ namespace OpenXMLOffice.Presentation {
         /// </summary>
         /// <returns>
         /// </returns>
-        internal P.Shape GetTextBoxShape() {
+        internal P.Shape GetTextBoxShape()
+        {
             return GetTextBoxBaseShape();
         }
 

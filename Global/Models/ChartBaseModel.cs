@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the position of an axis in a chart.
     /// </summary>
-    public enum AxisPosition {
+    public enum AxisPosition
+    {
         /// <summary>
         /// Top
         /// </summary>
@@ -29,7 +31,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a category axis in a chart.
     /// </summary>
-    public class CategoryAxisSetting {
+    public class CategoryAxisSetting
+    {
         #region Internal Fields
         internal uint id;
         internal AxisPosition axisPosition = AxisPosition.BOTTOM;
@@ -52,7 +55,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the options for the axes in a chart.
     /// </summary>
-    public class ChartAxesOptions {
+    public class ChartAxesOptions
+    {
         #region Public Fields
 
         /// <summary>
@@ -94,7 +98,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the options for a chart axis.
     /// </summary>
-    public class ChartAxisOptions {
+    public class ChartAxisOptions
+    {
         #region Public Fields
 
         /// <summary>
@@ -113,7 +118,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the grouping options for chart data.
     /// </summary>
-    public class ChartDataGrouping {
+    public class ChartDataGrouping
+    {
         #region Public Fields
 
         /// <summary>
@@ -192,7 +198,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the options for chart data labels.
     /// </summary>
-    public class ChartDataLabel {
+    public class ChartDataLabel
+    {
         #region Public Fields
 
         /// <summary>
@@ -243,7 +250,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for chart data.
     /// </summary>
-    public class ChartDataSetting {
+    public class ChartDataSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -275,7 +283,7 @@ namespace OpenXMLOffice.Global {
         /// Key For Data Column Value For Data Label Column If Data Label Column Are Present
         /// Inbetween and Used in the list it will be auto skipped By Data Column
         /// </summary>
-        public Dictionary<uint,uint> valueFromColumn = new();
+        public Dictionary<uint, uint> valueFromColumn = new();
 
         #endregion Public Fields
     }
@@ -283,7 +291,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the options for chart grid lines.
     /// </summary>
-    public class ChartGridLinesOptions {
+    public class ChartGridLinesOptions
+    {
         #region Public Fields
 
         /// <summary>
@@ -312,7 +321,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the options for chart legend.
     /// </summary>
-    public class ChartLegendOptions {
+    public class ChartLegendOptions
+    {
         #region Public Fields
 
         /// <summary>
@@ -349,7 +359,8 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Legend Position Values
         /// </summary>
-        public enum LegendPositionValues {
+        public enum LegendPositionValues
+        {
             /// <summary>
             /// Bottom
             /// </summary>
@@ -382,7 +393,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a chart series.
     /// </summary>
-    public class ChartSeriesSetting {
+    public class ChartSeriesSetting
+    {
         #region Internal Constructors
 
         internal ChartSeriesSetting() { }
@@ -393,7 +405,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a chart.
     /// </summary>
-    public class ChartSetting {
+    public class ChartSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -448,7 +461,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a value axis in a chart.
     /// </summary>
-    public class ValueAxisSetting {
+    public class ValueAxisSetting
+    {
         #region Internal Fields
         internal uint id;
         internal AxisPosition axisPosition = AxisPosition.LEFT;

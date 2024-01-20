@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the types of line charts.
     /// </summary>
-    public enum LineChartTypes {
+    public enum LineChartTypes
+    {
         /// <summary>
         /// Clustered Line Chart
         /// </summary>
@@ -41,7 +43,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the data label settings for a line chart.
     /// </summary>
-    public class LineChartDataLabel : ChartDataLabel {
+    public class LineChartDataLabel : ChartDataLabel
+    {
         #region Public Fields
 
         /// <summary>
@@ -56,7 +59,8 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// The possible positions for the data labels.
         /// </summary>
-        public enum DataLabelPositionValues {
+        public enum DataLabelPositionValues
+        {
             /// <summary>
             /// Left Side
             /// </summary>
@@ -94,7 +98,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the series settings for a line chart.
     /// </summary>
-    public class LineChartSeriesSetting : ChartSeriesSetting {
+    public class LineChartSeriesSetting : ChartSeriesSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -118,7 +123,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a line chart.
     /// </summary>
-    public class LineChartSetting : ChartSetting {
+    public class LineChartSetting : ChartSetting
+    {
         #region Public Fields
 
         /// <summary>

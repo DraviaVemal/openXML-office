@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Excel {
+namespace OpenXMLOffice.Excel
+{
     /// <summary>
     /// Horizontal alignment values
     /// </summary>
-    public enum HorizontalAlignmentValues {
+    public enum HorizontalAlignmentValues
+    {
         /// <summary>
         /// Unused
         /// </summary>
@@ -29,7 +31,8 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Vertical alignment values
     /// </summary>
-    public enum VerticalAlignmentValues {
+    public enum VerticalAlignmentValues
+    {
         /// <summary>
         /// Unused
         /// </summary>
@@ -54,7 +57,8 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the base class for a border in a style.
     /// </summary>
-    public class BorderSetting {
+    public class BorderSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -74,7 +78,8 @@ namespace OpenXMLOffice.Excel {
         /// <summary>
         /// Border style values
         /// </summary>
-        public enum StyleValues {
+        public enum StyleValues
+        {
             /// <summary>
             /// None Border option
             /// </summary>
@@ -152,13 +157,15 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the border style of a cell in a worksheet.
     /// </summary>
-    public class BorderStyle {
+    public class BorderStyle
+    {
         #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BorderStyle"/> class.
         /// </summary>
-        public BorderStyle() {
+        public BorderStyle()
+        {
             Bottom = new();
             Left = new();
             Right = new();
@@ -200,7 +207,8 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the style of a cell in a worksheet.
     /// </summary>
-    public class CellStyleSetting {
+    public class CellStyleSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -294,13 +302,15 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the cell style of a cell in a worksheet.
     /// </summary>
-    public class CellXfs {
+    public class CellXfs
+    {
         #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CellXfs"/> class.
         /// </summary>
-        public CellXfs() {
+        public CellXfs()
+        {
             HorizontalAlignment = HorizontalAlignmentValues.NONE;
             VerticalAlignment = VerticalAlignmentValues.NONE;
         }
@@ -380,13 +390,15 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the fill style of a cell in a worksheet.
     /// </summary>
-    public class FillStyle {
+    public class FillStyle
+    {
         #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FillStyle"/> class.
         /// </summary>
-        public FillStyle() {
+        public FillStyle()
+        {
             PatternType = PatternTypeValues.NONE;
         }
 
@@ -398,7 +410,8 @@ namespace OpenXMLOffice.Excel {
         /// Color Pattern Type
         /// TODO: Add more pattern types
         /// </summary>
-        public enum PatternTypeValues {
+        public enum PatternTypeValues
+        {
             /// <summary>
             /// None Pattern
             /// </summary>
@@ -440,13 +453,15 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the font style of a cell in a worksheet.
     /// </summary>
-    public class FontStyle {
+    public class FontStyle
+    {
         #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FontStyle"/> class.
         /// </summary>
-        public FontStyle() {
+        public FontStyle()
+        {
             Color = "accent1";
             Family = 2;
             Size = 11;
@@ -461,7 +476,8 @@ namespace OpenXMLOffice.Excel {
         /// <summary>
         /// Font Scheme values
         /// </summary>
-        public enum SchemeValues {
+        public enum SchemeValues
+        {
             /// <summary>
             /// None Scheme
             /// </summary>
@@ -538,13 +554,15 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the number format of a cell in a worksheet.
     /// </summary>
-    public class NumberFormats {
+    public class NumberFormats
+    {
         #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NumberFormats"/> class.
         /// </summary>
-        public NumberFormats() {
+        public NumberFormats()
+        {
             FormatCode = "General";
         }
 

@@ -2,12 +2,14 @@
 
 using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents an area chart, which is a type of chart that displays data as a series of points
     /// connected by a line and filled with color.
     /// </summary>
-    public class AreaChart : AreaFamilyChart {
+    public class AreaChart : AreaFamilyChart
+    {
         #region Public Constructors
 
         /// <summary>
@@ -20,7 +22,7 @@ namespace OpenXMLOffice.Global {
         /// <param name="DataCols">
         /// The data columns.
         /// </param>
-        public AreaChart(AreaChartSetting AreaChartSetting,ChartData[][] DataCols) : base(AreaChartSetting,DataCols) { }
+        public AreaChart(AreaChartSetting AreaChartSetting, ChartData[][] DataCols) : base(AreaChartSetting, DataCols) { }
 
         #endregion Public Constructors
 
@@ -32,7 +34,8 @@ namespace OpenXMLOffice.Global {
         /// <returns>
         /// The chart style.
         /// </returns>
-        public CS.ChartStyle GetChartStyle() {
+        public CS.ChartStyle GetChartStyle()
+        {
             return CreateChartStyles();
         }
 
@@ -42,7 +45,8 @@ namespace OpenXMLOffice.Global {
         /// <returns>
         /// The color style.
         /// </returns>
-        public CS.ColorStyle GetColorStyle() {
+        public CS.ColorStyle GetColorStyle()
+        {
             return CreateColorStyles();
         }
 

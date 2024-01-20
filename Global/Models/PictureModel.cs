@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the type of image.
     /// </summary>
-    public enum ImageType {
+    public enum ImageType
+    {
         /// <summary>
         /// JPEG image Format.
         /// </summary>
@@ -34,7 +36,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the settings for a picture.
     /// </summary>
-    public class PictureSetting {
+    public class PictureSetting
+    {
         #region Public Fields
 
         /// <summary>

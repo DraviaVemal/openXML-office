@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Excel {
+namespace OpenXMLOffice.Excel
+{
     /// <summary>
     /// Represents the data type of a cell in a worksheet.
     /// </summary>
-    public enum CellDataType {
+    public enum CellDataType
+    {
         /// <summary>
         /// Represents a date cell.
         /// </summary>
@@ -24,7 +26,8 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the properties of a column in a worksheet.
     /// </summary>
-    public class ColumnProperties {
+    public class ColumnProperties
+    {
         #region Public Fields
 
         /// <summary>
@@ -49,7 +52,8 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents a data cell in a worksheet.
     /// </summary>
-    public class DataCell {
+    public class DataCell
+    {
         #region Public Fields
 
         /// <summary>
@@ -73,7 +77,8 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents a record in a worksheet.
     /// </summary>
-    public class Record {
+    public class Record
+    {
         #region Public Constructors
 
         /// <summary>
@@ -82,7 +87,8 @@ namespace OpenXMLOffice.Excel {
         /// <param name="Value">
         /// The value of the record.
         /// </param>
-        public Record(string Value) {
+        public Record(string Value)
+        {
             this.Value = Value;
         }
 
@@ -106,7 +112,8 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the properties of a row in a worksheet.
     /// </summary>
-    public class RowProperties {
+    public class RowProperties
+    {
         #region Public Fields
 
         /// <summary>

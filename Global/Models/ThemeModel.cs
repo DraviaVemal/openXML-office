@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the theme pallet containing color values.
     /// </summary>
-    public class ThemePallet {
+    public class ThemePallet
+    {
         #region Public Fields
 
         /// <summary>

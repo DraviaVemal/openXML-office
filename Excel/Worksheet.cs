@@ -6,11 +6,13 @@ using OpenXMLOffice.Global;
 
 using S = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace OpenXMLOffice.Excel {
+namespace OpenXMLOffice.Excel
+{
     /// <summary>
     /// Represents a worksheet in an Excel workbook.
     /// </summary>
-    public class Worksheet {
+    public class Worksheet
+    {
         #region Private Fields
 
         private readonly S.Worksheet openXMLworksheet;
@@ -29,7 +31,8 @@ namespace OpenXMLOffice.Excel {
         /// <param name="_sheet">
         /// The sheet associated with the worksheet.
         /// </param>
-        public Worksheet(S.Worksheet worksheet,Sheet _sheet) {
+        public Worksheet(S.Worksheet worksheet, Sheet _sheet)
+        {
             openXMLworksheet = worksheet;
             sheet = _sheet;
         }
@@ -44,7 +47,8 @@ namespace OpenXMLOffice.Excel {
         /// <returns>
         /// The sheet ID.
         /// </returns>
-        public int GetSheetId() {
+        public int GetSheetId()
+        {
             return int.Parse(sheet.Id!.Value!);
         }
 
@@ -54,7 +58,8 @@ namespace OpenXMLOffice.Excel {
         /// <returns>
         /// The sheet name.
         /// </returns>
-        public string GetSheetName() {
+        public string GetSheetName()
+        {
             return sheet.Name!;
         }
 
@@ -67,9 +72,10 @@ namespace OpenXMLOffice.Excel {
         /// <param name="ColumnProperties">
         /// Optional column properties to be applied (e.g., width, hidden).
         /// </param>
-        public void SetColumn(string cellId,ColumnProperties ColumnProperties) {
+        public void SetColumn(string cellId, ColumnProperties ColumnProperties)
+        {
             (int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
-            SetColumn(colIndex,ColumnProperties);
+            SetColumn(colIndex, ColumnProperties);
         }
 
         /// <summary>
@@ -81,27 +87,36 @@ namespace OpenXMLOffice.Excel {
         /// <param name="ColumnProperties">
         /// Optional column properties to be applied (e.g., width, hidden).
         /// </param>
-        public void SetColumn(int col,ColumnProperties ColumnProperties) {
+        public void SetColumn(int col, ColumnProperties ColumnProperties)
+        {
             Columns? columns = openXMLworksheet.GetFirstChild<Columns>();
-            if(columns == null) {
+            if (columns == null)
+            {
                 columns = new Columns();
-                openXMLworksheet.InsertBefore(columns,openXMLworksheet.GetFirstChild<SheetData>());
+                openXMLworksheet.InsertBefore(columns, openXMLworksheet.GetFirstChild<SheetData>());
             }
             Column? existingColumn = columns.Elements<Column>().FirstOrDefault(c => c.Max?.Value == col && c.Min?.Value == col);
-            if(existingColumn != null) {
+            if (existingColumn != null)
+            {
                 existingColumn.CustomWidth = true;
-                if(ColumnProperties != null) {
-                    if(ColumnProperties.width != null && !ColumnProperties.bestFit) { existingColumn.Width = ColumnProperties.width; }
+                if (ColumnProperties != null)
+                {
+                    if (ColumnProperties.width != null && !ColumnProperties.bestFit) { existingColumn.Width = ColumnProperties.width; }
                     existingColumn.Hidden = ColumnProperties.hidden;
                     existingColumn.BestFit = BooleanValue.FromBoolean(ColumnProperties.bestFit);
                 }
-            } else {
-                Column newColumn = new() {
+            }
+            else
+            {
+                Column newColumn = new()
+                {
                     Min = (uint)col,
                     Max = (uint)col,
                 };
-                if(ColumnProperties != null) {
-                    if(ColumnProperties.width != null && !ColumnProperties.bestFit) {
+                if (ColumnProperties != null)
+                {
+                    if (ColumnProperties.width != null && !ColumnProperties.bestFit)
+                    {
                         newColumn.Width = ColumnProperties.width;
                         newColumn.CustomWidth = true;
                     }
@@ -127,8 +142,9 @@ namespace OpenXMLOffice.Excel {
         /// <param name="RowProperties">
         /// Optional row properties to be applied to the row (e.g., height, custom formatting).
         /// </param>
-        public void SetRow(int row,int col,DataCell[] dataCells,RowProperties RowProperties) {
-            SetRow(ConverterUtils.ConvertToExcelCellReference(row,col),dataCells,RowProperties);
+        public void SetRow(int row, int col, DataCell[] dataCells, RowProperties RowProperties)
+        {
+            SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), dataCells, RowProperties);
         }
 
         /// <summary>
@@ -144,42 +160,56 @@ namespace OpenXMLOffice.Excel {
         /// <param name="RowProperties">
         /// Optional row properties to be applied to the row (e.g., height, custom formatting).
         /// </param>
-        public void SetRow(string cellId,DataCell[] DataCells,RowProperties RowProperties) {
+        public void SetRow(string cellId, DataCell[] DataCells, RowProperties RowProperties)
+        {
             SheetData sheetData = openXMLworksheet.Elements<SheetData>().First();
             (int rowIndex, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
             Row? row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex?.Value == (uint)rowIndex);
-            if(row == null) {
-                row = new Row {
+            if (row == null)
+            {
+                row = new Row
+                {
                     RowIndex = new UInt32Value((uint)rowIndex)
                 };
                 sheetData.AppendChild(row);
             }
-            if(RowProperties != null) {
-                if(RowProperties.height != null) {
+            if (RowProperties != null)
+            {
+                if (RowProperties.height != null)
+                {
                     row.Height = RowProperties.height;
                     row.CustomHeight = true;
                 }
                 row.Hidden = RowProperties.hidden;
             }
-            foreach(DataCell DataCell in DataCells) {
-                string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex,colIndex);
+            foreach (DataCell DataCell in DataCells)
+            {
+                string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, colIndex);
                 colIndex++;
                 Cell? cell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference?.Value == currentCellId);
-                if(string.IsNullOrEmpty(DataCell?.cellValue)) {
+                if (string.IsNullOrEmpty(DataCell?.cellValue))
+                {
                     cell?.Remove();
-                } else {
-                    if(cell == null) {
-                        cell = new Cell {
+                }
+                else
+                {
+                    if (cell == null)
+                    {
+                        cell = new Cell
+                        {
                             CellReference = currentCellId
                         };
                         row.AppendChild(cell);
                     }
                     CellValues DataType = GetCellValues(DataCell.dataType);
                     cell.StyleIndex = Styles.Instance.GetCellStyleId(DataCell.styleSetting);
-                    if(DataType == CellValues.String) {
+                    if (DataType == CellValues.String)
+                    {
                         cell.DataType = CellValues.SharedString;
                         cell.CellValue = new CellValue(ShareString.Instance.InsertUnique(DataCell.cellValue));
-                    } else {
+                    }
+                    else
+                    {
                         cell.DataType = DataType;
                         cell.CellValue = new CellValue(DataCell.cellValue);
                     }
@@ -201,8 +231,10 @@ namespace OpenXMLOffice.Excel {
         /// <returns>
         /// The CellValues enumeration representing the cell data type.
         /// </returns>
-        private CellValues GetCellValues(CellDataType cellDataType) {
-            return cellDataType switch {
+        private CellValues GetCellValues(CellDataType cellDataType)
+        {
+            return cellDataType switch
+            {
                 CellDataType.DATE => CellValues.Date,
                 CellDataType.NUMBER => CellValues.Number,
                 _ => CellValues.String,

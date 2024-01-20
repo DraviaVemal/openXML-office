@@ -2,11 +2,13 @@
 
 using OpenXMLOffice.Global;
 
-namespace OpenXMLOffice.Excel {
+namespace OpenXMLOffice.Excel
+{
     /// <summary>
     /// Represents the properties of a column in a worksheet.
     /// </summary>
-    public class SpreadsheetProperties {
+    public class SpreadsheetProperties
+    {
         #region Public Fields
 
         /// <summary>
@@ -25,6 +27,7 @@ namespace OpenXMLOffice.Excel {
     /// <summary>
     /// Represents the settings of a spreadsheet.
     /// </summary>
-    public class SpreadsheetSettings {
+    public class SpreadsheetSettings
+    {
     }
 }

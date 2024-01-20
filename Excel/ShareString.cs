@@ -2,14 +2,16 @@
 
 using LiteDB;
 
-namespace OpenXMLOffice.Excel {
+namespace OpenXMLOffice.Excel
+{
     /// <summary>
     /// Represents a class that manages shared string values in Excel.
     /// </summary>
-    internal class ShareString : IDisposable {
+    internal class ShareString : IDisposable
+    {
         #region Private Fields
 
-        private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(),"db"));
+        private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
         private static ShareString? instance = null;
         private readonly ILiteCollection<Record> collection;
 
@@ -20,7 +22,8 @@ namespace OpenXMLOffice.Excel {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShareString"/> class.
         /// </summary>
-        private ShareString() {
+        private ShareString()
+        {
             collection = liteDatabase.GetCollection<Record>("Records");
             collection.EnsureIndex("Record.Value");
         }
@@ -32,8 +35,10 @@ namespace OpenXMLOffice.Excel {
         /// <summary>
         /// Gets the instance of the <see cref="ShareString"/> class.
         /// </summary>
-        public static ShareString Instance {
-            get {
+        public static ShareString Instance
+        {
+            get
+            {
                 instance ??= new ShareString();
                 return instance;
             }
@@ -46,7 +51,8 @@ namespace OpenXMLOffice.Excel {
         /// <summary>
         /// Releases all resources used by the <see cref="ShareString"/> class.
         /// </summary>
-        public void Dispose() {
+        public void Dispose()
+        {
             liteDatabase.Dispose();
         }
 
@@ -59,7 +65,8 @@ namespace OpenXMLOffice.Excel {
         /// <returns>
         /// The index of the value if found; otherwise, null.
         /// </returns>
-        public int? GetIndex(string Value) {
+        public int? GetIndex(string Value)
+        {
             return collection.FindOne(col => col.Value == Value)?.Id - 1;
         }
 
@@ -69,7 +76,8 @@ namespace OpenXMLOffice.Excel {
         /// <returns>
         /// A list of all the records.
         /// </returns>
-        public List<string> GetRecords() {
+        public List<string> GetRecords()
+        {
             return collection.Query().OrderBy(x => x.Id).Select(x => x.Value).ToList();
         }
 
@@ -82,7 +90,8 @@ namespace OpenXMLOffice.Excel {
         /// <returns>
         /// The value at the specified index if found; otherwise, null.
         /// </returns>
-        public string? GetValue(int Index) {
+        public string? GetValue(int Index)
+        {
             return collection.FindOne(col => col.Id == Index)?.Value;
         }
 
@@ -92,7 +101,8 @@ namespace OpenXMLOffice.Excel {
         /// <param name="Data">
         /// The value to insert.
         /// </param>
-        public void Insert(string Data) {
+        public void Insert(string Data)
+        {
             collection.Insert(new Record(Data));
         }
 
@@ -102,7 +112,8 @@ namespace OpenXMLOffice.Excel {
         /// <param name="Data">
         /// The list of values to insert.
         /// </param>
-        public void InsertBulk(List<string> Data) {
+        public void InsertBulk(List<string> Data)
+        {
             collection.InsertBulk(Data.Select(item => new Record(item)));
         }
 
@@ -115,9 +126,11 @@ namespace OpenXMLOffice.Excel {
         /// <returns>
         /// The index of the inserted value.
         /// </returns>
-        public int InsertUnique(string Data) {
+        public int InsertUnique(string Data)
+        {
             int? Index = GetIndex(Data);
-            if(Index != null) {
+            if (Index != null)
+            {
                 return (int)Index;
             }
             BsonValue DocId = collection.Insert(new Record(Data));

@@ -4,11 +4,13 @@ using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the settings for a bar chart.
     /// </summary>
-    public class BarFamilyChart : ChartBase {
+    public class BarFamilyChart : ChartBase
+    {
         #region Protected Fields
 
         /// <summary>
@@ -27,7 +29,8 @@ namespace OpenXMLOffice.Global {
         /// </param>
         /// <param name="DataCols">
         /// </param>
-        protected BarFamilyChart(BarChartSetting BarChartSetting,ChartData[][] DataCols) : base(BarChartSetting) {
+        protected BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
+        {
             this.barChartSetting = BarChartSetting;
             SetChartPlotArea(CreateChartPlotArea(DataCols));
         }
@@ -36,48 +39,58 @@ namespace OpenXMLOffice.Global {
 
         #region Private Methods
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex,ChartDataGrouping ChartDataGrouping,A.SolidFill SolidFill,C.DataLabels? DataLabels) {
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        {
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!,new[] { ChartDataGrouping.seriesHeaderCells! }),
+                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!, new[] { ChartDataGrouping.seriesHeaderCells! }),
                 new C.InvertIfNegative { Val = true });
             C.ShapeProperties ShapeProperties = CreateShapeProperties();
             ShapeProperties.Append(SolidFill);
             ShapeProperties.Append(new A.Outline(new A.NoFill()));
             ShapeProperties.Append(new A.EffectList());
-            if(DataLabels != null) {
+            if (DataLabels != null)
+            {
                 series.Append(DataLabels);
             }
             series.Append(ShapeProperties);
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!,ChartDataGrouping.xAxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!,ChartDataGrouping.yAxisCells!));
-            if(ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null) {
+            series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));
+            series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!, ChartDataGrouping.yAxisCells!));
+            if (ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null)
+            {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula,ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
-                ) { Uri = GeneratorUtils.GenerateNewGUID() }));
+                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula, ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
+                )
+                { Uri = GeneratorUtils.GenerateNewGUID() }));
             }
             return series;
         }
 
-        private C.DataLabels? CreateBarDataLabels(BarChartDataLabel BarChartDataLabel,int? DataLabelCounter = 0) {
-            if(BarChartDataLabel.showValue || BarChartDataLabel.showValueFromColumn || BarChartDataLabel.showCategoryName || BarChartDataLabel.showLegendKey || BarChartDataLabel.showSeriesName || DataLabelCounter > 0) {
-                C.DataLabels DataLabels = CreateDataLabels(BarChartDataLabel,DataLabelCounter);
-                if(barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END) {
+        private C.DataLabels? CreateBarDataLabels(BarChartDataLabel BarChartDataLabel, int? DataLabelCounter = 0)
+        {
+            if (BarChartDataLabel.showValue || BarChartDataLabel.showValueFromColumn || BarChartDataLabel.showCategoryName || BarChartDataLabel.showLegendKey || BarChartDataLabel.showSeriesName || DataLabelCounter > 0)
+            {
+                C.DataLabels DataLabels = CreateDataLabels(BarChartDataLabel, DataLabelCounter);
+                if (barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
+                {
                     throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
                 }
-                DataLabels.InsertAt(new C.DataLabelPosition() {
-                    Val = BarChartDataLabel.dataLabelPosition switch {
+                DataLabels.InsertAt(new C.DataLabelPosition()
+                {
+                    Val = BarChartDataLabel.dataLabelPosition switch
+                    {
                         BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
                         BarChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
                         BarChartDataLabel.DataLabelPositionValues.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
                         _ => C.DataLabelPositionValues.Center
                     }
-                },0);
-                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(),new A.Outline(new A.NoFill()),new A.EffectList()),0);
+                }, 0);
+                DataLabels.InsertAt(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()), 0);
                 A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 },new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" },new A.EastAsianFont() { Typeface = "+mn-ea" },new A.ComplexScriptFont() { Typeface = "+mn-cs" }) {
+                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
+                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
+                {
                     FontSize = (int)BarChartDataLabel.fontSize * 100,
                     Bold = BarChartDataLabel.isBold,
                     Italic = BarChartDataLabel.isItalic,
@@ -85,8 +98,9 @@ namespace OpenXMLOffice.Global {
                     Strike = A.TextStrikeValues.NoStrike,
                     Kerning = 1200,
                     Baseline = 0
-                }),new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit()) {
+                }), new A.EndParagraphRunProperties() { Language = "en-US" });
+                DataLabels.InsertAt(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                {
                     Rotation = 0,
                     UseParagraphSpacing = true,
                     VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
@@ -98,20 +112,23 @@ namespace OpenXMLOffice.Global {
                     BottomInset = 19050,
                     Anchor = A.TextAnchoringTypeValues.Center,
                     AnchorCenter = true
-                },new A.ListStyle(),
-               Paragraph),0);
+                }, new A.ListStyle(),
+               Paragraph), 0);
                 return DataLabels;
             }
             return null;
         }
 
-        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols) {
+        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
+        {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
             C.BarChart BarChart = new(
                 new C.BarDirection { Val = C.BarDirectionValues.Bar },
-                new C.BarGrouping {
-                    Val = barChartSetting.barChartTypes switch {
+                new C.BarGrouping
+                {
+                    Val = barChartSetting.barChartTypes switch
+                    {
                         BarChartTypes.STACKED => C.BarGroupingValues.Stacked,
                         BarChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
                         // Clusted
@@ -120,36 +137,44 @@ namespace OpenXMLOffice.Global {
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols,barChartSetting.chartDataSetting).ForEach(Series => {
-                C.DataLabels? GetDataLabels() {
-                    if(seriesIndex < barChartSetting.barChartSeriesSettings.Count) {
-                        return CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(),Series.dataLabelCells?.Length ?? 0);
+            CreateDataSeries(DataCols, barChartSetting.chartDataSetting).ForEach(Series =>
+            {
+                C.DataLabels? GetDataLabels()
+                {
+                    if (seriesIndex < barChartSetting.barChartSeriesSettings.Count)
+                    {
+                        return CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), Series.dataLabelCells?.Length ?? 0);
                     }
                     return null;
                 }
-                BarChart.Append(CreateBarChartSeries(seriesIndex,Series,
+                BarChart.Append(CreateBarChartSeries(seriesIndex, Series,
                     CreateSolidFill(barChartSetting.barChartSeriesSettings
                             .Where(item => item?.fillColor != null)
                             .Select(item => item?.fillColor!)
-                            .ToList(),seriesIndex),
+                            .ToList(), seriesIndex),
                     GetDataLabels()));
                 seriesIndex++;
             });
-            if(barChartSetting.barChartTypes == BarChartTypes.CLUSTERED) {
+            if (barChartSetting.barChartTypes == BarChartTypes.CLUSTERED)
+            {
                 BarChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
                 BarChart.Append(new C.Overlap { Val = (SByteValue)barChartSetting.barGraphicsSetting.seriesGap });
-            } else {
+            }
+            else
+            {
                 BarChart.Append(new C.GapWidth { Val = 150 });
                 BarChart.Append(new C.Overlap { Val = 100 });
             }
             C.DataLabels? DataLabels = CreateBarDataLabels(barChartSetting.barChartDataLabel);
-            if(DataLabels != null) {
+            if (DataLabels != null)
+            {
                 BarChart.Append(DataLabels);
             }
             BarChart.Append(new C.AxisId { Val = 1362418656 });
             BarChart.Append(new C.AxisId { Val = 1358349936 });
             plotArea.Append(BarChart);
-            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting() {
+            plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+            {
                 id = 1362418656,
                 axisPosition = AxisPosition.LEFT,
                 crossAxisId = 1358349936,
@@ -157,7 +182,8 @@ namespace OpenXMLOffice.Global {
                 isBold = barChartSetting.chartAxesOptions.isVerticalBold,
                 isItalic = barChartSetting.chartAxesOptions.isVerticalItalic,
             }));
-            plotArea.Append(CreateValueAxis(new ValueAxisSetting() {
+            plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+            {
                 id = 1358349936,
                 axisPosition = AxisPosition.BOTTOM,
                 crossAxisId = 1362418656,

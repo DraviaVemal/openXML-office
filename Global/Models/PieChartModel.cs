@@ -1,10 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global {
+namespace OpenXMLOffice.Global
+{
     /// <summary>
     /// Represents the types of pie charts.
     /// </summary>
-    public enum PieChartTypes {
+    public enum PieChartTypes
+    {
         /// <summary>
         /// Pie Chart
         /// </summary>
@@ -20,7 +22,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the data label for a pie chart.
     /// </summary>
-    public class PieChartDataLabel : ChartDataLabel {
+    public class PieChartDataLabel : ChartDataLabel
+    {
         #region Public Fields
 
         /// <summary>
@@ -35,7 +38,8 @@ namespace OpenXMLOffice.Global {
         /// <summary>
         /// Represents the possible positions of the data label.
         /// </summary>
-        public enum DataLabelPositionValues {
+        public enum DataLabelPositionValues
+        {
             /// <summary>
             /// Center
             /// </summary>
@@ -73,7 +77,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the series setting for a pie chart.
     /// </summary>
-    public class PieChartSeriesSetting : ChartSeriesSetting {
+    public class PieChartSeriesSetting : ChartSeriesSetting
+    {
         #region Public Fields
 
         /// <summary>
@@ -97,7 +102,8 @@ namespace OpenXMLOffice.Global {
     /// <summary>
     /// Represents the setting for a pie chart.
     /// </summary>
-    public class PieChartSetting : ChartSetting {
+    public class PieChartSetting : ChartSetting
+    {
         #region Public Fields
 
         /// <summary>

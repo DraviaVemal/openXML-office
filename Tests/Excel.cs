@@ -2,12 +2,14 @@
 
 using OpenXMLOffice.Excel;
 
-namespace OpenXMLOffice.Tests {
+namespace OpenXMLOffice.Tests
+{
     /// <summary>
     /// Excel Test
     /// </summary>
     [TestClass]
-    public class Excel {
+    public class Excel
+    {
         #region Private Fields
 
         private static Spreadsheet spreadsheet = new(new MemoryStream());
@@ -20,7 +22,8 @@ namespace OpenXMLOffice.Tests {
         /// Save the Test File After execution
         /// </summary>
         [ClassCleanup]
-        public static void ClassCleanup() {
+        public static void ClassCleanup()
+        {
             spreadsheet.Save();
         }
 
@@ -30,45 +33,52 @@ namespace OpenXMLOffice.Tests {
         /// <param name="context">
         /// </param>
         [ClassInitialize]
-        public static void ClassInitialize(TestContext context) {
-            spreadsheet = new(string.Format("../../test-{0}.xlsx",DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+        public static void ClassInitialize(TestContext context)
+        {
+            spreadsheet = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         }
 
         /// <summary>
         /// Add Sheet Test
         /// </summary>
         [TestMethod]
-        public void AddSheet() {
+        public void AddSheet()
+        {
             Worksheet worksheet = spreadsheet.AddSheet();
             Assert.IsNotNull(worksheet);
-            Assert.AreEqual("Sheet1",worksheet.GetSheetName());
+            Assert.AreEqual("Sheet1", worksheet.GetSheetName());
         }
 
         /// <summary>
         /// Rename Sheet Based on Index Test
         /// </summary>
         [TestMethod]
-        public void RenameSheet() {
+        public void RenameSheet()
+        {
             Worksheet worksheet = spreadsheet.AddSheet("Sheet11");
             Assert.IsNotNull(worksheet);
-            Assert.IsTrue(spreadsheet.RenameSheet("Sheet11","Data1"));
+            Assert.IsTrue(spreadsheet.RenameSheet("Sheet11", "Data1"));
         }
 
         /// <summary>
         /// Set Cell Test
         /// </summary>
         [TestMethod]
-        public void SetColumn() {
+        public void SetColumn()
+        {
             Worksheet worksheet = spreadsheet.AddSheet("Data3");
             Assert.IsNotNull(worksheet);
-            worksheet.SetColumn("A1",new ColumnProperties() {
+            worksheet.SetColumn("A1", new ColumnProperties()
+            {
                 width = 30
             });
-            worksheet.SetColumn("C4",new ColumnProperties() {
+            worksheet.SetColumn("C4", new ColumnProperties()
+            {
                 width = 30,
                 bestFit = true
             });
-            worksheet.SetColumn("G7",new ColumnProperties() {
+            worksheet.SetColumn("G7", new ColumnProperties()
+            {
                 hidden = true
             });
             Assert.IsTrue(true);
@@ -78,10 +88,11 @@ namespace OpenXMLOffice.Tests {
         /// Set Row Test
         /// </summary>
         [TestMethod]
-        public void SetRow() {
+        public void SetRow()
+        {
             Worksheet worksheet = spreadsheet.AddSheet("Data2");
             Assert.IsNotNull(worksheet);
-            worksheet.SetRow("A1",new DataCell[6]{
+            worksheet.SetRow("A1", new DataCell[6]{
                 new(){
                     cellValue = "test1",
                     dataType = CellDataType.STRING
@@ -114,15 +125,17 @@ namespace OpenXMLOffice.Tests {
                         numberFormat = "₹ #,##0.00;₹ -#,##0.00",
                     }
                 }
-            },new RowProperties() {
+            }, new RowProperties()
+            {
                 height = 20
             });
-            worksheet.SetRow("C1",new DataCell[1]{
+            worksheet.SetRow("C1", new DataCell[1]{
                 new(){
                     cellValue = "Re Update",
                     dataType = CellDataType.STRING
                 }
-            },new RowProperties() {
+            }, new RowProperties()
+            {
                 height = 30
             });
             Assert.IsTrue(true);
@@ -132,7 +145,8 @@ namespace OpenXMLOffice.Tests {
         /// Create Xslx File Based on File Test
         /// </summary>
         [TestMethod]
-        public void SheetConstructorFile() {
+        public void SheetConstructorFile()
+        {
             Spreadsheet spreadsheet1 = new("../try.xlsx");
             Assert.IsNotNull(spreadsheet1);
             spreadsheet1.Save();
@@ -143,7 +157,8 @@ namespace OpenXMLOffice.Tests {
         /// Create Xslx File Based on Stream Test
         /// </summary>
         [TestMethod]
-        public void SheetConstructorStream() {
+        public void SheetConstructorStream()
+        {
             MemoryStream memoryStream = new();
             Spreadsheet spreadsheet1 = new(memoryStream);
             Assert.IsNotNull(spreadsheet1);
