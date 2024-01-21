@@ -1,5 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using C = DocumentFormat.OpenXml.Drawing.Charts;
+
 namespace OpenXMLOffice.Global
 {
     /// <summary>
@@ -479,7 +481,98 @@ namespace OpenXMLOffice.Global
         /// Font Size
         /// </summary>
         public float fontSize = 11.97F;
-
         #endregion Internal Fields
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MarkerModel
+    {
+        /// <summary>
+        /// Market Size
+        /// </summary>
+        public int size = 5;
+        /// <summary>
+        /// 
+        /// </summary>
+        public MarkerShapeValues markerShapeValues = MarkerShapeValues.NONE;
+        /// <summary>
+        /// 
+        /// </summary>
+        public ShapePropertiesModel shapeProperties = new();
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum MarkerShapeValues
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            NONE,
+            /// <summary>
+            /// 
+            /// </summary>
+            AUTO,
+            /// <summary>
+            ///
+            /// </summary>
+            CIRCLE,
+            /// <summary>
+            ///
+            /// </summary>
+            DASH,
+            /// <summary>
+            ///
+            /// </summary>
+            DIAMOND,
+            /// <summary>
+            ///
+            /// </summary>
+            DOT,
+            /// <summary>
+            ///
+            /// </summary>
+            PICTURE,
+            /// <summary>
+            ///
+            /// </summary>
+            PLUSE,
+            /// <summary>
+            ///
+            /// </summary>
+            SQUARE,
+            /// <summary>
+            ///
+            /// </summary>
+            STAR,
+            /// <summary>
+            ///
+            /// </summary>
+            TRIANGLE,
+            /// <summary>
+            ///
+            /// </summary>
+            X
+        }
+
+        internal C.MarkerStyleValues GetMarkerStyleValues(MarkerShapeValues markerShapeValues)
+        {
+            return markerShapeValues switch
+            {
+                MarkerShapeValues.AUTO => C.MarkerStyleValues.Auto,
+                MarkerShapeValues.CIRCLE => C.MarkerStyleValues.Circle,
+                MarkerShapeValues.DASH => C.MarkerStyleValues.Dash,
+                MarkerShapeValues.DIAMOND => C.MarkerStyleValues.Diamond,
+                MarkerShapeValues.DOT => C.MarkerStyleValues.Dot,
+                MarkerShapeValues.PICTURE => C.MarkerStyleValues.Picture,
+                MarkerShapeValues.PLUSE => C.MarkerStyleValues.Plus,
+                MarkerShapeValues.SQUARE => C.MarkerStyleValues.Square,
+                MarkerShapeValues.STAR => C.MarkerStyleValues.Star,
+                MarkerShapeValues.TRIANGLE => C.MarkerStyleValues.Triangle,
+                MarkerShapeValues.X => C.MarkerStyleValues.X,
+                _ => C.MarkerStyleValues.None,
+            };
+        }
     }
 }

@@ -25,60 +25,85 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Create Bar Chart with provided settings
         /// </summary>
-        /// <param name="BarChartSetting">
+        /// <param name="barChartSetting">
         /// </param>
-        /// <param name="DataCols">
+        /// <param name="dataCols">
         /// </param>
-        protected BarFamilyChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting)
+        protected BarFamilyChart(BarChartSetting barChartSetting, ChartData[][] dataCols) : base(barChartSetting)
         {
-            barChartSetting = BarChartSetting;
-            SetChartPlotArea(CreateChartPlotArea(DataCols));
+            this.barChartSetting = barChartSetting;
+            SetChartPlotArea(CreateChartPlotArea(dataCols));
         }
 
         #endregion Protected Constructors
 
         #region Private Methods
 
-        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping, A.SolidFill SolidFill, C.DataLabels? DataLabels)
+        private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
+            SolidFillModel GetSolidFill()
+            {
+                SolidFillModel solidFillModel = new();
+                string? hexColor = barChartSetting.barChartSeriesSettings?
+                            .Where(item => item?.fillColor != null)
+                            .Select(item => item?.fillColor!)
+                            .ToList().ElementAtOrDefault(seriesIndex);
+                if (hexColor != null)
+                {
+                    solidFillModel.hexColor = hexColor;
+                    return solidFillModel;
+                }
+                else
+                {
+                    solidFillModel.schemeColorModel = new()
+                    {
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                    };
+                }
+                return solidFillModel;
+            }
+            C.DataLabels? DataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ? CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            ShapePropertiesModel shapePropertiesModel = new()
+            {
+                outline = new()
+                {
+                    solidFill = GetSolidFill()
+                }
+            };
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!, new[] { ChartDataGrouping.seriesHeaderCells! }),
+                CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }),
                 new C.InvertIfNegative { Val = true });
-            C.ShapeProperties ShapeProperties = CreateShapeProperties();
-            ShapeProperties.Append(SolidFill);
-            ShapeProperties.Append(new A.Outline(new A.NoFill()));
-            ShapeProperties.Append(new A.EffectList());
-            series.Append(ShapeProperties);
+            series.Append(CreateChartShapeProperties(shapePropertiesModel));
             if (DataLabels != null)
             {
                 series.Append(DataLabels);
             }
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!, ChartDataGrouping.yAxisCells!));
-            if (ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null)
+            series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
+            series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
+            if (chartDataGrouping.dataLabelCells != null && chartDataGrouping.dataLabelFormula != null)
             {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula, ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
+                    CreateDataLabelsRange(chartDataGrouping.dataLabelFormula, chartDataGrouping.dataLabelCells.Skip(1).ToArray())
                 )
                 { Uri = "{02D57815-91ED-43cb-92C2-25804820EDAC}" }));
             }
             return series;
         }
 
-        private C.DataLabels? CreateBarDataLabels(BarChartDataLabel BarChartDataLabel, int? DataLabelCounter = 0)
+        private C.DataLabels? CreateBarDataLabels(BarChartDataLabel barChartDataLabel, int? dataLabelCounter = 0)
         {
-            if (BarChartDataLabel.showValue || BarChartDataLabel.showValueFromColumn || BarChartDataLabel.showCategoryName || BarChartDataLabel.showLegendKey || BarChartDataLabel.showSeriesName || DataLabelCounter > 0)
+            if (barChartDataLabel.showValue || barChartDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName || dataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabels(BarChartDataLabel, DataLabelCounter);
-                if (barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && BarChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
+                C.DataLabels DataLabels = CreateDataLabels(barChartDataLabel, dataLabelCounter);
+                if (barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && barChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
                 {
                     throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
                 }
                 DataLabels.InsertAt(new C.DataLabelPosition()
                 {
-                    Val = BarChartDataLabel.dataLabelPosition switch
+                    Val = barChartDataLabel.dataLabelPosition switch
                     {
                         BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
                         BarChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
@@ -86,19 +111,29 @@ namespace OpenXMLOffice.Global
                         _ => C.DataLabelPositionValues.Center
                     }
                 }, 0);
-                DataLabels.Append(new C.ShapeProperties(new A.NoFill(), new A.Outline(new A.NoFill()), new A.EffectList()));
-                A.Paragraph Paragraph = new(new A.ParagraphProperties(new A.DefaultRunProperties(
-                    new A.SolidFill(new A.SchemeColor(new A.LuminanceModulation() { Val = 75000 }, new A.LuminanceOffset() { Val = 25000 }) { Val = A.SchemeColorValues.Text1 }),
-                    new A.LatinFont() { Typeface = "+mn-lt" }, new A.EastAsianFont() { Typeface = "+mn-ea" }, new A.ComplexScriptFont() { Typeface = "+mn-cs" })
+                DataLabels.Append(CreateChartShapeProperties());
+                A.Paragraph Paragraph = new(new A.ParagraphProperties(CreateDefaultRunProperties(new()
                 {
-                    FontSize = (int)BarChartDataLabel.fontSize * 100,
-                    Bold = BarChartDataLabel.isBold,
-                    Italic = BarChartDataLabel.isItalic,
-                    Underline = A.TextUnderlineValues.None,
-                    Strike = A.TextStrikeValues.NoStrike,
-                    Kerning = 1200,
-                    Baseline = 0
-                }), new A.EndParagraphRunProperties() { Language = "en-US" });
+                    solidFill = new()
+                    {
+                        schemeColorModel = new()
+                        {
+                            themeColorValues = ThemeColorValues.TEXT_1,
+                            luminanceModulation = 7500,
+                            luminanceOffset = 2500
+                        }
+                    },
+                    complexScriptFont = "+mn-cs",
+                    eastAsianFont = "+mn-ea",
+                    latinFont = "+mn-lt",
+                    fontSize = (int)barChartDataLabel.fontSize * 100,
+                    bold = barChartDataLabel.isBold,
+                    italic = barChartDataLabel.isItalic,
+                    underline = UnderLineValues.NONE,
+                    strike = StrikeValues.NO_STRIKE,
+                    kerning = 1200,
+                    baseline = 0,
+                })), new A.EndParagraphRunProperties() { Language = "en-US" });
                 DataLabels.Append(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
                 {
                     Rotation = 0,
@@ -119,7 +154,7 @@ namespace OpenXMLOffice.Global
             return null;
         }
 
-        private C.PlotArea CreateChartPlotArea(ChartData[][] DataCols)
+        private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
@@ -137,22 +172,9 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(DataCols, barChartSetting.chartDataSetting).ForEach(Series =>
+            CreateDataSeries(dataCols, barChartSetting.chartDataSetting).ForEach(Series =>
             {
-                C.DataLabels? GetDataLabels()
-                {
-                    if (seriesIndex < barChartSetting.barChartSeriesSettings.Count)
-                    {
-                        return CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), Series.dataLabelCells?.Length ?? 0);
-                    }
-                    return null;
-                }
-                BarChart.Append(CreateBarChartSeries(seriesIndex, Series,
-                    CreateSolidFill(barChartSetting.barChartSeriesSettings
-                            .Where(item => item?.fillColor != null)
-                            .Select(item => item?.fillColor!)
-                            .ToList(), seriesIndex),
-                    GetDataLabels()));
+                BarChart.Append(CreateBarChartSeries(seriesIndex, Series));
                 seriesIndex++;
             });
             if (barChartSetting.barChartTypes == BarChartTypes.CLUSTERED)
@@ -191,11 +213,7 @@ namespace OpenXMLOffice.Global
                 isBold = barChartSetting.chartAxesOptions.isHorizontalBold,
                 isItalic = barChartSetting.chartAxesOptions.isHorizontalItalic,
             }));
-            C.ShapeProperties ShapeProperties = CreateShapeProperties();
-            ShapeProperties.Append(new A.NoFill());
-            ShapeProperties.Append(new A.Outline(new A.NoFill()));
-            ShapeProperties.Append(new A.EffectList());
-            plotArea.Append(ShapeProperties);
+            plotArea.Append(CreateChartShapeProperties());
             return plotArea;
         }
 

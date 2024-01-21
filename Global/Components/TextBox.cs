@@ -116,7 +116,7 @@ namespace OpenXMLOffice.Global
                     new A.Offset { X = textBoxSetting.x, Y = textBoxSetting.y },
                     new A.Extents { Cx = textBoxSetting.width, Cy = textBoxSetting.height }),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
-                textBoxSetting.shapeBackground != null ? CreateSolidFill(new List<string>() { textBoxSetting.shapeBackground }, 0) : new A.NoFill()),
+                textBoxSetting.shapeBackground != null ? CreateSolidFill(new() { hexColor = textBoxSetting.shapeBackground }) : new A.NoFill()),
                 TextBody = new P.TextBody(
                         new A.BodyProperties(),
                         new A.ListStyle(),
@@ -127,7 +127,7 @@ namespace OpenXMLOffice.Global
 
         private A.Run CreateTextRun()
         {
-            A.Run Run = new(new A.RunProperties(CreateSolidFill(new List<string>() { textBoxSetting.textColor }, 0),
+            A.Run Run = new(new A.RunProperties(CreateSolidFill(new() { hexColor = textBoxSetting.textColor }),
                         new A.LatinFont { Typeface = textBoxSetting.fontFamily },
                         new A.EastAsianFont { Typeface = textBoxSetting.fontFamily },
                         new A.ComplexScriptFont { Typeface = textBoxSetting.fontFamily })
