@@ -69,16 +69,16 @@ namespace OpenXMLOffice.Global
                     solidFill = GetSolidFill()
                 }
             };
-            C.DataLabels? DataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
+            C.DataLabels? dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
                 CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings?[seriesIndex]?.areaChartDataLabel ?? new AreaChartDataLabel(), ChartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             C.AreaChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
                 CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!, new[] { ChartDataGrouping.seriesHeaderCells! }));
             series.Append(CreateChartShapeProperties(shapePropertiesModel));
-            if (DataLabels != null)
+            if (dataLabels != null)
             {
-                series.Append(DataLabels);
+                series.Append(dataLabels);
             }
             series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));
             series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!, ChartDataGrouping.yAxisCells!));
@@ -96,8 +96,8 @@ namespace OpenXMLOffice.Global
         {
             if (areaChartDataLabel.showValue || areaChartDataLabel.showValueFromColumn || areaChartDataLabel.showCategoryName || areaChartDataLabel.showLegendKey || areaChartDataLabel.showSeriesName || dataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabels(areaChartDataLabel, dataLabelCounter);
-                DataLabels.InsertAt(new C.DataLabelPosition()
+                C.DataLabels dataLabels = CreateDataLabels(areaChartDataLabel, dataLabelCounter);
+                dataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = areaChartDataLabel.dataLabelPosition switch
                     {
@@ -105,45 +105,53 @@ namespace OpenXMLOffice.Global
                         _ => C.DataLabelPositionValues.Center,
                     }
                 }, 0);
-                DataLabels.Append(CreateChartShapeProperties());
-                A.Paragraph Paragraph = new(new A.ParagraphProperties(CreateDefaultRunProperties(new()
+                dataLabels.Append(CreateChartShapeProperties());
+                dataLabels.Append(CreateChartTextProperties(new()
                 {
-                    solidFill = new()
+                    bodyProperties = new()
                     {
-                        schemeColorModel = new()
-                        {
-                            themeColorValues = ThemeColorValues.TEXT_1,
-                            luminanceModulation = 7500,
-                            luminanceOffset = 2500
-                        }
-                    },
-                    complexScriptFont = "+mn-cs",
-                    eastAsianFont = "+mn-ea",
-                    latinFont = "+mn-lt",
-                    fontSize = (int)areaChartDataLabel.fontSize * 100,
-                    bold = areaChartDataLabel.isBold,
-                    italic = areaChartDataLabel.isItalic,
-                    underline = UnderLineValues.NONE,
-                    strike = StrikeValues.NO_STRIKE,
-                    kerning = 1200,
-                    baseline = 0,
-                })), new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.Append(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                        anchorCenter = true,
+                        anchor = TextAnchoringValues.CENTER,
+                        bottomInset = 19050,
+                        leftInset = 38100,
+                        rightInset = 38100,
+                        topInset = 19050,
+                        useParagraphSpacing = true,
+                        vertical = TextVerticalAlignmentValues.HORIZONTAL,
+                        verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+                        wrap = TextWrappingValues.SQUARE,
+                    }
+                }));
+                dataLabels.Append(CreateDrawingListStyle());
+                dataLabels.Append(CreateDrawingParagraph(new()
                 {
-                    Rotation = 0,
-                    UseParagraphSpacing = true,
-                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-                    Vertical = A.TextVerticalValues.Horizontal,
-                    Wrap = A.TextWrappingValues.Square,
-                    LeftInset = 38100,
-                    TopInset = 19050,
-                    RightInset = 38100,
-                    BottomInset = 19050,
-                    Anchor = A.TextAnchoringTypeValues.Center,
-                    AnchorCenter = true
-                }, new A.ListStyle(),
-               Paragraph));
-                return DataLabels;
+                    paragraphPropertiesModel = new()
+                    {
+                        defaultRunProperties = new()
+                        {
+                            solidFill = new()
+                            {
+                                schemeColorModel = new()
+                                {
+                                    themeColorValues = ThemeColorValues.TEXT_1,
+                                    luminanceModulation = 7500,
+                                    luminanceOffset = 2500
+                                }
+                            },
+                            complexScriptFont = "+mn-cs",
+                            eastAsianFont = "+mn-ea",
+                            latinFont = "+mn-lt",
+                            fontSize = (int)areaChartDataLabel.fontSize * 100,
+                            bold = areaChartDataLabel.isBold,
+                            italic = areaChartDataLabel.isItalic,
+                            underline = UnderLineValues.NONE,
+                            strike = StrikeValues.NO_STRIKE,
+                            kerning = 1200,
+                            baseline = 0,
+                        }
+                    }
+                }));
+                return dataLabels;
             }
             return null;
         }
@@ -176,17 +184,17 @@ namespace OpenXMLOffice.Global
         private C.AreaChart CreateAreaChart(ChartData[][] dataCols)
         {
             C.AreaChart AreaChart = new(
-                            new C.Grouping
-                            {
-                                Val = areaChartSetting.areaChartTypes switch
-                                {
-                                    AreaChartTypes.STACKED => C.GroupingValues.Stacked,
-                                    AreaChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
-                                    // Clusted
-                                    _ => C.GroupingValues.Standard,
-                                }
-                            },
-                            new C.VaryColors { Val = false });
+                new C.Grouping
+                {
+                    Val = areaChartSetting.areaChartTypes switch
+                    {
+                        AreaChartTypes.STACKED => C.GroupingValues.Stacked,
+                        AreaChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
+                        // Clusted
+                        _ => C.GroupingValues.Standard,
+                    }
+                },
+                new C.VaryColors { Val = false });
             int seriesIndex = 0;
             CreateDataSeries(dataCols, areaChartSetting.chartDataSetting).ForEach(Series =>
             {

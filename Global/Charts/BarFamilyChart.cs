@@ -62,7 +62,7 @@ namespace OpenXMLOffice.Global
                 }
                 return solidFillModel;
             }
-            C.DataLabels? DataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ? CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            C.DataLabels? dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ? CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             ShapePropertiesModel shapePropertiesModel = new()
             {
                 outline = new()
@@ -76,9 +76,9 @@ namespace OpenXMLOffice.Global
                 CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }),
                 new C.InvertIfNegative { Val = true });
             series.Append(CreateChartShapeProperties(shapePropertiesModel));
-            if (DataLabels != null)
+            if (dataLabels != null)
             {
-                series.Append(DataLabels);
+                series.Append(dataLabels);
             }
             series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
             series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
@@ -96,12 +96,12 @@ namespace OpenXMLOffice.Global
         {
             if (barChartDataLabel.showValue || barChartDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName || dataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabels(barChartDataLabel, dataLabelCounter);
+                C.DataLabels dataLabels = CreateDataLabels(barChartDataLabel, dataLabelCounter);
                 if (barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && barChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
                 {
                     throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
                 }
-                DataLabels.InsertAt(new C.DataLabelPosition()
+                dataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = barChartDataLabel.dataLabelPosition switch
                     {
@@ -111,45 +111,54 @@ namespace OpenXMLOffice.Global
                         _ => C.DataLabelPositionValues.Center
                     }
                 }, 0);
-                DataLabels.Append(CreateChartShapeProperties());
-                A.Paragraph Paragraph = new(new A.ParagraphProperties(CreateDefaultRunProperties(new()
+                dataLabels.Append(CreateChartShapeProperties());
+                dataLabels.Append(CreateChartTextProperties(new()
                 {
-                    solidFill = new()
+                    bodyProperties = new()
                     {
-                        schemeColorModel = new()
-                        {
-                            themeColorValues = ThemeColorValues.TEXT_1,
-                            luminanceModulation = 7500,
-                            luminanceOffset = 2500
-                        }
-                    },
-                    complexScriptFont = "+mn-cs",
-                    eastAsianFont = "+mn-ea",
-                    latinFont = "+mn-lt",
-                    fontSize = (int)barChartDataLabel.fontSize * 100,
-                    bold = barChartDataLabel.isBold,
-                    italic = barChartDataLabel.isItalic,
-                    underline = UnderLineValues.NONE,
-                    strike = StrikeValues.NO_STRIKE,
-                    kerning = 1200,
-                    baseline = 0,
-                })), new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.Append(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                        rotation = 0,
+                        anchorCenter = true,
+                        anchor = TextAnchoringValues.CENTER,
+                        bottomInset = 19050,
+                        leftInset = 38100,
+                        rightInset = 38100,
+                        topInset = 19050,
+                        useParagraphSpacing = true,
+                        vertical = TextVerticalAlignmentValues.HORIZONTAL,
+                        verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+                        wrap = TextWrappingValues.SQUARE,
+                    }
+                }));
+                dataLabels.Append(CreateDrawingListStyle());
+                dataLabels.Append(CreateDrawingParagraph(new()
                 {
-                    Rotation = 0,
-                    UseParagraphSpacing = true,
-                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-                    Vertical = A.TextVerticalValues.Horizontal,
-                    Wrap = A.TextWrappingValues.Square,
-                    LeftInset = 38100,
-                    TopInset = 19050,
-                    RightInset = 38100,
-                    BottomInset = 19050,
-                    Anchor = A.TextAnchoringTypeValues.Center,
-                    AnchorCenter = true
-                }, new A.ListStyle(),
-               Paragraph));
-                return DataLabels;
+                    paragraphPropertiesModel = new()
+                    {
+                        defaultRunProperties = new()
+                        {
+                            solidFill = new()
+                            {
+                                schemeColorModel = new()
+                                {
+                                    themeColorValues = ThemeColorValues.TEXT_1,
+                                    luminanceModulation = 7500,
+                                    luminanceOffset = 2500
+                                }
+                            },
+                            complexScriptFont = "+mn-cs",
+                            eastAsianFont = "+mn-ea",
+                            latinFont = "+mn-lt",
+                            fontSize = (int)barChartDataLabel.fontSize * 100,
+                            bold = barChartDataLabel.isBold,
+                            italic = barChartDataLabel.isItalic,
+                            underline = UnderLineValues.NONE,
+                            strike = StrikeValues.NO_STRIKE,
+                            kerning = 1200,
+                            baseline = 0,
+                        }
+                    }
+                }));
+                return dataLabels;
             }
             return null;
         }

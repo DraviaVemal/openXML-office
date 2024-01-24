@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
@@ -101,13 +102,7 @@ namespace OpenXMLOffice.Global
             }
             return shapeProperties;
         }
-        /// <summary>
-        /// Create Paragraph
-        /// </summary>
-        protected A.Paragraph CreateParagraph()
-        {
-            return new();
-        }
+
         /// <summary>
         /// Create Effect List
         /// </summary>
@@ -115,13 +110,7 @@ namespace OpenXMLOffice.Global
         {
             return new();
         }
-        /// <summary>
-        /// Create Text Properties
-        /// </summary>
-        protected C.TextProperties CreateTextProperties()
-        {
-            return new();
-        }
+
         /// <summary>
         /// Create Outline
         /// </summary>
@@ -212,6 +201,103 @@ namespace OpenXMLOffice.Global
                 DefaultRunProperties.Baseline = defaultRunPropertiesModel.baseline;
             }
             return DefaultRunProperties;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
+        {
+            A.Paragraph paragraph = new();
+            if (drawingParagraphModel.paragraphPropertiesModel != null)
+            {
+                paragraph.Append(
+                    CreateDrawingParagraphProperties(drawingParagraphModel.paragraphPropertiesModel),
+                    new A.EndParagraphRunProperties() { Language = "en-US" });
+            }
+            return paragraph;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private A.ParagraphProperties CreateDrawingParagraphProperties(ParagraphPropertiesModel paragraphPropertiesModel)
+        {
+            A.ParagraphProperties paragraphProperties = new();
+            if (paragraphPropertiesModel.defaultRunProperties != null)
+            {
+                paragraphProperties.Append(CreateDefaultRunProperties(paragraphPropertiesModel.defaultRunProperties));
+            }
+            return paragraphProperties;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected A.ListStyle CreateDrawingListStyle()
+        {
+            return new();
+        }
+        /// <summary>
+        ///     Create Chart Text Properties
+        /// </summary>
+        protected C.TextProperties CreateChartTextProperties(ChartTextPropertiesModel chartTextPropertiesModel)
+        {
+            C.TextProperties textProperties = new();
+            if (chartTextPropertiesModel.bodyProperties != null)
+            {
+                textProperties.Append(CreateDrawingBodyProperties(chartTextPropertiesModel.bodyProperties));
+            }
+            return textProperties;
+        }
+        /// <summary>
+        ///    Create Drawing Body Properties
+        /// </summary>
+        /// <param name="drawingBodyPropertiesModel"></param>
+        /// <returns></returns>
+        private A.BodyProperties CreateDrawingBodyProperties(DrawingBodyPropertiesModel drawingBodyPropertiesModel)
+        {
+            A.BodyProperties bodyProperties = new(new A.ShapeAutoFit())
+            {
+                Rotation = drawingBodyPropertiesModel.rotation
+            };
+            if (drawingBodyPropertiesModel.leftInset != null)
+            {
+                bodyProperties.LeftInset = drawingBodyPropertiesModel.leftInset;
+            }
+            if (drawingBodyPropertiesModel.topInset != null)
+            {
+                bodyProperties.TopInset = drawingBodyPropertiesModel.topInset;
+            }
+            if (drawingBodyPropertiesModel.rightInset != null)
+            {
+                bodyProperties.RightInset = drawingBodyPropertiesModel.rightInset;
+            }
+            if (drawingBodyPropertiesModel.bottomInset != null)
+            {
+                bodyProperties.BottomInset = drawingBodyPropertiesModel.bottomInset;
+            }
+            if (drawingBodyPropertiesModel.useParagraphSpacing != null)
+            {
+                bodyProperties.UseParagraphSpacing = drawingBodyPropertiesModel.useParagraphSpacing;
+            }
+            if (drawingBodyPropertiesModel.verticalOverflow != null)
+            {
+                bodyProperties.VerticalOverflow = drawingBodyPropertiesModel.GetTextVerticalOverflowValues((TextVerticalOverflowValues)drawingBodyPropertiesModel.verticalOverflow);
+            }
+            if (drawingBodyPropertiesModel.vertical != null)
+            {
+                bodyProperties.Vertical = drawingBodyPropertiesModel.GetTextVerticalAlignmentValues((TextVerticalAlignmentValues)drawingBodyPropertiesModel.vertical);
+            }
+            if (drawingBodyPropertiesModel.wrap != null)
+            {
+                bodyProperties.Wrap = drawingBodyPropertiesModel.GetWrapingValues((TextWrappingValues)drawingBodyPropertiesModel.wrap);
+            }
+            if (drawingBodyPropertiesModel.anchor != null)
+            {
+                bodyProperties.Anchor = drawingBodyPropertiesModel.GetAnchorValues((TextAnchoringValues)drawingBodyPropertiesModel.anchor);
+            }
+            return bodyProperties;
         }
 
         #endregion Protected Methods

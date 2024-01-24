@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 
 namespace OpenXMLOffice.Global
@@ -123,6 +124,94 @@ namespace OpenXMLOffice.Global
         /// </summary>
         THIN_THICK,
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum TextVerticalAlignmentValues
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        EAST_ASIAN_VERTICAL,
+        /// <summary>
+        /// 
+        /// </summary>
+        HORIZONTAL,
+        /// <summary>
+        /// 
+        /// </summary>
+        MONGOLIAN_VERTICAL,
+        /// <summary>
+        /// 
+        /// </summary>
+        VERTICAL,
+        /// <summary>
+        /// 
+        /// </summary>
+        VERTICAL_270,
+        /// <summary>
+        /// 
+        /// </summary>
+        WORD_ART_LEFT_TO_RIGHT,
+        /// <summary>
+        /// 
+        /// </summary>
+        WORD_ART_VERTICAL,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum TextWrappingValues
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        NONE,
+        /// <summary>
+        /// 
+        /// </summary>
+        SQUARE,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum TextVerticalOverflowValues
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        CLIP,
+        /// <summary>
+        /// 
+        /// </summary>
+        ELLIPSIS,
+        /// <summary>
+        /// 
+        /// </summary>
+        OVERFLOW,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum TextAnchoringValues
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        BOTTOM,
+        /// <summary>
+        /// 
+        /// </summary>
+        TOP,
+        /// <summary>
+        /// 
+        /// </summary>
+        CENTER
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -461,5 +550,132 @@ namespace OpenXMLOffice.Global
                 _ => A.TextUnderlineValues.None
             };
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DrawingParagraphModel
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public ParagraphPropertiesModel? paragraphPropertiesModel = null;
+    }
+
+    /// <summary>
+    /// /
+    /// </summary>
+    public class ParagraphPropertiesModel
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public DefaultRunPropertiesModel? defaultRunProperties = null;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DrawingBodyPropertiesModel
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int rotation = 0;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? leftInset = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? topInset = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? rightInset = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? bottomInset = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool? useParagraphSpacing = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public TextVerticalOverflowValues? verticalOverflow = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public TextVerticalAlignmentValues? vertical = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public TextWrappingValues? wrap = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public TextAnchoringValues? anchor = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool? anchorCenter = null;
+
+        internal A.TextAnchoringTypeValues GetAnchorValues(TextAnchoringValues textAnchoring)
+        {
+            return textAnchoring switch
+            {
+                TextAnchoringValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
+                TextAnchoringValues.CENTER => A.TextAnchoringTypeValues.Center,
+                _ => A.TextAnchoringTypeValues.Top
+            };
+        }
+
+        internal A.TextVerticalValues GetTextVerticalAlignmentValues(TextVerticalAlignmentValues textVerticalAlignment)
+        {
+            return textVerticalAlignment switch
+            {
+                TextVerticalAlignmentValues.EAST_ASIAN_VERTICAL => A.TextVerticalValues.EastAsianVetical,
+                TextVerticalAlignmentValues.HORIZONTAL => A.TextVerticalValues.Horizontal,
+                TextVerticalAlignmentValues.MONGOLIAN_VERTICAL => A.TextVerticalValues.MongolianVertical,
+                TextVerticalAlignmentValues.VERTICAL => A.TextVerticalValues.Vertical,
+                TextVerticalAlignmentValues.VERTICAL_270 => A.TextVerticalValues.Vertical270,
+                TextVerticalAlignmentValues.WORD_ART_LEFT_TO_RIGHT => A.TextVerticalValues.WordArtVertical,
+                _ => A.TextVerticalValues.WordArtVertical
+            };
+        }
+
+        internal A.TextVerticalOverflowValues GetTextVerticalOverflowValues(TextVerticalOverflowValues textVerticalOverflow)
+        {
+            return textVerticalOverflow switch
+            {
+                TextVerticalOverflowValues.CLIP => A.TextVerticalOverflowValues.Clip,
+                TextVerticalOverflowValues.ELLIPSIS => A.TextVerticalOverflowValues.Ellipsis,
+                _ => A.TextVerticalOverflowValues.Overflow
+            };
+        }
+
+        internal A.TextWrappingValues GetWrapingValues(TextWrappingValues textWrapping)
+        {
+            return textWrapping switch
+            {
+                TextWrappingValues.NONE => A.TextWrappingValues.None,
+                _ => A.TextWrappingValues.Square
+            };
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ChartTextPropertiesModel
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public DrawingBodyPropertiesModel? bodyProperties = null;
     }
 }

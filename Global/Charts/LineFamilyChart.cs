@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
-using C16 = DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
@@ -118,7 +117,7 @@ namespace OpenXMLOffice.Global
                     }
                 }
             };
-            C.DataLabels? DataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ? CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            C.DataLabels? dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ? CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             SolidFillModel GetSolidFill()
             {
                 SolidFillModel solidFillModel = new();
@@ -153,9 +152,9 @@ namespace OpenXMLOffice.Global
             };
             series.Append(CreateChartShapeProperties(shapePropertiesModel));
             series.Append(CreateMarker(marketModel));
-            if (DataLabels != null)
+            if (dataLabels != null)
             {
-                series.Append(DataLabels);
+                series.Append(dataLabels);
             }
             series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
             series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
@@ -173,8 +172,8 @@ namespace OpenXMLOffice.Global
         {
             if (lineChartDataLabel.showValue || lineChartDataLabel.showValueFromColumn || lineChartDataLabel.showCategoryName || lineChartDataLabel.showLegendKey || lineChartDataLabel.showSeriesName || dataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabels(lineChartDataLabel, dataLabelCounter);
-                DataLabels.InsertAt(new C.DataLabelPosition()
+                C.DataLabels dataLabels = CreateDataLabels(lineChartDataLabel, dataLabelCounter);
+                dataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = lineChartDataLabel.dataLabelPosition switch
                     {
@@ -186,45 +185,54 @@ namespace OpenXMLOffice.Global
                         _ => C.DataLabelPositionValues.Center,
                     }
                 }, 0);
-                DataLabels.Append(CreateChartShapeProperties());
-                A.Paragraph Paragraph = new(new A.ParagraphProperties(CreateDefaultRunProperties(new()
+                dataLabels.Append(CreateChartShapeProperties());
+                dataLabels.Append(CreateChartTextProperties(new()
                 {
-                    solidFill = new()
+                    bodyProperties = new()
                     {
-                        schemeColorModel = new()
-                        {
-                            themeColorValues = ThemeColorValues.TEXT_1,
-                            luminanceModulation = 7500,
-                            luminanceOffset = 2500
-                        }
-                    },
-                    complexScriptFont = "+mn-cs",
-                    eastAsianFont = "+mn-ea",
-                    latinFont = "+mn-lt",
-                    fontSize = (int)lineChartDataLabel.fontSize * 100,
-                    bold = lineChartDataLabel.isBold,
-                    italic = lineChartDataLabel.isItalic,
-                    underline = UnderLineValues.NONE,
-                    strike = StrikeValues.NO_STRIKE,
-                    kerning = 1200,
-                    baseline = 0,
-                })), new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.Append(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                        rotation = 0,
+                        anchorCenter = true,
+                        anchor = TextAnchoringValues.CENTER,
+                        bottomInset = 19050,
+                        leftInset = 38100,
+                        rightInset = 38100,
+                        topInset = 19050,
+                        useParagraphSpacing = true,
+                        vertical = TextVerticalAlignmentValues.HORIZONTAL,
+                        verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+                        wrap = TextWrappingValues.SQUARE,
+                    }
+                }));
+                dataLabels.Append(CreateDrawingListStyle());
+                dataLabels.Append(CreateDrawingParagraph(new()
                 {
-                    Rotation = 0,
-                    UseParagraphSpacing = true,
-                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-                    Vertical = A.TextVerticalValues.Horizontal,
-                    Wrap = A.TextWrappingValues.Square,
-                    LeftInset = 38100,
-                    TopInset = 19050,
-                    RightInset = 38100,
-                    BottomInset = 19050,
-                    Anchor = A.TextAnchoringTypeValues.Center,
-                    AnchorCenter = true
-                }, new A.ListStyle(),
-               Paragraph));
-                return DataLabels;
+                    paragraphPropertiesModel = new()
+                    {
+                        defaultRunProperties = new()
+                        {
+                            solidFill = new()
+                            {
+                                schemeColorModel = new()
+                                {
+                                    themeColorValues = ThemeColorValues.TEXT_1,
+                                    luminanceModulation = 7500,
+                                    luminanceOffset = 2500
+                                }
+                            },
+                            complexScriptFont = "+mn-cs",
+                            eastAsianFont = "+mn-ea",
+                            latinFont = "+mn-lt",
+                            fontSize = (int)lineChartDataLabel.fontSize * 100,
+                            bold = lineChartDataLabel.isBold,
+                            italic = lineChartDataLabel.isItalic,
+                            underline = UnderLineValues.NONE,
+                            strike = StrikeValues.NO_STRIKE,
+                            kerning = 1200,
+                            baseline = 0,
+                        }
+                    }
+                }));
+                return dataLabels;
             }
             return null;
         }

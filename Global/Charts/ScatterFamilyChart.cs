@@ -43,7 +43,7 @@ namespace OpenXMLOffice.Global
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            OpenXmlCompositeElement Chart = scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ? new C.BubbleChart() : new C.ScatterChart(
+            OpenXmlCompositeElement chart = scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ? new C.BubbleChart() : new C.ScatterChart(
                 new C.ScatterStyle
                 {
                     Val = scatterChartSetting.scatterChartTypes switch
@@ -56,7 +56,7 @@ namespace OpenXMLOffice.Global
                         _ => C.ScatterStyleValues.LineMarker,
                     }
                 });
-            Chart.Append(new C.VaryColors() { Val = false });
+            chart.Append(new C.VaryColors() { Val = false });
             if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
             {
                 scatterChartSetting.chartDataSetting.is3Ddata = true;
@@ -68,22 +68,22 @@ namespace OpenXMLOffice.Global
             int seriesIndex = 0;
             CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting).ForEach(Series =>
             {
-                Chart.Append(CreateScatterChartSeries(seriesIndex, Series));
+                chart.Append(CreateScatterChartSeries(seriesIndex, Series));
                 seriesIndex++;
             });
             C.DataLabels? DataLabels = CreateScatterDataLabels(scatterChartSetting.scatterChartDataLabel);
             if (DataLabels != null)
             {
-                Chart.Append(DataLabels);
+                chart.Append(DataLabels);
             }
             if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
             {
-                Chart.Append(new C.BubbleScale() { Val = 100 });
-                Chart.Append(new C.ShowNegativeBubbles() { Val = false });
+                chart.Append(new C.BubbleScale() { Val = 100 });
+                chart.Append(new C.ShowNegativeBubbles() { Val = false });
             }
-            Chart.Append(new C.AxisId { Val = 1362418656 });
-            Chart.Append(new C.AxisId { Val = 1358349936 });
-            plotArea.Append(Chart);
+            chart.Append(new C.AxisId { Val = 1362418656 });
+            chart.Append(new C.AxisId { Val = 1358349936 });
+            plotArea.Append(chart);
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
                 id = 1362418656,
@@ -206,9 +206,9 @@ namespace OpenXMLOffice.Global
         {
             if (scatterChartDataLabel.showValue || scatterChartDataLabel.showValueFromColumn || scatterChartDataLabel.showCategoryName || scatterChartDataLabel.showLegendKey || scatterChartDataLabel.showSeriesName || scatterChartDataLabel.showBubbleSize || dataLabelCounter > 0)
             {
-                C.DataLabels DataLabels = CreateDataLabels(scatterChartDataLabel, dataLabelCounter);
-                DataLabels.Append(new C.ShowBubbleSize { Val = scatterChartDataLabel.showBubbleSize });
-                DataLabels.InsertAt(new C.DataLabelPosition()
+                C.DataLabels dataLabels = CreateDataLabels(scatterChartDataLabel, dataLabelCounter);
+                dataLabels.Append(new C.ShowBubbleSize { Val = scatterChartDataLabel.showBubbleSize });
+                dataLabels.InsertAt(new C.DataLabelPosition()
                 {
                     Val = scatterChartDataLabel.dataLabelPosition switch
                     {
@@ -220,45 +220,54 @@ namespace OpenXMLOffice.Global
                         _ => C.DataLabelPositionValues.Center,
                     }
                 }, 0);
-                DataLabels.Append(CreateChartShapeProperties());
-                A.Paragraph Paragraph = new(new A.ParagraphProperties(CreateDefaultRunProperties(new()
+                dataLabels.Append(CreateChartShapeProperties());
+                dataLabels.Append(CreateChartTextProperties(new()
                 {
-                    solidFill = new()
+                    bodyProperties = new()
                     {
-                        schemeColorModel = new()
-                        {
-                            themeColorValues = ThemeColorValues.TEXT_1,
-                            luminanceModulation = 7500,
-                            luminanceOffset = 2500
-                        }
-                    },
-                    complexScriptFont = "+mn-cs",
-                    eastAsianFont = "+mn-ea",
-                    latinFont = "+mn-lt",
-                    fontSize = (int)scatterChartDataLabel.fontSize * 100,
-                    bold = scatterChartDataLabel.isBold,
-                    italic = scatterChartDataLabel.isItalic,
-                    underline = UnderLineValues.NONE,
-                    strike = StrikeValues.NO_STRIKE,
-                    kerning = 1200,
-                    baseline = 0,
-                })), new A.EndParagraphRunProperties() { Language = "en-US" });
-                DataLabels.Append(new C.TextProperties(new A.BodyProperties(new A.ShapeAutoFit())
+                        rotation = 0,
+                        anchorCenter = true,
+                        anchor = TextAnchoringValues.CENTER,
+                        bottomInset = 19050,
+                        leftInset = 38100,
+                        rightInset = 38100,
+                        topInset = 19050,
+                        useParagraphSpacing = true,
+                        vertical = TextVerticalAlignmentValues.HORIZONTAL,
+                        verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+                        wrap = TextWrappingValues.SQUARE,
+                    }
+                }));
+                dataLabels.Append(CreateDrawingListStyle());
+                dataLabels.Append(CreateDrawingParagraph(new()
                 {
-                    Rotation = 0,
-                    UseParagraphSpacing = true,
-                    VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-                    Vertical = A.TextVerticalValues.Horizontal,
-                    Wrap = A.TextWrappingValues.Square,
-                    LeftInset = 38100,
-                    TopInset = 19050,
-                    RightInset = 38100,
-                    BottomInset = 19050,
-                    Anchor = A.TextAnchoringTypeValues.Center,
-                    AnchorCenter = true
-                }, new A.ListStyle(),
-               Paragraph));
-                return DataLabels;
+                    paragraphPropertiesModel = new()
+                    {
+                        defaultRunProperties = new()
+                        {
+                            solidFill = new()
+                            {
+                                schemeColorModel = new()
+                                {
+                                    themeColorValues = ThemeColorValues.TEXT_1,
+                                    luminanceModulation = 7500,
+                                    luminanceOffset = 2500
+                                }
+                            },
+                            complexScriptFont = "+mn-cs",
+                            eastAsianFont = "+mn-ea",
+                            latinFont = "+mn-lt",
+                            fontSize = (int)scatterChartDataLabel.fontSize * 100,
+                            bold = scatterChartDataLabel.isBold,
+                            italic = scatterChartDataLabel.isItalic,
+                            underline = UnderLineValues.NONE,
+                            strike = StrikeValues.NO_STRIKE,
+                            kerning = 1200,
+                            baseline = 0,
+                        }
+                    }
+                }));
+                return dataLabels;
             }
             return null;
         }
