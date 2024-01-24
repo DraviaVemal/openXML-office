@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
@@ -11,6 +10,8 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class BarFamilyChart : ChartBase
     {
+        private const int DefaultGapWidth = 150;
+        private const int DefaultOverlap = 100;
         #region Protected Fields
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -78,12 +79,13 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
             }
-            C.DataLabels? dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ? CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            C.DataLabels? dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ?
+                CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             ShapePropertiesModel shapePropertiesModel = new()
             {
                 solidFill = GetFillSolidFill(),
@@ -168,7 +170,7 @@ namespace OpenXMLOffice.Global
                                 complexScriptFont = "+mn-cs",
                                 eastAsianFont = "+mn-ea",
                                 latinFont = "+mn-lt",
-                                fontSize = (int)barChartDataLabel.fontSize * 100,
+                                fontSize = ConverterUtils.FontSizeToFontSize(barChartDataLabel.fontSize),
                                 bold = barChartDataLabel.isBold,
                                 italic = barChartDataLabel.isItalic,
                                 underline = UnderLineValues.NONE,
@@ -214,8 +216,8 @@ namespace OpenXMLOffice.Global
             }
             else
             {
-                BarChart.Append(new C.GapWidth { Val = 150 });
-                BarChart.Append(new C.Overlap { Val = 100 });
+                BarChart.Append(new C.GapWidth { Val = DefaultGapWidth });
+                BarChart.Append(new C.Overlap { Val = DefaultOverlap });
             }
             C.DataLabels? DataLabels = CreateBarDataLabels(barChartSetting.barChartDataLabel);
             if (DataLabels != null)

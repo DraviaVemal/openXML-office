@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
@@ -106,7 +105,7 @@ namespace OpenXMLOffice.Global
                     {
                         schemeColorModel = new()
                         {
-                            themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                            themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                         }
                     },
                     outline = new()
@@ -115,13 +114,14 @@ namespace OpenXMLOffice.Global
                         {
                             schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                             }
                         }
                     }
                 };
             }
-            C.DataLabels? dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ? CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            C.DataLabels? dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ?
+                CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             SolidFillModel GetSolidFill()
             {
                 SolidFillModel solidFillModel = new();
@@ -138,7 +138,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -224,7 +224,7 @@ namespace OpenXMLOffice.Global
                                 complexScriptFont = "+mn-cs",
                                 eastAsianFont = "+mn-ea",
                                 latinFont = "+mn-lt",
-                                fontSize = (int)lineChartDataLabel.fontSize * 100,
+                                fontSize = ConverterUtils.FontSizeToFontSize(lineChartDataLabel.fontSize),
                                 bold = lineChartDataLabel.isBold,
                                 italic = lineChartDataLabel.isItalic,
                                 underline = UnderLineValues.NONE,

@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
@@ -11,6 +10,8 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class ColumnFamilyChart : ChartBase
     {
+        private const int DefaultGapWidth = 150;
+        private const int DefaultOverlap = 100;
         #region Protected Fields
 
         /// <summary>
@@ -69,8 +70,8 @@ namespace OpenXMLOffice.Global
             }
             else
             {
-                ColumnChart.Append(new C.GapWidth { Val = 150 });
-                ColumnChart.Append(new C.Overlap { Val = 100 });
+                ColumnChart.Append(new C.GapWidth { Val = DefaultGapWidth });
+                ColumnChart.Append(new C.Overlap { Val = DefaultOverlap });
             }
             C.DataLabels? DataLabels = CreateColumnDataLabels(columnChartSetting.columnChartDataLabel);
             if (DataLabels != null)
@@ -118,7 +119,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -139,7 +140,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -152,7 +153,8 @@ namespace OpenXMLOffice.Global
                     solidFill = GetOutlineSolidFill()
                 }
             };
-            C.DataLabels? dataLabels = seriesIndex < columnChartSetting.columnChartSeriesSettings.Count ? CreateColumnDataLabels(columnChartSetting.columnChartSeriesSettings[seriesIndex]?.columnChartDataLabel ?? new ColumnChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            C.DataLabels? dataLabels = seriesIndex < columnChartSetting.columnChartSeriesSettings.Count ?
+                CreateColumnDataLabels(columnChartSetting.columnChartSeriesSettings[seriesIndex]?.columnChartDataLabel ?? new ColumnChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
@@ -225,7 +227,7 @@ namespace OpenXMLOffice.Global
                                 complexScriptFont = "+mn-cs",
                                 eastAsianFont = "+mn-ea",
                                 latinFont = "+mn-lt",
-                                fontSize = (int)columnChartDataLabel.fontSize * 100,
+                                fontSize = ConverterUtils.FontSizeToFontSize(columnChartDataLabel.fontSize),
                                 bold = columnChartDataLabel.isBold,
                                 italic = columnChartDataLabel.isItalic,
                                 underline = UnderLineValues.NONE,

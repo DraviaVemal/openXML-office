@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
@@ -57,7 +56,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -78,7 +77,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -161,7 +160,7 @@ namespace OpenXMLOffice.Global
                                 complexScriptFont = "+mn-cs",
                                 eastAsianFont = "+mn-ea",
                                 latinFont = "+mn-lt",
-                                fontSize = (int)areaChartDataLabel.fontSize * 100,
+                                fontSize = ConverterUtils.FontSizeToFontSize(areaChartDataLabel.fontSize),
                                 bold = areaChartDataLabel.isBold,
                                 italic = areaChartDataLabel.isItalic,
                                 underline = UnderLineValues.NONE,

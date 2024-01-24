@@ -123,6 +123,14 @@ namespace OpenXMLOffice.Global
             return (long)Math.Round((double)pixels / GlobalConstants.defaultDPI * 914400);
         }
 
-        #endregion Public Methods
+        /// <summary>
+        /// 
+        /// </summary>
+        public static int FontSizeToFontSize(float fontSize)
+        {
+            return (int)fontSize * 100;
+
+            #endregion Public Methods
+        }
     }
 }

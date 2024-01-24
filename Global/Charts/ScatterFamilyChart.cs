@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
@@ -101,7 +100,8 @@ namespace OpenXMLOffice.Global
 
         private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
-            C.DataLabels? dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ? CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            C.DataLabels? dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
+                CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             SolidFillModel GetSolidFill()
             {
                 SolidFillModel solidFillModel = new();
@@ -118,7 +118,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -133,7 +133,7 @@ namespace OpenXMLOffice.Global
                     {
                         schemeColorModel = new()
                         {
-                            themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                            themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                         }
                     },
                     outline = new()
@@ -142,7 +142,7 @@ namespace OpenXMLOffice.Global
                         {
                             schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                             }
                         }
                     }
@@ -165,7 +165,7 @@ namespace OpenXMLOffice.Global
                 {
                     schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
                         tint = 75000,
 
                     }
@@ -255,7 +255,7 @@ namespace OpenXMLOffice.Global
                                 complexScriptFont = "+mn-cs",
                                 eastAsianFont = "+mn-ea",
                                 latinFont = "+mn-lt",
-                                fontSize = (int)scatterChartDataLabel.fontSize * 100,
+                                fontSize = ConverterUtils.FontSizeToFontSize(scatterChartDataLabel.fontSize),
                                 bold = scatterChartDataLabel.isBold,
                                 italic = scatterChartDataLabel.isItalic,
                                 underline = UnderLineValues.NONE,

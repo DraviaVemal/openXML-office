@@ -132,7 +132,7 @@ namespace OpenXMLOffice.Global
                         new A.EastAsianFont { Typeface = textBoxSetting.fontFamily },
                         new A.ComplexScriptFont { Typeface = textBoxSetting.fontFamily })
             {
-                FontSize = textBoxSetting.fontSize * 100,
+                FontSize = ConverterUtils.FontSizeToFontSize(textBoxSetting.fontSize),
                 Bold = textBoxSetting.isBold,
                 Italic = textBoxSetting.isItalic,
                 Underline = textBoxSetting.isUnderline ? A.TextUnderlineValues.Single : A.TextUnderlineValues.None,

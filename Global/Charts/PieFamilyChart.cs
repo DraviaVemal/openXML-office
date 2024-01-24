@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
@@ -75,7 +74,8 @@ namespace OpenXMLOffice.Global
 
         private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
-            C.DataLabels? dataLabels = seriesIndex < pieChartSetting.pieChartSeriesSettings.Count ? CreatePieDataLabels(pieChartSetting.pieChartSeriesSettings?[seriesIndex]?.pieChartDataLabel ?? new PieChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+            C.DataLabels? dataLabels = seriesIndex < pieChartSetting.pieChartSeriesSettings.Count ?
+                CreatePieDataLabels(pieChartSetting.pieChartSeriesSettings?[seriesIndex]?.pieChartDataLabel ?? new PieChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             C.PieChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
@@ -89,7 +89,7 @@ namespace OpenXMLOffice.Global
                     {
                         schemeColorModel = new()
                         {
-                            themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % 6),
+                            themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColurCount),
                         }
                     }
                 };
@@ -101,7 +101,7 @@ namespace OpenXMLOffice.Global
                         {
                             schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % 6),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColurCount),
                             }
 
                         }
@@ -182,7 +182,7 @@ namespace OpenXMLOffice.Global
                                 complexScriptFont = "+mn-cs",
                                 eastAsianFont = "+mn-ea",
                                 latinFont = "+mn-lt",
-                                fontSize = (int)pieChartDataLabel.fontSize * 100,
+                                fontSize = ConverterUtils.FontSizeToFontSize(pieChartDataLabel.fontSize),
                                 bold = pieChartDataLabel.isBold,
                                 italic = pieChartDataLabel.isItalic,
                                 underline = UnderLineValues.NONE,
