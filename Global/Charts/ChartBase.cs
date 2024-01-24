@@ -242,7 +242,7 @@ public class ChartBase : CommonProperties
                     }).GetTextBoxBaseRun());
                 Paragraph.Append(CreateField("VALUE", "[VALUE]"));
             }
-            Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-US" });
+            Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });
             dataLabels.Append(new C.DataLabel(
                 new C.Index() { Val = (uint)i },
                 new C.SeriesText(
@@ -527,7 +527,7 @@ public class ChartBase : CommonProperties
             {
                 C.StringPoint stringPoint = new()
                 {
-                    Index = (UInt32Value)(uint)count
+                    Index = (UInt32Value)(uint)count,
                 };
                 stringPoint.AppendChild(new C.NumericValue(Cell.value ?? ""));
                 dataLabelsRangeChache.AppendChild(stringPoint);
@@ -555,13 +555,13 @@ public class ChartBase : CommonProperties
             int count = 0;
             foreach (ChartData Cell in cells)
             {
-                C.NumericPoint stringPoint = new()
+                C.NumericPoint numericPoint = new()
                 {
                     Index = (UInt32Value)(uint)count,
-                    FormatCode = Cell.numberFormat
+                    FormatCode = Cell.numberFormat,
                 };
-                stringPoint.AppendChild(new C.NumericValue(Cell.value ?? ""));
-                numberingCache.AppendChild(stringPoint);
+                numericPoint.AppendChild(new C.NumericValue(Cell.value ?? ""));
+                numberingCache.AppendChild(numericPoint);
                 ++count;
             }
             return numberingCache;
@@ -712,7 +712,7 @@ public class ChartBase : CommonProperties
         };
         chartSpace.EditingLanguage = new C.EditingLanguage()
         {
-            Val = "en-US"
+            Val = "en-IN"
         };
         return chartSpace;
     }
@@ -720,7 +720,7 @@ public class ChartBase : CommonProperties
     private static A.Field CreateField(string type, string text)
     {
         return new A.Field(
-            new A.RunProperties() { Language = "en-US" },
+            new A.RunProperties() { Language = "en-IN" },
             new A.ParagraphProperties(),
             new A.Text()
             {

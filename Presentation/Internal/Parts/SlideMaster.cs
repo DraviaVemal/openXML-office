@@ -167,7 +167,7 @@ namespace OpenXMLOffice.Presentation
             bodyStyle.Append(bodyLevelParagraphProperties);
             P.OtherStyle otherStyle = new();
             A.DefaultParagraphProperties otherDefaultParagraphProperties = new();
-            A.DefaultRunProperties otherDefaultRunProperties = new() { Language = "en-US" };
+            A.DefaultRunProperties otherDefaultRunProperties = new() { Language = "en-IN" };
             solidFill = new A.SolidFill();
             schemeColor = new A.SchemeColor { Val = A.SchemeColorValues.Text1 };
             solidFill.Append(schemeColor);

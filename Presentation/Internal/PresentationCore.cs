@@ -131,7 +131,7 @@ namespace OpenXMLOffice.Presentation
         {
             P.DefaultTextStyle defaultTextStyle = new();
             A.DefaultParagraphProperties defaultParagraphProperties = new();
-            A.DefaultRunProperties defaultRunProperties = new() { Language = "en-US" };
+            A.DefaultRunProperties defaultRunProperties = new() { Language = "en-IN" };
             defaultParagraphProperties.Append(defaultRunProperties);
             defaultTextStyle.Append(defaultParagraphProperties);
             A.Level1ParagraphProperties levelParagraphProperties = new()

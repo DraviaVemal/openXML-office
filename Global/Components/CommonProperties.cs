@@ -214,7 +214,7 @@ namespace OpenXMLOffice.Global
             {
                 paragraph.Append(
                     CreateDrawingParagraphProperties(drawingParagraphModel.paragraphPropertiesModel),
-                    new A.EndParagraphRunProperties() { Language = "en-US" });
+                    new A.EndParagraphRunProperties() { Language = "en-IN" });
             }
             return paragraph;
         }

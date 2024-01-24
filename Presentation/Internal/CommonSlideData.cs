@@ -134,7 +134,7 @@ namespace OpenXMLOffice.Presentation
                 new A.ListStyle(),
                 new A.Paragraph(
                     new A.Run(
-                        new A.RunProperties { Language = "en-US" },
+                        new A.RunProperties { Language = "en-IN" },
                         new A.Text { Text = "Click to edit Master title style" }
                     ),
                     new A.EndParagraphRunProperties { Language = "en-IN" }
@@ -168,35 +168,35 @@ namespace OpenXMLOffice.Presentation
                 new A.Paragraph(
                     new A.ParagraphProperties { Level = 0 },
                     new A.Run(
-                        new A.RunProperties { Language = "en-US" },
+                        new A.RunProperties { Language = "en-IN" },
                         new A.Text("Click to edit Master text styles")
                     )
                 ),
                 new A.Paragraph(
                     new A.ParagraphProperties { Level = 1 },
                     new A.Run(
-                        new A.RunProperties { Language = "en-US" },
+                        new A.RunProperties { Language = "en-IN" },
                         new A.Text("Second Level")
                     )
                 ),
                 new A.Paragraph(
                     new A.ParagraphProperties { Level = 2 },
                     new A.Run(
-                        new A.RunProperties { Language = "en-US" },
+                        new A.RunProperties { Language = "en-IN" },
                         new A.Text("Third Level")
                     )
                 ),
                 new A.Paragraph(
                     new A.ParagraphProperties { Level = 3 },
                     new A.Run(
-                        new A.RunProperties { Language = "en-US" },
+                        new A.RunProperties { Language = "en-IN" },
                         new A.Text("Fourth Level")
                     )
                 ),
                 new A.Paragraph(
                     new A.ParagraphProperties { Level = 4 },
                     new A.Run(
-                        new A.RunProperties { Language = "en-US" },
+                        new A.RunProperties { Language = "en-IN" },
                         new A.Text("Fifth Level")
                     ),
                     new A.EndParagraphRunProperties()

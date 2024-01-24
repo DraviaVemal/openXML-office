@@ -61,7 +61,12 @@ namespace OpenXMLOffice.Tests
             //3
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new AreaChartSetting()
             {
-                areaChartTypes = AreaChartTypes.PERCENT_STACKED
+                title = "",
+                areaChartTypes = AreaChartTypes.PERCENT_STACKED,
+                chartDataSetting = new()
+                {
+                    chartDataColumnEnd = 1
+                }
             });
             //4
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
