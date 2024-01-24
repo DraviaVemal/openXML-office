@@ -231,7 +231,7 @@ namespace OpenXMLOffice.Excel
         /// <returns>
         /// The CellValues enumeration representing the cell data type.
         /// </returns>
-        private CellValues GetCellValues(CellDataType cellDataType)
+        private static CellValues GetCellValues(CellDataType cellDataType)
         {
             return cellDataType switch
             {

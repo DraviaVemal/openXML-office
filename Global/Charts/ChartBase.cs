@@ -180,7 +180,7 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <returns>
     /// </returns>
-    protected CS.ChartStyle CreateChartStyles()
+    protected static CS.ChartStyle CreateChartStyles()
     {
         ChartStyle ChartStyle = new();
         return ChartStyle.CreateChartStyles();
@@ -191,10 +191,10 @@ public class ChartBase : CommonProperties
     /// </summary>
     /// <returns>
     /// </returns>
-    protected CS.ColorStyle CreateColorStyles()
+    protected static CS.ColorStyle CreateColorStyles()
     {
         ChartColor ChartColor = new();
-        return ChartColor.CreateColorStyles();
+        return Global.ChartColor.CreateColorStyles();
     }
 
     /// <summary>
@@ -487,7 +487,7 @@ public class ChartBase : CommonProperties
 
     #region Private Methods
 
-    private C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] cells)
+    private static C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] cells)
     {
         try
         {
@@ -517,7 +517,7 @@ public class ChartBase : CommonProperties
         }
     }
 
-    private C.NumberingCache AddNumberCacheValue(ChartData[] cells)
+    private static C.NumberingCache AddNumberCacheValue(ChartData[] cells)
     {
         try
         {
@@ -548,7 +548,7 @@ public class ChartBase : CommonProperties
         }
     }
 
-    private C.StringCache AddStringCacheValue(ChartData[] cells)
+    private static C.StringCache AddStringCacheValue(ChartData[] cells)
     {
         try
         {
@@ -670,7 +670,7 @@ public class ChartBase : CommonProperties
         return legend;
     }
 
-    private C.ChartSpace CreateChartSpace()
+    private static C.ChartSpace CreateChartSpace()
     {
         C.ChartSpace ChartSpace = new();
         ChartSpace.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
@@ -692,7 +692,7 @@ public class ChartBase : CommonProperties
         return ChartSpace;
     }
 
-    private A.Field CreateField(string type, string text)
+    private static A.Field CreateField(string type, string text)
     {
         return new A.Field(
             new A.RunProperties() { Language = "en-US" },
@@ -784,7 +784,7 @@ public class ChartBase : CommonProperties
     {
         C.Marker marker = new()
         {
-            Symbol = new() { Val = marketModel.GetMarkerStyleValues(marketModel.markerShapeValues) },
+            Symbol = new() { Val = MarkerModel.GetMarkerStyleValues(marketModel.markerShapeValues) },
         };
         if (marketModel.markerShapeValues != MarkerModel.MarkerShapeValues.NONE)
         {

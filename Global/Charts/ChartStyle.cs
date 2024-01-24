@@ -57,7 +57,7 @@ internal class ChartStyle
 
     #region Private Methods
 
-    private CS.AxisTitle CreateAxisTitle()
+    private static CS.AxisTitle CreateAxisTitle()
     {
         CS.AxisTitle axisTitle = new();
         axisTitle.Append(new CS.LineReference { Index = (UInt32Value)0 });
@@ -74,7 +74,7 @@ internal class ChartStyle
         return axisTitle;
     }
 
-    private CS.CategoryAxis CreateCategoryAxis()
+    private static CS.CategoryAxis CreateCategoryAxis()
     {
         CS.CategoryAxis categoryAxis = new();
         categoryAxis.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -102,7 +102,7 @@ internal class ChartStyle
         return categoryAxis;
     }
 
-    private CS.ChartArea CreateChartArea()
+    private static CS.ChartArea CreateChartArea()
     {
         CS.ChartArea chartArea = new();
         chartArea.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -130,7 +130,7 @@ internal class ChartStyle
         return chartArea;
     }
 
-    private CS.DataLabel CreateDataLabel()
+    private static CS.DataLabel CreateDataLabel()
     {
         CS.DataLabel dataLabel = new();
         dataLabel.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -147,7 +147,7 @@ internal class ChartStyle
         return dataLabel;
     }
 
-    private CS.DataLabelCallout CreateDataLabelCallout()
+    private static CS.DataLabelCallout CreateDataLabelCallout()
     {
         CS.DataLabelCallout dataLabelCallout = new();
         dataLabelCallout.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -193,7 +193,7 @@ internal class ChartStyle
         return dataLabelCallout;
     }
 
-    private CS.DataPoint CreateDataPoint()
+    private static CS.DataPoint CreateDataPoint()
     {
         CS.DataPoint dataPoint = new();
         dataPoint.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -207,7 +207,7 @@ internal class ChartStyle
         return dataPoint;
     }
 
-    private CS.DataPoint3D CreateDataPoint3D()
+    private static CS.DataPoint3D CreateDataPoint3D()
     {
         CS.DataPoint3D dataPoint3D = new();
         dataPoint3D.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -221,7 +221,7 @@ internal class ChartStyle
         return dataPoint3D;
     }
 
-    private CS.DataPointLine CreateDataPointLine()
+    private static CS.DataPointLine CreateDataPointLine()
     {
         CS.DataPointLine dataPointLine = new();
         CS.LineReference lnRef = new() { Index = (UInt32Value)0U };
@@ -242,7 +242,7 @@ internal class ChartStyle
         return dataPointLine;
     }
 
-    private CS.DataPointMarker CreateDataPointMarker()
+    private static CS.DataPointMarker CreateDataPointMarker()
     {
         CS.DataPointMarker dataPointMarker = new();
         CS.LineReference lnRef = new() { Index = (UInt32Value)0U };
@@ -264,7 +264,7 @@ internal class ChartStyle
         return dataPointMarker;
     }
 
-    private CS.DataPointWireframe CreateDataPointWireframe()
+    private static CS.DataPointWireframe CreateDataPointWireframe()
     {
         return new CS.DataPointWireframe(new CS.LineReference(
             new CS.StyleColor()
@@ -301,7 +301,7 @@ internal class ChartStyle
         ));
     }
 
-    private CS.DataTableStyle CreateDataTableStyle()
+    private static CS.DataTableStyle CreateDataTableStyle()
     {
         CS.DataTableStyle dataTableStyle = new();
         dataTableStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -330,7 +330,7 @@ internal class ChartStyle
         return dataTableStyle;
     }
 
-    private CS.DownBar CreateDownBar()
+    private static CS.DownBar CreateDownBar()
     {
         CS.DownBar downBar = new();
 
@@ -366,7 +366,7 @@ internal class ChartStyle
         return downBar;
     }
 
-    private CS.DropLine CreateDropLine()
+    private static CS.DropLine CreateDropLine()
     {
         CS.DropLine dropLine = new();
         dropLine.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -390,7 +390,7 @@ internal class ChartStyle
         return dropLine;
     }
 
-    private CS.ErrorBar CreateErrorBar()
+    private static CS.ErrorBar CreateErrorBar()
     {
         CS.ErrorBar errorBar = new();
         errorBar.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -414,7 +414,7 @@ internal class ChartStyle
         return errorBar;
     }
 
-    private CS.Floor CreateFloor()
+    private static CS.Floor CreateFloor()
     {
         CS.Floor floor = new();
         floor.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -432,7 +432,7 @@ internal class ChartStyle
         return floor;
     }
 
-    private CS.GridlineMajor CreateGridlineMajor()
+    private static CS.GridlineMajor CreateGridlineMajor()
     {
         CS.GridlineMajor gridlineMajor = new();
         gridlineMajor.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -454,7 +454,7 @@ internal class ChartStyle
         return gridlineMajor;
     }
 
-    private CS.GridlineMinor CreateGridlineMinor()
+    private static CS.GridlineMinor CreateGridlineMinor()
     {
         CS.GridlineMinor gridlineMinor = new();
         gridlineMinor.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -476,7 +476,7 @@ internal class ChartStyle
         return gridlineMinor;
     }
 
-    private CS.HiLoLine CreateHiLoLine()
+    private static CS.HiLoLine CreateHiLoLine()
     {
         CS.HiLoLine hiLoLine = new();
         hiLoLine.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -498,7 +498,7 @@ internal class ChartStyle
         return hiLoLine;
     }
 
-    private CS.LeaderLine CreateLeaderLine()
+    private static CS.LeaderLine CreateLeaderLine()
     {
         CS.LeaderLine leaderLine = new();
         leaderLine.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -519,7 +519,7 @@ internal class ChartStyle
         return leaderLine;
     }
 
-    private CS.LegendStyle CreateLegendStyle()
+    private static CS.LegendStyle CreateLegendStyle()
     {
         CS.LegendStyle legendStyle = new();
         legendStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -536,7 +536,7 @@ internal class ChartStyle
         return legendStyle;
     }
 
-    private CS.MarkerLayoutProperties CreateMarkerLayoutProperties()
+    private static CS.MarkerLayoutProperties CreateMarkerLayoutProperties()
     {
         return new CS.MarkerLayoutProperties()
         {
@@ -545,7 +545,7 @@ internal class ChartStyle
         };
     }
 
-    private CS.PlotArea CreatePlotArea()
+    private static CS.PlotArea CreatePlotArea()
     {
         CS.PlotArea plotAreaStyle = new();
         plotAreaStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -559,7 +559,7 @@ internal class ChartStyle
         return plotAreaStyle;
     }
 
-    private CS.PlotArea3D CreatePlotArea3D()
+    private static CS.PlotArea3D CreatePlotArea3D()
     {
         CS.PlotArea3D plotArea3DStyle = new();
         plotArea3DStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -572,7 +572,7 @@ internal class ChartStyle
         return plotArea3DStyle;
     }
 
-    private CS.SeriesAxis CreateSeriesAxis()
+    private static CS.SeriesAxis CreateSeriesAxis()
     {
         CS.SeriesAxis seriesAxisStyle = new();
 
@@ -593,7 +593,7 @@ internal class ChartStyle
         return seriesAxisStyle;
     }
 
-    private CS.SeriesLine CreateSeriesLine()
+    private static CS.SeriesLine CreateSeriesLine()
     {
         CS.SeriesLine seriesLineStyle = new();
         seriesLineStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -616,7 +616,7 @@ internal class ChartStyle
         return seriesLineStyle;
     }
 
-    private CS.TitleStyle CreateTitleStyle()
+    private static CS.TitleStyle CreateTitleStyle()
     {
         CS.TitleStyle titleStyle = new();
         titleStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -640,7 +640,7 @@ internal class ChartStyle
         return titleStyle;
     }
 
-    private CS.TrendlineLabel CreateTrendlineLabel()
+    private static CS.TrendlineLabel CreateTrendlineLabel()
     {
         CS.TrendlineLabel trendlineLabelStyle = new();
         trendlineLabelStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -661,7 +661,7 @@ internal class ChartStyle
         return trendlineLabelStyle;
     }
 
-    private CS.TrendlineStyle CreateTrendlineStyle()
+    private static CS.TrendlineStyle CreateTrendlineStyle()
     {
         CS.TrendlineStyle trendlineStyle = new();
         CS.LineReference lnRef = new() { Index = (UInt32Value)0U };
@@ -682,7 +682,7 @@ internal class ChartStyle
         return trendlineStyle;
     }
 
-    private CS.UpBar CreateUpBar()
+    private static CS.UpBar CreateUpBar()
     {
         CS.UpBar upBarStyle = new();
         upBarStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -705,7 +705,7 @@ internal class ChartStyle
         return upBarStyle;
     }
 
-    private CS.ValueAxis CreateValueAxis()
+    private static CS.ValueAxis CreateValueAxis()
     {
         CS.ValueAxis valueAxisStyle = new();
         valueAxisStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });
@@ -726,7 +726,7 @@ internal class ChartStyle
         return valueAxisStyle;
     }
 
-    private CS.Wall CreateWall()
+    private static CS.Wall CreateWall()
     {
         CS.Wall wallStyle = new();
         wallStyle.Append(new CS.LineReference { Index = (UInt32Value)0U });

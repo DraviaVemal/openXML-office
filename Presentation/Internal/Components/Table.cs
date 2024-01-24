@@ -195,36 +195,36 @@ namespace OpenXMLOffice.Presentation
             ));
             A.TableCellProperties TableCellProperties = new();
             TableCellProperties.Append(new A.LeftBorderLineProperties(
-                Cell.leftBorder ? CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                Cell.leftBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.RightBorderLineProperties(
-                Cell.rightBorder ? CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                Cell.rightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.TopBorderLineProperties(
-                Cell.topBorder ? CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                Cell.topBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.BottomBorderLineProperties(
-                Cell.bottomBorder ? CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                Cell.bottomBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-                Cell.topLeftToBottomRightBorder ? CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                Cell.topLeftToBottomRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
             TableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-                Cell.bottomLeftToTopRightBorder ? CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                Cell.bottomLeftToTopRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append((Cell.cellBackground != null || Row.rowBackground != null) ? CreateSolidFill(new() { hexColor = Cell.cellBackground ?? Row.rowBackground! }) : new A.NoFill());
+            TableCellProperties.Append((Cell.cellBackground != null || Row.rowBackground != null) ? G.CommonProperties.CreateSolidFill(new() { hexColor = Cell.cellBackground ?? Row.rowBackground! }) : new A.NoFill());
             TableCellXML.Append(TableCellProperties);
             return TableCellXML;
         }

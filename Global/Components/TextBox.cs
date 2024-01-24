@@ -116,7 +116,7 @@ namespace OpenXMLOffice.Global
                     new A.Offset { X = textBoxSetting.x, Y = textBoxSetting.y },
                     new A.Extents { Cx = textBoxSetting.width, Cy = textBoxSetting.height }),
                 new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
-                textBoxSetting.shapeBackground != null ? CreateSolidFill(new() { hexColor = textBoxSetting.shapeBackground }) : new A.NoFill()),
+                textBoxSetting.shapeBackground != null ? CommonProperties.CreateSolidFill(new() { hexColor = textBoxSetting.shapeBackground }) : new A.NoFill()),
                 TextBody = new P.TextBody(
                         new A.BodyProperties(),
                         new A.ListStyle(),

@@ -556,7 +556,7 @@ namespace OpenXMLOffice.Global
             X
         }
 
-        internal C.MarkerStyleValues GetMarkerStyleValues(MarkerShapeValues markerShapeValues)
+        internal static C.MarkerStyleValues GetMarkerStyleValues(MarkerShapeValues markerShapeValues)
         {
             return markerShapeValues switch
             {

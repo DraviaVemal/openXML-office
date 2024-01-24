@@ -18,7 +18,7 @@ namespace OpenXMLOffice.Global
         /// <returns>
         /// The color style object.
         /// </returns>
-        public CS.ColorStyle CreateColorStyles()
+        public static CS.ColorStyle CreateColorStyles()
         {
             CS.ColorStyle colorStyle = new() { Method = "cycle", Id = 10 };
             colorStyle.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");

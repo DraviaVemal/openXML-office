@@ -114,7 +114,7 @@ namespace OpenXMLOffice.Presentation
             }
         }
 
-        private P.Shape CreateShape1()
+        private static P.Shape CreateShape1()
         {
             P.Shape shape = new();
             NonVisualShapeProperties nonVisualShapeProperties = new(
@@ -146,7 +146,7 @@ namespace OpenXMLOffice.Presentation
             return shape;
         }
 
-        private P.Shape CreateShape2()
+        private static P.Shape CreateShape2()
         {
             P.Shape shape = new();
             NonVisualShapeProperties nonVisualShapeProperties = new(

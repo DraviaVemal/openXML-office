@@ -25,7 +25,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Create Soild Fill XML Property
         /// </summary>
-        protected A.SolidFill CreateSolidFill(SolidFillModel solidFillModel)
+        protected static A.SolidFill CreateSolidFill(SolidFillModel solidFillModel)
         {
             if (solidFillModel.hexColor == null && solidFillModel.schemeColorModel == null)
             {
@@ -38,7 +38,7 @@ namespace OpenXMLOffice.Global
             else
             {
                 A.SchemeColor schemeColor = new()
-                { Val = new A.SchemeColorValues(solidFillModel.GetSchemeColorValuesText(solidFillModel.schemeColorModel!.themeColorValues)) };
+                { Val = new A.SchemeColorValues(SolidFillModel.GetSchemeColorValuesText(solidFillModel.schemeColorModel!.themeColorValues)) };
                 if (solidFillModel.schemeColorModel.tint != null)
                 {
                     schemeColor.Append(new A.Tint() { Val = solidFillModel.schemeColorModel.tint });
@@ -106,7 +106,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Create Effect List
         /// </summary>
-        protected A.EffectList CreateEffectList(EffectListModel effectListModel)
+        protected static A.EffectList CreateEffectList(EffectListModel effectListModel)
         {
             return new();
         }
@@ -131,15 +131,15 @@ namespace OpenXMLOffice.Global
             }
             if (outlineModel.outlineCapTypeValues != null)
             {
-                outline.CapType = outlineModel.GetLineCapValues((OutlineCapTypeValues)outlineModel.outlineCapTypeValues);
+                outline.CapType = OutlineModel.GetLineCapValues((OutlineCapTypeValues)outlineModel.outlineCapTypeValues);
             }
             if (outlineModel.outlineLineTypeValues != null)
             {
-                outline.CompoundLineType = outlineModel.GetLineTypeValues((OutlineLineTypeValues)outlineModel.outlineLineTypeValues);
+                outline.CompoundLineType = OutlineModel.GetLineTypeValues((OutlineLineTypeValues)outlineModel.outlineLineTypeValues);
             }
             if (outlineModel.outlineAlignmentValues != null)
             {
-                outline.Alignment = outlineModel.GetLineAlignmentValues((OutlineAlignmentValues)outlineModel.outlineAlignmentValues);
+                outline.Alignment = OutlineModel.GetLineAlignmentValues((OutlineAlignmentValues)outlineModel.outlineAlignmentValues);
             }
             return outline;
         }
@@ -186,11 +186,11 @@ namespace OpenXMLOffice.Global
             }
             if (defaultRunPropertiesModel.underline != null)
             {
-                DefaultRunProperties.Underline = defaultRunPropertiesModel.GetTextUnderlineValues((UnderLineValues)defaultRunPropertiesModel.underline);
+                DefaultRunProperties.Underline = DefaultRunPropertiesModel.GetTextUnderlineValues((UnderLineValues)defaultRunPropertiesModel.underline);
             }
             if (defaultRunPropertiesModel.strike != null)
             {
-                DefaultRunProperties.Strike = defaultRunPropertiesModel.GetTextStrikeValues((StrikeValues)defaultRunPropertiesModel.strike);
+                DefaultRunProperties.Strike = DefaultRunPropertiesModel.GetTextStrikeValues((StrikeValues)defaultRunPropertiesModel.strike);
             }
             if (defaultRunPropertiesModel.kerning != null)
             {
@@ -234,7 +234,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// 
         /// </summary>
-        protected A.ListStyle CreateDrawingListStyle()
+        protected static A.ListStyle CreateDrawingListStyle()
         {
             return new();
         }
@@ -255,7 +255,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         /// <param name="drawingBodyPropertiesModel"></param>
         /// <returns></returns>
-        private A.BodyProperties CreateDrawingBodyProperties(DrawingBodyPropertiesModel drawingBodyPropertiesModel)
+        private static A.BodyProperties CreateDrawingBodyProperties(DrawingBodyPropertiesModel drawingBodyPropertiesModel)
         {
             A.BodyProperties bodyProperties = new(new A.ShapeAutoFit())
             {
@@ -283,19 +283,19 @@ namespace OpenXMLOffice.Global
             }
             if (drawingBodyPropertiesModel.verticalOverflow != null)
             {
-                bodyProperties.VerticalOverflow = drawingBodyPropertiesModel.GetTextVerticalOverflowValues((TextVerticalOverflowValues)drawingBodyPropertiesModel.verticalOverflow);
+                bodyProperties.VerticalOverflow = DrawingBodyPropertiesModel.GetTextVerticalOverflowValues((TextVerticalOverflowValues)drawingBodyPropertiesModel.verticalOverflow);
             }
             if (drawingBodyPropertiesModel.vertical != null)
             {
-                bodyProperties.Vertical = drawingBodyPropertiesModel.GetTextVerticalAlignmentValues((TextVerticalAlignmentValues)drawingBodyPropertiesModel.vertical);
+                bodyProperties.Vertical = DrawingBodyPropertiesModel.GetTextVerticalAlignmentValues((TextVerticalAlignmentValues)drawingBodyPropertiesModel.vertical);
             }
             if (drawingBodyPropertiesModel.wrap != null)
             {
-                bodyProperties.Wrap = drawingBodyPropertiesModel.GetWrapingValues((TextWrappingValues)drawingBodyPropertiesModel.wrap);
+                bodyProperties.Wrap = DrawingBodyPropertiesModel.GetWrapingValues((TextWrappingValues)drawingBodyPropertiesModel.wrap);
             }
             if (drawingBodyPropertiesModel.anchor != null)
             {
-                bodyProperties.Anchor = drawingBodyPropertiesModel.GetAnchorValues((TextAnchoringValues)drawingBodyPropertiesModel.anchor);
+                bodyProperties.Anchor = DrawingBodyPropertiesModel.GetAnchorValues((TextAnchoringValues)drawingBodyPropertiesModel.anchor);
             }
             return bodyProperties;
         }

@@ -135,7 +135,7 @@ namespace OpenXMLOffice.Global
             return backgroundFillStyleList;
         }
 
-        private A.FontScheme GenerateFontScheme()
+        private static A.FontScheme GenerateFontScheme()
         {
             return new A.FontScheme()
             {
@@ -297,7 +297,7 @@ namespace OpenXMLOffice.Global
             }
         }
 
-        private A.GradientStop GetGradientStop(int? position, int? saturationModulation, int? luminanceModulation, int? shade, int? tint)
+        private static A.GradientStop GetGradientStop(int? position, int? saturationModulation, int? luminanceModulation, int? shade, int? tint)
         {
             A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.PhColor };
             if (luminanceModulation != null)

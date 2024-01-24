@@ -78,7 +78,7 @@ namespace OpenXMLOffice.Presentation
             return notesTextViewProperties;
         }
 
-        private P.NormalViewProperties CreateNormalViewProperties()
+        private static P.NormalViewProperties CreateNormalViewProperties()
         {
             P.NormalViewProperties normalViewProperties = new()
             {
@@ -89,7 +89,7 @@ namespace OpenXMLOffice.Presentation
             return normalViewProperties;
         }
 
-        private P.SlideViewProperties CreateSlideViewProperties()
+        private static P.SlideViewProperties CreateSlideViewProperties()
         {
             var slideViewProperties = new P.SlideViewProperties(
                 new P.CommonSlideViewProperties(

@@ -253,7 +253,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public SolidFillModel? solidFill = null;
 
-        internal A.PenAlignmentValues GetLineAlignmentValues(OutlineAlignmentValues outlineAlignmentValues)
+        internal static A.PenAlignmentValues GetLineAlignmentValues(OutlineAlignmentValues outlineAlignmentValues)
         {
             return outlineAlignmentValues switch
             {
@@ -262,7 +262,7 @@ namespace OpenXMLOffice.Global
             };
         }
 
-        internal A.LineCapValues GetLineCapValues(OutlineCapTypeValues outlineCapTypeValues)
+        internal static A.LineCapValues GetLineCapValues(OutlineCapTypeValues outlineCapTypeValues)
         {
             return outlineCapTypeValues switch
             {
@@ -272,7 +272,7 @@ namespace OpenXMLOffice.Global
             };
         }
 
-        internal A.CompoundLineValues GetLineTypeValues(OutlineLineTypeValues outlineLineTypeValues)
+        internal static A.CompoundLineValues GetLineTypeValues(OutlineLineTypeValues outlineLineTypeValues)
         {
             return outlineLineTypeValues switch
             {
@@ -343,7 +343,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// 
         /// </summary>
-        internal string GetSchemeColorValuesText(ThemeColorValues themeColorValues)
+        internal static string GetSchemeColorValuesText(ThemeColorValues themeColorValues)
         {
             return themeColorValues switch
             {
@@ -520,7 +520,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// 
         /// </summary>
-        public A.TextStrikeValues GetTextStrikeValues(StrikeValues strikeValues)
+        public static A.TextStrikeValues GetTextStrikeValues(StrikeValues strikeValues)
         {
             return strikeValues switch
             {
@@ -533,7 +533,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// 
         /// </summary>
-        public A.TextUnderlineValues GetTextUnderlineValues(UnderLineValues runPropertiesUnderLineValues)
+        public static A.TextUnderlineValues GetTextUnderlineValues(UnderLineValues runPropertiesUnderLineValues)
         {
             return runPropertiesUnderLineValues switch
             {
@@ -624,7 +624,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public bool? anchorCenter = null;
 
-        internal A.TextAnchoringTypeValues GetAnchorValues(TextAnchoringValues textAnchoring)
+        internal static A.TextAnchoringTypeValues GetAnchorValues(TextAnchoringValues textAnchoring)
         {
             return textAnchoring switch
             {
@@ -634,7 +634,7 @@ namespace OpenXMLOffice.Global
             };
         }
 
-        internal A.TextVerticalValues GetTextVerticalAlignmentValues(TextVerticalAlignmentValues textVerticalAlignment)
+        internal static A.TextVerticalValues GetTextVerticalAlignmentValues(TextVerticalAlignmentValues textVerticalAlignment)
         {
             return textVerticalAlignment switch
             {
@@ -648,7 +648,7 @@ namespace OpenXMLOffice.Global
             };
         }
 
-        internal A.TextVerticalOverflowValues GetTextVerticalOverflowValues(TextVerticalOverflowValues textVerticalOverflow)
+        internal static A.TextVerticalOverflowValues GetTextVerticalOverflowValues(TextVerticalOverflowValues textVerticalOverflow)
         {
             return textVerticalOverflow switch
             {
@@ -658,7 +658,7 @@ namespace OpenXMLOffice.Global
             };
         }
 
-        internal A.TextWrappingValues GetWrapingValues(TextWrappingValues textWrapping)
+        internal static A.TextWrappingValues GetWrapingValues(TextWrappingValues textWrapping)
         {
             return textWrapping switch
             {

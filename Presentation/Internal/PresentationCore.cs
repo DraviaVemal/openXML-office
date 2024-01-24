@@ -127,7 +127,7 @@ namespace OpenXMLOffice.Presentation
 
         #region Private Methods
 
-        private P.DefaultTextStyle CreateDefaultTextStyle()
+        private static P.DefaultTextStyle CreateDefaultTextStyle()
         {
             P.DefaultTextStyle defaultTextStyle = new();
             A.DefaultParagraphProperties defaultParagraphProperties = new();

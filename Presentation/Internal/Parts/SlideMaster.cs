@@ -81,7 +81,7 @@ namespace OpenXMLOffice.Presentation
             openXMLSlideMaster.AppendChild(CreateTextStyles());
         }
 
-        private P.TextStyles CreateTextStyles()
+        private static P.TextStyles CreateTextStyles()
         {
             P.TextStyles textStyles = new();
 
