@@ -422,29 +422,29 @@ public class ChartBase : CommonProperties
         {
             valueAxis.Append(CreateMinorGridLine());
         }
-        C.TextProperties textProperties = new(
-            new A.BodyProperties(),
-            new A.ListStyle(),
-            new A.Paragraph(
-                new A.ParagraphProperties(
-                    CreateDefaultRunProperties(new()
-                    {
-                        fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
-                        bold = valueAxisSetting.isBold,
-                        italic = valueAxisSetting.isItalic,
-                        baseline = 0
-                    })
-                ),
-                new A.EndParagraphRunProperties { Language = "en-US" }
-            )
-        );
         valueAxis.Append(
             new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
             new C.MajorTickMark { Val = C.TickMarkValues.None },
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
         valueAxis.Append(CreateChartShapeProperties());
-        valueAxis.Append(textProperties);
+        valueAxis.Append(CreateChartTextProperties(new()
+        {
+            bodyProperties = new(),
+            drawingParagraph = new()
+            {
+                paragraphPropertiesModel = new()
+                {
+                    defaultRunProperties = new()
+                    {
+                        fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
+                        bold = valueAxisSetting.isBold,
+                        italic = valueAxisSetting.isItalic,
+                        baseline = 0
+                    }
+                }
+            }
+        }));
         valueAxis.Append(
             new C.CrossingAxis { Val = valueAxisSetting.crossAxisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
@@ -651,46 +651,47 @@ public class ChartBase : CommonProperties
         });
         legend.Append(new C.Overlay { Val = false });
         legend.Append(CreateChartShapeProperties());
-        C.TextProperties textProperties = new();
-        textProperties.Append(new A.BodyProperties()
+        legend.Append(CreateChartTextProperties(new()
         {
-            Rotation = 0,
-            UseParagraphSpacing = true,
-            VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-            Vertical = A.TextVerticalValues.Horizontal,
-            Wrap = A.TextWrappingValues.Square,
-            Anchor = A.TextAnchoringTypeValues.Center,
-            AnchorCenter = true
-        });
-        textProperties.Append(new A.ListStyle());
-        A.Paragraph paragraph = new();
-        A.ParagraphProperties paragraphProperties = new();
-        paragraphProperties.Append(CreateDefaultRunProperties(new()
-        {
-            solidFill = new()
+            bodyProperties = new()
             {
-                schemeColorModel = new()
-                {
-                    themeColorValues = ThemeColorValues.TEXT_1,
-                    luminanceModulation = 65000,
-                    luminanceOffset = 35000
-                }
+                rotation = 0,
+                useParagraphSpacing = true,
+                verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+                vertical = TextVerticalAlignmentValues.HORIZONTAL,
+                wrap = TextWrappingValues.SQUARE,
+                anchor = TextAnchoringValues.CENTER,
+                anchorCenter = true,
             },
-            complexScriptFont = "+mn-cs",
-            eastAsianFont = "+mn-ea",
-            latinFont = "+mn-lt",
-            fontSize = ConverterUtils.FontSizeToFontSize(chartLegendOptions.fontSize),
-            bold = chartLegendOptions.isBold,
-            italic = chartLegendOptions.isItalic,
-            underline = UnderLineValues.NONE,
-            strike = StrikeValues.NO_STRIKE,
-            kerning = 1200,
-            baseline = 0,
+            drawingParagraph = new()
+            {
+                paragraphPropertiesModel = new()
+                {
+                    defaultRunProperties = new()
+                    {
+                        solidFill = new()
+                        {
+                            schemeColorModel = new()
+                            {
+                                themeColorValues = ThemeColorValues.TEXT_1,
+                                luminanceModulation = 65000,
+                                luminanceOffset = 35000
+                            }
+                        },
+                        complexScriptFont = "+mn-cs",
+                        eastAsianFont = "+mn-ea",
+                        latinFont = "+mn-lt",
+                        fontSize = ConverterUtils.FontSizeToFontSize(chartLegendOptions.fontSize),
+                        bold = chartLegendOptions.isBold,
+                        italic = chartLegendOptions.isItalic,
+                        underline = UnderLineValues.NONE,
+                        strike = StrikeValues.NO_STRIKE,
+                        kerning = 1200,
+                        baseline = 0,
+                    }
+                }
+            }
         }));
-        paragraph.Append(paragraphProperties);
-        paragraph.Append(new A.EndParagraphRunProperties { Language = "en-US" });
-        textProperties.Append(paragraph);
-        legend.Append(textProperties);
         return legend;
     }
 
