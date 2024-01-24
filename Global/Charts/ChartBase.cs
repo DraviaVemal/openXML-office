@@ -133,6 +133,7 @@ public class ChartBase : CommonProperties
         CategoryAxis.Append(CreateChartShapeProperties());
         CategoryAxis.Append(CreateChartTextProperties(new()
         {
+            bodyProperties = new(),
             drawingParagraph = new()
             {
                 paragraphPropertiesModel = new()
