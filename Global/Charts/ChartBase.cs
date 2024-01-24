@@ -88,7 +88,10 @@ public class ChartBase : CommonProperties
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException($"Bubble Size Data Should Be numaric. ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
+            Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
+            throw new ArgumentException($"Bubble Size Data Should Be numaric.");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }
@@ -127,24 +130,23 @@ public class ChartBase : CommonProperties
         {
             CategoryAxis.Append(CreateMinorGridLine());
         }
-        C.TextProperties TextProperties = new(
-            new A.BodyProperties(),
-            new A.ListStyle(),
-            new A.Paragraph(
-                new A.ParagraphProperties(
-                    CreateDefaultRunProperties(new()
+        CategoryAxis.Append(CreateChartShapeProperties());
+        CategoryAxis.Append(CreateChartTextProperties(new()
+        {
+            drawingParagraph = new()
+            {
+                paragraphPropertiesModel = new()
+                {
+                    defaultRunProperties = new()
                     {
                         fontSize = ConverterUtils.FontSizeToFontSize(categoryAxisSetting.fontSize),
                         bold = categoryAxisSetting.isBold,
                         italic = categoryAxisSetting.isItalic,
                         baseline = 0
-                    })
-                ),
-                new A.EndParagraphRunProperties { Language = "en-US" }
-            )
-        );
-        CategoryAxis.Append(CreateChartShapeProperties());
-        CategoryAxis.Append(TextProperties);
+                    }
+                }
+            }
+        }));
         CategoryAxis.Append(
             new C.CrossingAxis { Val = categoryAxisSetting.crossAxisId },
             new C.Crosses { Val = C.CrossesValues.AutoZero },
@@ -194,8 +196,7 @@ public class ChartBase : CommonProperties
     /// </returns>
     protected static CS.ColorStyle CreateColorStyles()
     {
-        ChartColor ChartColor = new();
-        return Global.ChartColor.CreateColorStyles();
+        return ChartColor.CreateColorStyles();
     }
 
     /// <summary>
@@ -209,7 +210,7 @@ public class ChartBase : CommonProperties
     /// </returns>
     protected C.DataLabels CreateDataLabels(ChartDataLabel chartDataLabel, int? dataLabelCount = 0)
     {
-        C.DataLabels DataLabels = new();
+        C.DataLabels dataLabels = new();
         for (int i = 0; i < dataLabelCount; i++)
         {
             A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
@@ -241,7 +242,7 @@ public class ChartBase : CommonProperties
                 Paragraph.Append(CreateField("VALUE", "[VALUE]"));
             }
             Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-US" });
-            DataLabels.Append(new C.DataLabel(
+            dataLabels.Append(new C.DataLabel(
                 new C.Index() { Val = (uint)i },
                 new C.SeriesText(
                     new C.RichText(
@@ -259,7 +260,7 @@ public class ChartBase : CommonProperties
                 new C.Separator(chartDataLabel.separator)
             ));
         }
-        DataLabels.Append(new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
+        dataLabels.Append(new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
             new C.ShowValue { Val = chartDataLabel.showValue },
             new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
             new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
@@ -267,7 +268,53 @@ public class ChartBase : CommonProperties
             new C.ShowBubbleSize() { Val = true },
             new C.Separator(chartDataLabel.separator),
             new C.ShowLeaderLines() { Val = false });
-        return DataLabels;
+        dataLabels.Append(CreateChartShapeProperties());
+        dataLabels.Append(CreateChartTextProperties(new()
+        {
+            bodyProperties = new()
+            {
+                rotation = 0,
+                anchorCenter = true,
+                anchor = TextAnchoringValues.CENTER,
+                bottomInset = 19050,
+                leftInset = 38100,
+                rightInset = 38100,
+                topInset = 19050,
+                useParagraphSpacing = true,
+                vertical = TextVerticalAlignmentValues.HORIZONTAL,
+                verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+                wrap = TextWrappingValues.SQUARE,
+            },
+            drawingParagraph = new()
+            {
+                paragraphPropertiesModel = new()
+                {
+                    defaultRunProperties = new()
+                    {
+                        solidFill = new()
+                        {
+                            schemeColorModel = new()
+                            {
+                                themeColorValues = ThemeColorValues.TEXT_1,
+                                luminanceModulation = 7500,
+                                luminanceOffset = 2500
+                            }
+                        },
+                        complexScriptFont = "+mn-cs",
+                        eastAsianFont = "+mn-ea",
+                        latinFont = "+mn-lt",
+                        fontSize = ConverterUtils.FontSizeToFontSize(chartDataLabel.fontSize),
+                        bold = chartDataLabel.isBold,
+                        italic = chartDataLabel.isItalic,
+                        underline = UnderLineValues.NONE,
+                        strike = StrikeValues.NO_STRIKE,
+                        kerning = 1200,
+                        baseline = 0,
+                    }
+                }
+            }
+        }));
+        return dataLabels;
     }
 
     /// <summary>
@@ -342,12 +389,6 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create Series Text for the chart
     /// </summary>
-    /// <param name="formula">
-    /// </param>
-    /// <param name="cells">
-    /// </param>
-    /// <returns>
-    /// </returns>
     protected C.SeriesText CreateSeriesText(string formula, ChartData[] cells)
     {
         return new(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
@@ -356,10 +397,6 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create Value Axis for the chart
     /// </summary>
-    /// <param name="valueAxisSetting">
-    /// </param>
-    /// <returns>
-    /// </returns>
     protected C.ValueAxis CreateValueAxis(ValueAxisSetting valueAxisSetting)
     {
         C.ValueAxis valueAxis = new(
@@ -417,19 +454,15 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create Value Axis Data for the chart
     /// </summary>
-    /// <param name="formula">
-    /// </param>
-    /// <param name="cells">
-    /// </param>
-    /// <returns>
-    /// </returns>
-    /// <exception cref="ArgumentException">
-    /// </exception>
     protected C.Values CreateValueAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException($"Value Axis Data Should Be numaric. ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
+            Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
+
+            throw new ArgumentException($"Value Axis Data Should Be numaric.");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }
@@ -437,19 +470,15 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create X Axis Data for the chart
     /// </summary>
-    /// <param name="formula">
-    /// </param>
-    /// <param name="cells">
-    /// </param>
-    /// <returns>
-    /// </returns>
-    /// <exception cref="ArgumentException">
-    /// </exception>
     protected C.XValues CreateXValueAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException($"X Axis Data Should Be numaric. ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
+            Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
+
+            throw new ArgumentException($"X Axis Data Should Be numaric.");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }
@@ -457,19 +486,14 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create Y Axis Data for the chart
     /// </summary>
-    /// <param name="formula">
-    /// </param>
-    /// <param name="cells">
-    /// </param>
-    /// <returns>
-    /// </returns>
-    /// <exception cref="ArgumentException">
-    /// </exception>
     protected C.YValues CreateYValueAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException($"Y Axis Data Should Be numaric ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
+            Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
+            Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
+            throw new ArgumentException($"Y Axis Data Should be numaric.");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }
@@ -477,8 +501,6 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Set chart plot area
     /// </summary>
-    /// <param name="plotArea">
-    /// </param>
     protected void SetChartPlotArea(C.PlotArea plotArea)
     {
         chart.PlotArea = plotArea;

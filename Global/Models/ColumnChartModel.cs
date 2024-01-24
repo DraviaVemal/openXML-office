@@ -98,11 +98,6 @@ namespace OpenXMLOffice.Global
         #region Public Fields
 
         /// <summary>
-        /// Chart Stick Border Color
-        /// </summary>
-        public string? borderColor;
-
-        /// <summary>
         /// Option to customize specific data series. Will override chart level setting.
         /// </summary>
         public ColumnChartDataLabel columnChartDataLabel = new();

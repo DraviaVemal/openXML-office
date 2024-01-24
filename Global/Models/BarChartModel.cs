@@ -101,11 +101,6 @@ namespace OpenXMLOffice.Global
         public BarChartDataLabel barChartDataLabel = new();
 
         /// <summary>
-        /// The color of the border.
-        /// </summary>
-        public string? borderColor;
-
-        /// <summary>
         /// The color of the fill.
         /// </summary>
         public string? fillColor;

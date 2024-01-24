@@ -82,11 +82,6 @@ namespace OpenXMLOffice.Global
         #region Public Fields
 
         /// <summary>
-        /// The color of the border.
-        /// </summary>
-        public string? borderColor;
-
-        /// <summary>
         /// The color of the fill.
         /// </summary>
         public string? fillColor;

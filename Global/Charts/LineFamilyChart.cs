@@ -126,8 +126,8 @@ namespace OpenXMLOffice.Global
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = lineChartSetting.lineChartSeriesSettings?
-                            .Where(item => item?.fillColor != null)
-                            .Select(item => item?.fillColor!)
+                            .Where(item => item?.borderColor != null)
+                            .Select(item => item?.borderColor!)
                             .ToList().ElementAtOrDefault(seriesIndex);
                 if (hexColor != null)
                 {
@@ -189,52 +189,6 @@ namespace OpenXMLOffice.Global
                         _ => C.DataLabelPositionValues.Center,
                     }
                 }, 0);
-                dataLabels.Append(CreateChartShapeProperties());
-                dataLabels.Append(CreateChartTextProperties(new()
-                {
-                    bodyProperties = new()
-                    {
-                        rotation = 0,
-                        anchorCenter = true,
-                        anchor = TextAnchoringValues.CENTER,
-                        bottomInset = 19050,
-                        leftInset = 38100,
-                        rightInset = 38100,
-                        topInset = 19050,
-                        useParagraphSpacing = true,
-                        vertical = TextVerticalAlignmentValues.HORIZONTAL,
-                        verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
-                        wrap = TextWrappingValues.SQUARE,
-                    },
-                    drawingParagraph = new()
-                    {
-                        paragraphPropertiesModel = new()
-                        {
-                            defaultRunProperties = new()
-                            {
-                                solidFill = new()
-                                {
-                                    schemeColorModel = new()
-                                    {
-                                        themeColorValues = ThemeColorValues.TEXT_1,
-                                        luminanceModulation = 7500,
-                                        luminanceOffset = 2500
-                                    }
-                                },
-                                complexScriptFont = "+mn-cs",
-                                eastAsianFont = "+mn-ea",
-                                latinFont = "+mn-lt",
-                                fontSize = ConverterUtils.FontSizeToFontSize(lineChartDataLabel.fontSize),
-                                bold = lineChartDataLabel.isBold,
-                                italic = lineChartDataLabel.isItalic,
-                                underline = UnderLineValues.NONE,
-                                strike = StrikeValues.NO_STRIKE,
-                                kerning = 1200,
-                                baseline = 0,
-                            }
-                        }
-                    }
-                }));
                 return dataLabels;
             }
             return null;

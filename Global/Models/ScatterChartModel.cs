@@ -108,16 +108,6 @@ namespace OpenXMLOffice.Global
         #region Public Fields
 
         /// <summary>
-        /// The color of the series border.
-        /// </summary>
-        public string? borderColor;
-
-        /// <summary>
-        /// The color of the series fill.
-        /// </summary>
-        public string? fillColor;
-
-        /// <summary>
         /// Custom data label settings for the specific data series. This will override the chart
         /// level setting.
         /// </summary>

@@ -399,6 +399,10 @@ namespace OpenXMLOffice.Global
     {
         #region Internal Constructors
 
+        /// <summary>
+        /// The color of the border.
+        /// </summary>
+        public string? borderColor;
         internal ChartSeriesSetting() { }
 
         #endregion Internal Constructors
