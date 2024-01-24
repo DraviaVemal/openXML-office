@@ -51,10 +51,10 @@ namespace OpenXMLOffice.Global
             /// </summary>
             SHOW,
 
-            /// <summary>
-            /// Select Data Callout as Data label style
-            /// </summary>
-            DATA_CALLOUT
+            // /// <summary>
+            // /// Select Data Callout as Data label style
+            // /// </summary>
+            // DATA_CALLOUT
         }
 
         #endregion Public Enums

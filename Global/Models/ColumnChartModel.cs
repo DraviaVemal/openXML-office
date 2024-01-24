@@ -81,10 +81,10 @@ namespace OpenXMLOffice.Global
             /// </summary>
             OUTSIDE_END,
 
-            /// <summary>
-            /// Data Callout
-            /// </summary>
-            DATA_CALLOUT
+            // /// <summary>
+            // /// Data Callout
+            // /// </summary>
+            // DATA_CALLOUT
         }
 
         #endregion Public Enums

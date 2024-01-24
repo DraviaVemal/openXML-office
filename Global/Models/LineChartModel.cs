@@ -86,10 +86,10 @@ namespace OpenXMLOffice.Global
             /// </summary>
             BELOW,
 
-            /// <summary>
-            /// Data Callout
-            /// </summary>
-            DATA_CALLOUT
+            // /// <summary>
+            // /// Data Callout
+            // /// </summary>
+            // DATA_CALLOUT
         }
 
         #endregion Public Enums
