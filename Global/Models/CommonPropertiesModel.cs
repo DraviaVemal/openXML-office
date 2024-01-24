@@ -677,5 +677,10 @@ namespace OpenXMLOffice.Global
         /// 
         /// </summary>
         public DrawingBodyPropertiesModel? bodyProperties = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DrawingParagraphModel? drawingParagraph = null;
     }
 }

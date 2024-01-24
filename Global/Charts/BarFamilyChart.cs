@@ -65,6 +65,7 @@ namespace OpenXMLOffice.Global
             C.DataLabels? dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ? CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             ShapePropertiesModel shapePropertiesModel = new()
             {
+                solidFill = GetSolidFill(),
                 outline = new()
                 {
                     solidFill = GetSolidFill()
@@ -127,34 +128,33 @@ namespace OpenXMLOffice.Global
                         vertical = TextVerticalAlignmentValues.HORIZONTAL,
                         verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
                         wrap = TextWrappingValues.SQUARE,
-                    }
-                }));
-                dataLabels.Append(CreateDrawingListStyle());
-                dataLabels.Append(CreateDrawingParagraph(new()
-                {
-                    paragraphPropertiesModel = new()
+                    },
+                    drawingParagraph = new()
                     {
-                        defaultRunProperties = new()
+                        paragraphPropertiesModel = new()
                         {
-                            solidFill = new()
+                            defaultRunProperties = new()
                             {
-                                schemeColorModel = new()
+                                solidFill = new()
                                 {
-                                    themeColorValues = ThemeColorValues.TEXT_1,
-                                    luminanceModulation = 7500,
-                                    luminanceOffset = 2500
-                                }
-                            },
-                            complexScriptFont = "+mn-cs",
-                            eastAsianFont = "+mn-ea",
-                            latinFont = "+mn-lt",
-                            fontSize = (int)barChartDataLabel.fontSize * 100,
-                            bold = barChartDataLabel.isBold,
-                            italic = barChartDataLabel.isItalic,
-                            underline = UnderLineValues.NONE,
-                            strike = StrikeValues.NO_STRIKE,
-                            kerning = 1200,
-                            baseline = 0,
+                                    schemeColorModel = new()
+                                    {
+                                        themeColorValues = ThemeColorValues.TEXT_1,
+                                        luminanceModulation = 7500,
+                                        luminanceOffset = 2500
+                                    }
+                                },
+                                complexScriptFont = "+mn-cs",
+                                eastAsianFont = "+mn-ea",
+                                latinFont = "+mn-lt",
+                                fontSize = (int)barChartDataLabel.fontSize * 100,
+                                bold = barChartDataLabel.isBold,
+                                italic = barChartDataLabel.isItalic,
+                                underline = UnderLineValues.NONE,
+                                strike = StrikeValues.NO_STRIKE,
+                                kerning = 1200,
+                                baseline = 0,
+                            }
                         }
                     }
                 }));

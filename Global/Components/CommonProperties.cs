@@ -120,6 +120,7 @@ namespace OpenXMLOffice.Global
             if (outlineModel.solidFill != null)
             {
                 outline.Append(CreateSolidFill(outlineModel.solidFill));
+                outline.Append(new A.Round());
             }
             else
             {
@@ -206,7 +207,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// 
         /// </summary>
-        protected A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
+        private A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
         {
             A.Paragraph paragraph = new();
             if (drawingParagraphModel.paragraphPropertiesModel != null)
@@ -238,6 +239,7 @@ namespace OpenXMLOffice.Global
         {
             return new();
         }
+
         /// <summary>
         ///     Create Chart Text Properties
         /// </summary>
@@ -248,8 +250,14 @@ namespace OpenXMLOffice.Global
             {
                 textProperties.Append(CreateDrawingBodyProperties(chartTextPropertiesModel.bodyProperties));
             }
+            textProperties.Append(CreateDrawingListStyle());
+            if (chartTextPropertiesModel.drawingParagraph != null)
+            {
+                textProperties.Append(CreateDrawingParagraph(chartTextPropertiesModel.drawingParagraph));
+            }
             return textProperties;
         }
+
         /// <summary>
         ///    Create Drawing Body Properties
         /// </summary>

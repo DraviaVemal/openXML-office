@@ -87,7 +87,7 @@ public class ChartBase : CommonProperties
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException("Bubble Size Data Should Be numaric");
+            throw new ArgumentException($"Bubble Size Data Should Be numaric. ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }
@@ -428,7 +428,7 @@ public class ChartBase : CommonProperties
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException("Value Axis Data Should Be numaric");
+            throw new ArgumentException($"Value Axis Data Should Be numaric. ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }
@@ -448,7 +448,7 @@ public class ChartBase : CommonProperties
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException("X Axis Data Should Be numaric");
+            throw new ArgumentException($"X Axis Data Should Be numaric. ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }
@@ -468,7 +468,7 @@ public class ChartBase : CommonProperties
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
-            throw new ArgumentException("Y Axis Data Should Be numaric");
+            throw new ArgumentException($"Y Axis Data Should Be numaric ${cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
         }
         return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
     }

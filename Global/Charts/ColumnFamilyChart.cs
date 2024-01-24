@@ -126,6 +126,7 @@ namespace OpenXMLOffice.Global
             }
             ShapePropertiesModel shapePropertiesModel = new()
             {
+                solidFill = GetSolidFill(),
                 outline = new()
                 {
                     solidFill = GetSolidFill()
@@ -184,34 +185,33 @@ namespace OpenXMLOffice.Global
                         vertical = TextVerticalAlignmentValues.HORIZONTAL,
                         verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
                         wrap = TextWrappingValues.SQUARE,
-                    }
-                }));
-                dataLabels.Append(CreateDrawingListStyle());
-                dataLabels.Append(CreateDrawingParagraph(new()
-                {
-                    paragraphPropertiesModel = new()
+                    },
+                    drawingParagraph = new()
                     {
-                        defaultRunProperties = new()
+                        paragraphPropertiesModel = new()
                         {
-                            solidFill = new()
+                            defaultRunProperties = new()
                             {
-                                schemeColorModel = new()
+                                solidFill = new()
                                 {
-                                    themeColorValues = ThemeColorValues.TEXT_1,
-                                    luminanceModulation = 7500,
-                                    luminanceOffset = 2500
-                                }
-                            },
-                            complexScriptFont = "+mn-cs",
-                            eastAsianFont = "+mn-ea",
-                            latinFont = "+mn-lt",
-                            fontSize = (int)columnChartDataLabel.fontSize * 100,
-                            bold = columnChartDataLabel.isBold,
-                            italic = columnChartDataLabel.isItalic,
-                            underline = UnderLineValues.NONE,
-                            strike = StrikeValues.NO_STRIKE,
-                            kerning = 1200,
-                            baseline = 0,
+                                    schemeColorModel = new()
+                                    {
+                                        themeColorValues = ThemeColorValues.TEXT_1,
+                                        luminanceModulation = 7500,
+                                        luminanceOffset = 2500
+                                    }
+                                },
+                                complexScriptFont = "+mn-cs",
+                                eastAsianFont = "+mn-ea",
+                                latinFont = "+mn-lt",
+                                fontSize = (int)columnChartDataLabel.fontSize * 100,
+                                bold = columnChartDataLabel.isBold,
+                                italic = columnChartDataLabel.isItalic,
+                                underline = UnderLineValues.NONE,
+                                strike = StrikeValues.NO_STRIKE,
+                                kerning = 1200,
+                                baseline = 0,
+                            }
                         }
                     }
                 }));

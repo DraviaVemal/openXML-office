@@ -95,8 +95,12 @@ namespace OpenXMLOffice.Global
         {
             MarkerModel marketModel = new()
             {
-                markerShapeValues = MarkerModel.MarkerShapeValues.CIRCLE,
-                shapeProperties = new()
+                markerShapeValues = MarkerModel.MarkerShapeValues.NONE,
+            };
+            if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartTypes))
+            {
+                marketModel.markerShapeValues = MarkerModel.MarkerShapeValues.CIRCLE;
+                marketModel.shapeProperties = new()
                 {
                     solidFill = new()
                     {
@@ -115,8 +119,8 @@ namespace OpenXMLOffice.Global
                             }
                         }
                     }
-                }
-            };
+                };
+            }
             C.DataLabels? dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ? CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             SolidFillModel GetSolidFill()
             {
@@ -201,34 +205,33 @@ namespace OpenXMLOffice.Global
                         vertical = TextVerticalAlignmentValues.HORIZONTAL,
                         verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
                         wrap = TextWrappingValues.SQUARE,
-                    }
-                }));
-                dataLabels.Append(CreateDrawingListStyle());
-                dataLabels.Append(CreateDrawingParagraph(new()
-                {
-                    paragraphPropertiesModel = new()
+                    },
+                    drawingParagraph = new()
                     {
-                        defaultRunProperties = new()
+                        paragraphPropertiesModel = new()
                         {
-                            solidFill = new()
+                            defaultRunProperties = new()
                             {
-                                schemeColorModel = new()
+                                solidFill = new()
                                 {
-                                    themeColorValues = ThemeColorValues.TEXT_1,
-                                    luminanceModulation = 7500,
-                                    luminanceOffset = 2500
-                                }
-                            },
-                            complexScriptFont = "+mn-cs",
-                            eastAsianFont = "+mn-ea",
-                            latinFont = "+mn-lt",
-                            fontSize = (int)lineChartDataLabel.fontSize * 100,
-                            bold = lineChartDataLabel.isBold,
-                            italic = lineChartDataLabel.isItalic,
-                            underline = UnderLineValues.NONE,
-                            strike = StrikeValues.NO_STRIKE,
-                            kerning = 1200,
-                            baseline = 0,
+                                    schemeColorModel = new()
+                                    {
+                                        themeColorValues = ThemeColorValues.TEXT_1,
+                                        luminanceModulation = 7500,
+                                        luminanceOffset = 2500
+                                    }
+                                },
+                                complexScriptFont = "+mn-cs",
+                                eastAsianFont = "+mn-ea",
+                                latinFont = "+mn-lt",
+                                fontSize = (int)lineChartDataLabel.fontSize * 100,
+                                bold = lineChartDataLabel.isBold,
+                                italic = lineChartDataLabel.isItalic,
+                                underline = UnderLineValues.NONE,
+                                strike = StrikeValues.NO_STRIKE,
+                                kerning = 1200,
+                                baseline = 0,
+                            }
                         }
                     }
                 }));
