@@ -136,17 +136,20 @@ namespace OpenXMLOffice.Global
                 {
                     throw new ArgumentException("DataLabelPosition is not supported for Doughnut Chart.");
                 }
-                dataLabels.InsertAt(new C.DataLabelPosition()
+                if (pieChartSetting.pieChartTypes != PieChartTypes.DOUGHNUT)
                 {
-                    Val = pieChartDataLabel.dataLabelPosition switch
+                    dataLabels.InsertAt(new C.DataLabelPosition()
                     {
-                        PieChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
-                        PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
-                        PieChartDataLabel.DataLabelPositionValues.BEST_FIT => C.DataLabelPositionValues.BestFit,
-                        //Center
-                        _ => C.DataLabelPositionValues.Center,
-                    }
-                }, 0);
+                        Val = pieChartDataLabel.dataLabelPosition switch
+                        {
+                            PieChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
+                            PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
+                            PieChartDataLabel.DataLabelPositionValues.BEST_FIT => C.DataLabelPositionValues.BestFit,
+                            //Center
+                            _ => C.DataLabelPositionValues.Center,
+                        }
+                    }, 0);
+                }
                 return dataLabels;
             }
             return null;

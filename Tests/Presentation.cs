@@ -152,7 +152,14 @@ namespace OpenXMLOffice.Tests
             //17
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new PieChartSetting()
             {
-                pieChartTypes = PieChartTypes.DOUGHNUT
+                pieChartTypes = PieChartTypes.DOUGHNUT,
+                pieChartDataLabel = new()
+                {
+                    dataLabelPosition = PieChartDataLabel.DataLabelPositionValues.SHOW,
+                    showCategoryName = true,
+                    showValue = true,
+                    separator = ". "
+                }
             });
             //18
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new ScatterChartSetting());
