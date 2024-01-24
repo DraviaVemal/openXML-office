@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Global
 
         private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
-            SolidFillModel GetSolidFill()
+            SolidFillModel GetFillSolidFill()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = barChartSetting.barChartSeriesSettings?
@@ -62,13 +62,34 @@ namespace OpenXMLOffice.Global
                 }
                 return solidFillModel;
             }
+            SolidFillModel GetOutlineSolidFill()
+            {
+                SolidFillModel solidFillModel = new();
+                string? hexColor = barChartSetting.barChartSeriesSettings?
+                            .Where(item => item?.borderColor != null)
+                            .Select(item => item?.borderColor!)
+                            .ToList().ElementAtOrDefault(seriesIndex);
+                if (hexColor != null)
+                {
+                    solidFillModel.hexColor = hexColor;
+                    return solidFillModel;
+                }
+                else
+                {
+                    solidFillModel.schemeColorModel = new()
+                    {
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                    };
+                }
+                return solidFillModel;
+            }
             C.DataLabels? dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ? CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             ShapePropertiesModel shapePropertiesModel = new()
             {
-                solidFill = GetSolidFill(),
+                solidFill = GetFillSolidFill(),
                 outline = new()
                 {
-                    solidFill = GetSolidFill()
+                    solidFill = GetOutlineSolidFill()
                 }
             };
             C.BarChartSeries series = new(

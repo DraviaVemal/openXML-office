@@ -102,8 +102,7 @@ namespace OpenXMLOffice.Global
 
         private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
-            C.DataLabels? dataLabels = seriesIndex < columnChartSetting.columnChartSeriesSettings.Count ? CreateColumnDataLabels(columnChartSetting.columnChartSeriesSettings[seriesIndex]?.columnChartDataLabel ?? new ColumnChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-            SolidFillModel GetSolidFill()
+            SolidFillModel GetFillSolidFill()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = columnChartSetting.columnChartSeriesSettings?
@@ -124,14 +123,36 @@ namespace OpenXMLOffice.Global
                 }
                 return solidFillModel;
             }
+            SolidFillModel GetOutlineSolidFill()
+            {
+                SolidFillModel solidFillModel = new();
+                string? hexColor = columnChartSetting.columnChartSeriesSettings?
+                            .Where(item => item?.borderColor != null)
+                            .Select(item => item?.borderColor!)
+                            .ToList().ElementAtOrDefault(seriesIndex);
+                if (hexColor != null)
+                {
+                    solidFillModel.hexColor = hexColor;
+                    return solidFillModel;
+                }
+                else
+                {
+                    solidFillModel.schemeColorModel = new()
+                    {
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                    };
+                }
+                return solidFillModel;
+            }
             ShapePropertiesModel shapePropertiesModel = new()
             {
-                solidFill = GetSolidFill(),
+                solidFill = GetFillSolidFill(),
                 outline = new()
                 {
-                    solidFill = GetSolidFill()
+                    solidFill = GetOutlineSolidFill()
                 }
             };
+            C.DataLabels? dataLabels = seriesIndex < columnChartSetting.columnChartSeriesSettings.Count ? CreateColumnDataLabels(columnChartSetting.columnChartSeriesSettings[seriesIndex]?.columnChartDataLabel ?? new ColumnChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },

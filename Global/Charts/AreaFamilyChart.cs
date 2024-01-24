@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Global
 
         private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping)
         {
-            SolidFillModel GetSolidFill()
+            SolidFillModel GetFillSolidFill()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = areaChartSetting.areaChartSeriesSettings?
@@ -62,12 +62,33 @@ namespace OpenXMLOffice.Global
                 }
                 return solidFillModel;
             }
+            SolidFillModel GetOutlineSolidFill()
+            {
+                SolidFillModel solidFillModel = new();
+                string? hexColor = areaChartSetting.areaChartSeriesSettings?
+                            .Where(item => item?.borderColor != null)
+                            .Select(item => item?.borderColor!)
+                            .ToList().ElementAtOrDefault(seriesIndex);
+                if (hexColor != null)
+                {
+                    solidFillModel.hexColor = hexColor;
+                    return solidFillModel;
+                }
+                else
+                {
+                    solidFillModel.schemeColorModel = new()
+                    {
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % 6),
+                    };
+                }
+                return solidFillModel;
+            }
             ShapePropertiesModel shapePropertiesModel = new()
             {
-                solidFill = GetSolidFill(),
+                solidFill = GetFillSolidFill(),
                 outline = new()
                 {
-                    solidFill = GetSolidFill()
+                    solidFill = GetOutlineSolidFill()
                 }
             };
             C.DataLabels? dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
