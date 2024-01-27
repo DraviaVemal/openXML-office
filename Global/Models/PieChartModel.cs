@@ -85,7 +85,10 @@ namespace OpenXMLOffice.Global
         /// The color of the fill.
         /// </summary>
         public string? fillColor;
-
+        /// <summary>
+        /// Border Color is only valid for Doughnut Chart
+        /// </summary>
+        public override string? borderColor { get => base.borderColor; set => base.borderColor = value; }
         /// <summary>
         /// Option to customize specific data series, will override chart level setting.
         /// </summary>
@@ -115,7 +118,19 @@ namespace OpenXMLOffice.Global
         /// The type of the pie chart.
         /// </summary>
         public PieChartTypes pieChartTypes = PieChartTypes.PIE;
-
+        /// <summary>
+        /// Will be ignored if pieChartTypes is not DOUGHNUT.
+        /// Value is assumed in percentage.
+        /// </summary>
+        public uint doughnutHoleSize = 50;
+        /// <summary>
+        /// The angle of the first slice of the pie chart in degrees.
+        /// </summary>
+        public uint angleOfFirstSlice = 0;
+        /// <summary>
+        /// Pie Explosion Value in percentage
+        /// </summary>
+        public uint pointExplosion = 0;
         #endregion Public Fields
     }
 }

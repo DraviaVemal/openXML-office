@@ -67,6 +67,7 @@ namespace OpenXMLOffice.Global
         /// 
         /// </summary>
         internal bool isVisible = true;
+        internal bool invertOrder;
         #endregion Internal Fields
     }
 
@@ -76,7 +77,14 @@ namespace OpenXMLOffice.Global
     public class ChartAxesOptions
     {
         #region Public Fields
-
+        /// <summary>
+        /// Invert the axes item order for the Vertical axis
+        /// </summary>
+        public bool invertVerticalAxesOrder;
+        /// <summary>
+        /// Invert the axes item order for the Horizontal axis
+        /// </summary>
+        public bool invertHorizontalAxesOrder;
         /// <summary>
         /// Is Horizontal Axes Enabled
         /// </summary>
@@ -466,7 +474,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// The color of the border.
         /// </summary>
-        public string? borderColor;
+        public virtual string? borderColor { get; set; }
         internal ChartSeriesSetting() { }
 
         #endregion Internal Constructors
@@ -564,7 +572,11 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// 
         /// </summary>
-        internal bool isVisible;
+        internal bool isVisible = true;
+        /// <summary>
+        /// Invert the axis scale order
+        /// </summary>
+        internal bool invertOrder;
         #endregion Internal Fields
     }
 

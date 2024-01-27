@@ -138,21 +138,23 @@ namespace OpenXMLOffice.Global
             plotArea.Append(CreateAreaChart(dataCols));
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
-                id = 1362418656,
-                crossAxisId = 1358349936,
+                id = CategoryAxisId,
+                crossAxisId = ValueAxisId,
                 fontSize = areaChartSetting.chartAxesOptions.horizontalFontSize,
                 isBold = areaChartSetting.chartAxesOptions.isHorizontalBold,
                 isItalic = areaChartSetting.chartAxesOptions.isHorizontalItalic,
                 isVisible = areaChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+                invertOrder = areaChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                id = 1358349936,
-                crossAxisId = 1362418656,
+                id = ValueAxisId,
+                crossAxisId = CategoryAxisId,
                 fontSize = areaChartSetting.chartAxesOptions.verticalFontSize,
                 isBold = areaChartSetting.chartAxesOptions.isVerticalBold,
                 isItalic = areaChartSetting.chartAxesOptions.isVerticalItalic,
                 isVisible = areaChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+                invertOrder = areaChartSetting.chartAxesOptions.invertVerticalAxesOrder,
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;
@@ -183,8 +185,8 @@ namespace OpenXMLOffice.Global
             {
                 AreaChart.Append(DataLabels);
             }
-            AreaChart.Append(new C.AxisId { Val = 1362418656 });
-            AreaChart.Append(new C.AxisId { Val = 1358349936 });
+            AreaChart.Append(new C.AxisId { Val = CategoryAxisId });
+            AreaChart.Append(new C.AxisId { Val = ValueAxisId });
             return AreaChart;
         }
 

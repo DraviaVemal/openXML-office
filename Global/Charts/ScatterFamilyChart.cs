@@ -80,27 +80,29 @@ namespace OpenXMLOffice.Global
                 chart.Append(new C.BubbleScale() { Val = 100 });
                 chart.Append(new C.ShowNegativeBubbles() { Val = false });
             }
-            chart.Append(new C.AxisId { Val = 1362418656 });
-            chart.Append(new C.AxisId { Val = 1358349936 });
+            chart.Append(new C.AxisId { Val = CategoryAxisId });
+            chart.Append(new C.AxisId { Val = ValueAxisId });
             plotArea.Append(chart);
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                id = 1362418656,
+                id = CategoryAxisId,
                 axisPosition = AxisPosition.BOTTOM,
-                crossAxisId = 1358349936,
+                crossAxisId = ValueAxisId,
                 fontSize = scatterChartSetting.chartAxesOptions.horizontalFontSize,
                 isBold = scatterChartSetting.chartAxesOptions.isHorizontalBold,
                 isItalic = scatterChartSetting.chartAxesOptions.isHorizontalItalic,
                 isVisible = scatterChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+                invertOrder = scatterChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                id = 1358349936,
-                crossAxisId = 1362418656,
+                id = ValueAxisId,
+                crossAxisId = CategoryAxisId,
                 fontSize = scatterChartSetting.chartAxesOptions.verticalFontSize,
                 isBold = scatterChartSetting.chartAxesOptions.isVerticalBold,
                 isItalic = scatterChartSetting.chartAxesOptions.isVerticalItalic,
                 isVisible = scatterChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+                invertOrder = scatterChartSetting.chartAxesOptions.invertVerticalAxesOrder,
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;
@@ -110,7 +112,7 @@ namespace OpenXMLOffice.Global
         {
             C.DataLabels? dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
                 CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-            SolidFillModel GetSolidFill()
+            SolidFillModel GetOutlineSolidFill()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = scatterChartSetting.scatterChartSeriesSettings?
@@ -164,7 +166,7 @@ namespace OpenXMLOffice.Global
             {
                 outline = new()
                 {
-                    solidFill = scatterChartSetting.scatterChartTypes == ScatterChartTypes.SCATTER ? null : GetSolidFill(),
+                    solidFill = scatterChartSetting.scatterChartTypes == ScatterChartTypes.SCATTER ? null : GetOutlineSolidFill(),
                 }
             };
             if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)

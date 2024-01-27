@@ -67,26 +67,28 @@ namespace OpenXMLOffice.Global
             {
                 LineChart.Append(DataLabels);
             }
-            LineChart.Append(new C.AxisId { Val = 1362418656 });
-            LineChart.Append(new C.AxisId { Val = 1358349936 });
+            LineChart.Append(new C.AxisId { Val = CategoryAxisId });
+            LineChart.Append(new C.AxisId { Val = ValueAxisId });
             plotArea.Append(LineChart);
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
-                id = 1362418656,
-                crossAxisId = 1358349936,
+                id = CategoryAxisId,
+                crossAxisId = ValueAxisId,
                 fontSize = lineChartSetting.chartAxesOptions.horizontalFontSize,
                 isBold = lineChartSetting.chartAxesOptions.isHorizontalBold,
                 isItalic = lineChartSetting.chartAxesOptions.isHorizontalItalic,
                 isVisible = lineChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+                invertOrder = lineChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
-                id = 1358349936,
-                crossAxisId = 1362418656,
+                id = ValueAxisId,
+                crossAxisId = CategoryAxisId,
                 fontSize = lineChartSetting.chartAxesOptions.verticalFontSize,
                 isBold = lineChartSetting.chartAxesOptions.isVerticalBold,
                 isItalic = lineChartSetting.chartAxesOptions.isVerticalItalic,
                 isVisible = lineChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+                invertOrder = lineChartSetting.chartAxesOptions.invertVerticalAxesOrder,
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;

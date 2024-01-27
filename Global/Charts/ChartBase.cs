@@ -14,6 +14,8 @@ namespace OpenXMLOffice.Global;
 public class ChartBase : CommonProperties
 {
     internal const int AccentColurCount = 6;
+    internal const int CategoryAxisId = 1362418656;
+    internal const int ValueAxisId = 1358349936;
 
     #region Protected Fields
 
@@ -107,7 +109,7 @@ public class ChartBase : CommonProperties
     {
         C.CategoryAxis CategoryAxis = new(
             new C.AxisId { Val = categoryAxisSetting.id },
-            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
+            new C.Scaling(new C.Orientation { Val = categoryAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
             new C.Delete { Val = !categoryAxisSetting.isVisible },
             new C.AxisPosition
             {
@@ -440,7 +442,7 @@ public class ChartBase : CommonProperties
     {
         C.ValueAxis valueAxis = new(
             new C.AxisId { Val = valueAxisSetting.id },
-            new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
+            new C.Scaling(new C.Orientation { Val = valueAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
             new C.Delete { Val = !valueAxisSetting.isVisible },
             new C.AxisPosition
             {
