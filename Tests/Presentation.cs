@@ -227,9 +227,10 @@ namespace OpenXMLOffice.Tests
 					cellValue = $"Category {i}",
 					dataType = CellDataType.STRING
 				};
+				int val = (i % 2) == 0 ? -i : i;
 				data[i][1] = new DataCell()
 				{
-					cellValue = $"{i}",
+					cellValue = $"{val}",
 					dataType = CellDataType.NUMBER
 				};
 			}

@@ -19,6 +19,7 @@ public class ChartStyle
 	{
 		CS.ChartStyle ChartStyle = new()
 		{
+			Id = 395,
 			AxisTitle = CreateAxisTitle(),
 			CategoryAxis = CreateCategoryAxis(),
 			ChartArea = CreateChartArea(),
