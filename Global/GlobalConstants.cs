@@ -2,23 +2,23 @@
 
 namespace OpenXMLOffice.Global_2013
 {
-    /// <summary>
-    /// Global Constants
-    /// </summary>
-    public static class GlobalConstants
-    {        /// <summary>
-             /// Default DPI
-             /// </summary>
-        public const int defaultDPI = 96;
+	/// <summary>
+	/// Global Constants
+	/// </summary>
+	public static class GlobalConstants
+	{        /// <summary>
+			 /// Default DPI
+			 /// </summary>
+		public const int defaultDPI = 96;
 
-        /// <summary>
-        /// Default Slide Height in EMU
-        /// </summary>
-        public const int defaultSlideHeightEmu = 6858000;
+		/// <summary>
+		/// Default Slide Height in EMU
+		/// </summary>
+		public const int defaultSlideHeightEmu = 6858000;
 
-        /// <summary>
-        /// Default Slide Width in EMU
-        /// </summary>
-        public const int defaultSlideWidthEmu = 9144000;
-    }
+		/// <summary>
+		/// Default Slide Width in EMU
+		/// </summary>
+		public const int defaultSlideWidthEmu = 9144000;
+	}
 }

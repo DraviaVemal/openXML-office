@@ -6,9 +6,11 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Contains constants related to the presentation functionality.
 	/// </summary>
 	public static class PresentationConstants
-	{        /// <summary>
-			 /// Represents the common slide data types.
-			 /// </summary>
+	{
+
+		/// <summary>
+		/// Represents the common slide data types.
+		/// </summary>
 		public enum CommonSlideDataType
 		{
 			/// <summary>

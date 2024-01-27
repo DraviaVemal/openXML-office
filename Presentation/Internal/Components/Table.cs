@@ -13,19 +13,16 @@ namespace OpenXMLOffice.Presentation_2013
 	public class Table : G.CommonProperties
 	{
 		private readonly P.GraphicFrame graphicFrame = new();
-		private readonly TableSetting tableSetting;        /// <summary>
-														   /// Create Table with provided settings
-														   /// </summary>
-														   /// <param name="TableRows">
-														   /// </param>
-														   /// <param name="TableSetting">
-														   /// </param>
+		private readonly TableSetting tableSetting;
+
+		/// <summary>
+		/// Create Table with provided settings
+		/// </summary>
 		public Table(TableRow[] TableRows, TableSetting TableSetting)
 		{
 			tableSetting = TableSetting;
 			CreateTableGraphicFrame(TableRows);
 		}
-
 
 		/// <summary>
 		/// </summary>
@@ -60,10 +57,6 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Update Table Position
 		/// </summary>
-		/// <param name="X">
-		/// </param>
-		/// <param name="Y">
-		/// </param>
 		public void UpdatePosition(uint X, uint Y)
 		{
 			tableSetting.x = X;
@@ -81,10 +74,6 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Update Table Size
 		/// </summary>
-		/// <param name="Width">
-		/// </param>
-		/// <param name="Height">
-		/// </param>
 		public void UpdateSize(uint Width, uint Height)
 		{
 			ReCalculateColumnWidth();
@@ -99,10 +88,6 @@ namespace OpenXMLOffice.Presentation_2013
 				};
 			}
 		}
-
-
-
-
 
 		private long CalculateColumnWidth(TableSetting.WidthOptionValues widthType, float InputWidth)
 		{

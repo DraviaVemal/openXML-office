@@ -10,9 +10,11 @@ namespace OpenXMLOffice.Presentation_2013
 	/// </summary>
 	public class ViewProperties
 	{
-		private readonly P.ViewProperties openXMLViewProperties = new();        /// <summary>
-																				/// Create New View Properties
-																				/// </summary>
+		private readonly P.ViewProperties openXMLViewProperties = new();
+
+		/// <summary>
+		/// Create New View Properties
+		/// </summary>
 		public ViewProperties()
 		{
 			openXMLViewProperties.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
@@ -28,7 +30,6 @@ namespace OpenXMLOffice.Presentation_2013
 			});
 		}
 
-
 		/// <summary>
 		/// Return OpenXML View Properties
 		/// </summary>
@@ -38,10 +39,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			return openXMLViewProperties;
 		}
-
-
-
-
 
 		private static P.NotesTextViewProperties CreateNotesTextViewProperties()
 		{

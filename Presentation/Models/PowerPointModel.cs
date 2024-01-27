@@ -8,9 +8,10 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Represents the properties of a presentation.
 	/// </summary>
 	public class PresentationProperties
-	{        /// <summary>
-			 /// Gets or sets the presentation settings.
-			 /// </summary>
+	{
+		/// <summary>
+		/// Gets or sets the presentation settings.
+		/// </summary>
 		public PresentationSettings settings = new();
 
 		/// <summary>
@@ -31,9 +32,10 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Represents the settings of a presentation.
 	/// </summary>
 	public class PresentationSettings
-	{        /// <summary>
-			 /// Gets or sets a value indicating whether the presentation has multiple slide masters.
-			 /// </summary>
+	{
+		/// <summary>
+		/// Gets or sets a value indicating whether the presentation has multiple slide masters.
+		/// </summary>
 		public bool isMultiSlideMasterPartPresentation = false;
 
 		/// <summary>
@@ -46,9 +48,10 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Represents a slide master in a presentation.
 	/// </summary>
 	public class PresentationSlideMaster
-	{        /// <summary>
-			 /// Gets or sets the theme of the slide master.
-			 /// </summary>
+	{
+		/// <summary>
+		/// Gets or sets the theme of the slide master.
+		/// </summary>
 		public ThemePallet theme = new();
 	}
 

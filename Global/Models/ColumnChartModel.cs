@@ -2,141 +2,147 @@
 
 namespace OpenXMLOffice.Global_2013
 {
-    /// <summary>
-    /// Represents the types of column charts.
-    /// </summary>
-    public enum ColumnChartTypes
-    {
-        /// <summary>
-        /// Clustered Column Chart
-        /// </summary>
-        CLUSTERED,
+	/// <summary>
+	/// Represents the types of column charts.
+	/// </summary>
+	public enum ColumnChartTypes
+	{
+		/// <summary>
+		/// Clustered Column Chart
+		/// </summary>
+		CLUSTERED,
 
-        /// <summary>
-        /// Stacked Column Chart
-        /// </summary>
-        STACKED,
+		/// <summary>
+		/// Stacked Column Chart
+		/// </summary>
+		STACKED,
 
-        /// <summary>
-        /// Percent Stacked Column Chart
-        /// </summary>
-        PERCENT_STACKED,
+		/// <summary>
+		/// Percent Stacked Column Chart
+		/// </summary>
+		PERCENT_STACKED,
 
-        // CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D, COLUMN_3D
-    }
+		// CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D, COLUMN_3D
+	}
 
-    /// <summary>
-    /// Represents the graphics settings for a column chart.
-    /// </summary>
-    public class ColumnGraphicsSetting
-    {
-        /// <summary>
-        /// The gap width between the Column.
-        /// </summary>
-        public int categoryGap = 219;
-        /// <summary>
-        /// The gap between the series column.
-        /// </summary>
-        public int seriesGap = -27;
-    }
+	/// <summary>
+	/// Represents the graphics settings for a column chart.
+	/// </summary>
+	public class ColumnGraphicsSetting
+	{
+		/// <summary>
+		/// The gap width between the Column.
+		/// </summary>
+		public int categoryGap = 219;
+		/// <summary>
+		/// The gap between the series column.
+		/// </summary>
+		public int seriesGap = -27;
+	}
 
-    /// <summary>
-    /// Represents the data label settings for a column chart.
-    /// </summary>
-    public class ColumnChartDataLabel : ChartDataLabel
-    {        /// <summary>
-             /// The position of the data label.
-             /// </summary>
-        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;        /// <summary>
-                                                                                                  /// The possible positions for the data label.
-                                                                                                  /// </summary>
-        public enum DataLabelPositionValues
-        {
-            /// <summary>
-            /// Center
-            /// </summary>
-            CENTER,
+	/// <summary>
+	/// Represents the data label settings for a column chart.
+	/// </summary>
+	public class ColumnChartDataLabel : ChartDataLabel
+	{
 
-            /// <summary>
-            /// Inside End
-            /// </summary>
-            INSIDE_END,
+		/// <summary>
+		/// The position of the data label.
+		/// </summary>
+		public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 
-            /// <summary>
-            /// Inside Base
-            /// </summary>
-            INSIDE_BASE,
+		/// <summary>
+		/// The possible positions for the data label.
+		/// </summary>
+		public enum DataLabelPositionValues
+		{
+			/// <summary>
+			/// Center
+			/// </summary>
+			CENTER,
 
-            /// <summary>
-            /// This option is only for Cluster type chart.
-            /// </summary>
-            OUTSIDE_END,
+			/// <summary>
+			/// Inside End
+			/// </summary>
+			INSIDE_END,
 
-            // /// <summary>
-            // /// Data Callout
-            // /// </summary>
-            // DATA_CALLOUT
-        }
-    }
+			/// <summary>
+			/// Inside Base
+			/// </summary>
+			INSIDE_BASE,
 
-    /// <summary>
-    ///
-    /// </summary>
-    public class ColumnChartDataPointSetting : ChartDataPointSettings
-    {
+			/// <summary>
+			/// This option is only for Cluster type chart.
+			/// </summary>
+			OUTSIDE_END,
 
-    }
+			// /// <summary>
+			// /// Data Callout
+			// /// </summary>
+			// DATA_CALLOUT
+		}
+	}
 
-    /// <summary>
-    /// Represents the series settings for a column chart.
-    /// </summary>
-    public class ColumnChartSeriesSetting : ChartSeriesSetting
-    {        /// <summary>
-             ///
-             /// </summary>
-        public List<ColumnChartDataPointSetting?> columnChartDataPointSettings = new();
-        /// <summary>
-        /// Option to customize specific data series. Will override chart level setting.
-        /// </summary>
-        public ColumnChartDataLabel columnChartDataLabel = new();
+	/// <summary>
+	///
+	/// </summary>
+	public class ColumnChartDataPointSetting : ChartDataPointSettings
+	{
 
-        /// <summary>
-        /// Chart Stick Fill Color
-        /// </summary>
-        public string? fillColor;
-    }
+	}
 
-    /// <summary>
-    /// Represents the settings for a column chart.
-    /// </summary>
-    public class ColumnChartSetting : ChartSetting
-    {        /// <summary>
-             /// Chart Axes Options
-             /// </summary>
-        public ChartAxesOptions chartAxesOptions = new();
+	/// <summary>
+	/// Represents the series settings for a column chart.
+	/// </summary>
+	public class ColumnChartSeriesSetting : ChartSeriesSetting
+	{        /// <summary>
+			 ///
+			 /// </summary>
+		public List<ColumnChartDataPointSetting?> columnChartDataPointSettings = new();
+		/// <summary>
+		/// Option to customize specific data series. Will override chart level setting.
+		/// </summary>
+		public ColumnChartDataLabel columnChartDataLabel = new();
 
-        /// <summary>
-        /// Chart Axis Options
-        /// </summary>
-        public ChartAxisOptions chartAxisOptions = new();
+		/// <summary>
+		/// Chart Stick Fill Color
+		/// </summary>
+		public string? fillColor;
+	}
 
-        /// <summary>
-        /// Will get overridden by series level setting.
-        /// </summary>
-        public ColumnChartDataLabel columnChartDataLabel = new();
+	/// <summary>
+	/// Represents the settings for a column chart.
+	/// </summary>
+	public class ColumnChartSetting : ChartSetting
+	{
 
-        /// <summary>
-        /// Chart Series Settings
-        /// </summary>
-        public List<ColumnChartSeriesSetting?> columnChartSeriesSettings = new();
+		/// <summary>
+		/// Chart Axes Options
+		/// </summary>
+		public ChartAxesOptions chartAxesOptions = new();
 
-        /// <summary>
-        /// Chart Type. default is CLUSTERED
-        /// </summary>
-        public ColumnChartTypes columnChartTypes = ColumnChartTypes.CLUSTERED;
-        /// <summary>
-        /// The graphics settings for the column chart.
-        /// </summary>
-        public ColumnGraphicsSetting columnGraphicsSetting = new();
-    }
+		/// <summary>
+		/// Chart Axis Options
+		/// </summary>
+		public ChartAxisOptions chartAxisOptions = new();
+
+		/// <summary>
+		/// Will get overridden by series level setting.
+		/// </summary>
+		public ColumnChartDataLabel columnChartDataLabel = new();
+
+		/// <summary>
+		/// Chart Series Settings
+		/// </summary>
+		public List<ColumnChartSeriesSetting?> columnChartSeriesSettings = new();
+
+		/// <summary>
+		/// Chart Type. default is CLUSTERED
+		/// </summary>
+		public ColumnChartTypes columnChartTypes = ColumnChartTypes.CLUSTERED;
+		/// <summary>
+		/// The graphics settings for the column chart.
+		/// </summary>
+		public ColumnGraphicsSetting columnGraphicsSetting = new();
+	}
 }

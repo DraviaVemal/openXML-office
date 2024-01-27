@@ -102,8 +102,6 @@ namespace OpenXMLOffice.Global_2013
 			return new() { chartDataGroupings.ElementAt((int)chartPosition) };
 		}
 
-
-
 		/// <summary>
 		/// Get Chart Style
 		/// </summary>

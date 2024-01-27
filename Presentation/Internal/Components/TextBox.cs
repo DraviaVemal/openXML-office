@@ -10,11 +10,13 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Textbox Class
 	/// </summary>
 	public class TextBox : TextBoxBase
-	{        /// <summary>
-			 /// Create Textbox with provided settings
-			 /// </summary>
-			 /// <param name="TextBoxSetting">
-			 /// </param>
+	{
+
+		/// <summary>
+		/// Create Textbox with provided settings
+		/// </summary>
+		/// <param name="TextBoxSetting">
+		/// </param>
 		public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting) { }
 
 

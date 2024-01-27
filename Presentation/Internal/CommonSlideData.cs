@@ -14,7 +14,6 @@ namespace OpenXMLOffice.Presentation_2013
 	{
 		private readonly P.CommonSlideData openXMLCommonSlideData;
 
-
 		internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
 		{
 			openXMLCommonSlideData = new()
@@ -29,19 +28,11 @@ namespace OpenXMLOffice.Presentation_2013
 			openXMLCommonSlideData = commonSlideData;
 		}
 
-
-
-
-
 		// Return OpenXML CommonSlideData Object
 		internal P.CommonSlideData GetCommonSlideData()
 		{
 			return openXMLCommonSlideData;
 		}
-
-
-
-
 
 		private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
 		{

@@ -173,9 +173,10 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Presentation Table Cell Class for setting the cell properties.
 	/// </summary>
 	public class TableCell
-	{        /// <summary>
-			 /// Cell Alignment Option
-			 /// </summary>
+	{
+		/// <summary>
+		/// Cell Alignment Option
+		/// </summary>
 		public HorizontalAlignmentValues? horizontalAlignment;
 
 		/// <summary>
@@ -239,9 +240,10 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Table Row Customisation Properties
 	/// </summary>
 	public class TableRow
-	{        /// <summary>
-			 /// Row Height
-			 /// </summary>
+	{
+		/// <summary>
+		/// Row Height
+		/// </summary>
 		public int height = 370840;
 
 		/// <summary>
@@ -264,9 +266,10 @@ namespace OpenXMLOffice.Presentation_2013
 	/// Table Customisation Properties
 	/// </summary>
 	public class TableSetting
-	{        /// <summary>
-			 /// Overall Table Height
-			 /// </summary>
+	{
+		/// <summary>
+		/// Overall Table Height
+		/// </summary>
 		public uint height = 741680;
 
 		/// <summary>
@@ -300,9 +303,10 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Table Y Position in the slide in EMUs (English Metric Units).
 		/// </summary>
-		public uint y = 0;        /// <summary>
-								  /// Width Option Values
-								  /// </summary>
+		public uint y = 0;
+		/// <summary>
+		/// Width Option Values
+		/// </summary>
 		public enum WidthOptionValues
 		{
 			/// <summary>

@@ -7,13 +7,15 @@ namespace OpenXMLOffice.Presentation_2013
 	/// </summary>
 	public class PowerPoint
 	{
-		private readonly Presentation presentation;        /// <summary>
-														   /// Create New file in the system
-														   /// </summary>
-														   /// <param name="filePath">
-														   /// </param>
-														   /// <param name="powerPointProperties">
-														   /// </param>
+		private readonly Presentation presentation;
+
+		/// <summary>
+		/// Create New file in the system
+		/// </summary>
+		/// <param name="filePath">
+		/// </param>
+		/// <param name="powerPointProperties">
+		/// </param>
 		public PowerPoint(string filePath, PresentationProperties? powerPointProperties = null)
 		{
 			presentation = new(filePath, powerPointProperties);

@@ -13,15 +13,10 @@ namespace OpenXMLOffice.Global_2013
 		private const int DefaultGapWidth = 150;
 		private const int DefaultOverlap = 100;
 
-
 		/// <summary>
 		/// Column Chart Setting
 		/// </summary>
 		protected ColumnChartSetting columnChartSetting;
-
-
-
-
 
 		internal ColumnFamilyChart(ColumnChartSetting columnChartSetting) : base(columnChartSetting)
 		{
@@ -36,10 +31,6 @@ namespace OpenXMLOffice.Global_2013
 			this.columnChartSetting = columnChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols));
 		}
-
-
-
-
 
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
 		{

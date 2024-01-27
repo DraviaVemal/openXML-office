@@ -8,21 +8,16 @@ namespace OpenXMLOffice.Global_2013
 	/// Represents the settings for a line chart.
 	/// </summary>
 	public class LineChart : LineFamilyChart
-	{        /// <summary>
-			 /// Create Line Chart with provided settings
-			 /// </summary>
-			 /// <param name="LineChartSetting">
-			 /// </param>
-			 /// <param name="DataCols">
-			 /// </param>
-		public LineChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting, DataCols) { }
+	{
 
+		/// <summary>
+		/// Create Line Chart with provided settings
+		/// </summary>
+		public LineChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting, DataCols) { }
 
 		/// <summary>
 		/// Get Chart Style
 		/// </summary>
-		/// <returns>
-		/// </returns>
 		public static CS.ChartStyle GetChartStyle()
 		{
 			return CreateChartStyles();

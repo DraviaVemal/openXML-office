@@ -8,7 +8,6 @@ namespace OpenXMLOffice.Presentation_2013
 	internal class Presentation : PresentationCore
 	{
 
-
 		internal Presentation(string filePath, PresentationProperties? presentationProperties = null)
 		: base(filePath, presentationProperties) { }
 
@@ -20,10 +19,6 @@ namespace OpenXMLOffice.Presentation_2013
 
 		internal Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
 		: base(stream, isEditable, presentationProperties) { }
-
-
-
-
 
 		internal Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
 		{
@@ -107,7 +102,5 @@ namespace OpenXMLOffice.Presentation_2013
 			presentationDocument.Clone(filePath).Dispose();
 			presentationDocument.Dispose();
 		}
-
-
 	}
 }

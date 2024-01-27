@@ -11,15 +11,10 @@ namespace OpenXMLOffice.Global_2013
 	public class LineFamilyChart : ChartBase
 	{
 
-
 		/// <summary>
 		/// The settings for the line chart.
 		/// </summary>
 		protected LineChartSetting lineChartSetting;
-
-
-
-
 
 		internal LineFamilyChart(LineChartSetting lineChartSetting) : base(lineChartSetting)
 		{
@@ -34,10 +29,6 @@ namespace OpenXMLOffice.Global_2013
 			this.lineChartSetting = lineChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols));
 		}
-
-
-
-
 
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
 		{

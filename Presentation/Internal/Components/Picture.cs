@@ -16,15 +16,11 @@ namespace OpenXMLOffice.Presentation_2013
 
 		private readonly P.Picture openXMLPicture;
 
-		private readonly PictureSetting pictureSetting;        /// <summary>
-															   /// Create Picture Object with provided settings
-															   /// </summary>
-															   /// <param name="Stream">
-															   /// </param>
-															   /// <param name="Slide">
-															   /// </param>
-															   /// <param name="PictureSetting">
-															   /// </param>
+		private readonly PictureSetting pictureSetting;
+
+		/// <summary>
+		/// Create Picture Object with provided settings
+		/// </summary>
 		public Picture(Stream Stream, Slide Slide, PictureSetting PictureSetting)
 		{
 			currentSlide = Slide;
@@ -45,12 +41,6 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Create Picture Object with provided settings
 		/// </summary>
-		/// <param name="FilePath">
-		/// </param>
-		/// <param name="Slide">
-		/// </param>
-		/// <param name="PictureSetting">
-		/// </param>
 		public Picture(string FilePath, Slide Slide, PictureSetting PictureSetting)
 		{
 			currentSlide = Slide;
@@ -131,18 +121,10 @@ namespace OpenXMLOffice.Presentation_2013
 			}
 		}
 
-
-
-
-
 		internal P.Picture GetPicture()
 		{
 			return openXMLPicture;
 		}
-
-
-
-
 
 		private void CreatePicture(string EmbedId)
 		{
@@ -176,7 +158,5 @@ namespace OpenXMLOffice.Presentation_2013
 			};
 			GetPicture().BlipFill!.Append(new A.Stretch(new A.FillRectangle()));
 		}
-
-
 	}
 }

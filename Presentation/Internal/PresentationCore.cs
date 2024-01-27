@@ -11,7 +11,6 @@ namespace OpenXMLOffice.Presentation_2013
 	internal class PresentationCore
 	{
 
-
 		protected readonly PresentationDocument presentationDocument;
 
 		protected readonly PresentationInfo presentationInfo = new();
@@ -19,7 +18,6 @@ namespace OpenXMLOffice.Presentation_2013
 		protected readonly PresentationProperties presentationProperties;
 
 		protected ExtendedFilePropertiesPart? extendedFilePropertiesPart;
-
 
 		//#### Presentation Constants ####//
 		private readonly uint slideIdStart = 255;
@@ -110,10 +108,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			return GetPresentationPart().Presentation.SlideMasterIdList!;
 		}
-
-
-
-
 
 		private static P.DefaultTextStyle CreateDefaultTextStyle()
 		{

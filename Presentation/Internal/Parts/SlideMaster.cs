@@ -39,10 +39,6 @@ namespace OpenXMLOffice.Presentation_2013
 			return openXMLSlideMaster.SlideMasterPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
 		}
 
-
-
-
-
 		private void CreateSlideMaster()
 		{
 			slideLayoutIdList = new();

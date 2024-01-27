@@ -2,132 +2,140 @@
 
 namespace OpenXMLOffice.Global_2013
 {
-    /// <summary>
-    /// Represents the types of scatter charts.
-    /// </summary>
-    public enum ScatterChartTypes
-    {
-        /// <summary>
-        /// Scatter Chart
-        /// </summary>
-        SCATTER,
+	/// <summary>
+	/// Represents the types of scatter charts.
+	/// </summary>
+	public enum ScatterChartTypes
+	{
+		/// <summary>
+		/// Scatter Chart
+		/// </summary>
+		SCATTER,
 
-        /// <summary>
-        /// Scatter Chart with Smooth Lines
-        /// </summary>
-        SCATTER_SMOOTH,
+		/// <summary>
+		/// Scatter Chart with Smooth Lines
+		/// </summary>
+		SCATTER_SMOOTH,
 
-        /// <summary>
-        /// Scatter Chart with Smooth Lines and Markers
-        /// </summary>
-        SCATTER_SMOOTH_MARKER,
+		/// <summary>
+		/// Scatter Chart with Smooth Lines and Markers
+		/// </summary>
+		SCATTER_SMOOTH_MARKER,
 
-        /// <summary>
-        /// Scatter Chart with Straight Lines
-        /// </summary>
-        SCATTER_STRIGHT,
+		/// <summary>
+		/// Scatter Chart with Straight Lines
+		/// </summary>
+		SCATTER_STRIGHT,
 
-        /// <summary>
-        /// Scatter Chart with Straight Lines and Markers
-        /// </summary>
-        SCATTER_STRIGHT_MARKER,
+		/// <summary>
+		/// Scatter Chart with Straight Lines and Markers
+		/// </summary>
+		SCATTER_STRIGHT_MARKER,
 
-        /// <summary>
-        /// Bubble Chart
-        /// </summary>
-        BUBBLE,
+		/// <summary>
+		/// Bubble Chart
+		/// </summary>
+		BUBBLE,
 
-        // BUBBLE_3D
-    }
+		// BUBBLE_3D
+	}
 
-    /// <summary>
-    /// Represents the data label settings for a scatter chart.
-    /// </summary>
-    public class ScatterChartDataLabel : ChartDataLabel
-    {        /// <summary>
-             /// The position of the data labels.
-             /// </summary>
-        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
+	/// <summary>
+	/// Represents the data label settings for a scatter chart.
+	/// </summary>
+	public class ScatterChartDataLabel : ChartDataLabel
+	{
 
-        /// <summary>
-        /// Determines whether to show the bubble size in the data labels.
-        /// </summary>
-        public bool showBubbleSize = false;        /// <summary>
-                                                   /// The possible positions for the data labels.
-                                                   /// </summary>
-        public enum DataLabelPositionValues
-        {
-            /// <summary>
-            /// Left Side
-            /// </summary>
-            LEFT,
+		/// <summary>
+		/// The position of the data labels.
+		/// </summary>
+		public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 
-            /// <summary>
-            /// Right Side
-            /// </summary>
-            RIGHT,
+		/// <summary>
+		/// Determines whether to show the bubble size in the data labels.
+		/// </summary>
+		public bool showBubbleSize = false;
 
-            /// <summary>
-            /// Center Placement
-            /// </summary>
-            CENTER,
+		/// <summary>
+		/// The possible positions for the data labels.
+		/// </summary>
+		public enum DataLabelPositionValues
+		{
+			/// <summary>
+			/// Left Side
+			/// </summary>
+			LEFT,
 
-            /// <summary>
-            /// Above content
-            /// </summary>
-            ABOVE,
+			/// <summary>
+			/// Right Side
+			/// </summary>
+			RIGHT,
 
-            /// <summary>
-            /// Below content
-            /// </summary>
-            BELOW,
+			/// <summary>
+			/// Center Placement
+			/// </summary>
+			CENTER,
 
-            // /// <summary>
-            // /// Data Callout Style
-            // /// </summary>
-            // DATA_CALLOUT
-        }
-    }
+			/// <summary>
+			/// Above content
+			/// </summary>
+			ABOVE,
 
-    /// <summary>
-    /// Represents the series settings for a scatter chart.
-    /// </summary>
-    public class ScatterChartSeriesSetting : ChartSeriesSetting
-    {        /// <summary>
-             /// Custom data label settings for the specific data series. This will override the chart
-             /// level setting.
-             /// </summary>
-        public ScatterChartDataLabel scatterChartDataLabel = new();
-    }
+			/// <summary>
+			/// Below content
+			/// </summary>
+			BELOW,
 
-    /// <summary>
-    /// Represents the settings for a scatter chart.
-    /// </summary>
-    public class ScatterChartSetting : ChartSetting
-    {        /// <summary>
-             /// The options for the chart axes.
-             /// </summary>
-        public ChartAxesOptions chartAxesOptions = new();
+			// /// <summary>
+			// /// Data Callout Style
+			// /// </summary>
+			// DATA_CALLOUT
+		}
+	}
 
-        /// <summary>
-        /// The options for the chart axis.
-        /// </summary>
-        public ChartAxisOptions chartAxisOptions = new();
+	/// <summary>
+	/// Represents the series settings for a scatter chart.
+	/// </summary>
+	public class ScatterChartSeriesSetting : ChartSeriesSetting
+	{
 
-        /// <summary>
-        /// The data label settings for the scatter chart. This will get overridden by the series
-        /// level setting.
-        /// </summary>
-        public ScatterChartDataLabel scatterChartDataLabel = new();
+		/// <summary>
+		/// Custom data label settings for the specific data series. This will override the chart
+		/// level setting.
+		/// </summary>
+		public ScatterChartDataLabel scatterChartDataLabel = new();
+	}
 
-        /// <summary>
-        /// The list of series settings for the scatter chart.
-        /// </summary>
-        public List<ScatterChartSeriesSetting?> scatterChartSeriesSettings = new();
+	/// <summary>
+	/// Represents the settings for a scatter chart.
+	/// </summary>
+	public class ScatterChartSetting : ChartSetting
+	{
 
-        /// <summary>
-        /// The type of scatter chart.
-        /// </summary>
-        public ScatterChartTypes scatterChartTypes = ScatterChartTypes.SCATTER;
-    }
+		/// <summary>
+		/// The options for the chart axes.
+		/// </summary>
+		public ChartAxesOptions chartAxesOptions = new();
+
+		/// <summary>
+		/// The options for the chart axis.
+		/// </summary>
+		public ChartAxisOptions chartAxisOptions = new();
+
+		/// <summary>
+		/// The data label settings for the scatter chart. This will get overridden by the series
+		/// level setting.
+		/// </summary>
+		public ScatterChartDataLabel scatterChartDataLabel = new();
+
+		/// <summary>
+		/// The list of series settings for the scatter chart.
+		/// </summary>
+		public List<ScatterChartSeriesSetting?> scatterChartSeriesSettings = new();
+
+		/// <summary>
+		/// The type of scatter chart.
+		/// </summary>
+		public ScatterChartTypes scatterChartTypes = ScatterChartTypes.SCATTER;
+	}
 }
