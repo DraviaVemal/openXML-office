@@ -16,7 +16,15 @@ namespace OpenXMLOffice.Global_2016
 		public WaterfallChart(WaterfallChartSetting waterfallChartSetting, ChartData[][] dataColumns) : base(waterfallChartSetting)
 		{
 			this.waterfallChartSetting = waterfallChartSetting;
+			CreateWaterfallChart(dataColumns);
 		}
+
+		private void CreateWaterfallChart(ChartData[][] dataColumns)
+		{
+			GetExtendedChartSpace().Append(CreateChartData(CreateDataSeries(dataColumns, waterfallChartSetting.chartDataSetting)));
+			GetExtendedChartSpace().Append(CreateChart(CreateDataSeries(dataColumns, waterfallChartSetting.chartDataSetting)));
+		}
+
 
 	}
 }

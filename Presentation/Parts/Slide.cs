@@ -3,6 +3,8 @@
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Excel_2013;
 using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Global_2016;
+using P16 = OpenXMLOffice.Presentation_2016;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -101,6 +103,16 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Chart Chart = new(this, DataCells, comboChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
+			return Chart;
+		}
+
+		/// <summary>
+		/// Adds a Combo chart to the slide.
+		/// </summary>
+		public P16.Chart AddChart(DataCell[][] DataCells, WaterfallChartSetting waterfallChartSetting)
+		{
+			P16.Chart Chart = new(this, DataCells, waterfallChartSetting);
+			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetAlternateContent(this));
 			return Chart;
 		}
 

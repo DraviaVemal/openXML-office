@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Presentation_2016
 	/// <summary>
 	///
 	/// </summary>
-	public class Chart : ChartProperties
+	public class Chart : AdvancedChartProperties
 	{
 		/// <summary>
 		///
@@ -53,20 +53,8 @@ namespace OpenXMLOffice.Presentation_2016
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			LoadDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
-			ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
-				col.Select(Cell => new ChartData
-				{
-					numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
-					value = Cell?.cellValue,
-					dataType = Cell?.dataType switch
-					{
-						CellDataType.NUMBER => DataType.NUMBER,
-						CellDataType.DATE => DataType.DATE,
-						_ => DataType.STRING
-					}
-				}).ToArray()).ToArray();
-			WaterfallChart waterfallChart = new(waterfallChartSetting, ChartData);
-			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
+			WaterfallChart waterfallChart = new(waterfallChartSetting, ExcelToPPTdata(dataRows));
+			CreateExtendedChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(waterfallChart);
 		}
 

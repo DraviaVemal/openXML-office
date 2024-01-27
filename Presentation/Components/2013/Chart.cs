@@ -3,9 +3,6 @@
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Excel_2013;
 using OpenXMLOffice.Global_2013;
-using A = DocumentFormat.OpenXml.Drawing;
-using C = DocumentFormat.OpenXml.Drawing.Charts;
-using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation_2013
 {

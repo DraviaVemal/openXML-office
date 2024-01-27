@@ -3,6 +3,7 @@
 using OpenXMLOffice.Excel_2013;
 using G = OpenXMLOffice.Global_2013;
 using OpenXMLOffice.Presentation_2013;
+using OpenXMLOffice.Global_2016;
 
 namespace OpenXMLOffice.Tests
 {
@@ -39,7 +40,7 @@ namespace OpenXMLOffice.Tests
 		/// Add All Chart Types to Slide
 		/// </summary>
 		[TestMethod]
-		public void AddAllChartTypesToSlide()
+		public void Add2013Charts()
 		{
 			//1
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting());
@@ -203,6 +204,36 @@ namespace OpenXMLOffice.Tests
 				scatterChartTypes = G.ScatterChartTypes.BUBBLE
 			});
 			Assert.IsTrue(true);
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		[TestMethod]
+		public void Add2016Charts()
+		{
+			DataCell[][] data = new DataCell[9][];
+			data[0] = new DataCell[2];
+			data[0][1] = new()
+			{
+				cellValue = "Series 1",
+				dataType = CellDataType.STRING
+			};
+			for (int i = 1; i < 9; i++)
+			{
+				data[i] = new DataCell[2];
+				data[i][0] = new DataCell()
+				{
+					cellValue = $"Category {i}",
+					dataType = CellDataType.STRING
+				};
+				data[i][1] = new DataCell()
+				{
+					cellValue = $"{i}",
+					dataType = CellDataType.NUMBER
+				};
+			}
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new WaterfallChartSetting());
 		}
 
 		/// <summary>
