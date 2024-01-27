@@ -4,30 +4,26 @@ using OpenXMLOffice.Global;
 
 namespace OpenXMLOffice.Excel
 {
-    /// <summary>
-    /// Represents the properties of a column in a worksheet.
-    /// </summary>
-    public class SpreadsheetProperties
-    {
-        #region Public Fields
+	/// <summary>
+	/// Represents the properties of a column in a worksheet.
+	/// </summary>
+	public class SpreadsheetProperties
+	{
+		/// <summary>
+		/// Spreadsheet settings
+		/// </summary>
+		public SpreadsheetSettings settings = new();
 
-        /// <summary>
-        /// Spreadsheet settings
-        /// </summary>
-        public SpreadsheetSettings settings = new();
+		/// <summary>
+		/// Spreadsheet theme settings
+		/// </summary>
+		public ThemePallet theme = new();
+	}
 
-        /// <summary>
-        /// Spreadsheet theme settings
-        /// </summary>
-        public ThemePallet theme = new();
-
-        #endregion Public Fields
-    }
-
-    /// <summary>
-    /// Represents the settings of a spreadsheet.
-    /// </summary>
-    public class SpreadsheetSettings
-    {
-    }
+	/// <summary>
+	/// Represents the settings of a spreadsheet.
+	/// </summary>
+	public class SpreadsheetSettings
+	{
+	}
 }

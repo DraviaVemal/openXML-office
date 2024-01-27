@@ -8,21 +8,15 @@ namespace OpenXMLOffice.Global
     /// Represents the settings for a line chart.
     /// </summary>
     public class LineChart : LineFamilyChart
-    {
-        #region Public Constructors
-
-        /// <summary>
-        /// Create Line Chart with provided settings
-        /// </summary>
-        /// <param name="LineChartSetting">
-        /// </param>
-        /// <param name="DataCols">
-        /// </param>
+    {        /// <summary>
+             /// Create Line Chart with provided settings
+             /// </summary>
+             /// <param name="LineChartSetting">
+             /// </param>
+             /// <param name="DataCols">
+             /// </param>
         public LineChart(LineChartSetting LineChartSetting, ChartData[][] DataCols) : base(LineChartSetting, DataCols) { }
 
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Get Chart Style
@@ -44,6 +38,6 @@ namespace OpenXMLOffice.Global
             return CreateColorStyles();
         }
 
-        #endregion Public Methods
+
     }
 }

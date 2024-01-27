@@ -37,12 +37,9 @@ namespace OpenXMLOffice.Global
     /// Represents the settings for a picture.
     /// </summary>
     public class PictureSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The height of the picture in EMUs (English Metric Units).
-        /// </summary>
+    {        /// <summary>
+             /// The height of the picture in EMUs (English Metric Units).
+             /// </summary>
         public uint height = 6858000;
 
         /// <summary>
@@ -64,7 +61,5 @@ namespace OpenXMLOffice.Global
         /// The Y coordinate of the picture in EMUs (English Metric Units).
         /// </summary>
         public uint y = 0;
-
-        #endregion Public Fields
     }
 }

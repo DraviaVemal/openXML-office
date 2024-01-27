@@ -35,7 +35,6 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class CategoryAxisSetting
     {
-        #region Internal Fields
         internal uint id;
         internal AxisPosition axisPosition = AxisPosition.BOTTOM;
         internal uint crossAxisId;
@@ -68,7 +67,6 @@ namespace OpenXMLOffice.Global
         /// </summary>
         internal bool isVisible = true;
         internal bool invertOrder;
-        #endregion Internal Fields
     }
 
     /// <summary>
@@ -76,7 +74,7 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class ChartAxesOptions
     {
-        #region Public Fields
+
         /// <summary>
         /// Invert the axes item order for the Vertical axis
         /// </summary>
@@ -141,40 +139,30 @@ namespace OpenXMLOffice.Global
         /// Is Vertical Axes Enabled
         /// </summary>
         public bool isVerticalAxesEnabled = true;
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the options for a chart axis.
     /// </summary>
     public class ChartAxisOptions
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Horizontal Axis Title
-        /// </summary>
+    {        /// <summary>
+             /// Horizontal Axis Title
+             /// </summary>
         public string? horizontalAxisTitle;
 
         /// <summary>
         /// Vertical Axis Title
         /// </summary>
         public string? verticalAxisTitle;
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the grouping options for chart data.
     /// </summary>
     public class ChartDataGrouping
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Gets or sets the data label cells.
-        /// </summary>
+    {        /// <summary>
+             /// Gets or sets the data label cells.
+             /// </summary>
         public ChartData[]? dataLabelCells;
 
         /// <summary>
@@ -241,20 +229,19 @@ namespace OpenXMLOffice.Global
         /// Gets or sets the Z-axis formula.
         /// </summary>
         public string? zAxisFormula;
-
-        #endregion Public Fields
+        /// <summary>
+        /// 
+        /// </summary>
+        public int id;
     }
 
     /// <summary>
     /// Represents the options for chart data labels.
     /// </summary>
     public class ChartDataLabel
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The separator used for displaying multiple values.
-        /// </summary>
+    {        /// <summary>
+             /// The separator used for displaying multiple values.
+             /// </summary>
         public string separator = ", ";
 
         /// <summary>
@@ -305,20 +292,15 @@ namespace OpenXMLOffice.Global
         /// 
         /// </summary>
         public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the settings for chart data.
     /// </summary>
     public class ChartDataSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Set 0 To Use Till End
-        /// </summary>
+    {        /// <summary>
+             /// Set 0 To Use Till End
+             /// </summary>
         public uint chartDataColumnEnd = 0;
 
         /// <summary>
@@ -346,20 +328,15 @@ namespace OpenXMLOffice.Global
         /// Inbetween and Used in the list it will be auto skipped By Data Column
         /// </summary>
         public Dictionary<uint, uint> valueFromColumn = new();
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the options for chart grid lines.
     /// </summary>
     public class ChartGridLinesOptions
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Is Major Category Lines Enabled
-        /// </summary>
+    {        /// <summary>
+             /// Is Major Category Lines Enabled
+             /// </summary>
         public bool isMajorCategoryLinesEnabled = false;
 
         /// <summary>
@@ -376,20 +353,15 @@ namespace OpenXMLOffice.Global
         /// Is Minor Value Lines Enabled
         /// </summary>
         public bool isMinorValueLinesEnabled = false;
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the options for chart legend.
     /// </summary>
     public class ChartLegendOptions
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Is Legend Enabled
-        /// </summary>
+    {        /// <summary>
+             /// Is Legend Enabled
+             /// </summary>
         public bool isEnableLegend = true;
 
         /// <summary>
@@ -424,15 +396,9 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Legend Position
         /// </summary>
-        public LegendPositionValues legendPosition = LegendPositionValues.BOTTOM;
-
-        #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// Legend Position Values
-        /// </summary>
+        public LegendPositionValues legendPosition = LegendPositionValues.BOTTOM;        /// <summary>
+                                                                                         /// Legend Position Values
+                                                                                         /// </summary>
         public enum LegendPositionValues
         {
             /// <summary>
@@ -460,8 +426,6 @@ namespace OpenXMLOffice.Global
             /// </summary>
             TOP_RIGHT
         }
-
-        #endregion Public Enums
     }
 
     /// <summary>
@@ -484,7 +448,7 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class ChartSeriesSetting
     {
-        #region Internal Constructors
+
 
         /// <summary>
         /// The color of the border.
@@ -492,19 +456,16 @@ namespace OpenXMLOffice.Global
         public virtual string? borderColor { get; set; }
         internal ChartSeriesSetting() { }
 
-        #endregion Internal Constructors
+
     }
 
     /// <summary>
     /// Represents the settings for a chart.
     /// </summary>
     public class ChartSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Chart Data Setting
-        /// </summary>
+    {        /// <summary>
+             /// Chart Data Setting
+             /// </summary>
         public ChartDataSetting chartDataSetting = new();
 
         /// <summary>
@@ -542,13 +503,10 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public uint y = 0;
 
-        #endregion Public Fields
-
-        #region Internal Constructors
 
         internal ChartSetting() { }
 
-        #endregion Internal Constructors
+
     }
 
     /// <summary>
@@ -556,7 +514,6 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class ValueAxisSetting
     {
-        #region Internal Fields
         internal uint id;
         internal AxisPosition axisPosition = AxisPosition.LEFT;
         internal uint crossAxisId;
@@ -592,7 +549,6 @@ namespace OpenXMLOffice.Global
         /// Invert the axis scale order
         /// </summary>
         internal bool invertOrder;
-        #endregion Internal Fields
     }
 
     /// <summary>

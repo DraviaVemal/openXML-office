@@ -9,7 +9,7 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public static class ConverterUtils
     {
-        #region Public Methods
+
 
         /// <summary>
         /// This function converts an Excel-style cell reference (e.g., "A1") into row and column
@@ -130,7 +130,7 @@ namespace OpenXMLOffice.Global
         {
             return (int)fontSize * 100;
 
-            #endregion Public Methods
+
         }
     }
 }

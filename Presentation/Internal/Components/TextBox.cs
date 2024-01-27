@@ -6,44 +6,38 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
-    /// <summary>
-    /// Textbox Class
-    /// </summary>
-    public class TextBox : TextBoxBase
-    {
-        #region Public Constructors
+	/// <summary>
+	/// Textbox Class
+	/// </summary>
+	public class TextBox : TextBoxBase
+	{        /// <summary>
+			 /// Create Textbox with provided settings
+			 /// </summary>
+			 /// <param name="TextBoxSetting">
+			 /// </param>
+		public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting) { }
 
-        /// <summary>
-        /// Create Textbox with provided settings
-        /// </summary>
-        /// <param name="TextBoxSetting">
-        /// </param>
-        public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting) { }
 
-        #endregion Public Constructors
+		/// <summary>
+		/// Return OpenXML Run
+		/// </summary>
+		/// <returns>
+		/// </returns>
+		internal A.Run GetTextBoxRun()
+		{
+			return GetTextBoxBaseRun();
+		}
 
-        #region Internal Methods
+		/// <summary>
+		/// Return OpenXML Shape
+		/// </summary>
+		/// <returns>
+		/// </returns>
+		internal P.Shape GetTextBoxShape()
+		{
+			return GetTextBoxBaseShape();
+		}
 
-        /// <summary>
-        /// Return OpenXML Run
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        internal A.Run GetTextBoxRun()
-        {
-            return GetTextBoxBaseRun();
-        }
 
-        /// <summary>
-        /// Return OpenXML Shape
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        internal P.Shape GetTextBoxShape()
-        {
-            return GetTextBoxBaseShape();
-        }
-
-        #endregion Internal Methods
-    }
+	}
 }

@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Global;
 /// </summary>
 internal class ChartStyle
 {
-    #region Public Methods
+
 
     public static CS.ChartStyle CreateChartStyles()
     {
@@ -53,9 +53,9 @@ internal class ChartStyle
         return ChartStyle;
     }
 
-    #endregion Public Methods
 
-    #region Private Methods
+
+
 
     private static CS.AxisTitle CreateAxisTitle()
     {
@@ -744,5 +744,5 @@ internal class ChartStyle
         return wallStyle;
     }
 
-    #endregion Private Methods
+
 }

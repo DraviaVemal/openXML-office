@@ -7,7 +7,7 @@ namespace OpenXMLOffice.Presentation;
 /// </summary>
 public class CommonTools
 {
-    #region Public Methods
+
 
     /// <summary>
     /// Transpose a 2D array
@@ -35,5 +35,5 @@ public class CommonTools
         return transposedArray;
     }
 
-    #endregion Public Methods
+
 }

@@ -27,12 +27,9 @@ namespace OpenXMLOffice.Global
     /// Represents the settings for a chart data.
     /// </summary>
     public class ChartData
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The data type of the chart data.
-        /// </summary>
+    {        /// <summary>
+             /// The data type of the chart data.
+             /// </summary>
         public DataType dataType = DataType.STRING;
 
         /// <summary>
@@ -44,7 +41,5 @@ namespace OpenXMLOffice.Global
         /// The value of the chart data.
         /// </summary>
         public string? value;
-
-        #endregion Public Fields
     }
 }

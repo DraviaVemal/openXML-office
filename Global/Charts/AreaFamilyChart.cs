@@ -10,16 +10,16 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class AreaFamilyChart : ChartBase
     {
-        #region Protected Fields
+
 
         /// <summary>
         /// Area Chart Setting
         /// </summary>
         protected readonly AreaChartSetting areaChartSetting;
 
-        #endregion Protected Fields
 
-        #region Protected Constructors
+
+
 
         internal AreaFamilyChart(AreaChartSetting areaChartSetting) : base(areaChartSetting)
         {
@@ -35,11 +35,11 @@ namespace OpenXMLOffice.Global
             SetChartPlotArea(CreateChartPlotArea(dataCols));
         }
 
-        #endregion Protected Constructors
 
-        #region Private Methods
 
-        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping ChartDataGrouping)
+
+
+        private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
             SolidFillModel GetSeriesFillColor()
             {
@@ -56,7 +56,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -76,7 +76,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -90,22 +90,22 @@ namespace OpenXMLOffice.Global
                 }
             };
             C.DataLabels? dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
-                CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings?[seriesIndex]?.areaChartDataLabel ?? new AreaChartDataLabel(), ChartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+                CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings?[seriesIndex]?.areaChartDataLabel ?? new AreaChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             C.AreaChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(ChartDataGrouping.seriesHeaderFormula!, new[] { ChartDataGrouping.seriesHeaderCells! }));
+                new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
+                new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
+                CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             series.Append(CreateChartShapeProperties(shapePropertiesModel));
             if (dataLabels != null)
             {
                 series.Append(dataLabels);
             }
-            series.Append(CreateCategoryAxisData(ChartDataGrouping.xAxisFormula!, ChartDataGrouping.xAxisCells!));
-            series.Append(CreateValueAxisData(ChartDataGrouping.yAxisFormula!, ChartDataGrouping.yAxisCells!));
-            if (ChartDataGrouping.dataLabelCells != null && ChartDataGrouping.dataLabelFormula != null)
+            series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
+            series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
+            if (chartDataGrouping.dataLabelCells != null && chartDataGrouping.dataLabelFormula != null)
             {
                 series.Append(new C.ExtensionList(new C.Extension(
-                    CreateDataLabelsRange(ChartDataGrouping.dataLabelFormula, ChartDataGrouping.dataLabelCells.Skip(1).ToArray())
+                    CreateDataLabelsRange(chartDataGrouping.dataLabelFormula, chartDataGrouping.dataLabelCells.Skip(1).ToArray())
                 )
                 { Uri = "{02D57815-91ED-43cb-92C2-25804820EDAC}" }));
             }
@@ -134,7 +134,7 @@ namespace OpenXMLOffice.Global
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            plotArea.Append(CreateAreaChart(dataCols));
+            plotArea.Append(CreateAreaChart(CreateDataSeries(dataCols, areaChartSetting.chartDataSetting)));
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
                 id = CategoryAxisId,
@@ -159,7 +159,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        internal C.AreaChart CreateAreaChart(ChartData[][] dataCols)
+        internal C.AreaChart CreateAreaChart(List<ChartDataGrouping> chartDataGroupings)
         {
             C.AreaChart areaChart = new(
                 new C.Grouping
@@ -174,7 +174,7 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(dataCols, areaChartSetting.chartDataSetting).ForEach(Series =>
+            chartDataGroupings.ForEach(Series =>
             {
                 areaChart.Append(CreateAreaChartSeries(seriesIndex, Series));
                 seriesIndex++;
@@ -189,6 +189,6 @@ namespace OpenXMLOffice.Global
             return areaChart;
         }
 
-        #endregion Private Methods
+
     }
 }

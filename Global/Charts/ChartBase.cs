@@ -17,7 +17,7 @@ public class ChartBase : CommonProperties
     internal const int CategoryAxisId = 1362418656;
     internal const int ValueAxisId = 1358349936;
 
-    #region Protected Fields
+
 
     /// <summary>
     /// Chart Data Groupings
@@ -29,17 +29,11 @@ public class ChartBase : CommonProperties
     /// </summary>
     protected ChartSetting chartSetting;
 
-    #endregion Protected Fields
-
-    #region Private Fields
 
     private readonly C.Chart chart;
 
     private readonly C.ChartSpace openXMLChartSpace;
 
-    #endregion Private Fields
-
-    #region Protected Constructors
 
     /// <summary>
     /// Chartbase class constructor restricted only for inheritance use
@@ -57,9 +51,9 @@ public class ChartBase : CommonProperties
         { Id = "rId1" });
     }
 
-    #endregion Protected Constructors
 
-    #region Public Methods
+
+
 
     /// <summary>
     /// Get OpenXML ChartSpace
@@ -71,9 +65,9 @@ public class ChartBase : CommonProperties
         return openXMLChartSpace;
     }
 
-    #endregion Public Methods
 
-    #region Protected Methods
+
+
 
     /// <summary>
     /// Create Bubble Size Axis for the chart
@@ -400,6 +394,7 @@ public class ChartBase : CommonProperties
             List<ChartData> yAxisCells = ((ChartData[]?)dataCols[column].Clone()!).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
             ChartDataGrouping chartDataGrouping = new()
             {
+                id = i,
                 seriesHeaderFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 1}",
                 seriesHeaderCells = ((ChartData[]?)dataCols[column].Clone()!)[chartDataSetting.chartDataRowStart],
                 xAxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + xAxisCells.Count + 1}",
@@ -571,9 +566,9 @@ public class ChartBase : CommonProperties
         return chart.PlotArea;
     }
 
-    #endregion Protected Methods
 
-    #region Private Methods
+
+
 
     private static C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] cells)
     {
@@ -888,5 +883,5 @@ public class ChartBase : CommonProperties
         }
         return marker;
     }
-    #endregion Private Methods
+
 }

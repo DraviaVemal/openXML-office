@@ -35,7 +35,6 @@ namespace OpenXMLOffice.Global
             uint chartPosition = 0;
             comboChartSetting.ComboChartsSettingList.ForEach(chartSetting =>
             {
-                chartPosition++;
                 ((ChartSetting)chartSetting).chartDataSetting = new();
                 if (chartSetting is AreaChartSetting areaChartSetting)
                 {
@@ -71,6 +70,7 @@ namespace OpenXMLOffice.Global
                         scatterChart.CreateChart<C.BubbleChart>(GetChartPositionData(dataCols, chartPosition)) :
                         scatterChart.CreateChart<C.ScatterChart>(GetChartPositionData(dataCols, chartPosition)));
                 }
+                chartPosition++;
             });
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
@@ -96,12 +96,13 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private static ChartData[][] GetChartPositionData(ChartData[][] dataCols, uint chartPosition)
+        private List<ChartDataGrouping> GetChartPositionData(ChartData[][] dataCols, uint chartPosition)
         {
-            return new[] { dataCols.ElementAt(0), dataCols.ElementAt((int)chartPosition) };
+            List<ChartDataGrouping> chartDataGroupings = CreateDataSeries(dataCols, comboChartSetting.chartDataSetting);
+            return new() { chartDataGroupings.ElementAt((int)chartPosition) };
         }
 
-        #region Public Methods
+
 
         /// <summary>
         /// Get Chart Style
@@ -123,7 +124,7 @@ namespace OpenXMLOffice.Global
             return CreateColorStyles();
         }
 
-        #endregion Public Methods
+
     }
 
 }

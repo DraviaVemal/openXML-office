@@ -7,7 +7,7 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public static class GeneratorUtils
     {
-        #region Public Methods
+
 
         /// <summary>
         /// Generate new GUID
@@ -19,6 +19,6 @@ namespace OpenXMLOffice.Global
             return string.Format("{{{0}}}", Guid.NewGuid().ToString("D").ToUpper());
         }
 
-        #endregion Public Methods
+
     }
 }

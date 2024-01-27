@@ -6,12 +6,9 @@ namespace OpenXMLOffice.Global
     /// Global Constants
     /// </summary>
     public static class GlobalConstants
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Default DPI
-        /// </summary>
+    {        /// <summary>
+             /// Default DPI
+             /// </summary>
         public const int defaultDPI = 96;
 
         /// <summary>
@@ -23,7 +20,5 @@ namespace OpenXMLOffice.Global
         /// Default Slide Width in EMU
         /// </summary>
         public const int defaultSlideWidthEmu = 9144000;
-
-        #endregion Public Fields
     }
 }

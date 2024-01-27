@@ -44,21 +44,12 @@ namespace OpenXMLOffice.Global
     /// Represents the data label settings for a line chart.
     /// </summary>
     public class LineChartDataLabel : ChartDataLabel
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The position of the data labels.
-        /// </summary>
-        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
-
-        #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// The possible positions for the data labels.
-        /// </summary>
+    {        /// <summary>
+             /// The position of the data labels.
+             /// </summary>
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;        /// <summary>
+                                                                                                  /// The possible positions for the data labels.
+                                                                                                  /// </summary>
         public enum DataLabelPositionValues
         {
             /// <summary>
@@ -91,35 +82,25 @@ namespace OpenXMLOffice.Global
             // /// </summary>
             // DATA_CALLOUT
         }
-
-        #endregion Public Enums
     }
 
     /// <summary>
     /// Represents the series settings for a line chart.
     /// </summary>
     public class LineChartSeriesSetting : ChartSeriesSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Option to customize specific data series, which will override the chart level setting.
-        /// </summary>
+    {        /// <summary>
+             /// Option to customize specific data series, which will override the chart level setting.
+             /// </summary>
         public LineChartDataLabel lineChartDataLabel = new();
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the settings for a line chart.
     /// </summary>
     public class LineChartSetting : ChartSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The options for the chart axes.
-        /// </summary>
+    {        /// <summary>
+             /// The options for the chart axes.
+             /// </summary>
         public ChartAxesOptions chartAxesOptions = new();
 
         /// <summary>
@@ -141,7 +122,5 @@ namespace OpenXMLOffice.Global
         /// The type of the line chart.
         /// </summary>
         public LineChartTypes lineChartTypes = LineChartTypes.CLUSTERED;
-
-        #endregion Public Fields
     }
 }

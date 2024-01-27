@@ -13,16 +13,16 @@ namespace OpenXMLOffice.Global
     {
         private const int DefaultGapWidth = 150;
         private const int DefaultOverlap = 100;
-        #region Protected Fields
+
 
         /// <summary>
         /// Bar Chart Setting
         /// </summary>
         protected readonly BarChartSetting barChartSetting;
 
-        #endregion Protected Fields
 
-        #region Protected Constructors
+
+
 
         internal BarFamilyChart(BarChartSetting barChartSetting) : base(barChartSetting)
         {
@@ -38,9 +38,9 @@ namespace OpenXMLOffice.Global
             SetChartPlotArea(CreateChartPlotArea(dataCols));
         }
 
-        #endregion Protected Constructors
 
-        #region Private Methods
+
+
 
         private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
@@ -59,7 +59,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -79,7 +79,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -95,8 +95,8 @@ namespace OpenXMLOffice.Global
                 }
             };
             C.BarChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
+                new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
                 new C.InvertIfNegative { Val = true },
                 CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             series.Append(CreateChartShapeProperties(shapePropertiesModel));
@@ -122,7 +122,7 @@ namespace OpenXMLOffice.Global
                         {
                             solidFillModel.schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                             };
                         }
                         return solidFillModel;
@@ -142,7 +142,7 @@ namespace OpenXMLOffice.Global
                         {
                             solidFillModel.schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                             };
                         }
                         return solidFillModel;
@@ -203,7 +203,7 @@ namespace OpenXMLOffice.Global
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            plotArea.Append(CreateBarChart(dataCols));
+            plotArea.Append(CreateBarChart(CreateDataSeries(dataCols, barChartSetting.chartDataSetting)));
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
                 id = CategoryAxisId,
@@ -230,7 +230,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        internal C.BarChart CreateBarChart(ChartData[][] dataCols)
+        internal C.BarChart CreateBarChart(List<ChartDataGrouping> chartDataGroupings)
         {
             C.BarChart barChart = new(
                 new C.BarDirection { Val = C.BarDirectionValues.Bar },
@@ -246,7 +246,7 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(dataCols, barChartSetting.chartDataSetting).ForEach(Series =>
+            chartDataGroupings.ForEach(Series =>
             {
                 barChart.Append(CreateBarChartSeries(seriesIndex, Series));
                 seriesIndex++;
@@ -271,6 +271,6 @@ namespace OpenXMLOffice.Global
             return barChart;
         }
 
-        #endregion Private Methods
+
     }
 }

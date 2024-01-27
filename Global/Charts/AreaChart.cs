@@ -9,24 +9,18 @@ namespace OpenXMLOffice.Global
     /// connected by a line and filled with color.
     /// </summary>
     public class AreaChart : AreaFamilyChart
-    {
-        #region Public Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AreaChart"/> class with the specified area
-        /// chart settings and data columns.
-        /// </summary>
-        /// <param name="areaChartSetting">
-        /// The area chart settings.
-        /// </param>
-        /// <param name="dataCols">
-        /// The data columns.
-        /// </param>
+    {        /// <summary>
+             /// Initializes a new instance of the <see cref="AreaChart"/> class with the specified area
+             /// chart settings and data columns.
+             /// </summary>
+             /// <param name="areaChartSetting">
+             /// The area chart settings.
+             /// </param>
+             /// <param name="dataCols">
+             /// The data columns.
+             /// </param>
         public AreaChart(AreaChartSetting areaChartSetting, ChartData[][] dataCols) : base(areaChartSetting, dataCols) { }
 
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Gets the chart style for the area chart.
@@ -50,6 +44,6 @@ namespace OpenXMLOffice.Global
             return CreateColorStyles();
         }
 
-        #endregion Public Methods
+
     }
 }

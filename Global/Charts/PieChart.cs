@@ -8,23 +8,17 @@ namespace OpenXMLOffice.Global
     /// Represents the settings for a pie chart.
     /// </summary>
     public class PieChart : PieFamilyChart
-    {
-        #region Public Constructors
-
-        /// <summary>
-        /// Create Pie Chart with provided settings
-        /// </summary>
-        /// <param name="PieChartSetting">
-        /// </param>
-        /// <param name="DataCols">
-        /// </param>
+    {        /// <summary>
+             /// Create Pie Chart with provided settings
+             /// </summary>
+             /// <param name="PieChartSetting">
+             /// </param>
+             /// <param name="DataCols">
+             /// </param>
         public PieChart(PieChartSetting PieChartSetting, ChartData[][] DataCols) : base(PieChartSetting, DataCols)
         {
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Get Chart Style
@@ -46,6 +40,6 @@ namespace OpenXMLOffice.Global
             return CreateColorStyles();
         }
 
-        #endregion Public Methods
+
     }
 }

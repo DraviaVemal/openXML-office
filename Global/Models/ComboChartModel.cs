@@ -51,13 +51,13 @@ namespace OpenXMLOffice.Global
             ComboChartsSettingList.Add(pieChartSetting);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void AddComboChartsSetting(ScatterChartSetting scatterChartSetting)
-        {
-            ComboChartsSettingList.Add(scatterChartSetting);
-        }
+        // /// <summary>
+        // /// 
+        // /// </summary>
+        // public void AddComboChartsSetting(ScatterChartSetting scatterChartSetting)
+        // {
+        //     ComboChartsSettingList.Add(scatterChartSetting);
+        // }
 
         /// <summary>
         /// The options for the axes of the chart.

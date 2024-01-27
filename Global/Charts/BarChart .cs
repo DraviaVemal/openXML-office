@@ -8,23 +8,17 @@ namespace OpenXMLOffice.Global
     /// Represents the settings for a bar chart.
     /// </summary>
     public class BarChart : BarFamilyChart
-    {
-        #region Public Constructors
-
-        /// <summary>
-        /// Create Bar Chart with provided settings
-        /// </summary>
-        /// <param name="BarChartSetting">
-        /// </param>
-        /// <param name="DataCols">
-        /// </param>
+    {        /// <summary>
+             /// Create Bar Chart with provided settings
+             /// </summary>
+             /// <param name="BarChartSetting">
+             /// </param>
+             /// <param name="DataCols">
+             /// </param>
         public BarChart(BarChartSetting BarChartSetting, ChartData[][] DataCols) : base(BarChartSetting, DataCols)
         {
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Get Chart Style
@@ -46,6 +40,6 @@ namespace OpenXMLOffice.Global
             return CreateColorStyles();
         }
 
-        #endregion Public Methods
+
     }
 }

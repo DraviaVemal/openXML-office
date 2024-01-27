@@ -44,21 +44,12 @@ namespace OpenXMLOffice.Global
     /// Represents the data label settings for a bar chart.
     /// </summary>
     public class BarChartDataLabel : ChartDataLabel
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The position of the data labels.
-        /// </summary>
-        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
-
-        #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// The possible positions for the data labels.
-        /// </summary>
+    {        /// <summary>
+             /// The position of the data labels.
+             /// </summary>
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;        /// <summary>
+                                                                                                  /// The possible positions for the data labels.
+                                                                                                  /// </summary>
         public enum DataLabelPositionValues
         {
             /// <summary>
@@ -86,8 +77,6 @@ namespace OpenXMLOffice.Global
             // /// </summary>
             // DATA_CALLOUT
         }
-
-        #endregion Public Enums
     }
 
     /// <summary>
@@ -102,12 +91,9 @@ namespace OpenXMLOffice.Global
     /// Represents the series settings for a bar chart.
     /// </summary>
     public class BarChartSeriesSetting : ChartSeriesSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// 
-        /// </summary>
+    {        /// <summary>
+             /// 
+             /// </summary>
         public List<BarChartDataPointSetting?> barChartDataPointSettings = new();
 
         /// <summary>
@@ -119,20 +105,15 @@ namespace OpenXMLOffice.Global
         /// The color of the fill.
         /// </summary>
         public string? fillColor;
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the settings for a bar chart.
     /// </summary>
     public class BarChartSetting : ChartSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The data label settings for the entire chart. This will get overridden by series level setting.
-        /// </summary>
+    {        /// <summary>
+             /// The data label settings for the entire chart. This will get overridden by series level setting.
+             /// </summary>
         public BarChartDataLabel barChartDataLabel = new();
 
         /// <summary>
@@ -158,7 +139,5 @@ namespace OpenXMLOffice.Global
         /// The graphics settings for the bar chart.
         /// </summary>
         public BarGraphicsSetting barGraphicsSetting = new();
-
-        #endregion Public Fields
     }
 }

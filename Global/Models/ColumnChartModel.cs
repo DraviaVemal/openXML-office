@@ -44,21 +44,12 @@ namespace OpenXMLOffice.Global
     /// Represents the data label settings for a column chart.
     /// </summary>
     public class ColumnChartDataLabel : ChartDataLabel
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The position of the data label.
-        /// </summary>
-        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
-
-        #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// The possible positions for the data label.
-        /// </summary>
+    {        /// <summary>
+             /// The position of the data label.
+             /// </summary>
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;        /// <summary>
+                                                                                                  /// The possible positions for the data label.
+                                                                                                  /// </summary>
         public enum DataLabelPositionValues
         {
             /// <summary>
@@ -86,8 +77,6 @@ namespace OpenXMLOffice.Global
             // /// </summary>
             // DATA_CALLOUT
         }
-
-        #endregion Public Enums
     }
 
     /// <summary>
@@ -102,12 +91,9 @@ namespace OpenXMLOffice.Global
     /// Represents the series settings for a column chart.
     /// </summary>
     public class ColumnChartSeriesSetting : ChartSeriesSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// 
-        /// </summary>
+    {        /// <summary>
+             /// 
+             /// </summary>
         public List<ColumnChartDataPointSetting?> columnChartDataPointSettings = new();
         /// <summary>
         /// Option to customize specific data series. Will override chart level setting.
@@ -118,20 +104,15 @@ namespace OpenXMLOffice.Global
         /// Chart Stick Fill Color
         /// </summary>
         public string? fillColor;
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the settings for a column chart.
     /// </summary>
     public class ColumnChartSetting : ChartSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Chart Axes Options
-        /// </summary>
+    {        /// <summary>
+             /// Chart Axes Options
+             /// </summary>
         public ChartAxesOptions chartAxesOptions = new();
 
         /// <summary>
@@ -157,7 +138,5 @@ namespace OpenXMLOffice.Global
         /// The graphics settings for the column chart.
         /// </summary>
         public ColumnGraphicsSetting columnGraphicsSetting = new();
-
-        #endregion Public Fields
     }
 }

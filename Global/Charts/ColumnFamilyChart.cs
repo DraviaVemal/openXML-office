@@ -12,16 +12,16 @@ namespace OpenXMLOffice.Global
     {
         private const int DefaultGapWidth = 150;
         private const int DefaultOverlap = 100;
-        #region Protected Fields
+
 
         /// <summary>
         /// Column Chart Setting
         /// </summary>
         protected ColumnChartSetting columnChartSetting;
 
-        #endregion Protected Fields
 
-        #region Protected Constructors
+
+
 
         internal ColumnFamilyChart(ColumnChartSetting columnChartSetting) : base(columnChartSetting)
         {
@@ -37,15 +37,15 @@ namespace OpenXMLOffice.Global
             SetChartPlotArea(CreateChartPlotArea(dataCols));
         }
 
-        #endregion Protected Constructors
 
-        #region Private Methods
+
+
 
         private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            plotArea.Append(CreateColumnChart(dataCols));
+            plotArea.Append(CreateColumnChart(CreateDataSeries(dataCols, columnChartSetting.chartDataSetting)));
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
                 id = CategoryAxisId,
@@ -70,7 +70,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        internal C.BarChart CreateColumnChart(ChartData[][] dataCols)
+        internal C.BarChart CreateColumnChart(List<ChartDataGrouping> chartDataGroupings)
         {
             C.BarChart columnChart = new(
                 new C.BarDirection { Val = C.BarDirectionValues.Column },
@@ -86,7 +86,7 @@ namespace OpenXMLOffice.Global
                 },
                 new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(dataCols, columnChartSetting.chartDataSetting).ForEach(Series =>
+            chartDataGroupings.ForEach(Series =>
             {
                 columnChart.Append(CreateColumnChartSeries(seriesIndex, Series));
                 seriesIndex++;
@@ -128,7 +128,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -148,7 +148,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -164,8 +164,8 @@ namespace OpenXMLOffice.Global
             C.DataLabels? dataLabels = seriesIndex < columnChartSetting.columnChartSeriesSettings.Count ?
                 CreateColumnDataLabels(columnChartSetting.columnChartSeriesSettings[seriesIndex]?.columnChartDataLabel ?? new ColumnChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             C.BarChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
+                new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
                 new C.InvertIfNegative { Val = true },
                 CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             series.Append(CreateChartShapeProperties(shapePropertiesModel));
@@ -191,7 +191,7 @@ namespace OpenXMLOffice.Global
                         {
                             solidFillModel.schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                             };
                         }
                         return solidFillModel;
@@ -211,7 +211,7 @@ namespace OpenXMLOffice.Global
                         {
                             solidFillModel.schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                             };
                         }
                         return solidFillModel;
@@ -264,6 +264,6 @@ namespace OpenXMLOffice.Global
             return null;
         }
 
-        #endregion Private Methods
+
     }
 }

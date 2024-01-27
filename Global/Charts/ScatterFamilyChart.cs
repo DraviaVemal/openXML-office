@@ -10,16 +10,16 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class ScatterFamilyChart : ChartBase
     {
-        #region Protected Fields
+
 
         /// <summary>
         /// Scatter Chart Setting
         /// </summary>
         protected ScatterChartSetting scatterChartSetting;
 
-        #endregion Protected Fields
 
-        #region Protected Constructors
+
+
 
         internal ScatterFamilyChart(ScatterChartSetting scatterChartSetting) : base(scatterChartSetting)
         {
@@ -35,15 +35,25 @@ namespace OpenXMLOffice.Global
             SetChartPlotArea(CreateChartPlotArea(dataCols));
         }
 
-        #endregion Protected Constructors
 
-        #region Private Methods
+
+
 
         private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
         {
+            if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
+            {
+                scatterChartSetting.chartDataSetting.is3Ddata = true;
+                if ((dataCols.Length - 1) % 2 != 0)
+                {
+                    throw new ArgumentOutOfRangeException("Required 3D Data Size is not met.");
+                }
+            }
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ? CreateChart<C.BubbleChart>(dataCols) : CreateChart<C.ScatterChart>(dataCols));
+            plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ?
+                CreateChart<C.BubbleChart>(CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting)) :
+                CreateChart<C.ScatterChart>(CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting)));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
                 id = CategoryAxisId,
@@ -69,7 +79,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        internal T CreateChart<T>(ChartData[][] dataCols) where T : new()
+        internal T CreateChart<T>(List<ChartDataGrouping> chartDataGroupings) where T : new()
         {
             T chartType = new();
             if (chartType is C.ScatterChart scatterChart)
@@ -90,16 +100,8 @@ namespace OpenXMLOffice.Global
             if (chartType is OpenXmlCompositeElement chart)
             {
                 chart.Append(new C.VaryColors() { Val = false });
-                if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
-                {
-                    scatterChartSetting.chartDataSetting.is3Ddata = true;
-                    if ((dataCols.Length - 1) % 2 != 0)
-                    {
-                        throw new ArgumentOutOfRangeException("Required 3D Data Size is not met.");
-                    }
-                }
                 int seriesIndex = 0;
-                CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting).ForEach(Series =>
+                chartDataGroupings.ForEach(Series =>
                 {
                     chart.Append(CreateScatterChartSeries(seriesIndex, Series));
                     seriesIndex++;
@@ -139,7 +141,7 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
@@ -154,7 +156,7 @@ namespace OpenXMLOffice.Global
                     {
                         schemeColorModel = new()
                         {
-                            themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                            themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                         }
                     },
                     outline = new()
@@ -163,15 +165,15 @@ namespace OpenXMLOffice.Global
                         {
                             schemeColorModel = new()
                             {
-                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                             }
                         }
                     }
                 };
             }
             C.ScatterChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
+                new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
                 CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             ShapePropertiesModel shapePropertiesModel = new()
             {
@@ -246,6 +248,6 @@ namespace OpenXMLOffice.Global
             return null;
         }
 
-        #endregion Private Methods
+
     }
 }

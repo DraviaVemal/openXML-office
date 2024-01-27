@@ -44,26 +44,17 @@ namespace OpenXMLOffice.Global
     /// Represents the data label settings for a scatter chart.
     /// </summary>
     public class ScatterChartDataLabel : ChartDataLabel
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The position of the data labels.
-        /// </summary>
+    {        /// <summary>
+             /// The position of the data labels.
+             /// </summary>
         public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 
         /// <summary>
         /// Determines whether to show the bubble size in the data labels.
         /// </summary>
-        public bool showBubbleSize = false;
-
-        #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// The possible positions for the data labels.
-        /// </summary>
+        public bool showBubbleSize = false;        /// <summary>
+                                                   /// The possible positions for the data labels.
+                                                   /// </summary>
         public enum DataLabelPositionValues
         {
             /// <summary>
@@ -96,36 +87,26 @@ namespace OpenXMLOffice.Global
             // /// </summary>
             // DATA_CALLOUT
         }
-
-        #endregion Public Enums
     }
 
     /// <summary>
     /// Represents the series settings for a scatter chart.
     /// </summary>
     public class ScatterChartSeriesSetting : ChartSeriesSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Custom data label settings for the specific data series. This will override the chart
-        /// level setting.
-        /// </summary>
+    {        /// <summary>
+             /// Custom data label settings for the specific data series. This will override the chart
+             /// level setting.
+             /// </summary>
         public ScatterChartDataLabel scatterChartDataLabel = new();
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the settings for a scatter chart.
     /// </summary>
     public class ScatterChartSetting : ChartSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The options for the chart axes.
-        /// </summary>
+    {        /// <summary>
+             /// The options for the chart axes.
+             /// </summary>
         public ChartAxesOptions chartAxesOptions = new();
 
         /// <summary>
@@ -148,7 +129,5 @@ namespace OpenXMLOffice.Global
         /// The type of scatter chart.
         /// </summary>
         public ScatterChartTypes scatterChartTypes = ScatterChartTypes.SCATTER;
-
-        #endregion Public Fields
     }
 }

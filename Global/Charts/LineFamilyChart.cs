@@ -10,16 +10,16 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class LineFamilyChart : ChartBase
     {
-        #region Protected Fields
+
 
         /// <summary>
         /// The settings for the line chart.
         /// </summary>
         protected LineChartSetting lineChartSetting;
 
-        #endregion Protected Fields
 
-        #region Protected Constructors
+
+
 
         internal LineFamilyChart(LineChartSetting lineChartSetting) : base(lineChartSetting)
         {
@@ -35,15 +35,15 @@ namespace OpenXMLOffice.Global
             SetChartPlotArea(CreateChartPlotArea(dataCols));
         }
 
-        #endregion Protected Constructors
 
-        #region Private Methods
+
+
 
         private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            plotArea.Append(CreateLineChart(dataCols));
+            plotArea.Append(CreateLineChart(CreateDataSeries(dataCols, lineChartSetting.chartDataSetting)));
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
                 id = CategoryAxisId,
@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        internal C.LineChart CreateLineChart(ChartData[][] dataCols)
+        internal C.LineChart CreateLineChart(List<ChartDataGrouping> chartDataGroupings)
         {
             C.LineChart lineChart = new(
                             new C.Grouping
@@ -85,7 +85,7 @@ namespace OpenXMLOffice.Global
                             },
                             new C.VaryColors { Val = false });
             int seriesIndex = 0;
-            CreateDataSeries(dataCols, lineChartSetting.chartDataSetting).ForEach(Series =>
+            chartDataGroupings.ForEach(Series =>
             {
                 lineChart.Append(CreateLineChartSeries(seriesIndex, Series));
                 seriesIndex++;
@@ -147,14 +147,14 @@ namespace OpenXMLOffice.Global
                 {
                     solidFillModel.schemeColorModel = new()
                     {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                        themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
                     };
                 }
                 return solidFillModel;
             }
             C.LineChartSeries series = new(
-                new C.Index { Val = new UInt32Value((uint)seriesIndex) },
-                new C.Order { Val = new UInt32Value((uint)seriesIndex) },
+                new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
+                new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
                 CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             ShapePropertiesModel shapePropertiesModel = new()
             {
@@ -203,6 +203,6 @@ namespace OpenXMLOffice.Global
             return null;
         }
 
-        #endregion Private Methods
+
     }
 }

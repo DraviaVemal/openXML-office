@@ -29,21 +29,12 @@ namespace OpenXMLOffice.Global
     /// Represents the data label settings for an area chart.
     /// </summary>
     public class AreaChartDataLabel : ChartDataLabel
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The position of the data labels.
-        /// </summary>
-        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.SHOW;
-
-        #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// The possible values for the data label position.
-        /// </summary>
+    {        /// <summary>
+             /// The position of the data labels.
+             /// </summary>
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.SHOW;        /// <summary>
+                                                                                                /// The possible values for the data label position.
+                                                                                                /// </summary>
         public enum DataLabelPositionValues
         {
             /// <summary>
@@ -56,40 +47,30 @@ namespace OpenXMLOffice.Global
             // /// </summary>
             // DATA_CALLOUT
         }
-
-        #endregion Public Enums
     }
 
     /// <summary>
     /// Represents the series settings for an area chart.
     /// </summary>
     public class AreaChartSeriesSetting : ChartSeriesSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Option to customize specific data series. This will override the chart level setting.
-        /// </summary>
+    {        /// <summary>
+             /// Option to customize specific data series. This will override the chart level setting.
+             /// </summary>
         public AreaChartDataLabel areaChartDataLabel = new();
 
         /// <summary>
         /// The color of the fill.
         /// </summary>
         public string? fillColor;
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the settings for an area chart.
     /// </summary>
     public class AreaChartSetting : ChartSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The data label settings for the entire chart. This will get overridden by series level setting.
-        /// </summary>
+    {        /// <summary>
+             /// The data label settings for the entire chart. This will get overridden by series level setting.
+             /// </summary>
         public AreaChartDataLabel areaChartDataLabel = new();
 
         /// <summary>
@@ -111,7 +92,5 @@ namespace OpenXMLOffice.Global
         /// The options for the axis of the chart.
         /// </summary>
         public ChartAxisOptions chartAxisOptions = new();
-
-        #endregion Public Fields
     }
 }

@@ -10,28 +10,17 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class TextBoxBase : CommonProperties
     {
-        #region Private Fields
-
         private readonly TextBoxSetting textBoxSetting;
-        private P.Shape? openXMLShape;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        /// <summary>
-        /// Create Textbox with provided settings
-        /// </summary>
-        /// <param name="TextBoxSetting">
-        /// </param>
+        private P.Shape? openXMLShape;        /// <summary>
+                                              /// Create Textbox with provided settings
+                                              /// </summary>
+                                              /// <param name="TextBoxSetting">
+                                              /// </param>
         public TextBoxBase(TextBoxSetting TextBoxSetting)
         {
             textBoxSetting = TextBoxSetting;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Get Textbox Run
@@ -95,9 +84,9 @@ namespace OpenXMLOffice.Global
             }
         }
 
-        #endregion Public Methods
 
-        #region Private Methods
+
+
 
         private P.Shape CreateTextBox()
         {
@@ -145,6 +134,6 @@ namespace OpenXMLOffice.Global
             return Run;
         }
 
-        #endregion Private Methods
+
     }
 }

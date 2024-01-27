@@ -8,10 +8,7 @@ namespace OpenXMLOffice.Global
     /// Common Theme Class used by both presentation and spreadsheet.
     /// </summary>
     public class Theme
-    {
-        #region Private Fields
-
-        // TODO : Understand the purpose and migrate it to right place Postition, sat, lum, shade, tint
+    {        // TODO : Understand the purpose and migrate it to right place Postition, sat, lum, shade, tint
         private readonly int?[][] gsLst1 = new int?[][]{
             new int?[]{0,105000,110000,null, 67000},
             new int?[]{50000, 103000,105000,null, 73000},
@@ -30,25 +27,16 @@ namespace OpenXMLOffice.Global
             new int?[]{100000, 120000 ,null,63000,null}
         };
 
-        private readonly A.Theme openXMLTheme = new();
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        /// <summary>
-        /// Creates a new theme with the given pallet.
-        /// </summary>
-        /// <param name="ThemePallet">
-        /// </param>
+        private readonly A.Theme openXMLTheme = new();        /// <summary>
+                                                              /// Creates a new theme with the given pallet.
+                                                              /// </summary>
+                                                              /// <param name="ThemePallet">
+                                                              /// </param>
         public Theme(ThemePallet? ThemePallet = null)
         {
             CreateTheme(ThemePallet);
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Returns the OpenXML Theme Object.
@@ -60,9 +48,9 @@ namespace OpenXMLOffice.Global
             return openXMLTheme;
         }
 
-        #endregion Public Methods
 
-        #region Private Methods
+
+
 
         private static A.Outline[] GenerateOutlines()
         {
@@ -335,6 +323,6 @@ namespace OpenXMLOffice.Global
             };
         }
 
-        #endregion Private Methods
+
     }
 }

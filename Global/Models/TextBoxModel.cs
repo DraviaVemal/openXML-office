@@ -59,12 +59,9 @@ namespace OpenXMLOffice.Global
     /// Represents the settings for a text box.
     /// </summary>
     public class TextBoxSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Gets or sets the font family of the text.
-        /// </summary>
+    {        /// <summary>
+             /// Gets or sets the font family of the text.
+             /// </summary>
         public string fontFamily = "Calibri (Body)";
 
         /// <summary>
@@ -126,7 +123,5 @@ namespace OpenXMLOffice.Global
         /// Gets or sets the Y-coordinate of the text box in EMUs (English Metric Units).
         /// </summary>
         public uint y = 0;
-
-        #endregion Public Fields
     }
 }

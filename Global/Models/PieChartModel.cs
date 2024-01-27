@@ -23,21 +23,12 @@ namespace OpenXMLOffice.Global
     /// Represents the data label for a pie chart.
     /// </summary>
     public class PieChartDataLabel : ChartDataLabel
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The position of the data label.
-        /// </summary>
-        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
-
-        #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// Represents the possible positions of the data label.
-        /// </summary>
+    {        /// <summary>
+             /// The position of the data label.
+             /// </summary>
+        public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;        /// <summary>
+                                                                                                  /// Represents the possible positions of the data label.
+                                                                                                  /// </summary>
         public enum DataLabelPositionValues
         {
             /// <summary>
@@ -70,8 +61,6 @@ namespace OpenXMLOffice.Global
             // /// </summary>
             // DATA_CALLOUT
         }
-
-        #endregion Public Enums
     }
     /// <summary>
     /// 
@@ -84,12 +73,9 @@ namespace OpenXMLOffice.Global
     /// Represents the series setting for a pie chart.
     /// </summary>
     public class PieChartSeriesSetting : ChartSeriesSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// The color of the fill.
-        /// </summary>
+    {        /// <summary>
+             /// The color of the fill.
+             /// </summary>
         public string? fillColor;
         /// <summary>
         /// Border Color is only valid for Doughnut Chart
@@ -103,20 +89,15 @@ namespace OpenXMLOffice.Global
         /// Option to customize specific data series, will override chart level setting.
         /// </summary>
         public PieChartDataLabel pieChartDataLabel = new();
-
-        #endregion Public Fields
     }
 
     /// <summary>
     /// Represents the setting for a pie chart.
     /// </summary>
     public class PieChartSetting : ChartSetting
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Will get overridden by series level setting.
-        /// </summary>
+    {        /// <summary>
+             /// Will get overridden by series level setting.
+             /// </summary>
         public PieChartDataLabel pieChartDataLabel = new();
 
         /// <summary>
@@ -141,6 +122,6 @@ namespace OpenXMLOffice.Global
         /// Pie Explosion Value in percentage
         /// </summary>
         public uint pointExplosion = 0;
-        #endregion Public Fields
+
     }
 }

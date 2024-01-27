@@ -6,56 +6,45 @@ using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation
 {
-    internal class SlideLayout
-    {
-        #region Private Fields
+	internal class SlideLayout
+	{
+		private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT, PresentationConstants.SlideLayoutType.BLANK);
 
-        private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT, PresentationConstants.SlideLayoutType.BLANK);
+		private readonly P.SlideLayout openXMLSlideLayout = new()
+		{
+			Type = P.SlideLayoutValues.Text
+		}; public SlideLayout()
+		{
+			CreateSlideLayout();
+		}
 
-        private readonly P.SlideLayout openXMLSlideLayout = new()
-        {
-            Type = P.SlideLayoutValues.Text
-        };
 
-        #endregion Private Fields
+		public P.SlideLayout GetSlideLayout()
+		{
+			return openXMLSlideLayout;
+		}
 
-        #region Public Constructors
+		public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
+		{
+			return openXMLSlideLayout.SlideLayoutPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
+		}
 
-        public SlideLayout()
-        {
-            CreateSlideLayout();
-        }
 
-        #endregion Public Constructors
 
-        #region Public Methods
 
-        public P.SlideLayout GetSlideLayout()
-        {
-            return openXMLSlideLayout;
-        }
 
-        public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
-        {
-            return openXMLSlideLayout.SlideLayoutPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
-        }
+		private void CreateSlideLayout()
+		{
+			openXMLSlideLayout.AppendChild(commonSlideData.GetCommonSlideData());
+			openXMLSlideLayout.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+			openXMLSlideLayout.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+			openXMLSlideLayout.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
+			openXMLSlideLayout.AppendChild(new P.ColorMapOverride()
+			{
+				MasterColorMapping = new A.MasterColorMapping()
+			});
+		}
 
-        #endregion Public Methods
 
-        #region Private Methods
-
-        private void CreateSlideLayout()
-        {
-            openXMLSlideLayout.AppendChild(commonSlideData.GetCommonSlideData());
-            openXMLSlideLayout.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-            openXMLSlideLayout.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-            openXMLSlideLayout.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
-            openXMLSlideLayout.AppendChild(new P.ColorMapOverride()
-            {
-                MasterColorMapping = new A.MasterColorMapping()
-            });
-        }
-
-        #endregion Private Methods
-    }
+	}
 }

@@ -132,16 +132,16 @@ namespace OpenXMLOffice.Global
                 _ => A.TextUnderlineValues.None
             };
         }
-        #region Protected Constructors
+
 
         /// <summary>
         /// Class is only for inheritance purposes.
         /// </summary>
         protected CommonProperties() { }
 
-        #endregion Protected Constructors
 
-        #region Protected Methods
+
+
 
         /// <summary>
         /// Create Soild Fill XML Property
@@ -429,6 +429,6 @@ namespace OpenXMLOffice.Global
             return bodyProperties;
         }
 
-        #endregion Protected Methods
+
     }
 }

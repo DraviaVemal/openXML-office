@@ -6,12 +6,9 @@ namespace OpenXMLOffice.Global
     /// Represents the theme pallet containing color values.
     /// </summary>
     public class ThemePallet
-    {
-        #region Public Fields
-
-        /// <summary>
-        /// Gets or sets the value of Accent1 color.
-        /// </summary>
+    {        /// <summary>
+             /// Gets or sets the value of Accent1 color.
+             /// </summary>
         public string accent1 = "4472C4";
 
         /// <summary>
@@ -68,7 +65,5 @@ namespace OpenXMLOffice.Global
         /// Gets or sets the value of Light2 color.
         /// </summary>
         public string light2 = "E7E6E6";
-
-        #endregion Public Fields
     }
 }

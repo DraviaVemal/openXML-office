@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Global
     /// </summary>
     internal class ChartColor
     {
-        #region Public Methods
+
 
         /// <summary>
         /// Creates the color styles for charts.
@@ -77,6 +77,6 @@ namespace OpenXMLOffice.Global
             return colorStyle;
         }
 
-        #endregion Public Methods
+
     }
 }
