@@ -1,58 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using OpenXMLOffice.Global;
+
 namespace OpenXMLOffice.Excel
 {
-    /// <summary>
-    /// Horizontal alignment values
-    /// </summary>
-    public enum HorizontalAlignmentValues
-    {
-        /// <summary>
-        /// Unused
-        /// </summary>
-        NONE,
-
-        /// <summary>
-        /// Left alignment
-        /// </summary>
-        LEFT,
-
-        /// <summary>
-        /// Center alignment
-        /// </summary>
-        CENTER,
-
-        /// <summary>
-        /// Right alignment
-        /// </summary>
-        RIGHT
-    }
-
-    /// <summary>
-    /// Vertical alignment values
-    /// </summary>
-    public enum VerticalAlignmentValues
-    {
-        /// <summary>
-        /// Unused
-        /// </summary>
-        NONE,
-
-        /// <summary>
-        /// Top alignment
-        /// </summary>
-        TOP,
-
-        /// <summary>
-        /// Middle alignment
-        /// </summary>
-        MIDDLE,
-
-        /// <summary>
-        /// Bottom alignment
-        /// </summary>
-        BOTTOM
-    }
 
     /// <summary>
     /// Represents the base class for a border in a style.

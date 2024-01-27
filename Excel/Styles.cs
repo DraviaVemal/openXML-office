@@ -1,6 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using LiteDB;
+using OpenXMLOffice.Global;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace OpenXMLOffice.Excel

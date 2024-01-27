@@ -3,6 +3,59 @@
 namespace OpenXMLOffice.Global
 {
     /// <summary>
+    /// Text Horizontal Alignment
+    /// </summary>
+    public enum HorizontalAlignmentValues
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        NONE,
+        /// <summary>
+        /// Align Left
+        /// </summary>
+        LEFT,
+
+        /// <summary>
+        /// Align Center
+        /// </summary>
+        CENTER,
+
+        /// <summary>
+        /// Align Right
+        /// </summary>
+        RIGHT,
+
+        /// <summary>
+        /// Align Justify
+        /// </summary>
+        JUSTIFY
+    }
+    /// <summary>
+    /// Text Vertical Alignment
+    /// </summary>
+    public enum VerticalAlignmentValues
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        NONE,
+        /// <summary>
+        /// Align Top
+        /// </summary>
+        TOP,
+
+        /// <summary>
+        /// Align Middle
+        /// </summary>
+        MIDDLE,
+
+        /// <summary>
+        /// Align Bottom
+        /// </summary>
+        BOTTOM
+    }
+    /// <summary>
     /// Represents the settings for a text box.
     /// </summary>
     public class TextBoxSetting

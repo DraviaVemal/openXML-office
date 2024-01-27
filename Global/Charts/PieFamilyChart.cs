@@ -74,48 +74,6 @@ namespace OpenXMLOffice.Global
 
         private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
-            SolidFillModel GetFillSolidFill()
-            {
-                SolidFillModel solidFillModel = new();
-                string? hexColor = pieChartSetting.pieChartSeriesSettings?
-                            .Where(item => item?.fillColor != null)
-                            .Select(item => item?.fillColor!)
-                            .ToList().ElementAtOrDefault(seriesIndex);
-                if (hexColor != null)
-                {
-                    solidFillModel.hexColor = hexColor;
-                    return solidFillModel;
-                }
-                else
-                {
-                    solidFillModel.schemeColorModel = new()
-                    {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
-                    };
-                }
-                return solidFillModel;
-            }
-            SolidFillModel GetOutlineSolidFill()
-            {
-                SolidFillModel solidFillModel = new();
-                string? hexColor = pieChartSetting.pieChartSeriesSettings?
-                            .Where(item => item?.borderColor != null)
-                            .Select(item => item?.borderColor!)
-                            .ToList().ElementAtOrDefault(seriesIndex);
-                if (hexColor != null)
-                {
-                    solidFillModel.hexColor = hexColor;
-                    return solidFillModel;
-                }
-                else
-                {
-                    solidFillModel.schemeColorModel = new()
-                    {
-                        themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
-                    };
-                }
-                return solidFillModel;
-            }
             C.DataLabels? dataLabels = seriesIndex < pieChartSetting.pieChartSeriesSettings.Count ?
                 CreatePieDataLabels(pieChartSetting.pieChartSeriesSettings?[seriesIndex]?.pieChartDataLabel ?? new PieChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
             C.PieChartSeries series = new(
@@ -124,6 +82,48 @@ namespace OpenXMLOffice.Global
                 CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             for (uint index = 0; index < chartDataGrouping.xAxisCells!.Length; index++)
             {
+                SolidFillModel GetFillSolidFill()
+                {
+                    SolidFillModel solidFillModel = new();
+                    string? hexColor = pieChartSetting.pieChartSeriesSettings?
+                                .Where(item => item?.fillColor != null)
+                                .Select(item => item?.fillColor!)
+                                .ToList().ElementAtOrDefault((int)index);
+                    if (hexColor != null)
+                    {
+                        solidFillModel.hexColor = hexColor;
+                        return solidFillModel;
+                    }
+                    else
+                    {
+                        solidFillModel.schemeColorModel = new()
+                        {
+                            themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColurCount),
+                        };
+                    }
+                    return solidFillModel;
+                }
+                SolidFillModel GetOutlineSolidFill()
+                {
+                    SolidFillModel solidFillModel = new();
+                    string? hexColor = pieChartSetting.pieChartSeriesSettings?
+                                .Where(item => item?.borderColor != null)
+                                .Select(item => item?.borderColor!)
+                                .ToList().ElementAtOrDefault((int)index);
+                    if (hexColor != null)
+                    {
+                        solidFillModel.hexColor = hexColor;
+                        return solidFillModel;
+                    }
+                    else
+                    {
+                        solidFillModel.schemeColorModel = new()
+                        {
+                            themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColurCount),
+                        };
+                    }
+                    return solidFillModel;
+                }
                 C.DataPoint dataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
                 ShapePropertiesModel shapePropertiesModel = new()
                 {

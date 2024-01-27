@@ -1,5 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using OpenXMLOffice.Global;
+
 namespace OpenXMLOffice.Presentation
 {
     /// <summary>
@@ -96,56 +98,6 @@ namespace OpenXMLOffice.Presentation
         public string? value;
 
         #endregion Public Fields
-
-        #region Public Enums
-
-        /// <summary>
-        /// Cell Vertical Alignment Option
-        /// </summary>
-        public enum HorizontalAlignmentValues
-        {
-            /// <summary>
-            /// Align Left
-            /// </summary>
-            LEFT,
-
-            /// <summary>
-            /// Align Center
-            /// </summary>
-            CENTER,
-
-            /// <summary>
-            /// Align Right
-            /// </summary>
-            RIGHT,
-
-            /// <summary>
-            /// Align Justify
-            /// </summary>
-            JUSTIFY
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public enum VerticalAlignmentValues
-        {
-            /// <summary>
-            /// Align Top
-            /// </summary>
-            TOP,
-
-            /// <summary>
-            /// Align Middle
-            /// </summary>
-            MIDDLE,
-
-            /// <summary>
-            /// Align Bottom
-            /// </summary>
-            BOTTOM
-        }
-
-        #endregion Public Enums
     }
 
     /// <summary>

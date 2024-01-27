@@ -162,10 +162,10 @@ namespace OpenXMLOffice.Presentation
                 {
                     Alignment = cell.horizontalAlignment switch
                     {
-                        TableCell.HorizontalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
-                        TableCell.HorizontalAlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
-                        TableCell.HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
-                        TableCell.HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
+                        G.HorizontalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
+                        G.HorizontalAlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
+                        G.HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+                        G.HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
                         _ => A.TextAlignmentTypeValues.Left
                     },
                 });
@@ -197,9 +197,9 @@ namespace OpenXMLOffice.Presentation
             {
                 Anchor = cell.verticalAlignment switch
                 {
-                    TableCell.VerticalAlignmentValues.TOP => A.TextAnchoringTypeValues.Top,
-                    TableCell.VerticalAlignmentValues.MIDDLE => A.TextAnchoringTypeValues.Center,
-                    TableCell.VerticalAlignmentValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
+                    G.VerticalAlignmentValues.TOP => A.TextAnchoringTypeValues.Top,
+                    G.VerticalAlignmentValues.MIDDLE => A.TextAnchoringTypeValues.Center,
+                    G.VerticalAlignmentValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
                     _ => A.TextAnchoringTypeValues.Top
                 }
             };
