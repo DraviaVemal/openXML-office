@@ -488,7 +488,7 @@ namespace OpenXMLOffice.Tests
                         leftBorder = true,
                         topBorder = true,
                         rightBorder =true,
-                        verticalAlignment = TableCell.VerticalAlignmentValues.LEFT+ (i % 4)
+                        verticalAlignment = TableCell.HorizontalAlignmentValues.LEFT+ (i % 4)
                     },
                     new() {
                         value = $"Row {i + 1}, Cell 2",

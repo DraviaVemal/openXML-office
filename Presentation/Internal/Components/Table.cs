@@ -156,16 +156,16 @@ namespace OpenXMLOffice.Presentation
         private A.TableCell CreateTableCell(TableCell cell, TableRow row)
         {
             A.Paragraph paragraph = new();
-            if (cell.verticalAlignment != null)
+            if (cell.horizontalAlignment != null)
             {
                 paragraph.Append(new A.ParagraphProperties()
                 {
-                    Alignment = cell.verticalAlignment switch
+                    Alignment = cell.horizontalAlignment switch
                     {
-                        TableCell.VerticalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
-                        TableCell.VerticalAlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
-                        TableCell.VerticalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
-                        TableCell.VerticalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
+                        TableCell.HorizontalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
+                        TableCell.HorizontalAlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
+                        TableCell.HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+                        TableCell.HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
                         _ => A.TextAlignmentTypeValues.Left
                     },
                 });
@@ -195,11 +195,11 @@ namespace OpenXMLOffice.Presentation
             ));
             A.TableCellProperties tableCellProperties = new()
             {
-                Anchor = cell.horizontalAlignment switch
+                Anchor = cell.verticalAlignment switch
                 {
-                    TableCell.HorizontalAlignmentValues.TOP => A.TextAnchoringTypeValues.Top,
-                    TableCell.HorizontalAlignmentValues.MIDDLE => A.TextAnchoringTypeValues.Center,
-                    TableCell.HorizontalAlignmentValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
+                    TableCell.VerticalAlignmentValues.TOP => A.TextAnchoringTypeValues.Top,
+                    TableCell.VerticalAlignmentValues.MIDDLE => A.TextAnchoringTypeValues.Center,
+                    TableCell.VerticalAlignmentValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
                     _ => A.TextAnchoringTypeValues.Top
                 }
             };
