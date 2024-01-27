@@ -203,36 +203,96 @@ namespace OpenXMLOffice.Presentation
                     _ => A.TextAnchoringTypeValues.Top
                 }
             };
-            tableCellProperties.Append(new A.LeftBorderLineProperties(
-                cell.borderSettings.leftBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.leftBorder.borderColor }) : new A.NoFill(),
-                new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.leftBorder.width), CompoundLineType = A.CompoundLineValues.Single });
-            tableCellProperties.Append(new A.RightBorderLineProperties(
-                cell.borderSettings.rightBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.rightBorder.borderColor }) : new A.NoFill(),
-                new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.rightBorder.width), CompoundLineType = A.CompoundLineValues.Single });
-            tableCellProperties.Append(new A.TopBorderLineProperties(
-                cell.borderSettings.topBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.topBorder.borderColor }) : new A.NoFill(),
-                new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.topBorder.width), CompoundLineType = A.CompoundLineValues.Single });
-            tableCellProperties.Append(new A.BottomBorderLineProperties(
-                cell.borderSettings.bottomBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.bottomBorder.borderColor }) : new A.NoFill(),
-                new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.bottomBorder.width), CompoundLineType = A.CompoundLineValues.Single });
-            tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-                cell.borderSettings.topLeftToBottomRightBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor }) : new A.NoFill(),
-                new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.topLeftToBottomRightBorder.width), CompoundLineType = A.CompoundLineValues.Single });
-            tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-                cell.borderSettings.bottomLeftToTopRightBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor }) : new A.NoFill(),
-                new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
-            )
-            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.bottomLeftToTopRightBorder.width), CompoundLineType = A.CompoundLineValues.Single });
+            if (cell.borderSettings.leftBorder.showBorder)
+            {
+                tableCellProperties.Append(new A.LeftBorderLineProperties(
+                    CreateSolidFill(new() { hexColor = cell.borderSettings.leftBorder.borderColor }),
+                    new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.leftBorder.dashStyle) }
+                )
+                {
+                    Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.leftBorder.width),
+                    CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.leftBorder.borderStyle)
+                });
+            }
+            else
+            {
+                tableCellProperties.Append(new A.LeftBorderLineProperties(new A.NoFill()));
+            }
+            if (cell.borderSettings.rightBorder.showBorder)
+            {
+                tableCellProperties.Append(new A.RightBorderLineProperties(
+                      CreateSolidFill(new() { hexColor = cell.borderSettings.rightBorder.borderColor }),
+                    new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.rightBorder.dashStyle) }
+                )
+                {
+                    Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.rightBorder.width),
+                    CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.rightBorder.borderStyle)
+                });
+            }
+            else
+            {
+                tableCellProperties.Append(new A.RightBorderLineProperties(new A.NoFill()));
+            }
+            if (cell.borderSettings.topBorder.showBorder)
+            {
+                tableCellProperties.Append(new A.TopBorderLineProperties(
+                     CreateSolidFill(new() { hexColor = cell.borderSettings.topBorder.borderColor }),
+                    new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.topBorder.dashStyle) }
+                )
+                {
+                    Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.topBorder.width),
+                    CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.topBorder.borderStyle)
+                });
+            }
+            else
+            {
+                tableCellProperties.Append(new A.TopBorderLineProperties(new A.NoFill()));
+            }
+            if (cell.borderSettings.bottomBorder.showBorder)
+            {
+                tableCellProperties.Append(new A.BottomBorderLineProperties(
+                    CreateSolidFill(new() { hexColor = cell.borderSettings.bottomBorder.borderColor }),
+                    new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.bottomBorder.dashStyle) }
+                )
+                {
+                    Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.bottomBorder.width),
+                    CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.bottomBorder.borderStyle)
+                });
+            }
+            else
+            {
+                tableCellProperties.Append(new A.BottomBorderLineProperties(new A.NoFill()));
+            }
+            if (cell.borderSettings.topLeftToBottomRightBorder.showBorder)
+            {
+                tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
+                    CreateSolidFill(new() { hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor }),
+                    new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.topLeftToBottomRightBorder.dashStyle) }
+                )
+                {
+                    Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.topLeftToBottomRightBorder.width),
+                    CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.topLeftToBottomRightBorder.borderStyle)
+                });
+            }
+            else
+            {
+                tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(new A.NoFill()));
+            }
+            if (cell.borderSettings.bottomLeftToTopRightBorder.showBorder)
+            {
+                tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
+                    CreateSolidFill(new() { hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor }),
+                    new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.dashStyle) }
+                )
+                {
+                    Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.bottomLeftToTopRightBorder.width),
+                    CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.borderStyle)
+                });
+            }
+            else
+            {
+                tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(new A.NoFill()));
+            }
             tableCellProperties.Append((cell.cellBackground != null || row.rowBackground != null) ? G.CommonProperties.CreateSolidFill(new() { hexColor = cell.cellBackground ?? row.rowBackground! }) : new A.NoFill());
             tableCellXML.Append(tableCellProperties);
             return tableCellXML;
@@ -250,7 +310,11 @@ namespace OpenXMLOffice.Presentation
                    Id = 1,
                    Name = "Table 1"
                },
-               new P.NonVisualGraphicFrameDrawingProperties(new A.GraphicFrameLocks() { NoGrouping = true }),
+               new P.NonVisualGraphicFrameDrawingProperties(
+                new A.GraphicFrameLocks()
+                {
+                    NoGrouping = true
+                }),
                new P.ApplicationNonVisualDrawingProperties());
             graphicFrame.Graphic = new A.Graphic()
             {

@@ -16,13 +16,13 @@ namespace OpenXMLOffice.Global
         /// Initializes a new instance of the <see cref="AreaChart"/> class with the specified area
         /// chart settings and data columns.
         /// </summary>
-        /// <param name="AreaChartSetting">
+        /// <param name="areaChartSetting">
         /// The area chart settings.
         /// </param>
-        /// <param name="DataCols">
+        /// <param name="dataCols">
         /// The data columns.
         /// </param>
-        public AreaChart(AreaChartSetting AreaChartSetting, ChartData[][] DataCols) : base(AreaChartSetting, DataCols) { }
+        public AreaChart(AreaChartSetting areaChartSetting, ChartData[][] dataCols) : base(areaChartSetting, dataCols) { }
 
         #endregion Public Constructors
 

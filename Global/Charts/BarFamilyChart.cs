@@ -1,6 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Math;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace OpenXMLOffice.Global
@@ -23,13 +24,14 @@ namespace OpenXMLOffice.Global
 
         #region Protected Constructors
 
+        internal BarFamilyChart(BarChartSetting barChartSetting) : base(barChartSetting)
+        {
+            this.barChartSetting = barChartSetting;
+        }
+
         /// <summary>
         /// Create Bar Chart with provided settings
         /// </summary>
-        /// <param name="barChartSetting">
-        /// </param>
-        /// <param name="dataCols">
-        /// </param>
         protected BarFamilyChart(BarChartSetting barChartSetting, ChartData[][] dataCols) : base(barChartSetting)
         {
             this.barChartSetting = barChartSetting;
@@ -175,7 +177,7 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreateBarDataLabels(BarChartDataLabel barChartDataLabel, int? dataLabelCounter = 0)
         {
-            if (barChartDataLabel.showValue || barChartDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName || dataLabelCounter > 0)
+            if (barChartDataLabel.showValue || barChartDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName)
             {
                 C.DataLabels dataLabels = CreateDataLabels(barChartDataLabel, dataLabelCounter);
                 if (barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && barChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
@@ -201,43 +203,7 @@ namespace OpenXMLOffice.Global
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            C.BarChart BarChart = new(
-                new C.BarDirection { Val = C.BarDirectionValues.Bar },
-                new C.BarGrouping
-                {
-                    Val = barChartSetting.barChartTypes switch
-                    {
-                        BarChartTypes.STACKED => C.BarGroupingValues.Stacked,
-                        BarChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
-                        // Clusted
-                        _ => C.BarGroupingValues.Clustered
-                    }
-                },
-                new C.VaryColors { Val = false });
-            int seriesIndex = 0;
-            CreateDataSeries(dataCols, barChartSetting.chartDataSetting).ForEach(Series =>
-            {
-                BarChart.Append(CreateBarChartSeries(seriesIndex, Series));
-                seriesIndex++;
-            });
-            if (barChartSetting.barChartTypes == BarChartTypes.CLUSTERED)
-            {
-                BarChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
-                BarChart.Append(new C.Overlap { Val = (SByteValue)barChartSetting.barGraphicsSetting.seriesGap });
-            }
-            else
-            {
-                BarChart.Append(new C.GapWidth { Val = DefaultGapWidth });
-                BarChart.Append(new C.Overlap { Val = DefaultOverlap });
-            }
-            C.DataLabels? DataLabels = CreateBarDataLabels(barChartSetting.barChartDataLabel);
-            if (DataLabels != null)
-            {
-                BarChart.Append(DataLabels);
-            }
-            BarChart.Append(new C.AxisId { Val = CategoryAxisId });
-            BarChart.Append(new C.AxisId { Val = ValueAxisId });
-            plotArea.Append(BarChart);
+            plotArea.Append(CreateBarChart(dataCols));
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
                 id = CategoryAxisId,
@@ -262,6 +228,47 @@ namespace OpenXMLOffice.Global
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;
+        }
+
+        internal C.BarChart CreateBarChart(ChartData[][] dataCols)
+        {
+            C.BarChart barChart = new(
+                new C.BarDirection { Val = C.BarDirectionValues.Bar },
+                new C.BarGrouping
+                {
+                    Val = barChartSetting.barChartTypes switch
+                    {
+                        BarChartTypes.STACKED => C.BarGroupingValues.Stacked,
+                        BarChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
+                        // Clusted
+                        _ => C.BarGroupingValues.Clustered
+                    }
+                },
+                new C.VaryColors { Val = false });
+            int seriesIndex = 0;
+            CreateDataSeries(dataCols, barChartSetting.chartDataSetting).ForEach(Series =>
+            {
+                barChart.Append(CreateBarChartSeries(seriesIndex, Series));
+                seriesIndex++;
+            });
+            if (barChartSetting.barChartTypes == BarChartTypes.CLUSTERED)
+            {
+                barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
+                barChart.Append(new C.Overlap { Val = (SByteValue)barChartSetting.barGraphicsSetting.seriesGap });
+            }
+            else
+            {
+                barChart.Append(new C.GapWidth { Val = DefaultGapWidth });
+                barChart.Append(new C.Overlap { Val = DefaultOverlap });
+            }
+            C.DataLabels? dataLabels = CreateBarDataLabels(barChartSetting.barChartDataLabel);
+            if (dataLabels != null)
+            {
+                barChart.Append(dataLabels);
+            }
+            barChart.Append(new C.AxisId { Val = CategoryAxisId });
+            barChart.Append(new C.AxisId { Val = ValueAxisId });
+            return barChart;
         }
 
         #endregion Private Methods

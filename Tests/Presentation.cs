@@ -256,6 +256,24 @@ namespace OpenXMLOffice.Tests
         }
 
         /// <summary>
+        /// Add Combo Chart to the Slide
+        /// </summary>
+        [TestMethod]
+        public void AddComboChart()
+        {
+            G.ComboChartSetting comboChartSetting = new()
+            {
+                title = "Combo Chart",
+            };
+            comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting());
+            comboChartSetting.AddComboChartsSetting(new G.ColumnChartSetting());
+            comboChartSetting.AddComboChartsSetting(new G.ColumnChartSetting());
+            comboChartSetting.AddComboChartsSetting(new G.LineChartSetting());
+            powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), comboChartSetting);
+            Assert.IsTrue(true);
+        }
+
+        /// <summary>
         /// Add Picture to the slide
         /// </summary>
         [TestMethod]
@@ -316,11 +334,13 @@ namespace OpenXMLOffice.Tests
         public void AddTable()
         {
             Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-            slide.AddTable(CreateTableRowPayload(5), new TableSetting()
+            slide.AddTable(CreateTableRowPayload(10), new TableSetting()
             {
                 name = "New Table",
                 widthType = TableSetting.WidthOptionValues.PERCENTAGE,
-                tableColumnWidth = new() { 80, 20 }
+                tableColumnWidth = new() { 80, 20 },
+                x = (uint)G.ConverterUtils.PixelsToEmu(10),
+                y = (uint)G.ConverterUtils.PixelsToEmu(10)
             });
             Assert.IsTrue(true);
         }
@@ -496,14 +516,15 @@ namespace OpenXMLOffice.Tests
                         fontSize=22,
                         borderSettings = new(){
                             leftBorder = new(){
-                                showBorder = true
+                                showBorder = false
                             },
                             topBorder = new(){
                                 showBorder = true,
-                                borderColor = "FF0000"
+                                borderColor = "FF0000",
+                                width = 2
                             },
                             rightBorder = new(){
-                                showBorder = true
+                                showBorder = false
                             },
                             bottomBorder = new(){
                                 showBorder = true
@@ -520,11 +541,12 @@ namespace OpenXMLOffice.Tests
                                 showBorder = true
                             },
                             topBorder = new(){
-                                showBorder = true
+                                showBorder = false
                             },
                             rightBorder = new(){
                                 showBorder = true,
-                                borderColor= "0000FF"
+                                borderColor= "0000FF",
+                                width = 1
                             },
                             bottomBorder = new(){
                                 showBorder = true

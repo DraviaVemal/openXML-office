@@ -100,12 +100,6 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// Create Pie Chart with provided settings
         /// </summary>
-        /// <param name="Slide">
-        /// </param>
-        /// <param name="DataRows">
-        /// </param>
-        /// <param name="PieChartSetting">
-        /// </param>
         public Chart(Slide Slide, DataCell[][] DataRows, PieChartSetting PieChartSetting)
         {
             chartSetting = PieChartSetting;
@@ -118,12 +112,6 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// Create Scatter Chart with provided settings
         /// </summary>
-        /// <param name="Slide">
-        /// </param>
-        /// <param name="DataRows">
-        /// </param>
-        /// <param name="ScatterChartSetting">
-        /// </param>
         public Chart(Slide Slide, DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
         {
             chartSetting = ScatterChartSetting;
@@ -131,6 +119,17 @@ namespace OpenXMLOffice.Presentation
             currentSlide = Slide;
             InitialiseChartParts();
             CreateChart(DataRows, ScatterChartSetting);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Chart(Slide Slide, DataCell[][] DataRows, ComboChartSetting comboChartSetting)
+        {
+            chartSetting = comboChartSetting;
+            openXMLChartPart = Slide.GetSlidePart().AddNewPart<ChartPart>(Slide.GetNextSlideRelationId());
+            currentSlide = Slide;
+            InitialiseChartParts();
+            CreateChart(DataRows, comboChartSetting);
         }
 
         #endregion Public Constructors
@@ -236,11 +235,11 @@ namespace OpenXMLOffice.Presentation
 
         #region Private Methods
 
-        private void CreateChart(DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
+        private void CreateChart(DataCell[][] dataRows, AreaChartSetting areaChartSetting)
         {
-            LoadDataToExcel(DataRows);
+            LoadDataToExcel(dataRows);
             // Prepare Excel Data for PPT Cache
-            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+            ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
                     numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
@@ -252,18 +251,18 @@ namespace OpenXMLOffice.Presentation
                         _ => DataType.STRING
                     }
                 }).ToArray()).ToArray();
-            AreaChart AreaChart = new(AreaChartSetting, ChartData);
-            GetChartPart().ChartSpace = AreaChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = Global.AreaChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = Global.AreaChart.GetColorStyle();
+            AreaChart areaChart = new(areaChartSetting, ChartData);
+            GetChartPart().ChartSpace = areaChart.GetChartSpace();
+            GetChartStylePart().ChartStyle = AreaChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = AreaChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
-        private void CreateChart(DataCell[][] DataRows, BarChartSetting BarChartSetting)
+        private void CreateChart(DataCell[][] dataRows, BarChartSetting barChartSetting)
         {
-            LoadDataToExcel(DataRows);
+            LoadDataToExcel(dataRows);
             // Prepare Excel Data for PPT Cache
-            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+            ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
                col.Select(Cell => new ChartData
                {
                    numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
@@ -275,18 +274,18 @@ namespace OpenXMLOffice.Presentation
                        _ => DataType.STRING
                    }
                }).ToArray()).ToArray();
-            BarChart BarChart = new(BarChartSetting, ChartData);
-            GetChartPart().ChartSpace = BarChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = Global.BarChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = Global.BarChart.GetColorStyle();
+            BarChart barChart = new(barChartSetting, ChartData);
+            GetChartPart().ChartSpace = barChart.GetChartSpace();
+            GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
-        private void CreateChart(DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
+        private void CreateChart(DataCell[][] dataRows, ColumnChartSetting columnChartSetting)
         {
-            LoadDataToExcel(DataRows);
+            LoadDataToExcel(dataRows);
             // Prepare Excel Data for PPT Cache
-            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+            ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
                     numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
@@ -298,18 +297,18 @@ namespace OpenXMLOffice.Presentation
                         _ => DataType.STRING
                     }
                 }).ToArray()).ToArray();
-            ColumnChart ColumnChart = new(ColumnChartSetting, ChartData);
-            GetChartPart().ChartSpace = ColumnChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = Global.ColumnChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = Global.ColumnChart.GetColorStyle();
+            ColumnChart columnChart = new(columnChartSetting, ChartData);
+            GetChartPart().ChartSpace = columnChart.GetChartSpace();
+            GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
-        private void CreateChart(DataCell[][] DataRows, LineChartSetting LineChartSetting)
+        private void CreateChart(DataCell[][] dataRows, LineChartSetting lineChartSetting)
         {
-            LoadDataToExcel(DataRows);
+            LoadDataToExcel(dataRows);
             // Prepare Excel Data for PPT Cache
-            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+            ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
                     numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
@@ -321,18 +320,18 @@ namespace OpenXMLOffice.Presentation
                         _ => DataType.STRING
                     }
                 }).ToArray()).ToArray();
-            LineChart LineChart = new(LineChartSetting, ChartData);
-            GetChartPart().ChartSpace = LineChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = Global.LineChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = Global.LineChart.GetColorStyle();
+            LineChart lineChart = new(lineChartSetting, ChartData);
+            GetChartPart().ChartSpace = lineChart.GetChartSpace();
+            GetChartStylePart().ChartStyle = LineChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = LineChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
-        private void CreateChart(DataCell[][] DataRows, PieChartSetting PieChartSetting)
+        private void CreateChart(DataCell[][] dataRows, PieChartSetting pieChartSetting)
         {
-            LoadDataToExcel(DataRows);
+            LoadDataToExcel(dataRows);
             // Prepare Excel Data for PPT Cache
-            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+            ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
                     numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
@@ -344,18 +343,18 @@ namespace OpenXMLOffice.Presentation
                         _ => DataType.STRING
                     }
                 }).ToArray()).ToArray();
-            PieChart PieChart = new(PieChartSetting, ChartData);
-            GetChartPart().ChartSpace = PieChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = Global.PieChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = Global.PieChart.GetColorStyle();
+            PieChart pieChart = new(pieChartSetting, ChartData);
+            GetChartPart().ChartSpace = pieChart.GetChartSpace();
+            GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = PieChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
-        private void CreateChart(DataCell[][] DataRows, ScatterChartSetting ScatterChartSetting)
+        private void CreateChart(DataCell[][] dataRows, ScatterChartSetting scatterChartSetting)
         {
-            LoadDataToExcel(DataRows);
+            LoadDataToExcel(dataRows);
             // Prepare Excel Data for PPT Cache
-            ChartData[][] ChartData = CommonTools.TransposeArray(DataRows).Select(col =>
+            ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
                 col.Select(Cell => new ChartData
                 {
                     numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
@@ -367,10 +366,33 @@ namespace OpenXMLOffice.Presentation
                         _ => DataType.STRING
                     }
                 }).ToArray()).ToArray();
-            ScatterChart ScatterChart = new(ScatterChartSetting, ChartData);
-            GetChartPart().ChartSpace = ScatterChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = Global.ScatterChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = Global.ScatterChart.GetColorStyle();
+            ScatterChart scatterChart = new(scatterChartSetting, ChartData);
+            GetChartPart().ChartSpace = scatterChart.GetChartSpace();
+            GetChartStylePart().ChartStyle = ScatterChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = ScatterChart.GetColorStyle();
+            CreateChartGraphicFrame();
+        }
+
+        private void CreateChart(DataCell[][] dataRows, ComboChartSetting comboChartSetting)
+        {
+            LoadDataToExcel(dataRows);
+            // Prepare Excel Data for PPT Cache
+            ChartData[][] ChartData = CommonTools.TransposeArray(dataRows).Select(col =>
+                col.Select(Cell => new ChartData
+                {
+                    numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
+                    value = Cell?.cellValue,
+                    dataType = Cell?.dataType switch
+                    {
+                        CellDataType.NUMBER => DataType.NUMBER,
+                        CellDataType.DATE => DataType.DATE,
+                        _ => DataType.STRING
+                    }
+                }).ToArray()).ToArray();
+            ComboChart comboChart = new(comboChartSetting, ChartData);
+            GetChartPart().ChartSpace = comboChart.GetChartSpace();
+            GetChartStylePart().ChartStyle = ComboChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = ComboChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
@@ -378,7 +400,7 @@ namespace OpenXMLOffice.Presentation
         {
             // Load Chart Part To Graphics Frame For Export
             string? relationshipId = currentSlide.GetSlidePart().GetIdOfPart(GetChartPart());
-            P.NonVisualGraphicFrameProperties NonVisualProperties = new()
+            P.NonVisualGraphicFrameProperties nonVisualProperties = new()
             {
                 NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), Name = "Chart" },
                 NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
@@ -386,7 +408,7 @@ namespace OpenXMLOffice.Presentation
             };
             graphicFrame = new()
             {
-                NonVisualGraphicFrameProperties = NonVisualProperties,
+                NonVisualGraphicFrameProperties = nonVisualProperties,
                 Transform = new P.Transform(
                    new A.Offset
                    {
@@ -432,17 +454,17 @@ namespace OpenXMLOffice.Presentation
             GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
         }
 
-        private void LoadDataToExcel(DataCell[][] DataRows)
+        private void LoadDataToExcel(DataCell[][] dataRows)
         {
             // Load Data To Embeded Sheet
             Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
             Spreadsheet spreadsheet = new(stream);
-            Worksheet Worksheet = spreadsheet.AddSheet();
-            int RowIndex = 1;
-            foreach (DataCell[] DataCells in DataRows)
+            Worksheet worksheet = spreadsheet.AddSheet();
+            int rowIndex = 1;
+            foreach (DataCell[] dataCells in dataRows)
             {
-                Worksheet.SetRow(RowIndex, 1, DataCells, new RowProperties());
-                ++RowIndex;
+                worksheet.SetRow(rowIndex, 1, dataCells, new RowProperties());
+                ++rowIndex;
             }
             spreadsheet.Save();
         }

@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using A = DocumentFormat.OpenXml.Drawing;
 using OpenXMLOffice.Global;
 
 namespace OpenXMLOffice.Presentation
@@ -38,6 +39,56 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// 
         /// </summary>
+        public enum DrawingPresetLineDashValues
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            DASH,
+            /// <summary>
+            /// 
+            /// </summary>
+            DASH_DOT,
+            /// <summary>
+            /// 
+            /// </summary>
+            DOT,
+            /// <summary>
+            /// 
+            /// </summary>
+            LARGE_DASH,
+            /// <summary>
+            /// 
+            /// </summary>
+            LARGE_DASH_DOT,
+            /// <summary>
+            /// 
+            /// </summary>
+            LARGE_DASH_DOT_DOT,
+            /// <summary>
+            /// 
+            /// </summary>
+            SOLID,
+            /// <summary>
+            /// 
+            /// </summary>
+            SYSTEM_DASH,
+            /// <summary>
+            /// 
+            /// </summary>
+            SYSTEM_DASH_DOT,
+            /// <summary>
+            /// 
+            /// </summary>
+            SYSTEM_DASH_DOT_DOT,
+            /// <summary>
+            /// 
+            /// </summary>
+            SYSTEM_DOT,
+        }
+        /// <summary>
+        /// 
+        /// </summary>
         public bool showBorder = false;
         /// <summary>
         /// 
@@ -46,11 +97,45 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// 
         /// </summary>
-        public uint width = 12700;
+        public float width = 1.27F;
         /// <summary>
         /// 
         /// </summary>
         public BorderStyleValues borderStyle = BorderStyleValues.SINGEL;
+        /// <summary>
+        /// 
+        /// </summary>
+        public DrawingPresetLineDashValues dashStyle = DrawingPresetLineDashValues.SOLID;
+
+        internal static A.CompoundLineValues GetBorderStyleValue(BorderStyleValues borderStyle)
+        {
+            return borderStyle switch
+            {
+                BorderStyleValues.DOUBLE => A.CompoundLineValues.Double,
+                BorderStyleValues.TRIPLE => A.CompoundLineValues.Triple,
+                BorderStyleValues.THICK_THIN => A.CompoundLineValues.ThickThin,
+                BorderStyleValues.THIN_THICK => A.CompoundLineValues.ThinThick,
+                _ => A.CompoundLineValues.Single,
+            };
+        }
+
+        internal static A.PresetLineDashValues GetDashStyleValue(DrawingPresetLineDashValues dashStyle)
+        {
+            return dashStyle switch
+            {
+                DrawingPresetLineDashValues.DASH => A.PresetLineDashValues.Dash,
+                DrawingPresetLineDashValues.DASH_DOT => A.PresetLineDashValues.DashDot,
+                DrawingPresetLineDashValues.DOT => A.PresetLineDashValues.Dot,
+                DrawingPresetLineDashValues.LARGE_DASH => A.PresetLineDashValues.LargeDash,
+                DrawingPresetLineDashValues.LARGE_DASH_DOT => A.PresetLineDashValues.LargeDashDot,
+                DrawingPresetLineDashValues.LARGE_DASH_DOT_DOT => A.PresetLineDashValues.LargeDashDotDot,
+                DrawingPresetLineDashValues.SYSTEM_DASH => A.PresetLineDashValues.SystemDash,
+                DrawingPresetLineDashValues.SYSTEM_DASH_DOT => A.PresetLineDashValues.SystemDashDot,
+                DrawingPresetLineDashValues.SYSTEM_DASH_DOT_DOT => A.PresetLineDashValues.SystemDashDotDot,
+                DrawingPresetLineDashValues.SYSTEM_DOT => A.PresetLineDashValues.SystemDot,
+                _ => A.PresetLineDashValues.Solid,
+            };
+        }
     }
 
     /// <summary>
@@ -221,12 +306,12 @@ namespace OpenXMLOffice.Presentation
         public WidthOptionValues widthType = WidthOptionValues.AUTO;
 
         /// <summary>
-        /// Table X Position in the slide
+        /// Table X Position in the slide in EMUs (English Metric Units).
         /// </summary>
         public uint x = 0;
 
         /// <summary>
-        /// Table Y Position in the slide
+        /// Table Y Position in the slide in EMUs (English Metric Units).
         /// </summary>
         public uint y = 0;
 

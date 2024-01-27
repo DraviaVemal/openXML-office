@@ -21,13 +21,14 @@ namespace OpenXMLOffice.Global
 
         #region Protected Constructors
 
+        internal AreaFamilyChart(AreaChartSetting areaChartSetting) : base(areaChartSetting)
+        {
+            this.areaChartSetting = areaChartSetting;
+        }
+
         /// <summary>
         /// Create Area Chart with provided settings
         /// </summary>
-        /// <param name="areaChartSetting">
-        /// </param>
-        /// <param name="dataCols">
-        /// </param>
         protected AreaFamilyChart(AreaChartSetting areaChartSetting, ChartData[][] dataCols) : base(areaChartSetting)
         {
             this.areaChartSetting = areaChartSetting;
@@ -113,7 +114,7 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreateAreaDataLabels(AreaChartDataLabel areaChartDataLabel, int? dataLabelCounter = 0)
         {
-            if (areaChartDataLabel.showValue || areaChartDataLabel.showValueFromColumn || areaChartDataLabel.showCategoryName || areaChartDataLabel.showLegendKey || areaChartDataLabel.showSeriesName || dataLabelCounter > 0)
+            if (areaChartDataLabel.showValue || areaChartDataLabel.showValueFromColumn || areaChartDataLabel.showCategoryName || areaChartDataLabel.showLegendKey || areaChartDataLabel.showSeriesName)
             {
                 C.DataLabels dataLabels = CreateDataLabels(areaChartDataLabel, dataLabelCounter);
                 dataLabels.InsertAt(new C.DataLabelPosition()
@@ -158,9 +159,9 @@ namespace OpenXMLOffice.Global
             return plotArea;
         }
 
-        private C.AreaChart CreateAreaChart(ChartData[][] dataCols)
+        internal C.AreaChart CreateAreaChart(ChartData[][] dataCols)
         {
-            C.AreaChart AreaChart = new(
+            C.AreaChart areaChart = new(
                 new C.Grouping
                 {
                     Val = areaChartSetting.areaChartTypes switch
@@ -175,17 +176,17 @@ namespace OpenXMLOffice.Global
             int seriesIndex = 0;
             CreateDataSeries(dataCols, areaChartSetting.chartDataSetting).ForEach(Series =>
             {
-                AreaChart.Append(CreateAreaChartSeries(seriesIndex, Series));
+                areaChart.Append(CreateAreaChartSeries(seriesIndex, Series));
                 seriesIndex++;
             });
-            C.DataLabels? DataLabels = CreateAreaDataLabels(areaChartSetting.areaChartDataLabel);
-            if (DataLabels != null)
+            C.DataLabels? dataLabels = CreateAreaDataLabels(areaChartSetting.areaChartDataLabel);
+            if (dataLabels != null)
             {
-                AreaChart.Append(DataLabels);
+                areaChart.Append(dataLabels);
             }
-            AreaChart.Append(new C.AxisId { Val = CategoryAxisId });
-            AreaChart.Append(new C.AxisId { Val = ValueAxisId });
-            return AreaChart;
+            areaChart.Append(new C.AxisId { Val = CategoryAxisId });
+            areaChart.Append(new C.AxisId { Val = ValueAxisId });
+            return areaChart;
         }
 
         #endregion Private Methods

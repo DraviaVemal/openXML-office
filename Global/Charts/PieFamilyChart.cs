@@ -21,26 +21,18 @@ namespace OpenXMLOffice.Global
 
         #region Protected Constructors
 
+        internal PieFamilyChart(PieChartSetting pieChartSetting) : base(pieChartSetting)
+        {
+            this.pieChartSetting = pieChartSetting;
+        }
+
         /// <summary>
         /// Create Pie Chart with provided settings
         /// </summary>
-        /// <param name="pieChartSetting">
-        /// </param>
-        /// <param name="dataCols">
-        /// </param>
-        protected PieFamilyChart(PieChartSetting pieChartSetting, ChartData[][] dataCols) : base(pieChartSetting)
+        internal PieFamilyChart(PieChartSetting pieChartSetting, ChartData[][] dataCols) : base(pieChartSetting)
         {
             this.pieChartSetting = pieChartSetting;
-            switch (pieChartSetting.pieChartTypes)
-            {
-                case PieChartTypes.DOUGHNUT:
-                    SetChartPlotArea(CreateChartPlotArea(dataCols));
-                    break;
-
-                default:
-                    SetChartPlotArea(CreateChartPlotArea(dataCols));
-                    break;
-            };
+            SetChartPlotArea(CreateChartPlotArea(dataCols));
         }
 
         #endregion Protected Constructors
@@ -51,25 +43,36 @@ namespace OpenXMLOffice.Global
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            OpenXmlCompositeElement Chart = pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT ?
-                new C.DoughnutChart(new C.VaryColors { Val = true }) :
-                new C.PieChart(new C.VaryColors { Val = true });
-            int seriesIndex = 0;
-            CreateDataSeries(dataCols, pieChartSetting.chartDataSetting).ForEach(Series =>
-            {
-                Chart.Append(CreateChartSeries(seriesIndex, Series));
-                seriesIndex++;
-            });
-            C.DataLabels? DataLabels = CreatePieDataLabels(pieChartSetting.pieChartDataLabel);
-            if (DataLabels != null)
-            {
-                Chart.Append(DataLabels);
-            }
-            Chart.Append(new C.FirstSliceAngle { Val = 0 });
-            Chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
-            plotArea.Append(Chart);
+            plotArea.Append(pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT ? CreateChart<C.DoughnutChart>(dataCols) : CreateChart<C.PieChart>(dataCols));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;
+        }
+
+        internal T CreateChart<T>(ChartData[][] dataCols) where T : new()
+        {
+            if (typeof(T) != typeof(C.DoughnutChart) && typeof(T) != typeof(C.PieChart))
+            {
+                throw new ArgumentException("Invalid type parameter. T must be either C.DoughnutChart or C.PieChart.");
+            }
+            T chartType = new();
+            if (chartType is OpenXmlCompositeElement chart)
+            {
+                chart.Append(new C.VaryColors { Val = true });
+                int seriesIndex = 0;
+                CreateDataSeries(dataCols, pieChartSetting.chartDataSetting).ForEach(Series =>
+                {
+                    chart.Append(CreateChartSeries(seriesIndex, Series));
+                    seriesIndex++;
+                });
+                C.DataLabels? dataLabels = CreatePieDataLabels(pieChartSetting.pieChartDataLabel);
+                if (dataLabels != null)
+                {
+                    chart.Append(dataLabels);
+                }
+                chart.Append(new C.FirstSliceAngle { Val = (UInt16Value)pieChartSetting.angleOfFirstSlice });
+                chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
+            }
+            return chartType;
         }
 
         private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
@@ -155,7 +158,7 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreatePieDataLabels(PieChartDataLabel pieChartDataLabel, int? dataLabelCounter = 0)
         {
-            if (pieChartDataLabel.showValue || pieChartDataLabel.showCategoryName || pieChartDataLabel.showLegendKey || pieChartDataLabel.showSeriesName || dataLabelCounter > 0)
+            if (pieChartDataLabel.showValue || pieChartDataLabel.showValueFromColumn || pieChartDataLabel.showCategoryName || pieChartDataLabel.showLegendKey || pieChartDataLabel.showSeriesName)
             {
                 C.DataLabels dataLabels = CreateDataLabels(pieChartDataLabel, dataLabelCounter);
                 if (pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT &&

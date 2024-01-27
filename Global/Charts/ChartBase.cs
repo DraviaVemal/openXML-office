@@ -205,8 +205,7 @@ public class ChartBase : CommonProperties
     /// </returns>
     protected static CS.ChartStyle CreateChartStyles()
     {
-        ChartStyle ChartStyle = new();
-        return Global.ChartStyle.CreateChartStyles();
+        return ChartStyle.CreateChartStyles();
     }
 
     /// <summary>
@@ -562,6 +561,14 @@ public class ChartBase : CommonProperties
     protected void SetChartPlotArea(C.PlotArea plotArea)
     {
         chart.PlotArea = plotArea;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected C.PlotArea? GetPlotArea()
+    {
+        return chart.PlotArea;
     }
 
     #endregion Protected Methods

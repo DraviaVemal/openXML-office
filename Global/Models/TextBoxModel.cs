@@ -118,12 +118,12 @@ namespace OpenXMLOffice.Global
         public uint width = 100;
 
         /// <summary>
-        /// Gets or sets the X-coordinate of the text box.
+        /// Gets or sets the X-coordinate of the text box in EMUs (English Metric Units).
         /// </summary>
         public uint x = 0;
 
         /// <summary>
-        /// Gets or sets the Y-coordinate of the text box.
+        /// Gets or sets the Y-coordinate of the text box in EMUs (English Metric Units).
         /// </summary>
         public uint y = 0;
 

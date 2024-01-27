@@ -21,14 +21,15 @@ namespace OpenXMLOffice.Global
 
         #region Protected Constructors
 
+        internal LineFamilyChart(LineChartSetting lineChartSetting) : base(lineChartSetting)
+        {
+            this.lineChartSetting = lineChartSetting;
+        }
+
         /// <summary>
         /// Create Line Chart with provided settings
         /// </summary>
-        /// <param name="lineChartSetting">
-        /// </param>
-        /// <param name="dataCols">
-        /// </param>
-        protected LineFamilyChart(LineChartSetting lineChartSetting, ChartData[][] dataCols) : base(lineChartSetting)
+        internal LineFamilyChart(LineChartSetting lineChartSetting, ChartData[][] dataCols) : base(lineChartSetting)
         {
             this.lineChartSetting = lineChartSetting;
             SetChartPlotArea(CreateChartPlotArea(dataCols));
@@ -42,34 +43,7 @@ namespace OpenXMLOffice.Global
         {
             C.PlotArea plotArea = new();
             plotArea.Append(new C.Layout());
-            C.LineChart LineChart = new(
-                new C.Grouping
-                {
-                    Val = lineChartSetting.lineChartTypes switch
-                    {
-                        LineChartTypes.STACKED => C.GroupingValues.Stacked,
-                        LineChartTypes.STACKED_MARKER => C.GroupingValues.Stacked,
-                        LineChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
-                        LineChartTypes.PERCENT_STACKED_MARKER => C.GroupingValues.PercentStacked,
-                        // Clusted
-                        _ => C.GroupingValues.Standard,
-                    }
-                },
-                new C.VaryColors { Val = false });
-            int seriesIndex = 0;
-            CreateDataSeries(dataCols, lineChartSetting.chartDataSetting).ForEach(Series =>
-            {
-                LineChart.Append(CreateLineChartSeries(seriesIndex, Series));
-                seriesIndex++;
-            });
-            C.DataLabels? DataLabels = CreateLineDataLabels(lineChartSetting.lineChartDataLabel);
-            if (DataLabels != null)
-            {
-                LineChart.Append(DataLabels);
-            }
-            LineChart.Append(new C.AxisId { Val = CategoryAxisId });
-            LineChart.Append(new C.AxisId { Val = ValueAxisId });
-            plotArea.Append(LineChart);
+            plotArea.Append(CreateLineChart(dataCols));
             plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
             {
                 id = CategoryAxisId,
@@ -92,6 +66,38 @@ namespace OpenXMLOffice.Global
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;
+        }
+
+        internal C.LineChart CreateLineChart(ChartData[][] dataCols)
+        {
+            C.LineChart lineChart = new(
+                            new C.Grouping
+                            {
+                                Val = lineChartSetting.lineChartTypes switch
+                                {
+                                    LineChartTypes.STACKED => C.GroupingValues.Stacked,
+                                    LineChartTypes.STACKED_MARKER => C.GroupingValues.Stacked,
+                                    LineChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
+                                    LineChartTypes.PERCENT_STACKED_MARKER => C.GroupingValues.PercentStacked,
+                                    // Clusted
+                                    _ => C.GroupingValues.Standard,
+                                }
+                            },
+                            new C.VaryColors { Val = false });
+            int seriesIndex = 0;
+            CreateDataSeries(dataCols, lineChartSetting.chartDataSetting).ForEach(Series =>
+            {
+                lineChart.Append(CreateLineChartSeries(seriesIndex, Series));
+                seriesIndex++;
+            });
+            C.DataLabels? dataLabels = CreateLineDataLabels(lineChartSetting.lineChartDataLabel);
+            if (dataLabels != null)
+            {
+                lineChart.Append(dataLabels);
+            }
+            lineChart.Append(new C.AxisId { Val = CategoryAxisId });
+            lineChart.Append(new C.AxisId { Val = ValueAxisId });
+            return lineChart;
         }
 
         private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
@@ -177,7 +183,7 @@ namespace OpenXMLOffice.Global
 
         private C.DataLabels? CreateLineDataLabels(LineChartDataLabel lineChartDataLabel, int? dataLabelCounter = 0)
         {
-            if (lineChartDataLabel.showValue || lineChartDataLabel.showValueFromColumn || lineChartDataLabel.showCategoryName || lineChartDataLabel.showLegendKey || lineChartDataLabel.showSeriesName || dataLabelCounter > 0)
+            if (lineChartDataLabel.showValue || lineChartDataLabel.showValueFromColumn || lineChartDataLabel.showCategoryName || lineChartDataLabel.showLegendKey || lineChartDataLabel.showSeriesName)
             {
                 C.DataLabels dataLabels = CreateDataLabels(lineChartDataLabel, dataLabelCounter);
                 dataLabels.InsertAt(new C.DataLabelPosition()
