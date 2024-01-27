@@ -153,80 +153,89 @@ namespace OpenXMLOffice.Presentation
             return Table;
         }
 
-        private A.TableCell CreateTableCell(TableCell Cell, TableRow Row)
+        private A.TableCell CreateTableCell(TableCell cell, TableRow row)
         {
-            A.Paragraph Paragraph = new();
-            if (Cell.alignment != null)
+            A.Paragraph paragraph = new();
+            if (cell.verticalAlignment != null)
             {
-                Paragraph.Append(new A.ParagraphProperties()
+                paragraph.Append(new A.ParagraphProperties()
                 {
-                    Alignment = Cell.alignment switch
+                    Alignment = cell.verticalAlignment switch
                     {
-                        TableCell.AlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
-                        TableCell.AlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
-                        TableCell.AlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+                        TableCell.VerticalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
+                        TableCell.VerticalAlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
+                        TableCell.VerticalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+                        TableCell.VerticalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
                         _ => A.TextAlignmentTypeValues.Left
-                    }
+                    },
                 });
             }
-            if (Cell.value == null)
+            if (cell.value == null)
             {
-                Paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-IN" });
+                paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-IN" });
             }
             else
             {
-                Paragraph.Append(new TextBox(new G.TextBoxSetting()
+                paragraph.Append(new TextBox(new G.TextBoxSetting()
                 {
-                    text = Cell.value,
-                    textBackground = Cell.textBackground,
-                    textColor = Cell.textColor,
-                    fontFamily = Cell.fontFamily,
-                    fontSize = Cell.fontSize,
-                    isBold = Cell.isBold,
-                    isItalic = Cell.isItalic,
-                    isUnderline = Cell.isUnderline,
+                    text = cell.value,
+                    textBackground = cell.textBackground,
+                    textColor = cell.textColor,
+                    fontFamily = cell.fontFamily,
+                    fontSize = cell.fontSize,
+                    isBold = cell.isBold,
+                    isItalic = cell.isItalic,
+                    isUnderline = cell.isUnderline,
                 }).GetTextBoxRun());
             }
-            A.TableCell TableCellXML = new();
-            TableCellXML.Append(new A.TextBody(
+            A.TableCell tableCellXML = new(new A.TextBody(
                 new A.BodyProperties(),
                 new A.ListStyle(),
-                Paragraph
+                paragraph
             ));
-            A.TableCellProperties TableCellProperties = new();
-            TableCellProperties.Append(new A.LeftBorderLineProperties(
-                Cell.leftBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+            A.TableCellProperties tableCellProperties = new()
+            {
+                Anchor = cell.horizontalAlignment switch
+                {
+                    TableCell.HorizontalAlignmentValues.TOP => A.TextAnchoringTypeValues.Top,
+                    TableCell.HorizontalAlignmentValues.MIDDLE => A.TextAnchoringTypeValues.Center,
+                    TableCell.HorizontalAlignmentValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
+                    _ => A.TextAnchoringTypeValues.Top
+                }
+            };
+            tableCellProperties.Append(new A.LeftBorderLineProperties(
+                cell.leftBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(new A.RightBorderLineProperties(
-                Cell.rightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+            tableCellProperties.Append(new A.RightBorderLineProperties(
+                cell.rightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(new A.TopBorderLineProperties(
-                Cell.topBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+            tableCellProperties.Append(new A.TopBorderLineProperties(
+                cell.topBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(new A.BottomBorderLineProperties(
-                Cell.bottomBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+            tableCellProperties.Append(new A.BottomBorderLineProperties(
+                cell.bottomBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-                Cell.topLeftToBottomRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+            tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
+                cell.topLeftToBottomRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-                Cell.bottomLeftToTopRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+            tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
+                cell.bottomLeftToTopRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
             { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
-            TableCellProperties.Append((Cell.cellBackground != null || Row.rowBackground != null) ? G.CommonProperties.CreateSolidFill(new() { hexColor = Cell.cellBackground ?? Row.rowBackground! }) : new A.NoFill());
-            TableCellXML.Append(TableCellProperties);
-            return TableCellXML;
+            tableCellProperties.Append((cell.cellBackground != null || row.rowBackground != null) ? G.CommonProperties.CreateSolidFill(new() { hexColor = cell.cellBackground ?? row.rowBackground! }) : new A.NoFill());
+            tableCellXML.Append(tableCellProperties);
+            return tableCellXML;
         }
 
         private void CreateTableGraphicFrame(TableRow[] TableRows)

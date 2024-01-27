@@ -131,6 +131,20 @@ public class ChartBase : CommonProperties
             CategoryAxis.Append(CreateMinorGridLine());
         }
         CategoryAxis.Append(CreateChartShapeProperties());
+        SolidFillModel solidFillModel = new()
+        {
+            schemeColorModel = new()
+            {
+                themeColorValues = ThemeColorValues.TEXT_1,
+                luminanceModulation = 65000,
+                luminanceOffset = 35000
+            }
+        };
+        if (categoryAxisSetting.fontColor != null)
+        {
+            solidFillModel.hexColor = categoryAxisSetting.fontColor;
+            solidFillModel.schemeColorModel = null;
+        }
         CategoryAxis.Append(CreateChartTextProperties(new()
         {
             bodyProperties = new(),
@@ -140,10 +154,13 @@ public class ChartBase : CommonProperties
                 {
                     defaultRunProperties = new()
                     {
+                        solidFill = solidFillModel,
                         fontSize = ConverterUtils.FontSizeToFontSize(categoryAxisSetting.fontSize),
                         bold = categoryAxisSetting.isBold,
                         italic = categoryAxisSetting.isItalic,
-                        baseline = 0
+                        underline = categoryAxisSetting.underLineValues,
+                        strike = categoryAxisSetting.strikeValues,
+                        baseline = 0,
                     }
                 }
             }
@@ -211,55 +228,69 @@ public class ChartBase : CommonProperties
     /// </returns>
     protected C.DataLabels CreateDataLabels(ChartDataLabel chartDataLabel, int? dataLabelCount = 0)
     {
-        C.DataLabels dataLabels = new();
-        for (int i = 0; i < dataLabelCount; i++)
+        C.Extension extension = new(
+                new C15.ShowDataLabelsRange() { Val = chartDataLabel.showValueFromColumn },
+                new C15.ShowLeaderLines() { Val = false }
+            )
+        { Uri = "{CE6537A1-D6FC-4f65-9D91-7224C49458BB}" };
+        if (chartDataLabel.showValueFromColumn)
         {
-            A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
-            if (chartDataLabel.showSeriesName)
+            extension.InsertAt(new C15.DataLabelFieldTable(), 0);
+        }
+        C.ExtensionList extensionList = new(extension);
+        C.DataLabels dataLabels = new();
+        if (chartDataLabel.showValueFromColumn)
+        {
+            for (int i = 0; i < dataLabelCount; i++)
             {
-                Paragraph.Append(new TextBoxBase(
-                    new TextBoxSetting()
-                    {
-                        text = chartDataLabel.separator
-                    }).GetTextBoxBaseRun());
-                Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
+                A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
+                if (chartDataLabel.showSeriesName)
+                {
+                    Paragraph.Append(new TextBoxBase(
+                        new TextBoxSetting()
+                        {
+                            text = chartDataLabel.separator
+                        }).GetTextBoxBaseRun());
+                    Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
+                }
+                if (chartDataLabel.showCategoryName)
+                {
+                    Paragraph.Append(new TextBoxBase(
+                        new TextBoxSetting()
+                        {
+                            text = chartDataLabel.separator
+                        }).GetTextBoxBaseRun());
+                    Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
+                }
+                if (chartDataLabel.showValue)
+                {
+                    Paragraph.Append(new TextBoxBase(
+                        new TextBoxSetting()
+                        {
+                            text = chartDataLabel.separator
+                        }).GetTextBoxBaseRun());
+                    Paragraph.Append(CreateField("VALUE", "[VALUE]"));
+                }
+                Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });
+                dataLabels.Append(new C.DataLabel(
+                    new C.Index() { Val = (uint)i },
+                    new C.SeriesText(
+                        new C.RichText(
+                            new A.BodyProperties(),
+                            new A.ListStyle(),
+                            Paragraph
+                        )
+                    ),
+                    new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
+                    new C.ShowValue { Val = chartDataLabel.showValue },
+                    new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
+                    new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
+                    new C.ShowPercent() { Val = true },
+                    new C.ShowBubbleSize() { Val = true },
+                    new C.Separator(chartDataLabel.separator),
+                    (OpenXmlElement)extensionList.Clone()
+                ));
             }
-            if (chartDataLabel.showCategoryName)
-            {
-                Paragraph.Append(new TextBoxBase(
-                    new TextBoxSetting()
-                    {
-                        text = chartDataLabel.separator
-                    }).GetTextBoxBaseRun());
-                Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
-            }
-            if (chartDataLabel.showValue)
-            {
-                Paragraph.Append(new TextBoxBase(
-                    new TextBoxSetting()
-                    {
-                        text = chartDataLabel.separator
-                    }).GetTextBoxBaseRun());
-                Paragraph.Append(CreateField("VALUE", "[VALUE]"));
-            }
-            Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });
-            dataLabels.Append(new C.DataLabel(
-                new C.Index() { Val = (uint)i },
-                new C.SeriesText(
-                    new C.RichText(
-                        new A.BodyProperties(),
-                        new A.ListStyle(),
-                        Paragraph
-                    )
-                ),
-                new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
-                new C.ShowValue { Val = chartDataLabel.showValue },
-                new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
-                new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
-                new C.ShowPercent() { Val = true },
-                new C.ShowBubbleSize() { Val = true },
-                new C.Separator(chartDataLabel.separator)
-            ));
         }
         dataLabels.Append(new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
             new C.ShowValue { Val = chartDataLabel.showValue },
@@ -268,8 +299,23 @@ public class ChartBase : CommonProperties
             new C.ShowPercent { Val = false },
             new C.ShowBubbleSize() { Val = true },
             new C.Separator(chartDataLabel.separator),
-            new C.ShowLeaderLines() { Val = false });
+            new C.ShowLeaderLines() { Val = false },
+            (OpenXmlElement)extensionList.Clone());
         dataLabels.Append(CreateChartShapeProperties());
+        SolidFillModel solidFillModel = new()
+        {
+            schemeColorModel = new()
+            {
+                themeColorValues = ThemeColorValues.TEXT_1,
+                luminanceModulation = 65000,
+                luminanceOffset = 35000
+            }
+        };
+        if (chartDataLabel.fontColor != null)
+        {
+            solidFillModel.hexColor = chartDataLabel.fontColor;
+            solidFillModel.schemeColorModel = null;
+        }
         dataLabels.Append(CreateChartTextProperties(new()
         {
             bodyProperties = new()
@@ -292,23 +338,15 @@ public class ChartBase : CommonProperties
                 {
                     defaultRunProperties = new()
                     {
-                        solidFill = new()
-                        {
-                            schemeColorModel = new()
-                            {
-                                themeColorValues = ThemeColorValues.TEXT_1,
-                                luminanceModulation = 7500,
-                                luminanceOffset = 2500
-                            }
-                        },
+                        solidFill = solidFillModel,
                         complexScriptFont = "+mn-cs",
                         eastAsianFont = "+mn-ea",
                         latinFont = "+mn-lt",
                         fontSize = ConverterUtils.FontSizeToFontSize(chartDataLabel.fontSize),
                         bold = chartDataLabel.isBold,
                         italic = chartDataLabel.isItalic,
-                        underline = UnderLineValues.NONE,
-                        strike = StrikeValues.NO_STRIKE,
+                        underline = chartDataLabel.underLineValues,
+                        strike = chartDataLabel.strikeValues,
                         kerning = 1200,
                         baseline = 0,
                     }
@@ -428,6 +466,20 @@ public class ChartBase : CommonProperties
             new C.MinorTickMark { Val = C.TickMarkValues.None },
             new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
         valueAxis.Append(CreateChartShapeProperties());
+        SolidFillModel solidFillModel = new()
+        {
+            schemeColorModel = new()
+            {
+                themeColorValues = ThemeColorValues.TEXT_1,
+                luminanceModulation = 65000,
+                luminanceOffset = 35000
+            }
+        };
+        if (valueAxisSetting.fontColor != null)
+        {
+            solidFillModel.hexColor = valueAxisSetting.fontColor;
+            solidFillModel.schemeColorModel = null;
+        }
         valueAxis.Append(CreateChartTextProperties(new()
         {
             bodyProperties = new(),
@@ -437,9 +489,12 @@ public class ChartBase : CommonProperties
                 {
                     defaultRunProperties = new()
                     {
+                        solidFill = solidFillModel,
                         fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
                         bold = valueAxisSetting.isBold,
                         italic = valueAxisSetting.isItalic,
+                        underline = valueAxisSetting.underLineValues,
+                        strike = valueAxisSetting.strikeValues,
                         baseline = 0
                     }
                 }
@@ -649,8 +704,22 @@ public class ChartBase : CommonProperties
                 _ => C.LegendPositionValues.Bottom
             }
         });
-        legend.Append(new C.Overlay { Val = false });
+        legend.Append(new C.Overlay { Val = chartLegendOptions.isLegendChartOverLap });
         legend.Append(CreateChartShapeProperties());
+        SolidFillModel solidFillModel = new()
+        {
+            schemeColorModel = new()
+            {
+                themeColorValues = ThemeColorValues.TEXT_1,
+                luminanceModulation = 65000,
+                luminanceOffset = 35000
+            }
+        };
+        if (chartLegendOptions.fontColor != null)
+        {
+            solidFillModel.hexColor = chartLegendOptions.fontColor;
+            solidFillModel.schemeColorModel = null;
+        }
         legend.Append(CreateChartTextProperties(new()
         {
             bodyProperties = new()
@@ -669,23 +738,15 @@ public class ChartBase : CommonProperties
                 {
                     defaultRunProperties = new()
                     {
-                        solidFill = new()
-                        {
-                            schemeColorModel = new()
-                            {
-                                themeColorValues = ThemeColorValues.TEXT_1,
-                                luminanceModulation = 65000,
-                                luminanceOffset = 35000
-                            }
-                        },
+                        solidFill = solidFillModel,
                         complexScriptFont = "+mn-cs",
                         eastAsianFont = "+mn-ea",
                         latinFont = "+mn-lt",
                         fontSize = ConverterUtils.FontSizeToFontSize(chartLegendOptions.fontSize),
                         bold = chartLegendOptions.isBold,
                         italic = chartLegendOptions.isItalic,
-                        underline = UnderLineValues.NONE,
-                        strike = StrikeValues.NO_STRIKE,
+                        underline = chartLegendOptions.underLineValues,
+                        strike = chartLegendOptions.strikeValues,
                         kerning = 1200,
                         baseline = 0,
                     }

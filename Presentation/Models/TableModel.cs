@@ -12,7 +12,12 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// Cell Alignment Option
         /// </summary>
-        public AlignmentValues? alignment;
+        public VerticalAlignmentValues? verticalAlignment;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public HorizontalAlignmentValues? horizontalAlignment;
 
         /// <summary>
         /// Enable Bottom Border
@@ -97,7 +102,7 @@ namespace OpenXMLOffice.Presentation
         /// <summary>
         /// Cell Vertical Alignment Option
         /// </summary>
-        public enum AlignmentValues
+        public enum VerticalAlignmentValues
         {
             /// <summary>
             /// Align Left
@@ -118,6 +123,26 @@ namespace OpenXMLOffice.Presentation
             /// Align Justify
             /// </summary>
             JUSTIFY
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum HorizontalAlignmentValues
+        {
+            /// <summary>
+            /// Align Top
+            /// </summary>
+            TOP,
+
+            /// <summary>
+            /// Align Middle
+            /// </summary>
+            MIDDLE,
+
+            /// <summary>
+            /// Align Bottom
+            /// </summary>
+            BOTTOM
         }
 
         #endregion Public Enums

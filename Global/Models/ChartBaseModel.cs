@@ -51,6 +51,18 @@ namespace OpenXMLOffice.Global
         ///  Font Size
         /// </summary>
         public float fontSize = 11.97F;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? fontColor = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public UnderLineValues underLineValues = UnderLineValues.NONE;
+        /// <summary>
+        /// 
+        /// </summary>
+        public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
         #endregion Internal Fields
     }
 
@@ -78,6 +90,18 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public float horizontalFontSize = 11.97F;
         /// <summary>
+        /// 
+        /// </summary>
+        public string? horizontalFontColor = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public UnderLineValues horizontalUnderLineValues = UnderLineValues.NONE;
+        /// <summary>
+        /// 
+        /// </summary>
+        public StrikeValues horizontalStrikeValues = StrikeValues.NO_STRIKE;
+        /// <summary>
         /// Is Font Bold
         /// </summary>
         public bool isVerticalBold = false;
@@ -89,6 +113,18 @@ namespace OpenXMLOffice.Global
         ///  Font Size
         /// </summary>
         public float verticalFontSize = 11.97F;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? verticalFontColor = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public UnderLineValues verticalUnderLineValues = UnderLineValues.NONE;
+        /// <summary>
+        /// 
+        /// </summary>
+        public StrikeValues verticalStrikeValues = StrikeValues.NO_STRIKE;
         /// <summary>
         /// Is Vertical Axes Enabled
         /// </summary>
@@ -245,6 +281,18 @@ namespace OpenXMLOffice.Global
         /// Font Size
         /// </summary>
         public float fontSize = 11.97F;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? fontColor = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public UnderLineValues underLineValues = UnderLineValues.NONE;
+        /// <summary>
+        /// 
+        /// </summary>
+        public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
 
         #endregion Public Fields
     }
@@ -348,6 +396,18 @@ namespace OpenXMLOffice.Global
         /// Font Size
         /// </summary>
         public float fontSize = 11.97F;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? fontColor = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public UnderLineValues underLineValues = UnderLineValues.NONE;
+        /// <summary>
+        /// 
+        /// </summary>
+        public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
 
         /// <summary>
         /// Legend Position
@@ -485,6 +545,18 @@ namespace OpenXMLOffice.Global
         /// Font Size
         /// </summary>
         public float fontSize = 11.97F;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? fontColor = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public UnderLineValues underLineValues = UnderLineValues.NONE;
+        /// <summary>
+        /// 
+        /// </summary>
+        public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
         #endregion Internal Fields
     }
 

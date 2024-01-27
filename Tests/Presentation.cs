@@ -232,7 +232,8 @@ namespace OpenXMLOffice.Tests
                     null,
                     new(){
                         lineChartDataLabel = new LineChartDataLabel(){
-                            dataLabelPosition = LineChartDataLabel.DataLabelPositionValues.RIGHT
+                            dataLabelPosition = LineChartDataLabel.DataLabelPositionValues.RIGHT,
+                            showValueFromColumn = true
                         }
                     }
                 }
@@ -483,6 +484,7 @@ namespace OpenXMLOffice.Tests
                         leftBorder = true,
                         topBorder = true,
                         rightBorder =true,
+                        verticalAlignment = TableCell.VerticalAlignmentValues.LEFT+ (i % 4)
                     },
                     new() {
                         value = $"Row {i + 1}, Cell 2",
@@ -492,7 +494,8 @@ namespace OpenXMLOffice.Tests
                         leftBorder = true,
                         topBorder = true,
                         rightBorder =true,
-                        isItalic = true
+                        isItalic = true,
+                        horizontalAlignment = TableCell.HorizontalAlignmentValues.TOP +(i % 3)
                     },
                 }
                 };
