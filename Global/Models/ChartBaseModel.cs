@@ -465,6 +465,21 @@ namespace OpenXMLOffice.Global
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public class ChartDataPointSettings
+    {
+        /// <summary>
+        /// The color of the fill.
+        /// </summary>
+        public string? fillColor;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? borderColor;
+    }
+
+    /// <summary>
     /// Represents the settings for a chart series.
     /// </summary>
     public class ChartSeriesSetting

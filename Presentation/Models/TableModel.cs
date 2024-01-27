@@ -5,6 +5,86 @@ using OpenXMLOffice.Global;
 namespace OpenXMLOffice.Presentation
 {
     /// <summary>
+    /// 
+    /// </summary>
+    public class TableBorderSetting
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum BorderStyleValues
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            SINGEL,
+            /// <summary>
+            /// 
+            /// </summary>
+            DOUBLE,
+            /// <summary>
+            /// 
+            /// </summary>
+            TRIPLE,
+            /// <summary>
+            /// 
+            /// </summary>
+            THICK_THIN,
+            /// <summary>
+            /// 
+            /// </summary>
+            THIN_THICK,
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool showBorder = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string borderColor = "000000";
+        /// <summary>
+        /// 
+        /// </summary>
+        public uint width = 12700;
+        /// <summary>
+        /// 
+        /// </summary>
+        public BorderStyleValues borderStyle = BorderStyleValues.SINGEL;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TableBorderSettings
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public TableBorderSetting leftBorder = new();
+        /// <summary>
+        /// 
+        /// </summary>
+        public TableBorderSetting topBorder = new();
+        /// <summary>
+        /// 
+        /// </summary>
+        public TableBorderSetting rightBorder = new();
+        /// <summary>
+        /// 
+        /// </summary>
+        public TableBorderSetting bottomBorder = new();
+        /// <summary>
+        /// 
+        /// </summary>
+        public TableBorderSetting topLeftToBottomRightBorder = new();
+        /// <summary>
+        /// 
+        /// </summary>
+        public TableBorderSetting bottomLeftToTopRightBorder = new();
+    }
+
+    /// <summary>
     /// Presentation Table Cell Class for setting the cell properties.
     /// </summary>
     public class TableCell
@@ -22,14 +102,9 @@ namespace OpenXMLOffice.Presentation
         public VerticalAlignmentValues? verticalAlignment;
 
         /// <summary>
-        /// Enable Bottom Border
+        /// 
         /// </summary>
-        public bool bottomBorder = false;
-
-        /// <summary>
-        /// Enable Bottom Left to Top Right Border
-        /// </summary>
-        public bool bottomLeftToTopRightBorder = false;
+        public TableBorderSettings borderSettings = new();
 
         /// <summary>
         /// Cell Background Color
@@ -63,16 +138,6 @@ namespace OpenXMLOffice.Presentation
         public bool isUnderline = false;
 
         /// <summary>
-        /// Enable Left Border
-        /// </summary>
-        public bool leftBorder = false;
-
-        /// <summary>
-        /// Enable Right Border
-        /// </summary>
-        public bool rightBorder = false;
-
-        /// <summary>
         /// Text Background Color aka Highlight Color
         /// </summary>
         public string? textBackground;
@@ -81,16 +146,6 @@ namespace OpenXMLOffice.Presentation
         /// Text Color
         /// </summary>
         public string textColor = "000000";
-
-        /// <summary>
-        /// Enable Top Border
-        /// </summary>
-        public bool topBorder = false;
-
-        /// <summary>
-        /// Enable Top Left to Bottom Right Border
-        /// </summary>
-        public bool topLeftToBottomRightBorder = false;
 
         /// <summary>
         /// Cell Value

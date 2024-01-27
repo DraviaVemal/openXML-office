@@ -82,12 +82,11 @@ namespace OpenXMLOffice.Global
                 CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             for (uint index = 0; index < chartDataGrouping.xAxisCells!.Length; index++)
             {
-                SolidFillModel GetFillSolidFill()
+                SolidFillModel GetDataPointFill()
                 {
                     SolidFillModel solidFillModel = new();
-                    string? hexColor = pieChartSetting.pieChartSeriesSettings?
-                                .Where(item => item?.fillColor != null)
-                                .Select(item => item?.fillColor!)
+                    string? hexColor = pieChartSetting.pieChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.pieChartDataPointSettings?
+                                .Select(item => item?.fillColor)
                                 .ToList().ElementAtOrDefault((int)index);
                     if (hexColor != null)
                     {
@@ -103,12 +102,11 @@ namespace OpenXMLOffice.Global
                     }
                     return solidFillModel;
                 }
-                SolidFillModel GetOutlineSolidFill()
+                SolidFillModel GetDataPointBorder()
                 {
                     SolidFillModel solidFillModel = new();
-                    string? hexColor = pieChartSetting.pieChartSeriesSettings?
-                                .Where(item => item?.borderColor != null)
-                                .Select(item => item?.borderColor!)
+                    string? hexColor = pieChartSetting.pieChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.pieChartDataPointSettings?
+                                .Select(item => item?.borderColor)
                                 .ToList().ElementAtOrDefault((int)index);
                     if (hexColor != null)
                     {
@@ -127,13 +125,13 @@ namespace OpenXMLOffice.Global
                 C.DataPoint dataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
                 ShapePropertiesModel shapePropertiesModel = new()
                 {
-                    solidFill = GetFillSolidFill()
+                    solidFill = GetDataPointFill()
                 };
                 if (pieChartSetting.pieChartTypes != PieChartTypes.DOUGHNUT)
                 {
                     shapePropertiesModel.outline = new()
                     {
-                        solidFill = GetOutlineSolidFill()
+                        solidFill = GetDataPointBorder()
                     };
                 }
                 dataPoint.Append(CreateChartShapeProperties(shapePropertiesModel));

@@ -107,12 +107,11 @@ namespace OpenXMLOffice.Global
 
         private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
         {
-            SolidFillModel GetFillSolidFill()
+            SolidFillModel GetSeriesFillColor()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = columnChartSetting.columnChartSeriesSettings?
-                            .Where(item => item?.fillColor != null)
-                            .Select(item => item?.fillColor!)
+                            .Select(item => item?.fillColor)
                             .ToList().ElementAtOrDefault(seriesIndex);
                 if (hexColor != null)
                 {
@@ -128,12 +127,11 @@ namespace OpenXMLOffice.Global
                 }
                 return solidFillModel;
             }
-            SolidFillModel GetOutlineSolidFill()
+            SolidFillModel GetSeriesBorderColor()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = columnChartSetting.columnChartSeriesSettings?
-                            .Where(item => item?.borderColor != null)
-                            .Select(item => item?.borderColor!)
+                            .Select(item => item?.borderColor)
                             .ToList().ElementAtOrDefault(seriesIndex);
                 if (hexColor != null)
                 {
@@ -151,10 +149,10 @@ namespace OpenXMLOffice.Global
             }
             ShapePropertiesModel shapePropertiesModel = new()
             {
-                solidFill = GetFillSolidFill(),
+                solidFill = GetSeriesFillColor(),
                 outline = new()
                 {
-                    solidFill = GetOutlineSolidFill()
+                    solidFill = GetSeriesBorderColor()
                 }
             };
             C.DataLabels? dataLabels = seriesIndex < columnChartSetting.columnChartSeriesSettings.Count ?
@@ -162,9 +160,68 @@ namespace OpenXMLOffice.Global
             C.BarChartSeries series = new(
                 new C.Index { Val = new UInt32Value((uint)seriesIndex) },
                 new C.Order { Val = new UInt32Value((uint)seriesIndex) },
-                CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }),
-                new C.InvertIfNegative { Val = true });
+                new C.InvertIfNegative { Val = true },
+                CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
             series.Append(CreateChartShapeProperties(shapePropertiesModel));
+            int dataPointCount = columnChartSetting.columnChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.columnChartDataPointSettings.Count ?? 0;
+            for (uint index = 0; index < dataPointCount; index++)
+            {
+                if (columnChartSetting.columnChartSeriesSettings?[seriesIndex]?.columnChartDataPointSettings != null &&
+                index < columnChartSetting.columnChartSeriesSettings?[seriesIndex]?.columnChartDataPointSettings.Count &&
+                columnChartSetting.columnChartSeriesSettings?[seriesIndex]?.columnChartDataPointSettings[(int)index] != null)
+                {
+                    SolidFillModel GetDataPointFill()
+                    {
+                        SolidFillModel solidFillModel = new();
+                        string? hexColor = columnChartSetting.columnChartSeriesSettings?[seriesIndex]?.columnChartDataPointSettings?
+                                    .Select(item => item?.fillColor)
+                                    .ToList().ElementAtOrDefault((int)index);
+                        if (hexColor != null)
+                        {
+                            solidFillModel.hexColor = hexColor;
+                            return solidFillModel;
+                        }
+                        else
+                        {
+                            solidFillModel.schemeColorModel = new()
+                            {
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                            };
+                        }
+                        return solidFillModel;
+                    }
+                    SolidFillModel GetDataPointBorder()
+                    {
+                        SolidFillModel solidFillModel = new();
+                        string? hexColor = columnChartSetting.columnChartSeriesSettings?[seriesIndex]?.columnChartDataPointSettings?
+                                    .Select(item => item?.borderColor)
+                                    .ToList().ElementAtOrDefault((int)index);
+                        if (hexColor != null)
+                        {
+                            solidFillModel.hexColor = hexColor;
+                            return solidFillModel;
+                        }
+                        else
+                        {
+                            solidFillModel.schemeColorModel = new()
+                            {
+                                themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+                            };
+                        }
+                        return solidFillModel;
+                    }
+                    C.DataPoint dataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
+                    dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()
+                    {
+                        solidFill = GetDataPointFill(),
+                        outline = new()
+                        {
+                            solidFill = GetDataPointBorder()
+                        }
+                    }));
+                    series.Append(dataPoint);
+                }
+            }
             if (dataLabels != null)
             {
                 series.Append(dataLabels);

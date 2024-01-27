@@ -126,12 +126,11 @@ namespace OpenXMLOffice.Global
             }
             C.DataLabels? dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ?
                 CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-            SolidFillModel GetSolidFill()
+            SolidFillModel GetBorderColor()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = lineChartSetting.lineChartSeriesSettings?
-                            .Where(item => item?.borderColor != null)
-                            .Select(item => item?.borderColor!)
+                            .Select(item => item?.borderColor)
                             .ToList().ElementAtOrDefault(seriesIndex);
                 if (hexColor != null)
                 {
@@ -155,7 +154,7 @@ namespace OpenXMLOffice.Global
             {
                 outline = new()
                 {
-                    solidFill = GetSolidFill()
+                    solidFill = GetBorderColor()
                 }
             };
             series.Append(CreateChartShapeProperties(shapePropertiesModel));

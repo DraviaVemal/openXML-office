@@ -112,12 +112,11 @@ namespace OpenXMLOffice.Global
         {
             C.DataLabels? dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
                 CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-            SolidFillModel GetOutlineSolidFill()
+            SolidFillModel GetSeriesBorderColor()
             {
                 SolidFillModel solidFillModel = new();
                 string? hexColor = scatterChartSetting.scatterChartSeriesSettings?
-                            .Where(item => item?.borderColor != null)
-                            .Select(item => item?.borderColor!)
+                            .Select(item => item?.borderColor)
                             .ToList().ElementAtOrDefault(seriesIndex);
                 if (hexColor != null)
                 {
@@ -166,7 +165,7 @@ namespace OpenXMLOffice.Global
             {
                 outline = new()
                 {
-                    solidFill = scatterChartSetting.scatterChartTypes == ScatterChartTypes.SCATTER ? null : GetOutlineSolidFill(),
+                    solidFill = scatterChartSetting.scatterChartTypes == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(),
                 }
             };
             if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)

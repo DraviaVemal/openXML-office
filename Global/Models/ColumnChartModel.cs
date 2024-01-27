@@ -91,12 +91,24 @@ namespace OpenXMLOffice.Global
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public class ColumnChartDataPointSetting : ChartDataPointSettings
+    {
+
+    }
+
+    /// <summary>
     /// Represents the series settings for a column chart.
     /// </summary>
     public class ColumnChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<ColumnChartDataPointSetting?> columnChartDataPointSettings = new();
         /// <summary>
         /// Option to customize specific data series. Will override chart level setting.
         /// </summary>

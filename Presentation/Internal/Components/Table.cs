@@ -204,35 +204,35 @@ namespace OpenXMLOffice.Presentation
                 }
             };
             tableCellProperties.Append(new A.LeftBorderLineProperties(
-                cell.leftBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                cell.borderSettings.leftBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.leftBorder.borderColor }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.leftBorder.width), CompoundLineType = A.CompoundLineValues.Single });
             tableCellProperties.Append(new A.RightBorderLineProperties(
-                cell.rightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                cell.borderSettings.rightBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.rightBorder.borderColor }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.rightBorder.width), CompoundLineType = A.CompoundLineValues.Single });
             tableCellProperties.Append(new A.TopBorderLineProperties(
-                cell.topBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                cell.borderSettings.topBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.topBorder.borderColor }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.topBorder.width), CompoundLineType = A.CompoundLineValues.Single });
             tableCellProperties.Append(new A.BottomBorderLineProperties(
-                cell.bottomBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                cell.borderSettings.bottomBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.bottomBorder.borderColor }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.bottomBorder.width), CompoundLineType = A.CompoundLineValues.Single });
             tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-                cell.topLeftToBottomRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                cell.borderSettings.topLeftToBottomRightBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.topLeftToBottomRightBorder.width), CompoundLineType = A.CompoundLineValues.Single });
             tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-                cell.bottomLeftToTopRightBorder ? G.CommonProperties.CreateSolidFill(new() { hexColor = "000000" }) : new A.NoFill(),
+                cell.borderSettings.bottomLeftToTopRightBorder.showBorder ? CreateSolidFill(new() { hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor }) : new A.NoFill(),
                 new A.PresetDash() { Val = A.PresetLineDashValues.Solid }
             )
-            { Width = 12700, CompoundLineType = A.CompoundLineValues.Single });
+            { Width = G.ConverterUtils.FontSizeToFontSize(cell.borderSettings.bottomLeftToTopRightBorder.width), CompoundLineType = A.CompoundLineValues.Single });
             tableCellProperties.Append((cell.cellBackground != null || row.rowBackground != null) ? G.CommonProperties.CreateSolidFill(new() { hexColor = cell.cellBackground ?? row.rowBackground! }) : new A.NoFill());
             tableCellXML.Append(tableCellProperties);
             return tableCellXML;

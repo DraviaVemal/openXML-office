@@ -91,11 +91,24 @@ namespace OpenXMLOffice.Global
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public class BarChartDataPointSetting : ChartDataPointSettings
+    {
+
+    }
+
+    /// <summary>
     /// Represents the series settings for a bar chart.
     /// </summary>
     public class BarChartSeriesSetting : ChartSeriesSetting
     {
         #region Public Fields
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<BarChartDataPointSetting?> barChartDataPointSettings = new();
 
         /// <summary>
         /// Option to customize specific data series. This will override the chart level setting.

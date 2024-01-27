@@ -124,7 +124,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        /// TODO: Make Meaningful name
         /// </summary>
         public static int FontSizeToFontSize(float fontSize)
         {

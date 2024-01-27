@@ -73,7 +73,13 @@ namespace OpenXMLOffice.Global
 
         #endregion Public Enums
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class PieChartDataPointSetting : ChartDataPointSettings
+    {
 
+    }
     /// <summary>
     /// Represents the series setting for a pie chart.
     /// </summary>
@@ -89,6 +95,10 @@ namespace OpenXMLOffice.Global
         /// Border Color is only valid for Doughnut Chart
         /// </summary>
         public override string? borderColor { get => base.borderColor; set => base.borderColor = value; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<PieChartDataPointSetting?> pieChartDataPointSettings = new();
         /// <summary>
         /// Option to customize specific data series, will override chart level setting.
         /// </summary>

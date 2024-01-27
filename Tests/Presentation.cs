@@ -111,7 +111,17 @@ namespace OpenXMLOffice.Tests
                     fontSize = 5
                 },
                 columnChartSeriesSettings = new(){
+                    null,
                     new(){
+                        columnChartDataPointSettings = new(){
+                        null,
+                        new(){
+                            fillColor = "FF0000"
+                        },
+                        new(){
+                            fillColor = "00FF00"
+                        },
+                    },
                         fillColor= "AABBCC"
                     },
                     new(){
@@ -483,21 +493,43 @@ namespace OpenXMLOffice.Tests
                     new() {
                         value = $"Row {i + 1}, Cell 1",
                         textColor = "FF0000",
-                        bottomBorder = true,
                         fontSize=22,
-                        leftBorder = true,
-                        topBorder = true,
-                        rightBorder =true,
+                        borderSettings = new(){
+                            leftBorder = new(){
+                                showBorder = true
+                            },
+                            topBorder = new(){
+                                showBorder = true,
+                                borderColor = "FF0000"
+                            },
+                            rightBorder = new(){
+                                showBorder = true
+                            },
+                            bottomBorder = new(){
+                                showBorder = true
+                            }
+                        },
                         horizontalAlignment = G.HorizontalAlignmentValues.LEFT+ (i % 4)
                     },
                     new() {
                         value = $"Row {i + 1}, Cell 2",
                         textColor = "00FF00",
                         isBold = true,
-                        bottomBorder = true,
-                        leftBorder = true,
-                        topBorder = true,
-                        rightBorder =true,
+                        borderSettings = new(){
+                            leftBorder = new(){
+                                showBorder = true
+                            },
+                            topBorder = new(){
+                                showBorder = true
+                            },
+                            rightBorder = new(){
+                                showBorder = true,
+                                borderColor= "0000FF"
+                            },
+                            bottomBorder = new(){
+                                showBorder = true
+                            }
+                        },
                         isItalic = true,
                         verticalAlignment = G.VerticalAlignmentValues.TOP +(i % 3)
                     },
