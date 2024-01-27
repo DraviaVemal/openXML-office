@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global_2013
 {
@@ -38,34 +37,34 @@ namespace OpenXMLOffice.Global_2013
 				((ChartSetting)chartSetting).chartDataSetting = new();
 				if (chartSetting is AreaChartSetting areaChartSetting)
 				{
-					AreaFamilyChart areaChart = new(areaChartSetting);
+					AreaChart areaChart = new(areaChartSetting);
 					plotArea.Append(areaChart.CreateAreaChart(GetChartPositionData(dataCols, chartPosition)));
 				}
 				if (chartSetting is BarChartSetting barChartSetting)
 				{
-					BarFamilyChart barChart = new(barChartSetting);
+					BarChart barChart = new(barChartSetting);
 					plotArea.Append(barChart.CreateBarChart(GetChartPositionData(dataCols, chartPosition)));
 				}
 				if (chartSetting is ColumnChartSetting columnChartSetting)
 				{
-					ColumnFamilyChart columnChart = new(columnChartSetting);
+					ColumnChart columnChart = new(columnChartSetting);
 					plotArea.Append(columnChart.CreateColumnChart(GetChartPositionData(dataCols, chartPosition)));
 				}
 				if (chartSetting is LineChartSetting lineChartSetting)
 				{
-					LineFamilyChart lineChart = new(lineChartSetting);
+					LineChart lineChart = new(lineChartSetting);
 					plotArea.Append(lineChart.CreateLineChart(GetChartPositionData(dataCols, chartPosition)));
 				}
 				if (chartSetting is PieChartSetting pieChartSetting)
 				{
-					PieFamilyChart pieChart = new(pieChartSetting);
+					PieChart pieChart = new(pieChartSetting);
 					plotArea.Append(pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT ?
 						pieChart.CreateChart<C.DoughnutChart>(GetChartPositionData(dataCols, chartPosition)) :
 						pieChart.CreateChart<C.PieChart>(GetChartPositionData(dataCols, chartPosition)));
 				}
 				if (chartSetting is ScatterChartSetting scatterChartSetting)
 				{
-					ScatterFamilyChart scatterChart = new(scatterChartSetting);
+					ScatterChart scatterChart = new(scatterChartSetting);
 					plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ?
 						scatterChart.CreateChart<C.BubbleChart>(GetChartPositionData(dataCols, chartPosition)) :
 						scatterChart.CreateChart<C.ScatterChart>(GetChartPositionData(dataCols, chartPosition)));
