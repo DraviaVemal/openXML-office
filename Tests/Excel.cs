@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using OpenXMLOffice.Excel;
+using OpenXMLOffice.Excel_2013;
 
 namespace OpenXMLOffice.Tests
 {

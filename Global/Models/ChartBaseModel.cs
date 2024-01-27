@@ -2,7 +2,7 @@
 
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
     /// Represents the position of an axis in a chart.
@@ -51,19 +51,19 @@ namespace OpenXMLOffice.Global
         /// </summary>
         internal float fontSize = 11.97F;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal string? fontColor = null;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal UnderLineValues underLineValues = UnderLineValues.NONE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal StrikeValues strikeValues = StrikeValues.NO_STRIKE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal bool isVisible = true;
         internal bool invertOrder;
@@ -100,15 +100,15 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public float horizontalFontSize = 11.97F;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string? horizontalFontColor = null;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public UnderLineValues horizontalUnderLineValues = UnderLineValues.NONE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public StrikeValues horizontalStrikeValues = StrikeValues.NO_STRIKE;
         /// <summary>
@@ -124,15 +124,15 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public float verticalFontSize = 11.97F;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string? verticalFontColor = null;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public UnderLineValues verticalUnderLineValues = UnderLineValues.NONE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public StrikeValues verticalStrikeValues = StrikeValues.NO_STRIKE;
         /// <summary>
@@ -230,7 +230,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public string? zAxisFormula;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int id;
     }
@@ -281,15 +281,15 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public float fontSize = 11.97F;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string? fontColor = null;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public UnderLineValues underLineValues = UnderLineValues.NONE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
     }
@@ -381,15 +381,15 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public float fontSize = 11.97F;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string? fontColor = null;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public UnderLineValues underLineValues = UnderLineValues.NONE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
 
@@ -429,7 +429,7 @@ namespace OpenXMLOffice.Global
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class ChartDataPointSettings
     {
@@ -438,7 +438,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public string? fillColor;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string? borderColor;
     }
@@ -530,19 +530,19 @@ namespace OpenXMLOffice.Global
         /// </summary>
         internal float fontSize = 11.97F;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal string? fontColor = null;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal UnderLineValues underLineValues = UnderLineValues.NONE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal StrikeValues strikeValues = StrikeValues.NO_STRIKE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal bool isVisible = true;
         /// <summary>
@@ -552,7 +552,7 @@ namespace OpenXMLOffice.Global
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class MarkerModel
     {
@@ -561,24 +561,24 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public int size = 5;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public MarkerShapeValues markerShapeValues = MarkerShapeValues.NONE;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ShapePropertiesModel shapeProperties = new();
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public enum MarkerShapeValues
         {
             /// <summary>
-            /// 
+            ///
             /// </summary>
             NONE,
             /// <summary>
-            /// 
+            ///
             /// </summary>
             AUTO,
             /// <summary>

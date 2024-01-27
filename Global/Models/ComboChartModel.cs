@@ -1,9 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class ComboChartSetting : ChartSetting
     {
@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public List<object> ComboChartsSettingList { get; private set; } = new();
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void AddComboChartsSetting(AreaChartSetting areaChartSetting)
         {
@@ -20,7 +20,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void AddComboChartsSetting(BarChartSetting barChartSetting)
         {
@@ -28,7 +28,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void AddComboChartsSetting(ColumnChartSetting columnChartSetting)
         {
@@ -36,7 +36,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void AddComboChartsSetting(LineChartSetting lineChartSetting)
         {
@@ -44,7 +44,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void AddComboChartsSetting(PieChartSetting pieChartSetting)
         {
@@ -52,7 +52,7 @@ namespace OpenXMLOffice.Global
         }
 
         // /// <summary>
-        // /// 
+        // ///
         // /// </summary>
         // public void AddComboChartsSetting(ScatterChartSetting scatterChartSetting)
         // {

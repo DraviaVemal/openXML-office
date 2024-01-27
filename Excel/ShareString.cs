@@ -2,7 +2,7 @@
 
 using LiteDB;
 
-namespace OpenXMLOffice.Excel
+namespace OpenXMLOffice.Excel_2013
 {
 	/// <summary>
 	/// Represents a class that manages shared string values in Excel.
@@ -10,14 +10,9 @@ namespace OpenXMLOffice.Excel
 	internal class ShareString : IDisposable
 	{
 
-
 		private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
 		private static ShareString? instance = null;
 		private readonly ILiteCollection<Record> collection;
-
-
-
-
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ShareString"/> class.
@@ -27,10 +22,6 @@ namespace OpenXMLOffice.Excel
 			collection = liteDatabase.GetCollection<Record>("Records");
 			collection.EnsureIndex("Record.Value");
 		}
-
-
-
-
 
 		/// <summary>
 		/// Gets the instance of the <see cref="ShareString"/> class.
@@ -43,10 +34,6 @@ namespace OpenXMLOffice.Excel
 				return instance;
 			}
 		}
-
-
-
-
 
 		/// <summary>
 		/// Releases all resources used by the <see cref="ShareString"/> class.

@@ -1,11 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml.Packaging;
-using OpenXMLOffice.Global;
+using OpenXMLOffice.Excel_2013;
+using OpenXMLOffice.Global_2013;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
+namespace OpenXMLOffice.Presentation_2013
 {
 	/// <summary>
 	/// Represents a slide in a presentation.
@@ -13,7 +14,6 @@ namespace OpenXMLOffice.Presentation
 	public class Slide
 	{
 		private readonly P.Slide openXMLSlide = new();
-
 
 		internal Slide(P.Slide? OpenXMLSlide = null)
 		{
@@ -34,14 +34,10 @@ namespace OpenXMLOffice.Presentation
 			}
 		}
 
-
-
-
-
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
-		public Chart AddChart(Excel.DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
+		public Chart AddChart(DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
 		{
 			Chart Chart = new(this, DataCells, AreaChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
@@ -51,7 +47,7 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Adds a Bar chart to the slide.
 		/// </summary>
-		public Chart AddChart(Excel.DataCell[][] DataCells, BarChartSetting BarChartSetting)
+		public Chart AddChart(DataCell[][] DataCells, BarChartSetting BarChartSetting)
 		{
 			Chart Chart = new(this, DataCells, BarChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
@@ -61,7 +57,7 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Adds a Column chart to the slide.
 		/// </summary>
-		public Chart AddChart(Excel.DataCell[][] DataCells, ColumnChartSetting ColumnChartSetting)
+		public Chart AddChart(DataCell[][] DataCells, ColumnChartSetting ColumnChartSetting)
 		{
 			Chart Chart = new(this, DataCells, ColumnChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
@@ -71,7 +67,7 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Adds a Line chart to the slide.
 		/// </summary>
-		public Chart AddChart(Excel.DataCell[][] DataCells, LineChartSetting LineChartSetting)
+		public Chart AddChart(DataCell[][] DataCells, LineChartSetting LineChartSetting)
 		{
 			Chart Chart = new(this, DataCells, LineChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
@@ -81,7 +77,7 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Adds a Pie chart to the slide.
 		/// </summary>
-		public Chart AddChart(Excel.DataCell[][] DataCells, PieChartSetting PieChartSetting)
+		public Chart AddChart(DataCell[][] DataCells, PieChartSetting PieChartSetting)
 		{
 			Chart Chart = new(this, DataCells, PieChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
@@ -91,7 +87,7 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Adds a Scatter chart to the slide.
 		/// </summary>
-		public Chart AddChart(Excel.DataCell[][] DataCells, ScatterChartSetting ScatterChartSetting)
+		public Chart AddChart(DataCell[][] DataCells, ScatterChartSetting ScatterChartSetting)
 		{
 			Chart Chart = new(this, DataCells, ScatterChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
@@ -101,7 +97,7 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public Chart AddChart(Excel.DataCell[][] DataCells, ComboChartSetting comboChartSetting)
+		public Chart AddChart(DataCell[][] DataCells, ComboChartSetting comboChartSetting)
 		{
 			Chart Chart = new(this, DataCells, comboChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
@@ -165,10 +161,6 @@ namespace OpenXMLOffice.Presentation
 			});
 		}
 
-
-
-
-
 		internal string GetNextSlideRelationId()
 		{
 			return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
@@ -183,10 +175,6 @@ namespace OpenXMLOffice.Presentation
 		{
 			return openXMLSlide.SlidePart!;
 		}
-
-
-
-
 
 		private P.CommonSlideData GetCommonSlideData()
 		{

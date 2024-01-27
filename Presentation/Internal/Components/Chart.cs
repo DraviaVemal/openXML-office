@@ -1,13 +1,13 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml.Packaging;
-using OpenXMLOffice.Excel;
-using OpenXMLOffice.Global;
+using OpenXMLOffice.Excel_2013;
+using OpenXMLOffice.Global_2013;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
+namespace OpenXMLOffice.Presentation_2013
 {
 	/// <summary>
 	/// Chart Class Exported out of PPT importing from Global
@@ -17,15 +17,10 @@ namespace OpenXMLOffice.Presentation
 		private readonly ChartSetting chartSetting;
 		private readonly Slide currentSlide;
 		private readonly ChartPart openXMLChartPart;
-		private P.GraphicFrame? graphicFrame;        /// <summary>
-													 /// Create Area Chart with provided settings
-													 /// </summary>
-													 /// <param name="Slide">
-													 /// </param>
-													 /// <param name="DataRows">
-													 /// </param>
-													 /// <param name="AreaChartSetting">
-													 /// </param>
+		private P.GraphicFrame? graphicFrame;
+		/// <summary>
+		/// Create Area Chart with provided settings
+		/// </summary>
 		public Chart(Slide Slide, DataCell[][] DataRows, AreaChartSetting AreaChartSetting)
 		{
 			chartSetting = AreaChartSetting;
@@ -38,12 +33,6 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// </summary>
-		/// <param name="Slide">
-		/// </param>
-		/// <param name="DataRows">
-		/// </param>
-		/// <param name="BarChartSetting">
-		/// </param>
 		public Chart(Slide Slide, DataCell[][] DataRows, BarChartSetting BarChartSetting)
 		{
 			chartSetting = BarChartSetting;
@@ -56,12 +45,6 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Create Column Chart with provided settings
 		/// </summary>
-		/// <param name="Slide">
-		/// </param>
-		/// <param name="DataRows">
-		/// </param>
-		/// <param name="ColumnChartSetting">
-		/// </param>
 		public Chart(Slide Slide, DataCell[][] DataRows, ColumnChartSetting ColumnChartSetting)
 		{
 			chartSetting = ColumnChartSetting;
@@ -74,12 +57,6 @@ namespace OpenXMLOffice.Presentation
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// </summary>
-		/// <param name="Slide">
-		/// </param>
-		/// <param name="DataRows">
-		/// </param>
-		/// <param name="LineChartSetting">
-		/// </param>
 		public Chart(Slide Slide, DataCell[][] DataRows, LineChartSetting LineChartSetting)
 		{
 			chartSetting = LineChartSetting;

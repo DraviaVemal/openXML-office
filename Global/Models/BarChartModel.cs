@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
     /// Represents the types of bar charts.
@@ -80,7 +80,7 @@ namespace OpenXMLOffice.Global
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class BarChartDataPointSetting : ChartDataPointSettings
     {
@@ -92,7 +92,7 @@ namespace OpenXMLOffice.Global
     /// </summary>
     public class BarChartSeriesSetting : ChartSeriesSetting
     {        /// <summary>
-             /// 
+             ///
              /// </summary>
         public List<BarChartDataPointSetting?> barChartDataPointSettings = new();
 

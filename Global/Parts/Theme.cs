@@ -2,7 +2,7 @@
 
 using A = DocumentFormat.OpenXml.Drawing;
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
     /// Common Theme Class used by both presentation and spreadsheet.

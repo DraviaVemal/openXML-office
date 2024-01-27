@@ -4,7 +4,7 @@ using DocumentFormat.OpenXml.Packaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
+namespace OpenXMLOffice.Presentation_2013
 {
 	internal class SlideMaster
 	{

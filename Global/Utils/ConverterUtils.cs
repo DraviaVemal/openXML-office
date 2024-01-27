@@ -2,7 +2,7 @@
 
 using System.Text;
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
     /// Converter Utils

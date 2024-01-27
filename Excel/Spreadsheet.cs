@@ -4,7 +4,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace OpenXMLOffice.Excel
+namespace OpenXMLOffice.Excel_2013
 {
 	/// <summary>
 	/// This class serves as a versatile tool for working with Excel spreadsheets, built upon the
@@ -14,12 +14,14 @@ namespace OpenXMLOffice.Excel
 	/// existing files, and processing Excel data from stream
 	/// </summary>
 	public class Spreadsheet : SpreadsheetCore
-	{        /// <summary>
-			 /// This public constructor method initializes a new instance of the Spreadsheet class,
-			 /// allowing you to work with Excel spreadsheet It accepts a Existing excel file path and a
-			 /// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding
-			 /// SpreadsheetDocument. This is also used to update as template.
-			 /// </summary>
+	{
+
+		/// <summary>
+		/// This public constructor method initializes a new instance of the Spreadsheet class,
+		/// allowing you to work with Excel spreadsheet It accepts a Existing excel file path and a
+		/// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding
+		/// SpreadsheetDocument. This is also used to update as template.
+		/// </summary>
 		public Spreadsheet(string filePath) : base(filePath) { }
 
 		/// <summary>
@@ -226,10 +228,6 @@ namespace OpenXMLOffice.Excel
 		{
 			throw new NotImplementedException();
 		}
-
-
-
-
 
 		/// <summary>
 		/// Check if sheet name exist in the sheets list

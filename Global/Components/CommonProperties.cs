@@ -3,7 +3,7 @@
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
     /// Common Properties organised in one place to get inherited by child classes
@@ -326,7 +326,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
         {
@@ -341,7 +341,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private A.ParagraphProperties CreateDrawingParagraphProperties(ParagraphPropertiesModel paragraphPropertiesModel)
         {
@@ -354,7 +354,7 @@ namespace OpenXMLOffice.Global
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         protected static A.ListStyle CreateDrawingListStyle()
         {

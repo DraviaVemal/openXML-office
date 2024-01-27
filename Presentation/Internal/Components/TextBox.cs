@@ -1,10 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using OpenXMLOffice.Global;
+using OpenXMLOffice.Global_2013;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
+namespace OpenXMLOffice.Presentation_2013
 {
 	/// <summary>
 	/// Textbox Class

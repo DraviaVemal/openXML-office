@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
     /// Text Horizontal Alignment
@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Global
     public enum HorizontalAlignmentValues
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         NONE,
         /// <summary>
@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Global
     public enum VerticalAlignmentValues
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         NONE,
         /// <summary>

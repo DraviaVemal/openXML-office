@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Excel
+namespace OpenXMLOffice.Excel_2013
 {
 	/// <summary>
 	/// Represents the data type of a cell in a worksheet.
@@ -27,10 +27,12 @@ namespace OpenXMLOffice.Excel
 	/// Represents the properties of a column in a worksheet.
 	/// </summary>
 	public class ColumnProperties
-	{        /// <summary>
-			 /// Gets or sets a value indicating whether the column width should be automatically
-			 /// adjusted to fit the contents.
-			 /// </summary>
+	{
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the column width should be automatically
+		/// adjusted to fit the contents.
+		/// </summary>
 		public bool bestFit;
 
 		/// <summary>
@@ -48,9 +50,11 @@ namespace OpenXMLOffice.Excel
 	/// Represents a data cell in a worksheet.
 	/// </summary>
 	public class DataCell
-	{        /// <summary>
-			 /// Gets or sets the value of the cell.
-			 /// </summary>
+	{
+
+		/// <summary>
+		/// Gets or sets the value of the cell.
+		/// </summary>
 		public string? cellValue;
 
 		/// <summary>
@@ -74,18 +78,22 @@ namespace OpenXMLOffice.Excel
 	/// Represents a record in a worksheet.
 	/// </summary>
 	public class Record
-	{        /// <summary>
-			 /// Initializes a new instance of the <see cref="Record"/> class with the specified value.
-			 /// </summary>
-			 /// <param name="Value">
-			 /// The value of the record.
-			 /// </param>
+	{
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Record"/> class with the specified value.
+		/// </summary>
+		/// <param name="Value">
+		/// The value of the record.
+		/// </param>
 		public Record(string Value)
 		{
 			this.Value = Value;
-		}        /// <summary>
-				 /// Gets or sets the ID of the record.
-				 /// </summary>
+		}
+
+		/// <summary>
+		/// Gets or sets the ID of the record.
+		/// </summary>
 		public int Id { get; set; }
 
 		/// <summary>
@@ -98,9 +106,11 @@ namespace OpenXMLOffice.Excel
 	/// Represents the properties of a row in a worksheet.
 	/// </summary>
 	public class RowProperties
-	{        /// <summary>
-			 /// Gets or sets the height of the row.
-			 /// </summary>
+	{
+
+		/// <summary>
+		/// Gets or sets the height of the row.
+		/// </summary>
 		public double? height;
 
 		/// <summary>

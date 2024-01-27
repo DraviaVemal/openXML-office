@@ -4,7 +4,9 @@
 
 # OpenXMLOffice
 
-OpenXMLOffice is an advanced .NET library that leverages the power of OpenXML SDK 3.0 to streamline the creation and manipulation of Office documents, with a primary focus on Excel, Word, and PowerPoint files. Our mission is to enhance the document creation experience for developers by providing intuitive namespaces, classes, and utilities. The library is designed to offer maximum efficiency and ease of use, ensuring a seamless workflow. Please note that a minimum Microsoft Office support version of 2013 is required for optimal compatibility.
+OpenXMLOffice is an advanced .NET library that leverages the power of OpenXML SDK 3.0 to streamline the creation and manipulation of Office documents, with a primary focus on Excel, Word, and PowerPoint files. My mission is to enhance the document creation experience for developers by providing intuitive namespaces, classes, and utilities. The library is designed to offer maximum efficiency and ease of use, ensuring a seamless workflow. 
+
+It's important to note that OpenXMLOffice supports the creation of documents that can be opened from Office 2013 onwards. However, not every feature is available from the 2013 version. For instance if new features are added as part of the 2016 version, they are kept in a namespace that explicitly mentions '2016.' Developers should be aware that if they use 2016 components in their document creation, the generated file can only be opened in 2016 and above versions without any issues.
 
 ## Scope Details
 
@@ -14,7 +16,7 @@ OpenXMLOffice is an advanced .NET library that leverages the power of OpenXML SD
 
 ## Documentation [Link](https://draviavemal.gitbook.io/openxmloffice/)
 
-All project documentation is completed and regularly updated in Gitbooks. The maintained branch for documentation is the "Documents" branch within the project repository. We welcome any contributions or updates through pull requests. Your assistance is highly appreciated.
+All project documentation is in progress and regularly updated in Gitbooks. The maintained branch for documentation is the "Documents" branch within the project repository. Welcome to any contributions or updates through pull requests. Your assistance is highly appreciated.
 
 ## License
 
@@ -31,7 +33,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 3. Push to the Branch (git push origin feature/AmazingFeature)
 4. Open a Pull Request
 
-Please ensure you follow our PR and issue templates for quicker resolution.
+Please ensure you follow PR and issue templates for quicker resolution.
 
 ## Support
 

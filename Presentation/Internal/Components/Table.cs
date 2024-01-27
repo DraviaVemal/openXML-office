@@ -2,10 +2,10 @@
 
 using System.Data;
 using A = DocumentFormat.OpenXml.Drawing;
-using G = OpenXMLOffice.Global;
+using G = OpenXMLOffice.Global_2013;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
+namespace OpenXMLOffice.Presentation_2013
 {
 	/// <summary>
 	/// Represents Table Class

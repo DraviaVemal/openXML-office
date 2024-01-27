@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Global
+namespace OpenXMLOffice.Global_2013
 {
     /// <summary>
     /// Represents the types of pie charts.
@@ -63,7 +63,7 @@ namespace OpenXMLOffice.Global
         }
     }
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class PieChartDataPointSetting : ChartDataPointSettings
     {
@@ -82,7 +82,7 @@ namespace OpenXMLOffice.Global
         /// </summary>
         public override string? borderColor { get => base.borderColor; set => base.borderColor = value; }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public List<PieChartDataPointSetting?> pieChartDataPointSettings = new();
         /// <summary>

@@ -1,10 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using LiteDB;
-using OpenXMLOffice.Global;
+using OpenXMLOffice.Global_2013;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace OpenXMLOffice.Excel
+namespace OpenXMLOffice.Excel_2013
 {
 	/// <summary>
 	/// This class serves as a versatile tool for working with Excel spreadsheets, styles component
@@ -24,9 +24,11 @@ namespace OpenXMLOffice.Excel
 			fillStyleCollection = liteDatabase.GetCollection<FillStyle>("FillStyle");
 			borderStyleCollection = liteDatabase.GetCollection<BorderStyle>("BorderStyle");
 			cellXfsCollection = liteDatabase.GetCollection<CellXfs>("CellXfs");
-		}        /// <summary>
-				 /// Get the Cell Style Id based on user specified CellStyleSetting
-				 /// </summary>
+		}
+
+		/// <summary>
+		/// Get the Cell Style Id based on user specified CellStyleSetting
+		/// </summary>
 		public static Styles Instance
 		{
 			get
@@ -35,7 +37,6 @@ namespace OpenXMLOffice.Excel
 				return instance;
 			}
 		}
-
 
 		/// <summary>
 		/// Get the Cell Style Id based on user specified CellStyleSetting
@@ -91,10 +92,6 @@ namespace OpenXMLOffice.Excel
 			}
 		}
 
-
-
-
-
 		/// <summary>
 		/// Load the style from the Exisiting Sheet
 		/// TODO: Load Exisiting Style from the Excel Sheet For Update
@@ -125,10 +122,6 @@ namespace OpenXMLOffice.Excel
 			Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
 			Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
 		}
-
-
-
-
 
 		private uint GetBorderId(CellStyleSetting CellStyleSetting)
 		{

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-namespace OpenXMLOffice.Document;
+namespace OpenXMLOffice.Document_2013;
 
 /// <summary>
 /// Word Class

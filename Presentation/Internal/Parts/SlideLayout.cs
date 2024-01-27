@@ -4,7 +4,7 @@ using DocumentFormat.OpenXml.Packaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation
+namespace OpenXMLOffice.Presentation_2013
 {
 	internal class SlideLayout
 	{
@@ -18,7 +18,6 @@ namespace OpenXMLOffice.Presentation
 			CreateSlideLayout();
 		}
 
-
 		public P.SlideLayout GetSlideLayout()
 		{
 			return openXMLSlideLayout;
@@ -28,10 +27,6 @@ namespace OpenXMLOffice.Presentation
 		{
 			return openXMLSlideLayout.SlideLayoutPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
 		}
-
-
-
-
 
 		private void CreateSlideLayout()
 		{
@@ -44,7 +39,5 @@ namespace OpenXMLOffice.Presentation
 				MasterColorMapping = new A.MasterColorMapping()
 			});
 		}
-
-
 	}
 }

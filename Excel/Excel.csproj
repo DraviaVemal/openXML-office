@@ -1,29 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\Global\Global.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models/" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <PackageId>OpenXMLOffice.Excel</PackageId>
-    <RootNamespace>OpenXMLOffice.Excel</RootNamespace>
-    <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
-    <CosturaOutputType>SingleFile</CosturaOutputType>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <PackageDescription>OpenXML Excel Integrator is a robust .NET library tailored for managing and
-      manipulating Excel files using the OpenXML SDK. This toolkit simplifies complex tasks such as
-      creating spreadsheets, formatting cells, and inserting formulas, charts, and pivot tables.
-      Ideal for applications involving data analysis, report generation, and financial data
-      processing, it allows developers to programmatically control every aspect of Excel file
-      creation and editing. From automated report generation to data-driven spreadsheet creation,
-      the OpenXML Excel Integrator offers a streamlined approach to handle Excel documents
-      efficiently and accurately, enhancing your application's data management capabilities.</PackageDescription>
-    <PackageTags>OpenXML;Excel;SpreadSheet;Office;xls;xlsx</PackageTags>
-  </PropertyGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\Global\Global.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Models/" />
+	</ItemGroup>
+	<PropertyGroup>
+		<PackageId>OpenXMLOffice.Excel</PackageId>
+		<RootNamespace>OpenXMLOffice.Excel_2013</RootNamespace>
+		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+		<CosturaOutputType>SingleFile</CosturaOutputType>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageDescription>OpenXML Excel Integrator is a robust .NET library tailored for managing
+			and
+			manipulating Excel files using the OpenXML SDK. This toolkit simplifies complex tasks
+			such as
+			creating spreadsheets, formatting cells, and inserting formulas, charts, and pivot
+			tables.
+			Ideal for applications involving data analysis, report generation, and financial data
+			processing, it allows developers to programmatically control every aspect of Excel file
+			creation and editing. From automated report generation to data-driven spreadsheet
+			creation,
+			the OpenXML Excel Integrator offers a streamlined approach to handle Excel documents
+			efficiently and accurately, enhancing your application's data management capabilities.</PackageDescription>
+		<PackageTags>OpenXML;Excel;SpreadSheet;Office;xls;xlsx</PackageTags>
+	</PropertyGroup>
 </Project>

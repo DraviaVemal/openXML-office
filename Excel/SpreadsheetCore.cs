@@ -3,9 +3,9 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using OpenXMLOffice.Global;
+using OpenXMLOffice.Global_2013;
 
-namespace OpenXMLOffice.Excel
+namespace OpenXMLOffice.Excel_2013
 {
 	/// <summary>
 	/// Spreadsheet Core class for initializing the Spreadsheet
@@ -23,10 +23,6 @@ namespace OpenXMLOffice.Excel
 		/// Maintain the Spreadsheet Properties
 		/// </summary>
 		protected readonly SpreadsheetProperties spreadsheetProperties;
-
-
-
-
 
 		/// <summary>
 		/// This public constructor method initializes a new instance of the Spreadsheet class
@@ -112,10 +108,6 @@ namespace OpenXMLOffice.Excel
 			InitialiseStyle();
 			LoadStyle();
 		}
-
-
-
-
 
 		/// <summary>
 		/// Return the next relation id for the Spreadsheet
@@ -209,10 +201,6 @@ namespace OpenXMLOffice.Excel
 		{
 			Styles.Instance.SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
 		}
-
-
-
-
 
 		private void InitialiseStyle()
 		{

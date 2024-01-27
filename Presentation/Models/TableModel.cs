@@ -1,9 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using A = DocumentFormat.OpenXml.Drawing;
-using OpenXMLOffice.Global;
+using OpenXMLOffice.Global_2013;
 
-namespace OpenXMLOffice.Presentation
+namespace OpenXMLOffice.Presentation_2013
 {
 	/// <summary>
 	///
