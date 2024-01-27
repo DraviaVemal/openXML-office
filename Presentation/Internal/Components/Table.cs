@@ -153,7 +153,7 @@ namespace OpenXMLOffice.Presentation
             return Table;
         }
 
-        private A.TableCell CreateTableCell(TableCell cell, TableRow row)
+        private static A.TableCell CreateTableCell(TableCell cell, TableRow row)
         {
             A.Paragraph paragraph = new();
             if (cell.horizontalAlignment != null)

@@ -13,7 +13,7 @@ internal class ChartStyle
 {
     #region Public Methods
 
-    public CS.ChartStyle CreateChartStyles()
+    public static CS.ChartStyle CreateChartStyles()
     {
         CS.ChartStyle ChartStyle = new()
         {

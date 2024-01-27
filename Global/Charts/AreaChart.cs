@@ -34,7 +34,7 @@ namespace OpenXMLOffice.Global
         /// <returns>
         /// The chart style.
         /// </returns>
-        public CS.ChartStyle GetChartStyle()
+        public static CS.ChartStyle GetChartStyle()
         {
             return CreateChartStyles();
         }
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Global
         /// <returns>
         /// The color style.
         /// </returns>
-        public CS.ColorStyle GetColorStyle()
+        public static CS.ColorStyle GetColorStyle()
         {
             return CreateColorStyles();
         }

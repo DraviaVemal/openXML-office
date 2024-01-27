@@ -235,7 +235,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Create Outline
         /// </summary>
-        protected A.Outline CreateOutline(OutlineModel outlineModel)
+        protected static A.Outline CreateOutline(OutlineModel outlineModel)
         {
             A.Outline outline = new();
             if (outlineModel.solidFill != null)
@@ -275,7 +275,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         ///     Create Default Run Properties
         /// </summary>
-        protected A.DefaultRunProperties CreateDefaultRunProperties(DefaultRunPropertiesModel defaultRunPropertiesModel)
+        protected static A.DefaultRunProperties CreateDefaultRunProperties(DefaultRunPropertiesModel defaultRunPropertiesModel)
         {
             A.DefaultRunProperties DefaultRunProperties = new();
             if (defaultRunPropertiesModel.solidFill != null)

@@ -86,7 +86,7 @@ public class ChartBase : CommonProperties
     /// </returns>
     /// <exception cref="ArgumentException">
     /// </exception>
-    protected C.BubbleSize CreateBubbleSizeAxisData(string formula, ChartData[] cells)
+    protected static C.BubbleSize CreateBubbleSizeAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
@@ -186,7 +186,7 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C.CategoryAxisData CreateCategoryAxisData(string formula, ChartData[] cells)
+    protected static C.CategoryAxisData CreateCategoryAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType == DataType.NUMBER))
         {
@@ -206,7 +206,7 @@ public class ChartBase : CommonProperties
     protected static CS.ChartStyle CreateChartStyles()
     {
         ChartStyle ChartStyle = new();
-        return ChartStyle.CreateChartStyles();
+        return Global.ChartStyle.CreateChartStyles();
     }
 
     /// <summary>
@@ -367,7 +367,7 @@ public class ChartBase : CommonProperties
     /// </param>
     /// <returns>
     /// </returns>
-    protected C15.DataLabelsRange CreateDataLabelsRange(string formula, ChartData[] cells)
+    protected static C15.DataLabelsRange CreateDataLabelsRange(string formula, ChartData[] cells)
     {
         return new(new C15.Formula(formula), AddDataLabelCacheValue(cells));
     }
@@ -430,7 +430,7 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create Series Text for the chart
     /// </summary>
-    protected C.SeriesText CreateSeriesText(string formula, ChartData[] cells)
+    protected static C.SeriesText CreateSeriesText(string formula, ChartData[] cells)
     {
         return new(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
     }
@@ -512,7 +512,7 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create Value Axis Data for the chart
     /// </summary>
-    protected C.Values CreateValueAxisData(string formula, ChartData[] cells)
+    protected static C.Values CreateValueAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
@@ -528,7 +528,7 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create X Axis Data for the chart
     /// </summary>
-    protected C.XValues CreateXValueAxisData(string formula, ChartData[] cells)
+    protected static C.XValues CreateXValueAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {
@@ -544,7 +544,7 @@ public class ChartBase : CommonProperties
     /// <summary>
     /// Create Y Axis Data for the chart
     /// </summary>
-    protected C.YValues CreateYValueAxisData(string formula, ChartData[] cells)
+    protected static C.YValues CreateYValueAxisData(string formula, ChartData[] cells)
     {
         if (cells.All(v => v.dataType != DataType.NUMBER))
         {

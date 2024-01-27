@@ -254,8 +254,8 @@ namespace OpenXMLOffice.Presentation
                 }).ToArray()).ToArray();
             AreaChart AreaChart = new(AreaChartSetting, ChartData);
             GetChartPart().ChartSpace = AreaChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = AreaChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = AreaChart.GetColorStyle();
+            GetChartStylePart().ChartStyle = Global.AreaChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = Global.AreaChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
@@ -277,8 +277,8 @@ namespace OpenXMLOffice.Presentation
                }).ToArray()).ToArray();
             BarChart BarChart = new(BarChartSetting, ChartData);
             GetChartPart().ChartSpace = BarChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = BarChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = BarChart.GetColorStyle();
+            GetChartStylePart().ChartStyle = Global.BarChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = Global.BarChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
@@ -300,8 +300,8 @@ namespace OpenXMLOffice.Presentation
                 }).ToArray()).ToArray();
             ColumnChart ColumnChart = new(ColumnChartSetting, ChartData);
             GetChartPart().ChartSpace = ColumnChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = ColumnChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = ColumnChart.GetColorStyle();
+            GetChartStylePart().ChartStyle = Global.ColumnChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = Global.ColumnChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
@@ -323,8 +323,8 @@ namespace OpenXMLOffice.Presentation
                 }).ToArray()).ToArray();
             LineChart LineChart = new(LineChartSetting, ChartData);
             GetChartPart().ChartSpace = LineChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = LineChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = LineChart.GetColorStyle();
+            GetChartStylePart().ChartStyle = Global.LineChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = Global.LineChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
@@ -346,8 +346,8 @@ namespace OpenXMLOffice.Presentation
                 }).ToArray()).ToArray();
             PieChart PieChart = new(PieChartSetting, ChartData);
             GetChartPart().ChartSpace = PieChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = PieChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = PieChart.GetColorStyle();
+            GetChartStylePart().ChartStyle = Global.PieChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = Global.PieChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
@@ -369,8 +369,8 @@ namespace OpenXMLOffice.Presentation
                 }).ToArray()).ToArray();
             ScatterChart ScatterChart = new(ScatterChartSetting, ChartData);
             GetChartPart().ChartSpace = ScatterChart.GetChartSpace();
-            GetChartStylePart().ChartStyle = ScatterChart.GetChartStyle();
-            GetChartColorStylePart().ColorStyle = ScatterChart.GetColorStyle();
+            GetChartStylePart().ChartStyle = Global.ScatterChart.GetChartStyle();
+            GetChartColorStylePart().ColorStyle = Global.ScatterChart.GetColorStyle();
             CreateChartGraphicFrame();
         }
 
