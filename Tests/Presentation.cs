@@ -65,12 +65,16 @@ namespace OpenXMLOffice.Tests
                 areaChartTypes = AreaChartTypes.PERCENT_STACKED,
                 chartDataSetting = new()
                 {
-                    chartDataColumnEnd = 1
+                    chartDataColumnEnd = 2
                 }
             });
             //4
             powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new BarChartSetting()
             {
+                chartAxesOptions = new()
+                {
+                    isHorizontalAxesEnabled = false,
+                },
                 barChartDataLabel = new BarChartDataLabel()
                 {
                     dataLabelPosition = BarChartDataLabel.DataLabelPositionValues.INSIDE_END,

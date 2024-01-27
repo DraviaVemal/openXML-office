@@ -108,7 +108,7 @@ public class ChartBase : CommonProperties
         C.CategoryAxis CategoryAxis = new(
             new C.AxisId { Val = categoryAxisSetting.id },
             new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
-            new C.Delete { Val = false },
+            new C.Delete { Val = !categoryAxisSetting.isVisible },
             new C.AxisPosition
             {
                 Val = categoryAxisSetting.axisPosition switch
@@ -417,7 +417,7 @@ public class ChartBase : CommonProperties
             if (chartDataSetting.valueFromColumn.TryGetValue(column, out uint DataValueColumn))
             {
                 List<ChartData> dataLabelCells = ((ChartData[]?)dataCols[DataValueColumn].Clone()!).Skip((int)chartDataSetting.chartDataRowStart).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-                chartDataGrouping.dataLabelFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + dataLabelCells.Count + 1}";
+                chartDataGrouping.dataLabelFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + dataLabelCells.Count}";
                 chartDataGrouping.dataLabelCells = dataLabelCells.ToArray();
             }
             chartDataGroupings.Add(chartDataGrouping);
@@ -441,7 +441,7 @@ public class ChartBase : CommonProperties
         C.ValueAxis valueAxis = new(
             new C.AxisId { Val = valueAxisSetting.id },
             new C.Scaling(new C.Orientation { Val = C.OrientationValues.MinMax }),
-            new C.Delete { Val = false },
+            new C.Delete { Val = !valueAxisSetting.isVisible },
             new C.AxisPosition
             {
                 Val = valueAxisSetting.axisPosition switch
@@ -667,7 +667,7 @@ public class ChartBase : CommonProperties
             },
             AutoTitleDeleted = new C.AutoTitleDeleted()
             {
-                Val = false
+                Val = true
             },
             DisplayBlanksAs = new C.DisplayBlanksAs()
             {

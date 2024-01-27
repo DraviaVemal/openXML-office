@@ -77,6 +77,7 @@ namespace OpenXMLOffice.Global
                 fontSize = lineChartSetting.chartAxesOptions.horizontalFontSize,
                 isBold = lineChartSetting.chartAxesOptions.isHorizontalBold,
                 isItalic = lineChartSetting.chartAxesOptions.isHorizontalItalic,
+                isVisible = lineChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
@@ -85,6 +86,7 @@ namespace OpenXMLOffice.Global
                 fontSize = lineChartSetting.chartAxesOptions.verticalFontSize,
                 isBold = lineChartSetting.chartAxesOptions.isVerticalBold,
                 isItalic = lineChartSetting.chartAxesOptions.isVerticalItalic,
+                isVisible = lineChartSetting.chartAxesOptions.isVerticalAxesEnabled,
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;

@@ -31,10 +31,12 @@ namespace OpenXMLOffice.Global
     {
         /// <summary>
         /// The gap width between the bars.
+        /// Value is used in %.
         /// </summary>
         public int categoryGap = 219;
         /// <summary>
         /// The gap between the series bars.
+        /// Value is used in %.
         /// </summary>
         public int seriesGap = -27;
     }

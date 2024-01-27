@@ -50,19 +50,23 @@ namespace OpenXMLOffice.Global
         /// <summary>
         ///  Font Size
         /// </summary>
-        public float fontSize = 11.97F;
+        internal float fontSize = 11.97F;
         /// <summary>
         /// 
         /// </summary>
-        public string? fontColor = null;
+        internal string? fontColor = null;
         /// <summary>
         /// 
         /// </summary>
-        public UnderLineValues underLineValues = UnderLineValues.NONE;
+        internal UnderLineValues underLineValues = UnderLineValues.NONE;
         /// <summary>
         /// 
         /// </summary>
-        public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+        internal StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool isVisible = true;
         #endregion Internal Fields
     }
 
@@ -327,7 +331,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Is Data is used in 3D chart type
         /// </summary>
-        public bool is3Ddata;
+        internal bool is3Ddata;
 
         /// <summary>
         /// Key For Data Column Value For Data Label Column If Data Label Column Are Present
@@ -536,7 +540,7 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Is Font Bold
         /// </summary>
-        public bool isBold = false;
+        internal bool isBold = false;
         /// <summary>
         /// Is Font Italic
         /// </summary>
@@ -544,19 +548,23 @@ namespace OpenXMLOffice.Global
         /// <summary>
         /// Font Size
         /// </summary>
-        public float fontSize = 11.97F;
+        internal float fontSize = 11.97F;
         /// <summary>
         /// 
         /// </summary>
-        public string? fontColor = null;
+        internal string? fontColor = null;
         /// <summary>
         /// 
         /// </summary>
-        public UnderLineValues underLineValues = UnderLineValues.NONE;
+        internal UnderLineValues underLineValues = UnderLineValues.NONE;
         /// <summary>
         /// 
         /// </summary>
-        public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+        internal StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool isVisible;
         #endregion Internal Fields
     }
 

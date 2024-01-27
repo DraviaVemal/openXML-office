@@ -88,11 +88,19 @@ namespace OpenXMLOffice.Global
                 id = 1362418656,
                 axisPosition = AxisPosition.BOTTOM,
                 crossAxisId = 1358349936,
+                fontSize = scatterChartSetting.chartAxesOptions.horizontalFontSize,
+                isBold = scatterChartSetting.chartAxesOptions.isHorizontalBold,
+                isItalic = scatterChartSetting.chartAxesOptions.isHorizontalItalic,
+                isVisible = scatterChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
                 id = 1358349936,
-                crossAxisId = 1362418656
+                crossAxisId = 1362418656,
+                fontSize = scatterChartSetting.chartAxesOptions.verticalFontSize,
+                isBold = scatterChartSetting.chartAxesOptions.isVerticalBold,
+                isItalic = scatterChartSetting.chartAxesOptions.isVerticalItalic,
+                isVisible = scatterChartSetting.chartAxesOptions.isVerticalAxesEnabled,
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;

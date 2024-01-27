@@ -189,6 +189,7 @@ namespace OpenXMLOffice.Global
                 fontSize = barChartSetting.chartAxesOptions.verticalFontSize,
                 isBold = barChartSetting.chartAxesOptions.isVerticalBold,
                 isItalic = barChartSetting.chartAxesOptions.isVerticalItalic,
+                isVisible = barChartSetting.chartAxesOptions.isVerticalAxesEnabled,
             }));
             plotArea.Append(CreateValueAxis(new ValueAxisSetting()
             {
@@ -198,6 +199,7 @@ namespace OpenXMLOffice.Global
                 fontSize = barChartSetting.chartAxesOptions.horizontalFontSize,
                 isBold = barChartSetting.chartAxesOptions.isHorizontalBold,
                 isItalic = barChartSetting.chartAxesOptions.isHorizontalItalic,
+                isVisible = barChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
             }));
             plotArea.Append(CreateChartShapeProperties());
             return plotArea;
