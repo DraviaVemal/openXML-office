@@ -2,6 +2,7 @@
 
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
+using P16 = OpenXMLOffice.Presentation_2016;
 
 namespace OpenXMLOffice.Presentation_2013
 {
@@ -43,6 +44,26 @@ namespace OpenXMLOffice.Presentation_2013
 			if (chart.GetChartGraphicFrame().Parent == null)
 			{
 				parent.InsertBefore(chart.GetChartGraphicFrame(), openXMLShape);
+			}
+			openXMLShape.Remove();
+			return chart;
+		}
+
+		/// <summary>
+		/// Replace 2016 Support Chart for the source Shape
+		/// </summary>
+		public P16.Chart ReplaceChart(P16.Chart chart)
+		{
+			DocumentFormat.OpenXml.OpenXmlElement? parent = openXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
+			if (openXMLShape.ShapeProperties?.Transform2D != null)
+			{
+				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
+				chart.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
+				chart.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
+			}
+			if (chart.GetAlternateContent().Parent == null)
+			{
+				parent.InsertBefore(chart.GetAlternateContent(), openXMLShape);
 			}
 			openXMLShape.Remove();
 			return chart;

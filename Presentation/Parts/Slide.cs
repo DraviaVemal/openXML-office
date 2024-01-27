@@ -112,7 +112,7 @@ namespace OpenXMLOffice.Presentation_2013
 		public P16.Chart AddChart(DataCell[][] DataCells, WaterfallChartSetting waterfallChartSetting)
 		{
 			P16.Chart Chart = new(this, DataCells, waterfallChartSetting);
-			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetAlternateContent(this));
+			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetAlternateContent());
 			return Chart;
 		}
 

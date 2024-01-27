@@ -86,7 +86,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// </param>
 		/// <param name="Y">
 		/// </param>
-		public void UpdatePosition(uint X, uint Y)
+		public virtual void UpdatePosition(uint X, uint Y)
 		{
 			chartSetting.x = X;
 			chartSetting.y = Y;
@@ -107,7 +107,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// </param>
 		/// <param name="Height">
 		/// </param>
-		public void UpdateSize(uint Width, uint Height)
+		public virtual void UpdateSize(uint Width, uint Height)
 		{
 			chartSetting.width = Width;
 			chartSetting.height = Height;

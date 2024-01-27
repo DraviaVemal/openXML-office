@@ -8,7 +8,6 @@ using OpenXMLOffice.Presentation_2013;
 
 namespace OpenXMLOffice.Presentation_2016
 {
-
 	/// <summary>
 	///
 	/// </summary>
