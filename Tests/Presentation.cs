@@ -488,7 +488,7 @@ namespace OpenXMLOffice.Tests
                         leftBorder = true,
                         topBorder = true,
                         rightBorder =true,
-                        verticalAlignment = TableCell.HorizontalAlignmentValues.LEFT+ (i % 4)
+                        horizontalAlignment = TableCell.HorizontalAlignmentValues.LEFT+ (i % 4)
                     },
                     new() {
                         value = $"Row {i + 1}, Cell 2",
@@ -499,7 +499,7 @@ namespace OpenXMLOffice.Tests
                         topBorder = true,
                         rightBorder =true,
                         isItalic = true,
-                        horizontalAlignment = TableCell.HorizontalAlignmentValues.TOP +(i % 3)
+                        verticalAlignment = TableCell.VerticalAlignmentValues.TOP +(i % 3)
                     },
                 }
                 };
