@@ -120,6 +120,11 @@ namespace OpenXMLOffice.Presentation_2013
 				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
 				textBox.UpdateSize((uint)oldTransform.Extents!.Cx!, (uint)oldTransform.Extents!.Cy!);
 				textBox.UpdatePosition((uint)oldTransform.Offset!.X!, (uint)oldTransform.Offset!.Y!);
+				if (openXMLShape.ShapeStyle != null)
+				{
+					P.ShapeStyle ShapeStyle = (P.ShapeStyle)openXMLShape.ShapeStyle.Clone();
+					textBox.UpdateShapeStyle(ShapeStyle);
+				}
 			}
 			if (textBox.GetTextBoxShape().Parent == null)
 			{

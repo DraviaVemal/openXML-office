@@ -17,7 +17,7 @@ namespace OpenXMLOffice.Presentation_2013
 	{
 		private readonly P.Slide openXMLSlide = new();
 
-		internal Slide(P.Slide? OpenXMLSlide = null)
+		internal Slide(P.Slide? OpenXMLSlide = null, SlideModel? slideModel = null)
 		{
 			if (OpenXMLSlide != null)
 			{

@@ -19,8 +19,8 @@ namespace OpenXMLOffice.Global_2013
 		public TextBoxBase(TextBoxSetting TextBoxSetting)
 		{
 			textBoxSetting = TextBoxSetting;
+			CreateTextBox();
 		}
-
 
 		/// <summary>
 		/// Get Textbox Run
@@ -35,7 +35,7 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public P.Shape GetTextBoxBaseShape()
 		{
-			return CreateTextBox();
+			return openXMLShape!;
 		}
 
 		/// <summary>
@@ -71,6 +71,13 @@ namespace OpenXMLOffice.Global_2013
 				};
 			}
 		}
+		/// <summary>
+		///
+		/// </summary>
+		public void UpdateShapeStyle(P.ShapeStyle shapeStyle)
+		{
+			GetTextBoxBaseShape().ShapeStyle = shapeStyle;
+		}
 
 		private P.Shape CreateTextBox()
 		{
@@ -93,7 +100,7 @@ namespace OpenXMLOffice.Global_2013
 				TextBody = new P.TextBody(
 						new A.BodyProperties(),
 						new A.ListStyle(),
-						new A.Paragraph(CreateTextRun()))
+						new A.Paragraph(CreateTextRun())),
 			};
 			return openXMLShape;
 		}

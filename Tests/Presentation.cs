@@ -274,7 +274,8 @@ namespace OpenXMLOffice.Tests
 					new(){
 						lineChartDataLabel = new G.LineChartDataLabel(){
 							dataLabelPosition = G.LineChartDataLabel.DataLabelPositionValues.RIGHT,
-							showValueFromColumn = true
+							showValueFromColumn = true,
+							showValue = true
 						}
 					}
 				}
