@@ -8,12 +8,17 @@ namespace OpenXMLOffice.Excel_2013
 	/// <summary>
 	///
 	/// </summary>
-	public class ExcelPictureSetting : PictureSetting
+	public class ExcelPictureSetting
 	{
+		/// <summary>
+		/// The type of image.
+		/// </summary>
+		public ImageType imageType = ImageType.JPEG;
+
 		/// <summary>
 		///
 		/// </summary>
-		public int fromCol = 0;
+		public int fromCol = 1;
 		/// <summary>
 		///
 		/// </summary>
@@ -21,7 +26,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		///
 		/// </summary>
-		public int fromRow = 0;
+		public int fromRow = 2;
 		/// <summary>
 		///
 		/// </summary>
@@ -29,7 +34,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		///
 		/// </summary>
-		public int toCol = 0;
+		public int toCol = 1;
 		/// <summary>
 		///
 		/// </summary>
@@ -37,7 +42,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		///
 		/// </summary>
-		public int toRow = 1;
+		public int toRow = 3;
 		/// <summary>
 		///
 		/// </summary>

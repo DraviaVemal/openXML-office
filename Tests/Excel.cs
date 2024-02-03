@@ -145,7 +145,7 @@ namespace OpenXMLOffice.Tests
 		{
 			Worksheet worksheet = spreadsheet.AddSheet("Data4");
 			Assert.IsNotNull(worksheet);
-			worksheet.SetRow("A3", new DataCell[1]{
+			worksheet.SetRow("D3", new DataCell[1]{
 				new(){
 					cellValue = "Re Update",
 					dataType = CellDataType.STRING
@@ -154,13 +154,13 @@ namespace OpenXMLOffice.Tests
 			{
 				height = 30
 			});
-			worksheet.AddPicture(1, 1, "./TestFiles/tom_and_jerry.jpg", new()
+			worksheet.AddPicture("./TestFiles/tom_and_jerry.jpg", new()
 			{
 				imageType = ImageType.JPEG,
-				height = 100,
-				width = 100,
-				x = 100,
-				y = 100
+				fromCol = 6,
+				fromRow = 6,
+				toCol = 8,
+				toRow = 8
 			});
 			Assert.IsTrue(true);
 		}

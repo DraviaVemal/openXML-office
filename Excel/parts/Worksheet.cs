@@ -196,28 +196,28 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		///
 		/// </summary>
-		public void AddPicture(int row, int col, string filePath, PictureSetting pictureSetting)
+		public void AddPicture(string filePath, ExcelPictureSetting pictureSetting)
 		{
-			AddPicture(row, col, new FileStream(filePath, FileMode.Open, FileAccess.Read), pictureSetting);
+			AddPicture(new FileStream(filePath, FileMode.Open, FileAccess.Read), pictureSetting);
 		}
 
 		/// <summary>
 		///
 		/// </summary>
-		public void AddPicture(int row, int col, Stream stream, PictureSetting pictureSetting)
+		public void AddPicture(Stream stream, ExcelPictureSetting pictureSetting)
 		{
-			_ = new Picture(this, stream, new()
+			if (pictureSetting.fromCol < pictureSetting.toCol || pictureSetting.fromRow < pictureSetting.toRow)
 			{
-				fromCol = col,
-				fromRow = row,
-				toCol = col,
-				toRow = row + 1,
-				imageType = pictureSetting.imageType,
-				height = pictureSetting.height,
-				width = pictureSetting.width,
-				x = pictureSetting.x,
-				y = pictureSetting.y
-			});
+				_ = new Picture(this, stream, new()
+				{
+					fromCol = pictureSetting.fromCol,
+					fromRow = pictureSetting.fromRow,
+					toCol = pictureSetting.toCol,
+					toRow = pictureSetting.toRow,
+				});
+				return;
+			}
+			throw new ArgumentException("At least one cell range must be covered by the picture.");
 		}
 
 	}
