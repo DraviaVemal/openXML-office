@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using OpenXMLOffice.Global_2013;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 using P16 = OpenXMLOffice.Presentation_2016;
@@ -9,7 +10,7 @@ namespace OpenXMLOffice.Presentation_2013
 	/// <summary>
 	/// Shape Class For Presentation shape manipulation
 	/// </summary>
-	public class Shape
+	public class Shape : CommonProperties
 	{
 		private readonly P.Shape openXMLShape = new();
 
@@ -142,9 +143,41 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Update Shape Text without changing any other properties
 		/// </summary>
-		public void UpdateText(string newValue)
+		public void UpdateShape(ShapeTextModel shapeTextModel)
 		{
-
+			if (openXMLShape.TextBody != null)
+			{
+				A.Paragraph? paragraph = openXMLShape.TextBody.GetFirstChild<A.Paragraph>();
+				if (paragraph != null)
+				{
+					paragraph.RemoveAllChildren<A.Run>();
+					SolidFillModel solidFillModel = new()
+					{
+						schemeColorModel = new()
+						{
+							themeColorValues = ThemeColorValues.TEXT_1
+						}
+					};
+					if (shapeTextModel.fontColor != null)
+					{
+						solidFillModel.hexColor = shapeTextModel.fontColor;
+						solidFillModel.schemeColorModel = null;
+					}
+					paragraph.Append(CreateDrawingRun(new()
+					{
+						text = shapeTextModel.text,
+						drawingRunProperties = new()
+						{
+							solidFill = solidFillModel,
+							fontFamily = shapeTextModel.fontFamily,
+							fontSize = shapeTextModel.fontSize,
+							isBold = shapeTextModel.isBold,
+							isItalic = shapeTextModel.isItalic,
+							underline = shapeTextModel.underline
+						}
+					}));
+				}
+			}
 		}
 	}
 }
