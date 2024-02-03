@@ -21,59 +21,55 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Create Picture Object with provided settings
 		/// </summary>
-		public Picture(Stream Stream, Slide Slide, PictureSetting PictureSetting)
+		public Picture(Stream stream, Slide slide, PictureSetting pictureSetting)
 		{
-			currentSlide = Slide;
+			currentSlide = slide;
 			string EmbedId = currentSlide.GetNextSlideRelationId();
-			pictureSetting = PictureSetting;
+			this.pictureSetting = pictureSetting;
 			openXMLPicture = new();
 			CreatePicture(EmbedId);
-			ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.imageType switch
+			ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(pictureSetting.imageType switch
 			{
 				ImageType.PNG => "image/png",
 				ImageType.GIF => "image/gif",
 				ImageType.TIFF => "image/tiff",
 				_ => "image/jpeg"
 			}, EmbedId);
-			ImagePart.FeedData(Stream);
+			ImagePart.FeedData(stream);
 		}
 
 		/// <summary>
 		/// Create Picture Object with provided settings
 		/// </summary>
-		public Picture(string FilePath, Slide Slide, PictureSetting PictureSetting)
+		public Picture(string filePath, Slide slide, PictureSetting pictureSetting)
 		{
-			currentSlide = Slide;
+			currentSlide = slide;
 			string EmbedId = currentSlide.GetNextSlideRelationId();
-			pictureSetting = PictureSetting;
+			this.pictureSetting = pictureSetting;
 			openXMLPicture = new();
 			CreatePicture(EmbedId);
-			ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(PictureSetting.imageType switch
+			ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(pictureSetting.imageType switch
 			{
 				ImageType.PNG => "image/png",
 				ImageType.GIF => "image/gif",
 				ImageType.TIFF => "image/tiff",
 				_ => "image/jpeg"
 			}, EmbedId);
-			ImagePart.FeedData(new FileStream(FilePath, FileMode.Open, FileAccess.Read));
+			ImagePart.FeedData(new FileStream(filePath, FileMode.Open, FileAccess.Read));
 		}
 
 
 		/// <summary>
-		/// </summary>
-		/// <returns>
 		/// X,Y
-		/// </returns>
+		/// </summary>
 		public (uint, uint) GetPosition()
 		{
 			return (pictureSetting.x, pictureSetting.y);
 		}
 
 		/// <summary>
-		/// </summary>
-		/// <returns>
 		/// Width,Height
-		/// </returns>
+		/// </summary>
 		public (uint, uint) GetSize()
 		{
 			return (pictureSetting.width, pictureSetting.height);
@@ -82,10 +78,6 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Update Picture Position
 		/// </summary>
-		/// <param name="X">
-		/// </param>
-		/// <param name="Y">
-		/// </param>
 		public void UpdatePosition(uint X, uint Y)
 		{
 			pictureSetting.x = X;
@@ -103,10 +95,6 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Update Picture Size
 		/// </summary>
-		/// <param name="Width">
-		/// </param>
-		/// <param name="Height">
-		/// </param>
 		public void UpdateSize(uint Width, uint Height)
 		{
 			pictureSetting.width = Width;

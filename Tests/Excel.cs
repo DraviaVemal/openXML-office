@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using OpenXMLOffice.Global_2013;
 using OpenXMLOffice.Excel_2013;
 
 namespace OpenXMLOffice.Tests
@@ -132,6 +133,34 @@ namespace OpenXMLOffice.Tests
 			}, new RowProperties()
 			{
 				height = 30
+			});
+			Assert.IsTrue(true);
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		[TestMethod]
+		public void AddPicture()
+		{
+			Worksheet worksheet = spreadsheet.AddSheet("Data4");
+			Assert.IsNotNull(worksheet);
+			worksheet.SetRow("A3", new DataCell[1]{
+				new(){
+					cellValue = "Re Update",
+					dataType = CellDataType.STRING
+				}
+			}, new RowProperties()
+			{
+				height = 30
+			});
+			worksheet.AddPicture(1, 1, "./TestFiles/tom_and_jerry.jpg", new()
+			{
+				imageType = ImageType.JPEG,
+				height = 100,
+				width = 100,
+				x = 100,
+				y = 100
 			});
 			Assert.IsTrue(true);
 		}

@@ -40,14 +40,14 @@ namespace OpenXMLOffice.Global_2013
 	{
 
 		/// <summary>
-		/// The height of the picture in EMUs (English Metric Units).
-		/// </summary>
-		public uint height = 6858000;
-
-		/// <summary>
 		/// The type of image.
 		/// </summary>
 		public ImageType imageType = ImageType.JPEG;
+
+		/// <summary>
+		/// The height of the picture in EMUs (English Metric Units).
+		/// </summary>
+		public uint height = 6858000;
 
 		/// <summary>
 		/// The width of the picture in EMUs (English Metric Units).
