@@ -140,12 +140,32 @@ namespace OpenXMLOffice.Tests
 			//11
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
 			{
+				plotAreaOptions = new()
+				{
+					manualLayout = new()
+					{
+						x = 0.2F,
+						y = 0.1F,
+						width = 0.5F,
+						height = 0.5F
+					}
+				},
 				lineChartTypes = G.LineChartTypes.STACKED
 			});
 			//12
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
 			{
-				lineChartTypes = G.LineChartTypes.PERCENT_STACKED
+				lineChartTypes = G.LineChartTypes.PERCENT_STACKED,
+				chartLegendOptions = new()
+				{
+					manualLayout = new()
+					{
+						x = 0.5F,
+						y = 0.9F,
+						width = 0.5F,
+						height = 0.1F
+					}
+				}
 			});
 			//13
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
@@ -487,10 +507,6 @@ namespace OpenXMLOffice.Tests
 			powerPoint1.Save();
 			File.Delete("../try.pptx");
 		}
-
-
-
-
 
 		private static DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
 		{

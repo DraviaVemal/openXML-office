@@ -42,7 +42,7 @@ namespace OpenXMLOffice.Global_2013
 				}
 			}
 			C.PlotArea plotArea = new();
-			plotArea.Append(new C.Layout());
+			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ?
 				CreateChart<C.BubbleChart>(CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting)) :
 				CreateChart<C.ScatterChart>(CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting)));

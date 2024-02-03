@@ -150,6 +150,42 @@ public class ChartBase : CommonProperties
 	}
 
 	/// <summary>
+	/// Create Chart Shape Properties for the chart
+	/// </summary>
+	protected static C.Layout CreateLayout(LayoutModel? layoutModel = null)
+	{
+		if (layoutModel == null)
+		{
+			return new();
+		}
+		double x = layoutModel.x;
+		double y = layoutModel.y;
+		double width = layoutModel.width;
+		double height = layoutModel.height;
+		if (x < 0 || x > 1 || width < 0 || width > 1 || x + width < 0 || x + width > 1)
+		{
+			throw new ArgumentException("Layout value is not within acceptable range. X and Width values should be between 0 and 1, and their sum should be between 0 and 1.");
+		}
+
+		if (y < 0 || y > 1 || height < 0 || height > 1 || y + height < 0 || y + height > 1)
+		{
+			throw new ArgumentException("Layout value is not within acceptable range. Y and Height values should be between 0 and 1, and their sum should be between 0 and 1.");
+		}
+
+		return new(
+			new C.ManualLayout(
+				new C.LayoutTarget { Val = C.LayoutTargetValues.Inner },
+				new C.LeftMode { Val = C.LayoutModeValues.Edge },
+				new C.TopMode { Val = C.LayoutModeValues.Edge },
+				new C.Left { Val = x },
+				new C.Top { Val = y },
+				new C.Width { Val = width },
+				new C.Height { Val = height }
+			));
+	}
+
+
+	/// <summary>
 	/// Create Category Axis Data for the chart
 	/// </summary>
 	/// <param name="formula">
@@ -630,6 +666,10 @@ public class ChartBase : CommonProperties
 	private C.Legend CreateChartLegend(ChartLegendOptions chartLegendOptions)
 	{
 		C.Legend legend = new();
+		if (chartLegendOptions.manualLayout != null)
+		{
+			legend.Append(CreateLayout(chartLegendOptions.manualLayout));
+		}
 		legend.Append(new C.LegendPosition()
 		{
 			Val = chartLegendOptions.legendPosition switch

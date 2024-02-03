@@ -440,6 +440,10 @@ namespace OpenXMLOffice.Global_2013
 			/// </summary>
 			TOP_RIGHT
 		}
+		/// <summary>
+		/// Manual Position legend
+		/// </summary>
+		public LayoutModel? manualLayout;
 	}
 
 	/// <summary>
@@ -473,10 +477,25 @@ namespace OpenXMLOffice.Global_2013
 	}
 
 	/// <summary>
+	///
+	/// </summary>
+	public class PlotAreaModel
+	{
+		/// <summary>
+		/// Manual Position Char Ghaph Area
+		/// </summary>
+		public LayoutModel? manualLayout;
+	}
+
+	/// <summary>
 	/// Represents the settings for a chart.
 	/// </summary>
 	public class ChartSetting
 	{
+		/// <summary>
+		///
+		/// </summary>
+		public PlotAreaModel? plotAreaOptions;
 
 		/// <summary>
 		/// Chart Data Setting
@@ -561,6 +580,31 @@ namespace OpenXMLOffice.Global_2013
 		/// Invert the axis scale order
 		/// </summary>
 		internal bool invertOrder;
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public class LayoutModel
+	{
+		/// <summary>
+		/// Considered from left to right
+		/// Value is between 0 to 1
+		/// </summary>
+		public float x = 0;
+		/// <summary>
+		/// Considered from top to bottom
+		/// Value is between 0 to 1
+		/// </summary>
+		public float y = 0;
+		/// <summary>
+		/// Value is between 0 to 1
+		/// </summary>
+		public float width = 1;
+		/// <summary>
+		/// Value is between 0 to 1
+		/// </summary>
+		public float height = 1;
 	}
 
 	/// <summary>

@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Global_2013
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
 		{
 			C.PlotArea plotArea = new();
-			plotArea.Append(new C.Layout());
+			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(CreateLineChart(CreateDataSeries(dataCols, lineChartSetting.chartDataSetting)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{

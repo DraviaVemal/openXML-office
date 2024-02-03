@@ -192,7 +192,7 @@ namespace OpenXMLOffice.Global_2013
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
 		{
 			C.PlotArea plotArea = new();
-			plotArea.Append(new C.Layout());
+			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(CreateBarChart(CreateDataSeries(dataCols, barChartSetting.chartDataSetting)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{

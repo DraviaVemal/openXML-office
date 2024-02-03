@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Global_2013
 				throw new ArgumentException("Combo Chart Series Settings is empty");
 			}
 			C.PlotArea plotArea = new();
-			plotArea.Append(new C.Layout());
+			plotArea.Append(CreateLayout(comboChartSetting.plotAreaOptions?.manualLayout));
 			uint chartPosition = 0;
 			comboChartSetting.ComboChartsSettingList.ForEach(chartSetting =>
 			{

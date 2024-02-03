@@ -123,7 +123,7 @@ namespace OpenXMLOffice.Global_2013
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
 		{
 			C.PlotArea plotArea = new();
-			plotArea.Append(new C.Layout());
+			plotArea.Append(CreateLayout(areaChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(CreateAreaChart(CreateDataSeries(dataCols, areaChartSetting.chartDataSetting)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{

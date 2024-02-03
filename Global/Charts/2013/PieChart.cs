@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Global_2013
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
 		{
 			C.PlotArea plotArea = new();
-			plotArea.Append(new C.Layout());
+			plotArea.Append(CreateLayout(pieChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT ?
 				CreateChart<C.DoughnutChart>(CreateDataSeries(dataCols, pieChartSetting.chartDataSetting)) :
 				CreateChart<C.PieChart>(CreateDataSeries(dataCols, pieChartSetting.chartDataSetting)));
