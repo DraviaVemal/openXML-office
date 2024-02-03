@@ -196,11 +196,11 @@ namespace OpenXMLOffice.Presentation_2013
 			{
 				tableCellProperties.Append(new A.LeftBorderLineProperties(
 					CreateSolidFill(new() { hexColor = cell.borderSettings.leftBorder.borderColor }),
-					new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.leftBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.leftBorder.dashStyle) }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.leftBorder.width),
-					CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.leftBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.leftBorder.borderStyle)
 				});
 			}
 			else
@@ -211,11 +211,11 @@ namespace OpenXMLOffice.Presentation_2013
 			{
 				tableCellProperties.Append(new A.RightBorderLineProperties(
 					  CreateSolidFill(new() { hexColor = cell.borderSettings.rightBorder.borderColor }),
-					new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.rightBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.rightBorder.dashStyle) }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.rightBorder.width),
-					CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.rightBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.rightBorder.borderStyle)
 				});
 			}
 			else
@@ -226,11 +226,11 @@ namespace OpenXMLOffice.Presentation_2013
 			{
 				tableCellProperties.Append(new A.TopBorderLineProperties(
 					 CreateSolidFill(new() { hexColor = cell.borderSettings.topBorder.borderColor }),
-					new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.topBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topBorder.dashStyle) }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.topBorder.width),
-					CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.topBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.topBorder.borderStyle)
 				});
 			}
 			else
@@ -241,11 +241,11 @@ namespace OpenXMLOffice.Presentation_2013
 			{
 				tableCellProperties.Append(new A.BottomBorderLineProperties(
 					CreateSolidFill(new() { hexColor = cell.borderSettings.bottomBorder.borderColor }),
-					new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.bottomBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomBorder.dashStyle) }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.bottomBorder.width),
-					CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.bottomBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.bottomBorder.borderStyle)
 				});
 			}
 			else
@@ -256,11 +256,11 @@ namespace OpenXMLOffice.Presentation_2013
 			{
 				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
 					CreateSolidFill(new() { hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor }),
-					new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.topLeftToBottomRightBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topLeftToBottomRightBorder.dashStyle) }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.topLeftToBottomRightBorder.width),
-					CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.topLeftToBottomRightBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.topLeftToBottomRightBorder.borderStyle)
 				});
 			}
 			else
@@ -271,11 +271,11 @@ namespace OpenXMLOffice.Presentation_2013
 			{
 				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
 					CreateSolidFill(new() { hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor }),
-					new A.PresetDash() { Val = TableBorderSetting.GetDashStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.dashStyle) }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.bottomLeftToTopRightBorder.width),
-					CompoundLineType = TableBorderSetting.GetBorderStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.borderStyle)
 				});
 			}
 			else

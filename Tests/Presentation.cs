@@ -146,7 +146,24 @@ namespace OpenXMLOffice.Tests
 				columnChartTypes = G.ColumnChartTypes.PERCENT_STACKED
 			});
 			//10
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting());
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			{
+				lineChartSeriesSettings = new(){
+					new(){
+						lineChartLineFormat = new(){
+							dashType = G.DrawingPresetLineDashValues.DASH_DOT,
+							lineColor = "FF0000",
+							beginArrowValues= G.DrawingBeginArrowValues.ARROW,
+							endArrowValues= G.DrawingEndArrowValues.TRIANGLE,
+							lineStartWidth = G.LineWidthValues.MEDIUM,
+							lineEndWidth = G.LineWidthValues.LARGE,
+							outlineCapTypeValues = G.OutlineCapTypeValues.ROUND,
+							outlineLineTypeValues = G.OutlineLineTypeValues.DOUBLE,
+							width = 5
+						}
+					}
+				}
+			});
 			//11
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
 			{

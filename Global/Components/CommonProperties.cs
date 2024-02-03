@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
@@ -10,6 +11,125 @@ namespace OpenXMLOffice.Global_2013
 	/// </summary>
 	public class CommonProperties
 	{
+		/// <summary>
+		///
+		/// </summary>
+		public static A.CompoundLineValues GetBorderStyleValue(BorderStyleValues borderStyle)
+		{
+			return borderStyle switch
+			{
+				BorderStyleValues.DOUBLE => A.CompoundLineValues.Double,
+				BorderStyleValues.TRIPLE => A.CompoundLineValues.Triple,
+				BorderStyleValues.THICK_THIN => A.CompoundLineValues.ThickThin,
+				BorderStyleValues.THIN_THICK => A.CompoundLineValues.ThinThick,
+				_ => A.CompoundLineValues.Single,
+			};
+		}
+		/// <summary>
+		///
+		/// </summary>
+		public static A.PresetLineDashValues GetDashStyleValue(DrawingPresetLineDashValues dashStyle)
+		{
+			return dashStyle switch
+			{
+				DrawingPresetLineDashValues.DASH => A.PresetLineDashValues.Dash,
+				DrawingPresetLineDashValues.DASH_DOT => A.PresetLineDashValues.DashDot,
+				DrawingPresetLineDashValues.DOT => A.PresetLineDashValues.Dot,
+				DrawingPresetLineDashValues.LARGE_DASH => A.PresetLineDashValues.LargeDash,
+				DrawingPresetLineDashValues.LARGE_DASH_DOT => A.PresetLineDashValues.LargeDashDot,
+				DrawingPresetLineDashValues.LARGE_DASH_DOT_DOT => A.PresetLineDashValues.LargeDashDotDot,
+				DrawingPresetLineDashValues.SYSTEM_DASH => A.PresetLineDashValues.SystemDash,
+				DrawingPresetLineDashValues.SYSTEM_DASH_DOT => A.PresetLineDashValues.SystemDashDot,
+				DrawingPresetLineDashValues.SYSTEM_DASH_DOT_DOT => A.PresetLineDashValues.SystemDashDotDot,
+				DrawingPresetLineDashValues.SYSTEM_DOT => A.PresetLineDashValues.SystemDot,
+				_ => A.PresetLineDashValues.Solid,
+			};
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		public static A.LineEndValues GetEndArrowValue(DrawingEndArrowValues endArrowValues)
+		{
+			return endArrowValues switch
+			{
+				DrawingEndArrowValues.ARROW => A.LineEndValues.Arrow,
+				DrawingEndArrowValues.DIAMOND => A.LineEndValues.Diamond,
+				DrawingEndArrowValues.OVAL => A.LineEndValues.Oval,
+				DrawingEndArrowValues.STEALTH => A.LineEndValues.Stealth,
+				DrawingEndArrowValues.TRIANGLE => A.LineEndValues.Triangle,
+				_ => A.LineEndValues.None,
+			};
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		public static A.LineEndLengthValues GetLineEndLengthValue(LineWidthValues lineEndWidth)
+		{
+			return lineEndWidth switch
+			{
+				LineWidthValues.LARGE => A.LineEndLengthValues.Large,
+				LineWidthValues.MEDIUM => A.LineEndLengthValues.Medium,
+				_ => A.LineEndLengthValues.Small
+			};
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		public static A.LineEndWidthValues GetLineEndWidthValue(LineWidthValues lineEndWidth)
+		{
+			return lineEndWidth switch
+			{
+				LineWidthValues.LARGE => A.LineEndWidthValues.Large,
+				LineWidthValues.MEDIUM => A.LineEndWidthValues.Medium,
+				_ => A.LineEndWidthValues.Small
+			};
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		public static A.LineEndLengthValues GetLineStartLengthValue(LineWidthValues lineStartWidth)
+		{
+			return lineStartWidth switch
+			{
+				LineWidthValues.LARGE => A.LineEndLengthValues.Large,
+				LineWidthValues.MEDIUM => A.LineEndLengthValues.Medium,
+				_ => A.LineEndLengthValues.Small
+			};
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		public static A.LineEndValues GetBeginArrowValue(DrawingBeginArrowValues beginArrowValues)
+		{
+			return beginArrowValues switch
+			{
+				DrawingBeginArrowValues.ARROW => A.LineEndValues.Arrow,
+				DrawingBeginArrowValues.DIAMOND => A.LineEndValues.Diamond,
+				DrawingBeginArrowValues.OVAL => A.LineEndValues.Oval,
+				DrawingBeginArrowValues.STEALTH => A.LineEndValues.Stealth,
+				DrawingBeginArrowValues.TRIANGLE => A.LineEndValues.Triangle,
+				_ => A.LineEndValues.None,
+			};
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		public static A.LineEndWidthValues GetLineStartWidthValue(LineWidthValues lineStartWidth)
+		{
+			return lineStartWidth switch
+			{
+				LineWidthValues.LARGE => A.LineEndWidthValues.Large,
+				LineWidthValues.MEDIUM => A.LineEndWidthValues.Medium,
+				_ => A.LineEndWidthValues.Small
+			};
+		}
+
 		internal static A.TextAnchoringTypeValues GetAnchorValues(TextAnchoringValues textAnchoring)
 		{
 			return textAnchoring switch
@@ -157,12 +277,21 @@ namespace OpenXMLOffice.Global_2013
 			}
 			if (solidFillModel.hexColor != null)
 			{
-				return new A.SolidFill() { RgbColorModelHex = new A.RgbColorModelHex() { Val = solidFillModel.hexColor } };
+				A.RgbColorModelHex rgbColorModelHex = new() { Val = solidFillModel.hexColor };
+				if (solidFillModel.transparency != null)
+				{
+					rgbColorModelHex.Append(new A.Alpha() { Val = 100000 - (solidFillModel.transparency * 1000) });
+				}
+				return new A.SolidFill() { RgbColorModelHex = rgbColorModelHex };
 			}
 			else
 			{
 				A.SchemeColor schemeColor = new()
 				{ Val = new A.SchemeColorValues(GetSchemeColorValuesText(solidFillModel.schemeColorModel!.themeColorValues)) };
+				if (solidFillModel.transparency != null)
+				{
+					schemeColor.Append(new A.Alpha() { Val = 100000 - (solidFillModel.transparency * 1000) });
+				}
 				if (solidFillModel.schemeColorModel.tint != null)
 				{
 					schemeColor.Append(new A.Tint() { Val = solidFillModel.schemeColorModel.tint });
@@ -241,15 +370,6 @@ namespace OpenXMLOffice.Global_2013
 		protected static A.Outline CreateOutline(OutlineModel outlineModel)
 		{
 			A.Outline outline = new();
-			if (outlineModel.solidFill != null)
-			{
-				outline.Append(CreateSolidFill(outlineModel.solidFill));
-				outline.Append(new A.Round());
-			}
-			else
-			{
-				outline.Append(new A.NoFill());
-			}
 			if (outlineModel.width != null)
 			{
 				outline.Width = outlineModel.width;
@@ -266,6 +386,33 @@ namespace OpenXMLOffice.Global_2013
 			{
 				outline.Alignment = GetLineAlignmentValues((OutlineAlignmentValues)outlineModel.outlineAlignmentValues);
 			}
+			if (outlineModel.solidFill != null)
+			{
+				outline.Append(CreateSolidFill(outlineModel.solidFill));
+				outline.Append(new A.Round());
+			}
+			else
+			{
+				outline.Append(new A.NoFill());
+			}
+			if (outlineModel.dashType != null)
+			{
+				outline.Append(new A.PresetDash { Val = GetDashStyleValue((DrawingPresetLineDashValues)outlineModel.dashType) });
+			}
+			A.HeadEnd headEnd = new() { Type = GetBeginArrowValue(outlineModel.beginArrowValues) };
+			if (outlineModel.lineStartWidth != null)
+			{
+				headEnd.Width = GetLineStartWidthValue((LineWidthValues)outlineModel.lineStartWidth);
+				headEnd.Length = GetLineStartLengthValue((LineWidthValues)outlineModel.lineStartWidth);
+			}
+			outline.Append(headEnd);
+			A.TailEnd tailEnd = new() { Type = GetEndArrowValue(outlineModel.endArrowValues) };
+			if (outlineModel.lineEndWidth != null)
+			{
+				tailEnd.Width = GetLineEndWidthValue((LineWidthValues)outlineModel.lineEndWidth);
+				tailEnd.Length = GetLineEndLengthValue((LineWidthValues)outlineModel.lineEndWidth);
+			}
+			outline.Append(tailEnd);
 			return outline;
 		}
 

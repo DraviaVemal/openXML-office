@@ -20,5 +20,9 @@ namespace OpenXMLOffice.Global_2013
 		/// Default Slide Width in EMU
 		/// </summary>
 		public const int defaultSlideWidthEmu = 9144000;
+		/// <summary>
+		///
+		/// </summary>
+		public const int defaultPointToEmu = 12700;
 	}
 }

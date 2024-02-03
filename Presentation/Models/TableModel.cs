@@ -1,91 +1,15 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using A = DocumentFormat.OpenXml.Drawing;
 using OpenXMLOffice.Global_2013;
 
 namespace OpenXMLOffice.Presentation_2013
 {
+
 	/// <summary>
 	///
 	/// </summary>
 	public class TableBorderSetting
 	{
-		/// <summary>
-		///
-		/// </summary>
-		public enum BorderStyleValues
-		{
-			/// <summary>
-			///
-			/// </summary>
-			SINGEL,
-			/// <summary>
-			///
-			/// </summary>
-			DOUBLE,
-			/// <summary>
-			///
-			/// </summary>
-			TRIPLE,
-			/// <summary>
-			///
-			/// </summary>
-			THICK_THIN,
-			/// <summary>
-			///
-			/// </summary>
-			THIN_THICK,
-		}
-		/// <summary>
-		///
-		/// </summary>
-		public enum DrawingPresetLineDashValues
-		{
-			/// <summary>
-			///
-			/// </summary>
-			DASH,
-			/// <summary>
-			///
-			/// </summary>
-			DASH_DOT,
-			/// <summary>
-			///
-			/// </summary>
-			DOT,
-			/// <summary>
-			///
-			/// </summary>
-			LARGE_DASH,
-			/// <summary>
-			///
-			/// </summary>
-			LARGE_DASH_DOT,
-			/// <summary>
-			///
-			/// </summary>
-			LARGE_DASH_DOT_DOT,
-			/// <summary>
-			///
-			/// </summary>
-			SOLID,
-			/// <summary>
-			///
-			/// </summary>
-			SYSTEM_DASH,
-			/// <summary>
-			///
-			/// </summary>
-			SYSTEM_DASH_DOT,
-			/// <summary>
-			///
-			/// </summary>
-			SYSTEM_DASH_DOT_DOT,
-			/// <summary>
-			///
-			/// </summary>
-			SYSTEM_DOT,
-		}
 		/// <summary>
 		///
 		/// </summary>
@@ -106,36 +30,6 @@ namespace OpenXMLOffice.Presentation_2013
 		///
 		/// </summary>
 		public DrawingPresetLineDashValues dashStyle = DrawingPresetLineDashValues.SOLID;
-
-		internal static A.CompoundLineValues GetBorderStyleValue(BorderStyleValues borderStyle)
-		{
-			return borderStyle switch
-			{
-				BorderStyleValues.DOUBLE => A.CompoundLineValues.Double,
-				BorderStyleValues.TRIPLE => A.CompoundLineValues.Triple,
-				BorderStyleValues.THICK_THIN => A.CompoundLineValues.ThickThin,
-				BorderStyleValues.THIN_THICK => A.CompoundLineValues.ThinThick,
-				_ => A.CompoundLineValues.Single,
-			};
-		}
-
-		internal static A.PresetLineDashValues GetDashStyleValue(DrawingPresetLineDashValues dashStyle)
-		{
-			return dashStyle switch
-			{
-				DrawingPresetLineDashValues.DASH => A.PresetLineDashValues.Dash,
-				DrawingPresetLineDashValues.DASH_DOT => A.PresetLineDashValues.DashDot,
-				DrawingPresetLineDashValues.DOT => A.PresetLineDashValues.Dot,
-				DrawingPresetLineDashValues.LARGE_DASH => A.PresetLineDashValues.LargeDash,
-				DrawingPresetLineDashValues.LARGE_DASH_DOT => A.PresetLineDashValues.LargeDashDot,
-				DrawingPresetLineDashValues.LARGE_DASH_DOT_DOT => A.PresetLineDashValues.LargeDashDotDot,
-				DrawingPresetLineDashValues.SYSTEM_DASH => A.PresetLineDashValues.SystemDash,
-				DrawingPresetLineDashValues.SYSTEM_DASH_DOT => A.PresetLineDashValues.SystemDashDot,
-				DrawingPresetLineDashValues.SYSTEM_DASH_DOT_DOT => A.PresetLineDashValues.SystemDashDotDot,
-				DrawingPresetLineDashValues.SYSTEM_DOT => A.PresetLineDashValues.SystemDot,
-				_ => A.PresetLineDashValues.Solid,
-			};
-		}
 	}
 
 	/// <summary>

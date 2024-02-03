@@ -89,10 +89,76 @@ namespace OpenXMLOffice.Global_2013
 	}
 
 	/// <summary>
+	///
+	/// </summary>
+	public class LineChartLineFormat
+	{
+		/// <summary>
+		///
+		/// </summary>
+		public string? lineColor = null;
+		/// <summary>
+		/// /
+		/// </summary>
+		public int? transparency = null;
+		/// <summary>
+		/// /
+		/// </summary>
+		public int? width = null;
+		/// <summary>
+		///
+		/// </summary>
+		public OutlineCapTypeValues? outlineCapTypeValues = OutlineCapTypeValues.FLAT;
+		/// <summary>
+		///
+		/// </summary>
+		public OutlineLineTypeValues? outlineLineTypeValues = OutlineLineTypeValues.SINGEL;
+		/// <summary>
+		///
+		/// </summary>
+		public DrawingBeginArrowValues? beginArrowValues = DrawingBeginArrowValues.NONE;
+		/// <summary>
+		///
+		/// </summary>
+		public DrawingEndArrowValues? endArrowValues = DrawingEndArrowValues.NONE;
+		/// <summary>
+		///
+		/// </summary>
+		public DrawingPresetLineDashValues? dashType;
+		/// <summary>
+		///
+		/// </summary>
+		public LineWidthValues? lineStartWidth;
+		/// <summary>
+		///
+		/// </summary>
+		public LineWidthValues? lineEndWidth;
+	}
+	/// <summary>
+	///
+	/// </summary>
+	public class LineChartDataPointSetting : ChartDataPointSettings
+	{
+		// /// <summary>
+		// /// Format applied at data point level
+		// /// TODO : Data Point Implementation
+		// /// </summary>
+		// public LineChartLineFormat? lineChartLineFormat = null;
+	}
+
+	/// <summary>
 	/// Represents the series settings for a line chart.
 	/// </summary>
 	public class LineChartSeriesSetting : ChartSeriesSetting
 	{
+		/// <summary>
+		/// Format Applied at series level
+		/// </summary>
+		public LineChartLineFormat? lineChartLineFormat = null;
+		/// <summary>
+		///
+		/// </summary>
+		public List<LineChartDataPointSetting?> lineChartDataPointSettings = new();
 
 		/// <summary>
 		/// Option to customize specific data series, which will override the chart level setting.

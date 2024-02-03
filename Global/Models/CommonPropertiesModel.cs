@@ -1,7 +1,168 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using DocumentFormat.OpenXml;
+
 namespace OpenXMLOffice.Global_2013
 {
+	/// <summary>
+	///
+	/// </summary>
+	public enum BorderStyleValues
+	{
+		/// <summary>
+		///
+		/// </summary>
+		SINGEL,
+		/// <summary>
+		///
+		/// </summary>
+		DOUBLE,
+		/// <summary>
+		///
+		/// </summary>
+		TRIPLE,
+		/// <summary>
+		///
+		/// </summary>
+		THICK_THIN,
+		/// <summary>
+		///
+		/// </summary>
+		THIN_THICK,
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public enum DrawingBeginArrowValues
+	{
+		/// <summary>
+		///
+		/// </summary>
+		NONE,
+		/// <summary>
+		///
+		/// </summary>
+		ARROW,
+		/// <summary>
+		///
+		/// </summary>
+		DIAMOND,
+		/// <summary>
+		///
+		/// </summary>
+		OVAL,
+		/// <summary>
+		///
+		/// </summary>
+		STEALTH,
+		/// <summary>
+		///
+		/// </summary>
+		TRIANGLE
+	}
+	/// <summary>
+	///
+	/// </summary>
+	public enum DrawingEndArrowValues
+	{
+		/// <summary>
+		///
+		/// </summary>
+		NONE,
+		/// <summary>
+		///
+		/// </summary>
+		ARROW,
+		/// <summary>
+		///
+		/// </summary>
+		DIAMOND,
+		/// <summary>
+		///
+		/// </summary>
+		OVAL,
+		/// <summary>
+		///
+		/// </summary>
+		STEALTH,
+		/// <summary>
+		///
+		/// </summary>
+		TRIANGLE
+	}
+
+
+	/// <summary>
+	///
+	/// </summary>
+	public enum DrawingPresetLineDashValues
+	{
+		/// <summary>
+		///
+		/// </summary>
+		DASH,
+		/// <summary>
+		///
+		/// </summary>
+		DASH_DOT,
+		/// <summary>
+		///
+		/// </summary>
+		DOT,
+		/// <summary>
+		///
+		/// </summary>
+		LARGE_DASH,
+		/// <summary>
+		///
+		/// </summary>
+		LARGE_DASH_DOT,
+		/// <summary>
+		///
+		/// </summary>
+		LARGE_DASH_DOT_DOT,
+		/// <summary>
+		///
+		/// </summary>
+		SOLID,
+		/// <summary>
+		///
+		/// </summary>
+		SYSTEM_DASH,
+		/// <summary>
+		///
+		/// </summary>
+		SYSTEM_DASH_DOT,
+		/// <summary>
+		///
+		/// </summary>
+		SYSTEM_DASH_DOT_DOT,
+		/// <summary>
+		///
+		/// </summary>
+		SYSTEM_DOT,
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public enum LineWidthValues
+	{
+		/// <summary>
+		///
+		/// </summary>
+		SMALL,
+		/// <summary>
+		///
+		/// </summary>
+		MEDIUM,
+		/// <summary>
+		///
+		/// </summary>
+		LARGE
+	}
+
 	/// <summary>
 	///
 	/// </summary>
@@ -236,6 +397,10 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
+		public SolidFillModel? solidFill = null;
+		/// <summary>
+		///
+		/// </summary>
 		public OutlineCapTypeValues? outlineCapTypeValues = OutlineCapTypeValues.FLAT;
 		/// <summary>
 		///
@@ -248,7 +413,23 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel? solidFill = null;
+		public DrawingPresetLineDashValues? dashType;
+		/// <summary>
+		///
+		/// </summary>
+		public DrawingBeginArrowValues beginArrowValues = DrawingBeginArrowValues.NONE;
+		/// <summary>
+		///
+		/// </summary>
+		public DrawingEndArrowValues endArrowValues = DrawingEndArrowValues.NONE;
+		/// <summary>
+		///
+		/// </summary>
+		public LineWidthValues? lineEndWidth;
+		/// <summary>
+		///
+		/// </summary>
+		public LineWidthValues? lineStartWidth;
 	}
 	/// <summary>
 	///
@@ -306,6 +487,10 @@ namespace OpenXMLOffice.Global_2013
 		///
 		/// </summary>
 		public SchemeColorModel? schemeColorModel = null;
+		/// <summary>
+		///
+		/// </summary>
+		public int? transparency;
 	}
 
 	/// <summary>

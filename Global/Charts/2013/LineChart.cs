@@ -123,15 +123,16 @@ namespace OpenXMLOffice.Global_2013
 			}
 			C.DataLabels? dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ?
 				CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+			LineChartLineFormat? lineChartLineFormat = lineChartSetting.lineChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.lineChartLineFormat;
 			SolidFillModel GetBorderColor()
 			{
 				SolidFillModel solidFillModel = new();
 				string? hexColor = lineChartSetting.lineChartSeriesSettings?
 							.Select(item => item?.borderColor)
 							.ToList().ElementAtOrDefault(seriesIndex);
-				if (hexColor != null)
+				if ((lineChartLineFormat?.lineColor ?? hexColor) != null)
 				{
-					solidFillModel.hexColor = hexColor;
+					solidFillModel.hexColor = lineChartLineFormat?.lineColor ?? hexColor;
 					return solidFillModel;
 				}
 				else
@@ -143,17 +144,47 @@ namespace OpenXMLOffice.Global_2013
 				}
 				return solidFillModel;
 			}
+			OutlineModel outlineModel = new()
+			{
+				solidFill = GetBorderColor(),
+			};
+			if (lineChartLineFormat != null)
+			{
+				outlineModel.beginArrowValues = lineChartLineFormat.beginArrowValues ?? DrawingBeginArrowValues.NONE;
+				outlineModel.endArrowValues = lineChartLineFormat.endArrowValues ?? DrawingEndArrowValues.NONE;
+				if (lineChartLineFormat.width != null)
+				{
+					outlineModel.width = (int?)ConverterUtils.PointToEmu((int)lineChartLineFormat.width);
+				}
+				if (lineChartLineFormat.outlineCapTypeValues != null)
+				{
+					outlineModel.outlineCapTypeValues = lineChartLineFormat.outlineCapTypeValues;
+				}
+				if (lineChartLineFormat.outlineLineTypeValues != null)
+				{
+					outlineModel.outlineLineTypeValues = lineChartLineFormat.outlineLineTypeValues;
+				}
+				if (outlineModel.dashType != null)
+				{
+					outlineModel.dashType = lineChartLineFormat.dashType;
+				}
+				if (outlineModel.lineStartWidth != null)
+				{
+					outlineModel.lineStartWidth = lineChartLineFormat.lineStartWidth;
+				}
+				if (outlineModel.lineEndWidth != null)
+				{
+					outlineModel.lineEndWidth = lineChartLineFormat.lineEndWidth;
+				}
+			}
+			ShapePropertiesModel shapePropertiesModel = new()
+			{
+				outline = outlineModel,
+			};
 			C.LineChartSeries series = new(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
-			ShapePropertiesModel shapePropertiesModel = new()
-			{
-				outline = new()
-				{
-					solidFill = GetBorderColor()
-				}
-			};
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			series.Append(CreateMarker(marketModel));
 			if (dataLabels != null)
