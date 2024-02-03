@@ -63,6 +63,7 @@ namespace OpenXMLOffice.Global_2013
 				};
 			}
 		}
+
 		/// <summary>
 		///
 		/// </summary>

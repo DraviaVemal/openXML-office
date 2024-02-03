@@ -11,13 +11,13 @@ namespace OpenXMLOffice.Presentation_2013
 	internal class PresentationCore
 	{
 
-		protected readonly PresentationDocument presentationDocument;
+		internal readonly PresentationDocument presentationDocument;
 
-		protected readonly PresentationInfo presentationInfo = new();
+		internal readonly PresentationInfo presentationInfo = new();
 
-		protected readonly PresentationProperties presentationProperties;
+		internal readonly PresentationProperties presentationProperties;
 
-		protected ExtendedFilePropertiesPart? extendedFilePropertiesPart;
+		internal ExtendedFilePropertiesPart? extendedFilePropertiesPart;
 
 		//#### Presentation Constants ####//
 		private readonly uint slideIdStart = 255;
@@ -53,14 +53,14 @@ namespace OpenXMLOffice.Presentation_2013
 			}
 		}
 
-		public PresentationCore(Stream stream, PresentationProperties? presentationProperties = null)
+		internal PresentationCore(Stream stream, PresentationProperties? presentationProperties = null)
 		{
 			this.presentationProperties = presentationProperties ?? new();
 			presentationDocument = PresentationDocument.Create(stream, PresentationDocumentType.Presentation, true);
 			InitialisePresentation(this.presentationProperties);
 		}
 
-		public PresentationCore(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
+		internal PresentationCore(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
 		{
 			this.presentationProperties = presentationProperties ?? new();
 			presentationDocument = PresentationDocument.Open(stream, isEditable, new OpenSettings()
@@ -71,32 +71,32 @@ namespace OpenXMLOffice.Presentation_2013
 		}
 
 
-		protected string GetNextPresentationRelationId()
+		internal string GetNextPresentationRelationId()
 		{
 			return string.Format("rId{0}", GetPresentationPart().Parts.Count() + 1);
 		}
 
-		protected uint GetNextSlideId()
+		internal uint GetNextSlideId()
 		{
 			return (uint)(slideIdStart + GetSlideIdList().Count() + 1);
 		}
 
-		protected uint GetNextSlideMasterId()
+		internal uint GetNextSlideMasterId()
 		{
 			return (uint)(slideMasterIdStart + GetSlideMasterIdList().Count() + 1);
 		}
 
-		protected PresentationPart GetPresentationPart()
+		internal PresentationPart GetPresentationPart()
 		{
 			return presentationDocument.PresentationPart!;
 		}
 
-		protected P.SlideIdList GetSlideIdList()
+		internal P.SlideIdList GetSlideIdList()
 		{
 			return GetPresentationPart().Presentation.SlideIdList!;
 		}
 
-		protected SlideLayoutPart GetSlideLayoutPart(PresentationConstants.SlideLayoutType slideLayoutType)
+		internal SlideLayoutPart GetSlideLayoutPart(PresentationConstants.SlideLayoutType slideLayoutType)
 		{
 			// TODO: Multi Slide Master Use
 			SlideMasterPart slideMasterPart = GetPresentationPart().SlideMasterParts.FirstOrDefault()!;
@@ -104,7 +104,7 @@ namespace OpenXMLOffice.Presentation_2013
 				   .FirstOrDefault(sl => sl.SlideLayout.CommonSlideData!.Name == PresentationConstants.GetSlideLayoutType(slideLayoutType))!;
 		}
 
-		protected P.SlideMasterIdList GetSlideMasterIdList()
+		internal P.SlideMasterIdList GetSlideMasterIdList()
 		{
 			return GetPresentationPart().Presentation.SlideMasterIdList!;
 		}

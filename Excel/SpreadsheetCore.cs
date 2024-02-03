@@ -17,17 +17,17 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Maintain the master OpenXML Spreadsheet document
 		/// </summary>
-		protected readonly SpreadsheetDocument spreadsheetDocument;
+		internal readonly SpreadsheetDocument spreadsheetDocument;
 
 		/// <summary>
 		/// Maintain the Spreadsheet Properties
 		/// </summary>
-		protected readonly SpreadsheetProperties spreadsheetProperties;
+		internal readonly SpreadsheetProperties spreadsheetProperties;
 
 		/// <summary>
 		/// This public constructor method initializes a new instance of the Spreadsheet class
 		/// </summary>
-		protected SpreadsheetCore(string filePath)
+		internal SpreadsheetCore(string filePath)
 		{
 			spreadsheetProperties = new();
 			spreadsheetDocument = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook, true);
@@ -42,7 +42,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding
 		/// SpreadsheetDocument. This is also used to update as template.
 		/// </summary>
-		protected SpreadsheetCore(string filePath, SpreadsheetProperties spreadsheetProperties)
+		internal SpreadsheetCore(string filePath, SpreadsheetProperties spreadsheetProperties)
 		{
 			this.spreadsheetProperties = spreadsheetProperties;
 			spreadsheetDocument = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook, true);
@@ -54,7 +54,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// This public constructor method initializes a new instance of the Spreadsheet class
 		/// </summary>
-		protected SpreadsheetCore(string filePath, bool isEditable)
+		internal SpreadsheetCore(string filePath, bool isEditable)
 		{
 			spreadsheetProperties = new();
 			spreadsheetDocument = SpreadsheetDocument.Open(filePath, isEditable, new OpenSettings
@@ -69,7 +69,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// This public constructor method initializes a new instance of the Spreadsheet class.
 		/// </summary>
-		protected SpreadsheetCore(string filePath, bool isEditable, SpreadsheetProperties spreadsheetProperties)
+		internal SpreadsheetCore(string filePath, bool isEditable, SpreadsheetProperties spreadsheetProperties)
 		{
 			this.spreadsheetProperties = spreadsheetProperties;
 			spreadsheetDocument = SpreadsheetDocument.Open(filePath, isEditable, new OpenSettings
@@ -86,7 +86,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// allowing you to work with Excel spreadsheet It accepts a Stream object and a
 		/// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding SpreadsheetDocument.
 		/// </summary>
-		protected SpreadsheetCore(Stream stream)
+		internal SpreadsheetCore(Stream stream)
 		{
 			spreadsheetProperties = new();
 			spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
@@ -100,7 +100,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// allowing you to work with Excel spreadsheet It accepts a Stream object and a
 		/// SpreadsheetDocumentType enumeration value as parameters and creates a corresponding SpreadsheetDocument.
 		/// </summary>
-		protected SpreadsheetCore(Stream stream, SpreadsheetProperties spreadsheetProperties)
+		internal SpreadsheetCore(Stream stream, SpreadsheetProperties spreadsheetProperties)
 		{
 			this.spreadsheetProperties = spreadsheetProperties;
 			spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
@@ -114,7 +114,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// </summary>
 		/// <returns>
 		/// </returns>
-		protected string GetNextSpreadSheetRelationId()
+		internal string GetNextSpreadSheetRelationId()
 		{
 			return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + 1);
 		}
@@ -122,7 +122,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Return the Shared String Table for the Spreadsheet
 		/// </summary>
-		protected SharedStringTable GetShareString()
+		internal SharedStringTable GetShareString()
 		{
 			SharedStringTablePart? sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
 			if (sharedStringPart == null)
@@ -136,7 +136,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Return the Sheets for the Spreadsheet
 		/// </summary>
-		protected Sheets GetSheets()
+		internal Sheets GetSheets()
 		{
 			Sheets? Sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
 			if (Sheets == null)
@@ -150,7 +150,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Return Woorkbook Part for the Spreadsheet
 		/// </summary>
-		protected WorkbookPart GetWorkbookPart()
+		internal WorkbookPart GetWorkbookPart()
 		{
 			if (spreadsheetDocument.WorkbookPart == null)
 			{
@@ -162,7 +162,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Load the Shared String to the Cache (aka in memeory database lightdb)
 		/// </summary>
-		protected void LoadShareStringToCache()
+		internal void LoadShareStringToCache()
 		{
 			List<string> Records = new();
 			GetShareString().ChildElements.ToList().ForEach(rec =>
@@ -176,7 +176,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Load Exisiting Style from the Sheet
 		/// </summary>
-		protected void LoadStyle()
+		internal void LoadStyle()
 		{
 			Styles.Instance.LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
 		}
@@ -184,7 +184,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Update the cache data into spreadsheet
 		/// </summary>
-		protected void UpdateSharedString()
+		internal void UpdateSharedString()
 		{
 			ShareString.Instance.GetRecords().ForEach(Value =>
 			{
@@ -197,7 +197,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// <summary>
 		/// Load The DB Style Cache to Style Sheet
 		/// </summary>
-		protected void UpdateStyle()
+		internal void UpdateStyle()
 		{
 			Styles.Instance.SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
 		}

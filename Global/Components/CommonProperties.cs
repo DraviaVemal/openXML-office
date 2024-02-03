@@ -146,10 +146,6 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		protected CommonProperties() { }
 
-
-
-
-
 		/// <summary>
 		/// Create Soild Fill XML Property
 		/// </summary>

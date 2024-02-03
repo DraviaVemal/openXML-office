@@ -16,19 +16,19 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		///
 		/// </summary>
-		protected readonly ChartSetting chartSetting;
+		internal readonly ChartSetting chartSetting;
 		/// <summary>
 		///
 		/// </summary>
-		protected readonly Slide currentSlide;
+		internal readonly Slide currentSlide;
 		/// <summary>
 		///
 		/// </summary>
-		protected P.GraphicFrame? graphicFrame;
+		internal P.GraphicFrame? graphicFrame;
 		/// <summary>
 		///
 		/// </summary>
-		public ChartProperties(Slide slide, ChartSetting chartSetting)
+		internal ChartProperties(Slide slide, ChartSetting chartSetting)
 		{
 			this.chartSetting = chartSetting;
 			currentSlide = slide;
@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		///
 		/// </summary>
-		protected void LoadDataToExcel(DataCell[][] dataRows, Stream stream)
+		internal void LoadDataToExcel(DataCell[][] dataRows, Stream stream)
 		{
 			// Load Data To Embeded Sheet
 			Spreadsheet spreadsheet = new(stream);
@@ -56,7 +56,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <returns>
 		/// X,Y
 		/// </returns>
-		public (uint, uint) GetPosition()
+		internal (uint, uint) GetPosition()
 		{
 			return (chartSetting.x, chartSetting.y);
 		}
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <returns>
 		/// Width,Height
 		/// </returns>
-		public (uint, uint) GetSize()
+		internal (uint, uint) GetSize()
 		{
 			return (chartSetting.width, chartSetting.height);
 		}
@@ -74,7 +74,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Save Chart Part
 		/// </summary>
-		protected void Save()
+		internal void Save()
 		{
 			currentSlide.GetSlidePart().Slide.Save();
 		}
@@ -126,7 +126,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// </summary>
 		/// <param name="dataRows"></param>
 		/// <returns></returns>
-		protected static ChartData[][] ExcelToPPTdata(DataCell[][] dataRows)
+		internal static ChartData[][] ExcelToPPTdata(DataCell[][] dataRows)
 		{
 			return CommonTools.TransposeArray(dataRows).Select(col =>
 				col.Select(Cell => new ChartData
@@ -145,7 +145,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		///
 		/// </summary>
-		protected void CreateChartGraphicFrame(string relationshipId, uint id)
+		internal void CreateChartGraphicFrame(string relationshipId, uint id)
 		{
 			// Load Chart Part To Graphics Frame For Export
 			P.NonVisualGraphicFrameProperties nonVisualProperties = new()

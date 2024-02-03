@@ -4,7 +4,6 @@ using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using C15 = DocumentFormat.OpenXml.Office2013.Drawing.Chart;
-using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 
 namespace OpenXMLOffice.Global_2013;
 
@@ -20,12 +19,12 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Chart Data Groupings
 	/// </summary>
-	protected List<ChartDataGrouping> chartDataGroupings = new();
+	internal List<ChartDataGrouping> chartDataGroupings = new();
 
 	/// <summary>
 	/// Core chart settings common for every possible chart
 	/// </summary>
-	protected ChartSetting chartSetting;
+	internal ChartSetting chartSetting;
 
 	private readonly C.Chart chart;
 
@@ -36,7 +35,7 @@ public class ChartBase : CommonProperties
 	/// </summary>
 	/// <param name="chartSetting">
 	/// </param>
-	protected ChartBase(ChartSetting chartSetting)
+	internal ChartBase(ChartSetting chartSetting)
 	{
 		this.chartSetting = chartSetting;
 		openXMLChartSpace = CreateChartSpace();
@@ -58,7 +57,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Bubble Size Axis for the chart
 	/// </summary>
-	protected static C.BubbleSize CreateBubbleSizeAxisData(string formula, ChartData[] cells)
+	internal static C.BubbleSize CreateBubbleSizeAxisData(string formula, ChartData[] cells)
 	{
 		if (cells.All(v => v.dataType != DataType.NUMBER))
 		{
@@ -77,7 +76,7 @@ public class ChartBase : CommonProperties
 	/// </param>
 	/// <returns>
 	/// </returns>
-	protected C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting categoryAxisSetting)
+	internal C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting categoryAxisSetting)
 	{
 		C.CategoryAxis CategoryAxis = new(
 			new C.AxisId { Val = categoryAxisSetting.id },
@@ -152,7 +151,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Chart Shape Properties for the chart
 	/// </summary>
-	protected static C.Layout CreateLayout(LayoutModel? layoutModel = null)
+	internal static C.Layout CreateLayout(LayoutModel? layoutModel = null)
 	{
 		if (layoutModel == null)
 		{
@@ -194,7 +193,7 @@ public class ChartBase : CommonProperties
 	/// </param>
 	/// <returns>
 	/// </returns>
-	protected static C.CategoryAxisData CreateCategoryAxisData(string formula, ChartData[] cells)
+	internal static C.CategoryAxisData CreateCategoryAxisData(string formula, ChartData[] cells)
 	{
 		if (cells.All(v => v.dataType == DataType.NUMBER))
 		{
@@ -209,7 +208,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Data Labels for the chart
 	/// </summary>
-	protected C.DataLabels CreateDataLabels(ChartDataLabel chartDataLabel, int? dataLabelCount = 0)
+	internal C.DataLabels CreateDataLabels(ChartDataLabel chartDataLabel, int? dataLabelCount = 0)
 	{
 		C.Extension extension = new(
 				new C15.ShowDataLabelsRange() { Val = chartDataLabel.showValueFromColumn },
@@ -330,7 +329,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Data Labels Range for the chart.Used in value from Column
 	/// </summary>
-	protected static C15.DataLabelsRange CreateDataLabelsRange(string formula, ChartData[] cells)
+	internal static C15.DataLabelsRange CreateDataLabelsRange(string formula, ChartData[] cells)
 	{
 		return new(new C15.Formula(formula), AddDataLabelCacheValue(cells));
 	}
@@ -338,7 +337,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Data Series for the chart
 	/// </summary>
-	protected List<ChartDataGrouping> CreateDataSeries(ChartData[][] dataCols, ChartDataSetting chartDataSetting)
+	internal List<ChartDataGrouping> CreateDataSeries(ChartData[][] dataCols, ChartDataSetting chartDataSetting)
 	{
 		List<uint> seriesColumns = new();
 		for (uint col = chartDataSetting.chartDataColumnStart + 1; col <= (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length - 1 : chartDataSetting.chartDataColumnEnd); col++)
@@ -386,7 +385,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Series Text for the chart
 	/// </summary>
-	protected static C.SeriesText CreateSeriesText(string formula, ChartData[] cells)
+	internal static C.SeriesText CreateSeriesText(string formula, ChartData[] cells)
 	{
 		return new(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
 	}
@@ -394,7 +393,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Value Axis for the chart
 	/// </summary>
-	protected C.ValueAxis CreateValueAxis(ValueAxisSetting valueAxisSetting)
+	internal C.ValueAxis CreateValueAxis(ValueAxisSetting valueAxisSetting)
 	{
 		C.ValueAxis valueAxis = new(
 			new C.AxisId { Val = valueAxisSetting.id },
@@ -468,7 +467,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Value Axis Data for the chart
 	/// </summary>
-	protected static C.Values CreateValueAxisData(string formula, ChartData[] cells)
+	internal static C.Values CreateValueAxisData(string formula, ChartData[] cells)
 	{
 		if (cells.All(v => v.dataType != DataType.NUMBER))
 		{
@@ -484,7 +483,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create X Axis Data for the chart
 	/// </summary>
-	protected static C.XValues CreateXValueAxisData(string formula, ChartData[] cells)
+	internal static C.XValues CreateXValueAxisData(string formula, ChartData[] cells)
 	{
 		if (cells.All(v => v.dataType != DataType.NUMBER))
 		{
@@ -500,7 +499,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Y Axis Data for the chart
 	/// </summary>
-	protected static C.YValues CreateYValueAxisData(string formula, ChartData[] cells)
+	internal static C.YValues CreateYValueAxisData(string formula, ChartData[] cells)
 	{
 		if (cells.All(v => v.dataType != DataType.NUMBER))
 		{
@@ -515,7 +514,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Set chart plot area
 	/// </summary>
-	protected void SetChartPlotArea(C.PlotArea plotArea)
+	internal void SetChartPlotArea(C.PlotArea plotArea)
 	{
 		chart.PlotArea = plotArea;
 	}
@@ -523,7 +522,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	///
 	/// </summary>
-	protected C.PlotArea? GetPlotArea()
+	internal C.PlotArea? GetPlotArea()
 	{
 		return chart.PlotArea;
 	}
@@ -854,7 +853,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	///
 	/// </summary>
-	protected C.Marker CreateMarker(MarkerModel marketModel)
+	internal C.Marker CreateMarker(MarkerModel marketModel)
 	{
 		C.Marker marker = new()
 		{

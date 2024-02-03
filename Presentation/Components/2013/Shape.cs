@@ -139,6 +139,12 @@ namespace OpenXMLOffice.Presentation_2013
 			return openXMLShape;
 		}
 
+		/// <summary>
+		/// Update Shape Text without changing any other properties
+		/// </summary>
+		public void UpdateText(string newValue)
+		{
 
+		}
 	}
 }

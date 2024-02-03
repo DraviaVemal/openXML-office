@@ -8,17 +8,13 @@ namespace OpenXMLOffice.Presentation_2013
 {
 	internal class SlideMaster
 	{
-
-
-		protected P.SlideMaster openXMLSlideMaster = new();
-		protected P.SlideLayoutIdList? slideLayoutIdList;
-
+		internal P.SlideMaster openXMLSlideMaster = new();
+		internal P.SlideLayoutIdList? slideLayoutIdList;
 
 		private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_MASTER, PresentationConstants.SlideLayoutType.BLANK); public SlideMaster()
 		{
 			CreateSlideMaster();
 		}
-
 
 		public void AddSlideLayoutIdToList(string relationshipId)
 		{
@@ -165,7 +161,5 @@ namespace OpenXMLOffice.Presentation_2013
 			textStyles.Append(titleStyle, bodyStyle, otherStyle);
 			return textStyles;
 		}
-
-
 	}
 }

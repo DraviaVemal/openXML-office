@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Presentation_2016
 		/// <summary>
 		///
 		/// </summary>
-		protected void CreateExtendedChartGraphicFrame(string relationshipId, uint id)
+		internal void CreateExtendedChartGraphicFrame(string relationshipId, uint id)
 		{
 			// Load Chart Part To Graphics Frame For Export
 			P.NonVisualGraphicFrameProperties nonVisualProperties = new()

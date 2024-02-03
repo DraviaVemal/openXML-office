@@ -14,7 +14,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		protected AdvanceCharts(ChartSetting chartSetting) : base(chartSetting) { }
+		internal AdvanceCharts(ChartSetting chartSetting) : base(chartSetting) { }
 
 		/// <summary>
 		///
@@ -109,7 +109,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		protected CX.ChartData CreateChartData(List<ChartDataGrouping> chartDataGroupings)
+		internal CX.ChartData CreateChartData(List<ChartDataGrouping> chartDataGroupings)
 		{
 			CX.ChartData chartData = new()
 			{
@@ -128,7 +128,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		protected CX.Chart CreateChart(List<ChartDataGrouping> chartDataGroupings)
+		internal CX.Chart CreateChart(List<ChartDataGrouping> chartDataGroupings)
 		{
 			CX.PlotAreaRegion plotAreaRegion = new();
 			chartDataGroupings.Take(1).ToList().ForEach(dataSeries =>
