@@ -285,6 +285,10 @@ namespace OpenXMLOffice.Tests
 		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
 			{
+				titleOptions = new()
+				{
+					title = "Dev Chart"
+				},
 				lineChartDataLabel = new G.LineChartDataLabel()
 				{
 					dataLabelPosition = G.LineChartDataLabel.DataLabelPositionValues.LEFT,

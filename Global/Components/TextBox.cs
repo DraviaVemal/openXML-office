@@ -107,7 +107,7 @@ namespace OpenXMLOffice.Global_2013
 						new A.Paragraph(CreateDrawingRun(new()
 						{
 							text = textBoxSetting.text,
-							textBackground = textBoxSetting.textBackground,
+							textHightlight = textBoxSetting.textBackground,
 							drawingRunProperties = new()
 							{
 								solidFill = solidFillModel,

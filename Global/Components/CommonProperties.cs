@@ -287,52 +287,52 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		protected static A.DefaultRunProperties CreateDefaultRunProperties(DefaultRunPropertiesModel defaultRunPropertiesModel)
 		{
-			A.DefaultRunProperties DefaultRunProperties = new();
+			A.DefaultRunProperties defaultRunProperties = new();
 			if (defaultRunPropertiesModel.solidFill != null)
 			{
-				DefaultRunProperties.Append(CreateSolidFill(defaultRunPropertiesModel.solidFill));
+				defaultRunProperties.Append(CreateSolidFill(defaultRunPropertiesModel.solidFill));
 			}
 			if (defaultRunPropertiesModel.latinFont != null)
 			{
-				DefaultRunProperties.Append(new A.LatinFont { Typeface = defaultRunPropertiesModel.latinFont });
+				defaultRunProperties.Append(new A.LatinFont { Typeface = defaultRunPropertiesModel.latinFont });
 			}
 			if (defaultRunPropertiesModel.eastAsianFont != null)
 			{
-				DefaultRunProperties.Append(new A.EastAsianFont { Typeface = defaultRunPropertiesModel.eastAsianFont });
+				defaultRunProperties.Append(new A.EastAsianFont { Typeface = defaultRunPropertiesModel.eastAsianFont });
 			}
 			if (defaultRunPropertiesModel.complexScriptFont != null)
 			{
-				DefaultRunProperties.Append(new A.ComplexScriptFont { Typeface = defaultRunPropertiesModel.complexScriptFont });
+				defaultRunProperties.Append(new A.ComplexScriptFont { Typeface = defaultRunPropertiesModel.complexScriptFont });
 			}
 			if (defaultRunPropertiesModel.fontSize != null)
 			{
-				DefaultRunProperties.FontSize = defaultRunPropertiesModel.fontSize;
+				defaultRunProperties.FontSize = defaultRunPropertiesModel.fontSize;
 			}
 			if (defaultRunPropertiesModel.isBold != null)
 			{
-				DefaultRunProperties.Bold = defaultRunPropertiesModel.isBold;
+				defaultRunProperties.Bold = defaultRunPropertiesModel.isBold;
 			}
 			if (defaultRunPropertiesModel.isItalic != null)
 			{
-				DefaultRunProperties.Italic = defaultRunPropertiesModel.isItalic;
+				defaultRunProperties.Italic = defaultRunPropertiesModel.isItalic;
 			}
 			if (defaultRunPropertiesModel.underline != null)
 			{
-				DefaultRunProperties.Underline = GetTextUnderlineValues((UnderLineValues)defaultRunPropertiesModel.underline);
+				defaultRunProperties.Underline = GetTextUnderlineValues((UnderLineValues)defaultRunPropertiesModel.underline);
 			}
 			if (defaultRunPropertiesModel.strike != null)
 			{
-				DefaultRunProperties.Strike = GetTextStrikeValues((StrikeValues)defaultRunPropertiesModel.strike);
+				defaultRunProperties.Strike = GetTextStrikeValues((StrikeValues)defaultRunPropertiesModel.strike);
 			}
 			if (defaultRunPropertiesModel.kerning != null)
 			{
-				DefaultRunProperties.Kerning = defaultRunPropertiesModel.kerning;
+				defaultRunProperties.Kerning = defaultRunPropertiesModel.kerning;
 			}
 			if (defaultRunPropertiesModel.baseline != null)
 			{
-				DefaultRunProperties.Baseline = defaultRunPropertiesModel.baseline;
+				defaultRunProperties.Baseline = defaultRunPropertiesModel.baseline;
 			}
-			return DefaultRunProperties;
+			return defaultRunProperties;
 		}
 
 		/// <summary>
@@ -341,16 +341,20 @@ namespace OpenXMLOffice.Global_2013
 		private A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
 		{
 			A.Paragraph paragraph = new();
-			if (drawingParagraphModel.drawingRun != null)
-			{
-				paragraph.Append(
-					CreateDrawingRun(drawingParagraphModel.drawingRun));
-			}
 			if (drawingParagraphModel.paragraphPropertiesModel != null)
 			{
-				paragraph.Append(
-					CreateDrawingParagraphProperties(drawingParagraphModel.paragraphPropertiesModel),
-					new A.EndParagraphRunProperties() { Language = "en-IN" });
+				paragraph.Append(CreateDrawingParagraphProperties(drawingParagraphModel.paragraphPropertiesModel));
+			}
+			if (drawingParagraphModel.drawingRun != null)
+			{
+				paragraph.Append(CreateDrawingRun(drawingParagraphModel.drawingRun));
+			}
+			else
+			{
+				if (drawingParagraphModel.paragraphPropertiesModel != null)
+				{
+					paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-IN" });
+				}
 			}
 			return paragraph;
 		}
@@ -420,9 +424,9 @@ namespace OpenXMLOffice.Global_2013
 			{
 				run.Append(new A.Text(drawingRunModel.text));
 			}
-			if (drawingRunModel.textBackground != null)
+			if (drawingRunModel.textHightlight != null)
 			{
-				run.Append(new A.Highlight(new A.RgbColorModelHex { Val = drawingRunModel.textBackground }));
+				run.Append(new A.Highlight(new A.RgbColorModelHex { Val = drawingRunModel.textHightlight }));
 			}
 			return run;
 		}
@@ -442,6 +446,18 @@ namespace OpenXMLOffice.Global_2013
 			if (drawingRunPropertiesModel.solidFill != null)
 			{
 				runProperties.Append(CreateSolidFill(drawingRunPropertiesModel.solidFill));
+			}
+			if (drawingRunPropertiesModel.fontFamily != null)
+			{
+				runProperties.Append(new A.LatinFont { Typeface = drawingRunPropertiesModel.fontFamily });
+			}
+			if (drawingRunPropertiesModel.fontFamily != null)
+			{
+				runProperties.Append(new A.EastAsianFont { Typeface = drawingRunPropertiesModel.fontFamily });
+			}
+			if (drawingRunPropertiesModel.fontFamily != null)
+			{
+				runProperties.Append(new A.ComplexScriptFont { Typeface = drawingRunPropertiesModel.fontFamily });
 			}
 			if (drawingRunPropertiesModel.underline != null)
 			{

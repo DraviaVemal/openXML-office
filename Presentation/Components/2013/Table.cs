@@ -165,7 +165,7 @@ namespace OpenXMLOffice.Presentation_2013
 				paragraph.Append(CreateDrawingRun(new()
 				{
 					text = cell.value,
-					textBackground = cell.textBackground,
+					textHightlight = cell.textBackground,
 					drawingRunProperties = new()
 					{
 						solidFill = solidFillModel,

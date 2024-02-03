@@ -831,12 +831,14 @@ public class ChartBase : CommonProperties
 			},
 			drawingParagraph = new()
 			{
+				paragraphPropertiesModel = new(),
 				drawingRun = new()
 				{
+					text = titleModel.title,
 					drawingRunProperties = new()
 					{
 						solidFill = solidFillModel,
-						fontSize = ConverterUtils.FontSizeToFontSize(titleModel.fontSize),
+						fontSize = titleModel.fontSize,
 						isBold = titleModel.isBold,
 						isItalic = titleModel.isItalic,
 						underline = titleModel.underLineValues,

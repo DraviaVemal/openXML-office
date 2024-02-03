@@ -533,7 +533,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public string? textBackground;
+		public string? textHightlight;
 		/// <summary>
 		///
 		/// </summary>
