@@ -1,4 +1,4 @@
-name: .NET 7 Build and Publish to NuGet
+name: Package Build and Publish to NuGet
 
 permissions:
   contents: write
@@ -7,10 +7,13 @@ permissions:
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - 'Directory.Build.props'
 
 jobs:
-  build:
+  build-CsProj:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,7 +33,7 @@ jobs:
           name: nupkgs
           path: nupkgs/*.nupkg
 
-  publish:
+  publish-nuget:
     needs: build
     runs-on: ubuntu-latest
     steps:
