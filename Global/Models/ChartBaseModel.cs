@@ -488,6 +488,38 @@ namespace OpenXMLOffice.Global_2013
 	}
 
 	/// <summary>
+	///
+	/// </summary>
+	public class ChartTitleModel
+	{
+		/// <summary>
+		///
+		/// </summary>
+		public int fontSize = 11;
+		/// <summary>
+		///
+		/// </summary>
+		public string? fontColor;
+		/// <summary>
+		///
+		/// </summary>
+		public string? title;
+		/// <summary>
+		///
+		/// </summary>
+		public bool isBold;
+		/// <summary>
+		///
+		/// </summary>
+		public bool isItalic;
+		/// <summary>
+		///
+		/// </summary>
+		internal UnderLineValues underLineValues = UnderLineValues.NONE;
+
+	}
+
+	/// <summary>
 	/// Represents the settings for a chart.
 	/// </summary>
 	public class ChartSetting
@@ -520,7 +552,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Chart Title
 		/// </summary>
-		public string? title;
+		public ChartTitleModel? titleOptions;
 
 		/// <summary>
 		/// Chart Width in EMU

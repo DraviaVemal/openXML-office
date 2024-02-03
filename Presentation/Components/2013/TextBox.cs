@@ -1,7 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using OpenXMLOffice.Global_2013;
-using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation_2013
@@ -18,17 +17,6 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <param name="TextBoxSetting">
 		/// </param>
 		public TextBox(TextBoxSetting TextBoxSetting) : base(TextBoxSetting) { }
-
-
-		/// <summary>
-		/// Return OpenXML Run
-		/// </summary>
-		/// <returns>
-		/// </returns>
-		internal A.Run GetTextBoxRun()
-		{
-			return GetTextBoxBaseRun();
-		}
 
 		/// <summary>
 		/// Return OpenXML Shape

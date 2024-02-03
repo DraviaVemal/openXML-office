@@ -23,14 +23,6 @@ namespace OpenXMLOffice.Global_2013
 		}
 
 		/// <summary>
-		/// Get Textbox Run
-		/// </summary>
-		public A.Run GetTextBoxBaseRun()
-		{
-			return CreateTextRun();
-		}
-
-		/// <summary>
 		/// Get Textbox Shape
 		/// </summary>
 		public P.Shape GetTextBoxBaseShape()
@@ -81,6 +73,18 @@ namespace OpenXMLOffice.Global_2013
 
 		private P.Shape CreateTextBox()
 		{
+			SolidFillModel solidFillModel = new()
+			{
+				schemeColorModel = new()
+				{
+					themeColorValues = ThemeColorValues.TEXT_1
+				}
+			};
+			if (textBoxSetting.textColor != null)
+			{
+				solidFillModel.hexColor = textBoxSetting.textColor;
+				solidFillModel.schemeColorModel = null;
+			}
 			openXMLShape = new()
 			{
 				NonVisualShapeProperties = new P.NonVisualShapeProperties(
@@ -96,35 +100,27 @@ namespace OpenXMLOffice.Global_2013
 					new A.Offset { X = textBoxSetting.x, Y = textBoxSetting.y },
 					new A.Extents { Cx = textBoxSetting.width, Cy = textBoxSetting.height }),
 				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle },
-				textBoxSetting.shapeBackground != null ? CommonProperties.CreateSolidFill(new() { hexColor = textBoxSetting.shapeBackground }) : new A.NoFill()),
+				textBoxSetting.shapeBackground != null ? CreateSolidFill(new() { hexColor = textBoxSetting.shapeBackground }) : new A.NoFill()),
 				TextBody = new P.TextBody(
 						new A.BodyProperties(),
 						new A.ListStyle(),
-						new A.Paragraph(CreateTextRun())),
+						new A.Paragraph(CreateDrawingRun(new()
+						{
+							text = textBoxSetting.text,
+							textBackground = textBoxSetting.textBackground,
+							drawingRunProperties = new()
+							{
+								solidFill = solidFillModel,
+								fontFamily = textBoxSetting.fontFamily,
+								fontSize = textBoxSetting.fontSize,
+								isBold = textBoxSetting.isBold,
+								isItalic = textBoxSetting.isItalic,
+								underline = textBoxSetting.isUnderline ? UnderLineValues.SINGLE : UnderLineValues.NONE,
+							}
+						}))),
 			};
 			return openXMLShape;
 		}
-
-		private A.Run CreateTextRun()
-		{
-			A.Run Run = new(new A.RunProperties(CreateSolidFill(new() { hexColor = textBoxSetting.textColor }),
-						new A.LatinFont { Typeface = textBoxSetting.fontFamily },
-						new A.EastAsianFont { Typeface = textBoxSetting.fontFamily },
-						new A.ComplexScriptFont { Typeface = textBoxSetting.fontFamily })
-			{
-				FontSize = ConverterUtils.FontSizeToFontSize(textBoxSetting.fontSize),
-				Bold = textBoxSetting.isBold,
-				Italic = textBoxSetting.isItalic,
-				Underline = textBoxSetting.isUnderline ? A.TextUnderlineValues.Single : A.TextUnderlineValues.None,
-				Dirty = false
-			}, new A.Text(textBoxSetting.text));
-			if (textBoxSetting.textBackground != null)
-			{
-				Run.Append(new A.Highlight(new A.RgbColorModelHex { Val = textBoxSetting.textBackground }));
-			}
-			return Run;
-		}
-
 
 	}
 }

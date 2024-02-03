@@ -150,17 +150,32 @@ namespace OpenXMLOffice.Presentation_2013
 			}
 			else
 			{
-				paragraph.Append(new TextBox(new G.TextBoxSetting()
+				G.SolidFillModel solidFillModel = new()
+				{
+					schemeColorModel = new()
+					{
+						themeColorValues = G.ThemeColorValues.TEXT_1
+					}
+				};
+				if (cell.textColor != null)
+				{
+					solidFillModel.hexColor = cell.textColor;
+					solidFillModel.schemeColorModel = null;
+				}
+				paragraph.Append(CreateDrawingRun(new()
 				{
 					text = cell.value,
 					textBackground = cell.textBackground,
-					textColor = cell.textColor,
-					fontFamily = cell.fontFamily,
-					fontSize = cell.fontSize,
-					isBold = cell.isBold,
-					isItalic = cell.isItalic,
-					isUnderline = cell.isUnderline,
-				}).GetTextBoxRun());
+					drawingRunProperties = new()
+					{
+						solidFill = solidFillModel,
+						fontFamily = cell.fontFamily,
+						fontSize = cell.fontSize,
+						isBold = cell.isBold,
+						isItalic = cell.isItalic,
+						underline = cell.isUnderline ? G.UnderLineValues.SINGLE : G.UnderLineValues.NONE,
+					}
+				}));
 			}
 			A.TableCell tableCellXML = new(new A.TextBody(
 				new A.BodyProperties(),

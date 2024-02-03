@@ -129,6 +129,13 @@ namespace OpenXMLOffice.Global_2013
 				UnderLineValues.DOT_DOT_DASH_HEAVY => A.TextUnderlineValues.DotDotDashHeavy,
 				UnderLineValues.DOTTED => A.TextUnderlineValues.Dotted,
 				UnderLineValues.DOUBLE => A.TextUnderlineValues.Double,
+				UnderLineValues.HEAVY => A.TextUnderlineValues.Heavy,
+				UnderLineValues.HEAVY_DOTTED => A.TextUnderlineValues.HeavyDotted,
+				UnderLineValues.SINGLE => A.TextUnderlineValues.Single,
+				UnderLineValues.WAVY => A.TextUnderlineValues.Wavy,
+				UnderLineValues.WAVY_DOUBLE => A.TextUnderlineValues.WavyDouble,
+				UnderLineValues.WAVY_HEAVY => A.TextUnderlineValues.WavyHeavy,
+				UnderLineValues.WORDS => A.TextUnderlineValues.Words,
 				_ => A.TextUnderlineValues.None
 			};
 		}
@@ -265,13 +272,16 @@ namespace OpenXMLOffice.Global_2013
 			}
 			return outline;
 		}
+
 		/// <summary>
 		/// Create Default Run Properties
 		/// </summary>
-		protected A.DefaultRunProperties CreateDefaultRunProperties()
+		protected static A.DefaultRunProperties CreateDefaultRunProperties()
 		{
 			return CreateDefaultRunProperties(new());
 		}
+
+
 		/// <summary>
 		///     Create Default Run Properties
 		/// </summary>
@@ -298,13 +308,13 @@ namespace OpenXMLOffice.Global_2013
 			{
 				DefaultRunProperties.FontSize = defaultRunPropertiesModel.fontSize;
 			}
-			if (defaultRunPropertiesModel.bold != null)
+			if (defaultRunPropertiesModel.isBold != null)
 			{
-				DefaultRunProperties.Bold = defaultRunPropertiesModel.bold;
+				DefaultRunProperties.Bold = defaultRunPropertiesModel.isBold;
 			}
-			if (defaultRunPropertiesModel.italic != null)
+			if (defaultRunPropertiesModel.isItalic != null)
 			{
-				DefaultRunProperties.Italic = defaultRunPropertiesModel.italic;
+				DefaultRunProperties.Italic = defaultRunPropertiesModel.isItalic;
 			}
 			if (defaultRunPropertiesModel.underline != null)
 			{
@@ -331,6 +341,11 @@ namespace OpenXMLOffice.Global_2013
 		private A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
 		{
 			A.Paragraph paragraph = new();
+			if (drawingParagraphModel.drawingRun != null)
+			{
+				paragraph.Append(
+					CreateDrawingRun(drawingParagraphModel.drawingRun));
+			}
 			if (drawingParagraphModel.paragraphPropertiesModel != null)
 			{
 				paragraph.Append(
@@ -367,9 +382,9 @@ namespace OpenXMLOffice.Global_2013
 		protected C.TextProperties CreateChartTextProperties(ChartTextPropertiesModel chartTextPropertiesModel)
 		{
 			C.TextProperties textProperties = new();
-			if (chartTextPropertiesModel.bodyProperties != null)
+			if (chartTextPropertiesModel.drawingBodyProperties != null)
 			{
-				textProperties.Append(CreateDrawingBodyProperties(chartTextPropertiesModel.bodyProperties));
+				textProperties.Append(CreateDrawingBodyProperties(chartTextPropertiesModel.drawingBodyProperties));
 			}
 			textProperties.Append(CreateDrawingListStyle());
 			if (chartTextPropertiesModel.drawingParagraph != null)
@@ -378,7 +393,62 @@ namespace OpenXMLOffice.Global_2013
 			}
 			return textProperties;
 		}
+		/// <summary>
+		///
+		/// </summary>
+		protected C.RichText CreateChartRichText(ChartTextPropertiesModel chartTextPropertiesModel)
+		{
+			C.RichText richText = new();
+			if (chartTextPropertiesModel.drawingBodyProperties != null)
+			{
+				richText.Append(CreateDrawingBodyProperties(chartTextPropertiesModel.drawingBodyProperties));
+			}
+			richText.Append(CreateDrawingListStyle());
+			if (chartTextPropertiesModel.drawingParagraph != null)
+			{
+				richText.Append(CreateDrawingParagraph(chartTextPropertiesModel.drawingParagraph));
+			}
+			return richText;
+		}
+		/// <summary>
+		///
+		/// </summary>
+		protected static A.Run CreateDrawingRun(DrawingRunModel drawingRunModel)
+		{
+			A.Run run = new(CreateDrawingRunProperties(drawingRunModel.drawingRunProperties));
+			if (drawingRunModel.text != null)
+			{
+				run.Append(new A.Text(drawingRunModel.text));
+			}
+			if (drawingRunModel.textBackground != null)
+			{
+				run.Append(new A.Highlight(new A.RgbColorModelHex { Val = drawingRunModel.textBackground }));
+			}
+			return run;
+		}
 
+		/// <summary>
+		///
+		/// </summary>
+		protected static A.RunProperties CreateDrawingRunProperties(DrawingRunPropertiesModel drawingRunPropertiesModel)
+		{
+			A.RunProperties runProperties = new()
+			{
+				FontSize = ConverterUtils.FontSizeToFontSize(drawingRunPropertiesModel.fontSize),
+				Bold = drawingRunPropertiesModel.isBold,
+				Italic = drawingRunPropertiesModel.isItalic,
+				Dirty = false
+			};
+			if (drawingRunPropertiesModel.solidFill != null)
+			{
+				runProperties.Append(CreateSolidFill(drawingRunPropertiesModel.solidFill));
+			}
+			if (drawingRunPropertiesModel.underline != null)
+			{
+				runProperties.Underline = GetTextUnderlineValues((UnderLineValues)drawingRunPropertiesModel.underline);
+			}
+			return runProperties;
+		}
 		/// <summary>
 		///    Create Drawing Body Properties
 		/// </summary>

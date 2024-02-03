@@ -121,7 +121,7 @@ public class ChartBase : CommonProperties
 		}
 		CategoryAxis.Append(CreateChartTextProperties(new()
 		{
-			bodyProperties = new(),
+			drawingBodyProperties = new(),
 			drawingParagraph = new()
 			{
 				paragraphPropertiesModel = new()
@@ -130,8 +130,8 @@ public class ChartBase : CommonProperties
 					{
 						solidFill = solidFillModel,
 						fontSize = ConverterUtils.FontSizeToFontSize(categoryAxisSetting.fontSize),
-						bold = categoryAxisSetting.isBold,
-						italic = categoryAxisSetting.isItalic,
+						isBold = categoryAxisSetting.isBold,
+						isItalic = categoryAxisSetting.isItalic,
 						underline = categoryAxisSetting.underLineValues,
 						strike = categoryAxisSetting.strikeValues,
 						baseline = 0,
@@ -229,29 +229,17 @@ public class ChartBase : CommonProperties
 				A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
 				if (chartDataLabel.showSeriesName)
 				{
-					Paragraph.Append(new TextBoxBase(
-						new TextBoxSetting()
-						{
-							text = chartDataLabel.separator
-						}).GetTextBoxBaseRun());
+					Paragraph.Append(CreateDrawingRun(new() { text = chartDataLabel.separator }));
 					Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
 				}
 				if (chartDataLabel.showCategoryName)
 				{
-					Paragraph.Append(new TextBoxBase(
-						new TextBoxSetting()
-						{
-							text = chartDataLabel.separator
-						}).GetTextBoxBaseRun());
+					Paragraph.Append(CreateDrawingRun(new() { text = chartDataLabel.separator }));
 					Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
 				}
 				if (chartDataLabel.showValue)
 				{
-					Paragraph.Append(new TextBoxBase(
-						new TextBoxSetting()
-						{
-							text = chartDataLabel.separator
-						}).GetTextBoxBaseRun());
+					Paragraph.Append(CreateDrawingRun(new() { text = chartDataLabel.separator }));
 					Paragraph.Append(CreateField("VALUE", "[VALUE]"));
 				}
 				Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });
@@ -301,7 +289,7 @@ public class ChartBase : CommonProperties
 		}
 		dataLabels.Append(CreateChartTextProperties(new()
 		{
-			bodyProperties = new()
+			drawingBodyProperties = new()
 			{
 				rotation = 0,
 				anchorCenter = true,
@@ -326,8 +314,8 @@ public class ChartBase : CommonProperties
 						eastAsianFont = "+mn-ea",
 						latinFont = "+mn-lt",
 						fontSize = ConverterUtils.FontSizeToFontSize(chartDataLabel.fontSize),
-						bold = chartDataLabel.isBold,
-						italic = chartDataLabel.isItalic,
+						isBold = chartDataLabel.isBold,
+						isItalic = chartDataLabel.isItalic,
 						underline = chartDataLabel.underLineValues,
 						strike = chartDataLabel.strikeValues,
 						kerning = 1200,
@@ -452,7 +440,7 @@ public class ChartBase : CommonProperties
 		}
 		valueAxis.Append(CreateChartTextProperties(new()
 		{
-			bodyProperties = new(),
+			drawingBodyProperties = new(),
 			drawingParagraph = new()
 			{
 				paragraphPropertiesModel = new()
@@ -461,8 +449,8 @@ public class ChartBase : CommonProperties
 					{
 						solidFill = solidFillModel,
 						fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
-						bold = valueAxisSetting.isBold,
-						italic = valueAxisSetting.isItalic,
+						isBold = valueAxisSetting.isBold,
+						isItalic = valueAxisSetting.isItalic,
 						underline = valueAxisSetting.underLineValues,
 						strike = valueAxisSetting.strikeValues,
 						baseline = 0
@@ -656,9 +644,9 @@ public class ChartBase : CommonProperties
 		{
 			chart.Legend = CreateChartLegend(chartSetting.chartLegendOptions);
 		}
-		if (chartSetting.title != null)
+		if (chartSetting.titleOptions != null)
 		{
-			chart.Title = CreateTitle(chartSetting.title);
+			chart.Title = CreateTitle(chartSetting.titleOptions);
 		}
 		return chart;
 	}
@@ -700,7 +688,7 @@ public class ChartBase : CommonProperties
 		}
 		legend.Append(CreateChartTextProperties(new()
 		{
-			bodyProperties = new()
+			drawingBodyProperties = new()
 			{
 				rotation = 0,
 				useParagraphSpacing = true,
@@ -721,8 +709,8 @@ public class ChartBase : CommonProperties
 						eastAsianFont = "+mn-ea",
 						latinFont = "+mn-lt",
 						fontSize = ConverterUtils.FontSizeToFontSize(chartLegendOptions.fontSize),
-						bold = chartLegendOptions.isBold,
-						italic = chartLegendOptions.isItalic,
+						isBold = chartLegendOptions.isBold,
+						isItalic = chartLegendOptions.isItalic,
 						underline = chartLegendOptions.underLineValues,
 						strike = chartLegendOptions.strikeValues,
 						kerning = 1200,
@@ -815,27 +803,47 @@ public class ChartBase : CommonProperties
 		}));
 	}
 
-	private C.Title CreateTitle(string strTitle)
+	private C.Title CreateTitle(ChartTitleModel titleModel)
 	{
-		C.RichText richText = new();
-		richText.Append(new A.BodyProperties()
+		SolidFillModel solidFillModel = new()
 		{
-			Anchor = A.TextAnchoringTypeValues.Center,
-			AnchorCenter = true,
-			Rotation = 0,
-			UseParagraphSpacing = true,
-			Vertical = A.TextVerticalValues.Horizontal,
-			VerticalOverflow = A.TextVerticalOverflowValues.Ellipsis,
-			Wrap = A.TextWrappingValues.Square
-		});
-		richText.Append(new A.ListStyle());
-		richText.Append(
-			new A.Paragraph(new A.ParagraphProperties(CreateDefaultRunProperties()),
-			new TextBoxBase(new TextBoxSetting()
+			schemeColorModel = new()
 			{
-				text = strTitle ?? "Chart Title"
-			}).GetTextBoxBaseRun()));
-		C.Title title = new(new C.ChartText(richText));
+				themeColorValues = ThemeColorValues.TEXT_1
+			}
+		};
+		if (titleModel.fontColor != null)
+		{
+			solidFillModel.hexColor = titleModel.fontColor;
+			solidFillModel.schemeColorModel = null;
+		}
+		C.Title title = new(new C.ChartText(CreateChartRichText(new()
+		{
+			drawingBodyProperties = new()
+			{
+				anchor = TextAnchoringValues.CENTER,
+				anchorCenter = true,
+				useParagraphSpacing = true,
+				vertical = TextVerticalAlignmentValues.HORIZONTAL,
+				verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+				wrap = TextWrappingValues.SQUARE,
+				rotation = 0,
+			},
+			drawingParagraph = new()
+			{
+				drawingRun = new()
+				{
+					drawingRunProperties = new()
+					{
+						solidFill = solidFillModel,
+						fontSize = ConverterUtils.FontSizeToFontSize(titleModel.fontSize),
+						isBold = titleModel.isBold,
+						isItalic = titleModel.isItalic,
+						underline = titleModel.underLineValues,
+					}
+				}
+			}
+		})));
 		title.Append(new C.Overlay { Val = false });
 		title.Append(CreateChartShapeProperties());
 		return title;

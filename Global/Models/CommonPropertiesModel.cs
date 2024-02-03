@@ -376,6 +376,34 @@ namespace OpenXMLOffice.Global_2013
 		///
 		/// </summary>
 		DOUBLE,
+		/// <summary>
+		///
+		/// </summary>
+		HEAVY,
+		/// <summary>
+		///
+		/// </summary>
+		HEAVY_DOTTED,
+		/// <summary>
+		///
+		/// </summary>
+		SINGLE,
+		/// <summary>
+		///
+		/// </summary>
+		WAVY,
+		/// <summary>
+		///
+		/// </summary>
+		WAVY_DOUBLE,
+		/// <summary>
+		///
+		/// </summary>
+		WAVY_HEAVY,
+		/// <summary>
+		///
+		/// </summary>
+		WORDS,
 	}
 
 	/// <summary>
@@ -396,6 +424,41 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		DOUBLE_STRIKE,
 	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public class DrawingRunPropertiesModel
+	{
+		/// <summary>
+		///
+		/// </summary>
+		public SolidFillModel? solidFill = null;
+		/// <summary>
+		///
+		/// </summary>
+		public string? fontFamily = "(Calibri (Body))";
+
+		/// <summary>
+		///
+		/// </summary>
+		public int fontSize = 8;
+
+		/// <summary>
+		///
+		/// </summary>
+		public bool? isBold;
+
+		/// <summary>
+		///
+		/// </summary>
+		public bool? isItalic;
+		/// <summary>
+		///
+		/// </summary>
+		public UnderLineValues? underline = null;
+	}
+
 	/// <summary>
 	///
 	/// </summary>
@@ -435,12 +498,12 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public bool? bold;
+		public bool? isBold;
 
 		/// <summary>
 		///
 		/// </summary>
-		public bool? italic;
+		public bool? isItalic;
 
 		/// <summary>
 		///
@@ -461,12 +524,35 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	///
 	/// </summary>
+	public class DrawingRunModel
+	{
+		/// <summary>
+		///
+		/// </summary>
+		public DrawingRunPropertiesModel drawingRunProperties = new();
+		/// <summary>
+		///
+		/// </summary>
+		public string? textBackground;
+		/// <summary>
+		///
+		/// </summary>
+		public string? text;
+	}
+
+	/// <summary>
+	///
+	/// </summary>
 	public class DrawingParagraphModel
 	{
 		/// <summary>
 		///
 		/// </summary>
 		public ParagraphPropertiesModel? paragraphPropertiesModel = null;
+		/// <summary>
+		///
+		/// </summary>
+		public DrawingRunModel? drawingRun = null;
 	}
 
 	/// <summary>
@@ -539,7 +625,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingBodyPropertiesModel? bodyProperties = null;
+		public DrawingBodyPropertiesModel? drawingBodyProperties = null;
 
 		/// <summary>
 		///

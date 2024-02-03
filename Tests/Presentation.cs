@@ -57,7 +57,10 @@ namespace OpenXMLOffice.Tests
 			//3
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting()
 			{
-				title = "",
+				titleOptions = new()
+				{
+					title = "test"
+				},
 				areaChartTypes = G.AreaChartTypes.PERCENT_STACKED,
 				chartDataSetting = new()
 				{
@@ -89,7 +92,11 @@ namespace OpenXMLOffice.Tests
 			//5
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting()
 			{
-				title = "Change Data Layout",
+				titleOptions = new()
+				{
+					isItalic = true,
+					title = "Bar Chart"
+				},
 				barChartTypes = G.BarChartTypes.STACKED
 			});
 			//6
@@ -100,7 +107,10 @@ namespace OpenXMLOffice.Tests
 			//7
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting()
 			{
-				title = "Color Change Chart",
+				titleOptions = new()
+				{
+					title = "Column Chart"
+				},
 				chartLegendOptions = new G.ChartLegendOptions()
 				{
 					legendPosition = G.ChartLegendOptions.LegendPositionValues.TOP,
@@ -311,7 +321,10 @@ namespace OpenXMLOffice.Tests
 		{
 			G.ComboChartSetting comboChartSetting = new()
 			{
-				title = "Combo Chart",
+				titleOptions = new()
+				{
+					title = "Combo Chart"
+				},
 			};
 			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting());
 			comboChartSetting.AddComboChartsSetting(new G.BarChartSetting());
@@ -343,36 +356,57 @@ namespace OpenXMLOffice.Tests
 			//1
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
 			{
-				title = "Default"
+				titleOptions = new()
+				{
+					title = "Scatter Plot"
+				}
 			});
 			//2
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
 			{
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_SMOOTH,
-				title = "Scatter Smooth"
+				titleOptions = new()
+				{
+					title = "Scatter Smooth"
+				}
 			});
 			//3
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
 			{
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_SMOOTH_MARKER,
-				title = "Scatter Smooth Market"
+				titleOptions = new()
+				{
+					title = "Scatter Smooth Marker"
+				}
 			});
 			//4
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
 			{
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_STRIGHT,
-				title = "Scatter Stright"
+				titleOptions = new()
+				{
+					title = "Scatter Stright",
+					fontSize = 20
+				}
 			});
 			//5
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
 			{
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_STRIGHT_MARKER,
-				title = "Scatter Straight Marker"
+				titleOptions = new()
+				{
+					fontColor = "FF0000",
+					title = "Scatter Stright Marker"
+				}
 			});
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting()
 			{
 				scatterChartTypes = G.ScatterChartTypes.BUBBLE,
-				title = "Scatter  Bubble"
+				titleOptions = new()
+				{
+					isBold = true,
+					title = "Bubble Chart"
+				}
 			});
 			Assert.IsTrue(true);
 		}
@@ -410,12 +444,12 @@ namespace OpenXMLOffice.Tests
 			List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
 			shapes1[0].ReplaceTextBox(slide.AddTextBox(new G.TextBoxSetting()
 			{
-				text = "Dravia Vemal",
+				text = "This is text box Font Family",
 				fontFamily = "Bernard MT Condensed"
 			}));
 			shapes2[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()
 			{
-				text = "Vemal Dravia",
+				text = "This is text box background",
 				textBackground = "777777"
 			}));
 			shapes3[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()
@@ -447,7 +481,6 @@ namespace OpenXMLOffice.Tests
 			shape1[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(),
 			new G.ColumnChartSetting()
 			{
-				title = "Title",
 				chartLegendOptions = new G.ChartLegendOptions()
 				{
 					isEnableLegend = false
