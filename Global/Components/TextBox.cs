@@ -105,20 +105,27 @@ namespace OpenXMLOffice.Global_2013
 				TextBody = new P.TextBody(
 						new A.BodyProperties(),
 						new A.ListStyle(),
-						new A.Paragraph(CreateDrawingRun(new()
+						CreateDrawingParagraph(new()
 						{
-							text = textBoxSetting.text,
-							textHightlight = textBoxSetting.textBackground,
-							drawingRunProperties = new()
+							paragraphPropertiesModel = new()
 							{
-								solidFill = solidFillModel,
-								fontFamily = textBoxSetting.fontFamily,
-								fontSize = textBoxSetting.fontSize,
-								isBold = textBoxSetting.isBold,
-								isItalic = textBoxSetting.isItalic,
-								underline = textBoxSetting.isUnderline ? UnderLineValues.SINGLE : UnderLineValues.NONE,
+								horizontalAlignment = textBoxSetting.horizontalAlignment
+							},
+							drawingRun = new()
+							{
+								text = textBoxSetting.text,
+								textHightlight = textBoxSetting.textBackground,
+								drawingRunProperties = new()
+								{
+									solidFill = solidFillModel,
+									fontFamily = textBoxSetting.fontFamily,
+									fontSize = textBoxSetting.fontSize,
+									isBold = textBoxSetting.isBold,
+									isItalic = textBoxSetting.isItalic,
+									underline = textBoxSetting.isUnderline ? UnderLineValues.SINGLE : UnderLineValues.NONE,
+								}
 							}
-						}))),
+						})),
 			};
 			return openXMLShape;
 		}

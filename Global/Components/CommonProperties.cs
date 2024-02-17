@@ -14,6 +14,18 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
+		public static A.TextAlignmentTypeValues GetTextAlignmentValue(HorizontalAlignmentValues horizontalAlignmentValues)
+		{
+			return horizontalAlignmentValues switch
+			{
+				HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
+				HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+				_ => A.TextAlignmentTypeValues.Left
+			};
+		}
+		/// <summary>
+		///
+		/// </summary>
 		public static A.CompoundLineValues GetBorderStyleValue(BorderStyleValues borderStyle)
 		{
 			return borderStyle switch
@@ -481,7 +493,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		private A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
+		protected A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
 		{
 			A.Paragraph paragraph = new();
 			if (drawingParagraphModel.paragraphPropertiesModel != null)
@@ -511,6 +523,10 @@ namespace OpenXMLOffice.Global_2013
 			if (paragraphPropertiesModel.defaultRunProperties != null)
 			{
 				paragraphProperties.Append(CreateDefaultRunProperties(paragraphPropertiesModel.defaultRunProperties));
+			}
+			if (paragraphPropertiesModel.horizontalAlignment != null)
+			{
+				paragraphProperties.Alignment = GetTextAlignmentValue((HorizontalAlignmentValues)paragraphPropertiesModel.horizontalAlignment);
 			}
 			return paragraphProperties;
 		}

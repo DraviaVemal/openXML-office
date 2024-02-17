@@ -471,6 +471,7 @@ namespace OpenXMLOffice.Tests
 			shapes2[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()
 			{
 				text = "This is text box background",
+				horizontalAlignment = G.HorizontalAlignmentValues.RIGHT,
 				textBackground = "777777"
 			}));
 			shapes3[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()

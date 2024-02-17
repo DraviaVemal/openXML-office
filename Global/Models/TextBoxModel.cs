@@ -60,6 +60,10 @@ namespace OpenXMLOffice.Global_2013
 	/// </summary>
 	public class TextBoxSetting
 	{
+		/// <summary>
+		/// Cell Alignment Option
+		/// </summary>
+		public HorizontalAlignmentValues? horizontalAlignment;
 
 		/// <summary>
 		/// Gets or sets the font family of the text.

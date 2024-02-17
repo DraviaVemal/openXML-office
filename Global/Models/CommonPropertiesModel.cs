@@ -749,6 +749,10 @@ namespace OpenXMLOffice.Global_2013
 		///
 		/// </summary>
 		public DefaultRunPropertiesModel? defaultRunProperties = null;
+		/// <summary>
+		/// Cell Alignment Option
+		/// </summary>
+		public HorizontalAlignmentValues? horizontalAlignment;
 	}
 
 	/// <summary>
