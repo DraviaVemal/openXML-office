@@ -1,6 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
@@ -19,7 +18,7 @@ namespace OpenXMLOffice.Global_2013
 			return horizontalAlignmentValues switch
 			{
 				HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
-				HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+				HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Center,
 				_ => A.TextAlignmentTypeValues.Left
 			};
 		}
