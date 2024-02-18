@@ -18,7 +18,8 @@ namespace OpenXMLOffice.Global_2013
 			return horizontalAlignmentValues switch
 			{
 				HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
-				HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Center,
+				HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
+				HorizontalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
 				_ => A.TextAlignmentTypeValues.Left
 			};
 		}
