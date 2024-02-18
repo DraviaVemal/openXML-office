@@ -350,7 +350,10 @@ namespace OpenXMLOffice.Tests
 			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting());
 			comboChartSetting.AddComboChartsSetting(new G.BarChartSetting());
 			comboChartSetting.AddComboChartsSetting(new G.ColumnChartSetting());
-			comboChartSetting.AddComboChartsSetting(new G.LineChartSetting());
+			comboChartSetting.AddComboChartsSetting(new G.LineChartSetting()
+			{
+				isSecondaryAxis = true
+			});
 			comboChartSetting.AddComboChartsSetting(new G.PieChartSetting());
 			// comboChartSetting.AddComboChartsSetting(new G.ScatterChartSetting());
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(10), comboChartSetting);

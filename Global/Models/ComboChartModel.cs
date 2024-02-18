@@ -16,6 +16,10 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public void AddComboChartsSetting(AreaChartSetting areaChartSetting)
 		{
+			if (CheckSecondaryAxisAlreadyUsed())
+			{
+				throw new ArgumentException("Secondary Axis is already used in another series");
+			}
 			ComboChartsSettingList.Add(areaChartSetting);
 		}
 
@@ -24,6 +28,10 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public void AddComboChartsSetting(BarChartSetting barChartSetting)
 		{
+			if (CheckSecondaryAxisAlreadyUsed())
+			{
+				throw new ArgumentException("Secondary Axis is already used in another series");
+			}
 			ComboChartsSettingList.Add(barChartSetting);
 		}
 
@@ -32,6 +40,10 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public void AddComboChartsSetting(ColumnChartSetting columnChartSetting)
 		{
+			if (CheckSecondaryAxisAlreadyUsed())
+			{
+				throw new ArgumentException("Secondary Axis is already used in another series");
+			}
 			ComboChartsSettingList.Add(columnChartSetting);
 		}
 
@@ -40,6 +52,10 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public void AddComboChartsSetting(LineChartSetting lineChartSetting)
 		{
+			if (CheckSecondaryAxisAlreadyUsed())
+			{
+				throw new ArgumentException("Secondary Axis is already used in another series");
+			}
 			ComboChartsSettingList.Add(lineChartSetting);
 		}
 
@@ -48,6 +64,10 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public void AddComboChartsSetting(PieChartSetting pieChartSetting)
 		{
+			if (CheckSecondaryAxisAlreadyUsed())
+			{
+				throw new ArgumentException("Secondary Axis is already used in another series");
+			}
 			ComboChartsSettingList.Add(pieChartSetting);
 		}
 
@@ -56,7 +76,11 @@ namespace OpenXMLOffice.Global_2013
 		// /// </summary>
 		// public void AddComboChartsSetting(ScatterChartSetting scatterChartSetting)
 		// {
-		//     ComboChartsSettingList.Add(scatterChartSetting);
+		// 	if (checkSecondaryAxisAlreadyUsed())
+		// 	{
+		// 		throw new ArgumentException("Secondary Axis is already used in another series");
+		// 	}
+		// 	ComboChartsSettingList.Add(scatterChartSetting);
 		// }
 
 		/// <summary>
@@ -68,5 +92,10 @@ namespace OpenXMLOffice.Global_2013
 		/// The options for the axis of the chart.
 		/// </summary>
 		public ChartAxisOptions chartAxisOptions = new();
+
+		private bool CheckSecondaryAxisAlreadyUsed()
+		{
+			return ComboChartsSettingList.Select(val => ((ChartSetting)val).isSecondaryAxis).Count(v => v) > 1;
+		}
 	}
 }

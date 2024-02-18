@@ -13,8 +13,10 @@ namespace OpenXMLOffice.Global_2013;
 public class ChartBase : CommonProperties
 {
 	internal const int AccentColurCount = 6;
-	internal const int CategoryAxisId = 1362418656;
-	internal const int ValueAxisId = 1358349936;
+	internal uint CategoryAxisId = 1362418656;
+	internal uint ValueAxisId = 1358349936;
+	internal const int SecondaryCategoryAxisId = 1615085760;
+	internal const int SecondaryValueAxisId = 1474633616;
 
 	/// <summary>
 	/// Chart Data Groupings
@@ -37,6 +39,8 @@ public class ChartBase : CommonProperties
 	/// </param>
 	internal ChartBase(ChartSetting chartSetting)
 	{
+		CategoryAxisId = chartSetting.categoryAxisId ?? CategoryAxisId;
+		ValueAxisId = chartSetting.valueAxisId ?? ValueAxisId;
 		this.chartSetting = chartSetting;
 		openXMLChartSpace = CreateChartSpace();
 		chart = CreateChart();
@@ -95,49 +99,52 @@ public class ChartBase : CommonProperties
 			new C.MajorTickMark { Val = C.TickMarkValues.None },
 			new C.MinorTickMark { Val = C.TickMarkValues.None },
 			new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
-		if (chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled)
+		if (categoryAxisSetting.isVisible)
 		{
-			CategoryAxis.Append(CreateMajorGridLine());
-		}
-		if (chartSetting.chartGridLinesOptions.isMinorCategoryLinesEnabled)
-		{
-			CategoryAxis.Append(CreateMinorGridLine());
-		}
-		CategoryAxis.Append(CreateChartShapeProperties());
-		SolidFillModel solidFillModel = new()
-		{
-			schemeColorModel = new()
+			if (chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled)
 			{
-				themeColorValues = ThemeColorValues.TEXT_1,
-				luminanceModulation = 65000,
-				luminanceOffset = 35000
+				CategoryAxis.Append(CreateMajorGridLine());
 			}
-		};
-		if (categoryAxisSetting.fontColor != null)
-		{
-			solidFillModel.hexColor = categoryAxisSetting.fontColor;
-			solidFillModel.schemeColorModel = null;
-		}
-		CategoryAxis.Append(CreateChartTextProperties(new()
-		{
-			drawingBodyProperties = new(),
-			drawingParagraph = new()
+			if (chartSetting.chartGridLinesOptions.isMinorCategoryLinesEnabled)
 			{
-				paragraphPropertiesModel = new()
+				CategoryAxis.Append(CreateMinorGridLine());
+			}
+			CategoryAxis.Append(CreateChartShapeProperties());
+			SolidFillModel solidFillModel = new()
+			{
+				schemeColorModel = new()
 				{
-					defaultRunProperties = new()
+					themeColorValues = ThemeColorValues.TEXT_1,
+					luminanceModulation = 65000,
+					luminanceOffset = 35000
+				}
+			};
+			if (categoryAxisSetting.fontColor != null)
+			{
+				solidFillModel.hexColor = categoryAxisSetting.fontColor;
+				solidFillModel.schemeColorModel = null;
+			}
+			CategoryAxis.Append(CreateChartTextProperties(new()
+			{
+				drawingBodyProperties = new(),
+				drawingParagraph = new()
+				{
+					paragraphPropertiesModel = new()
 					{
-						solidFill = solidFillModel,
-						fontSize = ConverterUtils.FontSizeToFontSize(categoryAxisSetting.fontSize),
-						isBold = categoryAxisSetting.isBold,
-						isItalic = categoryAxisSetting.isItalic,
-						underline = categoryAxisSetting.underLineValues,
-						strike = categoryAxisSetting.strikeValues,
-						baseline = 0,
+						defaultRunProperties = new()
+						{
+							solidFill = solidFillModel,
+							fontSize = ConverterUtils.FontSizeToFontSize(categoryAxisSetting.fontSize),
+							isBold = categoryAxisSetting.isBold,
+							isItalic = categoryAxisSetting.isItalic,
+							underline = categoryAxisSetting.underLineValues,
+							strike = categoryAxisSetting.strikeValues,
+							baseline = 0,
+						}
 					}
 				}
-			}
-		}));
+			}));
+		}
 		CategoryAxis.Append(
 			new C.CrossingAxis { Val = categoryAxisSetting.crossAxisId },
 			new C.Crosses { Val = C.CrossesValues.AutoZero },
@@ -419,8 +426,8 @@ public class ChartBase : CommonProperties
 		}
 		valueAxis.Append(
 			new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
-			new C.MajorTickMark { Val = C.TickMarkValues.None },
-			new C.MinorTickMark { Val = C.TickMarkValues.None },
+			new C.MajorTickMark { Val = valueAxisSetting.majorTickMark },
+			new C.MinorTickMark { Val = valueAxisSetting.minorTickMark },
 			new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
 		valueAxis.Append(CreateChartShapeProperties());
 		SolidFillModel solidFillModel = new()
@@ -459,7 +466,7 @@ public class ChartBase : CommonProperties
 		}));
 		valueAxis.Append(
 			new C.CrossingAxis { Val = valueAxisSetting.crossAxisId },
-			new C.Crosses { Val = C.CrossesValues.AutoZero },
+			new C.Crosses { Val = valueAxisSetting.crosses },
 			new C.CrossBetween { Val = C.CrossBetweenValues.Between });
 		return valueAxis;
 	}

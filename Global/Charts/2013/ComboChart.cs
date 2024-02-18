@@ -12,28 +12,35 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public ComboChartSetting comboChartSetting { get; private set; }
+		public ComboChartSetting ComboChartSetting { get; private set; }
 
 		/// <summary>
 		///
 		/// </summary>
 		public ComboChart(ComboChartSetting comboChartSetting, ChartData[][] dataCols) : base(comboChartSetting)
 		{
-			this.comboChartSetting = comboChartSetting;
+			ComboChartSetting = comboChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols));
 		}
 
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
 		{
-			if (comboChartSetting.ComboChartsSettingList.Count == 0)
+			bool isSecondaryAxisActive = false;
+			if (ComboChartSetting.ComboChartsSettingList.Count == 0)
 			{
 				throw new ArgumentException("Combo Chart Series Settings is empty");
 			}
 			C.PlotArea plotArea = new();
-			plotArea.Append(CreateLayout(comboChartSetting.plotAreaOptions?.manualLayout));
+			plotArea.Append(CreateLayout(ComboChartSetting.plotAreaOptions?.manualLayout));
 			uint chartPosition = 0;
-			comboChartSetting.ComboChartsSettingList.ForEach(chartSetting =>
+			ComboChartSetting.ComboChartsSettingList.ForEach(chartSetting =>
 			{
+				if (((ChartSetting)chartSetting).isSecondaryAxis)
+				{
+					isSecondaryAxisActive = true;
+					((ChartSetting)chartSetting).categoryAxisId = SecondaryCategoryAxisId;
+					((ChartSetting)chartSetting).valueAxisId = SecondaryValueAxisId;
+				}
 				((ChartSetting)chartSetting).chartDataSetting = new();
 				if (chartSetting is AreaChartSetting areaChartSetting)
 				{
@@ -75,29 +82,46 @@ namespace OpenXMLOffice.Global_2013
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				fontSize = comboChartSetting.chartAxesOptions.horizontalFontSize,
-				isBold = comboChartSetting.chartAxesOptions.isHorizontalBold,
-				isItalic = comboChartSetting.chartAxesOptions.isHorizontalItalic,
-				isVisible = comboChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
-				invertOrder = comboChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
+				fontSize = ComboChartSetting.chartAxesOptions.horizontalFontSize,
+				isBold = ComboChartSetting.chartAxesOptions.isHorizontalBold,
+				isItalic = ComboChartSetting.chartAxesOptions.isHorizontalItalic,
+				isVisible = ComboChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+				invertOrder = ComboChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				fontSize = comboChartSetting.chartAxesOptions.verticalFontSize,
-				isBold = comboChartSetting.chartAxesOptions.isVerticalBold,
-				isItalic = comboChartSetting.chartAxesOptions.isVerticalItalic,
-				isVisible = comboChartSetting.chartAxesOptions.isVerticalAxesEnabled,
-				invertOrder = comboChartSetting.chartAxesOptions.invertVerticalAxesOrder,
+				fontSize = ComboChartSetting.chartAxesOptions.verticalFontSize,
+				isBold = ComboChartSetting.chartAxesOptions.isVerticalBold,
+				isItalic = ComboChartSetting.chartAxesOptions.isVerticalItalic,
+				isVisible = ComboChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+				invertOrder = ComboChartSetting.chartAxesOptions.invertVerticalAxesOrder,
 			}));
+			if (isSecondaryAxisActive)
+			{
+				plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+				{
+					id = SecondaryCategoryAxisId,
+					crossAxisId = SecondaryValueAxisId,
+					isVisible = false
+				}));
+				plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+				{
+					id = SecondaryValueAxisId,
+					crossAxisId = SecondaryCategoryAxisId,
+					axisPosition = AxisPosition.RIGHT,
+					crosses = C.CrossesValues.Maximum,
+					majorTickMark = C.TickMarkValues.Outside
+				}));
+			}
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
 		}
 
 		private List<ChartDataGrouping> GetChartPositionData(ChartData[][] dataCols, uint chartPosition)
 		{
-			List<ChartDataGrouping> chartDataGroupings = CreateDataSeries(dataCols, comboChartSetting.chartDataSetting);
+			List<ChartDataGrouping> chartDataGroupings = CreateDataSeries(dataCols, ComboChartSetting.chartDataSetting);
 			return new() { chartDataGroupings.ElementAt((int)chartPosition) };
 		}
 	}

@@ -524,6 +524,14 @@ namespace OpenXMLOffice.Global_2013
 	/// </summary>
 	public class ChartSetting
 	{
+		internal uint? categoryAxisId;
+		internal uint? valueAxisId;
+
+		/// <summary>
+		/// Only useful when used with Combo chart
+		/// </summary>
+		public bool isSecondaryAxis = false;
+
 		/// <summary>
 		///
 		/// </summary>
@@ -612,6 +620,10 @@ namespace OpenXMLOffice.Global_2013
 		/// Invert the axis scale order
 		/// </summary>
 		internal bool invertOrder;
+
+		internal C.TickMarkValues majorTickMark = C.TickMarkValues.None;
+		internal C.TickMarkValues minorTickMark = C.TickMarkValues.None;
+		internal C.CrossesValues crosses = C.CrossesValues.AutoZero;
 	}
 
 	/// <summary>
