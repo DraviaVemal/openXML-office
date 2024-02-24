@@ -7,6 +7,11 @@ namespace OpenXMLOffice.Global_2013
 	/// </summary>
 	public class ComboChartSetting : ChartSetting
 	{
+
+		/// <summary>
+		/// Secondary Axis postion
+		/// </summary>
+		public AxisPosition secondaryAxisPosition = AxisPosition.RIGHT;
 		/// <summary>
 		/// Add Chart Series Setting Using AddComboChartsSetting Method
 		/// </summary>

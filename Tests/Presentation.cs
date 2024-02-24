@@ -448,7 +448,7 @@ namespace OpenXMLOffice.Tests
 				widthType = TableSetting.WidthOptionValues.PERCENTAGE,
 				tableColumnWidth = new() { 80, 20 },
 				x = (uint)G.ConverterUtils.PixelsToEmu(10),
-				y = (uint)G.ConverterUtils.PixelsToEmu(10)
+				y = (uint)G.ConverterUtils.PixelsToEmu(10),
 			});
 			Assert.IsTrue(true);
 		}

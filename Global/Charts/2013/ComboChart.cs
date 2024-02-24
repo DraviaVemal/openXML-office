@@ -110,7 +110,7 @@ namespace OpenXMLOffice.Global_2013
 				{
 					id = SecondaryValueAxisId,
 					crossAxisId = SecondaryCategoryAxisId,
-					axisPosition = AxisPosition.RIGHT,
+					axisPosition = ComboChartSetting.secondaryAxisPosition,
 					crosses = C.CrossesValues.Maximum,
 					majorTickMark = C.TickMarkValues.Outside
 				}));
