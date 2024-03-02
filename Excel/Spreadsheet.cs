@@ -88,7 +88,7 @@ namespace OpenXMLOffice.Excel_2013
 		/// Use this method to create a new style and get the style id
 		/// Use of Style Id instead of Style Setting directly in Worksheet Cell is highly recommended for performance
 		/// </summary>
-		public static uint GetStyleId(CellStyleSetting CellStyleSetting)
+		public uint GetStyleId(CellStyleSetting CellStyleSetting)
 		{
 			return Styles.Instance.GetCellStyleId(CellStyleSetting);
 		}

@@ -472,8 +472,6 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public virtual string? borderColor { get; set; }
 		internal ChartSeriesSetting() { }
-
-
 	}
 
 	/// <summary>
