@@ -1,4 +1,4 @@
-# Pull Request Template for OpenXMLOffice
+# Pull Request Template for OpenXML-Office
 
 ## PR Type
 

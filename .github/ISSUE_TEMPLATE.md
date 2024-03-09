@@ -1,4 +1,4 @@
-# Issue Template for OpenXMLOffice
+# Issue Template for OpenXML-Office
 
 ## Describe the Issue
 
@@ -19,7 +19,7 @@ If applicable, add screenshots to help explain your problem.
 ## Environment
 
 - OS: [e.g., Windows, macOS, Linux]
-- OpenXMLOffice Version: [e.g., v0.0.1]
+- OpenXML-Office Version: [e.g., v0.0.1]
 - .NET Version: [e.g., .NET 7]
 - Any other relevant environment details
 

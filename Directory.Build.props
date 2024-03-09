@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
-        <PackageProjectUrl>https://draviavemal.gitbook.io/openxmloffice/</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/DraviaVemal/OpenXMLOffice</RepositoryUrl>
+        <PackageProjectUrl>https://draviavemal.gitbook.io/openxml-office/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/DraviaVemal/OpenXML-Office</RepositoryUrl>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
