@@ -22,7 +22,9 @@ namespace OpenXMLOffice.Presentation_2013
 		//#### Presentation Constants ####//
 		private readonly uint slideIdStart = 255;
 
-		private readonly uint slideMasterIdStart = 2147483647; public PresentationCore(string filePath, PresentationProperties? presentationProperties = null)
+		private readonly uint slideMasterIdStart = 2147483647;
+
+		public PresentationCore(string filePath, PresentationProperties? presentationProperties = null)
 		{
 			presentationInfo.filePath = filePath;
 			this.presentationProperties = presentationProperties ?? new();

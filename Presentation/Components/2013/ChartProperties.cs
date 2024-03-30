@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using OpenXMLOffice.Excel_2013;
+using OpenXMLOffice.Spreadsheet_2013;
 using OpenXMLOffice.Global_2013;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
@@ -40,15 +40,15 @@ namespace OpenXMLOffice.Presentation_2013
 		internal void LoadDataToExcel(DataCell[][] dataRows, Stream stream)
 		{
 			// Load Data To Embeded Sheet
-			Spreadsheet spreadsheet = new(stream);
-			Worksheet worksheet = spreadsheet.AddSheet();
+			Excel excel = new(stream, null);
+			Worksheet worksheet = excel.AddSheet();
 			int rowIndex = 1;
 			foreach (DataCell[] dataCells in dataRows)
 			{
 				worksheet.SetRow(rowIndex, 1, dataCells, new RowProperties());
 				++rowIndex;
 			}
-			spreadsheet.Save();
+			excel.Save();
 		}
 
 		/// <summary>

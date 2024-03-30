@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\Global\Global.csproj" />
-		<ProjectReference Include="..\Excel\Excel.csproj" />
+		<ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Internal/" />

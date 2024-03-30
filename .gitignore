@@ -4,6 +4,8 @@
 bin/
 obj/
 docs/
+.mono/
+.idea
 
 # Ignore NuGet package directories
 packages/

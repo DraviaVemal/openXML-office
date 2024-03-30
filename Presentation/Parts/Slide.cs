@@ -1,7 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml.Packaging;
-using OpenXMLOffice.Excel_2013;
+using OpenXMLOffice.Spreadsheet_2013;
 using OpenXMLOffice.Global_2013;
 using OpenXMLOffice.Global_2016;
 using P16 = OpenXMLOffice.Presentation_2016;

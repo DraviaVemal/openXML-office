@@ -1,7 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml.Packaging;
-using OpenXMLOffice.Excel_2013;
+using OpenXMLOffice.Spreadsheet_2013;
 using OpenXMLOffice.Global_2013;
 
 namespace OpenXMLOffice.Presentation_2013
@@ -86,10 +86,10 @@ namespace OpenXMLOffice.Presentation_2013
 		/// </summary>
 		/// <returns>
 		/// </returns>
-		public Spreadsheet GetChartWorkBook()
+		public Excel GetChartWorkBook()
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			return new(stream);
+			return new(stream, null);
 		}
 
 		internal string GetNextChartRelationId()

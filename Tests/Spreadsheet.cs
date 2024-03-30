@@ -1,0 +1,212 @@
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+
+using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Spreadsheet_2013;
+
+namespace OpenXMLOffice.Tests
+{
+	/// <summary>
+	/// Excel Test
+	/// </summary>
+	[TestClass]
+	public class Spreadsheet
+	{
+		private static Excel excel = new(new MemoryStream());
+
+
+		/// <summary>
+		/// Save the Test File After execution
+		/// </summary>
+		[ClassCleanup]
+		public static void ClassCleanup()
+		{
+			excel.Save();
+		}
+
+		/// <summary>
+		/// Initialize excel Test
+		/// </summary>
+		/// <param name="context">
+		/// </param>
+		[ClassInitialize]
+		public static void ClassInitialize(TestContext context)
+		{
+			excel = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+		}
+
+		/// <summary>
+		/// Add Sheet Test
+		/// </summary>
+		[TestMethod]
+		public void AddSheet()
+		{
+			Worksheet worksheet = excel.AddSheet("TestSheet1");
+			Assert.IsNotNull(worksheet);
+			Assert.AreEqual("TestSheet1", worksheet.GetSheetName());
+		}
+
+		/// <summary>
+		/// Rename Sheet Based on Index Test
+		/// </summary>
+		[TestMethod]
+		public void RenameSheet()
+		{
+			Worksheet worksheet = excel.AddSheet("Sheet11");
+			Assert.IsNotNull(worksheet);
+			Assert.IsTrue(excel.RenameSheet("Sheet11", "Data1"));
+		}
+
+		/// <summary>
+		/// Set Cell Test
+		/// </summary>
+		[TestMethod]
+		public void SetColumn()
+		{
+			Worksheet worksheet = excel.AddSheet("Data3");
+			Assert.IsNotNull(worksheet);
+			worksheet.SetColumn("A1", new ColumnProperties()
+			{
+				width = 30
+			});
+			worksheet.SetColumn("C4", new ColumnProperties()
+			{
+				width = 30,
+				bestFit = true
+			});
+			worksheet.SetColumn("G7", new ColumnProperties()
+			{
+				hidden = true
+			});
+			Assert.IsTrue(true);
+		}
+
+		/// <summary>
+		/// Set Row Test
+		/// </summary>
+		[TestMethod]
+		public void SetRow()
+		{
+			Worksheet worksheet = excel.AddSheet("Data2");
+			Assert.IsNotNull(worksheet);
+			worksheet.SetRow("A1", new DataCell[6]{
+				new(){
+					cellValue = "test1",
+					dataType = CellDataType.STRING
+				},
+				 new(){
+					cellValue = "test2",
+					dataType = CellDataType.STRING
+				},
+				 new(){
+					cellValue = "test3",
+					dataType = CellDataType.STRING
+				},
+				 new(){
+					cellValue = "test4",
+					dataType = CellDataType.STRING,
+					styleSetting = new(){
+						fontSize = 20
+					}
+				},
+				 new(){
+					cellValue = "2.51",
+					dataType = CellDataType.NUMBER,
+					styleSetting = new(){
+						numberFormat = "00.000",
+					}
+				},new(){
+					cellValue = "5.51",
+					dataType = CellDataType.NUMBER,
+					styleSetting = new(){
+						numberFormat = "₹ #,##0.00;₹ -#,##0.00",
+					}
+				}
+			}, new RowProperties()
+			{
+				height = 20
+			});
+			worksheet.SetRow("C1", new DataCell[1]{
+				new(){
+					cellValue = "Re Update",
+					dataType = CellDataType.STRING
+				}
+			}, new RowProperties()
+			{
+				height = 30
+			});
+			Assert.IsTrue(true);
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		[TestMethod]
+		public void AddPicture()
+		{
+			Worksheet worksheet = excel.AddSheet("Data4");
+			Assert.IsNotNull(worksheet);
+			worksheet.SetRow("D3", new DataCell[1]{
+				new(){
+					cellValue = "Re Update",
+					dataType = CellDataType.STRING
+				}
+			}, new RowProperties()
+			{
+				height = 30
+			});
+			worksheet.AddPicture("./TestFiles/tom_and_jerry.jpg", new()
+			{
+				imageType = ImageType.JPEG,
+				fromCol = 6,
+				fromRow = 6,
+				toCol = 8,
+				toRow = 8
+			});
+			Assert.IsTrue(true);
+		}
+
+		/// <summary>
+		/// Create Xslx File Based on File Test
+		/// </summary>
+		[TestMethod]
+		public void SheetConstructorFile()
+		{
+			Excel excel1 = new("../try.xlsx");
+			Assert.IsNotNull(excel1);
+			excel1.Save();
+			File.Delete("../try.xlsx");
+		}
+
+		/// <summary>
+		/// Create Xslx File Based on Stream Test
+		/// </summary>
+		[TestMethod]
+		public void SheetConstructorStream()
+		{
+			MemoryStream memoryStream = new();
+			Excel excel1 = new(memoryStream);
+			Assert.IsNotNull(excel1);
+		}
+
+		/// <summary>
+		/// Open and close Excel without editing
+		/// </summary>
+		[TestMethod]
+		public void OpenExistingexcelNonEdit()
+		{
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", false);
+			excel1.Save();
+			Assert.IsTrue(true);
+		}
+
+		/// <summary>
+		/// Test existing file
+		/// </summary>
+		[TestMethod]
+		public void OpenExistingexcel()
+		{
+			Excel excel = new("./TestFiles/basic_test.xlsx");
+		}
+
+	}
+}

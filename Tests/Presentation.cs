@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using OpenXMLOffice.Excel_2013;
+using OpenXMLOffice.Spreadsheet_2013;
 using G = OpenXMLOffice.Global_2013;
 using OpenXMLOffice.Presentation_2013;
 using OpenXMLOffice.Global_2016;
