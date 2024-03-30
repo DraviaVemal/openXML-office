@@ -100,7 +100,7 @@ namespace OpenXMLOffice.Presentation_2013
 		private void CreateChart(DataCell[][] dataRows, AreaChartSetting areaChartSetting)
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			LoadDataToExcel(dataRows, stream);
+			WriteDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
 			AreaChart areaChart = new(areaChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
@@ -110,7 +110,7 @@ namespace OpenXMLOffice.Presentation_2013
 		private void CreateChart(DataCell[][] dataRows, BarChartSetting barChartSetting)
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			LoadDataToExcel(dataRows, stream);
+			WriteDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
 			BarChart barChart = new(barChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
@@ -120,7 +120,7 @@ namespace OpenXMLOffice.Presentation_2013
 		private void CreateChart(DataCell[][] dataRows, ColumnChartSetting columnChartSetting)
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			LoadDataToExcel(dataRows, stream);
+			WriteDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
 			ColumnChart columnChart = new(columnChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
@@ -130,7 +130,7 @@ namespace OpenXMLOffice.Presentation_2013
 		private void CreateChart(DataCell[][] dataRows, LineChartSetting lineChartSetting)
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			LoadDataToExcel(dataRows, stream);
+			WriteDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
 			LineChart lineChart = new(lineChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
@@ -140,7 +140,7 @@ namespace OpenXMLOffice.Presentation_2013
 		private void CreateChart(DataCell[][] dataRows, PieChartSetting pieChartSetting)
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			LoadDataToExcel(dataRows, stream);
+			WriteDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
 			PieChart pieChart = new(pieChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
@@ -150,7 +150,7 @@ namespace OpenXMLOffice.Presentation_2013
 		private void CreateChart(DataCell[][] dataRows, ScatterChartSetting scatterChartSetting)
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			LoadDataToExcel(dataRows, stream);
+			WriteDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
 			ScatterChart scatterChart = new(scatterChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
@@ -160,7 +160,7 @@ namespace OpenXMLOffice.Presentation_2013
 		private void CreateChart(DataCell[][] dataRows, ComboChartSetting comboChartSetting)
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			LoadDataToExcel(dataRows, stream);
+			WriteDataToExcel(dataRows, stream);
 			// Prepare Excel Data for PPT Cache
 			ComboChart comboChart = new(comboChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());

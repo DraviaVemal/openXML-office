@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		///
 		/// </summary>
-		internal void LoadDataToExcel(DataCell[][] dataRows, Stream stream)
+		internal void WriteDataToExcel(DataCell[][] dataRows, Stream stream)
 		{
 			// Load Data To Embeded Sheet
 			Excel excel = new(stream, null);

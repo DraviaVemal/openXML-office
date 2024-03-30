@@ -26,8 +26,13 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			MemoryStream memoryStream = new();
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
 			PrepareSpreadsheet(this.spreadsheetProperties);
-			InitialiseStyle();
-			LoadStyle();
+		}
+
+		internal SpreadsheetCore(Stream stream, SpreadsheetProperties? spreadsheetProperties = null)
+		{
+			this.spreadsheetProperties = spreadsheetProperties ?? new();
+			spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
+			PrepareSpreadsheet(this.spreadsheetProperties);
 		}
 
 		internal SpreadsheetCore(string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
@@ -45,23 +50,13 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			if (isEditable)
 			{
 				spreadsheetInfo.isExistingFile = true;
+				PrepareSpreadsheet(this.spreadsheetProperties);
 			}
 			else
 			{
 				spreadsheetInfo.isEditable = false;
 			}
-			PrepareSpreadsheet(this.spreadsheetProperties);
-			InitialiseStyle();
-			LoadStyle();
-		}
-
-		internal SpreadsheetCore(Stream stream, SpreadsheetProperties? spreadsheetProperties = null)
-		{
-			this.spreadsheetProperties = spreadsheetProperties ?? new();
-			spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
-			PrepareSpreadsheet(this.spreadsheetProperties);
-			InitialiseStyle();
-			LoadStyle();
+			ReadDataFromFile();
 		}
 
 		internal SpreadsheetCore(Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
@@ -71,16 +66,30 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			{
 				AutoSave = true
 			});
-			PrepareSpreadsheet(this.spreadsheetProperties);
-			InitialiseStyle();
-			LoadStyle();
+			if (isEditable)
+			{
+				spreadsheetInfo.isExistingFile = true;
+				PrepareSpreadsheet(this.spreadsheetProperties);
+			}
+			else
+			{
+				spreadsheetInfo.isEditable = false;
+			}
+			ReadDataFromFile();
+		}
+
+		/// <summary>
+		/// Read Data from exiting file
+		/// </summary>
+		internal void ReadDataFromFile()
+		{
+			LoadShareStringFromFileToCache();
+			LoadStyleFromFileToCache();
 		}
 
 		/// <summary>
 		/// Return the next relation id for the Spreadsheet
 		/// </summary>
-		/// <returns>
-		/// </returns>
 		internal string GetNextSpreadSheetRelationId()
 		{
 			return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + 1);
@@ -129,7 +138,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// Load the Shared String to the Cache (aka in memeory database lightdb)
 		/// </summary>
-		internal void LoadShareStringToCache()
+		internal void LoadShareStringFromFileToCache()
 		{
 			List<string> Records = new();
 			GetShareString().ChildElements.ToList().ForEach(rec =>
@@ -143,7 +152,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// Load Exisiting Style from the Sheet
 		/// </summary>
-		internal void LoadStyle()
+		internal void LoadStyleFromFileToCache()
 		{
 			Styles.Instance.LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
 		}
@@ -188,15 +197,19 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		private void PrepareSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
 		{
 			GetWorkbookPart().Workbook ??= new Workbook();
-			Sheets sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>() ?? new Sheets();
-			GetWorkbookPart().Workbook.AppendChild(sheets);
+			Sheets? sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
+			if (sheets == null)
+			{
+				sheets = new Sheets();
+				GetWorkbookPart().Workbook.AppendChild(sheets);
+			}
 			if (GetWorkbookPart().ThemePart == null)
 			{
 				GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
 			}
 			Theme theme = new(SpreadsheetProperties?.theme);
 			GetWorkbookPart().ThemePart!.Theme = theme.GetTheme();
-			LoadShareStringToCache();
+			InitialiseStyle();
 			GetWorkbookPart().Workbook.Save();
 		}
 
