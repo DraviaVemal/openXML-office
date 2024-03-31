@@ -17,7 +17,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting areaChartSetting) : base(worksheet, areaChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSlideRelationId());
+			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, areaChartSetting);
 		}
@@ -27,7 +27,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, BarChartSetting barChartSetting) : base(worksheet, barChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSlideRelationId());
+			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, barChartSetting);
 		}
@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting columnChartSetting) : base(worksheet, columnChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSlideRelationId());
+			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, columnChartSetting);
 		}
@@ -47,7 +47,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, LineChartSetting lineChartSetting) : base(worksheet, lineChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSlideRelationId());
+			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, lineChartSetting);
 		}
@@ -57,7 +57,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, PieChartSetting pieChartSetting) : base(worksheet, pieChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSlideRelationId());
+			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, pieChartSetting);
 		}
@@ -67,7 +67,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting scatterChartSetting) : base(worksheet, scatterChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSlideRelationId());
+			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, scatterChartSetting);
 		}
@@ -76,7 +76,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting comboChartSetting) : base(worksheet, comboChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSlideRelationId());
+			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, comboChartSetting);
 		}

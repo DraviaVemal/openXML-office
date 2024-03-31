@@ -1,11 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using OpenXMLOffice.Spreadsheet_2013;
 using OpenXMLOffice.Global_2013;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Presentation_2013
 {
 	/// <summary>
 	///
@@ -19,7 +20,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		///
 		/// </summary>
-		internal readonly Worksheet currentWorksheet;
+		internal readonly Slide currentSlide;
 		/// <summary>
 		///
 		/// </summary>
@@ -27,12 +28,29 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		///
 		/// </summary>
-		internal ChartProperties(Worksheet worksheet, ChartSetting chartSetting)
+		internal ChartProperties(Slide slide, ChartSetting chartSetting)
 		{
 			this.chartSetting = chartSetting;
-			currentWorksheet = worksheet;
+			currentSlide = slide;
 		}
-		
+
+		/// <summary>
+		///
+		/// </summary>
+		internal void WriteDataToExcel(DataCell[][] dataRows, Stream stream)
+		{
+			// Load Data To Embeded Sheet
+			Excel excel = new(stream, null);
+			Worksheet worksheet = excel.AddSheet();
+			int rowIndex = 1;
+			foreach (DataCell[] dataCells in dataRows)
+			{
+				worksheet.SetRow(rowIndex, 1, dataCells, new RowProperties());
+				++rowIndex;
+			}
+			excel.Save();
+		}
+
 		/// <summary>
 		/// </summary>
 		/// <returns>
@@ -58,7 +76,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal void Save()
 		{
-			currentWorksheet.GetWorksheetPart().Worksheet.Save();
+			currentSlide.GetSlidePart().Slide.Save();
 		}
 
 		/// <summary>
@@ -103,6 +121,30 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			}
 		}
 
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="dataRows"></param>
+		/// <returns></returns>
+		internal static ChartData[][] ExcelToPPTdata(DataCell[][] dataRows)
+		{
+			return CommonTools.TransposeArray(dataRows).Select(col =>
+				col.Select(Cell => new ChartData
+				{
+					numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
+					value = Cell?.cellValue,
+					dataType = Cell?.dataType switch
+					{
+						CellDataType.NUMBER => DataType.NUMBER,
+						CellDataType.DATE => DataType.DATE,
+						_ => DataType.STRING
+					}
+				}).ToArray()).ToArray();
+		}
+
+		/// <summary>
+		///
+		/// </summary>
 		internal void CreateChartGraphicFrame(string relationshipId, uint id)
 		{
 			// Load Chart Part To Graphics Frame For Export

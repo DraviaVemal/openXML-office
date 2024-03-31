@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 	/// <summary>
 	/// Represents a worksheet in an Excel workbook.
 	/// </summary>
-	public class Worksheet
+	public class Worksheet : Drawing
 	{
 		private readonly X.Worksheet openXMLworksheet;
 		private readonly X.Sheet sheet;
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			return openXMLworksheet.WorksheetPart!;
 		}
 
-		internal string GetNextSlideRelationId()
+		internal string GetNextSheetPartRelationId()
 		{
 			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + 1);
 		}
@@ -218,6 +218,11 @@ namespace OpenXMLOffice.Spreadsheet_2013
 				return;
 			}
 			throw new ArgumentException("At least one cell range must be covered by the picture.");
+		}
+
+		internal DrawingsPart GetDrawingsPart()
+		{
+			return GetDrawingsPart(this);
 		}
 
 		// /// <summary>

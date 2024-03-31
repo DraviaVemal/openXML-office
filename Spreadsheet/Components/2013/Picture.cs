@@ -22,9 +22,9 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		{
 			this.excelPictureSetting = excelPictureSetting;
 			currentWorksheet = worksheet;
-			string embedId = GetNextSlideRelationId();
-			GetDrawingsPart().WorksheetDrawing.Append(CreateTwoCellAnchor(embedId));
-			ImagePart imagePart = GetDrawingsPart().AddNewPart<ImagePart>(excelPictureSetting.imageType switch
+			string embedId = worksheet.GetNextSheetPartRelationId();
+			worksheet.GetDrawingsPart().WorksheetDrawing.Append(CreateTwoCellAnchor(embedId));
+			ImagePart imagePart = worksheet.GetDrawingsPart().AddNewPart<ImagePart>(excelPictureSetting.imageType switch
 			{
 				ImageType.PNG => "image/png",
 				ImageType.GIF => "image/gif",
@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			}, embedId);
 			imagePart.FeedData(new FileStream(filePath, FileMode.Open, FileAccess.Read));
 			CreateTwoCellAnchor(embedId);
-			worksheet.GetWorksheet().Append(new X.Drawing() { Id = GetDrawingsPart().GetIdOfPart(imagePart) });
+			worksheet.GetWorksheet().Append(new X.Drawing() { Id = worksheet.GetDrawingsPart().GetIdOfPart(imagePart) });
 		}
 
 		/// <summary>
@@ -43,9 +43,9 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		{
 			this.excelPictureSetting = excelPictureSetting;
 			currentWorksheet = worksheet;
-			string embedId = currentWorksheet.GetNextSlideRelationId();
-			GetDrawingsPart().WorksheetDrawing.Append(CreateTwoCellAnchor(embedId));
-			ImagePart imagePart = GetDrawingsPart().AddNewPart<ImagePart>(excelPictureSetting.imageType switch
+			string embedId = currentWorksheet.GetNextSheetPartRelationId();
+			worksheet.GetDrawingsPart().WorksheetDrawing.Append(CreateTwoCellAnchor(embedId));
+			ImagePart imagePart = worksheet.GetDrawingsPart().AddNewPart<ImagePart>(excelPictureSetting.imageType switch
 			{
 				ImageType.PNG => "image/png",
 				ImageType.GIF => "image/gif",
@@ -54,23 +54,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			}, embedId);
 			imagePart.FeedData(stream);
 			CreateTwoCellAnchor(embedId);
-			worksheet.GetWorksheet().Append(new X.Drawing() { Id = currentWorksheet.GetWorksheetPart().GetIdOfPart(GetDrawingsPart()) });
-		}
-
-		private DrawingsPart GetDrawingsPart()
-		{
-			if (currentWorksheet.GetWorksheetPart().DrawingsPart == null)
-			{
-				currentWorksheet.GetWorksheetPart().AddNewPart<DrawingsPart>(currentWorksheet.GetNextSlideRelationId());
-				currentWorksheet.GetWorksheetPart().Worksheet.Save();
-				currentWorksheet.GetWorksheetPart().DrawingsPart!.WorksheetDrawing ??= new();
-			}
-			return currentWorksheet.GetWorksheetPart().DrawingsPart!;
-		}
-
-		internal string GetNextSlideRelationId()
-		{
-			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + 1);
+			worksheet.GetWorksheet().Append(new X.Drawing() { Id = currentWorksheet.GetWorksheetPart().GetIdOfPart(worksheet.GetDrawingsPart()) });
 		}
 
 		internal XDR.TwoCellAnchor CreateTwoCellAnchor(string embedId)
@@ -95,7 +79,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			};
 		}
 
-		internal XDR.Picture CreatePicture(string embedId)
+		internal static XDR.Picture CreatePicture(string embedId)
 		{
 			return new()
 			{
