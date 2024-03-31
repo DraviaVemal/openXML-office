@@ -195,7 +195,7 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void AddAllCharts()
 		{
-			Worksheet worksheet = excel.AddSheet("AreaChart");
+			Worksheet worksheet = excel.AddSheet("Area Chart");
 			int row = 0;
 			CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
@@ -264,7 +264,7 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			row = 0;
-			worksheet = excel.AddSheet("LineChart");
+			worksheet = excel.AddSheet("Line Chart");
 			CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
