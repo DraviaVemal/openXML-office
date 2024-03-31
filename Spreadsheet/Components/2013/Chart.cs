@@ -2,6 +2,7 @@
 
 
 using DocumentFormat.OpenXml.Packaging;
+using X = DocumentFormat.OpenXml.Spreadsheet;
 using OpenXMLOffice.Global_2013;
 
 namespace OpenXMLOffice.Spreadsheet_2013
@@ -15,75 +16,91 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// </summary>
-		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting areaChartSetting) : base(worksheet, areaChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting areaChartSetting) : base(worksheet, areaChartSetting)
 		{
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
+			ConnectDrawingToChart(worksheet);
 			CreateChart(chartDatas, dataRange, areaChartSetting);
 		}
 
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// </summary>
-		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, BarChartSetting barChartSetting) : base(worksheet, barChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, BarChartSetting barChartSetting) : base(worksheet, barChartSetting)
 		{
 			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
+			ConnectDrawingToChart(worksheet);
 			CreateChart(chartDatas, dataRange, barChartSetting);
 		}
 
 		/// <summary>
 		/// Create Column Chart with provided settings
 		/// </summary>
-		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting columnChartSetting) : base(worksheet, columnChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting columnChartSetting) : base(worksheet, columnChartSetting)
 		{
 			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
+			ConnectDrawingToChart(worksheet);
 			CreateChart(chartDatas, dataRange, columnChartSetting);
 		}
 
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// </summary>
-		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, LineChartSetting lineChartSetting) : base(worksheet, lineChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, LineChartSetting lineChartSetting) : base(worksheet, lineChartSetting)
 		{
 			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
+			ConnectDrawingToChart(worksheet);
 			CreateChart(chartDatas, dataRange, lineChartSetting);
 		}
 
 		/// <summary>
 		/// Create Pie Chart with provided settings
 		/// </summary>
-		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, PieChartSetting pieChartSetting) : base(worksheet, pieChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, PieChartSetting pieChartSetting) : base(worksheet, pieChartSetting)
 		{
 			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
+			ConnectDrawingToChart(worksheet);
 			CreateChart(chartDatas, dataRange, pieChartSetting);
 		}
 
 		/// <summary>
 		/// Create Scatter Chart with provided settings
 		/// </summary>
-		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting scatterChartSetting) : base(worksheet, scatterChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting scatterChartSetting) : base(worksheet, scatterChartSetting)
 		{
 			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
+			ConnectDrawingToChart(worksheet);
 			CreateChart(chartDatas, dataRange, scatterChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting comboChartSetting) : base(worksheet, comboChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting comboChartSetting) : base(worksheet, comboChartSetting)
 		{
 			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
+			ConnectDrawingToChart(worksheet);
 			CreateChart(chartDatas, dataRange, comboChartSetting);
 		}
 
 		internal string GetNextChartRelationId()
 		{
 			return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
+		}
+
+		private static void ConnectDrawingToChart(Worksheet worksheet)
+		{
+			// Add anchor to drawing for chart grapics
+			worksheet.CreateTwoCellAnchor(new()
+			{
+
+			});
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting areaChartSetting)

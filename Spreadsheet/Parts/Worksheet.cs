@@ -224,18 +224,17 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		///
 		/// </summary>
-		public void AddPicture(Stream stream, ExcelPictureSetting pictureSetting)
+		public Picture? AddPicture(Stream stream, ExcelPictureSetting pictureSetting)
 		{
 			if (pictureSetting.fromCol < pictureSetting.toCol || pictureSetting.fromRow < pictureSetting.toRow)
 			{
-				_ = new Picture(this, stream, new()
+				return new Picture(this, stream, new()
 				{
 					fromCol = pictureSetting.fromCol,
 					fromRow = pictureSetting.fromRow,
 					toCol = pictureSetting.toCol,
 					toRow = pictureSetting.toRow,
 				});
-				return;
 			}
 			throw new ArgumentException("At least one cell range must be covered by the picture.");
 		}
@@ -248,55 +247,55 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public void AddChart(DataRange dataRange, AreaChartSetting areaChartSetting)
+		public Chart AddChart(DataRange dataRange, AreaChartSetting areaChartSetting)
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			Chart chart = new(this, chartDatas, dataRange, areaChartSetting);
+			return new(this, chartDatas, dataRange, areaChartSetting);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void AddChart(Excel excel, DataRange dataRange, BarChartSetting barChartSetting)
+		public Chart AddChart(DataRange dataRange, BarChartSetting barChartSetting)
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			Chart chart = new(this, chartDatas, dataRange, barChartSetting);
+			return new(this, chartDatas, dataRange, barChartSetting);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void AddChart(Excel excel, DataRange dataRange, ColumnChartSetting columnChartSetting)
+		public Chart AddChart(DataRange dataRange, ColumnChartSetting columnChartSetting)
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			Chart chart = new(this, chartDatas, dataRange, columnChartSetting);
+			return new(this, chartDatas, dataRange, columnChartSetting);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void AddChart(Excel excel, DataRange dataRange, LineChartSetting lineChartSetting)
+		public Chart AddChart(DataRange dataRange, LineChartSetting lineChartSetting)
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			Chart chart = new(this, chartDatas, dataRange, lineChartSetting);
+			return new(this, chartDatas, dataRange, lineChartSetting);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void AddChart(Excel excel, DataRange dataRange, PieChartSetting pieChartSetting)
+		public Chart AddChart(DataRange dataRange, PieChartSetting pieChartSetting)
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			Chart chart = new(this, chartDatas, dataRange, pieChartSetting);
+			return new(this, chartDatas, dataRange, pieChartSetting);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void AddChart(Excel excel, DataRange dataRange, ScatterChartSetting scatterChartSetting)
+		public Chart AddChart(DataRange dataRange, ScatterChartSetting scatterChartSetting)
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			Chart chart = new(this, chartDatas, dataRange, scatterChartSetting);
+			return new(this, chartDatas, dataRange, scatterChartSetting);
 		}
 
 		private ChartData[][] PrepareCacheData(DataRange dataRange)

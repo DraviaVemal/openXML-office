@@ -360,11 +360,11 @@ public class ChartBase : CommonProperties
 			ChartDataGrouping chartDataGrouping = new()
 			{
 				id = i,
-				seriesHeaderFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 1}",
+				seriesHeaderFormula = $"${dataRange?.sheetName ?? "Sheet1"}!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 1}",
 				seriesHeaderCells = ((ChartData[]?)dataCols[column].Clone()!)[chartDataSetting.chartDataRowStart],
-				xAxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + xAxisCells.Count + 1}",
+				xAxisFormula = $"${dataRange?.sheetName ?? "Sheet1"}!${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + xAxisCells.Count + 1}",
 				xAxisCells = xAxisCells.ToArray(),
-				yAxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + yAxisCells.Count + 1}",
+				yAxisFormula = $"${dataRange?.sheetName ?? "Sheet1"}!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + yAxisCells.Count + 1}",
 				yAxisCells = yAxisCells.ToArray(),
 			};
 			if (chartDataSetting.is3Ddata)
@@ -372,13 +372,13 @@ public class ChartBase : CommonProperties
 				i++;
 				column = seriesColumns[i];
 				List<ChartData> zAxisCells = ((ChartData[]?)dataCols[column].Clone()!).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-				chartDataGrouping.zAxisFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + zAxisCells.Count + 1}";
+				chartDataGrouping.zAxisFormula = $"${dataRange?.sheetName ?? "Sheet1"}!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + zAxisCells.Count + 1}";
 				chartDataGrouping.zAxisCells = zAxisCells.ToArray();
 			}
 			if (chartDataSetting.valueFromColumn.TryGetValue(column, out uint DataValueColumn))
 			{
 				List<ChartData> dataLabelCells = ((ChartData[]?)dataCols[DataValueColumn].Clone()!).Skip((int)chartDataSetting.chartDataRowStart).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-				chartDataGrouping.dataLabelFormula = $"Sheet1!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + dataLabelCells.Count}";
+				chartDataGrouping.dataLabelFormula = $"${dataRange?.sheetName ?? "Sheet1"}!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + dataLabelCells.Count}";
 				chartDataGrouping.dataLabelCells = dataLabelCells.ToArray();
 			}
 			chartDataGroupings.Add(chartDataGrouping);

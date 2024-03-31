@@ -518,9 +518,80 @@ namespace OpenXMLOffice.Global_2013
 	}
 
 	/// <summary>
+	/// 
+	/// </summary>
+	public class AnchorPosition
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint column = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint columnOffset = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint row = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint rowOffset = 0;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public interface ISizeAndPosition { }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class PresentationSizeAndPosition
+	{
+
+		/// <summary>
+		/// Chart Height in EMU
+		/// </summary>
+		public uint height = 6858000;
+
+		/// <summary>
+		/// Chart Width in EMU
+		/// </summary>
+		public uint width = 12192000;
+
+		/// <summary>
+		/// Chart X Position in EMU
+		/// </summary>
+		public uint x = 0;
+
+		/// <summary>
+		/// Chart Y Position in EMU
+		/// </summary>
+		public uint y = 0;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class ExcelSizeAndPosition
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public AnchorPosition from = new();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public AnchorPosition to = new();
+	}
+
+	/// <summary>
 	/// Represents the settings for a chart.
 	/// </summary>
-	public class ChartSetting
+	public class ChartSetting : PresentationSizeAndPosition
 	{
 		internal uint? categoryAxisId;
 		internal uint? valueAxisId;
@@ -551,29 +622,9 @@ namespace OpenXMLOffice.Global_2013
 		public ChartLegendOptions chartLegendOptions = new();
 
 		/// <summary>
-		/// Chart Height in EMU
-		/// </summary>
-		public uint height = 6858000;
-
-		/// <summary>
 		/// Chart Title
 		/// </summary>
 		public ChartTitleModel? titleOptions;
-
-		/// <summary>
-		/// Chart Width in EMU
-		/// </summary>
-		public uint width = 12192000;
-
-		/// <summary>
-		/// Chart X Position in EMU
-		/// </summary>
-		public uint x = 0;
-
-		/// <summary>
-		/// Chart Y Position in EMU
-		/// </summary>
-		public uint y = 0;
 
 		internal ChartSetting() { }
 	}
