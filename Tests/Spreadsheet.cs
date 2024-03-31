@@ -221,6 +221,18 @@ namespace OpenXMLOffice.Tests
 			}, new AreaChartSetting<ExcelSetting>()
 			{
 				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 10,
+						column = 10
+					}
+				}
 			});
 			excel1.SaveAs(string.Format("../../Edit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
 			Assert.IsTrue(true);

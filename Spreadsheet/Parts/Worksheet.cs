@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2013;
 using X = DocumentFormat.OpenXml.Spreadsheet;
+using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace OpenXMLOffice.Spreadsheet_2013
 {
@@ -242,6 +243,11 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		internal DrawingsPart GetDrawingsPart()
 		{
 			return GetDrawingsPart(this);
+		}
+
+		internal XDR.WorksheetDrawing GetDrawing()
+		{
+			return GetDrawing(this);
 		}
 
 		/// <summary>

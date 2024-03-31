@@ -4,6 +4,28 @@ using OpenXMLOffice.Global_2013;
 
 namespace OpenXMLOffice.Spreadsheet_2013
 {
+    /// <summary>
+    /// Represents the types of area charts.
+    /// </summary>
+    public enum AnchorEditType
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        ONE_CELL,
+        /// <summary>
+        /// 
+        /// </summary>
+        TWO_CELL,
+        /// <summary>
+        /// 
+        /// </summary>
+        ABSOLUTE,
+        /// <summary>
+        /// 
+        /// </summary>
+		NONE
+    }
 
     /// <summary>
     /// 
@@ -57,6 +79,10 @@ namespace OpenXMLOffice.Spreadsheet_2013
     /// </summary>
     public class TwoCellAnchorModel
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public AnchorEditType anchorEditType = AnchorEditType.NONE;
 
         /// <summary>
         /// 

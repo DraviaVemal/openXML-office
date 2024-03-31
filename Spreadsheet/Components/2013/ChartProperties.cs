@@ -7,7 +7,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : ExcelSetting
 	{
 		/// <summary>
 		///

@@ -27,6 +27,15 @@ namespace OpenXMLOffice.Spreadsheet_2013
             }
             return worksheet.GetWorksheetPart().DrawingsPart!;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected static XDR.WorksheetDrawing GetDrawing(Worksheet worksheet)
+        {
+            return GetDrawingsPart(worksheet).WorksheetDrawing;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -50,6 +59,15 @@ namespace OpenXMLOffice.Spreadsheet_2013
                     RowOffset = new XDR.RowOffset(twoCellAnchorModel.to.rowOffset.ToString())
                 },
             };
+            if (twoCellAnchorModel.anchorEditType != AnchorEditType.NONE)
+            {
+                twoCellAnchor.EditAs = twoCellAnchorModel.anchorEditType switch
+                {
+                    AnchorEditType.TWO_CELL => XDR.EditAsValues.TwoCell,
+                    AnchorEditType.ABSOLUTE => XDR.EditAsValues.Absolute,
+                    _ => XDR.EditAsValues.OneCell
+                };
+            }
             if (twoCellAnchorModel.drawingGraphicFrame != null)
             {
                 twoCellAnchor.AddChild(CreateGraphicFrame(twoCellAnchorModel.drawingGraphicFrame));
@@ -61,7 +79,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
             return twoCellAnchor;
         }
 
-        private XDR.GraphicFrame CreateGraphicFrame(DrawingGraphicFrame drawingGraphicFrame)
+        private static XDR.GraphicFrame CreateGraphicFrame(DrawingGraphicFrame drawingGraphicFrame)
         {
             return new()
             {
@@ -77,7 +95,10 @@ namespace OpenXMLOffice.Spreadsheet_2013
                 Macro = "",
                 Graphic = new()
                 {
-                    GraphicData = new(new C.Chart())
+                    GraphicData = new(new C.ChartReference()
+                    {
+                        Id = drawingGraphicFrame.chartId
+                    })
                     {
                         Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart",
                     }

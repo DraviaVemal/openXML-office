@@ -36,6 +36,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			imagePart.FeedData(stream);
 			currentWorksheet.CreateTwoCellAnchor(new()
 			{
+				anchorEditType = AnchorEditType.ONE_CELL,
 				from = new()
 				{
 					column = excelPictureSetting.fromCol,
