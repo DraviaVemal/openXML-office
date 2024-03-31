@@ -18,7 +18,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) : base(worksheet, areaChartSetting)
 		{
-			string chartId = worksheet.GetNextSheetPartRelationId();
+			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitialiseChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) : base(worksheet, barChartSetting)
 		{
-			string chartId = worksheet.GetNextSheetPartRelationId();
+			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitialiseChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
@@ -42,7 +42,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) : base(worksheet, columnChartSetting)
 		{
-			string chartId = worksheet.GetNextSheetPartRelationId();
+			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitialiseChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
@@ -54,7 +54,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) : base(worksheet, lineChartSetting)
 		{
-			string chartId = worksheet.GetNextSheetPartRelationId();
+			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitialiseChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) : base(worksheet, pieChartSetting)
 		{
-			string chartId = worksheet.GetNextSheetPartRelationId();
+			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitialiseChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
@@ -78,7 +78,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) : base(worksheet, scatterChartSetting)
 		{
-			string chartId = worksheet.GetNextSheetPartRelationId();
+			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitialiseChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
@@ -89,7 +89,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) : base(worksheet, comboChartSetting)
 		{
-			string chartId = worksheet.GetNextSheetPartRelationId();
+			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitialiseChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
@@ -106,6 +106,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			// Add anchor to drawing for chart grapics
 			XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new()
 			{
+				anchorEditType = AnchorEditType.NONE,
 				from = new()
 				{
 					row = chartSetting.applicationSpecificSetting.from.row,
@@ -122,12 +123,12 @@ namespace OpenXMLOffice.Spreadsheet_2013
 				},
 				drawingGraphicFrame = new()
 				{
-					id = 1U,
-					name = "Chart 1",
+					id = (uint)worksheet.GetDrawingsPart().Parts.Count(),
+					name = string.Format("Chart {0}", (uint)worksheet.GetDrawingsPart().Parts.Count()),
 					chartId = chartId
 				}
 			});
-			worksheet.GetDrawing().AddChild(twoCellAnchor);
+			worksheet.GetDrawing().AppendChild(twoCellAnchor);
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)

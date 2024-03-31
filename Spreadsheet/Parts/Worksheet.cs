@@ -58,6 +58,11 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + 1);
 		}
 
+		internal string GetNextDrawingPartRelationId()
+		{
+			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + 1);
+		}
+
 		/// <summary>
 		/// Returns the sheet name of the current worksheet.
 		/// </summary>

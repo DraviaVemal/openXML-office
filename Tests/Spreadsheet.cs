@@ -190,6 +190,213 @@ namespace OpenXMLOffice.Tests
 		}
 
 		/// <summary>
+		/// Test All Chart Implementation
+		/// </summary>
+		[TestMethod]
+		public void AddAllCharts()
+		{
+			Worksheet worksheet = excel.AddSheet("AreaChart");
+			int row = 0;
+			CreateDataCellPayload().ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new AreaChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 20,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new AreaChartSetting<ExcelSetting>()
+			{
+				areaChartTypes = AreaChartTypes.STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 5
+					},
+					to = new()
+					{
+						row = 41,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new AreaChartSetting<ExcelSetting>()
+			{
+				areaChartTypes = AreaChartTypes.PERCENT_STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 42,
+						column = 5
+					},
+					to = new()
+					{
+						row = 62,
+						column = 20
+					}
+				}
+			});
+			row = 0;
+			worksheet = excel.AddSheet("LineChart");
+			CreateDataCellPayload().ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new LineChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 20,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new LineChartSetting<ExcelSetting>()
+			{
+				lineChartTypes = LineChartTypes.STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 5
+					},
+					to = new()
+					{
+						row = 41,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new LineChartSetting<ExcelSetting>()
+			{
+				lineChartTypes = LineChartTypes.PERCENT_STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 42,
+						column = 5
+					},
+					to = new()
+					{
+						row = 62,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new LineChartSetting<ExcelSetting>()
+			{
+				lineChartTypes = LineChartTypes.CLUSTERED_MARKER,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 21
+					},
+					to = new()
+					{
+						row = 20,
+						column = 36
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new LineChartSetting<ExcelSetting>()
+			{
+				lineChartTypes = LineChartTypes.STACKED_MARKER,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 21
+					},
+					to = new()
+					{
+						row = 41,
+						column = 36
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new LineChartSetting<ExcelSetting>()
+			{
+				lineChartTypes = LineChartTypes.PERCENT_STACKED_MARKER,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 42,
+						column = 21
+					},
+					to = new()
+					{
+						row = 62,
+						column = 36
+					}
+				}
+			});
+		}
+
+		/// <summary>
 		/// Open and close Excel without editing
 		/// </summary>
 		[TestMethod]
@@ -214,7 +421,7 @@ namespace OpenXMLOffice.Tests
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
-			_ = worksheet.AddChart(new()
+			worksheet.AddChart(new()
 			{
 				cellIdStart = "A1",
 				cellIdEnd = "D4"
@@ -240,7 +447,7 @@ namespace OpenXMLOffice.Tests
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
-			_ = worksheet.AddChart(new()
+			worksheet.AddChart(new()
 			{
 				cellIdStart = "A1",
 				cellIdEnd = "D4"

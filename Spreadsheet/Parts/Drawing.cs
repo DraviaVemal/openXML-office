@@ -43,7 +43,6 @@ namespace OpenXMLOffice.Spreadsheet_2013
         {
             XDR.TwoCellAnchor twoCellAnchor = new(new XDR.ClientData())
             {
-                EditAs = XDR.EditAsValues.OneCell,
                 FromMarker = new()
                 {
                     ColumnId = new XDR.ColumnId(twoCellAnchorModel.from.column.ToString()),
