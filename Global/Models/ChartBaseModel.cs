@@ -548,7 +548,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// 
 	/// </summary>
-	public class PresentationSizeAndPosition
+	public class PresentationSizeAndPosition : ISizeAndPosition
 	{
 
 		/// <summary>
@@ -575,7 +575,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// 
 	/// </summary>
-	public class ExcelSizeAndPosition
+	public class ExcelSizeAndPosition : ISizeAndPosition
 	{
 		/// <summary>
 		/// 
@@ -591,7 +591,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the settings for a chart.
 	/// </summary>
-	public class ChartSetting : PresentationSizeAndPosition
+	public class ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 		internal uint? categoryAxisId;
 		internal uint? valueAxisId;
@@ -625,6 +625,11 @@ namespace OpenXMLOffice.Global_2013
 		/// Chart Title
 		/// </summary>
 		public ChartTitleModel? titleOptions;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public required ApplicationSpecificSetting sizeAndPosition;
 
 		internal ChartSetting() { }
 	}

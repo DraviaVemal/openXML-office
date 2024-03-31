@@ -73,7 +73,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the settings for an area chart.
 	/// </summary>
-	public class AreaChartSetting : ChartSetting
+	public class AreaChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 		/// <summary>

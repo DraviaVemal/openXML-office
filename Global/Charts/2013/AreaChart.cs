@@ -8,14 +8,14 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Aread Chart Core data
 	/// </summary>
-	public class AreaChart : ChartBase
+	public class AreaChart<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 		/// <summary>
 		/// Area Chart Setting
 		/// </summary>
-		protected readonly AreaChartSetting areaChartSetting;
+		protected readonly AreaChartSetting<ApplicationSpecificSetting> areaChartSetting;
 
-		internal AreaChart(AreaChartSetting areaChartSetting) : base(areaChartSetting)
+		internal AreaChart(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) : base(areaChartSetting)
 		{
 			this.areaChartSetting = areaChartSetting;
 		}
@@ -23,7 +23,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// </summary>
-		public AreaChart(AreaChartSetting areaChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(areaChartSetting)
+		public AreaChart(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(areaChartSetting)
 		{
 			this.areaChartSetting = areaChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));

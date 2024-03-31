@@ -8,15 +8,15 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the types of pie charts.
 	/// </summary>
-	public class PieChart : ChartBase
+	public class PieChart<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 		/// <summary>
 		/// The settings for the pie chart.
 		/// </summary>
-		protected PieChartSetting pieChartSetting;
+		protected PieChartSetting<ApplicationSpecificSetting> pieChartSetting;
 
-		internal PieChart(PieChartSetting pieChartSetting) : base(pieChartSetting)
+		internal PieChart(PieChartSetting<ApplicationSpecificSetting> pieChartSetting) : base(pieChartSetting)
 		{
 			this.pieChartSetting = pieChartSetting;
 		}
@@ -24,7 +24,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Pie Chart with provided settings
 		/// </summary>
-		public PieChart(PieChartSetting pieChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(pieChartSetting)
+		public PieChart(PieChartSetting<ApplicationSpecificSetting> pieChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(pieChartSetting)
 		{
 			this.pieChartSetting = pieChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));

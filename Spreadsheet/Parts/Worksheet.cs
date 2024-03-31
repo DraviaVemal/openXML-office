@@ -247,7 +247,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public Chart AddChart(DataRange dataRange, AreaChartSetting areaChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) where ApplicationSpecificSetting : class, ISizeAndPosition
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
 			return new(this, chartDatas, dataRange, areaChartSetting);
@@ -256,7 +256,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public Chart AddChart(DataRange dataRange, BarChartSetting barChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) where ApplicationSpecificSetting : class, ISizeAndPosition
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
 			return new(this, chartDatas, dataRange, barChartSetting);
@@ -265,7 +265,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public Chart AddChart(DataRange dataRange, ColumnChartSetting columnChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) where ApplicationSpecificSetting : class, ISizeAndPosition
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
 			return new(this, chartDatas, dataRange, columnChartSetting);
@@ -274,7 +274,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public Chart AddChart(DataRange dataRange, LineChartSetting lineChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) where ApplicationSpecificSetting : class, ISizeAndPosition
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
 			return new(this, chartDatas, dataRange, lineChartSetting);
@@ -283,7 +283,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public Chart AddChart(DataRange dataRange, PieChartSetting pieChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) where ApplicationSpecificSetting : class, ISizeAndPosition
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
 			return new(this, chartDatas, dataRange, pieChartSetting);
@@ -292,7 +292,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public Chart AddChart(DataRange dataRange, ScatterChartSetting scatterChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) where ApplicationSpecificSetting : class, ISizeAndPosition
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
 			return new(this, chartDatas, dataRange, scatterChartSetting);

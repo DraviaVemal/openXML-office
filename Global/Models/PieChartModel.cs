@@ -100,7 +100,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the setting for a pie chart.
 	/// </summary>
-	public class PieChartSetting : ChartSetting
+	public class PieChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 		/// <summary>

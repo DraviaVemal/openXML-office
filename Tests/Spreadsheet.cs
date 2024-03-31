@@ -214,11 +214,14 @@ namespace OpenXMLOffice.Tests
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
-			worksheet.AddChart(new()
+			_ = worksheet.AddChart<ExcelSizeAndPosition>(new()
 			{
 				cellIdStart = "A1",
 				cellIdEnd = "D4"
-			}, new AreaChartSetting());
+			}, new AreaChartSetting<ExcelSizeAndPosition>()
+			{
+				sizeAndPosition = new()
+			});
 			excel1.SaveAs(string.Format("../../Edit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
 			Assert.IsTrue(true);
 		}

@@ -8,15 +8,15 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the settings for a line chart.
 	/// </summary>
-	public class LineChart : ChartBase
+	public class LineChart<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 		/// <summary>
 		/// The settings for the line chart.
 		/// </summary>
-		protected LineChartSetting lineChartSetting;
+		protected LineChartSetting<ApplicationSpecificSetting> lineChartSetting;
 
-		internal LineChart(LineChartSetting lineChartSetting) : base(lineChartSetting)
+		internal LineChart(LineChartSetting<ApplicationSpecificSetting> lineChartSetting) : base(lineChartSetting)
 		{
 			this.lineChartSetting = lineChartSetting;
 		}
@@ -24,7 +24,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// </summary>
-		public LineChart(LineChartSetting lineChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(lineChartSetting)
+		public LineChart(LineChartSetting<ApplicationSpecificSetting> lineChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(lineChartSetting)
 		{
 			this.lineChartSetting = lineChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));

@@ -5,7 +5,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	///
 	/// </summary>
-	public class ComboChartSetting : ChartSetting
+	public class ComboChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 		/// <summary>
@@ -19,7 +19,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public void AddComboChartsSetting(AreaChartSetting areaChartSetting)
+		public void AddComboChartsSetting(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
 		{
 			if (CheckSecondaryAxisAlreadyUsed())
 			{
@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public void AddComboChartsSetting(BarChartSetting barChartSetting)
+		public void AddComboChartsSetting(BarChartSetting<ApplicationSpecificSetting> barChartSetting)
 		{
 			if (CheckSecondaryAxisAlreadyUsed())
 			{
@@ -43,7 +43,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public void AddComboChartsSetting(ColumnChartSetting columnChartSetting)
+		public void AddComboChartsSetting(ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
 		{
 			if (CheckSecondaryAxisAlreadyUsed())
 			{
@@ -55,7 +55,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public void AddComboChartsSetting(LineChartSetting lineChartSetting)
+		public void AddComboChartsSetting(LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
 		{
 			if (CheckSecondaryAxisAlreadyUsed())
 			{
@@ -67,7 +67,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public void AddComboChartsSetting(PieChartSetting pieChartSetting)
+		public void AddComboChartsSetting(PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
 		{
 			if (CheckSecondaryAxisAlreadyUsed())
 			{
@@ -100,7 +100,7 @@ namespace OpenXMLOffice.Global_2013
 
 		private bool CheckSecondaryAxisAlreadyUsed()
 		{
-			return ComboChartsSettingList.Select(val => ((ChartSetting)val).isSecondaryAxis).Count(v => v) > 1;
+			return ComboChartsSettingList.Select(val => ((ChartSetting<ApplicationSpecificSetting>)val).isSecondaryAxis).Count(v => v) > 1;
 		}
 	}
 }

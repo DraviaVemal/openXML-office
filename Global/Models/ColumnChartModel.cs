@@ -113,7 +113,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the settings for a column chart.
 	/// </summary>
-	public class ColumnChartSetting : ChartSetting
+	public class ColumnChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 		/// <summary>

@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the settings for a bar chart.
 	/// </summary>
-	public class BarChart : ChartBase
+	public class BarChart<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 		private const int DefaultGapWidth = 150;
 		private const int DefaultOverlap = 100;
@@ -16,9 +16,9 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Bar Chart Setting
 		/// </summary>
-		protected readonly BarChartSetting barChartSetting;
+		protected readonly BarChartSetting<ApplicationSpecificSetting> barChartSetting;
 
-		internal BarChart(BarChartSetting barChartSetting) : base(barChartSetting)
+		internal BarChart(BarChartSetting<ApplicationSpecificSetting> barChartSetting) : base(barChartSetting)
 		{
 			this.barChartSetting = barChartSetting;
 		}
@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// </summary>
-		public BarChart(BarChartSetting barChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(barChartSetting)
+		public BarChart(BarChartSetting<ApplicationSpecificSetting> barChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(barChartSetting)
 		{
 			this.barChartSetting = barChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));

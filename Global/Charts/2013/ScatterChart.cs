@@ -8,16 +8,16 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the types of scatter charts.
 	/// </summary>
-	public class ScatterChart : ChartBase
+	public class ScatterChart<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 
 		/// <summary>
 		/// Scatter Chart Setting
 		/// </summary>
-		protected ScatterChartSetting scatterChartSetting;
+		protected ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting;
 
-		internal ScatterChart(ScatterChartSetting scatterChartSetting) : base(scatterChartSetting)
+		internal ScatterChart(ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) : base(scatterChartSetting)
 		{
 			this.scatterChartSetting = scatterChartSetting;
 		}
@@ -25,7 +25,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Scatter Chart with provided settings
 		/// </summary>
-		public ScatterChart(ScatterChartSetting scatterChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(scatterChartSetting)
+		public ScatterChart(ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(scatterChartSetting)
 		{
 			this.scatterChartSetting = scatterChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));

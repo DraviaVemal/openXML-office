@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Global_2013;
 /// <summary>
 /// Chart Base Class Common to all charts. Class is only intended to get created by inherited classes
 /// </summary>
-public class ChartBase : CommonProperties
+public class ChartBase<ApplicationSpecificSetting> : CommonProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 {
 	internal const int AccentColurCount = 6;
 	internal uint CategoryAxisId = 1362418656;
@@ -26,7 +26,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Core chart settings common for every possible chart
 	/// </summary>
-	internal ChartSetting chartSetting;
+	internal ChartSetting<ApplicationSpecificSetting> chartSetting;
 
 	private readonly C.Chart chart;
 
@@ -37,7 +37,7 @@ public class ChartBase : CommonProperties
 	/// </summary>
 	/// <param name="chartSetting">
 	/// </param>
-	internal ChartBase(ChartSetting chartSetting)
+	internal ChartBase(ChartSetting<ApplicationSpecificSetting> chartSetting)
 	{
 		CategoryAxisId = chartSetting.categoryAxisId ?? CategoryAxisId;
 		ValueAxisId = chartSetting.valueAxisId ?? ValueAxisId;

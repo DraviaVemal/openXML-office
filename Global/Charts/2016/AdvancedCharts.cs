@@ -8,13 +8,13 @@ namespace OpenXMLOffice.Global_2016
 	/// <summary>
 	///
 	/// </summary>
-	public class AdvanceCharts : ChartBase
+	public class AdvanceCharts<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 		private readonly CX.ChartSpace chartSpace = new();
 		/// <summary>
 		///
 		/// </summary>
-		internal AdvanceCharts(ChartSetting chartSetting) : base(chartSetting) { }
+		internal AdvanceCharts(ChartSetting<ApplicationSpecificSetting> chartSetting) : base(chartSetting) { }
 
 		/// <summary>
 		///

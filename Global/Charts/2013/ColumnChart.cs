@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the settings for a column chart.
 	/// </summary>
-	public class ColumnChart : ChartBase
+	public class ColumnChart<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 		private const int DefaultGapWidth = 150;
 		private const int DefaultOverlap = 100;
@@ -16,9 +16,9 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Column Chart Setting
 		/// </summary>
-		protected ColumnChartSetting columnChartSetting;
+		protected ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting;
 
-		internal ColumnChart(ColumnChartSetting columnChartSetting) : base(columnChartSetting)
+		internal ColumnChart(ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) : base(columnChartSetting)
 		{
 			this.columnChartSetting = columnChartSetting;
 		}
@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Column Chart with provided settings
 		/// </summary>
-		public ColumnChart(ColumnChartSetting columnChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(columnChartSetting)
+		public ColumnChart(ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(columnChartSetting)
 		{
 			this.columnChartSetting = columnChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));

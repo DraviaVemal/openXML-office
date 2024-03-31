@@ -109,7 +109,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// Represents the settings for a scatter chart.
 	/// </summary>
-	public class ScatterChartSetting : ChartSetting
+	public class ScatterChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 
 		/// <summary>

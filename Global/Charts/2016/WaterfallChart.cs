@@ -7,13 +7,13 @@ namespace OpenXMLOffice.Global_2016
 	/// <summary>
 	///
 	/// </summary>
-	public class WaterfallChart : AdvanceCharts
+	public class WaterfallChart<ApplicationSpecificSetting> : AdvanceCharts<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
-		private readonly WaterfallChartSetting waterfallChartSetting;
+		private readonly WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting;
 		/// <summary>
 		///
 		/// </summary>
-		public WaterfallChart(WaterfallChartSetting waterfallChartSetting, ChartData[][] dataColumns, DataRange? dataRange = null) : base(waterfallChartSetting)
+		public WaterfallChart(WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting, ChartData[][] dataColumns, DataRange? dataRange = null) : base(waterfallChartSetting)
 		{
 			this.waterfallChartSetting = waterfallChartSetting;
 			CreateWaterfallChart(dataColumns, dataRange);

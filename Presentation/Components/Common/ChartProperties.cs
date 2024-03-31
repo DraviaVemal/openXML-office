@@ -11,12 +11,12 @@ namespace OpenXMLOffice.Presentation_2013
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties
+	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 		/// <summary>
 		///
 		/// </summary>
-		internal readonly ChartSetting chartSetting;
+		internal readonly ChartSetting<ApplicationSpecificSetting> chartSetting;
 		/// <summary>
 		///
 		/// </summary>
@@ -28,7 +28,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		///
 		/// </summary>
-		internal ChartProperties(Slide slide, ChartSetting chartSetting)
+		internal ChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting)
 		{
 			this.chartSetting = chartSetting;
 			currentSlide = slide;

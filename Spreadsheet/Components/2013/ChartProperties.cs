@@ -7,42 +7,22 @@ namespace OpenXMLOffice.Spreadsheet_2013
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties
+	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
 		/// <summary>
 		///
 		/// </summary>
-		internal readonly ChartSetting chartSetting;
+		internal readonly ChartSetting<ApplicationSpecificSetting> chartSetting;
 
 		/// <summary>
 		///
 		/// </summary>
 		internal readonly Worksheet currentWorksheet;
 
-		internal ChartProperties(Worksheet worksheet, ChartSetting chartSetting)
+		internal ChartProperties(Worksheet worksheet, ChartSetting<ApplicationSpecificSetting> chartSetting)
 		{
 			this.chartSetting = chartSetting;
 			currentWorksheet = worksheet;
-		}
-
-		/// <summary>
-		/// </summary>
-		/// <returns>
-		/// X,Y
-		/// </returns>
-		internal (uint, uint) GetPosition()
-		{
-			return (chartSetting.x, chartSetting.y);
-		}
-
-		/// <summary>
-		/// </summary>
-		/// <returns>
-		/// Width,Height
-		/// </returns>
-		internal (uint, uint) GetSize()
-		{
-			return (chartSetting.width, chartSetting.height);
 		}
 
 		/// <summary>
