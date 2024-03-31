@@ -15,6 +15,7 @@ namespace OpenXMLOffice.Global_2013
 		/// This function converts an Excel-style cell reference (e.g., "A1") into row and column
 		/// indices (non zero-based) to identify the corresponding cell within a worksheet
 		/// </summary>
+		/// <returns>row,col</returns>
 		public static (int, int) ConvertFromExcelCellReference(string cellReference)
 		{
 			if (string.IsNullOrEmpty(cellReference)) { throw new ArgumentException("Cell reference cannot be empty."); }

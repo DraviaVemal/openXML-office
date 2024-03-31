@@ -37,14 +37,41 @@ namespace OpenXMLOffice.Spreadsheet_2013
 				return instance;
 			}
 		}
+		/// <summary>
+		/// Return Style details for the provided style ID
+		/// </summary>
+		public CellStyleSetting GetStyleForId(uint styleId)
+		{
+			CellXfs? cellXfs = cellXfsCollection.FindOne(item => item.Id == styleId);
+			FontStyle? fontStyle = fontStyleCollection.FindOne(item => item.Id == cellXfs.FontId);
+			BorderStyle? borderStyle = borderStyleCollection.FindOne(item => item.Id == cellXfs.BorderId);
+			FillStyle? fillStyle = fillStyleCollection.FindOne(item => item.Id == cellXfs.FillId);
+			NumberFormats? numberFormats = numberFormatCollection.FindOne(item =>
+				item.Id == cellXfs.NumberFormatId!);
+			CellStyleSetting cellStyleSetting = new()
+			{
+				isWrapText = cellXfs.IsWrapetext,
+				fontFamily = fontStyle.Name,
+				fontSize = fontStyle.Size,
+				isItalic = fontStyle.IsItalic,
+				isBold = fontStyle.IsBold,
+				isUnderline = fontStyle.IsUnderline,
+				isDoubleUnderline = fontStyle.IsDoubleUnderline,
+				textColor = fontStyle.Color,
+				borderLeft = borderStyle.Left,
+				borderTop = borderStyle.Top,
+				borderRight = borderStyle.Right,
+				borderBottom = borderStyle.Bottom,
+				backgroundColor = fillStyle.BackgroundColor,
+				foregroundColor = fillStyle.ForegroundColor,
+				numberFormat = numberFormats.FormatCode,
+			};
+			return cellStyleSetting;
+		}
 
 		/// <summary>
 		/// Get the Cell Style Id based on user specified CellStyleSetting
 		/// </summary>
-		/// <param name="CellStyleSetting">
-		/// </param>
-		/// <returns>
-		/// </returns>
 		public uint GetCellStyleId(CellStyleSetting CellStyleSetting)
 		{
 			uint FontId = GetFontId(CellStyleSetting);

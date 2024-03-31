@@ -13,14 +13,17 @@ namespace OpenXMLOffice.Spreadsheet_2013
 	internal class SpreadsheetCore
 	{
 
+		internal readonly Excel excel;
+
 		internal readonly SpreadsheetDocument spreadsheetDocument;
 
 		internal readonly SpreadsheetInfo spreadsheetInfo = new();
 
 		internal readonly SpreadsheetProperties spreadsheetProperties;
 
-		internal SpreadsheetCore(string filePath, SpreadsheetProperties? spreadsheetProperties)
+		internal SpreadsheetCore(Excel excel, string filePath, SpreadsheetProperties? spreadsheetProperties)
 		{
+			this.excel = excel;
 			spreadsheetInfo.filePath = filePath;
 			this.spreadsheetProperties = spreadsheetProperties ?? new();
 			MemoryStream memoryStream = new();
@@ -28,15 +31,9 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			PrepareSpreadsheet(this.spreadsheetProperties);
 		}
 
-		internal SpreadsheetCore(Stream stream, SpreadsheetProperties? spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
 		{
-			this.spreadsheetProperties = spreadsheetProperties ?? new();
-			spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
-			PrepareSpreadsheet(this.spreadsheetProperties);
-		}
-
-		internal SpreadsheetCore(string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
-		{
+			this.excel = excel;
 			spreadsheetInfo.filePath = filePath;
 			this.spreadsheetProperties = spreadsheetProperties ?? new();
 			FileStream reader = new(filePath, FileMode.Open);
@@ -59,8 +56,17 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			ReadDataFromFile();
 		}
 
-		internal SpreadsheetCore(Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, Stream stream, SpreadsheetProperties? spreadsheetProperties = null)
 		{
+			this.excel = excel;
+			this.spreadsheetProperties = spreadsheetProperties ?? new();
+			spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
+			PrepareSpreadsheet(this.spreadsheetProperties);
+		}
+
+		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
+		{
+			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new();
 			spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings()
 			{

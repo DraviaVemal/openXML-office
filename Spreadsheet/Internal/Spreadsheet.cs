@@ -8,13 +8,13 @@ namespace OpenXMLOffice.Spreadsheet_2013
 {
 	internal class Spreadsheet : SpreadsheetCore
 	{
-		internal Spreadsheet(string filePath, SpreadsheetProperties? spreadsheetProperties) : base(filePath, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, string filePath, SpreadsheetProperties? spreadsheetProperties) : base(excel, filePath, spreadsheetProperties) { }
 
-		internal Spreadsheet(string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(filePath, isEditable, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(excel, filePath, isEditable, spreadsheetProperties) { }
 
-		internal Spreadsheet(Stream stream, SpreadsheetProperties? spreadsheetProperties) : base(stream, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, Stream stream, SpreadsheetProperties? spreadsheetProperties) : base(excel, stream, spreadsheetProperties) { }
 
-		internal Spreadsheet(Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(stream, isEditable, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(excel, stream, isEditable, spreadsheetProperties) { }
 
 		internal Worksheet AddSheet(string? sheetName)
 		{
@@ -36,7 +36,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			};
 			GetSheets().Append(sheet);
 			worksheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(new SheetData());
-			return new Worksheet(worksheetPart.Worksheet, sheet);
+			return new Worksheet(excel, worksheetPart.Worksheet, sheet);
 		}
 
 		internal int? GetSheetId(string sheetName)
@@ -69,7 +69,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
 			if (sheet == null) { return null; }
 			if (GetWorkbookPart().GetPartById(sheet.Id!) is not WorksheetPart worksheetPart) { return null; }
-			return new Worksheet(worksheetPart.Worksheet, sheet);
+			return new Worksheet(excel, worksheetPart.Worksheet, sheet);
 		}
 
 		internal bool RemoveSheet(string sheetName)

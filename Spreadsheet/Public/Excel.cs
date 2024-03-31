@@ -21,7 +21,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
         /// </summary>
         public Excel(string filePath, SpreadsheetProperties? spreadsheetProperties = null)
         {
-            spreadsheet = new(filePath, spreadsheetProperties);
+            spreadsheet = new(this, filePath, spreadsheetProperties);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
         /// </summary>
         public Excel(string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
         {
-            spreadsheet = new(filePath, isEditable, spreadsheetProperties);
+            spreadsheet = new(this, filePath, isEditable, spreadsheetProperties);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
         /// </summary>
         public Excel(Stream Stream, SpreadsheetProperties? spreadsheetProperties = null)
         {
-            spreadsheet = new(Stream, spreadsheetProperties);
+            spreadsheet = new(this, Stream, spreadsheetProperties);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
         /// </summary>
         public Excel(Stream Stream, bool IsEditable, SpreadsheetProperties? spreadsheetProperties = null)
         {
-            spreadsheet = new(Stream, IsEditable, spreadsheetProperties);
+            spreadsheet = new(this, Stream, IsEditable, spreadsheetProperties);
         }
 
         /// <summary>

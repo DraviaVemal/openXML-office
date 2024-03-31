@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
         /// <summary>
         /// 
         /// </summary>
-        protected DrawingsPart GetDrawingsPart(Worksheet worksheet)
+        protected static DrawingsPart GetDrawingsPart(Worksheet worksheet)
         {
             if (worksheet.GetWorksheetPart().DrawingsPart == null)
             {
