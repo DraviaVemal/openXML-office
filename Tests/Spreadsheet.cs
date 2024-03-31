@@ -208,7 +208,7 @@ namespace OpenXMLOffice.Tests
 		public void OpenExistingExcel()
 		{
 			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
-			Worksheet worksheet = excel1.AddSheet("newChart");
+			Worksheet worksheet = excel1.AddSheet("AreaChart");
 			int row = 0;
 			CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
@@ -229,8 +229,34 @@ namespace OpenXMLOffice.Tests
 					},
 					to = new()
 					{
-						row = 10,
-						column = 10
+						row = 20,
+						column = 20
+					}
+				}
+			});
+			worksheet = excel1.AddSheet("LineChart");
+			row = 0;
+			CreateDataCellPayload().ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			_ = worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new LineChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 20,
+						column = 20
 					}
 				}
 			});
@@ -268,7 +294,6 @@ namespace OpenXMLOffice.Tests
 						styleSetting = new()
 						{
 							numberFormat = "0.00",
-							fontSize = 20
 						}
 					};
 				}
