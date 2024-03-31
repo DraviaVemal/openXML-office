@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using C = DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Spreadsheet_2013;
 using OpenXMLOffice.Global_2013;
@@ -101,7 +102,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			WriteDataToExcel(dataRows, stream);
-			// Prepare Excel Data for PPT Cache
 			AreaChart areaChart = new(areaChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(areaChart);
@@ -111,7 +111,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			WriteDataToExcel(dataRows, stream);
-			// Prepare Excel Data for PPT Cache
 			BarChart barChart = new(barChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(barChart);
@@ -121,7 +120,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			WriteDataToExcel(dataRows, stream);
-			// Prepare Excel Data for PPT Cache
 			ColumnChart columnChart = new(columnChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(columnChart);
@@ -131,7 +129,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			WriteDataToExcel(dataRows, stream);
-			// Prepare Excel Data for PPT Cache
 			LineChart lineChart = new(lineChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(lineChart);
@@ -141,7 +138,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			WriteDataToExcel(dataRows, stream);
-			// Prepare Excel Data for PPT Cache
 			PieChart pieChart = new(pieChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(pieChart);
@@ -151,7 +147,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			WriteDataToExcel(dataRows, stream);
-			// Prepare Excel Data for PPT Cache
 			ScatterChart scatterChart = new(scatterChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(scatterChart);
@@ -161,7 +156,6 @@ namespace OpenXMLOffice.Presentation_2013
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
 			WriteDataToExcel(dataRows, stream);
-			// Prepare Excel Data for PPT Cache
 			ComboChart comboChart = new(comboChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(comboChart);
@@ -169,6 +163,9 @@ namespace OpenXMLOffice.Presentation_2013
 
 		private void SaveChanges(ChartBase chart)
 		{
+			chart.GetChartSpace().Append(new C.ExternalData(
+				new C.AutoUpdate() { Val = false })
+			{ Id = "rId1" });
 			GetChartPart().ChartSpace = chart.GetChartSpace();
 			GetChartStylePart().ChartStyle = ChartStyle.CreateChartStyles();
 			GetChartColorStylePart().ColorStyle = ChartColor.CreateColorStyles();

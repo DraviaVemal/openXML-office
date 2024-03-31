@@ -26,10 +26,10 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// </summary>
-		public BarChart(BarChartSetting barChartSetting, ChartData[][] dataCols) : base(barChartSetting)
+		public BarChart(BarChartSetting barChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(barChartSetting)
 		{
 			this.barChartSetting = barChartSetting;
-			SetChartPlotArea(CreateChartPlotArea(dataCols));
+			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
 		private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
@@ -189,11 +189,11 @@ namespace OpenXMLOffice.Global_2013
 			return null;
 		}
 
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(CreateBarChart(CreateDataSeries(dataCols, barChartSetting.chartDataSetting)));
+			plotArea.Append(CreateBarChart(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,

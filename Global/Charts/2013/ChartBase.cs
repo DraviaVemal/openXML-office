@@ -45,9 +45,6 @@ public class ChartBase : CommonProperties
 		openXMLChartSpace = CreateChartSpace();
 		chart = CreateChart();
 		GetChartSpace().Append(chart);
-		GetChartSpace().Append(new C.ExternalData(
-			new C.AutoUpdate() { Val = false })
-		{ Id = "rId1" });
 	}
 
 	/// <summary>
@@ -344,7 +341,7 @@ public class ChartBase : CommonProperties
 	/// <summary>
 	/// Create Data Series for the chart
 	/// </summary>
-	internal List<ChartDataGrouping> CreateDataSeries(ChartData[][] dataCols, ChartDataSetting chartDataSetting)
+	internal List<ChartDataGrouping> CreateDataSeries(ChartDataSetting chartDataSetting, ChartData[][] dataCols, DataRange? dataRange)
 	{
 		List<uint> seriesColumns = new();
 		for (uint col = chartDataSetting.chartDataColumnStart + 1; col <= (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length - 1 : chartDataSetting.chartDataColumnEnd); col++)

@@ -1,6 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using OpenXMLOffice.Spreadsheet_2013;
+using X = OpenXMLOffice.Spreadsheet_2013;
 using G = OpenXMLOffice.Global_2013;
 using OpenXMLOffice.Presentation_2013;
 using OpenXMLOffice.Global_2016;
@@ -259,26 +259,26 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void Add2016Charts()
 		{
-			DataCell[][] data = new DataCell[9][];
-			data[0] = new DataCell[2];
+			X.DataCell[][] data = new X.DataCell[9][];
+			data[0] = new X.DataCell[2];
 			data[0][1] = new()
 			{
 				cellValue = "Series 1",
-				dataType = CellDataType.STRING
+				dataType = X.CellDataType.STRING
 			};
 			for (int i = 1; i < 9; i++)
 			{
-				data[i] = new DataCell[2];
-				data[i][0] = new DataCell()
+				data[i] = new X.DataCell[2];
+				data[i][0] = new X.DataCell()
 				{
 					cellValue = $"Category {i}",
-					dataType = CellDataType.STRING
+					dataType = X.CellDataType.STRING
 				};
 				int val = (i % 2) == 0 ? -i : i;
-				data[i][1] = new DataCell()
+				data[i][1] = new X.DataCell()
 				{
 					cellValue = $"{val}",
-					dataType = CellDataType.NUMBER
+					dataType = X.CellDataType.NUMBER
 				};
 			}
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new WaterfallChartSetting());
@@ -566,33 +566,33 @@ namespace OpenXMLOffice.Tests
 			File.Delete("../try.pptx");
 		}
 
-		private static DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
+		private static X.DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
 		{
 			Random random = new();
-			DataCell[][] data = new DataCell[payloadSize][];
-			data[0] = new DataCell[payloadSize];
+			X.DataCell[][] data = new X.DataCell[payloadSize][];
+			data[0] = new X.DataCell[payloadSize];
 			for (int col = 1; col < payloadSize; col++)
 			{
-				data[0][col] = new DataCell
+				data[0][col] = new X.DataCell
 				{
 					cellValue = $"Series {col}",
-					dataType = CellDataType.STRING
+					dataType = X.CellDataType.STRING
 				};
 			}
 			for (int row = 1; row < payloadSize; row++)
 			{
-				data[row] = new DataCell[payloadSize];
-				data[row][0] = new DataCell
+				data[row] = new X.DataCell[payloadSize];
+				data[row][0] = new X.DataCell
 				{
 					cellValue = $"Category {row}",
-					dataType = CellDataType.STRING
+					dataType = X.CellDataType.STRING
 				};
 				for (int col = IsValueAxis ? 0 : 1; col < payloadSize; col++)
 				{
-					data[row][col] = new DataCell
+					data[row][col] = new X.DataCell
 					{
 						cellValue = random.Next(1, 100).ToString(),
-						dataType = CellDataType.NUMBER,
+						dataType = X.CellDataType.NUMBER,
 						styleSetting = new()
 						{
 							numberFormat = "0.00",

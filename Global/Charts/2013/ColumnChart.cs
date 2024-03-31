@@ -26,17 +26,17 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Column Chart with provided settings
 		/// </summary>
-		public ColumnChart(ColumnChartSetting columnChartSetting, ChartData[][] dataCols) : base(columnChartSetting)
+		public ColumnChart(ColumnChartSetting columnChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(columnChartSetting)
 		{
 			this.columnChartSetting = columnChartSetting;
-			SetChartPlotArea(CreateChartPlotArea(dataCols));
+			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(columnChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(CreateColumnChart(CreateDataSeries(dataCols, columnChartSetting.chartDataSetting)));
+			plotArea.Append(CreateColumnChart(CreateDataSeries(columnChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,

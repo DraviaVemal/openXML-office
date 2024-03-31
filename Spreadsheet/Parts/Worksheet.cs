@@ -220,5 +220,63 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			throw new ArgumentException("At least one cell range must be covered by the picture.");
 		}
 
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public void AddChart(DataRange dataRange, AreaChartSetting areaChartSetting)
+		// {
+		// 	ChartData[][] chartDatas = PrepareCacheData(excel, dataRange);
+		// 	Chart chart = new(this, chartDatas, dataRange, areaChartSetting);
+		// }
+
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public void AddChart(DataRange dataRange, BarChartSetting barChartSetting)
+		// {
+		// 	ChartData[][] chartDatas = PrepareCacheData(excel, dataRange);
+		// 	Chart chart = new(this, chartDatas, dataRange, barChartSetting);
+		// }
+
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public void AddChart(DataRange dataRange, ColumnChartSetting columnChartSetting)
+		// {
+		// 	ChartData[][] chartDatas = PrepareCacheData(excel, dataRange);
+		// 	Chart chart = new(this, chartDatas, dataRange, columnChartSetting);
+		// }
+
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public void AddChart(DataRange dataRange, LineChartSetting lineChartSetting)
+		// {
+		// 	ChartData[][] chartDatas = PrepareCacheData(excel, dataRange);
+		// 	Chart chart = new(this, chartDatas, dataRange, lineChartSetting);
+		// }
+
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public void AddChart(DataRange dataRange, PieChartSetting pieChartSetting)
+		// {
+		// 	ChartData[][] chartDatas = PrepareCacheData(excel, dataRange);
+		// 	Chart chart = new(this, chartDatas, dataRange, pieChartSetting);
+		// }
+
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public void AddChart(DataRange dataRange, ScatterChartSetting scatterChartSetting)
+		// {
+		// 	ChartData[][] chartDatas = PrepareCacheData(excel, dataRange);
+		// 	Chart chart = new(this, chartDatas, dataRange, scatterChartSetting);
+		// }
+
+		private ChartData[][] PrepareCacheData(Excel excel, DataRange dataRange)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

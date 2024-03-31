@@ -24,17 +24,17 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// </summary>
-		public LineChart(LineChartSetting lineChartSetting, ChartData[][] dataCols) : base(lineChartSetting)
+		public LineChart(LineChartSetting lineChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(lineChartSetting)
 		{
 			this.lineChartSetting = lineChartSetting;
-			SetChartPlotArea(CreateChartPlotArea(dataCols));
+			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(CreateLineChart(CreateDataSeries(dataCols, lineChartSetting.chartDataSetting)));
+			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,

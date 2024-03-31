@@ -136,13 +136,23 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		{
 			UpdateStyle();
 			UpdateSharedString();
-			spreadsheetDocument.Save();
+			if (spreadsheetInfo.filePath == null)
+			{
+				throw new FieldAccessException("Data Is in File Stream Use SaveAs to Target save file");
+			}
+			if (spreadsheetInfo.isEditable)
+			{
+				spreadsheetDocument.Clone(spreadsheetInfo.filePath).Dispose();
+			}
 			spreadsheetDocument.Dispose();
 		}
 
 		internal void SaveAs(string filePath)
 		{
-			throw new NotImplementedException();
+			UpdateStyle();
+			UpdateSharedString();
+			spreadsheetDocument.Clone(filePath).Dispose();
+			spreadsheetDocument.Dispose();
 		}
 
 		private bool CheckIfSheetNameExist(string sheetName)

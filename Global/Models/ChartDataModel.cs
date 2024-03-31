@@ -43,4 +43,24 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		public string? value;
 	}
+
+	/// <summary>
+	/// Set the target data present with in the excel workbook
+	/// </summary>
+	public class DataRange
+	{
+		/// <summary>
+		/// Sheet name
+		/// Default : Current Sheet the chart is targetted for
+		/// </summary>
+		public string? sheetName { get; set; }
+		/// <summary>
+		/// Cell Id Range start. Ex: A1
+		/// </summary>
+		public required string cellIdStart { get; set; }
+		/// <summary>
+		/// Cell Id Range End. Ex: D4
+		/// </summary>
+		public required string cellIdEnd { get; set; }
+	}
 }

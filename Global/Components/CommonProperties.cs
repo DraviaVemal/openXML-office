@@ -345,7 +345,7 @@ namespace OpenXMLOffice.Global_2013
 		/// Create Shape Properties
 		/// </summary>
 		/// <returns></returns>
-		protected C.ShapeProperties CreateChartShapeProperties(ShapePropertiesModel shapePropertiesModel)
+		protected static C.ShapeProperties CreateChartShapeProperties(ShapePropertiesModel shapePropertiesModel)
 		{
 			C.ShapeProperties shapeProperties = new();
 			if (shapePropertiesModel.solidFill != null)
@@ -517,7 +517,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		private A.ParagraphProperties CreateDrawingParagraphProperties(ParagraphPropertiesModel paragraphPropertiesModel)
+		private static A.ParagraphProperties CreateDrawingParagraphProperties(ParagraphPropertiesModel paragraphPropertiesModel)
 		{
 			A.ParagraphProperties paragraphProperties = new();
 			if (paragraphPropertiesModel.defaultRunProperties != null)

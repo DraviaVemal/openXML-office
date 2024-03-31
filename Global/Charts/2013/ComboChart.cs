@@ -17,13 +17,13 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		///
 		/// </summary>
-		public ComboChart(ComboChartSetting comboChartSetting, ChartData[][] dataCols) : base(comboChartSetting)
+		public ComboChart(ComboChartSetting comboChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(comboChartSetting)
 		{
 			ComboChartSetting = comboChartSetting;
-			SetChartPlotArea(CreateChartPlotArea(dataCols));
+			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
 		{
 			bool isSecondaryAxisActive = false;
 			if (ComboChartSetting.ComboChartsSettingList.Count == 0)
@@ -45,36 +45,36 @@ namespace OpenXMLOffice.Global_2013
 				if (chartSetting is AreaChartSetting areaChartSetting)
 				{
 					AreaChart areaChart = new(areaChartSetting);
-					plotArea.Append(areaChart.CreateAreaChart(GetChartPositionData(dataCols, chartPosition)));
+					plotArea.Append(areaChart.CreateAreaChart(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is BarChartSetting barChartSetting)
 				{
 					BarChart barChart = new(barChartSetting);
-					plotArea.Append(barChart.CreateBarChart(GetChartPositionData(dataCols, chartPosition)));
+					plotArea.Append(barChart.CreateBarChart(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is ColumnChartSetting columnChartSetting)
 				{
 					ColumnChart columnChart = new(columnChartSetting);
-					plotArea.Append(columnChart.CreateColumnChart(GetChartPositionData(dataCols, chartPosition)));
+					plotArea.Append(columnChart.CreateColumnChart(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is LineChartSetting lineChartSetting)
 				{
 					LineChart lineChart = new(lineChartSetting);
-					plotArea.Append(lineChart.CreateLineChart(GetChartPositionData(dataCols, chartPosition)));
+					plotArea.Append(lineChart.CreateLineChart(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is PieChartSetting pieChartSetting)
 				{
 					PieChart pieChart = new(pieChartSetting);
 					plotArea.Append(pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT ?
-						pieChart.CreateChart<C.DoughnutChart>(GetChartPositionData(dataCols, chartPosition)) :
-						pieChart.CreateChart<C.PieChart>(GetChartPositionData(dataCols, chartPosition)));
+						pieChart.CreateChart<C.DoughnutChart>(GetChartPositionData(dataCols, chartPosition, dataRange)) :
+						pieChart.CreateChart<C.PieChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is ScatterChartSetting scatterChartSetting)
 				{
 					ScatterChart scatterChart = new(scatterChartSetting);
 					plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ?
-						scatterChart.CreateChart<C.BubbleChart>(GetChartPositionData(dataCols, chartPosition)) :
-						scatterChart.CreateChart<C.ScatterChart>(GetChartPositionData(dataCols, chartPosition)));
+						scatterChart.CreateChart<C.BubbleChart>(GetChartPositionData(dataCols, chartPosition, dataRange)) :
+						scatterChart.CreateChart<C.ScatterChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				chartPosition++;
 			});
@@ -119,9 +119,9 @@ namespace OpenXMLOffice.Global_2013
 			return plotArea;
 		}
 
-		private List<ChartDataGrouping> GetChartPositionData(ChartData[][] dataCols, uint chartPosition)
+		private List<ChartDataGrouping> GetChartPositionData(ChartData[][] dataCols, uint chartPosition, DataRange? dataRange)
 		{
-			List<ChartDataGrouping> chartDataGroupings = CreateDataSeries(dataCols, ComboChartSetting.chartDataSetting);
+			List<ChartDataGrouping> chartDataGroupings = CreateDataSeries(ComboChartSetting.chartDataSetting, dataCols, dataRange);
 			return new() { chartDataGroupings.ElementAt((int)chartPosition) };
 		}
 	}

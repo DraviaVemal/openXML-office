@@ -25,13 +25,13 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Scatter Chart with provided settings
 		/// </summary>
-		public ScatterChart(ScatterChartSetting scatterChartSetting, ChartData[][] dataCols) : base(scatterChartSetting)
+		public ScatterChart(ScatterChartSetting scatterChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(scatterChartSetting)
 		{
 			this.scatterChartSetting = scatterChartSetting;
-			SetChartPlotArea(CreateChartPlotArea(dataCols));
+			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
 		{
 			if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
 			{
@@ -44,8 +44,8 @@ namespace OpenXMLOffice.Global_2013
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ?
-				CreateChart<C.BubbleChart>(CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting)) :
-				CreateChart<C.ScatterChart>(CreateDataSeries(dataCols, scatterChartSetting.chartDataSetting)));
+				CreateChart<C.BubbleChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)) :
+				CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = CategoryAxisId,

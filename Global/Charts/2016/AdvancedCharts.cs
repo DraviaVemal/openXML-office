@@ -27,7 +27,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		private CX.StringDimension CreateStringDimension(string formula, ChartData[] cells)
+		private static CX.StringDimension CreateStringDimension(string formula, ChartData[] cells)
 		{
 			CX.StringDimension stringDimension = new() { Type = CX.StringDimensionType.Cat };
 			stringDimension.Append(new CX.Formula(formula));
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		private CX.NumericDimension CreateNumberDimension(string formula, ChartData[] cells)
+		private static CX.NumericDimension CreateNumberDimension(string formula, ChartData[] cells)
 		{
 			CX.NumericDimension numericDimension = new() { Type = CX.NumericDimensionType.Val };
 			numericDimension.Append(new CX.Formula(formula));
@@ -60,7 +60,7 @@ namespace OpenXMLOffice.Global_2016
 			return numericDimension;
 		}
 
-		private CX.Series CreateSeries(ChartDataGrouping dataSeries)
+		private static CX.Series CreateSeries(ChartDataGrouping dataSeries)
 		{
 			CX.Series series = new()
 			{
@@ -96,7 +96,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		private CX.Data CreateData(ChartDataGrouping dataSeries)
+		private static CX.Data CreateData(ChartDataGrouping dataSeries)
 		{
 			CX.Data data = new()
 			{
@@ -109,7 +109,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		internal CX.ChartData CreateChartData(List<ChartDataGrouping> chartDataGroupings)
+		internal static CX.ChartData CreateChartData(List<ChartDataGrouping> chartDataGroupings)
 		{
 			CX.ChartData chartData = new()
 			{
@@ -128,7 +128,7 @@ namespace OpenXMLOffice.Global_2016
 		/// <summary>
 		///
 		/// </summary>
-		internal CX.Chart CreateChart(List<ChartDataGrouping> chartDataGroupings)
+		internal static CX.Chart CreateChart(List<ChartDataGrouping> chartDataGroupings)
 		{
 			CX.PlotAreaRegion plotAreaRegion = new();
 			chartDataGroupings.Take(1).ToList().ForEach(dataSeries =>

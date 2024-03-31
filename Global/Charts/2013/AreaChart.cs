@@ -23,10 +23,10 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// </summary>
-		public AreaChart(AreaChartSetting areaChartSetting, ChartData[][] dataCols) : base(areaChartSetting)
+		public AreaChart(AreaChartSetting areaChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(areaChartSetting)
 		{
 			this.areaChartSetting = areaChartSetting;
-			SetChartPlotArea(CreateChartPlotArea(dataCols));
+			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
 		private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
@@ -120,11 +120,11 @@ namespace OpenXMLOffice.Global_2013
 			return null;
 		}
 
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(areaChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(CreateAreaChart(CreateDataSeries(dataCols, areaChartSetting.chartDataSetting)));
+			plotArea.Append(CreateAreaChart(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,
