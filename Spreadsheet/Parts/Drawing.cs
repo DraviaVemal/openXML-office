@@ -82,6 +82,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
         {
             return new()
             {
+                Macro = "",
                 NonVisualGraphicFrameProperties = new()
                 {
                     NonVisualDrawingProperties = new()
@@ -91,7 +92,19 @@ namespace OpenXMLOffice.Spreadsheet_2013
                     },
                     NonVisualGraphicFrameDrawingProperties = new()
                 },
-                Macro = "",
+                Transform = new()
+                {
+                    Offset = new()
+                    {
+                        X = 0,
+                        Y = 0
+                    },
+                    Extents = new()
+                    {
+                        Cx = 0,
+                        Cy = 0
+                    }
+                },
                 Graphic = new()
                 {
                     GraphicData = new(new C.ChartReference()
