@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Replace Chart for the source Shape
 		/// </summary>
-		public Chart ReplaceChart(Chart chart)
+		public Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting
 		{
 			DocumentFormat.OpenXml.OpenXmlElement? parent = openXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
 			if (openXMLShape.ShapeProperties?.Transform2D != null)
@@ -53,7 +53,7 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Replace 2016 Support Chart for the source Shape
 		/// </summary>
-		public P16.Chart ReplaceChart(P16.Chart chart)
+		public P16.Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(P16.Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting
 		{
 			DocumentFormat.OpenXml.OpenXmlElement? parent = openXMLShape.Parent ?? throw new InvalidOperationException("Old shape must have a parent.");
 			if (openXMLShape.ShapeProperties?.Transform2D != null)

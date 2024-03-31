@@ -43,10 +43,14 @@ namespace OpenXMLOffice.Tests
 		public void Add2013Charts()
 		{
 			//1
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting());
-			//2
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new()
+			});
+			//2
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
 				areaChartTypes = G.AreaChartTypes.STACKED,
 				chartAxesOptions = new()
 				{
@@ -55,8 +59,9 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//3
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
 					title = "test"
@@ -68,8 +73,9 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//4
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				chartAxesOptions = new()
 				{
 					isHorizontalAxesEnabled = false,
@@ -90,8 +96,9 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//5
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
 					isItalic = true,
@@ -100,13 +107,15 @@ namespace OpenXMLOffice.Tests
 				barChartTypes = G.BarChartTypes.STACKED
 			});
 			//6
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				barChartTypes = G.BarChartTypes.PERCENT_STACKED
 			});
 			//7
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
 					title = "Column Chart"
@@ -136,18 +145,21 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//8
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				columnChartTypes = G.ColumnChartTypes.STACKED
 			});
 			//9
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				columnChartTypes = G.ColumnChartTypes.PERCENT_STACKED
 			});
 			//10
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				lineChartSeriesSettings = new(){
 					new(){
 						lineChartLineFormat = new(){
@@ -165,8 +177,9 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//11
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				plotAreaOptions = new()
 				{
 					manualLayout = new()
@@ -180,8 +193,9 @@ namespace OpenXMLOffice.Tests
 				lineChartTypes = G.LineChartTypes.STACKED
 			});
 			//12
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				lineChartTypes = G.LineChartTypes.PERCENT_STACKED,
 				chartLegendOptions = new()
 				{
@@ -195,25 +209,32 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//13
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				lineChartTypes = G.LineChartTypes.CLUSTERED_MARKER
 			});
 			//14
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				lineChartTypes = G.LineChartTypes.STACKED_MARKER
 			});
 			//15
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				lineChartTypes = G.LineChartTypes.PERCENT_STACKED_MARKER
 			});
 			//16
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.PieChartSetting());
-			//17
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.PieChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
+			});
+			//17
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
 				pieChartTypes = G.PieChartTypes.DOUGHNUT,
 				pieChartDataLabel = new()
 				{
@@ -224,30 +245,38 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//18
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting());
-			//19
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
+			});
+			//19
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_SMOOTH
 			});
 			//20
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_SMOOTH_MARKER
 			});
 			//21
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_STRIGHT
 			});
 			//22
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_STRIGHT_MARKER
 			});
 			//23
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.BUBBLE
 			});
 			Assert.IsTrue(true);
@@ -281,7 +310,10 @@ namespace OpenXMLOffice.Tests
 					dataType = X.CellDataType.NUMBER
 				};
 			}
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new WaterfallChartSetting());
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new WaterfallChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+			});
 		}
 
 		/// <summary>
@@ -300,8 +332,9 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void AddDevChart()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
 					title = "Dev Chart"
@@ -340,21 +373,35 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void AddComboChart()
 		{
-			G.ComboChartSetting comboChartSetting = new()
+			G.ComboChartSetting<G.PresentationSetting> comboChartSetting = new()
 			{
+				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
 					title = "Combo Chart"
 				},
 			};
-			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting());
-			comboChartSetting.AddComboChartsSetting(new G.BarChartSetting());
-			comboChartSetting.AddComboChartsSetting(new G.ColumnChartSetting());
-			comboChartSetting.AddComboChartsSetting(new G.LineChartSetting()
+			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
+			});
+			comboChartSetting.AddComboChartsSetting(new G.BarChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+			});
+			comboChartSetting.AddComboChartsSetting(new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+			});
+			comboChartSetting.AddComboChartsSetting(new G.LineChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
 				isSecondaryAxis = true
 			});
-			comboChartSetting.AddComboChartsSetting(new G.PieChartSetting());
+			comboChartSetting.AddComboChartsSetting(new G.PieChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+			});
 			// comboChartSetting.AddComboChartsSetting(new G.ScatterChartSetting());
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(10), comboChartSetting);
 			Assert.IsTrue(true);
@@ -378,16 +425,18 @@ namespace OpenXMLOffice.Tests
 		public void AddScatterPlot()
 		{
 			//1
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
 					title = "Scatter Plot"
 				}
 			});
 			//2
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_SMOOTH,
 				titleOptions = new()
 				{
@@ -395,8 +444,9 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//3
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_SMOOTH_MARKER,
 				titleOptions = new()
 				{
@@ -404,8 +454,9 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//4
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_STRIGHT,
 				titleOptions = new()
 				{
@@ -414,8 +465,9 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//5
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.SCATTER_STRIGHT_MARKER,
 				titleOptions = new()
 				{
@@ -423,8 +475,9 @@ namespace OpenXMLOffice.Tests
 					title = "Scatter Stright Marker"
 				}
 			});
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				scatterChartTypes = G.ScatterChartTypes.BUBBLE,
 				titleOptions = new()
 				{
@@ -503,24 +556,27 @@ namespace OpenXMLOffice.Tests
 			List<Shape> shape4 = Slide.FindShapeByText("Slide_1_Shape_4").ToList();
 			List<Shape> shape5 = Slide.FindShapeByText("Slide_1_Shape_5").ToList();
 			List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
-			shape1[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(),
-			new G.ColumnChartSetting()
+			shape1[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(),
+			new G.ColumnChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				chartLegendOptions = new G.ChartLegendOptions()
 				{
 					isEnableLegend = false
 				},
 			}));
-			shape2[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(),
-			new G.BarChartSetting()
+			shape2[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(),
+			new G.BarChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				chartLegendOptions = new G.ChartLegendOptions()
 				{
 					legendPosition = G.ChartLegendOptions.LegendPositionValues.RIGHT
 				}
 			}));
-			shape3[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new G.LineChartSetting()
+			shape3[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				applicationSpecificSetting = new(),
 				chartAxesOptions = new G.ChartAxesOptions()
 				{
 					isHorizontalAxesEnabled = false
@@ -533,8 +589,14 @@ namespace OpenXMLOffice.Tests
 					isMinorValueLinesEnabled = true,
 				}
 			}));
-			shape4[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new G.LineChartSetting()));
-			shape5[0].ReplaceChart(new Chart(Slide, CreateDataCellPayload(), new G.AreaChartSetting()));
+			shape4[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new()
+			}));
+			shape5[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new()
+			}));
 			shape6[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()
 			{
 				text = "Test"

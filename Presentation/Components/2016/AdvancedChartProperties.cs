@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Presentation_2016
 	/// <summary>
 	///
 	/// </summary>
-	public class AdvancedChartProperties : ChartProperties
+	public class AdvancedChartProperties<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting
 	{
 		private AlternateContent? alternateContent;
 
@@ -22,15 +22,15 @@ namespace OpenXMLOffice.Presentation_2016
 		/// <summary>
 		///
 		/// </summary>
-		public AdvancedChartProperties(Slide slide, ChartSetting chartSetting) : base(slide, chartSetting)
+		public AdvancedChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting) : base(slide, chartSetting)
 		{
 			errorMessage = new TextBox(new()
 			{
 				text = "This chart is not supported in this version of PowerPoint. Requires PowerPoint 2016 or later.",
-				x = chartSetting.x,
-				y = chartSetting.y,
-				width = chartSetting.width,
-				height = chartSetting.height,
+				x = chartSetting.applicationSpecificSetting.x,
+				y = chartSetting.applicationSpecificSetting.y,
+				width = chartSetting.applicationSpecificSetting.width,
+				height = chartSetting.applicationSpecificSetting.height,
 			});
 		}
 
@@ -52,13 +52,13 @@ namespace OpenXMLOffice.Presentation_2016
 				Transform = new P.Transform(
 				   new A.Offset
 				   {
-					   X = chartSetting.x,
-					   Y = chartSetting.y
+					   X = chartSetting.applicationSpecificSetting.x,
+					   Y = chartSetting.applicationSpecificSetting.y
 				   },
 				   new A.Extents
 				   {
-					   Cx = chartSetting.width,
-					   Cy = chartSetting.height
+					   Cx = chartSetting.applicationSpecificSetting.width,
+					   Cy = chartSetting.applicationSpecificSetting.height
 				   }),
 				Graphic = new A.Graphic(
 				   new A.GraphicData(

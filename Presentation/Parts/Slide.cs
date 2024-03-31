@@ -39,9 +39,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
-		public Chart AddChart(DataCell[][] DataCells, AreaChartSetting AreaChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, AreaChartSetting<ApplicationSpecificSetting> AreaChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			Chart Chart = new(this, DataCells, AreaChartSetting);
+			Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, AreaChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
@@ -49,9 +49,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Bar chart to the slide.
 		/// </summary>
-		public Chart AddChart(DataCell[][] DataCells, BarChartSetting BarChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, BarChartSetting<ApplicationSpecificSetting> BarChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			Chart Chart = new(this, DataCells, BarChartSetting);
+			Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, BarChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
@@ -59,9 +59,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Column chart to the slide.
 		/// </summary>
-		public Chart AddChart(DataCell[][] DataCells, ColumnChartSetting ColumnChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ColumnChartSetting<ApplicationSpecificSetting> ColumnChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			Chart Chart = new(this, DataCells, ColumnChartSetting);
+			Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, ColumnChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
@@ -69,9 +69,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Line chart to the slide.
 		/// </summary>
-		public Chart AddChart(DataCell[][] DataCells, LineChartSetting LineChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, LineChartSetting<ApplicationSpecificSetting> LineChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			Chart Chart = new(this, DataCells, LineChartSetting);
+			Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, LineChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
@@ -79,9 +79,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Pie chart to the slide.
 		/// </summary>
-		public Chart AddChart(DataCell[][] DataCells, PieChartSetting PieChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, PieChartSetting<ApplicationSpecificSetting> PieChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			Chart Chart = new(this, DataCells, PieChartSetting);
+			Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, PieChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
@@ -89,9 +89,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Scatter chart to the slide.
 		/// </summary>
-		public Chart AddChart(DataCell[][] DataCells, ScatterChartSetting ScatterChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ScatterChartSetting<ApplicationSpecificSetting> ScatterChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			Chart Chart = new(this, DataCells, ScatterChartSetting);
+			Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, ScatterChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
@@ -99,9 +99,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public Chart AddChart(DataCell[][] DataCells, ComboChartSetting comboChartSetting)
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			Chart Chart = new(this, DataCells, comboChartSetting);
+			Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, comboChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
@@ -109,9 +109,9 @@ namespace OpenXMLOffice.Presentation_2013
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public P16.Chart AddChart(DataCell[][] DataCells, WaterfallChartSetting waterfallChartSetting)
+		public P16.Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting) where ApplicationSpecificSetting : PresentationSetting
 		{
-			P16.Chart Chart = new(this, DataCells, waterfallChartSetting);
+			P16.Chart<ApplicationSpecificSetting> Chart = new(this, DataCells, waterfallChartSetting);
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetAlternateContent());
 			return Chart;
 		}

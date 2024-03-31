@@ -548,7 +548,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// 
 	/// </summary>
-	public class PresentationSizeAndPosition : ISizeAndPosition
+	public class PresentationSetting : ISizeAndPosition
 	{
 
 		/// <summary>
@@ -575,7 +575,7 @@ namespace OpenXMLOffice.Global_2013
 	/// <summary>
 	/// 
 	/// </summary>
-	public class ExcelSizeAndPosition : ISizeAndPosition
+	public class ExcelSetting : ISizeAndPosition
 	{
 		/// <summary>
 		/// 
@@ -629,7 +629,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public required ApplicationSpecificSetting sizeAndPosition;
+		public required ApplicationSpecificSetting applicationSpecificSetting;
 
 		internal ChartSetting() { }
 	}
