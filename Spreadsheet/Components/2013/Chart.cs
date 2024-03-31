@@ -17,7 +17,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		public Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting areaChartSetting) : base(worksheet, areaChartSetting)
 		{
-			openXMLChartPart = worksheet.GetWorksheetPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
+			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(worksheet.GetNextSheetPartRelationId());
 			InitialiseChartParts();
 			CreateChart(chartDatas, dataRange, areaChartSetting);
 		}
@@ -89,49 +89,42 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting areaChartSetting)
 		{
 			AreaChart areaChart = new(areaChartSetting, chartDatas, dataRange);
-			CreateChartGraphicFrame(currentWorksheet.GetWorksheetPart().GetIdOfPart(GetChartPart()), (uint)currentWorksheet.GetWorksheetPart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(areaChart);
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, BarChartSetting barChartSetting)
 		{
 			BarChart barChart = new(barChartSetting, chartDatas, dataRange);
-			CreateChartGraphicFrame(currentWorksheet.GetWorksheetPart().GetIdOfPart(GetChartPart()), (uint)currentWorksheet.GetWorksheetPart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(barChart);
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting columnChartSetting)
 		{
 			ColumnChart columnChart = new(columnChartSetting, chartDatas, dataRange);
-			CreateChartGraphicFrame(currentWorksheet.GetWorksheetPart().GetIdOfPart(GetChartPart()), (uint)currentWorksheet.GetWorksheetPart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(columnChart);
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, LineChartSetting lineChartSetting)
 		{
 			LineChart lineChart = new(lineChartSetting, chartDatas, dataRange);
-			CreateChartGraphicFrame(currentWorksheet.GetWorksheetPart().GetIdOfPart(GetChartPart()), (uint)currentWorksheet.GetWorksheetPart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(lineChart);
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, PieChartSetting pieChartSetting)
 		{
 			PieChart pieChart = new(pieChartSetting, chartDatas, dataRange);
-			CreateChartGraphicFrame(currentWorksheet.GetWorksheetPart().GetIdOfPart(GetChartPart()), (uint)currentWorksheet.GetWorksheetPart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(pieChart);
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting scatterChartSetting)
 		{
 			ScatterChart scatterChart = new(scatterChartSetting, chartDatas, dataRange);
-			CreateChartGraphicFrame(currentWorksheet.GetWorksheetPart().GetIdOfPart(GetChartPart()), (uint)currentWorksheet.GetWorksheetPart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(scatterChart);
 		}
 
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting comboChartSetting)
 		{
 			ComboChart comboChart = new(comboChartSetting, chartDatas, dataRange);
-			CreateChartGraphicFrame(currentWorksheet.GetWorksheetPart().GetIdOfPart(GetChartPart()), (uint)currentWorksheet.GetWorksheetPart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(comboChart);
 		}
 
@@ -163,7 +156,6 @@ namespace OpenXMLOffice.Spreadsheet_2013
 
 		private void InitialiseChartParts()
 		{
-			GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
 			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
 			GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
 		}

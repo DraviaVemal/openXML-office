@@ -32,6 +32,7 @@ namespace OpenXMLOffice.Tests
 		public static void ClassInitialize(TestContext context)
 		{
 			excel = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+			excel.AddSheet();
 		}
 
 		/// <summary>

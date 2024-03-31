@@ -18,10 +18,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 
 		internal Worksheet AddSheet(string? sheetName)
 		{
-			if (sheetName == null)
-			{
-				sheetName = string.Format("Sheet{0}", GetMaxSheetId() + 1);
-			}
+			sheetName ??= string.Format("Sheet{0}", GetMaxSheetId() + 1);
 			if (CheckIfSheetNameExist(sheetName))
 			{
 				throw new ArgumentException("Sheet with name already exist.");

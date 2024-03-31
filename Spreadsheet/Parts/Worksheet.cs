@@ -205,7 +205,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			{
 				return DataType.STRING;
 			}
-			return cellValueType.Value.ToString() switch
+			return cellValueType.ToString() switch
 			{
 				"d" => DataType.DATE,
 				"n" => DataType.NUMBER,
@@ -324,7 +324,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 					{
 						_ => cell.CellValue!.Text
 					};
-					if (cell.DataType?.Value.ToString() == "s")
+					if (cell.DataType?.ToString() == "s")
 					{
 						cellValue = ShareString.Instance.GetValue(int.Parse(cellValue));
 					}

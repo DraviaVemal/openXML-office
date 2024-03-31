@@ -12,15 +12,15 @@ namespace OpenXMLOffice.Spreadsheet_2013
 
 		private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
 		private static ShareString? instance = null;
-		private readonly ILiteCollection<Record> collection;
+		private readonly ILiteCollection<StringRecord> stringCollection;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ShareString"/> class.
 		/// </summary>
 		private ShareString()
 		{
-			collection = liteDatabase.GetCollection<Record>("Records");
-			collection.EnsureIndex("Record.Value");
+			stringCollection = liteDatabase.GetCollection<StringRecord>("StringRecord");
+			stringCollection.EnsureIndex("StringRecord.Value");
 		}
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </returns>
 		public int? GetIndex(string value)
 		{
-			return collection.FindOne(col => col.Value == value)?.Id - 1;
+			return stringCollection.FindOne(col => col.Value == value)?.Id - 1;
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </returns>
 		public List<string> GetRecords()
 		{
-			return collection.Query().OrderBy(x => x.Id).Select(x => x.Value).ToList();
+			return stringCollection.Query().OrderBy(x => x.Id).Select(x => x.Value).ToList();
 		}
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </returns>
 		public string? GetValue(int index)
 		{
-			return collection.FindOne(col => col.Id == index)?.Value;
+			return stringCollection.FindById(index)?.Value;
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </param>
 		public void Insert(string Data)
 		{
-			collection.Insert(new Record(Data));
+			stringCollection.Insert(new StringRecord(Data));
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </param>
 		public void InsertBulk(List<string> data)
 		{
-			collection.InsertBulk(data.Select(item => new Record(item)));
+			stringCollection.InsertBulk(data.Select(item => new StringRecord(item)));
 		}
 
 		/// <summary>
@@ -120,7 +120,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			{
 				return (int)Index;
 			}
-			BsonValue DocId = collection.Insert(new Record(data));
+			BsonValue DocId = stringCollection.Insert(new StringRecord(data));
 			return (int)DocId.AsInt64 - 1;
 		}
 

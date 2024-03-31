@@ -77,16 +77,16 @@ namespace OpenXMLOffice.Spreadsheet_2013
 	/// <summary>
 	/// Represents a record in a worksheet.
 	/// </summary>
-	public class Record
+	public class StringRecord
 	{
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Record"/> class with the specified value.
+		/// Initializes a new instance of the <see cref="StringRecord"/> class with the specified value.
 		/// </summary>
 		/// <param name="Value">
 		/// The value of the record.
 		/// </param>
-		public Record(string Value)
+		public StringRecord(string Value)
 		{
 			this.Value = Value;
 		}
