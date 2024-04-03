@@ -132,7 +132,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		internal void Save()
 		{
 			UpdateStyle();
-			UpdateSharedString();
+			WriteSharedStringToFile();
 			spreadsheetDocument.Save();
 			if (spreadsheetInfo.filePath != null && spreadsheetInfo.isEditable)
 			{
@@ -144,7 +144,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		internal void SaveAs(string filePath)
 		{
 			UpdateStyle();
-			UpdateSharedString();
+			WriteSharedStringToFile();
 			spreadsheetDocument.Save();
 			spreadsheetDocument.Clone(filePath).Dispose();
 			spreadsheetDocument.Dispose();

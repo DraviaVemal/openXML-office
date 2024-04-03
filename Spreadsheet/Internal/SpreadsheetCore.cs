@@ -147,10 +147,13 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		internal void LoadShareStringFromFileToCache()
 		{
 			List<string> Records = new();
-			GetShareString().ChildElements.ToList().ForEach(rec =>
+			GetShareString().Elements<SharedStringItem>().ToList().ForEach(rec =>
 			{
-				// TODO : File Open Implementation
-				//Records.Add("");
+				Text? text = rec.GetFirstChild<Text>();
+				if (text != null)
+				{
+					Records.Add(text.Text);
+				}
 			});
 			ShareString.Instance.InsertBulk(Records);
 		}
@@ -166,8 +169,9 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// Update the cache data into spreadsheet
 		/// </summary>
-		internal void UpdateSharedString()
+		internal void WriteSharedStringToFile()
 		{
+			GetShareString().RemoveAllChildren<SharedStringItem>();
 			ShareString.Instance.GetRecords().ForEach(Value =>
 			{
 				GetShareString().Append(new SharedStringItem(new Text(Value)));
