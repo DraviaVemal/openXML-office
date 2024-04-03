@@ -15,7 +15,7 @@ namespace OpenXMLOffice.Tests
 	{
 		private static PowerPoint powerPoint = new(new MemoryStream());
 
-
+		private static readonly string resultPath = "../../testResult";
 		/// <summary>
 		/// Save Presenation on text completion cleanup
 		/// </summary>
@@ -33,13 +33,18 @@ namespace OpenXMLOffice.Tests
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext context)
 		{
-			powerPoint = new(string.Format("../../test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")), null);
+			if (!Directory.Exists(resultPath))
+			{
+				Directory.CreateDirectory(resultPath);
+			}
+			powerPoint = new(string.Format("{1}/test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath), null);
 		}
 
 		/// <summary>
 		/// Add All Chart Types to Slide
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Chart")]
 		public void Add2013Charts()
 		{
 			//1
@@ -286,6 +291,7 @@ namespace OpenXMLOffice.Tests
 		///
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Chart")]
 		public void Add2016Charts()
 		{
 			X.DataCell[][] data = new X.DataCell[9][];
@@ -320,6 +326,7 @@ namespace OpenXMLOffice.Tests
 		/// Add Blank Slide to the PPT
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Slide")]
 		public void AddBlankSlide()
 		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
@@ -330,6 +337,7 @@ namespace OpenXMLOffice.Tests
 		/// Add Single Chart to the Slide
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Chart")]
 		public void AddDevChart()
 		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
@@ -371,6 +379,7 @@ namespace OpenXMLOffice.Tests
 		/// Add Combo Chart to the Slide
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Chart")]
 		public void AddComboChart()
 		{
 			G.ComboChartSetting<G.PresentationSetting> comboChartSetting = new()
@@ -411,6 +420,7 @@ namespace OpenXMLOffice.Tests
 		/// Add Picture to the slide
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Picture")]
 		public void AddPicture()
 		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting());
@@ -422,6 +432,7 @@ namespace OpenXMLOffice.Tests
 		/// Add All type of sctter charts
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Chart")]
 		public void AddScatterPlot()
 		{
 			//1
@@ -492,6 +503,7 @@ namespace OpenXMLOffice.Tests
 		/// Add Table To the Slide
 		/// </summary>
 		[TestMethod]
+		[TestCategory("Table")]
 		public void AddTable()
 		{
 			Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
@@ -538,7 +550,7 @@ namespace OpenXMLOffice.Tests
 				textColor = "AAAAAA"
 			}));
 			powerPoint1.MoveSlideByIndex(4, 0);
-			powerPoint1.SaveAs(string.Format("../../edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+			powerPoint1.SaveAs(string.Format("{1}/edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
 
@@ -601,7 +613,7 @@ namespace OpenXMLOffice.Tests
 			{
 				text = "Test"
 			}));
-			powerPoint1.SaveAs(string.Format("../../chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+			powerPoint1.SaveAs(string.Format("{1}/chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
 
@@ -614,18 +626,6 @@ namespace OpenXMLOffice.Tests
 			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false);
 			powerPoint1.Save();
 			Assert.IsTrue(true);
-		}
-
-		/// <summary>
-		/// Check PPT File creation
-		/// </summary>
-		[TestMethod]
-		public void SheetConstructorFile()
-		{
-			PowerPoint powerPoint1 = new("../try.pptx", null);
-			Assert.IsNotNull(powerPoint1);
-			powerPoint1.Save();
-			File.Delete("../try.pptx");
 		}
 
 		private static X.DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)

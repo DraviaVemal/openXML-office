@@ -133,11 +133,8 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		{
 			UpdateStyle();
 			UpdateSharedString();
-			if (spreadsheetInfo.filePath == null)
-			{
-				throw new FieldAccessException("Data Is in File Stream Use SaveAs to Target save file");
-			}
-			if (spreadsheetInfo.isEditable)
+			spreadsheetDocument.Save();
+			if (spreadsheetInfo.filePath != null && spreadsheetInfo.isEditable)
 			{
 				spreadsheetDocument.Clone(spreadsheetInfo.filePath).Dispose();
 			}
@@ -148,6 +145,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		{
 			UpdateStyle();
 			UpdateSharedString();
+			spreadsheetDocument.Save();
 			spreadsheetDocument.Clone(filePath).Dispose();
 			spreadsheetDocument.Dispose();
 		}

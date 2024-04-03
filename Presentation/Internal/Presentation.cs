@@ -86,11 +86,8 @@ namespace OpenXMLOffice.Presentation_2013
 
 		internal void Save()
 		{
-			if (presentationInfo.filePath == null)
-			{
-				throw new FieldAccessException("Data Is in File Stream Use SaveAs to Target save file");
-			}
-			if (presentationInfo.isEditable)
+			presentationDocument.Save();
+			if (presentationInfo.filePath != null && presentationInfo.isEditable)
 			{
 				presentationDocument.Clone(presentationInfo.filePath).Dispose();
 			}

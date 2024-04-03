@@ -6,6 +6,7 @@ obj/
 docs/
 .mono/
 .idea
+testResult/
 
 # Ignore NuGet package directories
 packages/

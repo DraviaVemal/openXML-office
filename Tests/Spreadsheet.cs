@@ -13,6 +13,7 @@ namespace OpenXMLOffice.Tests
 	{
 		private static Excel excel = new(new MemoryStream());
 
+		private static readonly string resultPath = "../../testResult";
 
 		/// <summary>
 		/// Save the Test File After execution
@@ -31,7 +32,11 @@ namespace OpenXMLOffice.Tests
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext context)
 		{
-			excel = new(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+			if (!Directory.Exists(resultPath))
+			{
+				Directory.CreateDirectory(resultPath);
+			}
+			excel = new(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			excel.AddSheet();
 		}
 
@@ -164,18 +169,6 @@ namespace OpenXMLOffice.Tests
 				toRow = 8
 			});
 			Assert.IsTrue(true);
-		}
-
-		/// <summary>
-		/// Create Xslx File Based on File Test
-		/// </summary>
-		[TestMethod]
-		public void SheetConstructorFile()
-		{
-			Excel excel1 = new("../try.xlsx");
-			Assert.IsNotNull(excel1);
-			excel1.Save();
-			File.Delete("../try.xlsx");
 		}
 
 		/// <summary>
@@ -403,8 +396,7 @@ namespace OpenXMLOffice.Tests
 		public void OpenExistingexcelNonEdit()
 		{
 			Excel excel1 = new("./TestFiles/basic_test.xlsx", false);
-			excel1.Save();
-			excel1.SaveAs(string.Format("../../ReadEdit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+			excel1.SaveAs(string.Format("{1}/ReadEdit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
 
@@ -467,7 +459,7 @@ namespace OpenXMLOffice.Tests
 					}
 				}
 			});
-			excel1.SaveAs(string.Format("../../Edit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+			excel1.SaveAs(string.Format("{1}/Edit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
 
