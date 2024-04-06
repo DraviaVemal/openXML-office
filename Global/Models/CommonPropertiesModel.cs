@@ -510,8 +510,21 @@ namespace OpenXMLOffice.Global_2013
 		///
 		/// </summary>
 		public EffectListModel? effectList = null;
+		/// <summary>
+		/// 
+		/// </summary>
+		public ShapeProperty3D? shapeProperty3D = null;
 
 	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+
+	public class ShapeProperty3D
+	{
+	}
+
 	/// <summary>
 	///
 	/// </summary>

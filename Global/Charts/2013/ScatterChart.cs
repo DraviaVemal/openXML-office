@@ -71,47 +71,41 @@ namespace OpenXMLOffice.Global_2013
 			return plotArea;
 		}
 
-		internal T CreateChart<T>(List<ChartDataGrouping> chartDataGroupings) where T : new()
+		internal ChartType CreateChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			T chartType = new();
-			if (chartType is C.ScatterChart scatterChart)
+			ChartType chart = new();
+			chart.Append(new C.ScatterStyle
 			{
-				scatterChart.Append(new C.ScatterStyle
+				Val = scatterChartSetting.scatterChartTypes switch
 				{
-					Val = scatterChartSetting.scatterChartTypes switch
-					{
-						ScatterChartTypes.SCATTER_SMOOTH => C.ScatterStyleValues.Smooth,
-						ScatterChartTypes.SCATTER_SMOOTH_MARKER => C.ScatterStyleValues.SmoothMarker,
-						ScatterChartTypes.SCATTER_STRIGHT => C.ScatterStyleValues.Line,
-						ScatterChartTypes.SCATTER_STRIGHT_MARKER => C.ScatterStyleValues.LineMarker,
-						// Clusted
-						_ => C.ScatterStyleValues.LineMarker,
-					}
-				});
-			}
-			if (chartType is OpenXmlCompositeElement chart)
+					ScatterChartTypes.SCATTER_SMOOTH => C.ScatterStyleValues.Smooth,
+					ScatterChartTypes.SCATTER_SMOOTH_MARKER => C.ScatterStyleValues.SmoothMarker,
+					ScatterChartTypes.SCATTER_STRIGHT => C.ScatterStyleValues.Line,
+					ScatterChartTypes.SCATTER_STRIGHT_MARKER => C.ScatterStyleValues.LineMarker,
+					// Clusted
+					_ => C.ScatterStyleValues.LineMarker,
+				}
+			});
+			chart.Append(new C.VaryColors() { Val = false });
+			int seriesIndex = 0;
+			chartDataGroupings.ForEach(Series =>
 			{
-				chart.Append(new C.VaryColors() { Val = false });
-				int seriesIndex = 0;
-				chartDataGroupings.ForEach(Series =>
-				{
-					chart.Append(CreateScatterChartSeries(seriesIndex, Series));
-					seriesIndex++;
-				});
-				C.DataLabels? dataLabels = CreateScatterDataLabels(scatterChartSetting.scatterChartDataLabel);
-				if (dataLabels != null)
-				{
-					chart.Append(dataLabels);
-				}
-				if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
-				{
-					chart.Append(new C.BubbleScale() { Val = 100 });
-					chart.Append(new C.ShowNegativeBubbles() { Val = true });
-				}
-				chart.Append(new C.AxisId { Val = CategoryAxisId });
-				chart.Append(new C.AxisId { Val = ValueAxisId });
+				chart.Append(CreateScatterChartSeries(seriesIndex, Series));
+				seriesIndex++;
+			});
+			C.DataLabels? dataLabels = CreateScatterDataLabels(scatterChartSetting.scatterChartDataLabel);
+			if (dataLabels != null)
+			{
+				chart.Append(dataLabels);
 			}
-			return chartType;
+			if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
+			{
+				chart.Append(new C.BubbleScale() { Val = 100 });
+				chart.Append(new C.ShowNegativeBubbles() { Val = true });
+			}
+			chart.Append(new C.AxisId { Val = CategoryAxisId });
+			chart.Append(new C.AxisId { Val = ValueAxisId });
+			return chart;
 		}
 
 		private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)

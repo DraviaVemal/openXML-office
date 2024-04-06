@@ -365,6 +365,10 @@ namespace OpenXMLOffice.Global_2013
 			{
 				shapeProperties.Append(new A.EffectList());
 			}
+			if (shapePropertiesModel.shapeProperty3D != null)
+			{
+				shapeProperties.Append(new A.Shape3DType());
+			}
 			return shapeProperties;
 		}
 

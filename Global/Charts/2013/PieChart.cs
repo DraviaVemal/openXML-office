@@ -41,31 +41,24 @@ namespace OpenXMLOffice.Global_2013
 			return plotArea;
 		}
 
-		internal T CreateChart<T>(List<ChartDataGrouping> chartDataGroupings) where T : new()
+		internal ChartType CreateChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			if (typeof(T) != typeof(C.DoughnutChart) && typeof(T) != typeof(C.PieChart))
+			ChartType chart = new();
+			chart.Append(new C.VaryColors { Val = true });
+			int seriesIndex = 0;
+			chartDataGroupings.ForEach(Series =>
 			{
-				throw new ArgumentException("Invalid type parameter. T must be either C.DoughnutChart or C.PieChart.");
-			}
-			T chartType = new();
-			if (chartType is OpenXmlCompositeElement chart)
+				chart.Append(CreateChartSeries(seriesIndex, Series));
+				seriesIndex++;
+			});
+			C.DataLabels? dataLabels = CreatePieDataLabels(pieChartSetting.pieChartDataLabel);
+			if (dataLabels != null)
 			{
-				chart.Append(new C.VaryColors { Val = true });
-				int seriesIndex = 0;
-				chartDataGroupings.ForEach(Series =>
-				{
-					chart.Append(CreateChartSeries(seriesIndex, Series));
-					seriesIndex++;
-				});
-				C.DataLabels? dataLabels = CreatePieDataLabels(pieChartSetting.pieChartDataLabel);
-				if (dataLabels != null)
-				{
-					chart.Append(dataLabels);
-				}
-				chart.Append(new C.FirstSliceAngle { Val = (UInt16Value)pieChartSetting.angleOfFirstSlice });
-				chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
+				chart.Append(dataLabels);
 			}
-			return chartType;
+			chart.Append(new C.FirstSliceAngle { Val = (UInt16Value)pieChartSetting.angleOfFirstSlice });
+			chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
+			return chart;
 		}
 
 		private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)

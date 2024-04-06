@@ -193,7 +193,16 @@ namespace OpenXMLOffice.Global_2013
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(CreateBarChart(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
+			if (barChartSetting.barChartTypes == BarChartTypes.CLUSTERED ||
+			barChartSetting.barChartTypes == BarChartTypes.STACKED ||
+			barChartSetting.barChartTypes == BarChartTypes.PERCENT_STACKED)
+			{
+				plotArea.Append(CreateBarChart<C.BarChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
+			else
+			{
+				plotArea.Append(CreateBarChart<C.Bar3DChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,
@@ -220,36 +229,57 @@ namespace OpenXMLOffice.Global_2013
 			return plotArea;
 		}
 
-		internal C.BarChart CreateBarChart(List<ChartDataGrouping> chartDataGroupings)
+		internal ChartType CreateBarChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			C.BarChart barChart = new(
-				new C.BarDirection { Val = C.BarDirectionValues.Bar },
-				new C.BarGrouping
-				{
-					Val = barChartSetting.barChartTypes switch
-					{
-						BarChartTypes.STACKED => C.BarGroupingValues.Stacked,
-						BarChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
-						// Clusted
-						_ => C.BarGroupingValues.Clustered
-					}
-				},
-				new C.VaryColors { Val = false });
+			ChartType barChart = new();
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>
 			{
 				barChart.Append(CreateBarChartSeries(seriesIndex, Series));
 				seriesIndex++;
 			});
-			if (barChartSetting.barChartTypes == BarChartTypes.CLUSTERED)
+			switch (barChartSetting.barChartTypes)
 			{
-				barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
-				barChart.Append(new C.Overlap { Val = (SByteValue)barChartSetting.barGraphicsSetting.seriesGap });
-			}
-			else
-			{
-				barChart.Append(new C.GapWidth { Val = DefaultGapWidth });
-				barChart.Append(new C.Overlap { Val = DefaultOverlap });
+				case BarChartTypes.CLUSTERED:
+					barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
+					barChart.Append(new C.Overlap { Val = (SByteValue)barChartSetting.barGraphicsSetting.seriesGap });
+					break;
+				case BarChartTypes.CLUSTERED_3D:
+					barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
+					barChart.Append(new C.Shape()
+					{
+						Val = barChartSetting.barGraphicsSetting.columnShapeType switch
+						{
+							ColumnShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
+							ColumnShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
+							ColumnShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
+							ColumnShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
+							ColumnShapeType.CYLINDER => C.ShapeValues.Cylinder,
+							_ => C.ShapeValues.Box
+						}
+					});
+					break;
+				case BarChartTypes.STACKED_3D:
+				case BarChartTypes.PERCENT_STACKED_3D:
+					barChart.Append(new C.GapWidth { Val = DefaultGapWidth });
+					barChart.Append(new C.Shape()
+					{
+						Val = barChartSetting.barGraphicsSetting.columnShapeType switch
+						{
+							ColumnShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
+							ColumnShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
+							ColumnShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
+							ColumnShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
+							ColumnShapeType.CYLINDER => C.ShapeValues.Cylinder,
+							_ => C.ShapeValues.Box
+						}
+					});
+					break;
+				default:
+					barChart.Append(new C.GapWidth { Val = DefaultGapWidth });
+					barChart.Append(new C.Overlap { Val = DefaultOverlap });
+					break;
+
 			}
 			C.DataLabels? dataLabels = CreateBarDataLabels(barChartSetting.barChartDataLabel);
 			if (dataLabels != null)
@@ -258,6 +288,10 @@ namespace OpenXMLOffice.Global_2013
 			}
 			barChart.Append(new C.AxisId { Val = CategoryAxisId });
 			barChart.Append(new C.AxisId { Val = ValueAxisId });
+			if (barChartSetting.is3DChart)
+			{
+				barChart.Append(new C.AxisId { Val = 0 });
+			}
 			return barChart;
 		}
 

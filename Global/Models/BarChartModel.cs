@@ -22,7 +22,51 @@ namespace OpenXMLOffice.Global_2013
 		/// </summary>
 		PERCENT_STACKED,
 
-		// CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
+		/// <summary>
+		/// Clustered 3D Bar Chart
+		/// </summary>
+		CLUSTERED_3D,
+
+		/// <summary>
+		/// Stacked Bar Chart
+		/// </summary>
+		STACKED_3D,
+
+		/// <summary>
+		/// Percent Stacked Bar Chart
+		/// </summary>
+		PERCENT_STACKED_3D
+	}
+
+	/// <summary>
+	/// Represents the types of bar charts.
+	/// </summary>
+	public enum ColumnShapeType
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		BOX,
+		/// <summary>
+		/// 
+		/// </summary>
+		FULL_PYRAMID,
+		/// <summary>
+		/// 
+		/// </summary>
+		PARTIAL_PYRAMID,
+		/// <summary>
+		/// 
+		/// </summary>
+		CYLINDER,
+		/// <summary>
+		/// 
+		/// </summary>
+		FULL_CONE,
+		/// <summary>
+		/// 
+		/// </summary>
+		PARTIAL_CONE
 	}
 	/// <summary>
 	/// Represents the graphics settings for a bar chart.
@@ -34,6 +78,10 @@ namespace OpenXMLOffice.Global_2013
 		/// Value is used in %.
 		/// </summary>
 		public int categoryGap = 219;
+		/// <summary>
+		/// 3D Column Shape Options
+		/// </summary>
+		public ColumnShapeType columnShapeType = ColumnShapeType.BOX;
 		/// <summary>
 		/// The gap between the series bars.
 		/// Value is used in %.

@@ -595,6 +595,7 @@ namespace OpenXMLOffice.Global_2013
 	{
 		internal uint? categoryAxisId;
 		internal uint? valueAxisId;
+		internal bool is3DChart = false;
 
 		/// <summary>
 		/// Only useful when used with Combo chart

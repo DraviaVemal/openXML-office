@@ -651,7 +651,52 @@ public class ChartBase<ApplicationSpecificSetting> : CommonProperties where Appl
 		{
 			chart.Title = CreateTitle(chartSetting.titleOptions);
 		}
+		if (chartSetting.is3DChart)
+		{
+			chart.View3D = CreateView3D();
+			chart.Floor = CreateFloor();
+			chart.SideWall = CreateSideWall();
+			chart.BackWall = CreateBackWall();
+		}
 		return chart;
+	}
+
+	private C.BackWall CreateBackWall()
+	{
+		return new()
+		{
+			Thickness = new() { Val = 0 },
+			ShapeProperties = CreateChartShapeProperties(),
+		};
+	}
+
+	private C.SideWall CreateSideWall()
+	{
+		return new()
+		{
+			Thickness = new() { Val = 0 },
+			ShapeProperties = CreateChartShapeProperties(),
+		};
+	}
+
+	private C.Floor CreateFloor()
+	{
+		return new()
+		{
+			Thickness = new() { Val = 0 },
+			ShapeProperties = CreateChartShapeProperties(),
+		};
+	}
+
+	private C.View3D CreateView3D()
+	{
+		return new()
+		{
+			RotateX = new() { Val = 15 },
+			RotateY = new() { Val = 15 },
+			DepthPercent = new() { Val = 100 },
+			RightAngleAxes = new() { Val = true },
+		};
 	}
 
 	private C.Legend CreateChartLegend(ChartLegendOptions chartLegendOptions)
