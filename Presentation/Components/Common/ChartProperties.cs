@@ -1,12 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using OpenXMLOffice.Spreadsheet_2013;
-using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Spreadsheet_2007;
+using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation_2013
+namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
 	///

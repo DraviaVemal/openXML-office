@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <PackageId>OpenXMLOffice.Document</PackageId>
-    <RootNamespace>OpenXMLOffice.Document_2013</RootNamespace>
+    <RootNamespace>OpenXMLOffice.Document_2007</RootNamespace>
     <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
     <CosturaOutputType>SingleFile</CosturaOutputType>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,10 +1,10 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using LiteDB;
-using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Global_2007;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
 	/// This class serves as a versatile tool for working with Excel spreadsheets, styles component

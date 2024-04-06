@@ -6,7 +6,7 @@
 
 OpenXML-Office is an advanced .NET library that leverages the power of OpenXML SDK 3.0 to streamline the creation and manipulation of Office documents, with a primary focus on Excel, Word, and PowerPoint files. My mission is to enhance the document creation experience for developers by providing intuitive namespaces, classes, and utilities. The library is designed to offer maximum efficiency and ease of use, ensuring a seamless workflow. 
 
-It's important to note that OpenXML-Office supports the creation of documents that can be opened from Office 2013 onwards. However, not every feature is available from the 2013 version. For instance if new features are added as part of the 2016 version, they are kept in a namespace that explicitly mentions '2016.' Developers should be aware that if they use 2016 components in their document creation, the generated file can only be opened in 2016 and above versions without any issues.
+It's important to note that OpenXML-Office supports the creation of documents that can be opened from Office 2007 onwards. However, not every feature is available from the 2007 version. For instance if new features are added as part of the 2016 version, they are kept in a namespace that explicitly mentions '2016.' Developers should be aware that if they use 2016 components in their document creation, the generated file can only be opened in 2016 and above versions without any issues.
 
 ## Scope Details
 

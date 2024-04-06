@@ -3,9 +3,9 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Global_2007;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
 	/// Spreadsheet Core class for initializing the Spreadsheet

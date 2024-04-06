@@ -1,8 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using X = OpenXMLOffice.Spreadsheet_2013;
-using G = OpenXMLOffice.Global_2013;
-using OpenXMLOffice.Presentation_2013;
+using X = OpenXMLOffice.Spreadsheet_2007;
+using G = OpenXMLOffice.Global_2007;
+using OpenXMLOffice.Presentation_2007;
 using OpenXMLOffice.Global_2016;
 
 namespace OpenXMLOffice.Tests
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Tests
 		/// </summary>
 		[TestMethod]
 		[TestCategory("Chart")]
-		public void Add2013Charts()
+		public void Add2007Charts()
 		{
 			//1
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()

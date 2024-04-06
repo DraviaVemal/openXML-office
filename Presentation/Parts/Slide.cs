@@ -1,14 +1,14 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using DocumentFormat.OpenXml.Packaging;
-using OpenXMLOffice.Spreadsheet_2013;
-using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Spreadsheet_2007;
+using OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Global_2016;
 using P16 = OpenXMLOffice.Presentation_2016;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation_2013
+namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
 	/// Represents a slide in a presentation.

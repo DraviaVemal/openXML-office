@@ -2,11 +2,11 @@
 
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation_2013
+namespace OpenXMLOffice.Presentation_2007
 {
 	internal class PresentationCore
 	{

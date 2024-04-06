@@ -4,7 +4,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Spreadsheet_2007
 {
 	internal class Spreadsheet : SpreadsheetCore
 	{

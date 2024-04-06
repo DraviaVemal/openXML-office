@@ -2,7 +2,7 @@
 
 using LiteDB;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
 	/// Represents a class that manages shared string values in Excel.

@@ -10,7 +10,7 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<PackageId>OpenXMLOffice.Presentation</PackageId>
-		<RootNamespace>OpenXMLOffice.Presentation_2013</RootNamespace>
+		<RootNamespace>OpenXMLOffice.Presentation_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
 		<CosturaOutputType>SingleFile</CosturaOutputType>
 		<ImplicitUsings>enable</ImplicitUsings>

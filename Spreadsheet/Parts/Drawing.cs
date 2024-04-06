@@ -6,7 +6,7 @@ using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Spreadsheet_2007
 {
     /// <summary>
     /// 

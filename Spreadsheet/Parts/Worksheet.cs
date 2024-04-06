@@ -2,11 +2,11 @@
 
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using OpenXMLOffice.Global_2013;
+using OpenXMLOffice.Global_2007;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
 	/// Represents a worksheet in an Excel workbook.

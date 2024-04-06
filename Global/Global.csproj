@@ -8,7 +8,7 @@
 
 	<PropertyGroup>
 		<PackageId>OpenXMLOffice.Global</PackageId>
-		<RootNamespace>OpenXMLOffice.Global_2013</RootNamespace>
+		<RootNamespace>OpenXMLOffice.Global_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
 		<CosturaOutputType>SingleFile</CosturaOutputType>
 		<ImplicitUsings>enable</ImplicitUsings>

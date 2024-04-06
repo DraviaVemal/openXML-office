@@ -2,7 +2,7 @@
 
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 
-namespace OpenXMLOffice.Global_2013
+namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
 	/// Represents the position of an axis in a chart.
@@ -271,10 +271,6 @@ namespace OpenXMLOffice.Global_2013
 		public bool showValue = false;
 
 		/// <summary>
-		/// Determines whether to show the value from a column in the chart.
-		/// </summary>
-		public bool showValueFromColumn = false;
-		/// <summary>
 		/// Is Font Bold
 		/// </summary>
 		public bool isBold = false;
@@ -298,6 +294,11 @@ namespace OpenXMLOffice.Global_2013
 		///
 		/// </summary>
 		public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+
+		/// <summary>
+		/// Determines whether to show the value from a column in the chart.
+		/// </summary>
+		public bool showValueFromColumn = false;
 	}
 
 	/// <summary>

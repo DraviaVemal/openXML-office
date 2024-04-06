@@ -2,7 +2,7 @@
 
 using A = DocumentFormat.OpenXml.Drawing;
 
-namespace OpenXMLOffice.Global_2013
+namespace OpenXMLOffice.Global_2007
 {
     /// <summary>
     /// Common Theme Class used by both presentation and spreadsheet.
@@ -27,11 +27,13 @@ namespace OpenXMLOffice.Global_2013
             new int?[]{100000, 120000 ,null,63000,null}
         };
 
-        private readonly A.Theme openXMLTheme = new();        /// <summary>
-                                                              /// Creates a new theme with the given pallet.
-                                                              /// </summary>
-                                                              /// <param name="ThemePallet">
-                                                              /// </param>
+        private readonly A.Theme openXMLTheme = new();
+
+        /// <summary>
+        /// Creates a new theme with the given pallet.
+        /// </summary>
+        /// <param name="ThemePallet">
+        /// </param>
         public Theme(ThemePallet? ThemePallet = null)
         {
             CreateTheme(ThemePallet);
@@ -47,10 +49,6 @@ namespace OpenXMLOffice.Global_2013
         {
             return openXMLTheme;
         }
-
-
-
-
 
         private static A.Outline[] GenerateOutlines()
         {
@@ -322,7 +320,5 @@ namespace OpenXMLOffice.Global_2013
                 SchemeColor = schemeColor
             };
         }
-
-
     }
 }

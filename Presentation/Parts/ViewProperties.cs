@@ -3,7 +3,7 @@
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace OpenXMLOffice.Presentation_2013
+namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
 	/// PPT View Properties Part Handling

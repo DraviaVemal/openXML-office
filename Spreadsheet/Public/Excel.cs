@@ -2,7 +2,7 @@
 
 using DocumentFormat.OpenXml;
 
-namespace OpenXMLOffice.Spreadsheet_2013
+namespace OpenXMLOffice.Spreadsheet_2007
 {
 
     /// <summary>
