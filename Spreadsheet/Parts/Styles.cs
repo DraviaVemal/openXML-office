@@ -117,6 +117,11 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </exception>
 		internal void LoadStyleFromSheet(X.Stylesheet Stylesheet)
 		{
+			SetFonts(Stylesheet.Fonts);
+			SetFills(Stylesheet.Fills);
+			SetBorders(Stylesheet.Borders);
+			SetCellFormats(Stylesheet.CellFormats);
+			SetNumberFormats(Stylesheet.NumberingFormats);
 		}
 
 		/// <summary>
@@ -390,9 +395,14 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			}
 			else
 			{
+				uint numberFormatId = (uint)numberFormatCollection.Count();
+				if (numberFormatId != 0)
+				{
+					numberFormatId = ((uint)numberFormatCollection.Max().AsInt32) + 1;
+				}
 				BsonValue Result = numberFormatCollection.Insert(new NumberFormats()
 				{
-					Id = (uint)numberFormatCollection.Count(),
+					Id = numberFormatId,
 					FormatCode = CellStyleSetting.numberFormat
 				});
 				return (uint)Result.AsInt64;
@@ -413,6 +423,126 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			{ Count = (uint)numberFormatCollection.Count() };
 		}
 
+		private void SetNumberFormats(X.NumberingFormats? numberingFormats)
+		{
+			numberingFormats?.Descendants<X.NumberingFormat>().ToList()
+			.ForEach(numberingFormat =>
+			{
 
+				NumberFormats numFormat = new()
+				{
+					Id = numberingFormat.NumberFormatId!
+				};
+				if (numberingFormat.FormatCode != null)
+				{
+					numFormat.FormatCode = numberingFormat.FormatCode!;
+				}
+				numberFormatCollection.Insert(numFormat);
+			});
+		}
+
+		private void SetCellFormats(X.CellFormats? cellFormats)
+		{
+			cellFormats?.Descendants<X.CellFormat>().ToList()
+			.ForEach(cellFormat =>
+			{
+				if (cellFormat.NumberFormatId != null ||
+				cellFormat.FontId != null ||
+				cellFormat.FillId != null ||
+				cellFormat.BorderId != null)
+				{
+					CellXfs cellXfs = new()
+					{
+						Id = (uint)cellXfsCollection.Count()
+					};
+					if (cellFormat.NumberFormatId != null)
+					{
+						cellXfs.NumberFormatId = cellFormat.NumberFormatId;
+					}
+					if (cellFormat.FontId != null)
+					{
+						cellXfs.FontId = cellFormat.FontId;
+					}
+					if (cellFormat.FillId != null)
+					{
+						cellXfs.FillId = cellFormat.FillId;
+					}
+					if (cellFormat.BorderId != null)
+					{
+						cellXfs.BorderId = cellFormat.BorderId;
+					}
+					cellXfsCollection.Insert(cellXfs);
+				}
+			});
+		}
+
+		private void SetBorders(X.Borders? borders)
+		{
+			borders?.Descendants<X.Border>().ToList()
+			.ForEach(border =>
+			{
+
+			});
+		}
+
+		private void SetFills(X.Fills? fills)
+		{
+			fills?.Descendants<X.Fill>().ToList()
+			.ForEach(fill =>
+			{
+				if (fill.PatternFill?.BackgroundColor?.Rgb != null ||
+				fill.PatternFill?.ForegroundColor?.Rgb != null)
+				{
+					FillStyle fillStyle = new()
+					{
+						Id = (uint)fillStyleCollection.Count()
+					};
+					if (fill.PatternFill?.ForegroundColor?.Rgb != null)
+					{
+						fillStyle.ForegroundColor = fill.PatternFill.ForegroundColor.Rgb;
+					}
+					if (fill.PatternFill?.BackgroundColor?.Rgb != null)
+					{
+						fillStyle.BackgroundColor = fill.PatternFill.BackgroundColor.Rgb;
+					}
+					fillStyleCollection.Insert(fillStyle);
+				}
+			});
+		}
+
+		private void SetFonts(X.Fonts? fonts)
+		{
+			fonts?.Descendants<X.Font>().ToList()
+			.ForEach(font =>
+			{
+				if (font.Color?.Rgb != null ||
+				 font.FontName?.Val != null ||
+				 font.FontFamilyNumbering?.Val != null ||
+				 font.FontSize?.Val != null)
+				{
+					FontStyle fontStyle = new()
+					{
+						Id = (uint)fontStyleCollection.Count(),
+					};
+					if (font.FontSize?.Val != null)
+					{
+						fontStyle.Size = (uint)font.FontSize.Val;
+					}
+					if (font.Color?.Rgb != null)
+					{
+						fontStyle.Color = font.Color.Rgb!;
+					}
+					if (font.FontName?.Val != null)
+					{
+						fontStyle.Name = font.FontName.Val!;
+					}
+					if (font.FontFamilyNumbering?.Val != null)
+					{
+						fontStyle.Family = font.FontFamilyNumbering.Val;
+					}
+					fontStyleCollection.Insert(fontStyle);
+				}
+			});
+		}
 	}
 }
