@@ -579,6 +579,7 @@ namespace OpenXMLOffice.Tests
 			});
 			ComboChartSetting<ExcelSetting> comboChartSetting = new()
 			{
+				secondaryAxisPosition = AxisPosition.TOP,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -599,11 +600,11 @@ namespace OpenXMLOffice.Tests
 			});
 			comboChartSetting.AddComboChartsSetting(new BarChartSetting<ExcelSetting>()
 			{
+				isSecondaryAxis = true,
 				applicationSpecificSetting = new()
 			});
 			comboChartSetting.AddComboChartsSetting(new ColumnChartSetting<ExcelSetting>()
 			{
-				isSecondaryAxis = true,
 				applicationSpecificSetting = new()
 			});
 			worksheet.AddChart(new()
