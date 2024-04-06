@@ -525,7 +525,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint column = 0;
+		public uint column = 1;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -533,7 +533,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint row = 0;
+		public uint row = 1;
 		/// <summary>
 		/// 
 		/// </summary>

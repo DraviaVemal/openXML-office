@@ -189,6 +189,7 @@ namespace OpenXMLOffice.Tests
 		public void AddAllCharts()
 		{
 			Worksheet worksheet = excel.AddSheet("Area Chart");
+			excel.RemoveSheet("Sheet1");
 			int row = 0;
 			CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
@@ -242,6 +243,142 @@ namespace OpenXMLOffice.Tests
 			}, new AreaChartSetting<ExcelSetting>()
 			{
 				areaChartTypes = AreaChartTypes.PERCENT_STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 42,
+						column = 5
+					},
+					to = new()
+					{
+						row = 62,
+						column = 20
+					}
+				}
+			});
+			row = 0;
+			worksheet = excel.AddSheet("Bar Chart");
+			CreateDataCellPayload().ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new BarChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 20,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new BarChartSetting<ExcelSetting>()
+			{
+				barChartTypes = BarChartTypes.STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 5
+					},
+					to = new()
+					{
+						row = 41,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new BarChartSetting<ExcelSetting>()
+			{
+				barChartTypes = BarChartTypes.PERCENT_STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 42,
+						column = 5
+					},
+					to = new()
+					{
+						row = 62,
+						column = 20
+					}
+				}
+			});
+			row = 0;
+			worksheet = excel.AddSheet("Column Chart");
+			CreateDataCellPayload().ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new ColumnChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 20,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new ColumnChartSetting<ExcelSetting>()
+			{
+				columnChartTypes = ColumnChartTypes.STACKED,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 5
+					},
+					to = new()
+					{
+						row = 41,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new ColumnChartSetting<ExcelSetting>()
+			{
+				columnChartTypes = ColumnChartTypes.PERCENT_STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -384,6 +521,53 @@ namespace OpenXMLOffice.Tests
 					{
 						row = 62,
 						column = 36
+					}
+				}
+			});
+			row = 0;
+			worksheet = excel.AddSheet("Pie Chart");
+			CreateDataCellPayload().ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new PieChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 20,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new PieChartSetting<ExcelSetting>()
+			{
+				pieChartTypes = PieChartTypes.DOUGHNUT,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 5
+					},
+					to = new()
+					{
+						row = 41,
+						column = 20
 					}
 				}
 			});
