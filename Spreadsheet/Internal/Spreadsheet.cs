@@ -46,9 +46,9 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			return null;
 		}
 
-		internal static uint GetStyleId(CellStyleSetting CellStyleSetting)
+		internal uint GetStyleId(CellStyleSetting CellStyleSetting)
 		{
-			return Styles.Instance.GetCellStyleId(CellStyleSetting);
+			return GetStyleService().GetCellStyleId(CellStyleSetting);
 		}
 
 		internal string? GetSheetName(string sheetId)

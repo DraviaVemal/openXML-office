@@ -7,36 +7,24 @@ namespace OpenXMLOffice.Spreadsheet_2013
 	/// <summary>
 	/// Represents a class that manages shared string values in Excel.
 	/// </summary>
-	internal class ShareString : IDisposable
+	internal class ShareStringService : IDisposable
 	{
 
 		private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
-		private static ShareString? instance = null;
+
 		private readonly ILiteCollection<StringRecord> stringCollection;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ShareString"/> class.
+		/// Initializes a new instance of the <see cref="ShareStringService"/> class.
 		/// </summary>
-		private ShareString()
+		internal ShareStringService()
 		{
 			stringCollection = liteDatabase.GetCollection<StringRecord>("StringRecord");
 			stringCollection.EnsureIndex("StringRecord.Value");
 		}
 
 		/// <summary>
-		/// Gets the instance of the <see cref="ShareString"/> class.
-		/// </summary>
-		public static ShareString Instance
-		{
-			get
-			{
-				instance ??= new ShareString();
-				return instance;
-			}
-		}
-
-		/// <summary>
-		/// Releases all resources used by the <see cref="ShareString"/> class.
+		/// Releases all resources used by the <see cref="ShareStringService"/> class.
 		/// </summary>
 		public void Dispose()
 		{

@@ -21,6 +21,10 @@ namespace OpenXMLOffice.Spreadsheet_2013
 
 		internal readonly SpreadsheetProperties spreadsheetProperties;
 
+		private readonly StylesService stylesService = new();
+
+		private readonly ShareStringService shareStringService = new();
+
 		internal SpreadsheetCore(Excel excel, string filePath, SpreadsheetProperties? spreadsheetProperties)
 		{
 			this.excel = excel;
@@ -104,7 +108,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// <summary>
 		/// Return the Shared String Table for the Spreadsheet
 		/// </summary>
-		internal SharedStringTable GetShareString()
+		internal SharedStringTable GetExcelShareString()
 		{
 			SharedStringTablePart? sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
 			if (sharedStringPart == null)
@@ -147,7 +151,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		internal void LoadShareStringFromFileToCache()
 		{
 			List<string> Records = new();
-			GetShareString().Elements<SharedStringItem>().ToList().ForEach(rec =>
+			GetExcelShareString().Elements<SharedStringItem>().ToList().ForEach(rec =>
 			{
 				Text? text = rec.GetFirstChild<Text>();
 				if (text != null)
@@ -155,7 +159,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 					Records.Add(text.Text);
 				}
 			});
-			ShareString.Instance.InsertBulk(Records);
+			GetShareStringService().InsertBulk(Records);
 		}
 
 		/// <summary>
@@ -163,7 +167,7 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal void LoadStyleFromFileToCache()
 		{
-			Styles.Instance.LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+			GetStyleService().LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
 		}
 
 		/// <summary>
@@ -171,13 +175,13 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal void WriteSharedStringToFile()
 		{
-			GetShareString().RemoveAllChildren<SharedStringItem>();
-			ShareString.Instance.GetRecords().ForEach(Value =>
+			GetExcelShareString().RemoveAllChildren<SharedStringItem>();
+			GetShareStringService().GetRecords().ForEach(Value =>
 			{
-				GetShareString().Append(new SharedStringItem(new Text(Value)));
+				GetExcelShareString().Append(new SharedStringItem(new Text(Value)));
 			});
-			GetShareString().Count = (uint)GetShareString().ChildElements.Count;
-			GetShareString().UniqueCount = (uint)GetShareString().ChildElements.Count;
+			GetExcelShareString().Count = (uint)GetExcelShareString().ChildElements.Count;
+			GetExcelShareString().UniqueCount = (uint)GetExcelShareString().ChildElements.Count;
 		}
 
 		/// <summary>
@@ -185,7 +189,17 @@ namespace OpenXMLOffice.Spreadsheet_2013
 		/// </summary>
 		internal void UpdateStyle()
 		{
-			Styles.Instance.SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+			GetStyleService().SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+		}
+
+		internal StylesService GetStyleService()
+		{
+			return stylesService;
+		}
+
+		internal ShareStringService GetShareStringService()
+		{
+			return shareStringService;
 		}
 
 		private void InitialiseStyle()

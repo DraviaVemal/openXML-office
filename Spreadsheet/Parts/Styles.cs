@@ -9,15 +9,16 @@ namespace OpenXMLOffice.Spreadsheet_2013
 	/// <summary>
 	/// This class serves as a versatile tool for working with Excel spreadsheets, styles component
 	/// </summary>
-	public class Styles
+	public class StylesService
 	{
 		private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
-		private static Styles? instance = null;
 		private readonly ILiteCollection<BorderStyle> borderStyleCollection;
 		private readonly ILiteCollection<CellXfs> cellXfsCollection;
 		private readonly ILiteCollection<FillStyle> fillStyleCollection;
 		private readonly ILiteCollection<FontStyle> fontStyleCollection;
-		private readonly ILiteCollection<NumberFormats> numberFormatCollection; private Styles()
+		private readonly ILiteCollection<NumberFormats> numberFormatCollection;
+
+		internal StylesService()
 		{
 			numberFormatCollection = liteDatabase.GetCollection<NumberFormats>("NumberFormats");
 			fontStyleCollection = liteDatabase.GetCollection<FontStyle>("FontStyle");
@@ -26,17 +27,6 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			cellXfsCollection = liteDatabase.GetCollection<CellXfs>("CellXfs");
 		}
 
-		/// <summary>
-		/// Get the Cell Style Id based on user specified CellStyleSetting
-		/// </summary>
-		public static Styles Instance
-		{
-			get
-			{
-				instance ??= new Styles();
-				return instance;
-			}
-		}
 		/// <summary>
 		/// Return Style details for the provided style ID
 		/// </summary>

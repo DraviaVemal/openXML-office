@@ -176,11 +176,11 @@ namespace OpenXMLOffice.Spreadsheet_2013
 						row.AppendChild(cell);
 					}
 					X.CellValues dataType = GetCellValueType(DataCell.dataType);
-					cell.StyleIndex = DataCell.styleId ?? Styles.Instance.GetCellStyleId(DataCell.styleSetting ?? new());
+					cell.StyleIndex = DataCell.styleId ?? excel.GetStyleService().GetCellStyleId(DataCell.styleSetting ?? new());
 					if (dataType == X.CellValues.String)
 					{
 						cell.DataType = X.CellValues.SharedString;
-						cell.CellValue = new X.CellValue(ShareString.Instance.InsertUnique(DataCell.cellValue));
+						cell.CellValue = new X.CellValue(excel.GetShareStringService().InsertUnique(DataCell.cellValue));
 					}
 					else
 					{
@@ -352,12 +352,13 @@ namespace OpenXMLOffice.Spreadsheet_2013
 					};
 					if (cell.DataType?.ToString() == "s")
 					{
-						cellValue = ShareString.Instance.GetValue(int.Parse(cellValue));
+						cellValue = excel.GetShareStringService().GetValue(int.Parse(cellValue));
 					}
 					chartDatas[(int)(row.RowIndex?.Value - rowStart)!][colIndex - colStart] = new()
 					{
 						dataType = cellDataType,
-						numberFormat = Styles.Instance.GetStyleForId(cell.StyleIndex!).numberFormat,
+						// TODO : Do Performance Update
+						numberFormat = excel.GetStyleService().GetStyleForId(cell.StyleIndex!).numberFormat,
 						value = cellValue ?? ""
 					};
 				});
