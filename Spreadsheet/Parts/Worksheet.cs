@@ -315,6 +315,16 @@ namespace OpenXMLOffice.Spreadsheet_2013
 			return new(this, chartDatas, dataRange, scatterChartSetting);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : ExcelSetting
+		{
+			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			dataRange.sheetName ??= GetSheetName();
+			return new(this, chartDatas, dataRange, comboChartSetting);
+		}
+
 		private ChartData[][] PrepareCacheData(DataRange dataRange)
 		{
 			Worksheet? worksheet = excel.GetWorksheet(dataRange.sheetName ?? GetSheetName()) ?? throw new ArgumentException("Data Range Sheet not founds");

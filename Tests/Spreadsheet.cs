@@ -571,6 +571,46 @@ namespace OpenXMLOffice.Tests
 					}
 				}
 			});
+			row = 0;
+			worksheet = excel.AddSheet("Combo Chart");
+			CreateDataCellPayload().ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			ComboChartSetting<ExcelSetting> comboChartSetting = new()
+			{
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 5
+					},
+					to = new()
+					{
+						row = 41,
+						column = 20
+					}
+				}
+			};
+			comboChartSetting.AddComboChartsSetting(new LineChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+			});
+			comboChartSetting.AddComboChartsSetting(new BarChartSetting<ExcelSetting>()
+			{
+				applicationSpecificSetting = new()
+			});
+			comboChartSetting.AddComboChartsSetting(new ColumnChartSetting<ExcelSetting>()
+			{
+				isSecondaryAxis = true,
+				applicationSpecificSetting = new()
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, comboChartSetting);
 		}
 
 		/// <summary>
