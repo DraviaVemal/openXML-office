@@ -30,6 +30,13 @@ namespace OpenXMLOffice.Global_2007
 		public ColumnChart(ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(columnChartSetting)
 		{
 			this.columnChartSetting = columnChartSetting;
+			if (columnChartSetting.columnChartType == ColumnChartTypes.CLUSTERED_3D ||
+			columnChartSetting.columnChartType == ColumnChartTypes.STACKED_3D ||
+			columnChartSetting.columnChartType == ColumnChartTypes.PERCENT_STACKED_3D)
+			{
+				this.columnChartSetting.is3DChart = true;
+				Add3Dcontrol();
+			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
@@ -37,7 +44,14 @@ namespace OpenXMLOffice.Global_2007
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(columnChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(CreateColumnChart(CreateDataSeries(columnChartSetting.chartDataSetting, dataCols, dataRange)));
+			if (columnChartSetting.is3DChart)
+			{
+				plotArea.Append(CreateColumnChart<C.Bar3DChart>(CreateDataSeries(columnChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
+			else
+			{
+				plotArea.Append(CreateColumnChart<C.BarChart>(CreateDataSeries(columnChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,
@@ -62,16 +76,19 @@ namespace OpenXMLOffice.Global_2007
 			return plotArea;
 		}
 
-		internal C.BarChart CreateColumnChart(List<ChartDataGrouping> chartDataGroupings)
+		internal ChartType CreateColumnChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			C.BarChart columnChart = new(
-				new C.BarDirection { Val = C.BarDirectionValues.Column },
+			ChartType columnChart = new();
+			columnChart.Append(new C.BarDirection { Val = C.BarDirectionValues.Column },
 				new C.BarGrouping
 				{
 					Val = columnChartSetting.columnChartType switch
 					{
 						ColumnChartTypes.STACKED => C.BarGroupingValues.Stacked,
 						ColumnChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
+						ColumnChartTypes.CLUSTERED_3D => C.BarGroupingValues.Clustered,
+						ColumnChartTypes.STACKED_3D => C.BarGroupingValues.Stacked,
+						ColumnChartTypes.PERCENT_STACKED_3D => C.BarGroupingValues.PercentStacked,
 						// Clusted
 						_ => C.BarGroupingValues.Clustered,
 					}
@@ -83,15 +100,48 @@ namespace OpenXMLOffice.Global_2007
 				columnChart.Append(CreateColumnChartSeries(seriesIndex, Series));
 				seriesIndex++;
 			});
-			if (columnChartSetting.columnChartType == ColumnChartTypes.CLUSTERED)
+			switch (columnChartSetting.columnChartType)
 			{
-				columnChart.Append(new C.GapWidth { Val = (UInt16Value)columnChartSetting.columnGraphicsSetting.categoryGap });
-				columnChart.Append(new C.Overlap { Val = (SByteValue)columnChartSetting.columnGraphicsSetting.seriesGap });
-			}
-			else
-			{
-				columnChart.Append(new C.GapWidth { Val = DefaultGapWidth });
-				columnChart.Append(new C.Overlap { Val = DefaultOverlap });
+				case ColumnChartTypes.CLUSTERED:
+					columnChart.Append(new C.GapWidth { Val = (UInt16Value)columnChartSetting.columnGraphicsSetting.categoryGap });
+					columnChart.Append(new C.Overlap { Val = (SByteValue)columnChartSetting.columnGraphicsSetting.seriesGap });
+					break;
+				case ColumnChartTypes.CLUSTERED_3D:
+					columnChart.Append(new C.GapWidth { Val = (UInt16Value)columnChartSetting.columnGraphicsSetting.categoryGap });
+					columnChart.Append(new C.Shape()
+					{
+						Val = columnChartSetting.columnGraphicsSetting.columnShapeType switch
+						{
+							BarShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
+							BarShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
+							BarShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
+							BarShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
+							BarShapeType.CYLINDER => C.ShapeValues.Cylinder,
+							_ => C.ShapeValues.Box
+						}
+					});
+					break;
+				case ColumnChartTypes.STACKED_3D:
+				case ColumnChartTypes.PERCENT_STACKED_3D:
+					columnChart.Append(new C.GapWidth { Val = DefaultGapWidth });
+					columnChart.Append(new C.Shape()
+					{
+						Val = columnChartSetting.columnGraphicsSetting.columnShapeType switch
+						{
+							BarShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
+							BarShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
+							BarShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
+							BarShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
+							BarShapeType.CYLINDER => C.ShapeValues.Cylinder,
+							_ => C.ShapeValues.Box
+						}
+					});
+					break;
+				default:
+					columnChart.Append(new C.GapWidth { Val = DefaultGapWidth });
+					columnChart.Append(new C.Overlap { Val = DefaultOverlap });
+					break;
+
 			}
 			C.DataLabels? dataLabels = CreateColumnDataLabels(columnChartSetting.columnChartDataLabel);
 			if (dataLabels != null)

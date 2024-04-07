@@ -340,9 +340,9 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void AddDevChart()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
 			{
-				barChartType = G.BarChartTypes.STACKED_3D,
+				columnChartType = G.ColumnChartTypes.STACKED_3D,
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{

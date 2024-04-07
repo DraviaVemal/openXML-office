@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the types of bar charts.
 	/// </summary>
-	public enum ColumnShapeType
+	public enum BarShapeType
 	{
 		/// <summary>
 		/// 
@@ -81,7 +81,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// 3D Column Shape Options
 		/// </summary>
-		public ColumnShapeType columnShapeType = ColumnShapeType.BOX;
+		public BarShapeType barShapeType = BarShapeType.BOX;
 		/// <summary>
 		/// The gap between the series bars.
 		/// Value is used in %.

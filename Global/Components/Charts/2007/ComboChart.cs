@@ -56,7 +56,7 @@ namespace OpenXMLOffice.Global_2007
 				if (chartSetting is ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
 				{
 					ColumnChart<ApplicationSpecificSetting> columnChart = new(columnChartSetting);
-					plotArea.Append(columnChart.CreateColumnChart(GetChartPositionData(dataCols, chartPosition, dataRange)));
+					plotArea.Append(columnChart.CreateColumnChart<C.BarChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
 				{

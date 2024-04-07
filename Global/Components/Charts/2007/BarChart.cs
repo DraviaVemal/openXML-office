@@ -269,13 +269,13 @@ namespace OpenXMLOffice.Global_2007
 					barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
 					barChart.Append(new C.Shape()
 					{
-						Val = barChartSetting.barGraphicsSetting.columnShapeType switch
+						Val = barChartSetting.barGraphicsSetting.barShapeType switch
 						{
-							ColumnShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
-							ColumnShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
-							ColumnShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
-							ColumnShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
-							ColumnShapeType.CYLINDER => C.ShapeValues.Cylinder,
+							BarShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
+							BarShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
+							BarShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
+							BarShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
+							BarShapeType.CYLINDER => C.ShapeValues.Cylinder,
 							_ => C.ShapeValues.Box
 						}
 					});
@@ -285,13 +285,13 @@ namespace OpenXMLOffice.Global_2007
 					barChart.Append(new C.GapWidth { Val = DefaultGapWidth });
 					barChart.Append(new C.Shape()
 					{
-						Val = barChartSetting.barGraphicsSetting.columnShapeType switch
+						Val = barChartSetting.barGraphicsSetting.barShapeType switch
 						{
-							ColumnShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
-							ColumnShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
-							ColumnShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
-							ColumnShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
-							ColumnShapeType.CYLINDER => C.ShapeValues.Cylinder,
+							BarShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
+							BarShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
+							BarShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
+							BarShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
+							BarShapeType.CYLINDER => C.ShapeValues.Cylinder,
 							_ => C.ShapeValues.Box
 						}
 					});
