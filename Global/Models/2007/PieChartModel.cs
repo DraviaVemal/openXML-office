@@ -11,8 +11,11 @@ namespace OpenXMLOffice.Global_2007
 		/// Pie Chart
 		/// </summary>
 		PIE,
-
-		// PIE_3D, PIE_PIE, PIE_BAR,
+		/// <summary>
+		/// 
+		/// </summary>
+		PIE_3D,
+		// PIE_PIE, PIE_BAR,
 		/// <summary>
 		/// Doughnut Chart
 		/// </summary>

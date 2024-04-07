@@ -340,9 +340,9 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void AddDevChart()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
 			{
-				areaChartType = G.AreaChartTypes.STACKED_3D,
+				pieChartType = G.PieChartTypes.PIE_3D,
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{

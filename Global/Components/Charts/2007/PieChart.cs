@@ -28,6 +28,11 @@ namespace OpenXMLOffice.Global_2007
 		public PieChart(PieChartSetting<ApplicationSpecificSetting> pieChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(pieChartSetting)
 		{
 			this.pieChartSetting = pieChartSetting;
+			if (pieChartSetting.pieChartType == PieChartTypes.PIE_3D)
+			{
+				this.pieChartSetting.is3DChart = true;
+				Add3Dcontrol();
+			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
@@ -37,7 +42,8 @@ namespace OpenXMLOffice.Global_2007
 			plotArea.Append(CreateLayout(pieChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT ?
 				CreateChart<C.DoughnutChart>(CreateDataSeries(pieChartSetting.chartDataSetting, dataCols, dataRange)) :
-				CreateChart<C.PieChart>(CreateDataSeries(pieChartSetting.chartDataSetting, dataCols, dataRange)));
+				pieChartSetting.is3DChart ? CreateChart<C.Pie3DChart>(CreateDataSeries(pieChartSetting.chartDataSetting, dataCols, dataRange)) :
+				 CreateChart<C.PieChart>(CreateDataSeries(pieChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
 		}
