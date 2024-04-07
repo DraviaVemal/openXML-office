@@ -35,7 +35,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(pieChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT ?
+			plotArea.Append(pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT ?
 				CreateChart<C.DoughnutChart>(CreateDataSeries(pieChartSetting.chartDataSetting, dataCols, dataRange)) :
 				CreateChart<C.PieChart>(CreateDataSeries(pieChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateChartShapeProperties());
@@ -117,7 +117,7 @@ namespace OpenXMLOffice.Global_2007
 				{
 					solidFill = GetDataPointFill()
 				};
-				if (pieChartSetting.pieChartTypes != PieChartTypes.DOUGHNUT)
+				if (pieChartSetting.pieChartType != PieChartTypes.DOUGHNUT)
 				{
 					shapePropertiesModel.outline = new()
 					{
@@ -148,12 +148,12 @@ namespace OpenXMLOffice.Global_2007
 			if (pieChartDataLabel.showValue || pieChartDataLabel.showValueFromColumn || pieChartDataLabel.showCategoryName || pieChartDataLabel.showLegendKey || pieChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(pieChartDataLabel, dataLabelCounter);
-				if (pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT &&
+				if (pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT &&
 					new[] { PieChartDataLabel.DataLabelPositionValues.CENTER, PieChartDataLabel.DataLabelPositionValues.INSIDE_END, PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END, PieChartDataLabel.DataLabelPositionValues.BEST_FIT }.Contains(pieChartDataLabel.dataLabelPosition))
 				{
 					throw new ArgumentException("DataLabelPosition is not supported for Doughnut Chart.");
 				}
-				if (pieChartSetting.pieChartTypes != PieChartTypes.DOUGHNUT)
+				if (pieChartSetting.pieChartType != PieChartTypes.DOUGHNUT)
 				{
 					dataLabels.InsertAt(new C.DataLabelPosition()
 					{

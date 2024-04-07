@@ -136,6 +136,6 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// The type of scatter chart.
 		/// </summary>
-		public ScatterChartTypes scatterChartTypes = ScatterChartTypes.SCATTER;
+		public ScatterChartTypes scatterChartType = ScatterChartTypes.SCATTER;
 	}
 }

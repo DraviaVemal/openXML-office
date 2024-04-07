@@ -34,7 +34,7 @@ namespace OpenXMLOffice.Global_2007
 
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
 		{
-			if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
 				scatterChartSetting.chartDataSetting.is3Ddata = true;
 				if ((dataCols.Length - 1) % 2 != 0)
@@ -44,7 +44,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ?
+			plotArea.Append(scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE ?
 				CreateChart<C.BubbleChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)) :
 				CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
@@ -77,7 +77,7 @@ namespace OpenXMLOffice.Global_2007
 			ChartType chart = new();
 			chart.Append(new C.ScatterStyle
 			{
-				Val = scatterChartSetting.scatterChartTypes switch
+				Val = scatterChartSetting.scatterChartType switch
 				{
 					ScatterChartTypes.SCATTER_SMOOTH => C.ScatterStyleValues.Smooth,
 					ScatterChartTypes.SCATTER_SMOOTH_MARKER => C.ScatterStyleValues.SmoothMarker,
@@ -99,7 +99,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				chart.Append(dataLabels);
 			}
-			if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
 				chart.Append(new C.BubbleScale() { Val = 100 });
 				chart.Append(new C.ShowNegativeBubbles() { Val = true });
@@ -134,9 +134,9 @@ namespace OpenXMLOffice.Global_2007
 				return solidFillModel;
 			}
 			MarkerModel markerModel = new();
-			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartTypes))
+			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{
-				markerModel.markerShapeValues = scatterChartSetting.scatterChartTypes == ScatterChartTypes.SCATTER ? MarkerModel.MarkerShapeValues.AUTO : MarkerModel.MarkerShapeValues.CIRCLE;
+				markerModel.markerShapeValues = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? MarkerModel.MarkerShapeValues.AUTO : MarkerModel.MarkerShapeValues.CIRCLE;
 				markerModel.shapeProperties = new()
 				{
 					solidFill = new()
@@ -166,10 +166,10 @@ namespace OpenXMLOffice.Global_2007
 			{
 				outline = new()
 				{
-					solidFill = scatterChartSetting.scatterChartTypes == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(),
+					solidFill = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(),
 				}
 			};
-			if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
 				shapePropertiesModel.solidFill = new()
 				{
@@ -183,7 +183,7 @@ namespace OpenXMLOffice.Global_2007
 				series.Append(new C.InvertIfNegative() { Val = false });
 			}
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
-			if (scatterChartSetting.scatterChartTypes != ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE)
 			{
 				series.Append(CreateMarker(markerModel));
 			}
@@ -193,14 +193,14 @@ namespace OpenXMLOffice.Global_2007
 			}
 			series.Append(CreateXValueAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
 			series.Append(CreateYValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
-			if (scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
 				series.Append(CreateBubbleSizeAxisData(chartDataGrouping.zAxisFormula!, chartDataGrouping.zAxisCells!));
 				series.Append(new C.Bubble3D() { Val = false });
 			}
 			else
 			{
-				series.Append(new C.Smooth() { Val = new[] { ScatterChartTypes.SCATTER_SMOOTH, ScatterChartTypes.SCATTER_SMOOTH_MARKER }.Contains(scatterChartSetting.scatterChartTypes) });
+				series.Append(new C.Smooth() { Val = new[] { ScatterChartTypes.SCATTER_SMOOTH, ScatterChartTypes.SCATTER_SMOOTH_MARKER }.Contains(scatterChartSetting.scatterChartType) });
 			}
 			if (chartDataGrouping.dataLabelCells != null && chartDataGrouping.dataLabelFormula != null)
 			{

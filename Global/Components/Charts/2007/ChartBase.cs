@@ -491,14 +491,18 @@ namespace OpenXMLOffice.Global_2007
 			{
 				chart.Title = CreateTitle(chartSetting.titleOptions);
 			}
-			if (chartSetting.is3DChart)
-			{
-				chart.View3D = CreateView3D();
-				chart.Floor = CreateFloor();
-				chart.SideWall = CreateSideWall();
-				chart.BackWall = CreateBackWall();
-			}
 			return chart;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		protected void Add3Dcontrol()
+		{
+			chart.View3D = CreateView3D();
+			chart.Floor = CreateFloor();
+			chart.SideWall = CreateSideWall();
+			chart.BackWall = CreateBackWall();
 		}
 
 		private C.BackWall CreateBackWall()
@@ -506,7 +510,10 @@ namespace OpenXMLOffice.Global_2007
 			return new()
 			{
 				Thickness = new() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(),
+				ShapeProperties = CreateChartShapeProperties(new()
+				{
+					shapeProperty3D = new()
+				}),
 			};
 		}
 
@@ -515,7 +522,10 @@ namespace OpenXMLOffice.Global_2007
 			return new()
 			{
 				Thickness = new() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(),
+				ShapeProperties = CreateChartShapeProperties(new()
+				{
+					shapeProperty3D = new()
+				}),
 			};
 		}
 
@@ -524,7 +534,10 @@ namespace OpenXMLOffice.Global_2007
 			return new()
 			{
 				Thickness = new() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(),
+				ShapeProperties = CreateChartShapeProperties(new()
+				{
+					shapeProperty3D = new()
+				}),
 			};
 		}
 

@@ -116,7 +116,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// The type of the pie chart.
 		/// </summary>
-		public PieChartTypes pieChartTypes = PieChartTypes.PIE;
+		public PieChartTypes pieChartType = PieChartTypes.PIE;
 		/// <summary>
 		/// Will be ignored if pieChartTypes is not DOUGHNUT.
 		/// Value is assumed in percentage.

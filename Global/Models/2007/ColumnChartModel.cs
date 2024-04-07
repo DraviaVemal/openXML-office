@@ -139,7 +139,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Chart Type. default is CLUSTERED
 		/// </summary>
-		public ColumnChartTypes columnChartTypes = ColumnChartTypes.CLUSTERED;
+		public ColumnChartTypes columnChartType = ColumnChartTypes.CLUSTERED;
 		/// <summary>
 		/// The graphics settings for the column chart.
 		/// </summary>

@@ -195,6 +195,6 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// The type of the line chart.
 		/// </summary>
-		public LineChartTypes lineChartTypes = LineChartTypes.CLUSTERED;
+		public LineChartTypes lineChartType = LineChartTypes.CLUSTERED;
 	}
 }

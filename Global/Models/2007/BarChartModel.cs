@@ -178,7 +178,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// The type of bar chart.
 		/// </summary>
-		public BarChartTypes barChartTypes = BarChartTypes.CLUSTERED;
+		public BarChartTypes barChartType = BarChartTypes.CLUSTERED;
 
 		/// <summary>
 		/// The options for the chart axes.

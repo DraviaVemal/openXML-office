@@ -30,6 +30,13 @@ namespace OpenXMLOffice.Global_2007
 		public BarChart(BarChartSetting<ApplicationSpecificSetting> barChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(barChartSetting)
 		{
 			this.barChartSetting = barChartSetting;
+			if (barChartSetting.barChartType == BarChartTypes.CLUSTERED_3D ||
+			barChartSetting.barChartType == BarChartTypes.STACKED_3D ||
+			barChartSetting.barChartType == BarChartTypes.PERCENT_STACKED_3D)
+			{
+				this.barChartSetting.is3DChart = true;
+				Add3Dcontrol();
+			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
@@ -171,7 +178,7 @@ namespace OpenXMLOffice.Global_2007
 			if (barChartDataLabel.showValue || barChartDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(barChartDataLabel, dataLabelCounter);
-				if (barChartSetting.barChartTypes != BarChartTypes.CLUSTERED && barChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
+				if (!(barChartSetting.barChartType == BarChartTypes.CLUSTERED || barChartSetting.barChartType == BarChartTypes.CLUSTERED_3D) && barChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)
 				{
 					throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
 				}
@@ -194,15 +201,13 @@ namespace OpenXMLOffice.Global_2007
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions?.manualLayout));
-			if (barChartSetting.barChartTypes == BarChartTypes.CLUSTERED ||
-			barChartSetting.barChartTypes == BarChartTypes.STACKED ||
-			barChartSetting.barChartTypes == BarChartTypes.PERCENT_STACKED)
+			if (barChartSetting.is3DChart)
 			{
-				plotArea.Append(CreateBarChart<C.BarChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
+				plotArea.Append(CreateBarChart<C.Bar3DChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
 			else
 			{
-				plotArea.Append(CreateBarChart<C.Bar3DChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
+				plotArea.Append(CreateBarChart<C.BarChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
@@ -233,13 +238,28 @@ namespace OpenXMLOffice.Global_2007
 		internal ChartType CreateBarChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
 			ChartType barChart = new();
+			barChart.Append(new C.BarDirection { Val = C.BarDirectionValues.Bar },
+				new C.BarGrouping
+				{
+					Val = barChartSetting.barChartType switch
+					{
+						BarChartTypes.STACKED => C.BarGroupingValues.Stacked,
+						BarChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
+						BarChartTypes.CLUSTERED_3D => C.BarGroupingValues.PercentStacked,
+						BarChartTypes.STACKED_3D => C.BarGroupingValues.Stacked,
+						BarChartTypes.PERCENT_STACKED_3D => C.BarGroupingValues.PercentStacked,
+						// Clusted
+						_ => C.BarGroupingValues.Clustered
+					}
+				},
+				new C.VaryColors { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>
 			{
 				barChart.Append(CreateBarChartSeries(seriesIndex, Series));
 				seriesIndex++;
 			});
-			switch (barChartSetting.barChartTypes)
+			switch (barChartSetting.barChartType)
 			{
 				case BarChartTypes.CLUSTERED:
 					barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });

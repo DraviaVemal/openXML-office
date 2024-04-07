@@ -65,7 +65,7 @@ namespace OpenXMLOffice.Global_2007
 			C.LineChart lineChart = new(
 							new C.Grouping
 							{
-								Val = lineChartSetting.lineChartTypes switch
+								Val = lineChartSetting.lineChartType switch
 								{
 									LineChartTypes.STACKED => C.GroupingValues.Stacked,
 									LineChartTypes.STACKED_MARKER => C.GroupingValues.Stacked,
@@ -98,7 +98,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				markerShapeValues = MarkerModel.MarkerShapeValues.NONE,
 			};
-			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartTypes))
+			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartType))
 			{
 				marketModel.markerShapeValues = MarkerModel.MarkerShapeValues.CIRCLE;
 				marketModel.shapeProperties = new()

@@ -221,7 +221,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new AreaChartSetting<ExcelSetting>()
 			{
-				areaChartTypes = AreaChartTypes.STACKED,
+				areaChartType = AreaChartTypes.STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -242,7 +242,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new AreaChartSetting<ExcelSetting>()
 			{
-				areaChartTypes = AreaChartTypes.PERCENT_STACKED,
+				areaChartType = AreaChartTypes.PERCENT_STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -289,7 +289,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new BarChartSetting<ExcelSetting>()
 			{
-				barChartTypes = BarChartTypes.STACKED,
+				barChartType = BarChartTypes.STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -310,7 +310,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new BarChartSetting<ExcelSetting>()
 			{
-				barChartTypes = BarChartTypes.PERCENT_STACKED,
+				barChartType = BarChartTypes.PERCENT_STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -357,7 +357,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new ColumnChartSetting<ExcelSetting>()
 			{
-				columnChartTypes = ColumnChartTypes.STACKED,
+				columnChartType = ColumnChartTypes.STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -378,7 +378,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new ColumnChartSetting<ExcelSetting>()
 			{
-				columnChartTypes = ColumnChartTypes.PERCENT_STACKED,
+				columnChartType = ColumnChartTypes.PERCENT_STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -425,7 +425,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new LineChartSetting<ExcelSetting>()
 			{
-				lineChartTypes = LineChartTypes.STACKED,
+				lineChartType = LineChartTypes.STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -446,7 +446,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new LineChartSetting<ExcelSetting>()
 			{
-				lineChartTypes = LineChartTypes.PERCENT_STACKED,
+				lineChartType = LineChartTypes.PERCENT_STACKED,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -467,7 +467,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new LineChartSetting<ExcelSetting>()
 			{
-				lineChartTypes = LineChartTypes.CLUSTERED_MARKER,
+				lineChartType = LineChartTypes.CLUSTERED_MARKER,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -488,7 +488,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new LineChartSetting<ExcelSetting>()
 			{
-				lineChartTypes = LineChartTypes.STACKED_MARKER,
+				lineChartType = LineChartTypes.STACKED_MARKER,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -509,7 +509,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new LineChartSetting<ExcelSetting>()
 			{
-				lineChartTypes = LineChartTypes.PERCENT_STACKED_MARKER,
+				lineChartType = LineChartTypes.PERCENT_STACKED_MARKER,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -556,7 +556,7 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new PieChartSetting<ExcelSetting>()
 			{
-				pieChartTypes = PieChartTypes.DOUGHNUT,
+				pieChartType = PieChartTypes.DOUGHNUT,
 				applicationSpecificSetting = new()
 				{
 					from = new()

@@ -155,7 +155,7 @@ namespace OpenXMLOffice.Global_2007
 			C.AreaChart areaChart = new(
 				new C.Grouping
 				{
-					Val = areaChartSetting.areaChartTypes switch
+					Val = areaChartSetting.areaChartType switch
 					{
 						AreaChartTypes.STACKED => C.GroupingValues.Stacked,
 						AreaChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,

@@ -66,14 +66,14 @@ namespace OpenXMLOffice.Global_2007
 				if (chartSetting is PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
 				{
 					PieChart<ApplicationSpecificSetting> pieChart = new(pieChartSetting);
-					plotArea.Append(pieChartSetting.pieChartTypes == PieChartTypes.DOUGHNUT ?
+					plotArea.Append(pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT ?
 						pieChart.CreateChart<C.DoughnutChart>(GetChartPositionData(dataCols, chartPosition, dataRange)) :
 						pieChart.CreateChart<C.PieChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
 				{
 					ScatterChart<ApplicationSpecificSetting> scatterChart = new(scatterChartSetting);
-					plotArea.Append(scatterChartSetting.scatterChartTypes == ScatterChartTypes.BUBBLE ?
+					plotArea.Append(scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE ?
 						scatterChart.CreateChart<C.BubbleChart>(GetChartPositionData(dataCols, chartPosition, dataRange)) :
 						scatterChart.CreateChart<C.ScatterChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}

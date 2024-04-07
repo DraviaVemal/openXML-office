@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Global_2007
 				new C.BarDirection { Val = C.BarDirectionValues.Column },
 				new C.BarGrouping
 				{
-					Val = columnChartSetting.columnChartTypes switch
+					Val = columnChartSetting.columnChartType switch
 					{
 						ColumnChartTypes.STACKED => C.BarGroupingValues.Stacked,
 						ColumnChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
@@ -83,7 +83,7 @@ namespace OpenXMLOffice.Global_2007
 				columnChart.Append(CreateColumnChartSeries(seriesIndex, Series));
 				seriesIndex++;
 			});
-			if (columnChartSetting.columnChartTypes == ColumnChartTypes.CLUSTERED)
+			if (columnChartSetting.columnChartType == ColumnChartTypes.CLUSTERED)
 			{
 				columnChart.Append(new C.GapWidth { Val = (UInt16Value)columnChartSetting.columnGraphicsSetting.categoryGap });
 				columnChart.Append(new C.Overlap { Val = (SByteValue)columnChartSetting.columnGraphicsSetting.seriesGap });
