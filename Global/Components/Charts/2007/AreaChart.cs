@@ -27,6 +27,13 @@ namespace OpenXMLOffice.Global_2007
 		public AreaChart(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(areaChartSetting)
 		{
 			this.areaChartSetting = areaChartSetting;
+			if (areaChartSetting.areaChartType == AreaChartTypes.CLUSTERED_3D ||
+			areaChartSetting.areaChartType == AreaChartTypes.STACKED_3D ||
+			areaChartSetting.areaChartType == AreaChartTypes.PERCENT_STACKED_3D)
+			{
+				this.areaChartSetting.is3DChart = true;
+				Add3Dcontrol();
+			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
 
@@ -125,7 +132,14 @@ namespace OpenXMLOffice.Global_2007
 		{
 			C.PlotArea plotArea = new();
 			plotArea.Append(CreateLayout(areaChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(CreateAreaChart(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
+			if (areaChartSetting.is3DChart)
+			{
+				plotArea.Append(CreateAreaChart<C.Area3DChart>(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
+			else
+			{
+				plotArea.Append(CreateAreaChart<C.AreaChart>(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,
@@ -150,19 +164,22 @@ namespace OpenXMLOffice.Global_2007
 			return plotArea;
 		}
 
-		internal C.AreaChart CreateAreaChart(List<ChartDataGrouping> chartDataGroupings)
+		internal ChartType CreateAreaChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			C.AreaChart areaChart = new(
-				new C.Grouping
+			ChartType areaChart = new();
+			areaChart.Append(new C.Grouping
+			{
+				Val = areaChartSetting.areaChartType switch
 				{
-					Val = areaChartSetting.areaChartType switch
-					{
-						AreaChartTypes.STACKED => C.GroupingValues.Stacked,
-						AreaChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
-						// Clusted
-						_ => C.GroupingValues.Standard,
-					}
-				},
+					AreaChartTypes.STACKED => C.GroupingValues.Stacked,
+					AreaChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
+					AreaChartTypes.CLUSTERED_3D => C.GroupingValues.Standard,
+					AreaChartTypes.STACKED_3D => C.GroupingValues.Stacked,
+					AreaChartTypes.PERCENT_STACKED_3D => C.GroupingValues.PercentStacked,
+					// Clusted
+					_ => C.GroupingValues.Standard,
+				}
+			},
 				new C.VaryColors { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>

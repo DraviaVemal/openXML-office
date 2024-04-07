@@ -245,7 +245,7 @@ namespace OpenXMLOffice.Global_2007
 					{
 						BarChartTypes.STACKED => C.BarGroupingValues.Stacked,
 						BarChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
-						BarChartTypes.CLUSTERED_3D => C.BarGroupingValues.PercentStacked,
+						BarChartTypes.CLUSTERED_3D => C.BarGroupingValues.Clustered,
 						BarChartTypes.STACKED_3D => C.BarGroupingValues.Stacked,
 						BarChartTypes.PERCENT_STACKED_3D => C.BarGroupingValues.PercentStacked,
 						// Clusted

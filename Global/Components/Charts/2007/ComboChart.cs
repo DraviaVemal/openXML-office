@@ -46,7 +46,7 @@ namespace OpenXMLOffice.Global_2007
 				if (chartSetting is AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
 				{
 					AreaChart<ApplicationSpecificSetting> areaChart = new(areaChartSetting);
-					plotArea.Append(areaChart.CreateAreaChart(GetChartPositionData(dataCols, chartPosition, dataRange)));
+					plotArea.Append(areaChart.CreateAreaChart<C.AreaChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
 				if (chartSetting is BarChartSetting<ApplicationSpecificSetting> barChartSetting)
 				{

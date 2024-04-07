@@ -21,8 +21,18 @@ namespace OpenXMLOffice.Global_2007
 		/// Percent stacked area chart.
 		/// </summary>
 		PERCENT_STACKED,
-
-		// CLUSTERED_3D, STACKED_3D, PERCENT_STACKED_3D
+		/// <summary>
+		/// 
+		/// </summary>
+		CLUSTERED_3D,
+		/// <summary>
+		/// 
+		/// </summary>
+		STACKED_3D,
+		/// <summary>
+		/// 
+		/// </summary>
+		PERCENT_STACKED_3D
 	}
 
 	/// <summary>
