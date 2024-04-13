@@ -6,6 +6,133 @@ namespace OpenXMLOffice.Spreadsheet_2007
 {
 
 	/// <summary>
+	/// Color Pattern Type
+	/// TODO: Add more pattern types
+	/// </summary>
+	public enum PatternTypeValues
+	{
+		/// <summary>
+		/// None Pattern
+		/// </summary>
+		NONE,
+
+		/// <summary>
+		/// Solid Pattern Type
+		/// </summary>
+		SOLID
+	}/// <summary>
+	 /// Font Scheme values
+	 /// </summary>
+	public enum SchemeValues
+	{
+		/// <summary>
+		/// None Scheme
+		/// </summary>
+		NONE,
+
+		/// <summary>
+		/// Minor Scheme
+		/// </summary>
+		MINOR,
+
+		/// <summary>
+		/// Major Scheme
+		/// </summary>
+		MAJOR
+	}
+
+	/// <summary>
+	/// Border style values
+	/// </summary>
+	public enum StyleValues
+	{
+		/// <summary>
+		/// None Border option
+		/// </summary>
+		NONE,
+
+		/// <summary>
+		/// Thin Border option
+		/// </summary>
+		THIN,
+
+		/// <summary>
+		/// Medium Border option
+		/// </summary>
+		THICK,
+
+		/// <summary>
+		/// Dotted Border option
+		/// </summary>
+		DOTTED,
+
+		/// <summary>
+		/// Double Border option
+		/// </summary>
+		DOUBLE,
+
+		/// <summary>
+		/// Dashed Border option
+		/// </summary>
+		DASHED,
+
+		/// <summary>
+		/// Dash Dot Border option
+		/// </summary>
+		DASH_DOT,
+
+		/// <summary>
+		/// Dash Dot Dot Border option
+		/// </summary>
+		DASH_DOT_DOT,
+
+		/// <summary>
+		/// Medium Border option
+		/// </summary>
+		MEDIUM,
+
+		/// <summary>
+		/// Medium Dashed Border option
+		/// </summary>
+		MEDIUM_DASHED,
+
+		/// <summary>
+		/// Medium Dash Dot Border option
+		/// </summary>
+		MEDIUM_DASH_DOT,
+
+		/// <summary>
+		/// Medium Dash Dot Dot Border option
+		/// </summary>
+		MEDIUM_DASH_DOT_DOT,
+
+		/// <summary>
+		/// Slant Dash Dot Border option
+		/// </summary>
+		SLANT_DASH_DOT,
+
+		/// <summary>
+		/// Hair Border option
+		/// </summary>
+		HAIR
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public enum FontColorTypeValues
+	{
+		/// <summary>
+		///
+		/// </summary>
+		THEME,
+		/// <summary>
+		///
+		/// </summary>
+		RGB
+	}
+
+	/// <summary>
 	/// Represents the base class for a border in a style.
 	/// </summary>
 	public class BorderSetting
@@ -20,82 +147,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Gets or sets the style of the border.
 		/// </summary>
 		public StyleValues style = StyleValues.NONE;
-
-		/// <summary>
-		/// Border style values
-		/// </summary>
-		public enum StyleValues
-		{
-			/// <summary>
-			/// None Border option
-			/// </summary>
-			NONE,
-
-			/// <summary>
-			/// Thin Border option
-			/// </summary>
-			THIN,
-
-			/// <summary>
-			/// Medium Border option
-			/// </summary>
-			THICK,
-
-			/// <summary>
-			/// Dotted Border option
-			/// </summary>
-			DOTTED,
-
-			/// <summary>
-			/// Double Border option
-			/// </summary>
-			DOUBLE,
-
-			/// <summary>
-			/// Dashed Border option
-			/// </summary>
-			DASHED,
-
-			/// <summary>
-			/// Dash Dot Border option
-			/// </summary>
-			DASH_DOT,
-
-			/// <summary>
-			/// Dash Dot Dot Border option
-			/// </summary>
-			DASH_DOT_DOT,
-
-			/// <summary>
-			/// Medium Border option
-			/// </summary>
-			MEDIUM,
-
-			/// <summary>
-			/// Medium Dashed Border option
-			/// </summary>
-			MEDIUM_DASHED,
-
-			/// <summary>
-			/// Medium Dash Dot Border option
-			/// </summary>
-			MEDIUM_DASH_DOT,
-
-			/// <summary>
-			/// Medium Dash Dot Dot Border option
-			/// </summary>
-			MEDIUM_DASH_DOT_DOT,
-
-			/// <summary>
-			/// Slant Dash Dot Border option
-			/// </summary>
-			SLANT_DASH_DOT,
-
-			/// <summary>
-			/// Hair Border option
-			/// </summary>
-			HAIR
-		}
 	}
 
 	/// <summary>
@@ -225,7 +276,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the text color of the cell. default is 000000
 		/// </summary>
-		public string textColor = "000000";
+		public FontColor textColor = new()
+		{
+			FontColorType = FontColorTypeValues.RGB,
+			Value = "000000"
+		};
 
 		/// <summary>
 		/// Vertical alignment of the cell. default is bottom
@@ -329,23 +384,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// Color Pattern Type
-		/// TODO: Add more pattern types
+		/// Gets or sets the background color of the cell.
 		/// </summary>
-		public enum PatternTypeValues
-		{
-			/// <summary>
-			/// None Pattern
-			/// </summary>
-			NONE,
-
-			/// <summary>
-			/// Solid Pattern Type
-			/// </summary>
-			SOLID
-		}        /// <summary>
-				 /// Gets or sets the background color of the cell.
-				 /// </summary>
 		public string? BackgroundColor { get; set; }
 
 		/// <summary>
@@ -364,6 +404,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public PatternTypeValues PatternType { get; set; }
 	}
 
+
+	/// <summary>
+	///
+	/// </summary>
+	public class FontColor
+	{
+		/// <summary>
+		///
+		/// </summary>
+		public FontColorTypeValues FontColorType { get; set; } = FontColorTypeValues.THEME;
+
+		/// <summary>
+		///
+		/// </summary>
+		public required string Value { get; set; }
+	}
+
 	/// <summary>
 	/// Represents the font style of a cell in a worksheet.
 	/// </summary>
@@ -375,7 +432,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public FontStyle()
 		{
-			Color = "accent1";
+			Color = new() { Value = "1" };
 			Family = 2;
 			Size = 11;
 			Name = "Calibri";
@@ -383,30 +440,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// Font Scheme values
+		/// Font style ID
 		/// </summary>
-		public enum SchemeValues
-		{
-			/// <summary>
-			/// None Scheme
-			/// </summary>
-			NONE,
-
-			/// <summary>
-			/// Minor Scheme
-			/// </summary>
-			MINOR,
-
-			/// <summary>
-			/// Major Scheme
-			/// </summary>
-			MAJOR
-		}
+		public uint Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the color of the font. default is accent1
 		/// </summary>
-		public string Color { get; set; }
+		public FontColor Color { get; set; }
 
 		/// <summary>
 		/// Gets or sets the font family of the font.
@@ -417,11 +458,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Configure Font Scheme
 		/// </summary>
 		public SchemeValues FontScheme { get; set; }
-
-		/// <summary>
-		/// Font style ID
-		/// </summary>
-		public uint Id { get; set; }
 
 		/// <summary>
 		/// Is Cell Bold

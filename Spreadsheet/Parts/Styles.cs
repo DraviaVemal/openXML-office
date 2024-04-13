@@ -1,5 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Presentation;
 using LiteDB;
 using OpenXMLOffice.Global_2007;
 using X = DocumentFormat.OpenXml.Spreadsheet;
@@ -111,7 +113,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 
 		/// <summary>
 		/// Load the style from the Exisiting Sheet
-		/// TODO: Load Exisiting Style from the Excel Sheet For Update
 		/// </summary>
 		/// <exception cref="NotImplementedException">
 		/// </exception>
@@ -174,23 +175,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return new(borderStyleCollection.FindAll().ToList().Select(item =>
 			{
-				static X.BorderStyleValues GetBorderStyle(BorderSetting.StyleValues Style)
+				static X.BorderStyleValues GetBorderStyle(StyleValues Style)
 				{
 					return Style switch
 					{
-						BorderSetting.StyleValues.THIN => X.BorderStyleValues.Thin,
-						BorderSetting.StyleValues.THICK => X.BorderStyleValues.Thick,
-						BorderSetting.StyleValues.DOTTED => X.BorderStyleValues.Dotted,
-						BorderSetting.StyleValues.DOUBLE => X.BorderStyleValues.Double,
-						BorderSetting.StyleValues.DASHED => X.BorderStyleValues.Dashed,
-						BorderSetting.StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
-						BorderSetting.StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
-						BorderSetting.StyleValues.MEDIUM => X.BorderStyleValues.Medium,
-						BorderSetting.StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
-						BorderSetting.StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
-						BorderSetting.StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
-						BorderSetting.StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
-						BorderSetting.StyleValues.HAIR => X.BorderStyleValues.Hair,
+						StyleValues.THIN => X.BorderStyleValues.Thin,
+						StyleValues.THICK => X.BorderStyleValues.Thick,
+						StyleValues.DOTTED => X.BorderStyleValues.Dotted,
+						StyleValues.DOUBLE => X.BorderStyleValues.Double,
+						StyleValues.DASHED => X.BorderStyleValues.Dashed,
+						StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
+						StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
+						StyleValues.MEDIUM => X.BorderStyleValues.Medium,
+						StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
+						StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
+						StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
+						StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
+						StyleValues.HAIR => X.BorderStyleValues.Hair,
 						_ => X.BorderStyleValues.None
 					};
 				}
@@ -201,22 +202,22 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					BottomBorder = new(),
 					TopBorder = new(),
 				};
-				if (item.Left.style != BorderSetting.StyleValues.NONE)
+				if (item.Left.style != StyleValues.NONE)
 				{
 					Border.LeftBorder.Style = GetBorderStyle(item.Left.style);
 					Border.LeftBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
 				}
-				if (item.Right.style != BorderSetting.StyleValues.NONE)
+				if (item.Right.style != StyleValues.NONE)
 				{
 					Border.RightBorder.Style = GetBorderStyle(item.Right.style);
 					Border.RightBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
 				}
-				if (item.Top.style != BorderSetting.StyleValues.NONE)
+				if (item.Top.style != StyleValues.NONE)
 				{
 					Border.TopBorder.Style = GetBorderStyle(item.Top.style);
 					Border.TopBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
 				}
-				if (item.Bottom.style != BorderSetting.StyleValues.NONE)
+				if (item.Bottom.style != StyleValues.NONE)
 				{
 					Border.BottomBorder.Style = GetBorderStyle(item.Bottom.style);
 					Border.BottomBorder.AppendChild(new X.Color() { Rgb = item.Left.color });
@@ -308,7 +309,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					{
 						PatternType = item.PatternType switch
 						{
-							FillStyle.PatternTypeValues.SOLID => X.PatternValues.Solid,
+							PatternTypeValues.SOLID => X.PatternValues.Solid,
 							_ => X.PatternValues.None,
 						}
 					}
@@ -334,7 +335,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				item.IsUnderline == CellStyleSetting.isUnderline &&
 				item.IsDoubleUnderline == CellStyleSetting.isDoubleUnderline &&
 				item.Size == CellStyleSetting.fontSize &&
-				item.Color == CellStyleSetting.textColor &&
+				item.Color.FontColorType == CellStyleSetting.textColor.FontColorType &&
+				item.Color.Value == CellStyleSetting.textColor.Value &&
 				item.Name == CellStyleSetting.fontFamily);
 			if (FontStyle != null)
 			{
@@ -350,7 +352,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					IsUnderline = CellStyleSetting.isUnderline,
 					IsDoubleUnderline = CellStyleSetting.isDoubleUnderline,
 					Size = CellStyleSetting.fontSize,
-					Color = CellStyleSetting.textColor,
+					Color = new()
+					{
+						FontColorType = FontColorTypeValues.RGB,
+						Value = CellStyleSetting.textColor.Value,
+					},
 					Name = CellStyleSetting.fontFamily
 				});
 				return (uint)Result.AsInt64;
@@ -370,15 +376,34 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					{
 						Val = item.FontScheme switch
 						{
-							FontStyle.SchemeValues.MINOR => X.FontSchemeValues.Minor,
-							FontStyle.SchemeValues.MAJOR => X.FontSchemeValues.Major,
+							SchemeValues.MINOR => X.FontSchemeValues.Minor,
+							SchemeValues.MAJOR => X.FontSchemeValues.Major,
 							_ => X.FontSchemeValues.None
 						}
 					}
 				};
-				if (item.Color != null)
+				if (item.Color.Value != null)
 				{
-					Font.Color = new() { Rgb = item.Color };
+					if (item.Color.FontColorType == FontColorTypeValues.RGB)
+					{
+						Font.Color = new() { Rgb = item.Color.Value };
+					}
+					else
+					{
+						Font.Color = new() { Theme = new UInt32Value((uint)int.Parse(item.Color.Value)) };
+					}
+				}
+				if (item.IsBold)
+				{
+					Font.Bold = new();
+				}
+				if (item.IsItalic)
+				{
+					Font.Italic = new();
+				}
+				if (item.IsUnderline || item.IsDoubleUnderline)
+				{
+					Font.Underline = item.IsDoubleUnderline ? new() { Val = X.UnderlineValues.Double } : new();
 				}
 				return Font;
 			}))
@@ -515,33 +540,43 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			fonts?.Descendants<X.Font>().ToList()
 			.ForEach(font =>
 			{
-				if (font.Color?.Rgb != null ||
-				 font.FontName?.Val != null ||
-				 font.FontFamilyNumbering?.Val != null ||
-				 font.FontSize?.Val != null)
+				FontStyle fontStyle = new()
 				{
-					FontStyle fontStyle = new()
-					{
-						Id = (uint)fontStyleCollection.Count(),
-					};
-					if (font.FontSize?.Val != null)
-					{
-						fontStyle.Size = (uint)font.FontSize.Val;
-					}
-					if (font.Color?.Rgb != null)
-					{
-						fontStyle.Color = font.Color.Rgb!;
-					}
-					if (font.FontName?.Val != null)
-					{
-						fontStyle.Name = font.FontName.Val!;
-					}
-					if (font.FontFamilyNumbering?.Val != null)
-					{
-						fontStyle.Family = font.FontFamilyNumbering.Val;
-					}
-					fontStyleCollection.Insert(fontStyle);
+					Id = (uint)fontStyleCollection.Count(),
+					IsBold = font.Bold != null,
+					IsItalic = font.Italic != null,
+					IsUnderline = font.Underline != null,
+					IsDoubleUnderline = font.Underline?.Val != null && font.Underline.Val == X.UnderlineValues.Double,
+				};
+				if (font.FontSize?.Val != null)
+				{
+					fontStyle.Size = (uint)font.FontSize.Val;
 				}
+				if (font.Color != null)
+				{
+					fontStyle.Color = font.Color.Rgb != null ?
+					new()
+					{
+						FontColorType = FontColorTypeValues.RGB,
+						Value = font.Color.Rgb!
+					} :
+					new() { Value = font.Color.Theme! ?? "1" };
+				}
+				if (font.FontName?.Val != null)
+				{
+					fontStyle.Name = font.FontName.Val!;
+				}
+				if (font.FontFamilyNumbering?.Val != null)
+				{
+					fontStyle.Family = font.FontFamilyNumbering.Val;
+				}
+				fontStyle.FontScheme = font.FontScheme?.Val?.InnerText switch
+				{
+					"minor" => SchemeValues.MINOR,
+					"major" => SchemeValues.MAJOR,
+					_ => SchemeValues.NONE
+				};
+				fontStyleCollection.Insert(fontStyle);
 			});
 		}
 	}

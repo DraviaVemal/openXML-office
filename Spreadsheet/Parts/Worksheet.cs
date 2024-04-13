@@ -256,7 +256,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
@@ -266,7 +266,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
@@ -276,7 +276,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
@@ -286,7 +286,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
@@ -296,7 +296,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
@@ -306,7 +306,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
@@ -316,7 +316,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
