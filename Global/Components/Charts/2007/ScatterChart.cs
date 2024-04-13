@@ -214,7 +214,7 @@ namespace OpenXMLOffice.Global_2007
 
 		private C.DataLabels? CreateScatterDataLabels(ScatterChartDataLabel scatterChartDataLabel, int? dataLabelCounter = 0)
 		{
-			if (scatterChartDataLabel.showValue || scatterChartDataLabel.showValueFromColumn || scatterChartDataLabel.showCategoryName || scatterChartDataLabel.showLegendKey || scatterChartDataLabel.showSeriesName || scatterChartDataLabel.showBubbleSize)
+			if (scatterChartDataLabel.showValue || scatterChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || scatterChartDataLabel.showCategoryName || scatterChartDataLabel.showLegendKey || scatterChartDataLabel.showSeriesName || scatterChartDataLabel.showBubbleSize)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(scatterChartDataLabel, dataLabelCounter);
 				dataLabels.Append(new C.ShowBubbleSize { Val = scatterChartDataLabel.showBubbleSize });

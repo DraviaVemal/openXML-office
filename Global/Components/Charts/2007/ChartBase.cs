@@ -495,7 +495,7 @@ namespace OpenXMLOffice.Global_2007
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		protected void Add3Dcontrol()
 		{
@@ -645,7 +645,7 @@ namespace OpenXMLOffice.Global_2007
 			return chartSpace;
 		}
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		protected static A.Field CreateField(string type, string text)
 		{

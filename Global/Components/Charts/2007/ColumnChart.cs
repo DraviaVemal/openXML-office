@@ -288,7 +288,7 @@ namespace OpenXMLOffice.Global_2007
 
 		private C.DataLabels? CreateColumnDataLabels(ColumnChartDataLabel columnChartDataLabel, int? dataLabelCounter = 0)
 		{
-			if (columnChartDataLabel.showValue || columnChartDataLabel.showValueFromColumn || columnChartDataLabel.showCategoryName || columnChartDataLabel.showLegendKey || columnChartDataLabel.showSeriesName)
+			if (columnChartDataLabel.showValue || columnChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || columnChartDataLabel.showCategoryName || columnChartDataLabel.showLegendKey || columnChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(columnChartDataLabel, dataLabelCounter);
 				dataLabels.InsertAt(new C.DataLabelPosition()

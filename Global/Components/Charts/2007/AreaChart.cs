@@ -112,7 +112,7 @@ namespace OpenXMLOffice.Global_2007
 
 		private C.DataLabels? CreateAreaDataLabels(AreaChartDataLabel areaChartDataLabel, int? dataLabelCounter = 0)
 		{
-			if (areaChartDataLabel.showValue || areaChartDataLabel.showValueFromColumn || areaChartDataLabel.showCategoryName || areaChartDataLabel.showLegendKey || areaChartDataLabel.showSeriesName)
+			if (areaChartDataLabel.showValue || areaChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || areaChartDataLabel.showCategoryName || areaChartDataLabel.showLegendKey || areaChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(areaChartDataLabel, dataLabelCounter);
 				dataLabels.InsertAt(new C.DataLabelPosition()

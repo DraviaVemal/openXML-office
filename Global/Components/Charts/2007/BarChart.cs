@@ -175,7 +175,7 @@ namespace OpenXMLOffice.Global_2007
 
 		private C.DataLabels? CreateBarDataLabels(BarChartDataLabel barChartDataLabel, int? dataLabelCounter = 0)
 		{
-			if (barChartDataLabel.showValue || barChartDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName)
+			if (barChartDataLabel.showValue || barChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(barChartDataLabel, dataLabelCounter);
 				if (!(barChartSetting.barChartType == BarChartTypes.CLUSTERED || barChartSetting.barChartType == BarChartTypes.CLUSTERED_3D) && barChartDataLabel.dataLabelPosition == BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END)

@@ -206,7 +206,7 @@ namespace OpenXMLOffice.Global_2007
 
 		private C.DataLabels? CreateLineDataLabels(LineChartDataLabel lineChartDataLabel, int? dataLabelCounter = 0)
 		{
-			if (lineChartDataLabel.showValue || lineChartDataLabel.showValueFromColumn || lineChartDataLabel.showCategoryName || lineChartDataLabel.showLegendKey || lineChartDataLabel.showSeriesName)
+			if (lineChartDataLabel.showValue || lineChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || lineChartDataLabel.showCategoryName || lineChartDataLabel.showLegendKey || lineChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(lineChartDataLabel, dataLabelCounter);
 				dataLabels.InsertAt(new C.DataLabelPosition()
