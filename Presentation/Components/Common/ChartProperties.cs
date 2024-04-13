@@ -40,7 +40,7 @@ namespace OpenXMLOffice.Presentation_2007
 		internal void WriteDataToExcel(DataCell[][] dataRows, Stream stream)
 		{
 			// Load Data To Embeded Sheet
-			Excel excel = new(stream, null);
+			Excel excel = new();
 			Worksheet worksheet = excel.AddSheet();
 			int rowIndex = 1;
 			foreach (DataCell[] dataCells in dataRows)
@@ -48,7 +48,7 @@ namespace OpenXMLOffice.Presentation_2007
 				worksheet.SetRow(rowIndex, 1, dataCells, new RowProperties());
 				++rowIndex;
 			}
-			excel.Save();
+			excel.SaveAs(stream);
 		}
 
 		/// <summary>

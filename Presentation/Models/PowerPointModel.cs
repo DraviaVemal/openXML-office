@@ -57,7 +57,6 @@ namespace OpenXMLOffice.Presentation_2007
 
 	internal class PresentationInfo
 	{
-		public string? filePath;
 		public bool isEditable = true;
 		public bool isExistingFile = false;
 	}

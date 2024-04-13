@@ -24,18 +24,16 @@ namespace OpenXMLOffice.Presentation_2007
 
 		private readonly uint slideMasterIdStart = 2147483647;
 
-		public PresentationCore(string filePath, PresentationProperties? presentationProperties = null)
+		public PresentationCore(PresentationProperties? presentationProperties = null)
 		{
-			presentationInfo.filePath = filePath;
 			this.presentationProperties = presentationProperties ?? new();
-			MemoryStream memoryStream = new();
-			presentationDocument = PresentationDocument.Create(memoryStream, PresentationDocumentType.Presentation, true);
+			presentationDocument = PresentationDocument.Create(new MemoryStream(), PresentationDocumentType.Presentation, true);
 			InitialisePresentation(this.presentationProperties);
 		}
 
-		public PresentationCore(string filePath, bool isEditable, PresentationProperties? presentationProperties = null)
+		public PresentationCore(string filePath, bool isEditable = true, PresentationProperties? presentationProperties = null)
 		{
-			presentationInfo.filePath = filePath;
+			presentationInfo.isEditable = isEditable;
 			this.presentationProperties = presentationProperties ?? new();
 			FileStream reader = new(filePath, FileMode.Open);
 			MemoryStream memoryStream = new();
@@ -45,31 +43,25 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				AutoSave = true
 			});
-			if (isEditable)
+			if (presentationInfo.isEditable)
 			{
+				InitialisePresentation(this.presentationProperties);
 				presentationInfo.isExistingFile = true;
 			}
-			else
-			{
-				presentationInfo.isEditable = false;
-			}
 		}
 
-		internal PresentationCore(Stream stream, PresentationProperties? presentationProperties = null)
+		internal PresentationCore(Stream stream, bool isEditable = true, PresentationProperties? presentationProperties = null)
 		{
-			this.presentationProperties = presentationProperties ?? new();
-			presentationDocument = PresentationDocument.Create(stream, PresentationDocumentType.Presentation, true);
-			InitialisePresentation(this.presentationProperties);
-		}
-
-		internal PresentationCore(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
-		{
+			presentationInfo.isEditable = isEditable;
 			this.presentationProperties = presentationProperties ?? new();
 			presentationDocument = PresentationDocument.Open(stream, isEditable, new OpenSettings()
 			{
 				AutoSave = true
 			});
-			InitialisePresentation(this.presentationProperties);
+			if (presentationInfo.isEditable)
+			{
+				InitialisePresentation(this.presentationProperties);
+			}
 		}
 
 
@@ -149,11 +141,24 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			SlideMaster slideMaster = new();
 			SlideLayout slideLayout = new();
+			if (presentationDocument.CoreFilePropertiesPart == null)
+			{
+				presentationDocument.AddCoreFilePropertiesPart();
+				XMLHelper.AddOrUpdateCoreProperties(presentationDocument.CoreFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			}
+			if (presentationDocument.CustomFilePropertiesPart == null)
+			{
+				presentationDocument.AddCustomFilePropertiesPart();
+				XMLHelper.AddOrUpdateOpenXMLProperties(presentationDocument.CustomFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			}
 			PresentationPart presentationPart = presentationDocument.PresentationPart ?? presentationDocument.AddPresentationPart();
-			presentationPart.Presentation ??= new P.Presentation();
-			presentationPart.Presentation.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-			presentationPart.Presentation.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-			presentationPart.Presentation.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
+			if (presentationPart.Presentation == null)
+			{
+				presentationPart.Presentation = new P.Presentation();
+				presentationPart.Presentation.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+				presentationPart.Presentation.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+				presentationPart.Presentation.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
+			}
 			if (presentationPart.Presentation.GetFirstChild<P.SlideMasterIdList>() == null)
 			{
 				presentationPart.Presentation.AppendChild(new P.SlideMasterIdList());

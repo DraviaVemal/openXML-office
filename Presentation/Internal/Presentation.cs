@@ -8,14 +8,11 @@ namespace OpenXMLOffice.Presentation_2007
 	internal class Presentation : PresentationCore
 	{
 
-		internal Presentation(string filePath, PresentationProperties? presentationProperties = null)
-		: base(filePath, presentationProperties) { }
+		internal Presentation(PresentationProperties? presentationProperties = null)
+		: base(presentationProperties) { }
 
 		internal Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
 		: base(filePath, isEditable, presentationProperties) { }
-
-		internal Presentation(Stream stream, PresentationProperties? presentationProperties = null)
-		: base(stream, presentationProperties) { }
 
 		internal Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
 		: base(stream, isEditable, presentationProperties) { }
@@ -82,16 +79,6 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				throw new IndexOutOfRangeException("The specified slide index is out of range.");
 			}
-		}
-
-		internal void Save()
-		{
-			presentationDocument.Save();
-			if (presentationInfo.filePath != null && presentationInfo.isEditable)
-			{
-				presentationDocument.Clone(presentationInfo.filePath).Dispose();
-			}
-			presentationDocument.Dispose();
 		}
 
 		internal void SaveAs(string filePath)

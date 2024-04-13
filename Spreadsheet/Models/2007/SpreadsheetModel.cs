@@ -29,7 +29,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 
 	internal class SpreadsheetInfo
 	{
-		public string? filePath;
 		public bool isEditable = true;
 		public bool isExistingFile = false;
 	}

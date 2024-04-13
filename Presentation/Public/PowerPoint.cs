@@ -12,13 +12,9 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create New file in the system
 		/// </summary>
-		/// <param name="filePath">
-		/// </param>
-		/// <param name="powerPointProperties">
-		/// </param>
-		public PowerPoint(string filePath, PresentationProperties? powerPointProperties = null)
+		public PowerPoint(PresentationProperties? powerPointProperties = null)
 		{
-			presentation = new(filePath, powerPointProperties);
+			presentation = new(powerPointProperties);
 		}
 
 		/// <summary>
@@ -33,14 +29,6 @@ namespace OpenXMLOffice.Presentation_2007
 		public PowerPoint(string filePath, bool isEditable, PresentationProperties? powerPointProperties = null)
 		{
 			presentation = new(filePath, isEditable, powerPointProperties);
-		}
-
-		/// <summary>
-		/// Works with in memory object can be saved to file at later point
-		/// </summary>
-		public PowerPoint(Stream Stream, PresentationProperties? powerPointProperties = null)
-		{
-			presentation = new(Stream, powerPointProperties);
 		}
 
 		/// <summary>
@@ -106,14 +94,6 @@ namespace OpenXMLOffice.Presentation_2007
 		public void RemoveSlideByIndex(int SlideIndex)
 		{
 			presentation.RemoveSlideByIndex(SlideIndex);
-		}
-
-		/// <summary>
-		/// Save the file
-		/// </summary>
-		public void Save()
-		{
-			presentation.Save();
 		}
 
 		/// <summary>

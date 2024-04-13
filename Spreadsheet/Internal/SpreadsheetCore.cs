@@ -25,20 +25,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 
 		private readonly ShareStringService shareStringService = new();
 
-		internal SpreadsheetCore(Excel excel, string filePath, SpreadsheetProperties? spreadsheetProperties)
+		internal SpreadsheetCore(Excel excel, SpreadsheetProperties? spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			spreadsheetInfo.filePath = filePath;
 			this.spreadsheetProperties = spreadsheetProperties ?? new();
 			MemoryStream memoryStream = new();
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
-			PrepareSpreadsheet(this.spreadsheetProperties);
+			InitialiseSpreadsheet(this.spreadsheetProperties);
 		}
 
 		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			spreadsheetInfo.filePath = filePath;
 			this.spreadsheetProperties = spreadsheetProperties ?? new();
 			FileStream reader = new(filePath, FileMode.Open);
 			MemoryStream memoryStream = new();
@@ -51,21 +49,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (isEditable)
 			{
 				spreadsheetInfo.isExistingFile = true;
-				PrepareSpreadsheet(this.spreadsheetProperties);
+				InitialiseSpreadsheet(this.spreadsheetProperties);
 			}
 			else
 			{
 				spreadsheetInfo.isEditable = false;
 			}
 			ReadDataFromFile();
-		}
-
-		internal SpreadsheetCore(Excel excel, Stream stream, SpreadsheetProperties? spreadsheetProperties = null)
-		{
-			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new();
-			spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true);
-			PrepareSpreadsheet(this.spreadsheetProperties);
 		}
 
 		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
@@ -79,7 +69,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (isEditable)
 			{
 				spreadsheetInfo.isExistingFile = true;
-				PrepareSpreadsheet(this.spreadsheetProperties);
+				InitialiseSpreadsheet(this.spreadsheetProperties);
 			}
 			else
 			{
@@ -218,8 +208,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Common Spreadsheet perparation process used by all constructor
 		/// </summary>
-		private void PrepareSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
+		private void InitialiseSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
 		{
+			if (spreadsheetDocument.CoreFilePropertiesPart == null)
+			{
+				spreadsheetDocument.AddCoreFilePropertiesPart();
+				XMLHelper.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			}
+			if (spreadsheetDocument.CustomFilePropertiesPart == null)
+			{
+				spreadsheetDocument.AddCustomFilePropertiesPart();
+				XMLHelper.AddOrUpdateOpenXMLProperties(spreadsheetDocument.CustomFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			}
 			GetWorkbookPart().Workbook ??= new Workbook();
 			Sheets? sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
 			if (sheets == null)

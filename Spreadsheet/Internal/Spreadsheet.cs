@@ -8,11 +8,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 {
 	internal class Spreadsheet : SpreadsheetCore
 	{
-		internal Spreadsheet(Excel excel, string filePath, SpreadsheetProperties? spreadsheetProperties) : base(excel, filePath, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, SpreadsheetProperties? spreadsheetProperties) : base(excel, spreadsheetProperties) { }
 
 		internal Spreadsheet(Excel excel, string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(excel, filePath, isEditable, spreadsheetProperties) { }
-
-		internal Spreadsheet(Excel excel, Stream stream, SpreadsheetProperties? spreadsheetProperties) : base(excel, stream, spreadsheetProperties) { }
 
 		internal Spreadsheet(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(excel, stream, isEditable, spreadsheetProperties) { }
 
@@ -129,25 +127,20 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return true;
 		}
 
-		internal void Save()
-		{
-			UpdateStyle();
-			WriteSharedStringToFile();
-			spreadsheetDocument.Save();
-			if (spreadsheetInfo.filePath != null && spreadsheetInfo.isEditable)
-			{
-				spreadsheetDocument.Clone(spreadsheetInfo.filePath).Dispose();
-			}
-			spreadsheetDocument.Dispose();
-		}
-
 		internal void SaveAs(string filePath)
 		{
 			UpdateStyle();
 			WriteSharedStringToFile();
 			spreadsheetDocument.Save();
 			spreadsheetDocument.Clone(filePath).Dispose();
-			spreadsheetDocument.Dispose();
+		}
+
+		internal void SaveAs(Stream stream)
+		{
+			UpdateStyle();
+			WriteSharedStringToFile();
+			spreadsheetDocument.Save();
+			spreadsheetDocument.Clone(stream).Dispose();
 		}
 
 		private bool CheckIfSheetNameExist(string sheetName)

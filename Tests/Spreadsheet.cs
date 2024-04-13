@@ -11,18 +11,9 @@ namespace OpenXMLOffice.Tests
 	[TestClass]
 	public class Spreadsheet
 	{
-		private static Excel excel = new(new MemoryStream());
+		private static readonly Excel excel = new();
 
 		private static readonly string resultPath = "../../testResult";
-
-		/// <summary>
-		/// Save the Test File After execution
-		/// </summary>
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			excel.Save();
-		}
 
 		/// <summary>
 		/// Initialize excel Test
@@ -36,8 +27,16 @@ namespace OpenXMLOffice.Tests
 			{
 				Directory.CreateDirectory(resultPath);
 			}
-			excel = new(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			excel.AddSheet();
+		}
+
+		/// <summary>
+		/// Save the Test File After execution
+		/// </summary>
+		[ClassCleanup]
+		public static void ClassCleanup()
+		{
+			excel.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}
 
 		/// <summary>
@@ -169,17 +168,6 @@ namespace OpenXMLOffice.Tests
 				toRow = 8
 			});
 			Assert.IsTrue(true);
-		}
-
-		/// <summary>
-		/// Create Xslx File Based on Stream Test
-		/// </summary>
-		[TestMethod]
-		public void SheetConstructorStream()
-		{
-			MemoryStream memoryStream = new();
-			Excel excel1 = new(memoryStream);
-			Assert.IsNotNull(excel1);
 		}
 
 		/// <summary>

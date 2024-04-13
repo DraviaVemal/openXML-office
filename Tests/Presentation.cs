@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Tests
 	[TestClass]
 	public class Presentation
 	{
-		private static PowerPoint powerPoint = new(new MemoryStream());
+		private static readonly PowerPoint powerPoint = new();
 
 		private static readonly string resultPath = "../../testResult";
 		/// <summary>
@@ -22,7 +22,7 @@ namespace OpenXMLOffice.Tests
 		[ClassCleanup]
 		public static void ClassCleanup()
 		{
-			powerPoint.Save();
+			powerPoint.SaveAs(string.Format("{1}/test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}
 
 		/// <summary>
@@ -37,7 +37,6 @@ namespace OpenXMLOffice.Tests
 			{
 				Directory.CreateDirectory(resultPath);
 			}
-			powerPoint = new(string.Format("{1}/test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath), null);
 		}
 
 		/// <summary>
@@ -601,7 +600,7 @@ namespace OpenXMLOffice.Tests
 		public void OpenExistingPresentationNonEdit()
 		{
 			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false);
-			powerPoint1.Save();
+			powerPoint1.SaveAs(string.Format("{1}/copy-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
 

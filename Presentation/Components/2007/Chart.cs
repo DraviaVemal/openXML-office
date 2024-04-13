@@ -91,7 +91,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public Excel GetChartWorkBook()
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			return new(stream, null);
+			return new(stream, true);
 		}
 
 		internal string GetNextChartRelationId()

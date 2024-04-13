@@ -35,7 +35,7 @@ namespace OpenXMLOffice.Presentation_2016
 		public Excel GetChartWorkBook()
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart!.GetStream();
-			return new(stream, null);
+			return new(stream, true);
 		}
 
 		internal string GetNextChartRelationId()
