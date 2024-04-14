@@ -1,4 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -13,7 +17,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Add Chart Series Setting Using AddComboChartsSetting Method
 		/// </summary>
-		public List<object> ComboChartsSettingList { get; private set; } = new List<object>();
+		public List<object> ComboChartsSettingList = new List<object>();
 		/// <summary>
 		///
 		/// </summary>

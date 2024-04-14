@@ -1,4 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
@@ -34,56 +37,96 @@ namespace OpenXMLOffice.Global_2007
 			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
+		private SolidFillModel GetSeriesFillColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = barChartSetting.barChartSeriesSettings
+						.Select(item => item.fillColor)
+						.ToList().ElementAtOrDefault(seriesIndex);
+			if (hexColor != null)
+			{
+				solidFillModel.hexColor = hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
+		private SolidFillModel GetSeriesBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = barChartSetting.barChartSeriesSettings
+						.Select(item => item.borderColor)
+						.ToList().ElementAtOrDefault(seriesIndex);
+			if (hexColor != null)
+			{
+				solidFillModel.hexColor = hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
+		private SolidFillModel GetDataPointFill(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings
+						.Select(item => item.fillColor)
+						.ToList().ElementAtOrDefault((int)index);
+			if (hexColor != null)
+			{
+				solidFillModel.hexColor = hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
+		private SolidFillModel GetDataPointBorder(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings
+						.Select(item => item.borderColor)
+						.ToList().ElementAtOrDefault((int)index);
+			if (hexColor != null)
+			{
+				solidFillModel.hexColor = hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
 		private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			SolidFillModel GetSeriesFillColor()
-			{
-				SolidFillModel solidFillModel = new SolidFillModel();
-				string hexColor = barChartSetting.barChartSeriesSettings?
-							.Select(item => item?.fillColor)
-							.ToList().ElementAtOrDefault(seriesIndex);
-				if (hexColor != null)
-				{
-					solidFillModel.hexColor = hexColor;
-					return solidFillModel;
-				}
-				else
-				{
-					solidFillModel.schemeColorModel = new SchemeColorModel()
-					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-					};
-				}
-				return solidFillModel;
-			}
-			SolidFillModel GetSeriesBorderColor()
-			{
-				SolidFillModel solidFillModel = new SolidFillModel();
-				string hexColor = barChartSetting.barChartSeriesSettings?
-							.Select(item => item?.borderColor)
-							.ToList().ElementAtOrDefault(seriesIndex);
-				if (hexColor != null)
-				{
-					solidFillModel.hexColor = hexColor;
-					return solidFillModel;
-				}
-				else
-				{
-					solidFillModel.schemeColorModel = new SchemeColorModel()
-					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-					};
-				}
-				return solidFillModel;
-			}
 			C.DataLabels dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ?
-				CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+				CreateBarDataLabels(barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
 			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
-				solidFill = GetSeriesFillColor(),
+				solidFill = GetSeriesFillColor(seriesIndex, chartDataGrouping),
 				outline = new OutlineModel()
 				{
-					solidFill = GetSeriesBorderColor()
+					solidFill = GetSeriesBorderColor(seriesIndex, chartDataGrouping)
 				}
 			};
 			C.BarChartSeries series = new C.BarChartSeries(
@@ -92,60 +135,21 @@ namespace OpenXMLOffice.Global_2007
 				new C.InvertIfNegative { Val = true },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
-			int dataPointCount = barChartSetting.barChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.barChartDataPointSettings.Count ?? 0;
+			int dataPointCount = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings.Count;
 			for (uint index = 0; index < dataPointCount; index++)
 			{
-				if (barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings != null &&
-				index < barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings.Count &&
-				barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings[(int)index] != null)
+				if (barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings != null &&
+				index < barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings.Count &&
+				barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings[(int)index] != null)
 				{
-					SolidFillModel GetDataPointFill()
-					{
-						SolidFillModel solidFillModel = new SolidFillModel();
-						string hexColor = barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings?
-									.Select(item => item?.fillColor)
-									.ToList().ElementAtOrDefault((int)index);
-						if (hexColor != null)
-						{
-							solidFillModel.hexColor = hexColor;
-							return solidFillModel;
-						}
-						else
-						{
-							solidFillModel.schemeColorModel = new SchemeColorModel()
-							{
-								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-							};
-						}
-						return solidFillModel;
-					}
-					SolidFillModel GetDataPointBorder()
-					{
-						SolidFillModel solidFillModel = new SolidFillModel();
-						string hexColor = barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings?
-									.Select(item => item?.borderColor)
-									.ToList().ElementAtOrDefault((int)index);
-						if (hexColor != null)
-						{
-							solidFillModel.hexColor = hexColor;
-							return solidFillModel;
-						}
-						else
-						{
-							solidFillModel.schemeColorModel = new SchemeColorModel()
-							{
-								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-							};
-						}
-						return solidFillModel;
-					}
+
 					C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()
 					{
-						solidFill = GetDataPointFill(),
+						solidFill = GetDataPointFill(index, seriesIndex, chartDataGrouping),
 						outline = new OutlineModel()
 						{
-							solidFill = GetDataPointBorder()
+							solidFill = GetDataPointBorder(index, seriesIndex, chartDataGrouping)
 						}
 					}));
 					series.Append(dataPoint);
@@ -200,7 +204,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions?.manualLayout));
+			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions.manualLayout));
 			if (barChartSetting.is3DChart)
 			{
 				plotArea.Append(CreateBarChart<C.Bar3DChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));

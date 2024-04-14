@@ -697,5 +697,4 @@ namespace OpenXMLOffice.Global_2013
 			return wallStyle;
 		}
 	}
-
 }

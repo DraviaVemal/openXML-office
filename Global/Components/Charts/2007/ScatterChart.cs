@@ -1,4 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
@@ -36,7 +39,7 @@ namespace OpenXMLOffice.Global_2007
 				}
 			}
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions?.manualLayout));
+			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions.manualLayout));
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
 				plotArea.Append(CreateChart<C.BubbleChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
@@ -73,7 +76,6 @@ namespace OpenXMLOffice.Global_2007
 		{
 			ChartType chart = new ChartType();
 			C.ScatterStyleValues scatterStyleValue;
-
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_SMOOTH)
 			{
 				scatterStyleValue = C.ScatterStyleValues.Smooth;
@@ -94,12 +96,10 @@ namespace OpenXMLOffice.Global_2007
 			{
 				scatterStyleValue = C.ScatterStyleValues.LineMarker;
 			}
-
 			chart.Append(new C.ScatterStyle
 			{
 				Val = scatterStyleValue
 			});
-
 			chart.Append(new C.VaryColors() { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>
@@ -121,30 +121,30 @@ namespace OpenXMLOffice.Global_2007
 			chart.Append(new C.AxisId { Val = ValueAxisId });
 			return chart;
 		}
+		private SolidFillModel GetSeriesBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = scatterChartSetting.scatterChartSeriesSettings
+						.Select(item => item.borderColor)
+						.ToList().ElementAtOrDefault(seriesIndex);
+			if (hexColor != null)
+			{
+				solidFillModel.hexColor = hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
 		private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			C.DataLabels dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
-				CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-			SolidFillModel GetSeriesBorderColor()
-			{
-				SolidFillModel solidFillModel = new SolidFillModel();
-				string hexColor = scatterChartSetting.scatterChartSeriesSettings?
-							.Select(item => item?.borderColor)
-							.ToList().ElementAtOrDefault(seriesIndex);
-				if (hexColor != null)
-				{
-					solidFillModel.hexColor = hexColor;
-					return solidFillModel;
-				}
-				else
-				{
-					solidFillModel.schemeColorModel = new SchemeColorModel()
-					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-					};
-				}
-				return solidFillModel;
-			}
+				CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings[seriesIndex].scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
 			MarkerModel markerModel = new MarkerModel();
 			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{
@@ -178,7 +178,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				outline = new OutlineModel()
 				{
-					solidFill = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(),
+					solidFill = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(seriesIndex, chartDataGrouping),
 				}
 			};
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)

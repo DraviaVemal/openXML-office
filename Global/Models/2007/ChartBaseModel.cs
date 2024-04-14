@@ -1,6 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OpenXMLOffice.Global_2013;
+using System.Collections.Generic;
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>

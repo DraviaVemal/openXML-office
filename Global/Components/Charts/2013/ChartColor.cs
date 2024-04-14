@@ -22,7 +22,7 @@ namespace OpenXMLOffice.Global_2013
 			{
 				colorStyle.Append(new A.SchemeColor()
 				{
-					Val = new A.SchemeColorValues($"accent{i}")
+					Val = new A.SchemeColorValues(string.Format("accent{0}", i))
 				});
 			}
 			colorStyle.Append(new CS.ColorStyleVariation());

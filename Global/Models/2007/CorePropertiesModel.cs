@@ -31,5 +31,4 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public string creator = "OpenXML-Office";
 	}
-
 }

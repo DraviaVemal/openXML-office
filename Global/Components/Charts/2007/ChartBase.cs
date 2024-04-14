@@ -1,4 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
@@ -52,10 +55,10 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
-				Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
-				Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
-				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
-				throw new ArgumentException($"Bubble Size Data Should Be numaric.");
+				Console.WriteLine(string.Format("Object Details Value : {0} is not numeric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
+				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
+				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
+				throw new ArgumentException("Bubble Size Data Should Be numaric.");
 			}
 			return new C.BubbleSize(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -217,16 +220,24 @@ namespace OpenXMLOffice.Global_2007
 			for (int i = 0; i < seriesColumns.Count; i++)
 			{
 				uint column = seriesColumns[i];
+				string sheetName = dataRange != null ? dataRange.sheetName : "Sheet1";
+				string columnName = ConverterUtils.ConvertIntToColumnName((int)column + 1);
+				string startColumnName = ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1);
+				string endColumnName = ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1);
+				uint rowNumber = chartDataSetting.chartDataRowStart + 1;
+				uint startRowNumber = chartDataSetting.chartDataRowStart + 2;
 				List<ChartData> xAxisCells = ((ChartData[])dataCols[chartDataSetting.chartDataColumnStart].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 				List<ChartData> yAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
+				long endRowNumberX = chartDataSetting.chartDataRowStart + xAxisCells.Count + 1;
+				long endRowNumberY = chartDataSetting.chartDataRowStart + yAxisCells.Count + 1;
 				ChartDataGrouping chartDataGrouping = new ChartDataGrouping()
 				{
 					id = i,
-					seriesHeaderFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 1}",
+					seriesHeaderFormula = string.Format("'{0}'!{1}{2}", sheetName, columnName, rowNumber),
 					seriesHeaderCells = ((ChartData[])dataCols[column].Clone())[chartDataSetting.chartDataRowStart],
-					xAxisFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + xAxisCells.Count + 1}",
+					xAxisFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, startColumnName, startRowNumber, endColumnName, endRowNumberX),
 					xAxisCells = xAxisCells.ToArray(),
-					yAxisFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + yAxisCells.Count + 1}",
+					yAxisFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberY),
 					yAxisCells = yAxisCells.ToArray(),
 				};
 				if (chartDataSetting.is3Ddata)
@@ -234,13 +245,17 @@ namespace OpenXMLOffice.Global_2007
 					i++;
 					column = seriesColumns[i];
 					List<ChartData> zAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-					chartDataGrouping.zAxisFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + zAxisCells.Count + 1}";
+					long endRowNumberZ = chartDataSetting.chartDataRowStart + zAxisCells.Count + 1;
+					chartDataGrouping.zAxisFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberZ);
 					chartDataGrouping.zAxisCells = zAxisCells.ToArray();
 				}
-				if (chartDataSetting.valueFromColumn.TryGetValue(column, out uint DataValueColumn))
+				uint DataValueColumn;
+				if (chartDataSetting.valueFromColumn.TryGetValue(column, out DataValueColumn))
 				{
+					columnName = ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1);
 					List<ChartData> dataLabelCells = ((ChartData[])dataCols[DataValueColumn].Clone()).Skip((int)chartDataSetting.chartDataRowStart).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-					chartDataGrouping.dataLabelFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + dataLabelCells.Count}";
+					var endRowNumberD = chartDataSetting.chartDataRowStart + dataLabelCells.Count;
+					chartDataGrouping.dataLabelFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberD);
 					chartDataGrouping.dataLabelCells = dataLabelCells.ToArray();
 				}
 				chartDataGroupings.Add(chartDataGrouping);
@@ -341,10 +356,10 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
-				Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
-				Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
-				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
-				throw new ArgumentException($"Value Axis Data Should Be numaric.");
+				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
+				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
+				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
+				throw new ArgumentException("Value Axis Data Should Be numaric.");
 			}
 			return new C.Values(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -355,10 +370,10 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
-				Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
-				Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
-				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
-				throw new ArgumentException($"X Axis Data Should Be numaric.");
+				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
+				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
+				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
+				throw new ArgumentException("X Axis Data Should Be numaric.");
 			}
 			return new C.XValues(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -369,10 +384,10 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
-				Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
-				Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
-				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
-				throw new ArgumentException($"Y Axis Data Should be numaric.");
+				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
+				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
+				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
+				throw new ArgumentException("Y Axis Data Should be numaric.");
 			}
 			return new C.YValues(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}

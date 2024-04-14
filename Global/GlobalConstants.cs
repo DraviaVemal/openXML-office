@@ -5,9 +5,10 @@ namespace OpenXMLOffice.Global_2007
 	/// Global Constants
 	/// </summary>
 	public static class GlobalConstants
-	{        /// <summary>
-			 /// Default DPI
-			 /// </summary>
+	{
+		/// <summary>
+		/// Default DPI
+		/// </summary>
 		public const int defaultDPI = 96;
 		/// <summary>
 		/// Default Slide Height in EMU

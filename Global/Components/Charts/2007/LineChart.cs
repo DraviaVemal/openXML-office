@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Collections.Generic;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
@@ -28,7 +30,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions?.manualLayout));
+			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions.manualLayout));
 			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
@@ -86,6 +88,26 @@ namespace OpenXMLOffice.Global_2007
 			lineChart.Append(new C.AxisId { Val = ValueAxisId });
 			return lineChart;
 		}
+		private SolidFillModel GetBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping, LineChartLineFormat lineChartLineFormat)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = lineChartSetting.lineChartSeriesSettings
+						.Select(item => item.borderColor)
+						.ToList().ElementAtOrDefault(seriesIndex);
+			if ((lineChartLineFormat.lineColor ?? hexColor) != null)
+			{
+				solidFillModel.hexColor = lineChartLineFormat.lineColor ?? hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
 		private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			MarkerModel marketModel = new MarkerModel()
@@ -117,31 +139,11 @@ namespace OpenXMLOffice.Global_2007
 				};
 			}
 			C.DataLabels dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ?
-				CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-			LineChartLineFormat lineChartLineFormat = lineChartSetting.lineChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.lineChartLineFormat;
-			SolidFillModel GetBorderColor()
-			{
-				SolidFillModel solidFillModel = new SolidFillModel();
-				string hexColor = lineChartSetting.lineChartSeriesSettings?
-							.Select(item => item?.borderColor)
-							.ToList().ElementAtOrDefault(seriesIndex);
-				if ((lineChartLineFormat?.lineColor ?? hexColor) != null)
-				{
-					solidFillModel.hexColor = lineChartLineFormat?.lineColor ?? hexColor;
-					return solidFillModel;
-				}
-				else
-				{
-					solidFillModel.schemeColorModel = new SchemeColorModel()
-					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-					};
-				}
-				return solidFillModel;
-			}
+				CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings[seriesIndex].lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+			LineChartLineFormat lineChartLineFormat = lineChartSetting.lineChartSeriesSettings.ElementAtOrDefault(seriesIndex).lineChartLineFormat;
 			OutlineModel outlineModel = new OutlineModel()
 			{
-				solidFill = GetBorderColor(),
+				solidFill = GetBorderColor(seriesIndex, chartDataGrouping, lineChartLineFormat),
 			};
 			if (lineChartLineFormat != null)
 			{

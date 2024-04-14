@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Collections.Generic;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
@@ -32,58 +34,58 @@ namespace OpenXMLOffice.Global_2007
 			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
+		private SolidFillModel GetSeriesBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = areaChartSetting.areaChartSeriesSettings
+						.Select(item => item.borderColor)
+						.ToList().ElementAtOrDefault(seriesIndex);
+			if (hexColor != null)
+			{
+				solidFillModel.hexColor = hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
+		private SolidFillModel GetSeriesFillColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		{
+			SolidFillModel solidFillModel = new SolidFillModel();
+			string hexColor = areaChartSetting.areaChartSeriesSettings
+						.Select(item => item.fillColor)
+						.ToList().ElementAtOrDefault(seriesIndex);
+			if (hexColor != null)
+			{
+				solidFillModel.hexColor = hexColor;
+				return solidFillModel;
+			}
+			else
+			{
+				solidFillModel.schemeColorModel = new SchemeColorModel()
+				{
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+				};
+			}
+			return solidFillModel;
+		}
 		private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			SolidFillModel GetSeriesFillColor()
-			{
-				SolidFillModel solidFillModel = new SolidFillModel();
-				string hexColor = areaChartSetting.areaChartSeriesSettings?
-							.Select(item => item.fillColor)
-							.ToList().ElementAtOrDefault(seriesIndex);
-				if (hexColor != null)
-				{
-					solidFillModel.hexColor = hexColor;
-					return solidFillModel;
-				}
-				else
-				{
-					solidFillModel.schemeColorModel = new SchemeColorModel()
-					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-					};
-				}
-				return solidFillModel;
-			}
-			SolidFillModel GetSeriesBorderColor()
-			{
-				SolidFillModel solidFillModel = new SolidFillModel();
-				string hexColor = areaChartSetting.areaChartSeriesSettings?
-							.Select(item => item.borderColor)
-							.ToList().ElementAtOrDefault(seriesIndex);
-				if (hexColor != null)
-				{
-					solidFillModel.hexColor = hexColor;
-					return solidFillModel;
-				}
-				else
-				{
-					solidFillModel.schemeColorModel = new SchemeColorModel()
-					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
-					};
-				}
-				return solidFillModel;
-			}
 			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
-				solidFill = GetSeriesFillColor(),
+				solidFill = GetSeriesFillColor(seriesIndex, chartDataGrouping),
 				outline = new OutlineModel()
 				{
-					solidFill = GetSeriesBorderColor()
+					solidFill = GetSeriesBorderColor(seriesIndex, chartDataGrouping)
 				}
 			};
 			C.DataLabels dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
-				CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings?[seriesIndex]?.areaChartDataLabel ?? new AreaChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
+				CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings[seriesIndex].areaChartDataLabel ?? new AreaChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
 			C.AreaChartSeries series = new C.AreaChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },

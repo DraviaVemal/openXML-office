@@ -168,7 +168,7 @@ namespace OpenXMLOffice.Global_2013
 			}
 			catch
 			{
-				throw new Exception("Chart. Data Label Ref Error");
+				throw new System.Exception("Chart. Data Label Ref Error");
 			}
 		}
 	}

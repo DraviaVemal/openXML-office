@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Collections.Generic;
+
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -78,7 +80,14 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Border Color is only valid for Doughnut Chart
 		/// </summary>
-		public override string borderColor { get => base.borderColor; set => base.borderColor = value; }
+		public override string borderColor
+		{
+			get { return base.borderColor; }
+			set
+			{
+				base.borderColor = value;
+			}
+		}
 		/// <summary>
 		///
 		/// </summary>

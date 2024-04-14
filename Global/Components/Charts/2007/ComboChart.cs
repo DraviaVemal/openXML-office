@@ -1,4 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 namespace OpenXMLOffice.Global_2007
@@ -28,7 +31,7 @@ namespace OpenXMLOffice.Global_2007
 				throw new ArgumentException("Combo Chart Series Settings is empty");
 			}
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(ComboChartSetting.plotAreaOptions?.manualLayout));
+			plotArea.Append(CreateLayout(ComboChartSetting.plotAreaOptions.manualLayout));
 			uint chartPosition = 0;
 			ComboChartSetting.ComboChartsSettingList.ForEach(chartSetting =>
 			{
@@ -39,27 +42,32 @@ namespace OpenXMLOffice.Global_2007
 					((ChartSetting<ApplicationSpecificSetting>)chartSetting).valueAxisId = SecondaryValueAxisId;
 				}
 				((ChartSetting<ApplicationSpecificSetting>)chartSetting).chartDataSetting = new ChartDataSetting();
-				if (chartSetting is AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
+				AreaChartSetting<ApplicationSpecificSetting> areaChartSetting = chartSetting as AreaChartSetting<ApplicationSpecificSetting>;
+				if (areaChartSetting != null)
 				{
 					AreaChart<ApplicationSpecificSetting> areaChart = new AreaChart<ApplicationSpecificSetting>(areaChartSetting);
 					plotArea.Append(areaChart.CreateAreaChart<C.AreaChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
-				if (chartSetting is BarChartSetting<ApplicationSpecificSetting> barChartSetting)
+				BarChartSetting<ApplicationSpecificSetting> barChartSetting = chartSetting as BarChartSetting<ApplicationSpecificSetting>;
+				if (barChartSetting != null)
 				{
 					BarChart<ApplicationSpecificSetting> barChart = new BarChart<ApplicationSpecificSetting>(barChartSetting);
 					plotArea.Append(barChart.CreateBarChart<C.BarChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
-				if (chartSetting is ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
+				ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting = chartSetting as ColumnChartSetting<ApplicationSpecificSetting>;
+				if (columnChartSetting != null)
 				{
 					ColumnChart<ApplicationSpecificSetting> columnChart = new ColumnChart<ApplicationSpecificSetting>(columnChartSetting);
 					plotArea.Append(columnChart.CreateColumnChart<C.BarChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
-				if (chartSetting is LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
+				LineChartSetting<ApplicationSpecificSetting> lineChartSetting = chartSetting as LineChartSetting<ApplicationSpecificSetting>;
+				if (lineChartSetting != null)
 				{
 					LineChart<ApplicationSpecificSetting> lineChart = new LineChart<ApplicationSpecificSetting>(lineChartSetting);
 					plotArea.Append(lineChart.CreateLineChart(GetChartPositionData(dataCols, chartPosition, dataRange)));
 				}
-				if (chartSetting is PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
+				PieChartSetting<ApplicationSpecificSetting> pieChartSetting = chartSetting as PieChartSetting<ApplicationSpecificSetting>;
+				if (pieChartSetting != null)
 				{
 					PieChart<ApplicationSpecificSetting> pieChart = new PieChart<ApplicationSpecificSetting>(pieChartSetting);
 					if (pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT)
@@ -71,7 +79,8 @@ namespace OpenXMLOffice.Global_2007
 						plotArea.Append(pieChart.CreateChart<C.PieChart>(GetChartPositionData(dataCols, chartPosition, dataRange)));
 					}
 				}
-				if (chartSetting is ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
+				ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting = chartSetting as ScatterChartSetting<ApplicationSpecificSetting>;
+				if (scatterChartSetting != null)
 				{
 					ScatterChart<ApplicationSpecificSetting> scatterChart = new ScatterChart<ApplicationSpecificSetting>(scatterChartSetting);
 					if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)

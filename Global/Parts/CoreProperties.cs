@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.IO;
 using System.Xml;
 namespace OpenXMLOffice.Global_2007
 {
