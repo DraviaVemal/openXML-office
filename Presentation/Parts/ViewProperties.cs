@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class ViewProperties
 	{
-		private readonly P.ViewProperties openXMLViewProperties = new();
+		private readonly P.ViewProperties openXMLViewProperties = new P.ViewProperties();
 		/// <summary>
 		/// Create New View Properties
 		/// </summary>
@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private static P.NotesTextViewProperties CreateNotesTextViewProperties()
 		{
-			P.NotesTextViewProperties notesTextViewProperties = new(
+			P.NotesTextViewProperties notesTextViewProperties = new P.NotesTextViewProperties(
 				new P.CommonViewProperties
 				{
 					ScaleFactor = new P.ScaleFactor(new A.ScaleX()
@@ -60,7 +60,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private static P.NormalViewProperties CreateNormalViewProperties()
 		{
-			P.NormalViewProperties normalViewProperties = new()
+			P.NormalViewProperties normalViewProperties = new P.NormalViewProperties()
 			{
 				HorizontalBarState = P.SplitterBarStateValues.Maximized,
 				RestoredLeft = new P.RestoredLeft { AutoAdjust = false, Size = 16014 },

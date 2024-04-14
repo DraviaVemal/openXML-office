@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Presentation_2007
 		private readonly P.CommonSlideData openXMLCommonSlideData;
 		internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
 		{
-			openXMLCommonSlideData = new()
+			openXMLCommonSlideData = new P.CommonSlideData()
 			{
 				Name = PresentationConstants.GetSlideLayoutType(layoutType)
 			};
@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
 		{
-			Background background = new()
+			Background background = new Background()
 			{
 				BackgroundStyleReference = new BackgroundStyleReference(new A.SchemeColor()
 				{
@@ -39,7 +39,7 @@ namespace OpenXMLOffice.Presentation_2007
 					Index = 1001
 				}
 			};
-			ShapeTree shapeTree = new()
+			ShapeTree shapeTree = new ShapeTree()
 			{
 				GroupShapeProperties = new GroupShapeProperties()
 				{
@@ -91,20 +91,20 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private static P.Shape CreateShape1()
 		{
-			P.Shape shape = new();
-			NonVisualShapeProperties nonVisualShapeProperties = new(
+			P.Shape shape = new P.Shape();
+			NonVisualShapeProperties nonVisualShapeProperties = new NonVisualShapeProperties(
 				new NonVisualDrawingProperties { Id = 2, Name = "Title 1" },
 				new NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
 				new ApplicationNonVisualDrawingProperties(new PlaceholderShape { Type = PlaceholderValues.Title })
 			);
-			ShapeProperties shapeProperties = new(
+			ShapeProperties shapeProperties = new ShapeProperties(
 				new A.Transform2D(
 					new A.Offset { X = 838200L, Y = 365125L },
 					new A.Extents { Cx = 10515600L, Cy = 1325563L }
 				),
 				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
 			);
-			TextBody textBody = new(
+			TextBody textBody = new TextBody(
 				new A.BodyProperties(),
 				new A.ListStyle(),
 				new A.Paragraph(
@@ -122,21 +122,21 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private static P.Shape CreateShape2()
 		{
-			P.Shape shape = new();
-			NonVisualShapeProperties nonVisualShapeProperties = new(
+			P.Shape shape = new P.Shape();
+			NonVisualShapeProperties nonVisualShapeProperties = new NonVisualShapeProperties(
 				new NonVisualDrawingProperties { Id = 3U, Name = "Text Placeholder 2" },
 				new NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
 				new ApplicationNonVisualDrawingProperties(
 					new PlaceholderShape { Index = 1U, Type = PlaceholderValues.Body })
 			);
-			ShapeProperties shapeProperties = new(
+			ShapeProperties shapeProperties = new ShapeProperties(
 				new A.Transform2D(
 					new A.Offset { X = 838200L, Y = 1825625L },
 					new A.Extents { Cx = 10515600L, Cy = 4351338L }
 				),
 				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
 			);
-			TextBody textBody = new(
+			TextBody textBody = new TextBody(
 				new A.BodyProperties(),
 				new A.ListStyle(),
 				new A.Paragraph(

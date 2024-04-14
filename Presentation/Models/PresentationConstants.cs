@@ -45,10 +45,11 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </returns>
 		public static string GetSlideLayoutType(SlideLayoutType value)
 		{
-			return value switch
+			switch (value)
 			{
-				_ => "Blank",
-			};
+				default:
+					return "Blank";
+			}
 		}
 	}
 }

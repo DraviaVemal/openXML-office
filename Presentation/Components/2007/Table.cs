@@ -1,5 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using A = DocumentFormat.OpenXml.Drawing;
 using G = OpenXMLOffice.Global_2007;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -10,7 +13,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class Table : G.CommonProperties
 	{
-		private readonly P.GraphicFrame graphicFrame = new();
+		private readonly P.GraphicFrame graphicFrame = new P.GraphicFrame();
 		private readonly TableSetting tableSetting;
 		/// <summary>
 		/// Create Table with provided settings
@@ -25,18 +28,18 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <returns>
 		/// X,Y
 		/// </returns>
-		public (uint, uint) GetPosition()
+		public Tuple<uint, uint> GetPosition()
 		{
-			return (tableSetting.x, tableSetting.y);
+			return Tuple.Create(tableSetting.x, tableSetting.y);
 		}
 		/// <summary>
 		/// </summary>
 		/// <returns>
 		/// Width,Height
 		/// </returns>
-		public (uint, uint) GetSize()
+		public Tuple<uint, uint> GetSize()
 		{
-			return (tableSetting.width, tableSetting.height);
+			return Tuple.Create(tableSetting.width, tableSetting.height);
 		}
 		/// <summary>
 		/// Get Table Graphic Frame
@@ -82,13 +85,25 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private long CalculateColumnWidth(TableSetting.WidthOptionValues widthType, float InputWidth)
 		{
-			return widthType switch
+			int calculatedWidth;
+			switch (widthType)
 			{
-				TableSetting.WidthOptionValues.PIXEL => G.ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth)),
-				TableSetting.WidthOptionValues.PERCENTAGE => Convert.ToInt32(tableSetting.width / 100 * InputWidth),
-				TableSetting.WidthOptionValues.RATIO => Convert.ToInt32(tableSetting.width / 100 * (InputWidth * 10)),
-				_ => Convert.ToInt32(InputWidth)
-			};
+				case TableSetting.WidthOptionValues.PIXEL:
+					calculatedWidth = (int)G.ConverterUtils.PixelsToEmu(Convert.ToInt32(InputWidth));
+					break;
+				case TableSetting.WidthOptionValues.PERCENTAGE:
+					calculatedWidth = Convert.ToInt32(tableSetting.width / 100 * InputWidth);
+					break;
+				case TableSetting.WidthOptionValues.RATIO:
+					calculatedWidth = Convert.ToInt32(tableSetting.width / 100 * (InputWidth * 10));
+					break;
+				default:
+					calculatedWidth = Convert.ToInt32(InputWidth);
+					break;
+			}
+
+			return calculatedWidth;
+
 		}
 		private A.Table CreateTable(TableRow[] TableRows)
 		{
@@ -100,7 +115,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				throw new ArgumentException("Column With Setting Does Not Match Data");
 			}
-			A.Table Table = new()
+			A.Table Table = new A.Table()
 			{
 				TableProperties = new A.TableProperties()
 				{
@@ -118,20 +133,34 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private static A.TableCell CreateTableCell(TableCell cell, TableRow row)
 		{
-			A.Paragraph paragraph = new();
+			A.Paragraph paragraph = new A.Paragraph();
 			if (cell.horizontalAlignment != null)
 			{
+				A.TextAlignmentTypeValues alignment;
+				switch (cell.horizontalAlignment)
+				{
+					case G.HorizontalAlignmentValues.CENTER:
+						alignment = A.TextAlignmentTypeValues.Center;
+						break;
+					case G.HorizontalAlignmentValues.LEFT:
+						alignment = A.TextAlignmentTypeValues.Left;
+						break;
+					case G.HorizontalAlignmentValues.JUSTIFY:
+						alignment = A.TextAlignmentTypeValues.Justified;
+						break;
+					case G.HorizontalAlignmentValues.RIGHT:
+						alignment = A.TextAlignmentTypeValues.Right;
+						break;
+					default:
+						alignment = A.TextAlignmentTypeValues.Left;
+						break;
+				}
+
 				paragraph.Append(new A.ParagraphProperties()
 				{
-					Alignment = cell.horizontalAlignment switch
-					{
-						G.HorizontalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
-						G.HorizontalAlignmentValues.LEFT => A.TextAlignmentTypeValues.Left,
-						G.HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
-						G.HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
-						_ => A.TextAlignmentTypeValues.Left
-					},
+					Alignment = alignment
 				});
+
 			}
 			if (cell.value == null)
 			{
@@ -139,9 +168,9 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				G.SolidFillModel solidFillModel = new()
+				G.SolidFillModel solidFillModel = new G.SolidFillModel()
 				{
-					schemeColorModel = new()
+					schemeColorModel = new G.SchemeColorModel()
 					{
 						themeColorValues = G.ThemeColorValues.TEXT_1
 					}
@@ -151,11 +180,11 @@ namespace OpenXMLOffice.Presentation_2007
 					solidFillModel.hexColor = cell.textColor;
 					solidFillModel.schemeColorModel = null;
 				}
-				paragraph.Append(CreateDrawingRun(new()
+				paragraph.Append(CreateDrawingRun(new G.DrawingRunModel()
 				{
 					text = cell.value,
 					textHightlight = cell.textBackground,
-					drawingRunProperties = new()
+					drawingRunProperties = new G.DrawingRunPropertiesModel()
 					{
 						solidFill = solidFillModel,
 						fontFamily = cell.fontFamily,
@@ -166,25 +195,37 @@ namespace OpenXMLOffice.Presentation_2007
 					}
 				}));
 			}
-			A.TableCell tableCellXML = new(new A.TextBody(
+			A.TableCell tableCellXML = new A.TableCell(new A.TextBody(
 				new A.BodyProperties(),
 				new A.ListStyle(),
 				paragraph
 			));
-			A.TableCellProperties tableCellProperties = new()
+			A.TextAnchoringTypeValues anchor;
+			switch (cell.verticalAlignment)
 			{
-				Anchor = cell.verticalAlignment switch
-				{
-					G.VerticalAlignmentValues.TOP => A.TextAnchoringTypeValues.Top,
-					G.VerticalAlignmentValues.MIDDLE => A.TextAnchoringTypeValues.Center,
-					G.VerticalAlignmentValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
-					_ => A.TextAnchoringTypeValues.Top
-				}
+				case G.VerticalAlignmentValues.TOP:
+					anchor = A.TextAnchoringTypeValues.Top;
+					break;
+				case G.VerticalAlignmentValues.MIDDLE:
+					anchor = A.TextAnchoringTypeValues.Center;
+					break;
+				case G.VerticalAlignmentValues.BOTTOM:
+					anchor = A.TextAnchoringTypeValues.Bottom;
+					break;
+				default:
+					anchor = A.TextAnchoringTypeValues.Top;
+					break;
+			}
+
+			A.TableCellProperties tableCellProperties = new A.TableCellProperties()
+			{
+				Anchor = anchor
 			};
+
 			if (cell.borderSettings.leftBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.LeftBorderLineProperties(
-					CreateSolidFill(new() { hexColor = cell.borderSettings.leftBorder.borderColor }),
+					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.leftBorder.borderColor }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.leftBorder.dashStyle) }
 				)
 				{
@@ -199,7 +240,7 @@ namespace OpenXMLOffice.Presentation_2007
 			if (cell.borderSettings.rightBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.RightBorderLineProperties(
-					  CreateSolidFill(new() { hexColor = cell.borderSettings.rightBorder.borderColor }),
+					  CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.rightBorder.borderColor }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.rightBorder.dashStyle) }
 				)
 				{
@@ -214,7 +255,7 @@ namespace OpenXMLOffice.Presentation_2007
 			if (cell.borderSettings.topBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.TopBorderLineProperties(
-					 CreateSolidFill(new() { hexColor = cell.borderSettings.topBorder.borderColor }),
+					 CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.topBorder.borderColor }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topBorder.dashStyle) }
 				)
 				{
@@ -229,7 +270,7 @@ namespace OpenXMLOffice.Presentation_2007
 			if (cell.borderSettings.bottomBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.BottomBorderLineProperties(
-					CreateSolidFill(new() { hexColor = cell.borderSettings.bottomBorder.borderColor }),
+					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.bottomBorder.borderColor }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomBorder.dashStyle) }
 				)
 				{
@@ -244,7 +285,7 @@ namespace OpenXMLOffice.Presentation_2007
 			if (cell.borderSettings.topLeftToBottomRightBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-					CreateSolidFill(new() { hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor }),
+					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topLeftToBottomRightBorder.dashStyle) }
 				)
 				{
@@ -259,7 +300,7 @@ namespace OpenXMLOffice.Presentation_2007
 			if (cell.borderSettings.bottomLeftToTopRightBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-					CreateSolidFill(new() { hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor }),
+					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.dashStyle) }
 				)
 				{
@@ -271,13 +312,20 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(new A.NoFill()));
 			}
-			tableCellProperties.Append((cell.cellBackground != null || row.rowBackground != null) ? G.CommonProperties.CreateSolidFill(new() { hexColor = cell.cellBackground ?? row.rowBackground! }) : new A.NoFill());
+			if (cell.cellBackground != null || row.rowBackground != null)
+			{
+				tableCellProperties.Append(CreateSolidFill(new G.SolidFillModel() { hexColor = cell.cellBackground ?? row.rowBackground }));
+			}
+			else
+			{
+				tableCellProperties.Append(new A.NoFill());
+			}
 			tableCellXML.Append(tableCellProperties);
 			return tableCellXML;
 		}
 		private void CreateTableGraphicFrame(TableRow[] TableRows)
 		{
-			A.GraphicData GraphicData = new(CreateTable(TableRows))
+			A.GraphicData GraphicData = new A.GraphicData(CreateTable(TableRows))
 			{
 				Uri = "http://schemas.openxmlformats.org/drawingml/2006/table"
 			};
@@ -313,7 +361,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private A.TableGrid CreateTableGrid(int ColumnCount)
 		{
-			A.TableGrid TableGrid = new();
+			A.TableGrid TableGrid = new A.TableGrid();
 			if (tableSetting.widthType == TableSetting.WidthOptionValues.AUTO)
 			{
 				for (int i = 0; i < ColumnCount; i++)
@@ -332,7 +380,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private A.TableRow CreateTableRow(TableRow Row)
 		{
-			A.TableRow TableRow = new()
+			A.TableRow TableRow = new A.TableRow()
 			{
 				Height = Row.height
 			};
@@ -344,18 +392,18 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private void ReCalculateColumnWidth()
 		{
-			A.Table? Table = graphicFrame!.Graphic!.GraphicData!.GetFirstChild<A.Table>();
+			A.Table Table = graphicFrame.Graphic.GraphicData.GetFirstChild<A.Table>();
 			if (Table != null)
 			{
-				List<A.GridColumn> GridColumn = Table.TableGrid!.Elements<A.GridColumn>().ToList();
+				List<A.GridColumn> GridColumn = Table.TableGrid.Elements<A.GridColumn>().ToList();
 				if (tableSetting.widthType == TableSetting.WidthOptionValues.AUTO)
 				{
 					GridColumn.ForEach(Column => Column.Width = tableSetting.width / GridColumn.Count);
 				}
 				else
 				{
-					GridColumn.Select((item, index) => (item, index)).ToList().ForEach(Column =>
-						Column.item.Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[Column.index]));
+					GridColumn.Select((item, index) => Tuple.Create(item, index)).ToList().ForEach(result =>
+						result.Item1.Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[result.Item2]));
 				}
 			}
 		}

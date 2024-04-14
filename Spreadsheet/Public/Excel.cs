@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.IO;
+
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -14,29 +16,29 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Create New file in the system
 		/// </summary>
-		public Excel(SpreadsheetProperties? spreadsheetProperties = null)
+		public Excel(SpreadsheetProperties spreadsheetProperties = null)
 		{
-			spreadsheet = new(this, spreadsheetProperties);
+			spreadsheet = new Spreadsheet(this, spreadsheetProperties);
 		}
 		/// <summary>
 		/// Open and work with existing file
 		/// </summary>
-		public Excel(string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
+		public Excel(string filePath, bool isEditable, SpreadsheetProperties spreadsheetProperties = null)
 		{
-			spreadsheet = new(this, filePath, isEditable, spreadsheetProperties);
+			spreadsheet = new Spreadsheet(this, filePath, isEditable, spreadsheetProperties);
 		}
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point
 		/// </summary>
-		public Excel(Stream Stream, bool IsEditable, SpreadsheetProperties? spreadsheetProperties = null)
+		public Excel(Stream Stream, bool IsEditable, SpreadsheetProperties spreadsheetProperties = null)
 		{
-			spreadsheet = new(this, Stream, IsEditable, spreadsheetProperties);
+			spreadsheet = new Spreadsheet(this, Stream, IsEditable, spreadsheetProperties);
 		}
 		/// <summary>
 		/// Adds a new sheet to the OpenXMLOffice with the specified name. Throws an exception if
 		/// SheetName already exist.
 		/// </summary>
-		public Worksheet AddSheet(string? sheetName = null)
+		public Worksheet AddSheet(string sheetName = null)
 		{
 			return spreadsheet.AddSheet(sheetName);
 		}
@@ -66,14 +68,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Return the Sheet Name for the given Sheet ID
 		/// </summary>
-		public string? GetSheetName(string sheetId)
+		public string GetSheetName(string sheetId)
 		{
 			return spreadsheet.GetSheetName(sheetId);
 		}
 		/// <summary>
 		/// Retrieves a Worksheet object from an OpenXMLOffice, allowing manipulation of the worksheet.
 		/// </summary>
-		public Worksheet? GetWorksheet(string sheetName)
+		public Worksheet GetWorksheet(string sheetName)
 		{
 			return spreadsheet.GetWorksheet(sheetName);
 		}

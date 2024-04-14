@@ -6,8 +6,8 @@ namespace OpenXMLOffice.Presentation_2007
 {
 	internal class SlideLayout
 	{
-		private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT, PresentationConstants.SlideLayoutType.BLANK);
-		private readonly P.SlideLayout openXMLSlideLayout = new()
+		private readonly CommonSlideData commonSlideData = new CommonSlideData(PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT, PresentationConstants.SlideLayoutType.BLANK);
+		private readonly P.SlideLayout openXMLSlideLayout = new P.SlideLayout()
 		{
 			Type = P.SlideLayoutValues.Text
 		}; public SlideLayout()
@@ -20,7 +20,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
 		{
-			return openXMLSlideLayout.SlideLayoutPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
+			return openXMLSlideLayout.SlideLayoutPart.CreateRelationshipToPart(openXmlPart, RelationshipId);
 		}
 		private void CreateSlideLayout()
 		{

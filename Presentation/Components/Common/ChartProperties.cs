@@ -4,6 +4,9 @@ using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using P = DocumentFormat.OpenXml.Presentation;
+using System.IO;
+using System;
+using System.Linq;
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -22,7 +25,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal P.GraphicFrame? graphicFrame;
+		internal P.GraphicFrame graphicFrame;
 		/// <summary>
 		///
 		/// </summary>
@@ -37,7 +40,7 @@ namespace OpenXMLOffice.Presentation_2007
 		internal void WriteDataToExcel(DataCell[][] dataRows, Stream stream)
 		{
 			// Load Data To Embeded Sheet
-			Excel excel = new();
+			Excel excel = new Excel();
 			Worksheet worksheet = excel.AddSheet();
 			int rowIndex = 1;
 			foreach (DataCell[] dataCells in dataRows)
@@ -52,18 +55,18 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <returns>
 		/// X,Y
 		/// </returns>
-		internal (uint, uint) GetPosition()
+		internal Tuple<uint, uint> GetPosition()
 		{
-			return (chartSetting.applicationSpecificSetting.x, chartSetting.applicationSpecificSetting.y);
+			return Tuple.Create(chartSetting.applicationSpecificSetting.x, chartSetting.applicationSpecificSetting.y);
 		}
 		/// <summary>
 		/// </summary>
 		/// <returns>
 		/// Width,Height
 		/// </returns>
-		internal (uint, uint) GetSize()
+		internal Tuple<uint, uint> GetSize()
 		{
-			return (chartSetting.applicationSpecificSetting.width, chartSetting.applicationSpecificSetting.height);
+			return Tuple.Create(chartSetting.applicationSpecificSetting.width, chartSetting.applicationSpecificSetting.height);
 		}
 		/// <summary>
 		/// Save Chart Part
@@ -119,18 +122,25 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <returns></returns>
 		internal static ChartData[][] ExcelToPPTdata(DataCell[][] dataRows)
 		{
-			return CommonTools.TransposeArray(dataRows).Select(col =>
-				col.Select(Cell => new ChartData
+			return CommonTools.TransposeArray(dataRows).Select(col => col.Select(Cell =>
+			{
+				var numberFormat = Cell.styleSetting.numberFormat ?? "General";
+				var dataType = DataType.STRING;
+				if (Cell.dataType == CellDataType.NUMBER)
 				{
-					numberFormat = Cell?.styleSetting?.numberFormat ?? "General",
-					value = Cell?.cellValue,
-					dataType = Cell?.dataType switch
-					{
-						CellDataType.NUMBER => DataType.NUMBER,
-						CellDataType.DATE => DataType.DATE,
-						_ => DataType.STRING
-					}
-				}).ToArray()).ToArray();
+					dataType = DataType.NUMBER;
+				}
+				else if (Cell.dataType == CellDataType.DATE)
+				{
+					dataType = DataType.DATE;
+				}
+				return new ChartData
+				{
+					numberFormat = numberFormat,
+					value = Cell.cellValue,
+					dataType = dataType
+				};
+			}).ToArray()).ToArray();
 		}
 		/// <summary>
 		///
@@ -138,13 +148,13 @@ namespace OpenXMLOffice.Presentation_2007
 		internal void CreateChartGraphicFrame(string relationshipId, uint id)
 		{
 			// Load Chart Part To Graphics Frame For Export
-			P.NonVisualGraphicFrameProperties nonVisualProperties = new()
+			P.NonVisualGraphicFrameProperties nonVisualProperties = new P.NonVisualGraphicFrameProperties()
 			{
 				NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = id, Name = "Chart" },
 				NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
 				ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
 			};
-			graphicFrame = new()
+			graphicFrame = new P.GraphicFrame()
 			{
 				NonVisualGraphicFrameProperties = nonVisualProperties,
 				Transform = new P.Transform(
@@ -167,7 +177,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal P.GraphicFrame GetChartGraphicFrame()
 		{
-			return graphicFrame!;
+			return graphicFrame;
 		}
 	}
 }

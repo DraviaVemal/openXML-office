@@ -1,4 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Collections.Generic;
 using OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Presentation_2007
 {
@@ -36,27 +37,27 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		public TableBorderSetting leftBorder = new();
+		public TableBorderSetting leftBorder = new TableBorderSetting();
 		/// <summary>
 		///
 		/// </summary>
-		public TableBorderSetting topBorder = new();
+		public TableBorderSetting topBorder = new TableBorderSetting();
 		/// <summary>
 		///
 		/// </summary>
-		public TableBorderSetting rightBorder = new();
+		public TableBorderSetting rightBorder = new TableBorderSetting();
 		/// <summary>
 		///
 		/// </summary>
-		public TableBorderSetting bottomBorder = new();
+		public TableBorderSetting bottomBorder = new TableBorderSetting();
 		/// <summary>
 		///
 		/// </summary>
-		public TableBorderSetting topLeftToBottomRightBorder = new();
+		public TableBorderSetting topLeftToBottomRightBorder = new TableBorderSetting();
 		/// <summary>
 		///
 		/// </summary>
-		public TableBorderSetting bottomLeftToTopRightBorder = new();
+		public TableBorderSetting bottomLeftToTopRightBorder = new TableBorderSetting();
 	}
 	/// <summary>
 	/// Presentation Table Cell Class for setting the cell properties.
@@ -74,11 +75,11 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		public TableBorderSettings borderSettings = new();
+		public TableBorderSettings borderSettings = new TableBorderSettings();
 		/// <summary>
 		/// Cell Background Color
 		/// </summary>
-		public string? cellBackground;
+		public string cellBackground;
 		/// <summary>
 		/// Cell Font Family
 		/// Default: Calibri (Body)
@@ -103,7 +104,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Text Background Color aka Highlight Color
 		/// </summary>
-		public string? textBackground;
+		public string textBackground;
 		/// <summary>
 		/// Text Color
 		/// </summary>
@@ -111,7 +112,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Cell Value
 		/// </summary>
-		public string? value;
+		public string value;
 	}
 	/// <summary>
 	/// Table Row Customisation Properties
@@ -125,11 +126,11 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Row Background Color.Will get overriden by TableCell.CellBackground
 		/// </summary>
-		public string? rowBackground;
+		public string rowBackground;
 		/// <summary>
 		/// Table Cell List
 		/// </summary>
-		public List<TableCell> tableCells = new();
+		public List<TableCell> tableCells = new List<TableCell>();
 		/// <summary>
 		/// Default Text Color for the row. Will get overriden by TableCell.TextColor
 		/// </summary>
@@ -151,7 +152,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Table Column Width List.Works based on WidthType Setting
 		/// </summary>
-		public List<float> tableColumnWidth = new();
+		public List<float> tableColumnWidth = new List<float>();
 		/// <summary>
 		/// Overall Table Width
 		/// </summary>

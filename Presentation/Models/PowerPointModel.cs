@@ -1,4 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Collections.Generic;
 using OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Presentation_2007
 {
@@ -10,18 +11,18 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Gets or sets the presentation settings.
 		/// </summary>
-		public PresentationSettings settings = new();
+		public PresentationSettings settings = new PresentationSettings();
 		/// <summary>
 		/// Gets or sets the slide masters of the presentation.
 		/// </summary>
 		/// <remarks>
 		/// TODO: Multi Theme Slide Master Support
 		/// </remarks>
-		public Dictionary<string, PresentationSlideMaster>? slideMasters;
+		public Dictionary<string, PresentationSlideMaster> slideMasters;
 		/// <summary>
 		/// Gets or sets the theme of the presentation.
 		/// </summary>
-		public ThemePallet theme = new();
+		public ThemePallet theme = new ThemePallet();
 	}
 	/// <summary>
 	/// Represents the settings of a presentation.
@@ -45,7 +46,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Gets or sets the theme of the slide master.
 		/// </summary>
-		public ThemePallet theme = new();
+		public ThemePallet theme = new ThemePallet();
 	}
 	internal class PresentationInfo
 	{

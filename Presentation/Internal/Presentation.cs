@@ -1,24 +1,27 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using P = DocumentFormat.OpenXml.Presentation;
 namespace OpenXMLOffice.Presentation_2007
 {
 	internal class Presentation : PresentationCore
 	{
-		internal Presentation(PresentationProperties? presentationProperties = null)
+		internal Presentation(PresentationProperties presentationProperties = null)
 		: base(presentationProperties) { }
-		internal Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
+		internal Presentation(string filePath, bool isEditable, PresentationProperties presentationProperties = null, bool autosave = true)
 		: base(filePath, isEditable, presentationProperties) { }
-		internal Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
+		internal Presentation(Stream stream, bool isEditable, PresentationProperties presentationProperties = null)
 		: base(stream, isEditable, presentationProperties) { }
 		internal Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
 		{
 			SlidePart slidePart = GetPresentationPart().AddNewPart<SlidePart>(GetNextPresentationRelationId());
-			Slide slide = new();
+			Slide slide = new Slide();
 			slidePart.Slide = slide.GetSlide();
 			slidePart.AddPart(GetSlideLayoutPart(slideLayoutType));
 			P.SlideIdList slideIdList = GetSlideIdList();
-			P.SlideId slideId = new() { Id = GetNextSlideId(), RelationshipId = GetPresentationPart().GetIdOfPart(slidePart) };
+			P.SlideId slideId = new P.SlideId() { Id = GetNextSlideId(), RelationshipId = GetPresentationPart().GetIdOfPart(slidePart) };
 			slideIdList.Append(slideId);
 			return slide;
 		}
@@ -27,7 +30,7 @@ namespace OpenXMLOffice.Presentation_2007
 			if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
 			{
 				P.SlideId SlideId = (P.SlideId)GetSlideIdList().ElementAt(SlideIndex);
-				SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId!.Value!);
+				SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId.Value);
 				return new Slide(SlidePart.Slide);
 			}
 			else
@@ -60,9 +63,9 @@ namespace OpenXMLOffice.Presentation_2007
 			if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
 			{
 				P.SlideId SlideId = (P.SlideId)GetSlideIdList().ElementAt(SlideIndex);
-				SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId!.Value!);
+				SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId.Value);
 				GetSlideIdList().RemoveChild(SlideId);
-				GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value!);
+				GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value);
 				GetPresentationPart().DeletePart(SlidePart);
 			}
 			else

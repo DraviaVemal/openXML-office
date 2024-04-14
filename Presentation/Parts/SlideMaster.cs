@@ -1,4 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -6,15 +7,15 @@ namespace OpenXMLOffice.Presentation_2007
 {
 	internal class SlideMaster
 	{
-		internal P.SlideMaster openXMLSlideMaster = new();
-		internal P.SlideLayoutIdList? slideLayoutIdList;
-		private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_MASTER, PresentationConstants.SlideLayoutType.BLANK); public SlideMaster()
+		internal P.SlideMaster openXMLSlideMaster = new P.SlideMaster();
+		internal P.SlideLayoutIdList slideLayoutIdList;
+		private readonly CommonSlideData commonSlideData = new CommonSlideData(PresentationConstants.CommonSlideDataType.SLIDE_MASTER, PresentationConstants.SlideLayoutType.BLANK); public SlideMaster()
 		{
 			CreateSlideMaster();
 		}
 		public void AddSlideLayoutIdToList(string relationshipId)
 		{
-			slideLayoutIdList!.AppendChild(new P.SlideLayoutId()
+			slideLayoutIdList.AppendChild(new P.SlideLayoutId()
 			{
 				Id = (uint)(2147483649 + slideLayoutIdList.Count() + 1),
 				RelationshipId = relationshipId
@@ -26,12 +27,12 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
 		{
-			return openXMLSlideMaster.SlideMasterPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
+			return openXMLSlideMaster.SlideMasterPart.CreateRelationshipToPart(openXmlPart, RelationshipId);
 		}
 		private void CreateSlideMaster()
 		{
-			slideLayoutIdList = new();
-			openXMLSlideMaster = new(commonSlideData.GetCommonSlideData());
+			slideLayoutIdList = new P.SlideLayoutIdList();
+			openXMLSlideMaster = new P.SlideMaster(commonSlideData.GetCommonSlideData());
 			openXMLSlideMaster.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 			openXMLSlideMaster.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			openXMLSlideMaster.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
@@ -55,9 +56,9 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private static P.TextStyles CreateTextStyles()
 		{
-			P.TextStyles textStyles = new();
-			P.TitleStyle titleStyle = new();
-			A.Level1ParagraphProperties titleLevel1ParagraphProperties = new()
+			P.TextStyles textStyles = new P.TextStyles();
+			P.TitleStyle titleStyle = new P.TitleStyle();
+			A.Level1ParagraphProperties titleLevel1ParagraphProperties = new A.Level1ParagraphProperties()
 			{
 				Alignment = A.TextAlignmentTypeValues.Left,
 				DefaultTabSize = 914400,
@@ -65,38 +66,38 @@ namespace OpenXMLOffice.Presentation_2007
 				LatinLineBreak = false,
 				RightToLeft = false
 			};
-			A.LineSpacing lineSpacing = new()
+			A.LineSpacing lineSpacing = new A.LineSpacing()
 			{
 				SpacingPercent = new A.SpacingPercent()
 				{
 					Val = 90000
 				}
 			};
-			A.SpaceBefore spaceBefore = new()
+			A.SpaceBefore spaceBefore = new A.SpaceBefore()
 			{
 				SpacingPoints = new A.SpacingPoints()
 				{
 					Val = 0
 				}
 			};
-			A.NoBullet bulletNone = new();
-			A.DefaultRunProperties titleRunProperties = new()
+			A.NoBullet bulletNone = new A.NoBullet();
+			A.DefaultRunProperties titleRunProperties = new A.DefaultRunProperties()
 			{
 				Kerning = 1200,
 				FontSize = 4400
 			};
-			A.SolidFill solidFill = new();
-			A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.Text1 };
+			A.SolidFill solidFill = new A.SolidFill();
+			A.SchemeColor schemeColor = new A.SchemeColor() { Val = A.SchemeColorValues.Text1 };
 			solidFill.Append(schemeColor);
 			titleRunProperties.Append(solidFill);
-			A.LatinFont latinTypeface = new() { Typeface = "+mj-lt" };
-			A.EastAsianFont eastAsianTypeface = new() { Typeface = "+mj-ea" };
-			A.ComplexScriptFont complexScriptTypeface = new() { Typeface = "+mj-cs" };
+			A.LatinFont latinTypeface = new A.LatinFont() { Typeface = "+mj-lt" };
+			A.EastAsianFont eastAsianTypeface = new A.EastAsianFont() { Typeface = "+mj-ea" };
+			A.ComplexScriptFont complexScriptTypeface = new A.ComplexScriptFont() { Typeface = "+mj-cs" };
 			titleRunProperties.Append(latinTypeface, eastAsianTypeface, complexScriptTypeface);
 			titleLevel1ParagraphProperties.Append(lineSpacing, spaceBefore, bulletNone, titleRunProperties);
 			titleStyle.Append(titleLevel1ParagraphProperties);
-			P.BodyStyle bodyStyle = new();
-			A.Level1ParagraphProperties bodyLevelParagraphProperties = new()
+			P.BodyStyle bodyStyle = new P.BodyStyle();
+			A.Level1ParagraphProperties bodyLevelParagraphProperties = new A.Level1ParagraphProperties()
 			{
 				Alignment = A.TextAlignmentTypeValues.Left,
 				DefaultTabSize = 914400,
@@ -119,9 +120,9 @@ namespace OpenXMLOffice.Presentation_2007
 					Val = 0
 				}
 			};
-			A.BulletFont bulletFont = new() { CharacterSet = 0, Panose = "020B0604020202020204", PitchFamily = 34, Typeface = "Arial" };
-			A.CharacterBullet bulletChar = new() { Char = "•" };
-			A.DefaultRunProperties bodyRunProperties = new()
+			A.BulletFont bulletFont = new A.BulletFont() { CharacterSet = 0, Panose = "020B0604020202020204", PitchFamily = 34, Typeface = "Arial" };
+			A.CharacterBullet bulletChar = new A.CharacterBullet() { Char = "•" };
+			A.DefaultRunProperties bodyRunProperties = new A.DefaultRunProperties()
 			{
 				Kerning = 1200,
 				FontSize = 2800
@@ -136,9 +137,9 @@ namespace OpenXMLOffice.Presentation_2007
 			bodyRunProperties.Append(latinTypeface, eastAsianTypeface, complexScriptTypeface);
 			bodyLevelParagraphProperties.Append(lineSpacing, spaceBefore, bulletFont, bulletChar, bodyRunProperties);
 			bodyStyle.Append(bodyLevelParagraphProperties);
-			P.OtherStyle otherStyle = new();
-			A.DefaultParagraphProperties otherDefaultParagraphProperties = new();
-			A.DefaultRunProperties otherDefaultRunProperties = new() { Language = "en-IN" };
+			P.OtherStyle otherStyle = new P.OtherStyle();
+			A.DefaultParagraphProperties otherDefaultParagraphProperties = new A.DefaultParagraphProperties();
+			A.DefaultRunProperties otherDefaultRunProperties = new A.DefaultRunProperties() { Language = "en-IN" };
 			solidFill = new A.SolidFill();
 			schemeColor = new A.SchemeColor { Val = A.SchemeColorValues.Text1 };
 			solidFill.Append(schemeColor);

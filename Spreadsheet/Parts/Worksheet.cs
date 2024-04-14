@@ -69,8 +69,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public void SetColumn(string cellId, ColumnProperties columnProperties)
 		{
-			(int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
-			SetColumn(colIndex, columnProperties);
+			Tuple<int, int> result = ConverterUtils.ConvertFromExcelCellReference(cellId);
+			SetColumn(result.Item2, columnProperties);
 		}
 		/// <summary>
 		/// Sets the properties for a column at the specified column index in a worksheet.
@@ -127,10 +127,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public void SetRow(string cellId, DataCell[] dataCells, RowProperties rowProperties)
 		{
-			int rowIndex, columnIndex;
 			Tuple<int, int> result = ConverterUtils.ConvertFromExcelCellReference(cellId);
-			rowIndex = result.Item1;
-			columnIndex = result.Item2;
+			int rowIndex = result.Item1;
+			int columnIndex = result.Item2;
 			X.Row row = GetWorkSheetData().Elements<X.Row>().FirstOrDefault(r => r.RowIndex.Value == (uint)rowIndex);
 			if (row == null)
 			{
@@ -318,9 +317,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private ChartData[][] PrepareCacheData(DataRange dataRange)
 		{
-			Worksheet worksheet = excel.GetWorksheet(dataRange.sheetName ?? GetSheetName()) ?? throw new ArgumentException("Data Range Sheet not founds");
-			(int rowStart, int colStart) = ConverterUtils.ConvertFromExcelCellReference(dataRange.cellIdStart);
-			(int rowEnd, int colEnd) = ConverterUtils.ConvertFromExcelCellReference(dataRange.cellIdEnd);
+			string sheetName = dataRange.sheetName ?? GetSheetName();
+			Worksheet worksheet = excel.GetWorksheet(sheetName);
+			if (worksheet == null)
+			{
+				throw new ArgumentException("Data Range Sheet not found");
+			}
+			Tuple<int, int> result = ConverterUtils.ConvertFromExcelCellReference(dataRange.cellIdStart);
+			int rowStart = result.Item1;
+			int colStart = result.Item2;
+			result = ConverterUtils.ConvertFromExcelCellReference(dataRange.cellIdEnd);
+			int rowEnd = result.Item1;
+			int colEnd = result.Item2;
 			List<X.Row> dataRows = GetWorkSheetData().Elements<X.Row>().Where(row => row.RowIndex.Value >= rowStart && row.RowIndex.Value <= rowEnd).ToList();
 			ChartData[][] chartDatas = new ChartData[rowEnd - rowStart + 1][];
 			dataRows.ForEach(row =>
@@ -334,13 +342,17 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				List<X.Cell> dataCells = row.Elements<X.Cell>().Where(c => cellIds.Contains(c.CellReference.Value)).ToList();
 				dataCells.ForEach(cell =>
 				{
-					(int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cell.CellReference?.Value!);
+					result = ConverterUtils.ConvertFromExcelCellReference(cell.CellReference.Value);
+					int colIndex = result.Item2;
 					// TODO : Cell Value is bit confusing for value types and formula do furter research for extending the functionality
 					DataType cellDataType = GetCellDataType(cell.DataType);
-					string cellValue = cellDataType switch
+					string cellValue;
+					switch (cellDataType)
 					{
-						_ => cell.CellValue.Text
-					};
+						default:
+							cellValue = cell.CellValue.Text;
+							break;
+					}
 					if (cell.DataType.ToString() == "s")
 					{
 						cellValue = excel.GetShareStringService().GetValue(int.Parse(cellValue));

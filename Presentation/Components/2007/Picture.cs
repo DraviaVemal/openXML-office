@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.IO;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -21,15 +23,26 @@ namespace OpenXMLOffice.Presentation_2007
 			currentSlide = slide;
 			string EmbedId = currentSlide.GetNextSlideRelationId();
 			this.pictureSetting = pictureSetting;
-			openXMLPicture = new();
+			openXMLPicture = new P.Picture();
 			CreatePicture(EmbedId);
-			ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(pictureSetting.imageType switch
+			ImagePart ImagePart;
+			if (pictureSetting.imageType == ImageType.PNG)
 			{
-				ImageType.PNG => "image/png",
-				ImageType.GIF => "image/gif",
-				ImageType.TIFF => "image/tiff",
-				_ => "image/jpeg"
-			}, EmbedId);
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/png", EmbedId);
+			}
+			else if (pictureSetting.imageType == ImageType.GIF)
+			{
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/gif", EmbedId);
+			}
+			else if (pictureSetting.imageType == ImageType.TIFF)
+			{
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/tiff", EmbedId);
+			}
+			else
+			{
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/jpeg", EmbedId);
+			}
+
 			ImagePart.FeedData(stream);
 		}
 		/// <summary>
@@ -40,30 +53,41 @@ namespace OpenXMLOffice.Presentation_2007
 			currentSlide = slide;
 			string EmbedId = currentSlide.GetNextSlideRelationId();
 			this.pictureSetting = pictureSetting;
-			openXMLPicture = new();
+			openXMLPicture = new P.Picture();
 			CreatePicture(EmbedId);
-			ImagePart ImagePart = currentSlide.GetSlide().SlidePart!.AddNewPart<ImagePart>(pictureSetting.imageType switch
+			ImagePart ImagePart;
+			if (pictureSetting.imageType == ImageType.PNG)
 			{
-				ImageType.PNG => "image/png",
-				ImageType.GIF => "image/gif",
-				ImageType.TIFF => "image/tiff",
-				_ => "image/jpeg"
-			}, EmbedId);
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/png", EmbedId);
+			}
+			else if (pictureSetting.imageType == ImageType.GIF)
+			{
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/gif", EmbedId);
+			}
+			else if (pictureSetting.imageType == ImageType.TIFF)
+			{
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/tiff", EmbedId);
+			}
+			else
+			{
+				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/jpeg", EmbedId);
+			}
+
 			ImagePart.FeedData(new FileStream(filePath, FileMode.Open, FileAccess.Read));
 		}
 		/// <summary>
 		/// X,Y
 		/// </summary>
-		public (uint, uint) GetPosition()
+		public Tuple<uint, uint> GetPosition()
 		{
-			return (pictureSetting.x, pictureSetting.y);
+			return Tuple.Create(pictureSetting.x, pictureSetting.y);
 		}
 		/// <summary>
 		/// Width,Height
 		/// </summary>
-		public (uint, uint) GetSize()
+		public Tuple<uint, uint> GetSize()
 		{
-			return (pictureSetting.width, pictureSetting.height);
+			return Tuple.Create(pictureSetting.width, pictureSetting.height);
 		}
 		/// <summary>
 		/// Update Picture Position
@@ -74,7 +98,7 @@ namespace OpenXMLOffice.Presentation_2007
 			pictureSetting.y = Y;
 			if (openXMLPicture != null)
 			{
-				openXMLPicture.ShapeProperties!.Transform2D = new A.Transform2D
+				openXMLPicture.ShapeProperties.Transform2D = new A.Transform2D
 				{
 					Offset = new A.Offset { X = pictureSetting.x, Y = pictureSetting.y },
 					Extents = new A.Extents { Cx = pictureSetting.width, Cy = pictureSetting.height }
@@ -90,7 +114,7 @@ namespace OpenXMLOffice.Presentation_2007
 			pictureSetting.height = Height;
 			if (openXMLPicture != null)
 			{
-				openXMLPicture.ShapeProperties!.Transform2D = new A.Transform2D
+				openXMLPicture.ShapeProperties.Transform2D = new A.Transform2D
 				{
 					Offset = new A.Offset { X = pictureSetting.x, Y = pictureSetting.y },
 					Extents = new A.Extents { Cx = pictureSetting.width, Cy = pictureSetting.height }
@@ -127,11 +151,11 @@ namespace OpenXMLOffice.Presentation_2007
 					Extents = new A.Extents() { Cx = pictureSetting.width, Cy = pictureSetting.height }
 				}
 			};
-			GetPicture().BlipFill = new()
+			GetPicture().BlipFill = new P.BlipFill()
 			{
 				Blip = new A.Blip() { Embed = EmbedId }
 			};
-			GetPicture().BlipFill!.Append(new A.Stretch(new A.FillRectangle()));
+			GetPicture().BlipFill.Append(new A.Stretch(new A.FillRectangle()));
 		}
 	}
 }

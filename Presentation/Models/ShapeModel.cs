@@ -10,15 +10,15 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string? text;
+		public string text;
 		/// <summary>
 		///
 		/// </summary>
-		public string? fontColor;
+		public string fontColor;
 		/// <summary>
 		///
 		/// </summary>
-		public string? fontFamily = "(Calibri (Body))";
+		public string fontFamily = "(Calibri (Body))";
 		/// <summary>
 		///
 		/// </summary>
