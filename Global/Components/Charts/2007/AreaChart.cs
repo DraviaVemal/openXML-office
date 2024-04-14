@@ -1,9 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -15,16 +13,14 @@ namespace OpenXMLOffice.Global_2007
 		/// Area Chart Setting
 		/// </summary>
 		protected readonly AreaChartSetting<ApplicationSpecificSetting> areaChartSetting;
-
 		internal AreaChart(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) : base(areaChartSetting)
 		{
 			this.areaChartSetting = areaChartSetting;
 		}
-
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// </summary>
-		public AreaChart(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(areaChartSetting)
+		public AreaChart(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting, ChartData[][] dataCols, DataRange dataRange = null) : base(areaChartSetting)
 		{
 			this.areaChartSetting = areaChartSetting;
 			if (areaChartSetting.areaChartType == AreaChartTypes.CLUSTERED_3D ||
@@ -36,14 +32,13 @@ namespace OpenXMLOffice.Global_2007
 			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
-
 		private C.AreaChartSeries CreateAreaChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			SolidFillModel GetSeriesFillColor()
 			{
-				SolidFillModel solidFillModel = new();
-				string? hexColor = areaChartSetting.areaChartSeriesSettings?
-							.Select(item => item?.fillColor)
+				SolidFillModel solidFillModel = new SolidFillModel();
+				string hexColor = areaChartSetting.areaChartSeriesSettings?
+							.Select(item => item.fillColor)
 							.ToList().ElementAtOrDefault(seriesIndex);
 				if (hexColor != null)
 				{
@@ -52,7 +47,7 @@ namespace OpenXMLOffice.Global_2007
 				}
 				else
 				{
-					solidFillModel.schemeColorModel = new()
+					solidFillModel.schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 					};
@@ -61,9 +56,9 @@ namespace OpenXMLOffice.Global_2007
 			}
 			SolidFillModel GetSeriesBorderColor()
 			{
-				SolidFillModel solidFillModel = new();
-				string? hexColor = areaChartSetting.areaChartSeriesSettings?
-							.Select(item => item?.borderColor)
+				SolidFillModel solidFillModel = new SolidFillModel();
+				string hexColor = areaChartSetting.areaChartSeriesSettings?
+							.Select(item => item.borderColor)
 							.ToList().ElementAtOrDefault(seriesIndex);
 				if (hexColor != null)
 				{
@@ -72,34 +67,34 @@ namespace OpenXMLOffice.Global_2007
 				}
 				else
 				{
-					solidFillModel.schemeColorModel = new()
+					solidFillModel.schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 					};
 				}
 				return solidFillModel;
 			}
-			ShapePropertiesModel shapePropertiesModel = new()
+			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
 				solidFill = GetSeriesFillColor(),
-				outline = new()
+				outline = new OutlineModel()
 				{
 					solidFill = GetSeriesBorderColor()
 				}
 			};
-			C.DataLabels? dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
+			C.DataLabels dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
 				CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings?[seriesIndex]?.areaChartDataLabel ?? new AreaChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-			C.AreaChartSeries series = new(
+			C.AreaChartSeries series = new C.AreaChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
-				CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
+				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			if (dataLabels != null)
 			{
 				series.Append(dataLabels);
 			}
-			series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
-			series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
+			series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula, chartDataGrouping.xAxisCells));
+			series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula, chartDataGrouping.yAxisCells));
 			if (chartDataGrouping.dataLabelCells != null && chartDataGrouping.dataLabelFormula != null)
 			{
 				series.Append(new C.ExtensionList(new C.Extension(
@@ -109,29 +104,29 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return series;
 		}
-
-		private C.DataLabels? CreateAreaDataLabels(AreaChartDataLabel areaChartDataLabel, int? dataLabelCounter = 0)
+		private C.DataLabels CreateAreaDataLabels(AreaChartDataLabel areaChartDataLabel, int dataLabelCounter = 0)
 		{
 			if (areaChartDataLabel.showValue || areaChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || areaChartDataLabel.showCategoryName || areaChartDataLabel.showLegendKey || areaChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(areaChartDataLabel, dataLabelCounter);
-				dataLabels.InsertAt(new C.DataLabelPosition()
+				C.DataLabelPositionValues positionValue;
+				switch (areaChartDataLabel.dataLabelPosition)
 				{
-					Val = areaChartDataLabel.dataLabelPosition switch
-					{
-						//Show
-						_ => C.DataLabelPositionValues.Center,
-					}
-				}, 0);
+					// Add cases for other dataLabelPosition values as needed
+					default:
+						positionValue = C.DataLabelPositionValues.Center;
+						break;
+				}
+				C.DataLabelPosition dataLabelPosition = new C.DataLabelPosition { Val = positionValue };
+				dataLabels.InsertAt(dataLabelPosition, 0);
 				return dataLabels;
 			}
 			return null;
 		}
-
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
-			C.PlotArea plotArea = new();
-			plotArea.Append(CreateLayout(areaChartSetting.plotAreaOptions?.manualLayout));
+			C.PlotArea plotArea = new C.PlotArea();
+			plotArea.Append(CreateLayout(areaChartSetting.plotAreaOptions.manualLayout));
 			if (areaChartSetting.is3DChart)
 			{
 				plotArea.Append(CreateAreaChart<C.Area3DChart>(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
@@ -163,31 +158,39 @@ namespace OpenXMLOffice.Global_2007
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
 		}
-
 		internal ChartType CreateAreaChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			ChartType areaChart = new();
-			areaChart.Append(new C.Grouping
+			ChartType areaChart = new ChartType();
+			C.GroupingValues groupingValue;
+			switch (areaChartSetting.areaChartType)
 			{
-				Val = areaChartSetting.areaChartType switch
-				{
-					AreaChartTypes.STACKED => C.GroupingValues.Stacked,
-					AreaChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
-					AreaChartTypes.CLUSTERED_3D => C.GroupingValues.Standard,
-					AreaChartTypes.STACKED_3D => C.GroupingValues.Stacked,
-					AreaChartTypes.PERCENT_STACKED_3D => C.GroupingValues.PercentStacked,
-					// Clusted
-					_ => C.GroupingValues.Standard,
-				}
-			},
-				new C.VaryColors { Val = false });
+				case AreaChartTypes.STACKED:
+					groupingValue = C.GroupingValues.Stacked;
+					break;
+				case AreaChartTypes.PERCENT_STACKED:
+					groupingValue = C.GroupingValues.PercentStacked;
+					break;
+				case AreaChartTypes.CLUSTERED_3D:
+					groupingValue = C.GroupingValues.Standard;
+					break;
+				case AreaChartTypes.STACKED_3D:
+					groupingValue = C.GroupingValues.Stacked;
+					break;
+				case AreaChartTypes.PERCENT_STACKED_3D:
+					groupingValue = C.GroupingValues.PercentStacked;
+					break;
+				default:
+					groupingValue = C.GroupingValues.Standard;
+					break;
+			}
+			areaChart.Append(new C.Grouping { Val = groupingValue }, new C.VaryColors { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>
 			{
 				areaChart.Append(CreateAreaChartSeries(seriesIndex, Series));
 				seriesIndex++;
 			});
-			C.DataLabels? dataLabels = CreateAreaDataLabels(areaChartSetting.areaChartDataLabel);
+			C.DataLabels dataLabels = CreateAreaDataLabels(areaChartSetting.areaChartDataLabel);
 			if (dataLabels != null)
 			{
 				areaChart.Append(dataLabels);
@@ -196,7 +199,5 @@ namespace OpenXMLOffice.Global_2007
 			areaChart.Append(new C.AxisId { Val = ValueAxisId });
 			return areaChart;
 		}
-
-
 	}
 }

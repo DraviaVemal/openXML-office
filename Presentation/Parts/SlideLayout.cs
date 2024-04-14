@@ -1,15 +1,12 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml.Packaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	internal class SlideLayout
 	{
 		private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT, PresentationConstants.SlideLayoutType.BLANK);
-
 		private readonly P.SlideLayout openXMLSlideLayout = new()
 		{
 			Type = P.SlideLayoutValues.Text
@@ -17,17 +14,14 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			CreateSlideLayout();
 		}
-
 		public P.SlideLayout GetSlideLayout()
 		{
 			return openXMLSlideLayout;
 		}
-
 		public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
 		{
 			return openXMLSlideLayout.SlideLayoutPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
 		}
-
 		private void CreateSlideLayout()
 		{
 			openXMLSlideLayout.AppendChild(commonSlideData.GetCommonSlideData());

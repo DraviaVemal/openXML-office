@@ -1,8 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
-
 using OpenXMLOffice.Global_2007;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -14,7 +11,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// The type of image.
 		/// </summary>
 		public ImageType imageType = ImageType.JPEG;
-
 		/// <summary>
 		///
 		/// </summary>

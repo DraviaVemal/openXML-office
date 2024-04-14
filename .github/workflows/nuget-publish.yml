@@ -1,17 +1,14 @@
 name: Package Build and Publish to NuGet
-
 permissions:
   contents: write
   pages: write
   id-token: write
-
 on:
   push:
     branches:
       - main
     paths:
       - 'Directory.Build.props'
-
 jobs:
   build-CsProj:
     runs-on: windows-latest
@@ -32,7 +29,6 @@ jobs:
         with:
           name: nupkgs
           path: nupkgs/*.nupkg
-
   publish-nuget:
     needs: build-CsProj
     runs-on: ubuntu-latest

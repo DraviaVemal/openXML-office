@@ -1,9 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Global_2013;
 using CX = DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-
 namespace OpenXMLOffice.Global_2016
 {
 	/// <summary>
@@ -11,12 +9,11 @@ namespace OpenXMLOffice.Global_2016
 	/// </summary>
 	public class AdvanceCharts<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
-		private readonly CX.ChartSpace chartSpace = new();
+		private readonly CX.ChartSpace chartSpace = new CX.ChartSpace();
 		/// <summary>
 		///
 		/// </summary>
 		internal AdvanceCharts(ChartSetting<ApplicationSpecificSetting> chartSetting) : base(chartSetting) { }
-
 		/// <summary>
 		///
 		/// </summary>
@@ -30,48 +27,46 @@ namespace OpenXMLOffice.Global_2016
 		/// </summary>
 		private static CX.StringDimension CreateStringDimension(string formula, ChartData[] cells)
 		{
-			CX.StringDimension stringDimension = new() { Type = CX.StringDimensionType.Cat };
+			CX.StringDimension stringDimension = new CX.StringDimension() { Type = CX.StringDimensionType.Cat };
 			stringDimension.Append(new CX.Formula(formula));
-			CX.StringLevel stringLevel = new() { PtCount = (uint)cells.Length };
+			CX.StringLevel stringLevel = new CX.StringLevel() { PtCount = (uint)cells.Length };
 			uint index = 0;
 			cells.ToList().ForEach(cell =>
 			{
-				stringLevel.Append(new CX.ChartStringValue(cell.value!) { Index = index });
+				stringLevel.Append(new CX.ChartStringValue(cell.value) { Index = index });
 				index++;
 			});
 			stringDimension.Append(stringLevel);
 			return stringDimension;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		private static CX.NumericDimension CreateNumberDimension(string formula, ChartData[] cells)
 		{
-			CX.NumericDimension numericDimension = new() { Type = CX.NumericDimensionType.Val };
+			CX.NumericDimension numericDimension = new CX.NumericDimension() { Type = CX.NumericDimensionType.Val };
 			numericDimension.Append(new CX.Formula(formula));
-			CX.NumericLevel numericLevel = new() { PtCount = (uint)cells.Length, FormatCode = cells[0].numberFormat };
+			CX.NumericLevel numericLevel = new CX.NumericLevel() { PtCount = (uint)cells.Length, FormatCode = cells[0].numberFormat };
 			uint index = 0;
 			cells.ToList().ForEach(cell =>
 			{
-				numericLevel.Append(new CX.NumericValue(cell.value!) { Idx = index });
+				numericLevel.Append(new CX.NumericValue(cell.value) { Idx = index });
 				index++;
 			});
 			numericDimension.Append(numericLevel);
 			return numericDimension;
 		}
-
 		private static CX.Series CreateSeries(ChartDataGrouping dataSeries)
 		{
-			CX.Series series = new()
+			CX.Series series = new CX.Series()
 			{
 				LayoutId = CX.SeriesLayout.Waterfall,
 				UniqueId = "{BCAD149B-F3BE-45E7-9A19-6B9C31CD6306}"
 			};
 			series.Append(new CX.Text(
 				new CX.TextData(
-					new CX.Formula(dataSeries.seriesHeaderFormula!),
-					new CX.VXsdstring(dataSeries.seriesHeaderCells!.value!)
+					new CX.Formula(dataSeries.seriesHeaderFormula),
+					new CX.VXsdstring(dataSeries.seriesHeaderCells.value)
 				)
 			));
 			series.Append(new CX.DataLabels(
@@ -93,18 +88,17 @@ namespace OpenXMLOffice.Global_2016
 			));
 			return series;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		private static CX.Data CreateData(ChartDataGrouping dataSeries)
 		{
-			CX.Data data = new()
+			CX.Data data = new CX.Data()
 			{
 				Id = (uint)dataSeries.id
 			};
-			data.Append(CreateStringDimension(dataSeries.xAxisFormula!, dataSeries.xAxisCells!));
-			data.Append(CreateNumberDimension(dataSeries.yAxisFormula!, dataSeries.yAxisCells!));
+			data.Append(CreateStringDimension(dataSeries.xAxisFormula, dataSeries.xAxisCells));
+			data.Append(CreateNumberDimension(dataSeries.yAxisFormula, dataSeries.yAxisCells));
 			return data;
 		}
 		/// <summary>
@@ -112,9 +106,9 @@ namespace OpenXMLOffice.Global_2016
 		/// </summary>
 		internal static CX.ChartData CreateChartData(List<ChartDataGrouping> chartDataGroupings)
 		{
-			CX.ChartData chartData = new()
+			CX.ChartData chartData = new CX.ChartData()
 			{
-				ExternalData = new()
+				ExternalData = new CX.ExternalData()
 				{
 					Id = "rId1",
 					AutoUpdate = true
@@ -131,16 +125,16 @@ namespace OpenXMLOffice.Global_2016
 		/// </summary>
 		internal static CX.Chart CreateChart(List<ChartDataGrouping> chartDataGroupings)
 		{
-			CX.PlotAreaRegion plotAreaRegion = new();
+			CX.PlotAreaRegion plotAreaRegion = new CX.PlotAreaRegion();
 			chartDataGroupings.Take(1).ToList().ForEach(dataSeries =>
 			{
 				plotAreaRegion.Append(CreateSeries(dataSeries));
 			});
-			CX.PlotArea plotArea = new()
+			CX.PlotArea plotArea = new CX.PlotArea()
 			{
 				PlotAreaRegion = plotAreaRegion
 			};
-			CX.Chart chart = new()
+			CX.Chart chart = new CX.Chart()
 			{
 				PlotArea = plotArea,
 				Legend = new CX.Legend()

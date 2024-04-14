@@ -1,8 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Spreadsheet_2007;
-
 namespace OpenXMLOffice.Tests
 {
 	/// <summary>
@@ -12,9 +10,7 @@ namespace OpenXMLOffice.Tests
 	public class Spreadsheet
 	{
 		private static readonly Excel excel = new();
-
 		private static readonly string resultPath = "../../testResult";
-
 		/// <summary>
 		/// Initialize excel Test
 		/// </summary>
@@ -29,7 +25,6 @@ namespace OpenXMLOffice.Tests
 			}
 			excel.AddSheet();
 		}
-
 		/// <summary>
 		/// Save the Test File After execution
 		/// </summary>
@@ -38,7 +33,6 @@ namespace OpenXMLOffice.Tests
 		{
 			excel.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}
-
 		/// <summary>
 		/// Add Sheet Test
 		/// </summary>
@@ -49,7 +43,6 @@ namespace OpenXMLOffice.Tests
 			Assert.IsNotNull(worksheet);
 			Assert.AreEqual("TestSheet1", worksheet.GetSheetName());
 		}
-
 		/// <summary>
 		/// Rename Sheet Based on Index Test
 		/// </summary>
@@ -60,7 +53,6 @@ namespace OpenXMLOffice.Tests
 			Assert.IsNotNull(worksheet);
 			Assert.IsTrue(excel.RenameSheet("Sheet11", "Data1"));
 		}
-
 		/// <summary>
 		/// Set Cell Test
 		/// </summary>
@@ -84,7 +76,6 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Set Row Test
 		/// </summary>
@@ -141,7 +132,6 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -169,7 +159,6 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Test All Chart Implementation
 		/// </summary>
@@ -601,7 +590,6 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, comboChartSetting);
 		}
-
 		/// <summary>
 		/// Open and close Excel without editing
 		/// </summary>
@@ -612,7 +600,6 @@ namespace OpenXMLOffice.Tests
 			excel1.SaveAs(string.Format("{1}/ReadEdit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Test existing file
 		/// </summary>
@@ -675,7 +662,6 @@ namespace OpenXMLOffice.Tests
 			excel1.SaveAs(string.Format("{1}/Edit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
-
 		private static DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
 		{
 			Random random = new();
@@ -712,6 +698,5 @@ namespace OpenXMLOffice.Tests
 			}
 			return data;
 		}
-
 	}
 }

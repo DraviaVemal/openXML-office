@@ -1,10 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml.Presentation;
 using A = DocumentFormat.OpenXml.Drawing;
-
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -13,7 +10,6 @@ namespace OpenXMLOffice.Presentation_2007
 	public class CommonSlideData
 	{
 		private readonly P.CommonSlideData openXMLCommonSlideData;
-
 		internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
 		{
 			openXMLCommonSlideData = new()
@@ -22,18 +18,15 @@ namespace OpenXMLOffice.Presentation_2007
 			};
 			CreateCommonSlideData(commonSlideDataType);
 		}
-
 		internal CommonSlideData(P.CommonSlideData commonSlideData)
 		{
 			openXMLCommonSlideData = commonSlideData;
 		}
-
 		// Return OpenXML CommonSlideData Object
 		internal P.CommonSlideData GetCommonSlideData()
 		{
 			return openXMLCommonSlideData;
 		}
-
 		private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
 		{
 			Background background = new()
@@ -80,26 +73,22 @@ namespace OpenXMLOffice.Presentation_2007
 								new ApplicationNonVisualDrawingProperties()
 							)
 			};
-
 			switch (commonSlideDataType)
 			{
 				case PresentationConstants.CommonSlideDataType.SLIDE_MASTER:
 					openXMLCommonSlideData.AppendChild(background);
 					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
-
 				case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
 					shapeTree.AppendChild(CreateShape1());
 					shapeTree.AppendChild(CreateShape2());
 					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
-
 				default: // slide
 					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 			}
 		}
-
 		private static P.Shape CreateShape1()
 		{
 			P.Shape shape = new();
@@ -131,7 +120,6 @@ namespace OpenXMLOffice.Presentation_2007
 			shape.Append(textBody);
 			return shape;
 		}
-
 		private static P.Shape CreateShape2()
 		{
 			P.Shape shape = new();
@@ -196,7 +184,5 @@ namespace OpenXMLOffice.Presentation_2007
 			shape.Append(textBody);
 			return shape;
 		}
-
-
 	}
 }

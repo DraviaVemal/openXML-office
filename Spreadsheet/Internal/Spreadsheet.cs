@@ -1,19 +1,14 @@
 ﻿// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	internal class Spreadsheet : SpreadsheetCore
 	{
 		internal Spreadsheet(Excel excel, SpreadsheetProperties? spreadsheetProperties) : base(excel, spreadsheetProperties) { }
-
 		internal Spreadsheet(Excel excel, string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(excel, filePath, isEditable, spreadsheetProperties) { }
-
 		internal Spreadsheet(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties) : base(excel, stream, isEditable, spreadsheetProperties) { }
-
 		internal Worksheet AddSheet(string? sheetName)
 		{
 			sheetName ??= string.Format("Sheet{0}", GetMaxSheetId() + 1);
@@ -33,7 +28,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			worksheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(new SheetData());
 			return new Worksheet(excel, worksheetPart.Worksheet, sheet);
 		}
-
 		internal int? GetSheetId(string sheetName)
 		{
 			Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
@@ -43,12 +37,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return null;
 		}
-
 		internal uint GetStyleId(CellStyleSetting CellStyleSetting)
 		{
 			return GetStyleService().GetCellStyleId(CellStyleSetting);
 		}
-
 		internal string? GetSheetName(string sheetId)
 		{
 			Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId) as Sheet;
@@ -58,7 +50,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return null;
 		}
-
 		internal Worksheet? GetWorksheet(string sheetName)
 		{
 			Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
@@ -66,7 +57,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (GetWorkbookPart().GetPartById(sheet.Id!) is not WorksheetPart worksheetPart) { return null; }
 			return new Worksheet(excel, worksheetPart.Worksheet, sheet);
 		}
-
 		internal bool RemoveSheet(string sheetName)
 		{
 			Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
@@ -81,7 +71,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return false;
 		}
-
 		internal bool RemoveSheet(int sheetId)
 		{
 			Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Id?.Value == sheetId.ToString()) as Sheet;
@@ -96,7 +85,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return false;
 		}
-
 		internal bool RenameSheet(string oldSheetName, string newSheetName)
 		{
 			if (CheckIfSheetNameExist(newSheetName))
@@ -111,7 +99,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			sheet.Name = newSheetName;
 			return true;
 		}
-
 		internal bool RenameSheet(int sheetId, string newSheetName)
 		{
 			if (CheckIfSheetNameExist(newSheetName))
@@ -126,7 +113,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			sheet.Name = newSheetName;
 			return true;
 		}
-
 		internal void SaveAs(string filePath)
 		{
 			UpdateStyle();
@@ -134,7 +120,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			spreadsheetDocument.Save();
 			spreadsheetDocument.Clone(filePath).Dispose();
 		}
-
 		internal void SaveAs(Stream stream)
 		{
 			UpdateStyle();
@@ -142,18 +127,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			spreadsheetDocument.Save();
 			spreadsheetDocument.Clone(stream).Dispose();
 		}
-
 		private bool CheckIfSheetNameExist(string sheetName)
 		{
 			Sheet? sheet = GetSheets().FirstOrDefault(sheet => (sheet as Sheet)?.Name == sheetName) as Sheet;
 			return sheet != null;
 		}
-
 		private UInt32Value GetMaxSheetId()
 		{
 			return GetSheets().Max(sheet => (sheet as Sheet)?.SheetId) ?? 0;
 		}
-
-
 	}
 }

@@ -1,9 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -13,21 +11,18 @@ namespace OpenXMLOffice.Global_2007
 	{
 		private const int DefaultGapWidth = 150;
 		private const int DefaultOverlap = 100;
-
 		/// <summary>
 		/// Bar Chart Setting
 		/// </summary>
 		protected readonly BarChartSetting<ApplicationSpecificSetting> barChartSetting;
-
 		internal BarChart(BarChartSetting<ApplicationSpecificSetting> barChartSetting) : base(barChartSetting)
 		{
 			this.barChartSetting = barChartSetting;
 		}
-
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// </summary>
-		public BarChart(BarChartSetting<ApplicationSpecificSetting> barChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(barChartSetting)
+		public BarChart(BarChartSetting<ApplicationSpecificSetting> barChartSetting, ChartData[][] dataCols, DataRange dataRange = null) : base(barChartSetting)
 		{
 			this.barChartSetting = barChartSetting;
 			if (barChartSetting.barChartType == BarChartTypes.CLUSTERED_3D ||
@@ -39,13 +34,12 @@ namespace OpenXMLOffice.Global_2007
 			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
-
 		private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			SolidFillModel GetSeriesFillColor()
 			{
-				SolidFillModel solidFillModel = new();
-				string? hexColor = barChartSetting.barChartSeriesSettings?
+				SolidFillModel solidFillModel = new SolidFillModel();
+				string hexColor = barChartSetting.barChartSeriesSettings?
 							.Select(item => item?.fillColor)
 							.ToList().ElementAtOrDefault(seriesIndex);
 				if (hexColor != null)
@@ -55,7 +49,7 @@ namespace OpenXMLOffice.Global_2007
 				}
 				else
 				{
-					solidFillModel.schemeColorModel = new()
+					solidFillModel.schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 					};
@@ -64,8 +58,8 @@ namespace OpenXMLOffice.Global_2007
 			}
 			SolidFillModel GetSeriesBorderColor()
 			{
-				SolidFillModel solidFillModel = new();
-				string? hexColor = barChartSetting.barChartSeriesSettings?
+				SolidFillModel solidFillModel = new SolidFillModel();
+				string hexColor = barChartSetting.barChartSeriesSettings?
 							.Select(item => item?.borderColor)
 							.ToList().ElementAtOrDefault(seriesIndex);
 				if (hexColor != null)
@@ -75,28 +69,28 @@ namespace OpenXMLOffice.Global_2007
 				}
 				else
 				{
-					solidFillModel.schemeColorModel = new()
+					solidFillModel.schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 					};
 				}
 				return solidFillModel;
 			}
-			C.DataLabels? dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ?
+			C.DataLabels dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ?
 				CreateBarDataLabels(barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-			ShapePropertiesModel shapePropertiesModel = new()
+			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
 				solidFill = GetSeriesFillColor(),
-				outline = new()
+				outline = new OutlineModel()
 				{
 					solidFill = GetSeriesBorderColor()
 				}
 			};
-			C.BarChartSeries series = new(
+			C.BarChartSeries series = new C.BarChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.InvertIfNegative { Val = true },
-				CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
+				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			int dataPointCount = barChartSetting.barChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.barChartDataPointSettings.Count ?? 0;
 			for (uint index = 0; index < dataPointCount; index++)
@@ -107,8 +101,8 @@ namespace OpenXMLOffice.Global_2007
 				{
 					SolidFillModel GetDataPointFill()
 					{
-						SolidFillModel solidFillModel = new();
-						string? hexColor = barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings?
+						SolidFillModel solidFillModel = new SolidFillModel();
+						string hexColor = barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings?
 									.Select(item => item?.fillColor)
 									.ToList().ElementAtOrDefault((int)index);
 						if (hexColor != null)
@@ -118,7 +112,7 @@ namespace OpenXMLOffice.Global_2007
 						}
 						else
 						{
-							solidFillModel.schemeColorModel = new()
+							solidFillModel.schemeColorModel = new SchemeColorModel()
 							{
 								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 							};
@@ -127,8 +121,8 @@ namespace OpenXMLOffice.Global_2007
 					}
 					SolidFillModel GetDataPointBorder()
 					{
-						SolidFillModel solidFillModel = new();
-						string? hexColor = barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings?
+						SolidFillModel solidFillModel = new SolidFillModel();
+						string hexColor = barChartSetting.barChartSeriesSettings?[seriesIndex]?.barChartDataPointSettings?
 									.Select(item => item?.borderColor)
 									.ToList().ElementAtOrDefault((int)index);
 						if (hexColor != null)
@@ -138,18 +132,18 @@ namespace OpenXMLOffice.Global_2007
 						}
 						else
 						{
-							solidFillModel.schemeColorModel = new()
+							solidFillModel.schemeColorModel = new SchemeColorModel()
 							{
 								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 							};
 						}
 						return solidFillModel;
 					}
-					C.DataPoint dataPoint = new(new C.Index { Val = index }, new C.Bubble3D { Val = false });
+					C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()
 					{
 						solidFill = GetDataPointFill(),
-						outline = new()
+						outline = new OutlineModel()
 						{
 							solidFill = GetDataPointBorder()
 						}
@@ -161,8 +155,8 @@ namespace OpenXMLOffice.Global_2007
 			{
 				series.Append(dataLabels);
 			}
-			series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
-			series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
+			series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula, chartDataGrouping.xAxisCells));
+			series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula, chartDataGrouping.yAxisCells));
 			if (chartDataGrouping.dataLabelCells != null && chartDataGrouping.dataLabelFormula != null)
 			{
 				series.Append(new C.ExtensionList(new C.Extension(
@@ -172,8 +166,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return series;
 		}
-
-		private C.DataLabels? CreateBarDataLabels(BarChartDataLabel barChartDataLabel, int? dataLabelCounter = 0)
+		private C.DataLabels CreateBarDataLabels(BarChartDataLabel barChartDataLabel, int? dataLabelCounter = 0)
 		{
 			if (barChartDataLabel.showValue || barChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || barChartDataLabel.showCategoryName || barChartDataLabel.showLegendKey || barChartDataLabel.showSeriesName)
 			{
@@ -182,24 +175,31 @@ namespace OpenXMLOffice.Global_2007
 				{
 					throw new ArgumentException("'Outside End' Data Label Is only Available with Cluster chart type");
 				}
-				dataLabels.InsertAt(new C.DataLabelPosition()
+				C.DataLabelPositionValues positionValue;
+				switch (barChartDataLabel.dataLabelPosition)
 				{
-					Val = barChartDataLabel.dataLabelPosition switch
-					{
-						BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END => C.DataLabelPositionValues.OutsideEnd,
-						BarChartDataLabel.DataLabelPositionValues.INSIDE_END => C.DataLabelPositionValues.InsideEnd,
-						BarChartDataLabel.DataLabelPositionValues.INSIDE_BASE => C.DataLabelPositionValues.InsideBase,
-						_ => C.DataLabelPositionValues.Center
-					}
-				}, 0);
+					case BarChartDataLabel.DataLabelPositionValues.OUTSIDE_END:
+						positionValue = C.DataLabelPositionValues.OutsideEnd;
+						break;
+					case BarChartDataLabel.DataLabelPositionValues.INSIDE_END:
+						positionValue = C.DataLabelPositionValues.InsideEnd;
+						break;
+					case BarChartDataLabel.DataLabelPositionValues.INSIDE_BASE:
+						positionValue = C.DataLabelPositionValues.InsideBase;
+						break;
+					default:
+						positionValue = C.DataLabelPositionValues.Center;
+						break;
+				}
+				var dataLabelPosition = new C.DataLabelPosition { Val = positionValue };
+				dataLabels.InsertAt(dataLabelPosition, 0);
 				return dataLabels;
 			}
 			return null;
 		}
-
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
-			C.PlotArea plotArea = new();
+			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions?.manualLayout));
 			if (barChartSetting.is3DChart)
 			{
@@ -234,25 +234,52 @@ namespace OpenXMLOffice.Global_2007
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
 		}
-
+		internal C.ShapeValues GetShapeValue(BarShapeType barShapeType)
+		{
+			switch (barShapeType)
+			{
+				case BarShapeType.FULL_PYRAMID:
+					return C.ShapeValues.PyramidToMaximum;
+				case BarShapeType.PARTIAL_PYRAMID:
+					return C.ShapeValues.Pyramid;
+				case BarShapeType.FULL_CONE:
+					return C.ShapeValues.ConeToMax;
+				case BarShapeType.PARTIAL_CONE:
+					return C.ShapeValues.Cone;
+				case BarShapeType.CYLINDER:
+					return C.ShapeValues.Cylinder;
+				default:
+					return C.ShapeValues.Box;
+			}
+		}
 		internal ChartType CreateBarChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			ChartType barChart = new();
+			ChartType barChart = new ChartType();
+			C.BarGroupingValues groupingValue;
+			switch (barChartSetting.barChartType)
+			{
+				case BarChartTypes.STACKED:
+					groupingValue = C.BarGroupingValues.Stacked;
+					break;
+				case BarChartTypes.PERCENT_STACKED:
+					groupingValue = C.BarGroupingValues.PercentStacked;
+					break;
+				case BarChartTypes.CLUSTERED_3D:
+					groupingValue = C.BarGroupingValues.Clustered;
+					break;
+				case BarChartTypes.STACKED_3D:
+					groupingValue = C.BarGroupingValues.Stacked;
+					break;
+				case BarChartTypes.PERCENT_STACKED_3D:
+					groupingValue = C.BarGroupingValues.PercentStacked;
+					break;
+				default:
+					groupingValue = C.BarGroupingValues.Clustered;
+					break;
+			}
 			barChart.Append(new C.BarDirection { Val = C.BarDirectionValues.Bar },
-				new C.BarGrouping
-				{
-					Val = barChartSetting.barChartType switch
-					{
-						BarChartTypes.STACKED => C.BarGroupingValues.Stacked,
-						BarChartTypes.PERCENT_STACKED => C.BarGroupingValues.PercentStacked,
-						BarChartTypes.CLUSTERED_3D => C.BarGroupingValues.Clustered,
-						BarChartTypes.STACKED_3D => C.BarGroupingValues.Stacked,
-						BarChartTypes.PERCENT_STACKED_3D => C.BarGroupingValues.PercentStacked,
-						// Clusted
-						_ => C.BarGroupingValues.Clustered
-					}
-				},
-				new C.VaryColors { Val = false });
+							new C.BarGrouping { Val = groupingValue },
+							new C.VaryColors { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>
 			{
@@ -262,47 +289,22 @@ namespace OpenXMLOffice.Global_2007
 			switch (barChartSetting.barChartType)
 			{
 				case BarChartTypes.CLUSTERED:
-					barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
-					barChart.Append(new C.Overlap { Val = (SByteValue)barChartSetting.barGraphicsSetting.seriesGap });
+					barChart.Append(new C.GapWidth { Val = new UInt16Value((ushort)barChartSetting.barGraphicsSetting.categoryGap) });
+					barChart.Append(new C.Overlap { Val = new SByteValue((sbyte)barChartSetting.barGraphicsSetting.seriesGap) });
 					break;
 				case BarChartTypes.CLUSTERED_3D:
-					barChart.Append(new C.GapWidth { Val = (UInt16Value)barChartSetting.barGraphicsSetting.categoryGap });
-					barChart.Append(new C.Shape()
-					{
-						Val = barChartSetting.barGraphicsSetting.barShapeType switch
-						{
-							BarShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
-							BarShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
-							BarShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
-							BarShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
-							BarShapeType.CYLINDER => C.ShapeValues.Cylinder,
-							_ => C.ShapeValues.Box
-						}
-					});
-					break;
 				case BarChartTypes.STACKED_3D:
 				case BarChartTypes.PERCENT_STACKED_3D:
-					barChart.Append(new C.GapWidth { Val = DefaultGapWidth });
-					barChart.Append(new C.Shape()
-					{
-						Val = barChartSetting.barGraphicsSetting.barShapeType switch
-						{
-							BarShapeType.FULL_PYRAMID => C.ShapeValues.PyramidToMaximum,
-							BarShapeType.PARTIAL_PYRAMID => C.ShapeValues.Pyramid,
-							BarShapeType.FULL_CONE => C.ShapeValues.ConeToMax,
-							BarShapeType.PARTIAL_CONE => C.ShapeValues.Cone,
-							BarShapeType.CYLINDER => C.ShapeValues.Cylinder,
-							_ => C.ShapeValues.Box
-						}
-					});
+					barChart.Append(new C.GapWidth { Val = new UInt16Value((ushort)barChartSetting.barGraphicsSetting.categoryGap) });
+					var shapeValue = GetShapeValue(barChartSetting.barGraphicsSetting.barShapeType);
+					barChart.Append(new C.Shape { Val = shapeValue });
 					break;
 				default:
 					barChart.Append(new C.GapWidth { Val = DefaultGapWidth });
 					barChart.Append(new C.Overlap { Val = DefaultOverlap });
 					break;
-
 			}
-			C.DataLabels? dataLabels = CreateBarDataLabels(barChartSetting.barChartDataLabel);
+			C.DataLabels dataLabels = CreateBarDataLabels(barChartSetting.barChartDataLabel);
 			if (dataLabels != null)
 			{
 				barChart.Append(dataLabels);
@@ -315,7 +317,5 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return barChart;
 		}
-
-
 	}
 }

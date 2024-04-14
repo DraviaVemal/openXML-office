@@ -1,5 +1,4 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -28,7 +27,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		THIN_THICK,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -89,8 +87,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		TRIANGLE
 	}
-
-
 	/// <summary>
 	///
 	/// </summary>
@@ -141,7 +137,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		SYSTEM_DOT,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -160,7 +155,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		LARGE
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -235,7 +229,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		TRANSPARENT
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -314,7 +307,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		WORD_ART_VERTICAL,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -329,7 +321,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		SQUARE,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -348,7 +339,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		OVERFLOW,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -367,7 +357,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		CENTER
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -382,7 +371,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		INSERT,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -395,7 +383,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel? solidFill = null;
+		public SolidFillModel solidFill = null;
 		/// <summary>
 		///
 		/// </summary>
@@ -463,15 +451,12 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public int? luminanceOffset;
 	}
-
 	/// <summary>
 	///
 	/// </summary>
 	public class EffectListModel
 	{
-
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -480,17 +465,16 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string? hexColor = null;
+		public string hexColor = null;
 		/// <summary>
 		///
 		/// </summary>
-		public SchemeColorModel? schemeColorModel = null;
+		public SchemeColorModel schemeColorModel = null;
 		/// <summary>
 		///
 		/// </summary>
 		public int? transparency;
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -499,30 +483,26 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel? solidFill = null;
+		public SolidFillModel solidFill = null;
 		/// <summary>
 		///
 		/// </summary>
-		public OutlineModel outline = new();
+		public OutlineModel outline = new OutlineModel();
 		/// <summary>
 		///
 		/// </summary>
-		public EffectListModel? effectList = null;
+		public EffectListModel effectList = null;
 		/// <summary>
-		/// 
+		///
 		/// </summary>
-		public ShapeProperty3D? shapeProperty3D = null;
-
+		public ShapeProperty3D shapeProperty3D = null;
 	}
-
 	/// <summary>
-	/// 
+	///
 	/// </summary>
-
 	public class ShapeProperty3D
 	{
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -601,7 +581,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		WORDS,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -620,7 +599,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		DOUBLE_STRIKE,
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -629,22 +607,19 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel? solidFill = null;
+		public SolidFillModel solidFill = null;
 		/// <summary>
 		///
 		/// </summary>
-		public string? fontFamily = "(Calibri (Body))";
-
+		public string fontFamily = "(Calibri (Body))";
 		/// <summary>
 		///
 		/// </summary>
 		public int fontSize = 8;
-
 		/// <summary>
 		///
 		/// </summary>
 		public bool? isBold;
-
 		/// <summary>
 		///
 		/// </summary>
@@ -654,69 +629,56 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public UnderLineValues? underline = null;
 	}
-
 	/// <summary>
 	///
 	/// </summary>
 	public class DefaultRunPropertiesModel
 	{
-
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel? solidFill = null;
-
+		public SolidFillModel solidFill = null;
 		/// <summary>
 		///
 		/// </summary>
 		public UnderLineValues? underline = null;
-
 		/// <summary>
 		///
 		/// </summary>
-		public string? latinFont;
-
+		public string latinFont;
 		/// <summary>
 		///
 		/// </summary>
-		public string? eastAsianFont;
-
+		public string eastAsianFont;
 		/// <summary>
 		///
 		/// </summary>
-		public string? complexScriptFont;
-
+		public string complexScriptFont;
 		/// <summary>
 		///
 		/// </summary>
 		public int? fontSize;
-
 		/// <summary>
 		///
 		/// </summary>
 		public bool? isBold;
-
 		/// <summary>
 		///
 		/// </summary>
 		public bool? isItalic;
-
 		/// <summary>
 		///
 		/// </summary>
 		public StrikeValues? strike;
-
 		/// <summary>
 		///
 		/// </summary>
 		public int? kerning;
-
 		/// <summary>
 		///
 		/// </summary>
 		public int? baseline;
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -725,17 +687,16 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingRunPropertiesModel drawingRunProperties = new();
+		public DrawingRunPropertiesModel drawingRunProperties = new DrawingRunPropertiesModel();
 		/// <summary>
 		///
 		/// </summary>
-		public string? textHightlight;
+		public string textHightlight;
 		/// <summary>
 		///
 		/// </summary>
-		public string? text;
+		public string text;
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -744,13 +705,12 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public ParagraphPropertiesModel? paragraphPropertiesModel = null;
+		public ParagraphPropertiesModel paragraphPropertiesModel = null;
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingRunModel? drawingRun = null;
+		public DrawingRunModel drawingRun = null;
 	}
-
 	/// <summary>
 	/// /
 	/// </summary>
@@ -759,13 +719,12 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public DefaultRunPropertiesModel? defaultRunProperties = null;
+		public DefaultRunPropertiesModel defaultRunProperties = null;
 		/// <summary>
 		/// Cell Alignment Option
 		/// </summary>
 		public HorizontalAlignmentValues? horizontalAlignment;
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -816,7 +775,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public bool? anchorCenter = null;
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -825,11 +783,10 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingBodyPropertiesModel? drawingBodyProperties = null;
-
+		public DrawingBodyPropertiesModel drawingBodyProperties = null;
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingParagraphModel? drawingParagraph = null;
+		public DrawingParagraphModel drawingParagraph = null;
 	}
 }

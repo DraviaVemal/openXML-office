@@ -1,10 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using OpenXMLOffice.Global_2007;
-
+using G = OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -12,19 +10,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// </summary>
 	internal class SpreadsheetCore
 	{
-
 		internal readonly Excel excel;
-
 		internal readonly SpreadsheetDocument spreadsheetDocument;
-
 		internal readonly SpreadsheetInfo spreadsheetInfo = new();
-
 		internal readonly SpreadsheetProperties spreadsheetProperties;
-
 		private readonly StylesService stylesService = new();
-
 		private readonly ShareStringService shareStringService = new();
-
 		internal SpreadsheetCore(Excel excel, SpreadsheetProperties? spreadsheetProperties = null)
 		{
 			this.excel = excel;
@@ -33,7 +24,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
 			InitialiseSpreadsheet(this.spreadsheetProperties);
 		}
-
 		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
 		{
 			this.excel = excel;
@@ -57,7 +47,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			ReadDataFromFile();
 		}
-
 		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
 		{
 			this.excel = excel;
@@ -77,7 +66,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			ReadDataFromFile();
 		}
-
 		/// <summary>
 		/// Read Data from exiting file
 		/// </summary>
@@ -86,7 +74,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			LoadShareStringFromFileToCache();
 			LoadStyleFromFileToCache();
 		}
-
 		/// <summary>
 		/// Return the next relation id for the Spreadsheet
 		/// </summary>
@@ -94,7 +81,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + 1);
 		}
-
 		/// <summary>
 		/// Return the Shared String Table for the Spreadsheet
 		/// </summary>
@@ -108,7 +94,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return sharedStringPart.SharedStringTable;
 		}
-
 		/// <summary>
 		/// Return the Sheets for the Spreadsheet
 		/// </summary>
@@ -122,7 +107,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return Sheets;
 		}
-
 		/// <summary>
 		/// Return Woorkbook Part for the Spreadsheet
 		/// </summary>
@@ -134,7 +118,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return spreadsheetDocument.WorkbookPart;
 		}
-
 		/// <summary>
 		/// Load the Shared String to the Cache (aka in memeory database lightdb)
 		/// </summary>
@@ -151,7 +134,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			});
 			GetShareStringService().InsertBulk(Records);
 		}
-
 		/// <summary>
 		/// Load Exisiting Style from the Sheet
 		/// </summary>
@@ -159,7 +141,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			GetStyleService().LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
 		}
-
 		/// <summary>
 		/// Update the cache data into spreadsheet
 		/// </summary>
@@ -173,7 +154,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			GetExcelShareString().Count = (uint)GetExcelShareString().ChildElements.Count;
 			GetExcelShareString().UniqueCount = (uint)GetExcelShareString().ChildElements.Count;
 		}
-
 		/// <summary>
 		/// Load The DB Style Cache to Style Sheet
 		/// </summary>
@@ -181,17 +161,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			GetStyleService().SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
 		}
-
 		internal StylesService GetStyleService()
 		{
 			return stylesService;
 		}
-
 		internal ShareStringService GetShareStringService()
 		{
 			return shareStringService;
 		}
-
 		private void InitialiseStyle()
 		{
 			if (GetWorkbookPart().WorkbookStylesPart == null)
@@ -204,7 +181,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				GetWorkbookPart().WorkbookStylesPart!.Stylesheet ??= new();
 			}
 		}
-
 		/// <summary>
 		/// Common Spreadsheet perparation process used by all constructor
 		/// </summary>
@@ -213,13 +189,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (spreadsheetDocument.CoreFilePropertiesPart == null)
 			{
 				spreadsheetDocument.AddCoreFilePropertiesPart();
-				XMLHelper.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			}
+			G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			if (spreadsheetDocument.CustomFilePropertiesPart == null)
 			{
 				spreadsheetDocument.AddCustomFilePropertiesPart();
-				XMLHelper.AddOrUpdateOpenXMLProperties(spreadsheetDocument.CustomFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			}
+			G.CustomProperties.AddOrUpdateOpenXMLCustomProperties(spreadsheetDocument.CustomFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			GetWorkbookPart().Workbook ??= new Workbook();
 			Sheets? sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
 			if (sheets == null)
@@ -231,12 +207,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
 			}
-			Theme theme = new(SpreadsheetProperties?.theme);
+			G.Theme theme = new(SpreadsheetProperties?.theme);
 			GetWorkbookPart().ThemePart!.Theme = theme.GetTheme();
 			InitialiseStyle();
 			GetWorkbookPart().Workbook.Save();
 		}
-
-
 	}
 }

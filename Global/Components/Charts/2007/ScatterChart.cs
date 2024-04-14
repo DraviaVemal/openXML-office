@@ -1,9 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -11,28 +9,23 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public class ScatterChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
-
-
 		/// <summary>
 		/// Scatter Chart Setting
 		/// </summary>
 		protected ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting;
-
 		internal ScatterChart(ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) : base(scatterChartSetting)
 		{
 			this.scatterChartSetting = scatterChartSetting;
 		}
-
 		/// <summary>
 		/// Create Scatter Chart with provided settings
 		/// </summary>
-		public ScatterChart(ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(scatterChartSetting)
+		public ScatterChart(ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting, ChartData[][] dataCols, DataRange dataRange = null) : base(scatterChartSetting)
 		{
 			this.scatterChartSetting = scatterChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
-
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
@@ -42,11 +35,16 @@ namespace OpenXMLOffice.Global_2007
 					throw new ArgumentOutOfRangeException("Required 3D Data Size is not met.");
 				}
 			}
-			C.PlotArea plotArea = new();
+			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions?.manualLayout));
-			plotArea.Append(scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE ?
-				CreateChart<C.BubbleChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)) :
-				CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
+			{
+				plotArea.Append(CreateChart<C.BubbleChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
+			else
+			{
+				plotArea.Append(CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
+			}
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = CategoryAxisId,
@@ -71,22 +69,37 @@ namespace OpenXMLOffice.Global_2007
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
 		}
-
 		internal ChartType CreateChart<ChartType>(List<ChartDataGrouping> chartDataGroupings) where ChartType : OpenXmlCompositeElement, new()
 		{
-			ChartType chart = new();
+			ChartType chart = new ChartType();
+			C.ScatterStyleValues scatterStyleValue;
+
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_SMOOTH)
+			{
+				scatterStyleValue = C.ScatterStyleValues.Smooth;
+			}
+			else if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_SMOOTH_MARKER)
+			{
+				scatterStyleValue = C.ScatterStyleValues.SmoothMarker;
+			}
+			else if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_STRIGHT)
+			{
+				scatterStyleValue = C.ScatterStyleValues.Line;
+			}
+			else if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_STRIGHT_MARKER)
+			{
+				scatterStyleValue = C.ScatterStyleValues.LineMarker;
+			}
+			else
+			{
+				scatterStyleValue = C.ScatterStyleValues.LineMarker;
+			}
+
 			chart.Append(new C.ScatterStyle
 			{
-				Val = scatterChartSetting.scatterChartType switch
-				{
-					ScatterChartTypes.SCATTER_SMOOTH => C.ScatterStyleValues.Smooth,
-					ScatterChartTypes.SCATTER_SMOOTH_MARKER => C.ScatterStyleValues.SmoothMarker,
-					ScatterChartTypes.SCATTER_STRIGHT => C.ScatterStyleValues.Line,
-					ScatterChartTypes.SCATTER_STRIGHT_MARKER => C.ScatterStyleValues.LineMarker,
-					// Clusted
-					_ => C.ScatterStyleValues.LineMarker,
-				}
+				Val = scatterStyleValue
 			});
+
 			chart.Append(new C.VaryColors() { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>
@@ -94,7 +107,7 @@ namespace OpenXMLOffice.Global_2007
 				chart.Append(CreateScatterChartSeries(seriesIndex, Series));
 				seriesIndex++;
 			});
-			C.DataLabels? dataLabels = CreateScatterDataLabels(scatterChartSetting.scatterChartDataLabel);
+			C.DataLabels dataLabels = CreateScatterDataLabels(scatterChartSetting.scatterChartDataLabel);
 			if (dataLabels != null)
 			{
 				chart.Append(dataLabels);
@@ -108,15 +121,14 @@ namespace OpenXMLOffice.Global_2007
 			chart.Append(new C.AxisId { Val = ValueAxisId });
 			return chart;
 		}
-
 		private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			C.DataLabels? dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
+			C.DataLabels dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
 				CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings?[seriesIndex]?.scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
 			SolidFillModel GetSeriesBorderColor()
 			{
-				SolidFillModel solidFillModel = new();
-				string? hexColor = scatterChartSetting.scatterChartSeriesSettings?
+				SolidFillModel solidFillModel = new SolidFillModel();
+				string hexColor = scatterChartSetting.scatterChartSeriesSettings?
 							.Select(item => item?.borderColor)
 							.ToList().ElementAtOrDefault(seriesIndex);
 				if (hexColor != null)
@@ -126,31 +138,31 @@ namespace OpenXMLOffice.Global_2007
 				}
 				else
 				{
-					solidFillModel.schemeColorModel = new()
+					solidFillModel.schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 					};
 				}
 				return solidFillModel;
 			}
-			MarkerModel markerModel = new();
+			MarkerModel markerModel = new MarkerModel();
 			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{
 				markerModel.markerShapeValues = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? MarkerModel.MarkerShapeValues.AUTO : MarkerModel.MarkerShapeValues.CIRCLE;
-				markerModel.shapeProperties = new()
+				markerModel.shapeProperties = new ShapePropertiesModel()
 				{
-					solidFill = new()
+					solidFill = new SolidFillModel()
 					{
-						schemeColorModel = new()
+						schemeColorModel = new SchemeColorModel()
 						{
 							themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 						}
 					},
-					outline = new()
+					outline = new OutlineModel()
 					{
-						solidFill = new()
+						solidFill = new SolidFillModel()
 						{
-							schemeColorModel = new()
+							schemeColorModel = new SchemeColorModel()
 							{
 								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 							}
@@ -158,26 +170,25 @@ namespace OpenXMLOffice.Global_2007
 					}
 				};
 			}
-			C.ScatterChartSeries series = new(
+			C.ScatterChartSeries series = new C.ScatterChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
-				CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
-			ShapePropertiesModel shapePropertiesModel = new()
+				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
+			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
-				outline = new()
+				outline = new OutlineModel()
 				{
 					solidFill = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(),
 				}
 			};
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
-				shapePropertiesModel.solidFill = new()
+				shapePropertiesModel.solidFill = new SolidFillModel()
 				{
-					schemeColorModel = new()
+					schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
 						tint = 75000,
-
 					}
 				};
 				series.Append(new C.InvertIfNegative() { Val = false });
@@ -191,11 +202,11 @@ namespace OpenXMLOffice.Global_2007
 			{
 				series.Append(dataLabels);
 			}
-			series.Append(CreateXValueAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
-			series.Append(CreateYValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
+			series.Append(CreateXValueAxisData(chartDataGrouping.xAxisFormula, chartDataGrouping.xAxisCells));
+			series.Append(CreateYValueAxisData(chartDataGrouping.yAxisFormula, chartDataGrouping.yAxisCells));
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
-				series.Append(CreateBubbleSizeAxisData(chartDataGrouping.zAxisFormula!, chartDataGrouping.zAxisCells!));
+				series.Append(CreateBubbleSizeAxisData(chartDataGrouping.zAxisFormula, chartDataGrouping.zAxisCells));
 				series.Append(new C.Bubble3D() { Val = false });
 			}
 			else
@@ -211,30 +222,40 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return series;
 		}
-
-		private C.DataLabels? CreateScatterDataLabels(ScatterChartDataLabel scatterChartDataLabel, int? dataLabelCounter = 0)
+		private C.DataLabels CreateScatterDataLabels(ScatterChartDataLabel scatterChartDataLabel, int? dataLabelCounter = 0)
 		{
 			if (scatterChartDataLabel.showValue || scatterChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || scatterChartDataLabel.showCategoryName || scatterChartDataLabel.showLegendKey || scatterChartDataLabel.showSeriesName || scatterChartDataLabel.showBubbleSize)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(scatterChartDataLabel, dataLabelCounter);
 				dataLabels.Append(new C.ShowBubbleSize { Val = scatterChartDataLabel.showBubbleSize });
+				C.DataLabelPositionValues dataLabelPositionValue;
+				if (scatterChartDataLabel.dataLabelPosition == ScatterChartDataLabel.DataLabelPositionValues.LEFT)
+				{
+					dataLabelPositionValue = C.DataLabelPositionValues.Left;
+				}
+				else if (scatterChartDataLabel.dataLabelPosition == ScatterChartDataLabel.DataLabelPositionValues.RIGHT)
+				{
+					dataLabelPositionValue = C.DataLabelPositionValues.Right;
+				}
+				else if (scatterChartDataLabel.dataLabelPosition == ScatterChartDataLabel.DataLabelPositionValues.ABOVE)
+				{
+					dataLabelPositionValue = C.DataLabelPositionValues.Top;
+				}
+				else if (scatterChartDataLabel.dataLabelPosition == ScatterChartDataLabel.DataLabelPositionValues.BELOW)
+				{
+					dataLabelPositionValue = C.DataLabelPositionValues.Bottom;
+				}
+				else
+				{
+					dataLabelPositionValue = C.DataLabelPositionValues.Center;
+				}
 				dataLabels.InsertAt(new C.DataLabelPosition()
 				{
-					Val = scatterChartDataLabel.dataLabelPosition switch
-					{
-						ScatterChartDataLabel.DataLabelPositionValues.LEFT => C.DataLabelPositionValues.Left,
-						ScatterChartDataLabel.DataLabelPositionValues.RIGHT => C.DataLabelPositionValues.Right,
-						ScatterChartDataLabel.DataLabelPositionValues.ABOVE => C.DataLabelPositionValues.Top,
-						ScatterChartDataLabel.DataLabelPositionValues.BELOW => C.DataLabelPositionValues.Bottom,
-						//Center
-						_ => C.DataLabelPositionValues.Center,
-					}
+					Val = dataLabelPositionValue
 				}, 0);
 				return dataLabels;
 			}
 			return null;
 		}
-
-
 	}
 }

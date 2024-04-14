@@ -1,8 +1,6 @@
 # EditorConfig is awesome: https://EditorConfig.org
-
 # Top-most EditorConfig file
 root = true
-
 # C# files
 [*.cs]
 indent_style = tab
@@ -11,7 +9,6 @@ end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
-
 # C# solution files
 [*.sln]
 indent_style = tab
@@ -20,7 +17,6 @@ end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
-
 # C# project files
 [*.{csproj,vcxproj,fsproj}]
 indent_style = tab

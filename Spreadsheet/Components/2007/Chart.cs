@@ -1,11 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
-
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Global_2013;
 using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -25,7 +22,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartDatas, dataRange, areaChartSetting);
 		}
-
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// </summary>
@@ -37,7 +33,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartDatas, dataRange, barChartSetting);
 		}
-
 		/// <summary>
 		/// Create Column Chart with provided settings
 		/// </summary>
@@ -49,7 +44,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartDatas, dataRange, columnChartSetting);
 		}
-
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// </summary>
@@ -61,7 +55,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartDatas, dataRange, lineChartSetting);
 		}
-
 		/// <summary>
 		/// Create Pie Chart with provided settings
 		/// </summary>
@@ -73,7 +66,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartDatas, dataRange, pieChartSetting);
 		}
-
 		/// <summary>
 		/// Create Scatter Chart with provided settings
 		/// </summary>
@@ -96,12 +88,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartDatas, dataRange, comboChartSetting);
 		}
-
 		internal string GetNextChartRelationId()
 		{
 			return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
 		}
-
 		private void ConnectDrawingToChart(Worksheet worksheet, string chartId)
 		{
 			// Add anchor to drawing for chart grapics
@@ -131,49 +121,41 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			});
 			worksheet.GetDrawing().AppendChild(twoCellAnchor);
 		}
-
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
 		{
 			AreaChart<ApplicationSpecificSetting> areaChart = new(areaChartSetting, chartDatas, dataRange);
 			SaveChanges(areaChart);
 		}
-
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting)
 		{
 			BarChart<ApplicationSpecificSetting> barChart = new(barChartSetting, chartDatas, dataRange);
 			SaveChanges(barChart);
 		}
-
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
 		{
 			ColumnChart<ApplicationSpecificSetting> columnChart = new(columnChartSetting, chartDatas, dataRange);
 			SaveChanges(columnChart);
 		}
-
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
 		{
 			LineChart<ApplicationSpecificSetting> lineChart = new(lineChartSetting, chartDatas, dataRange);
 			SaveChanges(lineChart);
 		}
-
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
 		{
 			PieChart<ApplicationSpecificSetting> pieChart = new(pieChartSetting, chartDatas, dataRange);
 			SaveChanges(pieChart);
 		}
-
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
 		{
 			ScatterChart<ApplicationSpecificSetting> scatterChart = new(scatterChartSetting, chartDatas, dataRange);
 			SaveChanges(scatterChart);
 		}
-
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting)
 		{
 			ComboChart<ApplicationSpecificSetting> comboChart = new(comboChartSetting, chartDatas, dataRange);
 			SaveChanges(comboChart);
 		}
-
 		private void SaveChanges(ChartBase<ApplicationSpecificSetting> chart)
 		{
 			GetChartPart().ChartSpace = chart.GetChartSpace();
@@ -184,27 +166,22 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			GetChartColorStylePart().ColorStyle.Save();
 			GetChartPart().ChartSpace.Save();
 		}
-
 		private ChartColorStylePart GetChartColorStylePart()
 		{
 			return openXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
 		}
-
 		private ChartPart GetChartPart()
 		{
 			return openXMLChartPart;
 		}
-
 		private ChartStylePart GetChartStylePart()
 		{
 			return openXMLChartPart.ChartStyleParts.FirstOrDefault()!;
 		}
-
 		private void InitialiseChartParts()
 		{
 			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
 			GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
 		}
 	}
-
 }

@@ -1,10 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -13,11 +11,8 @@ namespace OpenXMLOffice.Presentation_2007
 	public class Picture : CommonProperties
 	{
 		private readonly Slide currentSlide;
-
 		private readonly P.Picture openXMLPicture;
-
 		private readonly PictureSetting pictureSetting;
-
 		/// <summary>
 		/// Create Picture Object with provided settings
 		/// </summary>
@@ -37,7 +32,6 @@ namespace OpenXMLOffice.Presentation_2007
 			}, EmbedId);
 			ImagePart.FeedData(stream);
 		}
-
 		/// <summary>
 		/// Create Picture Object with provided settings
 		/// </summary>
@@ -57,8 +51,6 @@ namespace OpenXMLOffice.Presentation_2007
 			}, EmbedId);
 			ImagePart.FeedData(new FileStream(filePath, FileMode.Open, FileAccess.Read));
 		}
-
-
 		/// <summary>
 		/// X,Y
 		/// </summary>
@@ -66,7 +58,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return (pictureSetting.x, pictureSetting.y);
 		}
-
 		/// <summary>
 		/// Width,Height
 		/// </summary>
@@ -74,7 +65,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return (pictureSetting.width, pictureSetting.height);
 		}
-
 		/// <summary>
 		/// Update Picture Position
 		/// </summary>
@@ -91,7 +81,6 @@ namespace OpenXMLOffice.Presentation_2007
 				};
 			}
 		}
-
 		/// <summary>
 		/// Update Picture Size
 		/// </summary>
@@ -108,12 +97,10 @@ namespace OpenXMLOffice.Presentation_2007
 				};
 			}
 		}
-
 		internal P.Picture GetPicture()
 		{
 			return openXMLPicture;
 		}
-
 		private void CreatePicture(string EmbedId)
 		{
 			GetPicture().NonVisualPictureProperties = new P.NonVisualPictureProperties(

@@ -1,7 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using OpenXMLOffice.Global_2007;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -13,20 +11,17 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Spreadsheet settings
 		/// </summary>
 		public SpreadsheetSettings settings = new();
-
 		/// <summary>
 		/// Spreadsheet theme settings
 		/// </summary>
 		public ThemePallet theme = new();
 	}
-
 	/// <summary>
 	/// Represents the settings of a spreadsheet.
 	/// </summary>
 	public class SpreadsheetSettings
 	{
 	}
-
 	internal class SpreadsheetInfo
 	{
 		public bool isEditable = true;

@@ -1,10 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using System.Data;
 using A = DocumentFormat.OpenXml.Drawing;
 using G = OpenXMLOffice.Global_2007;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -14,7 +12,6 @@ namespace OpenXMLOffice.Presentation_2007
 	{
 		private readonly P.GraphicFrame graphicFrame = new();
 		private readonly TableSetting tableSetting;
-
 		/// <summary>
 		/// Create Table with provided settings
 		/// </summary>
@@ -23,7 +20,6 @@ namespace OpenXMLOffice.Presentation_2007
 			tableSetting = TableSetting;
 			CreateTableGraphicFrame(TableRows);
 		}
-
 		/// <summary>
 		/// </summary>
 		/// <returns>
@@ -33,7 +29,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return (tableSetting.x, tableSetting.y);
 		}
-
 		/// <summary>
 		/// </summary>
 		/// <returns>
@@ -43,7 +38,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return (tableSetting.width, tableSetting.height);
 		}
-
 		/// <summary>
 		/// Get Table Graphic Frame
 		/// </summary>
@@ -53,7 +47,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return graphicFrame;
 		}
-
 		/// <summary>
 		/// Update Table Position
 		/// </summary>
@@ -70,7 +63,6 @@ namespace OpenXMLOffice.Presentation_2007
 				};
 			}
 		}
-
 		/// <summary>
 		/// Update Table Size
 		/// </summary>
@@ -88,7 +80,6 @@ namespace OpenXMLOffice.Presentation_2007
 				};
 			}
 		}
-
 		private long CalculateColumnWidth(TableSetting.WidthOptionValues widthType, float InputWidth)
 		{
 			return widthType switch
@@ -99,7 +90,6 @@ namespace OpenXMLOffice.Presentation_2007
 				_ => Convert.ToInt32(InputWidth)
 			};
 		}
-
 		private A.Table CreateTable(TableRow[] TableRows)
 		{
 			if (TableRows.Length < 1 || TableRows[0].tableCells.Count < 1)
@@ -126,7 +116,6 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			return Table;
 		}
-
 		private static A.TableCell CreateTableCell(TableCell cell, TableRow row)
 		{
 			A.Paragraph paragraph = new();
@@ -286,7 +275,6 @@ namespace OpenXMLOffice.Presentation_2007
 			tableCellXML.Append(tableCellProperties);
 			return tableCellXML;
 		}
-
 		private void CreateTableGraphicFrame(TableRow[] TableRows)
 		{
 			A.GraphicData GraphicData = new(CreateTable(TableRows))
@@ -323,7 +311,6 @@ namespace OpenXMLOffice.Presentation_2007
 				}
 			};
 		}
-
 		private A.TableGrid CreateTableGrid(int ColumnCount)
 		{
 			A.TableGrid TableGrid = new();
@@ -343,7 +330,6 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			return TableGrid;
 		}
-
 		private A.TableRow CreateTableRow(TableRow Row)
 		{
 			A.TableRow TableRow = new()
@@ -356,7 +342,6 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			return TableRow;
 		}
-
 		private void ReCalculateColumnWidth()
 		{
 			A.Table? Table = graphicFrame!.Graphic!.GraphicData!.GetFirstChild<A.Table>();
@@ -374,7 +359,5 @@ namespace OpenXMLOffice.Presentation_2007
 				}
 			}
 		}
-
-
 	}
 }

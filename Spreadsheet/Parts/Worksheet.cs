@@ -1,11 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -16,7 +14,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		private readonly Excel excel;
 		private readonly X.Worksheet openXMLworksheet;
 		private readonly X.Sheet sheet;
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Worksheet"/> class.
 		/// </summary>
@@ -26,8 +23,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			openXMLworksheet = worksheet;
 			sheet = _sheet;
 		}
-
-
 		/// <summary>
 		/// Returns the sheet ID of the current worksheet.
 		/// </summary>
@@ -42,27 +37,22 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return openXMLworksheet;
 		}
-
 		internal X.SheetData GetWorkSheetData()
 		{
 			return openXMLworksheet.Elements<X.SheetData>().First();
 		}
-
 		internal WorksheetPart GetWorksheetPart()
 		{
 			return openXMLworksheet.WorksheetPart!;
 		}
-
 		internal string GetNextSheetPartRelationId()
 		{
 			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + 1);
 		}
-
 		internal string GetNextDrawingPartRelationId()
 		{
 			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + 1);
 		}
-
 		/// <summary>
 		/// Returns the sheet name of the current worksheet.
 		/// </summary>
@@ -70,7 +60,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return sheet.Name!;
 		}
-
 		/// <summary>
 		/// Sets the properties for a column based on a starting cell ID in a worksheet.
 		/// </summary>
@@ -79,7 +68,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			(int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
 			SetColumn(colIndex, columnProperties);
 		}
-
 		/// <summary>
 		/// Sets the properties for a column at the specified column index in a worksheet.
 		/// </summary>
@@ -122,7 +110,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				columns.Append(newColumn);
 			}
 		}
-
 		/// <summary>
 		/// Sets the data and properties for a specific row and its cells in a worksheet.
 		/// </summary>
@@ -130,7 +117,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), dataCells, rowProperties);
 		}
-
 		/// <summary>
 		/// Sets the data and properties for a row based on a starting cell ID and its data cells in
 		/// a worksheet.
@@ -191,7 +177,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			openXMLworksheet.Save();
 		}
-
 		/// <summary>
 		/// Gets the CellValues enumeration corresponding to the specified cell data type.
 		/// </summary>
@@ -204,7 +189,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				_ => X.CellValues.String,
 			};
 		}
-
 		private static DataType GetCellDataType(EnumValue<X.CellValues>? cellValueType)
 		{
 			if (cellValueType == null)
@@ -218,7 +202,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				_ => DataType.STRING,
 			};
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -226,7 +209,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			AddPicture(new FileStream(filePath, FileMode.Open, FileAccess.Read), pictureSetting);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -244,17 +226,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			throw new ArgumentException("At least one cell range must be covered by the picture.");
 		}
-
 		internal DrawingsPart GetDrawingsPart()
 		{
 			return GetDrawingsPart(this);
 		}
-
 		internal XDR.WorksheetDrawing GetDrawing()
 		{
 			return GetDrawing(this);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -264,7 +243,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			dataRange.sheetName ??= GetSheetName();
 			return new(this, chartDatas, dataRange, areaChartSetting);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -274,7 +252,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			dataRange.sheetName ??= GetSheetName();
 			return new(this, chartDatas, dataRange, barChartSetting);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -284,7 +261,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			dataRange.sheetName ??= GetSheetName();
 			return new(this, chartDatas, dataRange, columnChartSetting);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -294,7 +270,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			dataRange.sheetName ??= GetSheetName();
 			return new(this, chartDatas, dataRange, lineChartSetting);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -304,7 +279,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			dataRange.sheetName ??= GetSheetName();
 			return new(this, chartDatas, dataRange, pieChartSetting);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -314,7 +288,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			dataRange.sheetName ??= GetSheetName();
 			return new(this, chartDatas, dataRange, scatterChartSetting);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -324,7 +297,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			dataRange.sheetName ??= GetSheetName();
 			return new(this, chartDatas, dataRange, comboChartSetting);
 		}
-
 		private ChartData[][] PrepareCacheData(DataRange dataRange)
 		{
 			Worksheet? worksheet = excel.GetWorksheet(dataRange.sheetName ?? GetSheetName()) ?? throw new ArgumentException("Data Range Sheet not founds");

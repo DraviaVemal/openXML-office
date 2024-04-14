@@ -1,8 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -11,7 +9,6 @@ namespace OpenXMLOffice.Presentation_2007
 	public class ViewProperties
 	{
 		private readonly P.ViewProperties openXMLViewProperties = new();
-
 		/// <summary>
 		/// Create New View Properties
 		/// </summary>
@@ -29,7 +26,6 @@ namespace OpenXMLOffice.Presentation_2007
 				Cy = 72008
 			});
 		}
-
 		/// <summary>
 		/// Return OpenXML View Properties
 		/// </summary>
@@ -39,7 +35,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return openXMLViewProperties;
 		}
-
 		private static P.NotesTextViewProperties CreateNotesTextViewProperties()
 		{
 			P.NotesTextViewProperties notesTextViewProperties = new(
@@ -63,7 +58,6 @@ namespace OpenXMLOffice.Presentation_2007
 			);
 			return notesTextViewProperties;
 		}
-
 		private static P.NormalViewProperties CreateNormalViewProperties()
 		{
 			P.NormalViewProperties normalViewProperties = new()
@@ -74,7 +68,6 @@ namespace OpenXMLOffice.Presentation_2007
 			};
 			return normalViewProperties;
 		}
-
 		private static P.SlideViewProperties CreateSlideViewProperties()
 		{
 			var slideViewProperties = new P.SlideViewProperties(
@@ -105,7 +98,5 @@ namespace OpenXMLOffice.Presentation_2007
 			);
 			return slideViewProperties;
 		}
-
-
 	}
 }

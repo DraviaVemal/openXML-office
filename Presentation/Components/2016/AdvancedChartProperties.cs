@@ -1,5 +1,4 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using System.Runtime;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
@@ -7,7 +6,6 @@ using OpenXMLOffice.Presentation_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 using CX = DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-
 namespace OpenXMLOffice.Presentation_2016
 {
 	/// <summary>
@@ -16,9 +14,7 @@ namespace OpenXMLOffice.Presentation_2016
 	public class AdvancedChartProperties<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting
 	{
 		private AlternateContent? alternateContent;
-
 		private readonly TextBox errorMessage;
-
 		/// <summary>
 		///
 		/// </summary>
@@ -33,7 +29,6 @@ namespace OpenXMLOffice.Presentation_2016
 				height = chartSetting.applicationSpecificSetting.height,
 			});
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -70,7 +65,6 @@ namespace OpenXMLOffice.Presentation_2016
 			};
 			CreateAlternateContent();
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -79,7 +73,6 @@ namespace OpenXMLOffice.Presentation_2016
 			base.UpdateSize(width, height);
 			errorMessage.UpdateSize(width, height);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -88,7 +81,6 @@ namespace OpenXMLOffice.Presentation_2016
 			base.UpdatePosition(x, y);
 			errorMessage.UpdatePosition(x, y);
 		}
-
 		private void CreateAlternateContent()
 		{
 			alternateContent = new(
@@ -102,12 +94,10 @@ namespace OpenXMLOffice.Presentation_2016
 			);
 			alternateContent.AddNamespaceDeclaration("cx1", "http://schemas.microsoft.com/office/drawing/2015/9/8/chartex");
 		}
-
 		internal AlternateContent GetAlternateContent()
 		{
 			return alternateContent!;
 		}
-
 		new internal void GetChartGraphicFrame()
 		{
 			throw new AmbiguousImplementationException("Use GetAlternateContent() instead.");

@@ -1,7 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using OpenXMLOffice.Global_2007;
-
 namespace OpenXMLOffice.Global_2016
 {
 	/// <summary>
@@ -9,6 +7,5 @@ namespace OpenXMLOffice.Global_2016
 	/// </summary>
 	public class WaterfallChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
-
 	}
 }

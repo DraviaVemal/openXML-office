@@ -1,7 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using A = DocumentFormat.OpenXml.Drawing;
-
 namespace OpenXMLOffice.Global_2007
 {
     /// <summary>
@@ -14,21 +12,17 @@ namespace OpenXMLOffice.Global_2007
             new int?[]{50000, 103000,105000,null, 73000},
             new int?[]{100000,109000,105000,null, 81000}
         };
-
         private readonly int?[][] gsLst2 = new int?[][]{
             new int?[]{0, 103000,102000,null, 94000},
             new int?[]{50000,110000, 100000, 100000,null},
            new int?[]{100000,120000,99000, 78000,null}
            };
-
         private readonly int?[][] gsLst3 = new int?[][]{
             new int?[]{0,150000,102000, 98000,93000},
             new int?[]{50000, 130000 ,103000,90000,98000},
             new int?[]{100000, 120000 ,null,63000,null}
         };
-
         private readonly A.Theme openXMLTheme = new();
-
         /// <summary>
         /// Creates a new theme with the given pallet.
         /// </summary>
@@ -38,8 +32,6 @@ namespace OpenXMLOffice.Global_2007
         {
             CreateTheme(ThemePallet);
         }
-
-
         /// <summary>
         /// Returns the OpenXML Theme Object.
         /// </summary>
@@ -49,7 +41,6 @@ namespace OpenXMLOffice.Global_2007
         {
             return openXMLTheme;
         }
-
         private static A.Outline[] GenerateOutlines()
         {
             static A.Outline AppendNodes(int width)
@@ -71,7 +62,6 @@ namespace OpenXMLOffice.Global_2007
                 AppendNodes(12700),
                 AppendNodes(19050)};
         }
-
         private void CreateTheme(ThemePallet? ThemePallet)
         {
             openXMLTheme.Name = "Office Theme";
@@ -99,7 +89,6 @@ namespace OpenXMLOffice.Global_2007
                 }
             };
         }
-
         private A.BackgroundFillStyleList GenerateBackgroundFillStyleList()
         {
             A.BackgroundFillStyleList backgroundFillStyleList = new(new A.SolidFill()
@@ -120,7 +109,6 @@ namespace OpenXMLOffice.Global_2007
             });
             return backgroundFillStyleList;
         }
-
         private static A.FontScheme GenerateFontScheme()
         {
             return new A.FontScheme()
@@ -232,7 +220,6 @@ namespace OpenXMLOffice.Global_2007
                 )
             };
         }
-
         private A.FormatScheme GenerateFormatScheme()
         {
             return new A.FormatScheme()
@@ -282,7 +269,6 @@ namespace OpenXMLOffice.Global_2007
                 return gradientFill;
             }
         }
-
         private static A.GradientStop GetGradientStop(int? position, int? saturationModulation, int? luminanceModulation, int? shade, int? tint)
         {
             A.SchemeColor schemeColor = new() { Val = A.SchemeColorValues.PhColor };

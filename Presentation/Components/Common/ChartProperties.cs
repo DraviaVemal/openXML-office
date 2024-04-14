@@ -1,11 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using OpenXMLOffice.Spreadsheet_2007;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -33,7 +31,6 @@ namespace OpenXMLOffice.Presentation_2007
 			this.chartSetting = chartSetting;
 			currentSlide = slide;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -50,7 +47,6 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			excel.SaveAs(stream);
 		}
-
 		/// <summary>
 		/// </summary>
 		/// <returns>
@@ -60,7 +56,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return (chartSetting.applicationSpecificSetting.x, chartSetting.applicationSpecificSetting.y);
 		}
-
 		/// <summary>
 		/// </summary>
 		/// <returns>
@@ -70,7 +65,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return (chartSetting.applicationSpecificSetting.width, chartSetting.applicationSpecificSetting.height);
 		}
-
 		/// <summary>
 		/// Save Chart Part
 		/// </summary>
@@ -78,7 +72,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			currentSlide.GetSlidePart().Slide.Save();
 		}
-
 		/// <summary>
 		/// Update Chart Position
 		/// </summary>
@@ -99,7 +92,6 @@ namespace OpenXMLOffice.Presentation_2007
 				};
 			}
 		}
-
 		/// <summary>
 		/// Update Chart Size
 		/// </summary>
@@ -120,7 +112,6 @@ namespace OpenXMLOffice.Presentation_2007
 				};
 			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -141,7 +132,6 @@ namespace OpenXMLOffice.Presentation_2007
 					}
 				}).ToArray()).ToArray();
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -175,12 +165,9 @@ namespace OpenXMLOffice.Presentation_2007
 				   { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" })
 			};
 		}
-
 		internal P.GraphicFrame GetChartGraphicFrame()
 		{
 			return graphicFrame!;
 		}
-
 	}
-
 }

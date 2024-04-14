@@ -7,10 +7,8 @@ docs/
 .mono/
 .idea
 testResult/
-
 # Ignore NuGet package directories
 packages/
-
 # Ignore user-specific files and settings
 *.suo
 *.user
@@ -19,14 +17,11 @@ packages/
 *.xlsx
 *.pptx
 *.docx
-
 # Ignore build and publish web output
 wwwroot/
-
 # Ignore build output and logs
 bin/
 obj/
-
 # Ignore Visual Studio temporary files
 .vscode/
 *.suo
@@ -68,6 +63,5 @@ desktop.ini
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
-
 # skip dir
 !**/TestFiles/**

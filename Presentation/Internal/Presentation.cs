@@ -1,22 +1,16 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml.Packaging;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	internal class Presentation : PresentationCore
 	{
-
 		internal Presentation(PresentationProperties? presentationProperties = null)
 		: base(presentationProperties) { }
-
 		internal Presentation(string filePath, bool isEditable, PresentationProperties? presentationProperties = null, bool autosave = true)
 		: base(filePath, isEditable, presentationProperties) { }
-
 		internal Presentation(Stream stream, bool isEditable, PresentationProperties? presentationProperties = null)
 		: base(stream, isEditable, presentationProperties) { }
-
 		internal Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
 		{
 			SlidePart slidePart = GetPresentationPart().AddNewPart<SlidePart>(GetNextPresentationRelationId());
@@ -28,7 +22,6 @@ namespace OpenXMLOffice.Presentation_2007
 			slideIdList.Append(slideId);
 			return slide;
 		}
-
 		internal Slide GetSlideByIndex(int SlideIndex)
 		{
 			if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
@@ -42,12 +35,10 @@ namespace OpenXMLOffice.Presentation_2007
 				throw new IndexOutOfRangeException("The specified slide index is out of range.");
 			}
 		}
-
 		internal int GetSlideCount()
 		{
 			return GetSlideIdList().Count();
 		}
-
 		internal void MoveSlideByIndex(int SourceIndex, int TargetIndex)
 		{
 			if (SourceIndex >= 0 && GetSlideIdList().Count() > SourceIndex &&
@@ -64,7 +55,6 @@ namespace OpenXMLOffice.Presentation_2007
 				throw new IndexOutOfRangeException("The specified slide index is out of range.");
 			}
 		}
-
 		internal void RemoveSlideByIndex(int SlideIndex)
 		{
 			if (SlideIndex >= 0 && GetSlideIdList().Count() > SlideIndex)
@@ -80,7 +70,6 @@ namespace OpenXMLOffice.Presentation_2007
 				throw new IndexOutOfRangeException("The specified slide index is out of range.");
 			}
 		}
-
 		internal void SaveAs(string filePath)
 		{
 			presentationDocument.Clone(filePath).Dispose();

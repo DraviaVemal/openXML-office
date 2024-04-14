@@ -1,7 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using OpenXMLOffice.Global_2007;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -13,18 +11,15 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		///
 		/// </summary>
 		internal readonly ChartSetting<ApplicationSpecificSetting> chartSetting;
-
 		/// <summary>
 		///
 		/// </summary>
 		internal readonly Worksheet currentWorksheet;
-
 		internal ChartProperties(Worksheet worksheet, ChartSetting<ApplicationSpecificSetting> chartSetting)
 		{
 			this.chartSetting = chartSetting;
 			currentWorksheet = worksheet;
 		}
-
 		/// <summary>
 		/// Save Chart Part
 		/// </summary>
@@ -32,7 +27,5 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			currentWorksheet.GetWorksheetPart().Worksheet.Save();
 		}
-
 	}
-
 }

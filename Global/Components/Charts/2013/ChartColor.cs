@@ -1,8 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using A = DocumentFormat.OpenXml.Drawing;
 using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-
 namespace OpenXMLOffice.Global_2013
 {
 	/// <summary>
@@ -10,7 +8,6 @@ namespace OpenXMLOffice.Global_2013
 	/// </summary>
 	public class ChartColor
 	{
-
 		/// <summary>
 		/// Creates the color styles for charts.
 		/// </summary>
@@ -19,7 +16,7 @@ namespace OpenXMLOffice.Global_2013
 		/// </returns>
 		public static CS.ColorStyle CreateColorStyles()
 		{
-			CS.ColorStyle colorStyle = new() { Method = "cycle", Id = 10 };
+			CS.ColorStyle colorStyle = new CS.ColorStyle() { Method = "cycle", Id = 10 };
 			colorStyle.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 			for (int i = 1; i < 7; i++)
 			{
@@ -75,7 +72,5 @@ namespace OpenXMLOffice.Global_2013
 			}));
 			return colorStyle;
 		}
-
-
 	}
 }

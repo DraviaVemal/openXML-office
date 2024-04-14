@@ -1,5 +1,4 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Spreadsheet_2007;
 using OpenXMLOffice.Global_2007;
@@ -7,7 +6,6 @@ using OpenXMLOffice.Global_2016;
 using P16 = OpenXMLOffice.Presentation_2016;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -16,7 +14,6 @@ namespace OpenXMLOffice.Presentation_2007
 	public class Slide
 	{
 		private readonly P.Slide openXMLSlide = new();
-
 		internal Slide(P.Slide? OpenXMLSlide = null, SlideModel? slideModel = null)
 		{
 			if (OpenXMLSlide != null)
@@ -35,7 +32,6 @@ namespace OpenXMLOffice.Presentation_2007
 				openXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			}
 		}
-
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
@@ -45,7 +41,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a Bar chart to the slide.
 		/// </summary>
@@ -55,7 +50,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a Column chart to the slide.
 		/// </summary>
@@ -65,7 +59,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a Line chart to the slide.
 		/// </summary>
@@ -75,7 +68,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a Pie chart to the slide.
 		/// </summary>
@@ -85,7 +77,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a Scatter chart to the slide.
 		/// </summary>
@@ -95,7 +86,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
@@ -105,7 +95,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
@@ -115,7 +104,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Chart.GetAlternateContent());
 			return Chart;
 		}
-
 		/// <summary>
 		/// Adds a picture to the slide.
 		/// </summary>
@@ -125,7 +113,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Picture.GetPicture());
 			return Picture;
 		}
-
 		/// <summary>
 		/// Adds a picture to the slide.
 		/// </summary>
@@ -135,7 +122,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Picture.GetPicture());
 			return Picture;
 		}
-
 		/// <summary>
 		/// Adds a table to the slide.
 		/// </summary>
@@ -146,7 +132,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(GraphicFrame);
 			return Table;
 		}
-
 		/// <summary>
 		/// Adds a text box to the slide.
 		/// </summary>
@@ -157,7 +142,6 @@ namespace OpenXMLOffice.Presentation_2007
 			GetSlide().CommonSlideData!.ShapeTree!.Append(Shape);
 			return TextBox;
 		}
-
 		/// <summary>
 		/// Finds a shape by its text.
 		/// </summary>
@@ -172,27 +156,21 @@ namespace OpenXMLOffice.Presentation_2007
 				return new Shape(shape);
 			});
 		}
-
 		internal string GetNextSlideRelationId()
 		{
 			return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
 		}
-
 		internal P.Slide GetSlide()
 		{
 			return openXMLSlide;
 		}
-
 		internal SlidePart GetSlidePart()
 		{
 			return openXMLSlide.SlidePart!;
 		}
-
 		private P.CommonSlideData GetCommonSlideData()
 		{
 			return openXMLSlide.CommonSlideData!;
 		}
-
-
 	}
 }

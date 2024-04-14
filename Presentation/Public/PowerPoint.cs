@@ -1,5 +1,4 @@
 ﻿// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -8,7 +7,6 @@ namespace OpenXMLOffice.Presentation_2007
 	public class PowerPoint
 	{
 		private readonly Presentation presentation;
-
 		/// <summary>
 		/// Create New file in the system
 		/// </summary>
@@ -16,7 +14,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			presentation = new(powerPointProperties);
 		}
-
 		/// <summary>
 		/// Open and work with existing file
 		/// </summary>
@@ -30,7 +27,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			presentation = new(filePath, isEditable, powerPointProperties);
 		}
-
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point
 		/// </summary>
@@ -38,8 +34,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			presentation = new(Stream, IsEditable, powerPointProperties);
 		}
-
-
 		/// <summary>
 		/// Add new slide to the presentation
 		/// </summary>
@@ -51,7 +45,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return presentation.AddSlide(slideLayoutType);
 		}
-
 		/// <summary>
 		/// Get Slide by index
 		/// </summary>
@@ -63,7 +56,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return presentation.GetSlideByIndex(SlideIndex);
 		}
-
 		/// <summary>
 		/// Get Slide count
 		/// </summary>
@@ -73,7 +65,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return presentation.GetSlideCount();
 		}
-
 		/// <summary>
 		/// Move slide by index
 		/// </summary>
@@ -85,7 +76,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			presentation.MoveSlideByIndex(SourceIndex, TargetIndex);
 		}
-
 		/// <summary>
 		/// Remove slide by index
 		/// </summary>
@@ -95,7 +85,6 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			presentation.RemoveSlideByIndex(SlideIndex);
 		}
-
 		/// <summary>
 		/// Save the file as new file
 		/// </summary>
@@ -105,7 +94,5 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			presentation.SaveAs(filePath);
 		}
-
-
 	}
 }

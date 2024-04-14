@@ -1,39 +1,35 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-using OpenXMLOffice.Global_2007;
-namespace OpenXMLOffice.Presentation_2007
+namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
 	///
 	/// </summary>
-	public class ShapeTextModel
+	public class CorePropertiesModel
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public string? text;
+		public string title = null;
 		/// <summary>
 		///
 		/// </summary>
-		public string? fontColor;
+		public string subject = null;
 		/// <summary>
 		///
 		/// </summary>
-		public string? fontFamily = "(Calibri (Body))";
+		public string description = null;
 		/// <summary>
 		///
 		/// </summary>
-		public int fontSize = 8;
+		public string tags = null;
 		/// <summary>
 		///
 		/// </summary>
-		public bool? isBold;
+		public string category = null;
 		/// <summary>
 		///
 		/// </summary>
-		public bool? isItalic;
-		/// <summary>
-		///
-		/// </summary>
-		public UnderLineValues? underline = null;
+		public string creator = "OpenXML-Office";
 	}
+
 }

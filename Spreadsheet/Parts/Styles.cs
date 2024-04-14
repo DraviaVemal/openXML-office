@@ -1,11 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Presentation;
 using LiteDB;
 using OpenXMLOffice.Global_2007;
 using X = DocumentFormat.OpenXml.Spreadsheet;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -19,7 +17,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		private readonly ILiteCollection<FillStyle> fillStyleCollection;
 		private readonly ILiteCollection<FontStyle> fontStyleCollection;
 		private readonly ILiteCollection<NumberFormats> numberFormatCollection;
-
 		internal StylesService()
 		{
 			numberFormatCollection = liteDatabase.GetCollection<NumberFormats>("NumberFormats");
@@ -28,7 +25,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			borderStyleCollection = liteDatabase.GetCollection<BorderStyle>("BorderStyle");
 			cellXfsCollection = liteDatabase.GetCollection<CellXfs>("CellXfs");
 		}
-
 		/// <summary>
 		/// Return Style details for the provided style ID
 		/// </summary>
@@ -60,7 +56,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			};
 			return cellStyleSetting;
 		}
-
 		/// <summary>
 		/// Get the Cell Style Id based on user specified CellStyleSetting
 		/// </summary>
@@ -110,7 +105,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return (uint)Result.AsInt64;
 			}
 		}
-
 		/// <summary>
 		/// Load the style from the Exisiting Sheet
 		/// </summary>
@@ -124,7 +118,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			SetCellFormats(Stylesheet.CellFormats);
 			SetNumberFormats(Stylesheet.NumberingFormats);
 		}
-
 		/// <summary>
 		/// Save the style properties to the xlsx file
 		/// </summary>
@@ -145,7 +138,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
 			Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
 		}
-
 		private uint GetBorderId(CellStyleSetting CellStyleSetting)
 		{
 			BorderStyle? BorderStyle = borderStyleCollection.FindOne(item =>
@@ -170,7 +162,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return (uint)Result.AsInt64;
 			}
 		}
-
 		private X.Borders GetBorders()
 		{
 			return new(borderStyleCollection.FindAll().ToList().Select(item =>
@@ -226,7 +217,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}))
 			{ Count = (uint)borderStyleCollection.Count() };
 		}
-
 		private X.CellFormats GetCellFormats()
 		{
 			return new(
@@ -277,7 +267,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 						}))
 			{ Count = (uint)cellXfsCollection.Count() };
 		}
-
 		private uint GetFillId(CellStyleSetting CellStyleSetting)
 		{
 			FillStyle? FillStyle = fillStyleCollection.FindOne(item =>
@@ -298,7 +287,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return (uint)Result.AsInt64;
 			}
 		}
-
 		private X.Fills GetFills()
 		{
 			return new(fillStyleCollection.FindAll().ToList().Select(item =>
@@ -326,7 +314,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}))
 			{ Count = (uint)fillStyleCollection.Count() };
 		}
-
 		private uint GetFontId(CellStyleSetting CellStyleSetting)
 		{
 			FontStyle? FontStyle = fontStyleCollection.FindOne(item =>
@@ -362,7 +349,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return (uint)Result.AsInt64;
 			}
 		}
-
 		private X.Fonts GetFonts()
 		{
 			return new(fontStyleCollection.FindAll().ToList().Select(item =>
@@ -409,7 +395,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}))
 			{ Count = (uint)fontStyleCollection.Count() };
 		}
-
 		private uint GetNumberFormat(CellStyleSetting CellStyleSetting)
 		{
 			NumberFormats? NumberFormats = numberFormatCollection.FindOne(item =>
@@ -433,7 +418,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return (uint)Result.AsInt64;
 			}
 		}
-
 		private X.NumberingFormats GetNumberFormats()
 		{
 			return new(numberFormatCollection.FindAll().ToList().Select(item =>
@@ -447,13 +431,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}))
 			{ Count = (uint)numberFormatCollection.Count() };
 		}
-
 		private void SetNumberFormats(X.NumberingFormats? numberingFormats)
 		{
 			numberingFormats?.Descendants<X.NumberingFormat>().ToList()
 			.ForEach(numberingFormat =>
 			{
-
 				NumberFormats numFormat = new()
 				{
 					Id = numberingFormat.NumberFormatId!
@@ -465,7 +447,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				numberFormatCollection.Insert(numFormat);
 			});
 		}
-
 		private void SetCellFormats(X.CellFormats? cellFormats)
 		{
 			cellFormats?.Descendants<X.CellFormat>().ToList()
@@ -500,16 +481,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				}
 			});
 		}
-
 		private void SetBorders(X.Borders? borders)
 		{
 			borders?.Descendants<X.Border>().ToList()
 			.ForEach(border =>
 			{
-
 			});
 		}
-
 		private void SetFills(X.Fills? fills)
 		{
 			fills?.Descendants<X.Fill>().ToList()
@@ -534,7 +512,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				}
 			});
 		}
-
 		private void SetFonts(X.Fonts? fonts)
 		{
 			fonts?.Descendants<X.Font>().ToList()

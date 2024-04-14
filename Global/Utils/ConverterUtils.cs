@@ -1,7 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using System.Text;
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -9,17 +7,15 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public static class ConverterUtils
 	{
-
-
 		/// <summary>
 		/// This function converts an Excel-style cell reference (e.g., "A1") into row and column
 		/// indices (non zero-based) to identify the corresponding cell within a worksheet
 		/// </summary>
 		/// <returns>row,col</returns>
-		public static (int, int) ConvertFromExcelCellReference(string cellReference)
+		public static Tuple<int, int> ConvertFromExcelCellReference(string cellReference)
 		{
 			if (string.IsNullOrEmpty(cellReference)) { throw new ArgumentException("Cell reference cannot be empty."); }
-			StringBuilder columnName = new();
+			StringBuilder columnName = new StringBuilder();
 			int rowIndex = 0;
 			int columnIndex = 0;
 			foreach (char c in cellReference)
@@ -45,9 +41,8 @@ namespace OpenXMLOffice.Global_2007
 			{
 				throw new ArgumentException("Invalid row or column index in cell reference.");
 			}
-			return (rowIndex, columnIndex);
+			return Tuple.Create(rowIndex, columnIndex);
 		}
-
 		/// <summary>
 		/// Converts an integer representing an Excel column index to its corresponding column name.
 		/// </summary>
@@ -64,7 +59,6 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return columnName;
 		}
-
 		/// <summary>
 		/// This function converts a pair of row and column indices (non zero-based) into an
 		/// Excel-style cell reference (e.g., "A1" for row 1, column 1)
@@ -74,7 +68,6 @@ namespace OpenXMLOffice.Global_2007
 			if (row < 1 || column < 1) { throw new ArgumentException("Row and column indices must be positive integers."); }
 			return ConvertIntToColumnName(column) + row;
 		}
-
 		/// <summary>
 		/// Convert Emu to Pixels
 		/// </summary>
@@ -82,7 +75,6 @@ namespace OpenXMLOffice.Global_2007
 		{
 			return (int)Math.Round((double)emuValue / 914400 * GlobalConstants.defaultDPI);
 		}
-
 		/// <summary>
 		/// Convert Pixels to Emu
 		/// </summary>
@@ -90,7 +82,6 @@ namespace OpenXMLOffice.Global_2007
 		{
 			return (long)Math.Round((double)pixels / GlobalConstants.defaultDPI * 914400);
 		}
-
 		/// <summary>
 		/// Convert Point to Emu
 		/// </summary>
@@ -98,7 +89,6 @@ namespace OpenXMLOffice.Global_2007
 		{
 			return (long)Math.Round(point * GlobalConstants.defaultPointToEmu);
 		}
-
 		/// <summary>
 		/// Convert Emu to Point
 		/// </summary>
@@ -106,15 +96,12 @@ namespace OpenXMLOffice.Global_2007
 		{
 			return (int)Math.Round((double)emu / GlobalConstants.defaultPointToEmu);
 		}
-
 		/// <summary>
 		/// TODO: Make Meaningful name
 		/// </summary>
 		public static int FontSizeToFontSize(float fontSize)
 		{
 			return (int)fontSize * 100;
-
-
 		}
 	}
 }

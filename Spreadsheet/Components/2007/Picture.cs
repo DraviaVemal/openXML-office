@@ -1,8 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using OpenXMLOffice.Global_2007;
 using DocumentFormat.OpenXml.Packaging;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -12,7 +10,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	{
 		private readonly ExcelPictureSetting excelPictureSetting;
 		private readonly Worksheet currentWorksheet;
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Picture"/> class.
 		/// </summary>
@@ -22,7 +19,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			currentWorksheet = worksheet;
 			AddImageToDrawing(stream);
 		}
-
 		private void AddImageToDrawing(Stream stream)
 		{
 			string embedId = currentWorksheet.GetNextSheetPartRelationId();
@@ -61,5 +57,4 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			});
 		}
 	}
-
 }

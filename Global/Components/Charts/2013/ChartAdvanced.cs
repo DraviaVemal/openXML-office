@@ -1,11 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using C15 = DocumentFormat.OpenXml.Office2013.Drawing.Chart;
-
 namespace OpenXMLOffice.Global_2013
 {
 	/// <summary>
@@ -17,13 +15,12 @@ namespace OpenXMLOffice.Global_2013
 		///
 		/// </summary>
 		public ChartAdvance(ChartSetting<ApplicationSpecificSetting> chartSetting) : base(chartSetting) { }
-
 		/// <summary>
 		/// Create Data Labels for the chart
 		/// </summary>
 		internal C.DataLabels CreateDataLabels(ChartDataLabel chartDataLabel, int? dataLabelCount = 0)
 		{
-			C.Extension extension = new(
+			C.Extension extension = new C.Extension(
 					new C15.ShowDataLabelsRange() { Val = chartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn },
 					new C15.ShowLeaderLines() { Val = false }
 				)
@@ -32,26 +29,26 @@ namespace OpenXMLOffice.Global_2013
 			{
 				extension.InsertAt(new C15.DataLabelFieldTable(), 0);
 			}
-			C.ExtensionList extensionList = new(extension);
-			C.DataLabels dataLabels = new();
+			C.ExtensionList extensionList = new C.ExtensionList(extension);
+			C.DataLabels dataLabels = new C.DataLabels();
 			if (chartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn)
 			{
 				for (int i = 0; i < dataLabelCount; i++)
 				{
-					A.Paragraph Paragraph = new(CreateField("CELLRANGE", "[CELLRANGE]"));
+					A.Paragraph Paragraph = new A.Paragraph(CreateField("CELLRANGE", "[CELLRANGE]"));
 					if (chartDataLabel.showSeriesName)
 					{
-						Paragraph.Append(CreateDrawingRun(new() { text = chartDataLabel.separator }));
+						Paragraph.Append(CreateDrawingRun(new DrawingRunModel() { text = chartDataLabel.separator }));
 						Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
 					}
 					if (chartDataLabel.showCategoryName)
 					{
-						Paragraph.Append(CreateDrawingRun(new() { text = chartDataLabel.separator }));
+						Paragraph.Append(CreateDrawingRun(new DrawingRunModel() { text = chartDataLabel.separator }));
 						Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
 					}
 					if (chartDataLabel.showValue)
 					{
-						Paragraph.Append(CreateDrawingRun(new() { text = chartDataLabel.separator }));
+						Paragraph.Append(CreateDrawingRun(new DrawingRunModel() { text = chartDataLabel.separator }));
 						Paragraph.Append(CreateField("VALUE", "[VALUE]"));
 					}
 					Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });
@@ -85,9 +82,9 @@ namespace OpenXMLOffice.Global_2013
 				new C.ShowLeaderLines() { Val = false },
 				(OpenXmlElement)extensionList.Clone());
 			dataLabels.Append(CreateChartShapeProperties());
-			SolidFillModel solidFillModel = new()
+			SolidFillModel solidFillModel = new SolidFillModel()
 			{
-				schemeColorModel = new()
+				schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.TEXT_1,
 					luminanceModulation = 65000,
@@ -99,9 +96,9 @@ namespace OpenXMLOffice.Global_2013
 				solidFillModel.hexColor = chartDataLabel.fontColor;
 				solidFillModel.schemeColorModel = null;
 			}
-			dataLabels.Append(CreateChartTextProperties(new()
+			dataLabels.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 			{
-				drawingBodyProperties = new()
+				drawingBodyProperties = new DrawingBodyPropertiesModel()
 				{
 					rotation = 0,
 					anchorCenter = true,
@@ -115,11 +112,11 @@ namespace OpenXMLOffice.Global_2013
 					verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
 					wrap = TextWrappingValues.SQUARE,
 				},
-				drawingParagraph = new()
+				drawingParagraph = new DrawingParagraphModel()
 				{
-					paragraphPropertiesModel = new()
+					paragraphPropertiesModel = new ParagraphPropertiesModel()
 					{
-						defaultRunProperties = new()
+						defaultRunProperties = new DefaultRunPropertiesModel()
 						{
 							solidFill = solidFillModel,
 							complexScriptFont = "+mn-cs",
@@ -138,19 +135,18 @@ namespace OpenXMLOffice.Global_2013
 			}));
 			return dataLabels;
 		}
-
 		/// <summary>
 		/// Create Data Labels Range for the chart.Used in value from Column
 		/// </summary>
 		internal static C15.DataLabelsRange CreateDataLabelsRange(string formula, ChartData[] cells)
 		{
-			return new(new C15.Formula(formula), AddDataLabelCacheValue(cells));
+			return new C15.DataLabelsRange(new C15.Formula(formula), AddDataLabelCacheValue(cells));
 		}
 		private static C15.DataLabelsRangeChache AddDataLabelCacheValue(ChartData[] cells)
 		{
 			try
 			{
-				C15.DataLabelsRangeChache dataLabelsRangeChache = new()
+				C15.DataLabelsRangeChache dataLabelsRangeChache = new C15.DataLabelsRangeChache()
 				{
 					PointCount = new C.PointCount()
 					{
@@ -160,7 +156,7 @@ namespace OpenXMLOffice.Global_2013
 				int count = 0;
 				foreach (ChartData Cell in cells)
 				{
-					C.StringPoint stringPoint = new()
+					C.StringPoint stringPoint = new C.StringPoint()
 					{
 						Index = (UInt32Value)(uint)count,
 					};

@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <ProjectReference Include="..\Global\Global.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
     <PackageId>OpenXMLOffice.Document</PackageId>
     <RootNamespace>OpenXMLOffice.Document_2007</RootNamespace>
@@ -22,5 +20,4 @@
       document processing functionality.</PackageDescription>
     <PackageTags>OpenXML;Document;Word;Office</PackageTags>
   </PropertyGroup>
-
 </Project>

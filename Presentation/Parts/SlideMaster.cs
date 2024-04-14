@@ -1,21 +1,17 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml.Packaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	internal class SlideMaster
 	{
 		internal P.SlideMaster openXMLSlideMaster = new();
 		internal P.SlideLayoutIdList? slideLayoutIdList;
-
 		private readonly CommonSlideData commonSlideData = new(PresentationConstants.CommonSlideDataType.SLIDE_MASTER, PresentationConstants.SlideLayoutType.BLANK); public SlideMaster()
 		{
 			CreateSlideMaster();
 		}
-
 		public void AddSlideLayoutIdToList(string relationshipId)
 		{
 			slideLayoutIdList!.AppendChild(new P.SlideLayoutId()
@@ -24,17 +20,14 @@ namespace OpenXMLOffice.Presentation_2007
 				RelationshipId = relationshipId
 			});
 		}
-
 		public P.SlideMaster GetSlideMaster()
 		{
 			return openXMLSlideMaster;
 		}
-
 		public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
 		{
 			return openXMLSlideMaster.SlideMasterPart!.CreateRelationshipToPart(openXmlPart, RelationshipId);
 		}
-
 		private void CreateSlideMaster()
 		{
 			slideLayoutIdList = new();
@@ -60,11 +53,9 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLSlideMaster.AppendChild(slideLayoutIdList);
 			openXMLSlideMaster.AppendChild(CreateTextStyles());
 		}
-
 		private static P.TextStyles CreateTextStyles()
 		{
 			P.TextStyles textStyles = new();
-
 			P.TitleStyle titleStyle = new();
 			A.Level1ParagraphProperties titleLevel1ParagraphProperties = new()
 			{

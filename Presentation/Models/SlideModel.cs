@@ -1,5 +1,4 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -7,6 +6,5 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class SlideModel
 	{
-
 	}
 }

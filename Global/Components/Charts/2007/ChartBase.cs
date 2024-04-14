@@ -1,9 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -16,21 +14,16 @@ namespace OpenXMLOffice.Global_2007
 		internal uint ValueAxisId = 1358349936;
 		internal const int SecondaryCategoryAxisId = 1615085760;
 		internal const int SecondaryValueAxisId = 1474633616;
-
 		/// <summary>
 		/// Chart Data Groupings
 		/// </summary>
-		internal List<ChartDataGrouping> chartDataGroupings = new();
-
+		internal List<ChartDataGrouping> chartDataGroupings = new List<ChartDataGrouping>();
 		/// <summary>
 		/// Core chart settings common for every possible chart
 		/// </summary>
 		internal ChartSetting<ApplicationSpecificSetting> chartSetting;
-
 		private readonly C.Chart chart;
-
 		private readonly C.ChartSpace openXMLChartSpace;
-
 		/// <summary>
 		/// Chartbase class constructor restricted only for inheritance use
 		/// </summary>
@@ -45,7 +38,6 @@ namespace OpenXMLOffice.Global_2007
 			chart = CreateChart();
 			GetChartSpace().Append(chart);
 		}
-
 		/// <summary>
 		/// Get OpenXML ChartSpace
 		/// </summary>
@@ -53,7 +45,6 @@ namespace OpenXMLOffice.Global_2007
 		{
 			return openXMLChartSpace;
 		}
-
 		/// <summary>
 		/// Create Bubble Size Axis for the chart
 		/// </summary>
@@ -66,9 +57,8 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
 				throw new ArgumentException($"Bubble Size Data Should Be numaric.");
 			}
-			return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
+			return new C.BubbleSize(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
-
 		/// <summary>
 		/// Create Category Axis for the chart
 		/// </summary>
@@ -78,23 +68,31 @@ namespace OpenXMLOffice.Global_2007
 		/// </returns>
 		internal C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting categoryAxisSetting)
 		{
-			C.CategoryAxis CategoryAxis = new(
+			C.AxisPositionValues axisPositionValue;
+			switch (categoryAxisSetting.axisPosition)
+			{
+				case AxisPosition.LEFT:
+					axisPositionValue = C.AxisPositionValues.Left;
+					break;
+				case AxisPosition.RIGHT:
+					axisPositionValue = C.AxisPositionValues.Right;
+					break;
+				case AxisPosition.TOP:
+					axisPositionValue = C.AxisPositionValues.Top;
+					break;
+				default:
+					axisPositionValue = C.AxisPositionValues.Bottom;
+					break;
+			}
+			C.CategoryAxis CategoryAxis = new C.CategoryAxis(
 				new C.AxisId { Val = categoryAxisSetting.id },
 				new C.Scaling(new C.Orientation { Val = categoryAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
 				new C.Delete { Val = !categoryAxisSetting.isVisible },
-				new C.AxisPosition
-				{
-					Val = categoryAxisSetting.axisPosition switch
-					{
-						AxisPosition.LEFT => C.AxisPositionValues.Left,
-						AxisPosition.RIGHT => C.AxisPositionValues.Right,
-						AxisPosition.TOP => C.AxisPositionValues.Top,
-						_ => C.AxisPositionValues.Bottom
-					}
-				},
+				new C.AxisPosition { Val = axisPositionValue },
 				new C.MajorTickMark { Val = C.TickMarkValues.None },
 				new C.MinorTickMark { Val = C.TickMarkValues.None },
-				new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
+				new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo }
+			);
 			if (categoryAxisSetting.isVisible)
 			{
 				if (chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled)
@@ -106,9 +104,9 @@ namespace OpenXMLOffice.Global_2007
 					CategoryAxis.Append(CreateMinorGridLine());
 				}
 				CategoryAxis.Append(CreateChartShapeProperties());
-				SolidFillModel solidFillModel = new()
+				SolidFillModel solidFillModel = new SolidFillModel()
 				{
-					schemeColorModel = new()
+					schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.TEXT_1,
 						luminanceModulation = 65000,
@@ -120,14 +118,14 @@ namespace OpenXMLOffice.Global_2007
 					solidFillModel.hexColor = categoryAxisSetting.fontColor;
 					solidFillModel.schemeColorModel = null;
 				}
-				CategoryAxis.Append(CreateChartTextProperties(new()
+				CategoryAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 				{
-					drawingBodyProperties = new(),
-					drawingParagraph = new()
+					drawingBodyProperties = new DrawingBodyPropertiesModel(),
+					drawingParagraph = new DrawingParagraphModel()
 					{
-						paragraphPropertiesModel = new()
+						paragraphPropertiesModel = new ParagraphPropertiesModel()
 						{
-							defaultRunProperties = new()
+							defaultRunProperties = new DefaultRunPropertiesModel()
 							{
 								solidFill = solidFillModel,
 								fontSize = ConverterUtils.FontSizeToFontSize(categoryAxisSetting.fontSize),
@@ -150,15 +148,14 @@ namespace OpenXMLOffice.Global_2007
 				new C.NoMultiLevelLabels { Val = false });
 			return CategoryAxis;
 		}
-
 		/// <summary>
 		/// Create Chart Shape Properties for the chart
 		/// </summary>
-		internal static C.Layout CreateLayout(LayoutModel? layoutModel = null)
+		internal static C.Layout CreateLayout(LayoutModel layoutModel = null)
 		{
 			if (layoutModel == null)
 			{
-				return new();
+				return new C.Layout();
 			}
 			double x = layoutModel.x;
 			double y = layoutModel.y;
@@ -168,13 +165,11 @@ namespace OpenXMLOffice.Global_2007
 			{
 				throw new ArgumentException("Layout value is not within acceptable range. X and Width values should be between 0 and 1, and their sum should be between 0 and 1.");
 			}
-
 			if (y < 0 || y > 1 || height < 0 || height > 1 || y + height < 0 || y + height > 1)
 			{
 				throw new ArgumentException("Layout value is not within acceptable range. Y and Height values should be between 0 and 1, and their sum should be between 0 and 1.");
 			}
-
-			return new(
+			return new C.Layout(
 				new C.ManualLayout(
 					new C.LayoutTarget { Val = C.LayoutTargetValues.Inner },
 					new C.LeftMode { Val = C.LayoutModeValues.Edge },
@@ -185,8 +180,6 @@ namespace OpenXMLOffice.Global_2007
 					new C.Height { Val = height }
 				));
 		}
-
-
 		/// <summary>
 		/// Create Category Axis Data for the chart
 		/// </summary>
@@ -200,38 +193,37 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType == DataType.NUMBER))
 			{
-				return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
+				return new C.CategoryAxisData(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 			}
 			else
 			{
-				return new(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
+				return new C.CategoryAxisData(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
 			}
 		}
-
 		/// <summary>
 		/// Create Data Series for the chart
 		/// </summary>
-		internal List<ChartDataGrouping> CreateDataSeries(ChartDataSetting chartDataSetting, ChartData[][] dataCols, DataRange? dataRange)
+		internal List<ChartDataGrouping> CreateDataSeries(ChartDataSetting chartDataSetting, ChartData[][] dataCols, DataRange dataRange)
 		{
-			List<uint> seriesColumns = new();
-			for (uint col = chartDataSetting.chartDataColumnStart + 1; col <= (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length - 1 : chartDataSetting.chartDataColumnEnd); col++)
+			List<uint> seriesColumns = new List<uint>();
+			for (uint col = chartDataSetting.chartDataColumnStart + 1; col <= (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length - 1 : (int)chartDataSetting.chartDataColumnEnd); col++)
 			{
 				seriesColumns.Add(col);
 			}
-			if ((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : chartDataSetting.chartDataRowEnd) - chartDataSetting.chartDataRowStart < 1 || (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length : chartDataSetting.chartDataColumnEnd) - chartDataSetting.chartDataColumnStart < 1)
+			if ((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - chartDataSetting.chartDataRowStart < 1 || (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length : (int)chartDataSetting.chartDataColumnEnd) - chartDataSetting.chartDataColumnStart < 1)
 			{
 				throw new ArgumentException("Data Series Invalid Range");
 			}
 			for (int i = 0; i < seriesColumns.Count; i++)
 			{
 				uint column = seriesColumns[i];
-				List<ChartData> xAxisCells = ((ChartData[]?)dataCols[chartDataSetting.chartDataColumnStart].Clone()!).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-				List<ChartData> yAxisCells = ((ChartData[]?)dataCols[column].Clone()!).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-				ChartDataGrouping chartDataGrouping = new()
+				List<ChartData> xAxisCells = ((ChartData[])dataCols[chartDataSetting.chartDataColumnStart].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
+				List<ChartData> yAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
+				ChartDataGrouping chartDataGrouping = new ChartDataGrouping()
 				{
 					id = i,
 					seriesHeaderFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 1}",
-					seriesHeaderCells = ((ChartData[]?)dataCols[column].Clone()!)[chartDataSetting.chartDataRowStart],
+					seriesHeaderCells = ((ChartData[])dataCols[column].Clone())[chartDataSetting.chartDataRowStart],
 					xAxisFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1)}${chartDataSetting.chartDataRowStart + xAxisCells.Count + 1}",
 					xAxisCells = xAxisCells.ToArray(),
 					yAxisFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + yAxisCells.Count + 1}",
@@ -241,13 +233,13 @@ namespace OpenXMLOffice.Global_2007
 				{
 					i++;
 					column = seriesColumns[i];
-					List<ChartData> zAxisCells = ((ChartData[]?)dataCols[column].Clone()!).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
+					List<ChartData> zAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 					chartDataGrouping.zAxisFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)column + 1)}${chartDataSetting.chartDataRowStart + zAxisCells.Count + 1}";
 					chartDataGrouping.zAxisCells = zAxisCells.ToArray();
 				}
 				if (chartDataSetting.valueFromColumn.TryGetValue(column, out uint DataValueColumn))
 				{
-					List<ChartData> dataLabelCells = ((ChartData[]?)dataCols[DataValueColumn].Clone()!).Skip((int)chartDataSetting.chartDataRowStart).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
+					List<ChartData> dataLabelCells = ((ChartData[])dataCols[DataValueColumn].Clone()).Skip((int)chartDataSetting.chartDataRowStart).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 					chartDataGrouping.dataLabelFormula = $"'{dataRange?.sheetName ?? "Sheet1"}'!${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + 2}:${ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1)}${chartDataSetting.chartDataRowStart + dataLabelCells.Count}";
 					chartDataGrouping.dataLabelCells = dataLabelCells.ToArray();
 				}
@@ -255,34 +247,39 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return chartDataGroupings;
 		}
-
 		/// <summary>
 		/// Create Series Text for the chart
 		/// </summary>
 		internal static C.SeriesText CreateSeriesText(string formula, ChartData[] cells)
 		{
-			return new(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
+			return new C.SeriesText(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
 		}
-
 		/// <summary>
 		/// Create Value Axis for the chart
 		/// </summary>
 		internal C.ValueAxis CreateValueAxis(ValueAxisSetting valueAxisSetting)
 		{
-			C.ValueAxis valueAxis = new(
+			C.AxisPositionValues axisPositionValue;
+			switch (valueAxisSetting.axisPosition)
+			{
+				case AxisPosition.LEFT:
+					axisPositionValue = C.AxisPositionValues.Left;
+					break;
+				case AxisPosition.RIGHT:
+					axisPositionValue = C.AxisPositionValues.Right;
+					break;
+				case AxisPosition.TOP:
+					axisPositionValue = C.AxisPositionValues.Top;
+					break;
+				default:
+					axisPositionValue = C.AxisPositionValues.Bottom;
+					break;
+			}
+			C.ValueAxis valueAxis = new C.ValueAxis(
 				new C.AxisId { Val = valueAxisSetting.id },
 				new C.Scaling(new C.Orientation { Val = valueAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
 				new C.Delete { Val = !valueAxisSetting.isVisible },
-				new C.AxisPosition
-				{
-					Val = valueAxisSetting.axisPosition switch
-					{
-						AxisPosition.LEFT => C.AxisPositionValues.Left,
-						AxisPosition.RIGHT => C.AxisPositionValues.Right,
-						AxisPosition.TOP => C.AxisPositionValues.Top,
-						_ => C.AxisPositionValues.Bottom
-					}
-				});
+				new C.AxisPosition { Val = axisPositionValue });
 			if (chartSetting.chartGridLinesOptions.isMajorValueLinesEnabled)
 			{
 				valueAxis.Append(CreateMajorGridLine());
@@ -297,9 +294,9 @@ namespace OpenXMLOffice.Global_2007
 				new C.MinorTickMark { Val = valueAxisSetting.minorTickMark },
 				new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
 			valueAxis.Append(CreateChartShapeProperties());
-			SolidFillModel solidFillModel = new()
+			SolidFillModel solidFillModel = new SolidFillModel()
 			{
-				schemeColorModel = new()
+				schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.TEXT_1,
 					luminanceModulation = 65000,
@@ -311,14 +308,14 @@ namespace OpenXMLOffice.Global_2007
 				solidFillModel.hexColor = valueAxisSetting.fontColor;
 				solidFillModel.schemeColorModel = null;
 			}
-			valueAxis.Append(CreateChartTextProperties(new()
+			valueAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 			{
-				drawingBodyProperties = new(),
-				drawingParagraph = new()
+				drawingBodyProperties = new DrawingBodyPropertiesModel(),
+				drawingParagraph = new DrawingParagraphModel()
 				{
-					paragraphPropertiesModel = new()
+					paragraphPropertiesModel = new ParagraphPropertiesModel()
 					{
-						defaultRunProperties = new()
+						defaultRunProperties = new DefaultRunPropertiesModel()
 						{
 							solidFill = solidFillModel,
 							fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
@@ -337,7 +334,6 @@ namespace OpenXMLOffice.Global_2007
 				new C.CrossBetween { Val = C.CrossBetweenValues.Between });
 			return valueAxis;
 		}
-
 		/// <summary>
 		/// Create Value Axis Data for the chart
 		/// </summary>
@@ -348,12 +344,10 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
 				Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
 				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
-
 				throw new ArgumentException($"Value Axis Data Should Be numaric.");
 			}
-			return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
+			return new C.Values(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
-
 		/// <summary>
 		/// Create X Axis Data for the chart
 		/// </summary>
@@ -364,12 +358,10 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine($"Object Details Value : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.value} is not numaric");
 				Console.WriteLine($"Object Details Number Format : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.numberFormat}");
 				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
-
 				throw new ArgumentException($"X Axis Data Should Be numaric.");
 			}
-			return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
+			return new C.XValues(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
-
 		/// <summary>
 		/// Create Y Axis Data for the chart
 		/// </summary>
@@ -382,9 +374,8 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine($"Object Details Data Type : {cells.FirstOrDefault(v => v.dataType != DataType.NUMBER)?.dataType}");
 				throw new ArgumentException($"Y Axis Data Should be numaric.");
 			}
-			return new(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
+			return new C.YValues(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
-
 		/// <summary>
 		/// Set chart plot area
 		/// </summary>
@@ -392,20 +383,18 @@ namespace OpenXMLOffice.Global_2007
 		{
 			chart.PlotArea = plotArea;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
-		internal C.PlotArea? GetPlotArea()
+		internal C.PlotArea GetPlotArea()
 		{
 			return chart.PlotArea;
 		}
-
 		private static C.NumberingCache AddNumberCacheValue(ChartData[] cells)
 		{
 			try
 			{
-				C.NumberingCache numberingCache = new()
+				C.NumberingCache numberingCache = new C.NumberingCache()
 				{
 					PointCount = new C.PointCount()
 					{
@@ -415,7 +404,7 @@ namespace OpenXMLOffice.Global_2007
 				int count = 0;
 				foreach (ChartData Cell in cells)
 				{
-					C.NumericPoint numericPoint = new()
+					C.NumericPoint numericPoint = new C.NumericPoint()
 					{
 						Index = (UInt32Value)(uint)count,
 						FormatCode = Cell.numberFormat,
@@ -431,12 +420,11 @@ namespace OpenXMLOffice.Global_2007
 				throw new Exception("Chart. Numeric Ref Error");
 			}
 		}
-
 		private static C.StringCache AddStringCacheValue(ChartData[] cells)
 		{
 			try
 			{
-				C.StringCache stringCache = new()
+				C.StringCache stringCache = new C.StringCache()
 				{
 					PointCount = new C.PointCount()
 					{
@@ -446,7 +434,7 @@ namespace OpenXMLOffice.Global_2007
 				int count = 0;
 				foreach (ChartData Cell in cells)
 				{
-					C.StringPoint stringPoint = new()
+					C.StringPoint stringPoint = new C.StringPoint()
 					{
 						Index = (UInt32Value)(uint)count
 					};
@@ -461,10 +449,9 @@ namespace OpenXMLOffice.Global_2007
 				throw new Exception("Chart. String Ref Error");
 			}
 		}
-
 		private C.Chart CreateChart()
 		{
-			C.Chart chart = new()
+			C.Chart chart = new C.Chart()
 			{
 				PlotVisibleOnly = new C.PlotVisibleOnly()
 				{
@@ -493,7 +480,6 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return chart;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -504,78 +490,84 @@ namespace OpenXMLOffice.Global_2007
 			chart.SideWall = CreateSideWall();
 			chart.BackWall = CreateBackWall();
 		}
-
 		private C.BackWall CreateBackWall()
 		{
-			return new()
+			return new C.BackWall()
 			{
-				Thickness = new() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new()
+				Thickness = new C.Thickness() { Val = 0 },
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel()
 				{
-					shapeProperty3D = new()
+					shapeProperty3D = new ShapeProperty3D()
 				}),
 			};
 		}
-
 		private C.SideWall CreateSideWall()
 		{
-			return new()
+			return new C.SideWall()
 			{
-				Thickness = new() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new()
+				Thickness = new C.Thickness() { Val = 0 },
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel()
 				{
-					shapeProperty3D = new()
+					shapeProperty3D = new ShapeProperty3D()
 				}),
 			};
 		}
-
 		private C.Floor CreateFloor()
 		{
-			return new()
+			return new C.Floor()
 			{
-				Thickness = new() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new()
+				Thickness = new C.Thickness() { Val = 0 },
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel()
 				{
-					shapeProperty3D = new()
+					shapeProperty3D = new ShapeProperty3D()
 				}),
 			};
 		}
-
 		private C.View3D CreateView3D()
 		{
-			return new()
+			return new C.View3D()
 			{
-				RotateX = new() { Val = 15 },
-				RotateY = new() { Val = 15 },
-				DepthPercent = new() { Val = 100 },
-				RightAngleAxes = new() { Val = true },
+				RotateX = new C.RotateX() { Val = 15 },
+				RotateY = new C.RotateY() { Val = 15 },
+				DepthPercent = new C.DepthPercent() { Val = 100 },
+				RightAngleAxes = new C.RightAngleAxes() { Val = true },
 			};
 		}
-
 		private C.Legend CreateChartLegend(ChartLegendOptions chartLegendOptions)
 		{
-			C.Legend legend = new();
+			C.Legend legend = new C.Legend();
 			if (chartLegendOptions.manualLayout != null)
 			{
 				legend.Append(CreateLayout(chartLegendOptions.manualLayout));
 			}
-			legend.Append(new C.LegendPosition()
+			C.LegendPositionValues legendPositionValue;
+			switch (chartLegendOptions.legendPosition)
 			{
-				Val = chartLegendOptions.legendPosition switch
-				{
-					ChartLegendOptions.LegendPositionValues.TOP_RIGHT => C.LegendPositionValues.TopRight,
-					ChartLegendOptions.LegendPositionValues.TOP => C.LegendPositionValues.Top,
-					ChartLegendOptions.LegendPositionValues.BOTTOM => C.LegendPositionValues.Bottom,
-					ChartLegendOptions.LegendPositionValues.LEFT => C.LegendPositionValues.Left,
-					ChartLegendOptions.LegendPositionValues.RIGHT => C.LegendPositionValues.Right,
-					_ => C.LegendPositionValues.Bottom
-				}
-			});
+				case ChartLegendOptions.LegendPositionValues.TOP_RIGHT:
+					legendPositionValue = C.LegendPositionValues.TopRight;
+					break;
+				case ChartLegendOptions.LegendPositionValues.TOP:
+					legendPositionValue = C.LegendPositionValues.Top;
+					break;
+				case ChartLegendOptions.LegendPositionValues.BOTTOM:
+					legendPositionValue = C.LegendPositionValues.Bottom;
+					break;
+				case ChartLegendOptions.LegendPositionValues.LEFT:
+					legendPositionValue = C.LegendPositionValues.Left;
+					break;
+				case ChartLegendOptions.LegendPositionValues.RIGHT:
+					legendPositionValue = C.LegendPositionValues.Right;
+					break;
+				default:
+					legendPositionValue = C.LegendPositionValues.Bottom;
+					break;
+			}
+			legend.Append(new C.LegendPosition() { Val = legendPositionValue });
 			legend.Append(new C.Overlay { Val = chartLegendOptions.isLegendChartOverLap });
 			legend.Append(CreateChartShapeProperties());
-			SolidFillModel solidFillModel = new()
+			SolidFillModel solidFillModel = new SolidFillModel()
 			{
-				schemeColorModel = new()
+				schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.TEXT_1,
 					luminanceModulation = 65000,
@@ -587,9 +579,9 @@ namespace OpenXMLOffice.Global_2007
 				solidFillModel.hexColor = chartLegendOptions.fontColor;
 				solidFillModel.schemeColorModel = null;
 			}
-			legend.Append(CreateChartTextProperties(new()
+			legend.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 			{
-				drawingBodyProperties = new()
+				drawingBodyProperties = new DrawingBodyPropertiesModel()
 				{
 					rotation = 0,
 					useParagraphSpacing = true,
@@ -599,11 +591,11 @@ namespace OpenXMLOffice.Global_2007
 					anchor = TextAnchoringValues.CENTER,
 					anchorCenter = true,
 				},
-				drawingParagraph = new()
+				drawingParagraph = new DrawingParagraphModel()
 				{
-					paragraphPropertiesModel = new()
+					paragraphPropertiesModel = new ParagraphPropertiesModel()
 					{
-						defaultRunProperties = new()
+						defaultRunProperties = new DefaultRunPropertiesModel()
 						{
 							solidFill = solidFillModel,
 							complexScriptFont = "+mn-cs",
@@ -622,10 +614,9 @@ namespace OpenXMLOffice.Global_2007
 			}));
 			return legend;
 		}
-
 		private static C.ChartSpace CreateChartSpace()
 		{
-			C.ChartSpace chartSpace = new();
+			C.ChartSpace chartSpace = new C.ChartSpace();
 			chartSpace.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 			chartSpace.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
 			chartSpace.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
@@ -659,10 +650,9 @@ namespace OpenXMLOffice.Global_2007
 			)
 			{ Type = type, Id = GeneratorUtils.GenerateNewGUID() };
 		}
-
 		private C.MajorGridlines CreateMajorGridLine()
 		{
-			return new(CreateChartShapeProperties(new()
+			return new C.MajorGridlines(CreateChartShapeProperties(new ShapePropertiesModel()
 			{
 				outline = new OutlineModel()
 				{
@@ -682,10 +672,9 @@ namespace OpenXMLOffice.Global_2007
 				}
 			}));
 		}
-
 		private C.MinorGridlines CreateMinorGridLine()
 		{
-			return new(CreateChartShapeProperties(new()
+			return new C.MinorGridlines(CreateChartShapeProperties(new ShapePropertiesModel()
 			{
 				outline = new OutlineModel()
 				{
@@ -705,12 +694,11 @@ namespace OpenXMLOffice.Global_2007
 				}
 			}));
 		}
-
 		private C.Title CreateTitle(ChartTitleModel titleModel)
 		{
-			SolidFillModel solidFillModel = new()
+			SolidFillModel solidFillModel = new SolidFillModel()
 			{
-				schemeColorModel = new()
+				schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.TEXT_1
 				}
@@ -720,9 +708,9 @@ namespace OpenXMLOffice.Global_2007
 				solidFillModel.hexColor = titleModel.fontColor;
 				solidFillModel.schemeColorModel = null;
 			}
-			C.Title title = new(new C.ChartText(CreateChartRichText(new()
+			C.Title title = new C.Title(new C.ChartText(CreateChartRichText(new ChartTextPropertiesModel()
 			{
-				drawingBodyProperties = new()
+				drawingBodyProperties = new DrawingBodyPropertiesModel()
 				{
 					anchor = TextAnchoringValues.CENTER,
 					anchorCenter = true,
@@ -732,13 +720,13 @@ namespace OpenXMLOffice.Global_2007
 					wrap = TextWrappingValues.SQUARE,
 					rotation = 0,
 				},
-				drawingParagraph = new()
+				drawingParagraph = new DrawingParagraphModel()
 				{
-					paragraphPropertiesModel = new(),
-					drawingRun = new()
+					paragraphPropertiesModel = new ParagraphPropertiesModel(),
+					drawingRun = new DrawingRunModel()
 					{
 						text = titleModel.title,
-						drawingRunProperties = new()
+						drawingRunProperties = new DrawingRunPropertiesModel()
 						{
 							solidFill = solidFillModel,
 							fontSize = titleModel.fontSize,
@@ -753,24 +741,21 @@ namespace OpenXMLOffice.Global_2007
 			title.Append(CreateChartShapeProperties());
 			return title;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		internal C.Marker CreateMarker(MarkerModel marketModel)
 		{
-			C.Marker marker = new()
+			C.Marker marker = new C.Marker()
 			{
-				Symbol = new() { Val = MarkerModel.GetMarkerStyleValues(marketModel.markerShapeValues) },
+				Symbol = new C.Symbol() { Val = MarkerModel.GetMarkerStyleValues(marketModel.markerShapeValues) },
 			};
 			if (marketModel.markerShapeValues != MarkerModel.MarkerShapeValues.NONE)
 			{
-				marker.Size = new() { Val = (ByteValue)marketModel.size };
+				marker.Size = new C.Size() { Val = (ByteValue)marketModel.size };
 				marker.Append(CreateChartShapeProperties(marketModel.shapeProperties));
 			}
 			return marker;
 		}
-
 	}
-
 }

@@ -1,20 +1,18 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Packaging;
 using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
 using X = DocumentFormat.OpenXml.Spreadsheet;
-
 namespace OpenXMLOffice.Spreadsheet_2007
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class Drawing
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         protected static DrawingsPart GetDrawingsPart(Worksheet worksheet)
         {
@@ -27,17 +25,15 @@ namespace OpenXMLOffice.Spreadsheet_2007
             }
             return worksheet.GetWorksheetPart().DrawingsPart!;
         }
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         protected static XDR.WorksheetDrawing GetDrawing(Worksheet worksheet)
         {
             return GetDrawingsPart(worksheet).WorksheetDrawing;
         }
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal XDR.TwoCellAnchor CreateTwoCellAnchor(TwoCellAnchorModel twoCellAnchorModel)
         {
@@ -77,7 +73,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
             }
             return twoCellAnchor;
         }
-
         private static XDR.GraphicFrame CreateGraphicFrame(DrawingGraphicFrame drawingGraphicFrame)
         {
             return new()
@@ -117,7 +112,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
                 },
             };
         }
-
         private static XDR.Picture CreatePicture(DrawingPictureModel drawingPictureModel)
         {
             return new()
@@ -148,5 +142,4 @@ namespace OpenXMLOffice.Spreadsheet_2007
             };
         }
     }
-
 }

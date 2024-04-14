@@ -1,9 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2013;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -11,29 +9,25 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public class LineChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
-
 		/// <summary>
 		/// The settings for the line chart.
 		/// </summary>
 		protected LineChartSetting<ApplicationSpecificSetting> lineChartSetting;
-
 		internal LineChart(LineChartSetting<ApplicationSpecificSetting> lineChartSetting) : base(lineChartSetting)
 		{
 			this.lineChartSetting = lineChartSetting;
 		}
-
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// </summary>
-		public LineChart(LineChartSetting<ApplicationSpecificSetting> lineChartSetting, ChartData[][] dataCols, DataRange? dataRange = null) : base(lineChartSetting)
+		public LineChart(LineChartSetting<ApplicationSpecificSetting> lineChartSetting, ChartData[][] dataCols, DataRange dataRange = null) : base(lineChartSetting)
 		{
 			this.lineChartSetting = lineChartSetting;
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
-
-		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange? dataRange)
+		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
-			C.PlotArea plotArea = new();
+			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions?.manualLayout));
 			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
@@ -59,30 +53,31 @@ namespace OpenXMLOffice.Global_2007
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
 		}
-
 		internal C.LineChart CreateLineChart(List<ChartDataGrouping> chartDataGroupings)
 		{
-			C.LineChart lineChart = new(
-							new C.Grouping
-							{
-								Val = lineChartSetting.lineChartType switch
-								{
-									LineChartTypes.STACKED => C.GroupingValues.Stacked,
-									LineChartTypes.STACKED_MARKER => C.GroupingValues.Stacked,
-									LineChartTypes.PERCENT_STACKED => C.GroupingValues.PercentStacked,
-									LineChartTypes.PERCENT_STACKED_MARKER => C.GroupingValues.PercentStacked,
-									// Clusted
-									_ => C.GroupingValues.Standard,
-								}
-							},
-							new C.VaryColors { Val = false });
+			C.Grouping grouping;
+			switch (lineChartSetting.lineChartType)
+			{
+				case LineChartTypes.STACKED:
+				case LineChartTypes.STACKED_MARKER:
+					grouping = new C.Grouping() { Val = C.GroupingValues.Stacked };
+					break;
+				case LineChartTypes.PERCENT_STACKED:
+				case LineChartTypes.PERCENT_STACKED_MARKER:
+					grouping = new C.Grouping() { Val = C.GroupingValues.PercentStacked };
+					break;
+				default:
+					grouping = new C.Grouping() { Val = C.GroupingValues.Standard };
+					break;
+			}
+			C.LineChart lineChart = new C.LineChart(grouping, new C.VaryColors { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>
 			{
 				lineChart.Append(CreateLineChartSeries(seriesIndex, Series));
 				seriesIndex++;
 			});
-			C.DataLabels? dataLabels = CreateLineDataLabels(lineChartSetting.lineChartDataLabel);
+			C.DataLabels dataLabels = CreateLineDataLabels(lineChartSetting.lineChartDataLabel);
 			if (dataLabels != null)
 			{
 				lineChart.Append(dataLabels);
@@ -91,30 +86,29 @@ namespace OpenXMLOffice.Global_2007
 			lineChart.Append(new C.AxisId { Val = ValueAxisId });
 			return lineChart;
 		}
-
 		private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			MarkerModel marketModel = new()
+			MarkerModel marketModel = new MarkerModel()
 			{
 				markerShapeValues = MarkerModel.MarkerShapeValues.NONE,
 			};
 			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartType))
 			{
 				marketModel.markerShapeValues = MarkerModel.MarkerShapeValues.CIRCLE;
-				marketModel.shapeProperties = new()
+				marketModel.shapeProperties = new ShapePropertiesModel()
 				{
-					solidFill = new()
+					solidFill = new SolidFillModel()
 					{
-						schemeColorModel = new()
+						schemeColorModel = new SchemeColorModel()
 						{
 							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
 						}
 					},
-					outline = new()
+					outline = new OutlineModel()
 					{
-						solidFill = new()
+						solidFill = new SolidFillModel()
 						{
-							schemeColorModel = new()
+							schemeColorModel = new SchemeColorModel()
 							{
 								themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
 							}
@@ -122,13 +116,13 @@ namespace OpenXMLOffice.Global_2007
 					}
 				};
 			}
-			C.DataLabels? dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ?
+			C.DataLabels dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ?
 				CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings?[seriesIndex]?.lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells?.Length ?? 0) : null;
-			LineChartLineFormat? lineChartLineFormat = lineChartSetting.lineChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.lineChartLineFormat;
+			LineChartLineFormat lineChartLineFormat = lineChartSetting.lineChartSeriesSettings?.ElementAtOrDefault(seriesIndex)?.lineChartLineFormat;
 			SolidFillModel GetBorderColor()
 			{
-				SolidFillModel solidFillModel = new();
-				string? hexColor = lineChartSetting.lineChartSeriesSettings?
+				SolidFillModel solidFillModel = new SolidFillModel();
+				string hexColor = lineChartSetting.lineChartSeriesSettings?
 							.Select(item => item?.borderColor)
 							.ToList().ElementAtOrDefault(seriesIndex);
 				if ((lineChartLineFormat?.lineColor ?? hexColor) != null)
@@ -138,14 +132,14 @@ namespace OpenXMLOffice.Global_2007
 				}
 				else
 				{
-					solidFillModel.schemeColorModel = new()
+					solidFillModel.schemeColorModel = new SchemeColorModel()
 					{
 						themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
 					};
 				}
 				return solidFillModel;
 			}
-			OutlineModel outlineModel = new()
+			OutlineModel outlineModel = new OutlineModel()
 			{
 				solidFill = GetBorderColor(),
 			};
@@ -178,22 +172,22 @@ namespace OpenXMLOffice.Global_2007
 					outlineModel.lineEndWidth = lineChartLineFormat.lineEndWidth;
 				}
 			}
-			ShapePropertiesModel shapePropertiesModel = new()
+			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
 				outline = outlineModel,
 			};
-			C.LineChartSeries series = new(
+			C.LineChartSeries series = new C.LineChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
-				CreateSeriesText(chartDataGrouping.seriesHeaderFormula!, new[] { chartDataGrouping.seriesHeaderCells! }));
+				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			series.Append(CreateMarker(marketModel));
 			if (dataLabels != null)
 			{
 				series.Append(dataLabels);
 			}
-			series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula!, chartDataGrouping.xAxisCells!));
-			series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula!, chartDataGrouping.yAxisCells!));
+			series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula, chartDataGrouping.xAxisCells));
+			series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula, chartDataGrouping.yAxisCells));
 			if (chartDataGrouping.dataLabelCells != null && chartDataGrouping.dataLabelFormula != null)
 			{
 				series.Append(new C.ExtensionList(new C.Extension(
@@ -203,29 +197,34 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return series;
 		}
-
-		private C.DataLabels? CreateLineDataLabels(LineChartDataLabel lineChartDataLabel, int? dataLabelCounter = 0)
+		private C.DataLabels CreateLineDataLabels(LineChartDataLabel lineChartDataLabel, int? dataLabelCounter = 0)
 		{
 			if (lineChartDataLabel.showValue || lineChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || lineChartDataLabel.showCategoryName || lineChartDataLabel.showLegendKey || lineChartDataLabel.showSeriesName)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(lineChartDataLabel, dataLabelCounter);
-				dataLabels.InsertAt(new C.DataLabelPosition()
+				C.DataLabelPosition dataLabelPosition;
+				switch (lineChartDataLabel.dataLabelPosition)
 				{
-					Val = lineChartDataLabel.dataLabelPosition switch
-					{
-						LineChartDataLabel.DataLabelPositionValues.LEFT => C.DataLabelPositionValues.Left,
-						LineChartDataLabel.DataLabelPositionValues.RIGHT => C.DataLabelPositionValues.Right,
-						LineChartDataLabel.DataLabelPositionValues.ABOVE => C.DataLabelPositionValues.Top,
-						LineChartDataLabel.DataLabelPositionValues.BELOW => C.DataLabelPositionValues.Bottom,
-						//Center
-						_ => C.DataLabelPositionValues.Center,
-					}
-				}, 0);
+					case LineChartDataLabel.DataLabelPositionValues.LEFT:
+						dataLabelPosition = new C.DataLabelPosition() { Val = C.DataLabelPositionValues.Left };
+						break;
+					case LineChartDataLabel.DataLabelPositionValues.RIGHT:
+						dataLabelPosition = new C.DataLabelPosition() { Val = C.DataLabelPositionValues.Right };
+						break;
+					case LineChartDataLabel.DataLabelPositionValues.ABOVE:
+						dataLabelPosition = new C.DataLabelPosition() { Val = C.DataLabelPositionValues.Top };
+						break;
+					case LineChartDataLabel.DataLabelPositionValues.BELOW:
+						dataLabelPosition = new C.DataLabelPosition() { Val = C.DataLabelPositionValues.Bottom };
+						break;
+					default:
+						dataLabelPosition = new C.DataLabelPosition() { Val = C.DataLabelPositionValues.Center };
+						break;
+				}
+				dataLabels.InsertAt(dataLabelPosition, 0);
 				return dataLabels;
 			}
 			return null;
 		}
-
-
 	}
 }

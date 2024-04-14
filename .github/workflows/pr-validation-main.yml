@@ -1,15 +1,12 @@
 name: .NET 7 Build on PR
-
 permissions:
   contents: write
   pages: write
   id-token: write
-
 on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: windows-latest

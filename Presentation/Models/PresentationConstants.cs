@@ -1,5 +1,4 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -7,7 +6,6 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public static class PresentationConstants
 	{
-
 		/// <summary>
 		/// Represents the common slide data types.
 		/// </summary>
@@ -17,18 +15,15 @@ namespace OpenXMLOffice.Presentation_2007
 			/// Generate Common Slide Data for a Slide Master Specification
 			/// </summary>
 			SLIDE_MASTER,
-
 			/// <summary>
 			/// Generate Common Slide Data for a Slide Layout Specification
 			/// </summary>
 			SLIDE_LAYOUT,
-
 			/// <summary>
 			/// Generate Common Slide Data for a Slide Specification
 			/// </summary>
 			SLIDE
 		}
-
 		/// <summary>
 		/// Represents the slide layout types.
 		/// </summary>
@@ -39,8 +34,6 @@ namespace OpenXMLOffice.Presentation_2007
 			/// </summary>
 			BLANK
 		}
-
-
 		/// <summary>
 		/// Gets the string representation of the specified slide layout type.
 		/// </summary>
@@ -57,7 +50,5 @@ namespace OpenXMLOffice.Presentation_2007
 				_ => "Blank",
 			};
 		}
-
-
 	}
 }

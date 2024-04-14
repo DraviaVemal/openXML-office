@@ -1,10 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using X = OpenXMLOffice.Spreadsheet_2007;
 using G = OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Presentation_2007;
 using OpenXMLOffice.Global_2016;
-
 namespace OpenXMLOffice.Tests
 {
 	/// <summary>
@@ -14,7 +12,6 @@ namespace OpenXMLOffice.Tests
 	public class Presentation
 	{
 		private static readonly PowerPoint powerPoint = new();
-
 		private static readonly string resultPath = "../../testResult";
 		/// <summary>
 		/// Save Presenation on text completion cleanup
@@ -24,7 +21,6 @@ namespace OpenXMLOffice.Tests
 		{
 			powerPoint.SaveAs(string.Format("{1}/test-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}
-
 		/// <summary>
 		/// Initialize Presentation For Test
 		/// </summary>
@@ -38,7 +34,6 @@ namespace OpenXMLOffice.Tests
 				Directory.CreateDirectory(resultPath);
 			}
 		}
-
 		/// <summary>
 		/// Add All Chart Types to Slide
 		/// </summary>
@@ -285,7 +280,6 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		///
 		/// </summary>
@@ -320,7 +314,6 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 			});
 		}
-
 		/// <summary>
 		/// Add Blank Slide to the PPT
 		/// </summary>
@@ -331,7 +324,6 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Add Single Chart to the Slide
 		/// </summary>
@@ -350,7 +342,6 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Add Combo Chart to the Slide
 		/// </summary>
@@ -391,7 +382,6 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(10), comboChartSetting);
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Add Picture to the slide
 		/// </summary>
@@ -403,7 +393,6 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting());
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Add All type of sctter charts
 		/// </summary>
@@ -474,7 +463,6 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Add Table To the Slide
 		/// </summary>
@@ -493,7 +481,6 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Open and Edit Existing Presentation
 		/// </summary>
@@ -529,7 +516,6 @@ namespace OpenXMLOffice.Tests
 			powerPoint1.SaveAs(string.Format("{1}/edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Open and Edit Existing Presentation with Chart
 		/// </summary>
@@ -592,7 +578,6 @@ namespace OpenXMLOffice.Tests
 			powerPoint1.SaveAs(string.Format("{1}/chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
-
 		/// <summary>
 		/// Open and close Presentation without editing
 		/// </summary>
@@ -603,7 +588,6 @@ namespace OpenXMLOffice.Tests
 			powerPoint1.SaveAs(string.Format("{1}/copy-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
-
 		private static X.DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
 		{
 			Random random = new();
@@ -641,7 +625,6 @@ namespace OpenXMLOffice.Tests
 			}
 			return data;
 		}
-
 		private static TableRow[] CreateTableRowPayload(int rowCount)
 		{
 			TableRow[] data = new TableRow[rowCount];
@@ -703,7 +686,5 @@ namespace OpenXMLOffice.Tests
 			}
 			return data;
 		}
-
-
 	}
 }

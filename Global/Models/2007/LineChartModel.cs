@@ -1,5 +1,4 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -11,46 +10,37 @@ namespace OpenXMLOffice.Global_2007
 		/// Clustered Line Chart
 		/// </summary>
 		CLUSTERED,
-
 		/// <summary>
 		/// Stacked Line Chart
 		/// </summary>
 		STACKED,
-
 		/// <summary>
 		/// Percent Stacked Line Chart
 		/// </summary>
 		PERCENT_STACKED,
-
 		/// <summary>
 		/// Clustered Marker Line Chart
 		/// </summary>
 		CLUSTERED_MARKER,
-
 		/// <summary>
 		/// Stacked Marker Line Chart
 		/// </summary>
 		STACKED_MARKER,
-
 		/// <summary>
 		/// Percent Stacked Marker Line Chart
 		/// </summary>
 		PERCENT_STACKED_MARKER,
-
 		// CLUSTERED_3D
 	}
-
 	/// <summary>
 	/// Represents the data label settings for a line chart.
 	/// </summary>
 	public class LineChartDataLabel : ChartDataLabel
 	{
-
 		/// <summary>
 		/// The position of the data labels.
 		/// </summary>
 		public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
-
 		/// <summary>
 		/// The possible positions for the data labels.
 		/// </summary>
@@ -60,34 +50,28 @@ namespace OpenXMLOffice.Global_2007
 			/// Left Side
 			/// </summary>
 			LEFT,
-
 			/// <summary>
 			/// Right Side
 			/// </summary>
 			RIGHT,
-
 			/// <summary>
 			/// Center
 			/// </summary>
 			CENTER,
-
 			/// <summary>
 			/// Above
 			/// </summary>
 			ABOVE,
-
 			/// <summary>
 			/// Below
 			/// </summary>
 			BELOW,
-
 			// /// <summary>
 			// /// Data Callout
 			// /// </summary>
 			// DATA_CALLOUT
 		}
 	}
-
 	/// <summary>
 	///
 	/// </summary>
@@ -96,7 +80,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string? lineColor = null;
+		public string lineColor = null;
 		/// <summary>
 		/// /
 		/// </summary>
@@ -145,7 +129,6 @@ namespace OpenXMLOffice.Global_2007
 		// /// </summary>
 		// public LineChartLineFormat? lineChartLineFormat = null;
 	}
-
 	/// <summary>
 	/// Represents the series settings for a line chart.
 	/// </summary>
@@ -154,44 +137,37 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Format Applied at series level
 		/// </summary>
-		public LineChartLineFormat? lineChartLineFormat = null;
+		public LineChartLineFormat lineChartLineFormat = null;
 		/// <summary>
 		///
 		/// </summary>
-		public List<LineChartDataPointSetting?> lineChartDataPointSettings = new();
-
+		public List<LineChartDataPointSetting> lineChartDataPointSettings = new List<LineChartDataPointSetting>();
 		/// <summary>
 		/// Option to customize specific data series, which will override the chart level setting.
 		/// </summary>
-		public LineChartDataLabel lineChartDataLabel = new();
+		public LineChartDataLabel lineChartDataLabel = new LineChartDataLabel();
 	}
-
 	/// <summary>
 	/// Represents the settings for a line chart.
 	/// </summary>
 	public class LineChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
 	{
-
 		/// <summary>
 		/// The options for the chart axes.
 		/// </summary>
-		public ChartAxesOptions chartAxesOptions = new();
-
+		public ChartAxesOptions chartAxesOptions = new ChartAxesOptions();
 		/// <summary>
 		/// The options for the chart axis.
 		/// </summary>
-		public ChartAxisOptions chartAxisOptions = new();
-
+		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();
 		/// <summary>
 		/// The data label settings for the line chart, which will get overridden by series level setting.
 		/// </summary>
-		public LineChartDataLabel lineChartDataLabel = new();
-
+		public LineChartDataLabel lineChartDataLabel = new LineChartDataLabel();
 		/// <summary>
 		/// The series settings for the line chart.
 		/// </summary>
-		public List<LineChartSeriesSetting?> lineChartSeriesSettings = new();
-
+		public List<LineChartSeriesSetting> lineChartSeriesSettings = new List<LineChartSeriesSetting>();
 		/// <summary>
 		/// The type of the line chart.
 		/// </summary>

@@ -1,8 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -15,269 +13,360 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public static A.TextAlignmentTypeValues GetTextAlignmentValue(HorizontalAlignmentValues horizontalAlignmentValues)
 		{
-			return horizontalAlignmentValues switch
+			switch (horizontalAlignmentValues)
 			{
-				HorizontalAlignmentValues.RIGHT => A.TextAlignmentTypeValues.Right,
-				HorizontalAlignmentValues.JUSTIFY => A.TextAlignmentTypeValues.Justified,
-				HorizontalAlignmentValues.CENTER => A.TextAlignmentTypeValues.Center,
-				_ => A.TextAlignmentTypeValues.Left
-			};
+				case HorizontalAlignmentValues.RIGHT:
+					return A.TextAlignmentTypeValues.Right;
+				case HorizontalAlignmentValues.JUSTIFY:
+					return A.TextAlignmentTypeValues.Justified;
+				case HorizontalAlignmentValues.CENTER:
+					return A.TextAlignmentTypeValues.Center;
+				default:
+					return A.TextAlignmentTypeValues.Left;
+			}
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public static A.CompoundLineValues GetBorderStyleValue(BorderStyleValues borderStyle)
 		{
-			return borderStyle switch
+			switch (borderStyle)
 			{
-				BorderStyleValues.DOUBLE => A.CompoundLineValues.Double,
-				BorderStyleValues.TRIPLE => A.CompoundLineValues.Triple,
-				BorderStyleValues.THICK_THIN => A.CompoundLineValues.ThickThin,
-				BorderStyleValues.THIN_THICK => A.CompoundLineValues.ThinThick,
-				_ => A.CompoundLineValues.Single,
-			};
+				case BorderStyleValues.DOUBLE:
+					return A.CompoundLineValues.Double;
+				case BorderStyleValues.TRIPLE:
+					return A.CompoundLineValues.Triple;
+				case BorderStyleValues.THICK_THIN:
+					return A.CompoundLineValues.ThickThin;
+				case BorderStyleValues.THIN_THICK:
+					return A.CompoundLineValues.ThinThick;
+				default:
+					return A.CompoundLineValues.Single;
+			}
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public static A.PresetLineDashValues GetDashStyleValue(DrawingPresetLineDashValues dashStyle)
 		{
-			return dashStyle switch
+			switch (dashStyle)
 			{
-				DrawingPresetLineDashValues.DASH => A.PresetLineDashValues.Dash,
-				DrawingPresetLineDashValues.DASH_DOT => A.PresetLineDashValues.DashDot,
-				DrawingPresetLineDashValues.DOT => A.PresetLineDashValues.Dot,
-				DrawingPresetLineDashValues.LARGE_DASH => A.PresetLineDashValues.LargeDash,
-				DrawingPresetLineDashValues.LARGE_DASH_DOT => A.PresetLineDashValues.LargeDashDot,
-				DrawingPresetLineDashValues.LARGE_DASH_DOT_DOT => A.PresetLineDashValues.LargeDashDotDot,
-				DrawingPresetLineDashValues.SYSTEM_DASH => A.PresetLineDashValues.SystemDash,
-				DrawingPresetLineDashValues.SYSTEM_DASH_DOT => A.PresetLineDashValues.SystemDashDot,
-				DrawingPresetLineDashValues.SYSTEM_DASH_DOT_DOT => A.PresetLineDashValues.SystemDashDotDot,
-				DrawingPresetLineDashValues.SYSTEM_DOT => A.PresetLineDashValues.SystemDot,
-				_ => A.PresetLineDashValues.Solid,
-			};
+				case DrawingPresetLineDashValues.DASH:
+					return A.PresetLineDashValues.Dash;
+				case DrawingPresetLineDashValues.DASH_DOT:
+					return A.PresetLineDashValues.DashDot;
+				case DrawingPresetLineDashValues.DOT:
+					return A.PresetLineDashValues.Dot;
+				case DrawingPresetLineDashValues.LARGE_DASH:
+					return A.PresetLineDashValues.LargeDash;
+				case DrawingPresetLineDashValues.LARGE_DASH_DOT:
+					return A.PresetLineDashValues.LargeDashDot;
+				case DrawingPresetLineDashValues.LARGE_DASH_DOT_DOT:
+					return A.PresetLineDashValues.LargeDashDotDot;
+				case DrawingPresetLineDashValues.SYSTEM_DASH:
+					return A.PresetLineDashValues.SystemDash;
+				case DrawingPresetLineDashValues.SYSTEM_DASH_DOT:
+					return A.PresetLineDashValues.SystemDashDot;
+				case DrawingPresetLineDashValues.SYSTEM_DASH_DOT_DOT:
+					return A.PresetLineDashValues.SystemDashDotDot;
+				case DrawingPresetLineDashValues.SYSTEM_DOT:
+					return A.PresetLineDashValues.SystemDot;
+				default:
+					return A.PresetLineDashValues.Solid;
+			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		public static A.LineEndValues GetEndArrowValue(DrawingEndArrowValues endArrowValues)
 		{
-			return endArrowValues switch
+			switch (endArrowValues)
 			{
-				DrawingEndArrowValues.ARROW => A.LineEndValues.Arrow,
-				DrawingEndArrowValues.DIAMOND => A.LineEndValues.Diamond,
-				DrawingEndArrowValues.OVAL => A.LineEndValues.Oval,
-				DrawingEndArrowValues.STEALTH => A.LineEndValues.Stealth,
-				DrawingEndArrowValues.TRIANGLE => A.LineEndValues.Triangle,
-				_ => A.LineEndValues.None,
-			};
+				case DrawingEndArrowValues.ARROW:
+					return A.LineEndValues.Arrow;
+				case DrawingEndArrowValues.DIAMOND:
+					return A.LineEndValues.Diamond;
+				case DrawingEndArrowValues.OVAL:
+					return A.LineEndValues.Oval;
+				case DrawingEndArrowValues.STEALTH:
+					return A.LineEndValues.Stealth;
+				case DrawingEndArrowValues.TRIANGLE:
+					return A.LineEndValues.Triangle;
+				default:
+					return A.LineEndValues.None;
+			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		public static A.LineEndLengthValues GetLineEndLengthValue(LineWidthValues lineEndWidth)
 		{
-			return lineEndWidth switch
+			switch (lineEndWidth)
 			{
-				LineWidthValues.LARGE => A.LineEndLengthValues.Large,
-				LineWidthValues.MEDIUM => A.LineEndLengthValues.Medium,
-				_ => A.LineEndLengthValues.Small
-			};
+				case LineWidthValues.LARGE:
+					return A.LineEndLengthValues.Large;
+				case LineWidthValues.MEDIUM:
+					return A.LineEndLengthValues.Medium;
+				default:
+					return A.LineEndLengthValues.Small;
+			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		public static A.LineEndWidthValues GetLineEndWidthValue(LineWidthValues lineEndWidth)
 		{
-			return lineEndWidth switch
+			switch (lineEndWidth)
 			{
-				LineWidthValues.LARGE => A.LineEndWidthValues.Large,
-				LineWidthValues.MEDIUM => A.LineEndWidthValues.Medium,
-				_ => A.LineEndWidthValues.Small
-			};
+				case LineWidthValues.LARGE:
+					return A.LineEndWidthValues.Large;
+				case LineWidthValues.MEDIUM:
+					return A.LineEndWidthValues.Medium;
+				default:
+					return A.LineEndWidthValues.Small;
+			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		public static A.LineEndLengthValues GetLineStartLengthValue(LineWidthValues lineStartWidth)
 		{
-			return lineStartWidth switch
+			switch (lineStartWidth)
 			{
-				LineWidthValues.LARGE => A.LineEndLengthValues.Large,
-				LineWidthValues.MEDIUM => A.LineEndLengthValues.Medium,
-				_ => A.LineEndLengthValues.Small
-			};
+				case LineWidthValues.LARGE:
+					return A.LineEndLengthValues.Large;
+				case LineWidthValues.MEDIUM:
+					return A.LineEndLengthValues.Medium;
+				default:
+					return A.LineEndLengthValues.Small;
+			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		public static A.LineEndValues GetBeginArrowValue(DrawingBeginArrowValues beginArrowValues)
 		{
-			return beginArrowValues switch
+			switch (beginArrowValues)
 			{
-				DrawingBeginArrowValues.ARROW => A.LineEndValues.Arrow,
-				DrawingBeginArrowValues.DIAMOND => A.LineEndValues.Diamond,
-				DrawingBeginArrowValues.OVAL => A.LineEndValues.Oval,
-				DrawingBeginArrowValues.STEALTH => A.LineEndValues.Stealth,
-				DrawingBeginArrowValues.TRIANGLE => A.LineEndValues.Triangle,
-				_ => A.LineEndValues.None,
-			};
+				case DrawingBeginArrowValues.ARROW:
+					return A.LineEndValues.Arrow;
+				case DrawingBeginArrowValues.DIAMOND:
+					return A.LineEndValues.Diamond;
+				case DrawingBeginArrowValues.OVAL:
+					return A.LineEndValues.Oval;
+				case DrawingBeginArrowValues.STEALTH:
+					return A.LineEndValues.Stealth;
+				case DrawingBeginArrowValues.TRIANGLE:
+					return A.LineEndValues.Triangle;
+				default:
+					return A.LineEndValues.None;
+			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		public static A.LineEndWidthValues GetLineStartWidthValue(LineWidthValues lineStartWidth)
 		{
-			return lineStartWidth switch
+			switch (lineStartWidth)
 			{
-				LineWidthValues.LARGE => A.LineEndWidthValues.Large,
-				LineWidthValues.MEDIUM => A.LineEndWidthValues.Medium,
-				_ => A.LineEndWidthValues.Small
-			};
+				case LineWidthValues.LARGE:
+					return A.LineEndWidthValues.Large;
+				case LineWidthValues.MEDIUM:
+					return A.LineEndWidthValues.Medium;
+				default:
+					return A.LineEndWidthValues.Small;
+			}
 		}
-
 		internal static A.TextAnchoringTypeValues GetAnchorValues(TextAnchoringValues textAnchoring)
 		{
-			return textAnchoring switch
+			switch (textAnchoring)
 			{
-				TextAnchoringValues.BOTTOM => A.TextAnchoringTypeValues.Bottom,
-				TextAnchoringValues.CENTER => A.TextAnchoringTypeValues.Center,
-				_ => A.TextAnchoringTypeValues.Top
-			};
+				case TextAnchoringValues.BOTTOM:
+					return A.TextAnchoringTypeValues.Bottom;
+				case TextAnchoringValues.CENTER:
+					return A.TextAnchoringTypeValues.Center;
+				default:
+					return A.TextAnchoringTypeValues.Top;
+			}
 		}
-
 		internal static A.TextVerticalValues GetTextVerticalAlignmentValues(TextVerticalAlignmentValues textVerticalAlignment)
 		{
-			return textVerticalAlignment switch
+			switch (textVerticalAlignment)
 			{
-				TextVerticalAlignmentValues.EAST_ASIAN_VERTICAL => A.TextVerticalValues.EastAsianVetical,
-				TextVerticalAlignmentValues.HORIZONTAL => A.TextVerticalValues.Horizontal,
-				TextVerticalAlignmentValues.MONGOLIAN_VERTICAL => A.TextVerticalValues.MongolianVertical,
-				TextVerticalAlignmentValues.VERTICAL => A.TextVerticalValues.Vertical,
-				TextVerticalAlignmentValues.VERTICAL_270 => A.TextVerticalValues.Vertical270,
-				TextVerticalAlignmentValues.WORD_ART_LEFT_TO_RIGHT => A.TextVerticalValues.WordArtVertical,
-				_ => A.TextVerticalValues.WordArtVertical
-			};
+				case TextVerticalAlignmentValues.EAST_ASIAN_VERTICAL:
+					return A.TextVerticalValues.EastAsianVetical;
+				case TextVerticalAlignmentValues.HORIZONTAL:
+					return A.TextVerticalValues.Horizontal;
+				case TextVerticalAlignmentValues.MONGOLIAN_VERTICAL:
+					return A.TextVerticalValues.MongolianVertical;
+				case TextVerticalAlignmentValues.VERTICAL:
+					return A.TextVerticalValues.Vertical;
+				case TextVerticalAlignmentValues.VERTICAL_270:
+					return A.TextVerticalValues.Vertical270;
+				case TextVerticalAlignmentValues.WORD_ART_LEFT_TO_RIGHT:
+					return A.TextVerticalValues.WordArtVertical;
+				default:
+					return A.TextVerticalValues.WordArtVertical;
+			}
 		}
-
 		internal static A.TextVerticalOverflowValues GetTextVerticalOverflowValues(TextVerticalOverflowValues textVerticalOverflow)
 		{
-			return textVerticalOverflow switch
+			switch (textVerticalOverflow)
 			{
-				TextVerticalOverflowValues.CLIP => A.TextVerticalOverflowValues.Clip,
-				TextVerticalOverflowValues.ELLIPSIS => A.TextVerticalOverflowValues.Ellipsis,
-				_ => A.TextVerticalOverflowValues.Overflow
-			};
+				case TextVerticalOverflowValues.CLIP:
+					return A.TextVerticalOverflowValues.Clip;
+				case TextVerticalOverflowValues.ELLIPSIS:
+					return A.TextVerticalOverflowValues.Ellipsis;
+				default:
+					return A.TextVerticalOverflowValues.Overflow;
+			}
 		}
-
 		internal static A.TextWrappingValues GetWrapingValues(TextWrappingValues textWrapping)
 		{
-			return textWrapping switch
+			switch (textWrapping)
 			{
-				TextWrappingValues.NONE => A.TextWrappingValues.None,
-				_ => A.TextWrappingValues.Square
-			};
+				case TextWrappingValues.NONE:
+					return A.TextWrappingValues.None;
+				default:
+					return A.TextWrappingValues.Square;
+			}
 		}
 		internal static A.TextStrikeValues GetTextStrikeValues(StrikeValues strikeValues)
 		{
-			return strikeValues switch
+			switch (strikeValues)
 			{
-				StrikeValues.SINGLE_STRIKE => A.TextStrikeValues.SingleStrike,
-				StrikeValues.DOUBLE_STRIKE => A.TextStrikeValues.DoubleStrike,
-				_ => A.TextStrikeValues.NoStrike
-			};
+				case StrikeValues.SINGLE_STRIKE:
+					return A.TextStrikeValues.SingleStrike;
+				case StrikeValues.DOUBLE_STRIKE:
+					return A.TextStrikeValues.DoubleStrike;
+				default:
+					return A.TextStrikeValues.NoStrike;
+			}
 		}
 		internal static string GetSchemeColorValuesText(ThemeColorValues themeColorValues)
 		{
-			return themeColorValues switch
+			switch (themeColorValues)
 			{
-				ThemeColorValues.ACCENT_1 => "accent1",
-				ThemeColorValues.ACCENT_2 => "accent2",
-				ThemeColorValues.ACCENT_3 => "accent3",
-				ThemeColorValues.ACCENT_4 => "accent4",
-				ThemeColorValues.ACCENT_5 => "accent5",
-				ThemeColorValues.ACCENT_6 => "accent6",
-				ThemeColorValues.DARK_1 => "dk1",
-				ThemeColorValues.DARK_2 => "dk2",
-				ThemeColorValues.BACKGROUND_1 => "bg1",
-				ThemeColorValues.BACKGROUND_2 => "bg2",
-				ThemeColorValues.LIGHT_1 => "lt1",
-				ThemeColorValues.LIGHT_2 => "lt2",
-				ThemeColorValues.TEXT_1 => "tx1",
-				ThemeColorValues.TEXT_2 => "tx2",
-				ThemeColorValues.HYPERLINK => "hlink",
-				ThemeColorValues.FOLLOW_HYPERLINK => "folHlink",
-				_ => "phClr"
-			};
+				case ThemeColorValues.ACCENT_1:
+					return "accent1";
+				case ThemeColorValues.ACCENT_2:
+					return "accent2";
+				case ThemeColorValues.ACCENT_3:
+					return "accent3";
+				case ThemeColorValues.ACCENT_4:
+					return "accent4";
+				case ThemeColorValues.ACCENT_5:
+					return "accent5";
+				case ThemeColorValues.ACCENT_6:
+					return "accent6";
+				case ThemeColorValues.DARK_1:
+					return "dk1";
+				case ThemeColorValues.DARK_2:
+					return "dk2";
+				case ThemeColorValues.BACKGROUND_1:
+					return "bg1";
+				case ThemeColorValues.BACKGROUND_2:
+					return "bg2";
+				case ThemeColorValues.LIGHT_1:
+					return "lt1";
+				case ThemeColorValues.LIGHT_2:
+					return "lt2";
+				case ThemeColorValues.TEXT_1:
+					return "tx1";
+				case ThemeColorValues.TEXT_2:
+					return "tx2";
+				case ThemeColorValues.HYPERLINK:
+					return "hlink";
+				case ThemeColorValues.FOLLOW_HYPERLINK:
+					return "folHlink";
+				default:
+					return "phClr";
+			}
 		}
 		internal static A.PenAlignmentValues GetLineAlignmentValues(OutlineAlignmentValues outlineAlignmentValues)
 		{
-			return outlineAlignmentValues switch
+			switch (outlineAlignmentValues)
 			{
-				OutlineAlignmentValues.CENTER => A.PenAlignmentValues.Center,
-				_ => A.PenAlignmentValues.Insert
-			};
+				case OutlineAlignmentValues.CENTER:
+					return A.PenAlignmentValues.Center;
+				default:
+					return A.PenAlignmentValues.Insert;
+			}
 		}
-
 		internal static A.LineCapValues GetLineCapValues(OutlineCapTypeValues outlineCapTypeValues)
 		{
-			return outlineCapTypeValues switch
+			switch (outlineCapTypeValues)
 			{
-				OutlineCapTypeValues.SQUARE => A.LineCapValues.Square,
-				OutlineCapTypeValues.ROUND => A.LineCapValues.Round,
-				_ => A.LineCapValues.Flat
-			};
+				case OutlineCapTypeValues.SQUARE:
+					return A.LineCapValues.Square;
+				case OutlineCapTypeValues.ROUND:
+					return A.LineCapValues.Round;
+				default:
+					return A.LineCapValues.Flat;
+			}
 		}
-
 		internal static A.CompoundLineValues GetLineTypeValues(OutlineLineTypeValues outlineLineTypeValues)
 		{
-			return outlineLineTypeValues switch
+			switch (outlineLineTypeValues)
 			{
-				OutlineLineTypeValues.DOUBLE => A.CompoundLineValues.Double,
-				OutlineLineTypeValues.TRIPLE => A.CompoundLineValues.Triple,
-				OutlineLineTypeValues.THICK_THIN => A.CompoundLineValues.ThickThin,
-				OutlineLineTypeValues.THIN_THICK => A.CompoundLineValues.ThinThick,
-				_ => A.CompoundLineValues.Single
-			};
+				case OutlineLineTypeValues.DOUBLE:
+					return A.CompoundLineValues.Double;
+				case OutlineLineTypeValues.TRIPLE:
+					return A.CompoundLineValues.Triple;
+				case OutlineLineTypeValues.THICK_THIN:
+					return A.CompoundLineValues.ThickThin;
+				case OutlineLineTypeValues.THIN_THICK:
+					return A.CompoundLineValues.ThinThick;
+				default:
+					return A.CompoundLineValues.Single;
+			}
 		}
-
 		internal static A.TextUnderlineValues GetTextUnderlineValues(UnderLineValues runPropertiesUnderLineValues)
 		{
-			return runPropertiesUnderLineValues switch
+			switch (runPropertiesUnderLineValues)
 			{
-				UnderLineValues.DASH => A.TextUnderlineValues.Dash,
-				UnderLineValues.DASH_HEAVY => A.TextUnderlineValues.DashHeavy,
-				UnderLineValues.DASH_LONG => A.TextUnderlineValues.DashLong,
-				UnderLineValues.DASH_LONG_HEAVY => A.TextUnderlineValues.DashLongHeavy,
-				UnderLineValues.DOT_DASH => A.TextUnderlineValues.DotDash,
-				UnderLineValues.DOT_DASH_HEAVY => A.TextUnderlineValues.DotDashHeavy,
-				UnderLineValues.DOT_DOT_DASH => A.TextUnderlineValues.DotDotDash,
-				UnderLineValues.DOT_DOT_DASH_HEAVY => A.TextUnderlineValues.DotDotDashHeavy,
-				UnderLineValues.DOTTED => A.TextUnderlineValues.Dotted,
-				UnderLineValues.DOUBLE => A.TextUnderlineValues.Double,
-				UnderLineValues.HEAVY => A.TextUnderlineValues.Heavy,
-				UnderLineValues.HEAVY_DOTTED => A.TextUnderlineValues.HeavyDotted,
-				UnderLineValues.SINGLE => A.TextUnderlineValues.Single,
-				UnderLineValues.WAVY => A.TextUnderlineValues.Wavy,
-				UnderLineValues.WAVY_DOUBLE => A.TextUnderlineValues.WavyDouble,
-				UnderLineValues.WAVY_HEAVY => A.TextUnderlineValues.WavyHeavy,
-				UnderLineValues.WORDS => A.TextUnderlineValues.Words,
-				_ => A.TextUnderlineValues.None
-			};
+				case UnderLineValues.DASH:
+					return A.TextUnderlineValues.Dash;
+				case UnderLineValues.DASH_HEAVY:
+					return A.TextUnderlineValues.DashHeavy;
+				case UnderLineValues.DASH_LONG:
+					return A.TextUnderlineValues.DashLong;
+				case UnderLineValues.DASH_LONG_HEAVY:
+					return A.TextUnderlineValues.DashLongHeavy;
+				case UnderLineValues.DOT_DASH:
+					return A.TextUnderlineValues.DotDash;
+				case UnderLineValues.DOT_DASH_HEAVY:
+					return A.TextUnderlineValues.DotDashHeavy;
+				case UnderLineValues.DOT_DOT_DASH:
+					return A.TextUnderlineValues.DotDotDash;
+				case UnderLineValues.DOT_DOT_DASH_HEAVY:
+					return A.TextUnderlineValues.DotDotDashHeavy;
+				case UnderLineValues.DOTTED:
+					return A.TextUnderlineValues.Dotted;
+				case UnderLineValues.DOUBLE:
+					return A.TextUnderlineValues.Double;
+				case UnderLineValues.HEAVY:
+					return A.TextUnderlineValues.Heavy;
+				case UnderLineValues.HEAVY_DOTTED:
+					return A.TextUnderlineValues.HeavyDotted;
+				case UnderLineValues.SINGLE:
+					return A.TextUnderlineValues.Single;
+				case UnderLineValues.WAVY:
+					return A.TextUnderlineValues.Wavy;
+				case UnderLineValues.WAVY_DOUBLE:
+					return A.TextUnderlineValues.WavyDouble;
+				case UnderLineValues.WAVY_HEAVY:
+					return A.TextUnderlineValues.WavyHeavy;
+				case UnderLineValues.WORDS:
+					return A.TextUnderlineValues.Words;
+				default:
+					return A.TextUnderlineValues.None;
+			}
 		}
-
-
 		/// <summary>
 		/// Class is only for inheritance purposes.
 		/// </summary>
 		protected CommonProperties() { }
-
 		/// <summary>
 		/// Create Soild Fill XML Property
 		/// </summary>
@@ -289,7 +378,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			if (solidFillModel.hexColor != null)
 			{
-				A.RgbColorModelHex rgbColorModelHex = new() { Val = solidFillModel.hexColor };
+				A.RgbColorModelHex rgbColorModelHex = new A.RgbColorModelHex() { Val = solidFillModel.hexColor };
 				if (solidFillModel.transparency != null)
 				{
 					rgbColorModelHex.Append(new A.Alpha() { Val = 100000 - (solidFillModel.transparency * 1000) });
@@ -298,8 +387,8 @@ namespace OpenXMLOffice.Global_2007
 			}
 			else
 			{
-				A.SchemeColor schemeColor = new()
-				{ Val = new A.SchemeColorValues(GetSchemeColorValuesText(solidFillModel.schemeColorModel!.themeColorValues)) };
+				A.SchemeColor schemeColor = new A.SchemeColor()
+				{ Val = new A.SchemeColorValues(GetSchemeColorValuesText(solidFillModel.schemeColorModel.themeColorValues)) };
 				if (solidFillModel.transparency != null)
 				{
 					schemeColor.Append(new A.Alpha() { Val = 100000 - (solidFillModel.transparency * 1000) });
@@ -331,23 +420,21 @@ namespace OpenXMLOffice.Global_2007
 				return new A.SolidFill(schemeColor);
 			}
 		}
-
 		/// <summary>
 		/// Create Shape Properties With Default Settings
 		/// </summary>
 		/// <returns></returns>
 		protected C.ShapeProperties CreateChartShapeProperties()
 		{
-			return CreateChartShapeProperties(new());
+			return CreateChartShapeProperties(new ShapePropertiesModel());
 		}
-
 		/// <summary>
 		/// Create Shape Properties
 		/// </summary>
 		/// <returns></returns>
 		protected static C.ShapeProperties CreateChartShapeProperties(ShapePropertiesModel shapePropertiesModel)
 		{
-			C.ShapeProperties shapeProperties = new();
+			C.ShapeProperties shapeProperties = new C.ShapeProperties();
 			if (shapePropertiesModel.solidFill != null)
 			{
 				shapeProperties.Append(CreateSolidFill(shapePropertiesModel.solidFill));
@@ -371,21 +458,19 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return shapeProperties;
 		}
-
 		/// <summary>
 		/// Create Effect List
 		/// </summary>
 		protected static A.EffectList CreateEffectList(EffectListModel effectListModel)
 		{
-			return new();
+			return new A.EffectList();
 		}
-
 		/// <summary>
 		/// Create Outline
 		/// </summary>
 		protected static A.Outline CreateOutline(OutlineModel outlineModel)
 		{
-			A.Outline outline = new();
+			A.Outline outline = new A.Outline();
 			if (outlineModel.width != null)
 			{
 				outline.Width = outlineModel.width;
@@ -415,14 +500,14 @@ namespace OpenXMLOffice.Global_2007
 			{
 				outline.Append(new A.PresetDash { Val = GetDashStyleValue((DrawingPresetLineDashValues)outlineModel.dashType) });
 			}
-			A.HeadEnd headEnd = new() { Type = GetBeginArrowValue(outlineModel.beginArrowValues) };
+			A.HeadEnd headEnd = new A.HeadEnd() { Type = GetBeginArrowValue(outlineModel.beginArrowValues) };
 			if (outlineModel.lineStartWidth != null)
 			{
 				headEnd.Width = GetLineStartWidthValue((LineWidthValues)outlineModel.lineStartWidth);
 				headEnd.Length = GetLineStartLengthValue((LineWidthValues)outlineModel.lineStartWidth);
 			}
 			outline.Append(headEnd);
-			A.TailEnd tailEnd = new() { Type = GetEndArrowValue(outlineModel.endArrowValues) };
+			A.TailEnd tailEnd = new A.TailEnd() { Type = GetEndArrowValue(outlineModel.endArrowValues) };
 			if (outlineModel.lineEndWidth != null)
 			{
 				tailEnd.Width = GetLineEndWidthValue((LineWidthValues)outlineModel.lineEndWidth);
@@ -431,22 +516,19 @@ namespace OpenXMLOffice.Global_2007
 			outline.Append(tailEnd);
 			return outline;
 		}
-
 		/// <summary>
 		/// Create Default Run Properties
 		/// </summary>
 		protected static A.DefaultRunProperties CreateDefaultRunProperties()
 		{
-			return CreateDefaultRunProperties(new());
+			return CreateDefaultRunProperties(new DefaultRunPropertiesModel());
 		}
-
-
 		/// <summary>
 		///     Create Default Run Properties
 		/// </summary>
 		protected static A.DefaultRunProperties CreateDefaultRunProperties(DefaultRunPropertiesModel defaultRunPropertiesModel)
 		{
-			A.DefaultRunProperties defaultRunProperties = new();
+			A.DefaultRunProperties defaultRunProperties = new A.DefaultRunProperties();
 			if (defaultRunPropertiesModel.solidFill != null)
 			{
 				defaultRunProperties.Append(CreateSolidFill(defaultRunPropertiesModel.solidFill));
@@ -493,13 +575,12 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return defaultRunProperties;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		protected A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
 		{
-			A.Paragraph paragraph = new();
+			A.Paragraph paragraph = new A.Paragraph();
 			if (drawingParagraphModel.paragraphPropertiesModel != null)
 			{
 				paragraph.Append(CreateDrawingParagraphProperties(drawingParagraphModel.paragraphPropertiesModel));
@@ -517,13 +598,12 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return paragraph;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		private static A.ParagraphProperties CreateDrawingParagraphProperties(ParagraphPropertiesModel paragraphPropertiesModel)
 		{
-			A.ParagraphProperties paragraphProperties = new();
+			A.ParagraphProperties paragraphProperties = new A.ParagraphProperties();
 			if (paragraphPropertiesModel.defaultRunProperties != null)
 			{
 				paragraphProperties.Append(CreateDefaultRunProperties(paragraphPropertiesModel.defaultRunProperties));
@@ -534,21 +614,19 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return paragraphProperties;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		protected static A.ListStyle CreateDrawingListStyle()
 		{
-			return new();
+			return new A.ListStyle();
 		}
-
 		/// <summary>
 		///     Create Chart Text Properties
 		/// </summary>
 		protected C.TextProperties CreateChartTextProperties(ChartTextPropertiesModel chartTextPropertiesModel)
 		{
-			C.TextProperties textProperties = new();
+			C.TextProperties textProperties = new C.TextProperties();
 			if (chartTextPropertiesModel.drawingBodyProperties != null)
 			{
 				textProperties.Append(CreateDrawingBodyProperties(chartTextPropertiesModel.drawingBodyProperties));
@@ -565,7 +643,7 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		protected C.RichText CreateChartRichText(ChartTextPropertiesModel chartTextPropertiesModel)
 		{
-			C.RichText richText = new();
+			C.RichText richText = new C.RichText();
 			if (chartTextPropertiesModel.drawingBodyProperties != null)
 			{
 				richText.Append(CreateDrawingBodyProperties(chartTextPropertiesModel.drawingBodyProperties));
@@ -582,7 +660,7 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		protected static A.Run CreateDrawingRun(DrawingRunModel drawingRunModel)
 		{
-			A.Run run = new(CreateDrawingRunProperties(drawingRunModel.drawingRunProperties));
+			A.Run run = new A.Run(CreateDrawingRunProperties(drawingRunModel.drawingRunProperties));
 			if (drawingRunModel.text != null)
 			{
 				run.Append(new A.Text(drawingRunModel.text));
@@ -593,13 +671,12 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return run;
 		}
-
 		/// <summary>
 		///
 		/// </summary>
 		protected static A.RunProperties CreateDrawingRunProperties(DrawingRunPropertiesModel drawingRunPropertiesModel)
 		{
-			A.RunProperties runProperties = new()
+			A.RunProperties runProperties = new A.RunProperties()
 			{
 				FontSize = ConverterUtils.FontSizeToFontSize(drawingRunPropertiesModel.fontSize),
 				Bold = drawingRunPropertiesModel.isBold,
@@ -635,7 +712,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <returns></returns>
 		private static A.BodyProperties CreateDrawingBodyProperties(DrawingBodyPropertiesModel drawingBodyPropertiesModel)
 		{
-			A.BodyProperties bodyProperties = new(new A.ShapeAutoFit())
+			A.BodyProperties bodyProperties = new A.BodyProperties(new A.ShapeAutoFit())
 			{
 				Rotation = drawingBodyPropertiesModel.rotation
 			};
@@ -677,7 +754,5 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return bodyProperties;
 		}
-
-
 	}
 }

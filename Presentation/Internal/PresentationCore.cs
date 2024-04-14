@@ -1,36 +1,26 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
-
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	internal class PresentationCore
 	{
-
 		internal readonly PresentationDocument presentationDocument;
-
 		internal readonly PresentationInfo presentationInfo = new();
-
 		internal readonly PresentationProperties presentationProperties;
-
 		internal ExtendedFilePropertiesPart? extendedFilePropertiesPart;
-
 		//#### Presentation Constants ####//
 		private readonly uint slideIdStart = 255;
-
 		private readonly uint slideMasterIdStart = 2147483647;
-
 		public PresentationCore(PresentationProperties? presentationProperties = null)
 		{
 			this.presentationProperties = presentationProperties ?? new();
 			presentationDocument = PresentationDocument.Create(new MemoryStream(), PresentationDocumentType.Presentation, true);
 			InitialisePresentation(this.presentationProperties);
 		}
-
 		public PresentationCore(string filePath, bool isEditable = true, PresentationProperties? presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
@@ -49,7 +39,6 @@ namespace OpenXMLOffice.Presentation_2007
 				presentationInfo.isExistingFile = true;
 			}
 		}
-
 		internal PresentationCore(Stream stream, bool isEditable = true, PresentationProperties? presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
@@ -63,33 +52,26 @@ namespace OpenXMLOffice.Presentation_2007
 				InitialisePresentation(this.presentationProperties);
 			}
 		}
-
-
 		internal string GetNextPresentationRelationId()
 		{
 			return string.Format("rId{0}", GetPresentationPart().Parts.Count() + 1);
 		}
-
 		internal uint GetNextSlideId()
 		{
 			return (uint)(slideIdStart + GetSlideIdList().Count() + 1);
 		}
-
 		internal uint GetNextSlideMasterId()
 		{
 			return (uint)(slideMasterIdStart + GetSlideMasterIdList().Count() + 1);
 		}
-
 		internal PresentationPart GetPresentationPart()
 		{
 			return presentationDocument.PresentationPart!;
 		}
-
 		internal P.SlideIdList GetSlideIdList()
 		{
 			return GetPresentationPart().Presentation.SlideIdList!;
 		}
-
 		internal SlideLayoutPart GetSlideLayoutPart(PresentationConstants.SlideLayoutType slideLayoutType)
 		{
 			// TODO: Multi Slide Master Use
@@ -97,12 +79,10 @@ namespace OpenXMLOffice.Presentation_2007
 			return slideMasterPart.SlideLayoutParts
 				   .FirstOrDefault(sl => sl.SlideLayout.CommonSlideData!.Name == PresentationConstants.GetSlideLayoutType(slideLayoutType))!;
 		}
-
 		internal P.SlideMasterIdList GetSlideMasterIdList()
 		{
 			return GetPresentationPart().Presentation.SlideMasterIdList!;
 		}
-
 		private static P.DefaultTextStyle CreateDefaultTextStyle()
 		{
 			P.DefaultTextStyle defaultTextStyle = new();
@@ -136,7 +116,6 @@ namespace OpenXMLOffice.Presentation_2007
 			defaultTextStyle.Append(levelParagraphProperties);
 			return defaultTextStyle;
 		}
-
 		private void InitialisePresentation(PresentationProperties? powerPointProperties)
 		{
 			SlideMaster slideMaster = new();
@@ -144,13 +123,13 @@ namespace OpenXMLOffice.Presentation_2007
 			if (presentationDocument.CoreFilePropertiesPart == null)
 			{
 				presentationDocument.AddCoreFilePropertiesPart();
-				XMLHelper.AddOrUpdateCoreProperties(presentationDocument.CoreFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			}
+			CoreProperties.AddOrUpdateCoreProperties(presentationDocument.CoreFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			if (presentationDocument.CustomFilePropertiesPart == null)
 			{
 				presentationDocument.AddCustomFilePropertiesPart();
-				XMLHelper.AddOrUpdateOpenXMLProperties(presentationDocument.CustomFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			}
+			CustomProperties.AddOrUpdateOpenXMLCustomProperties(presentationDocument.CustomFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			PresentationPart presentationPart = presentationDocument.PresentationPart ?? presentationDocument.AddPresentationPart();
 			if (presentationPart.Presentation == null)
 			{
@@ -229,7 +208,5 @@ namespace OpenXMLOffice.Presentation_2007
 			slideMaster.UpdateRelationship(presentationPart.ThemePart, presentationPart.GetIdOfPart(presentationPart.ThemePart));
 			presentationPart.Presentation.Save();
 		}
-
-
 	}
 }
