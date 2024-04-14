@@ -1,4 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
@@ -28,7 +32,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public int GetSheetId()
 		{
-			return int.Parse(sheet.Id!.Value!);
+			return int.Parse(sheet.Id.Value);
 		}
 		/// <summary>
 		///
@@ -43,7 +47,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal WorksheetPart GetWorksheetPart()
 		{
-			return openXMLworksheet.WorksheetPart!;
+			return openXMLworksheet.WorksheetPart;
 		}
 		internal string GetNextSheetPartRelationId()
 		{
@@ -58,7 +62,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public string GetSheetName()
 		{
-			return sheet.Name!;
+			return sheet.Name;
 		}
 		/// <summary>
 		/// Sets the properties for a column based on a starting cell ID in a worksheet.
@@ -73,13 +77,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public void SetColumn(int col, ColumnProperties columnProperties)
 		{
-			X.Columns? columns = openXMLworksheet.GetFirstChild<X.Columns>();
+			X.Columns columns = openXMLworksheet.GetFirstChild<X.Columns>();
 			if (columns == null)
 			{
 				columns = new X.Columns();
 				openXMLworksheet.InsertBefore(columns, openXMLworksheet.GetFirstChild<X.SheetData>());
 			}
-			X.Column? existingColumn = columns.Elements<X.Column>().FirstOrDefault(c => c.Max?.Value == col && c.Min?.Value == col);
+			X.Column existingColumn = columns.Elements<X.Column>().FirstOrDefault(c => c.Max.Value == col && c.Min.Value == col);
 			if (existingColumn != null)
 			{
 				existingColumn.CustomWidth = true;
@@ -92,7 +96,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			else
 			{
-				X.Column newColumn = new()
+				X.Column newColumn = new X.Column()
 				{
 					Min = (uint)col,
 					Max = (uint)col,
@@ -123,8 +127,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public void SetRow(string cellId, DataCell[] dataCells, RowProperties rowProperties)
 		{
-			(int rowIndex, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cellId);
-			X.Row? row = GetWorkSheetData().Elements<X.Row>().FirstOrDefault(r => r.RowIndex?.Value == (uint)rowIndex);
+			int rowIndex, columnIndex;
+			Tuple<int, int> result = ConverterUtils.ConvertFromExcelCellReference(cellId);
+			rowIndex = result.Item1;
+			columnIndex = result.Item2;
+			X.Row row = GetWorkSheetData().Elements<X.Row>().FirstOrDefault(r => r.RowIndex.Value == (uint)rowIndex);
 			if (row == null)
 			{
 				row = new X.Row
@@ -144,12 +151,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			foreach (DataCell DataCell in dataCells)
 			{
-				string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, colIndex);
-				colIndex++;
-				X.Cell? cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference?.Value == currentCellId);
-				if (string.IsNullOrEmpty(DataCell?.cellValue))
+				string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
+				columnIndex++;
+				X.Cell cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference.Value == currentCellId);
+				if (string.IsNullOrEmpty(DataCell.cellValue))
 				{
-					cell?.Remove();
+					cell.Remove();
 				}
 				else
 				{
@@ -162,7 +169,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 						row.AppendChild(cell);
 					}
 					X.CellValues dataType = GetCellValueType(DataCell.dataType);
-					cell.StyleIndex = DataCell.styleId ?? excel.GetStyleService().GetCellStyleId(DataCell.styleSetting ?? new());
+					cell.StyleIndex = DataCell.styleId ?? excel.GetStyleService().GetCellStyleId(DataCell.styleSetting ?? new CellStyleSetting());
 					if (dataType == X.CellValues.String)
 					{
 						cell.DataType = X.CellValues.SharedString;
@@ -182,26 +189,38 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		private static X.CellValues GetCellValueType(CellDataType cellDataType)
 		{
-			return cellDataType switch
+			switch (cellDataType)
 			{
-				CellDataType.DATE => X.CellValues.Date,
-				CellDataType.NUMBER => X.CellValues.Number,
-				_ => X.CellValues.String,
-			};
+				case CellDataType.DATE:
+					return X.CellValues.Date;
+				case CellDataType.NUMBER:
+					return X.CellValues.Number;
+				default:
+					return X.CellValues.String;
+			}
 		}
-		private static DataType GetCellDataType(EnumValue<X.CellValues>? cellValueType)
+
+		private static DataType GetCellDataType(EnumValue<X.CellValues> cellValueType)
 		{
 			if (cellValueType == null)
 			{
 				return DataType.STRING;
 			}
-			return cellValueType.ToString() switch
+			else
 			{
-				"d" => DataType.DATE,
-				"n" => DataType.NUMBER,
-				_ => DataType.STRING,
-			};
+				string valueType = cellValueType.ToString();
+				switch (valueType)
+				{
+					case "d":
+						return DataType.DATE;
+					case "n":
+						return DataType.NUMBER;
+					default:
+						return DataType.STRING;
+				}
+			}
 		}
+
 		/// <summary>
 		///
 		/// </summary>
@@ -212,11 +231,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public Picture? AddPicture(Stream stream, ExcelPictureSetting pictureSetting)
+		public Picture AddPicture(Stream stream, ExcelPictureSetting pictureSetting)
 		{
 			if (pictureSetting.fromCol < pictureSetting.toCol || pictureSetting.fromRow < pictureSetting.toRow)
 			{
-				return new Picture(this, stream, new()
+				return new Picture(this, stream, new ExcelPictureSetting()
 				{
 					fromCol = pictureSetting.fromCol,
 					fromRow = pictureSetting.fromRow,
@@ -240,8 +259,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			dataRange.sheetName ??= GetSheetName();
-			return new(this, chartDatas, dataRange, areaChartSetting);
+			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
+			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, areaChartSetting);
 		}
 		/// <summary>
 		///
@@ -249,8 +268,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			dataRange.sheetName ??= GetSheetName();
-			return new(this, chartDatas, dataRange, barChartSetting);
+			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
+			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, barChartSetting);
 		}
 		/// <summary>
 		///
@@ -258,8 +277,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			dataRange.sheetName ??= GetSheetName();
-			return new(this, chartDatas, dataRange, columnChartSetting);
+			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
+			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, columnChartSetting);
 		}
 		/// <summary>
 		///
@@ -267,8 +286,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			dataRange.sheetName ??= GetSheetName();
-			return new(this, chartDatas, dataRange, lineChartSetting);
+			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
+			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, lineChartSetting);
 		}
 		/// <summary>
 		///
@@ -276,8 +295,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			dataRange.sheetName ??= GetSheetName();
-			return new(this, chartDatas, dataRange, pieChartSetting);
+			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
+			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, pieChartSetting);
 		}
 		/// <summary>
 		///
@@ -285,8 +304,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			dataRange.sheetName ??= GetSheetName();
-			return new(this, chartDatas, dataRange, scatterChartSetting);
+			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
+			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, scatterChartSetting);
 		}
 		/// <summary>
 		///
@@ -294,43 +313,43 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : ExcelSetting
 		{
 			ChartData[][] chartDatas = PrepareCacheData(dataRange);
-			dataRange.sheetName ??= GetSheetName();
-			return new(this, chartDatas, dataRange, comboChartSetting);
+			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
+			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, comboChartSetting);
 		}
 		private ChartData[][] PrepareCacheData(DataRange dataRange)
 		{
-			Worksheet? worksheet = excel.GetWorksheet(dataRange.sheetName ?? GetSheetName()) ?? throw new ArgumentException("Data Range Sheet not founds");
+			Worksheet worksheet = excel.GetWorksheet(dataRange.sheetName ?? GetSheetName()) ?? throw new ArgumentException("Data Range Sheet not founds");
 			(int rowStart, int colStart) = ConverterUtils.ConvertFromExcelCellReference(dataRange.cellIdStart);
 			(int rowEnd, int colEnd) = ConverterUtils.ConvertFromExcelCellReference(dataRange.cellIdEnd);
-			List<X.Row> dataRows = GetWorkSheetData().Elements<X.Row>().Where(row => row.RowIndex?.Value >= rowStart && row.RowIndex?.Value <= rowEnd).ToList();
+			List<X.Row> dataRows = GetWorkSheetData().Elements<X.Row>().Where(row => row.RowIndex.Value >= rowStart && row.RowIndex.Value <= rowEnd).ToList();
 			ChartData[][] chartDatas = new ChartData[rowEnd - rowStart + 1][];
 			dataRows.ForEach(row =>
 			{
-				chartDatas[(int)(row.RowIndex?.Value - rowStart)!] = new ChartData[colEnd - colStart + 1];
-				List<string> cellIds = new();
+				chartDatas[(int)(row.RowIndex.Value - rowStart)] = new ChartData[colEnd - colStart + 1];
+				List<string> cellIds = new List<string>();
 				for (int col = colStart; col <= colEnd; col++)
 				{
-					cellIds.Add(ConverterUtils.ConvertToExcelCellReference((int)(row.RowIndex?.Value)!, col));
+					cellIds.Add(ConverterUtils.ConvertToExcelCellReference((int)row.RowIndex.Value, col));
 				}
-				List<X.Cell> dataCells = row.Elements<X.Cell>().Where(c => cellIds.Contains(c.CellReference?.Value!)).ToList();
+				List<X.Cell> dataCells = row.Elements<X.Cell>().Where(c => cellIds.Contains(c.CellReference.Value)).ToList();
 				dataCells.ForEach(cell =>
 				{
 					(int _, int colIndex) = ConverterUtils.ConvertFromExcelCellReference(cell.CellReference?.Value!);
 					// TODO : Cell Value is bit confusing for value types and formula do furter research for extending the functionality
 					DataType cellDataType = GetCellDataType(cell.DataType);
-					string? cellValue = cellDataType switch
+					string cellValue = cellDataType switch
 					{
-						_ => cell.CellValue!.Text
+						_ => cell.CellValue.Text
 					};
-					if (cell.DataType?.ToString() == "s")
+					if (cell.DataType.ToString() == "s")
 					{
 						cellValue = excel.GetShareStringService().GetValue(int.Parse(cellValue));
 					}
-					chartDatas[(int)(row.RowIndex?.Value - rowStart)!][colIndex - colStart] = new()
+					chartDatas[(int)(row.RowIndex.Value - rowStart)][colIndex - colStart] = new ChartData()
 					{
 						dataType = cellDataType,
 						// TODO : Do Performance Update
-						numberFormat = excel.GetStyleService().GetStyleForId(cell.StyleIndex!).numberFormat,
+						numberFormat = excel.GetStyleService().GetStyleForId(cell.StyleIndex).numberFormat,
 						value = cellValue ?? ""
 					};
 				});

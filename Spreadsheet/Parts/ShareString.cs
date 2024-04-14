@@ -1,4 +1,8 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using LiteDB;
 namespace OpenXMLOffice.Spreadsheet_2007
 {
@@ -7,7 +11,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// </summary>
 	internal class ShareStringService : IDisposable
 	{
-		private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
+		private static readonly LiteDatabase liteDatabase = new LiteDatabase(Path.ChangeExtension(Path.GetTempFileName(), "db"));
 		private readonly ILiteCollection<StringRecord> stringCollection;
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ShareStringService"/> class.
@@ -35,7 +39,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </returns>
 		public int? GetIndex(string value)
 		{
-			return stringCollection.FindOne(col => col.Value == value)?.Id - 1;
+			return stringCollection.FindOne(col => col.Value == value).Id - 1;
 		}
 		/// <summary>
 		/// Gets all the records in the shared string collection.
@@ -56,9 +60,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <returns>
 		/// The value at the specified index if found; otherwise, null.
 		/// </returns>
-		public string? GetValue(int index)
+		public string GetValue(int index)
 		{
-			return stringCollection.FindById(index)?.Value;
+			return stringCollection.FindById(index).Value;
 		}
 		/// <summary>
 		/// Inserts a new value into the shared string collection.

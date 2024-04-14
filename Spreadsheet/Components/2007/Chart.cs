@@ -1,4 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Global_2013;
@@ -95,24 +96,24 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		private void ConnectDrawingToChart(Worksheet worksheet, string chartId)
 		{
 			// Add anchor to drawing for chart grapics
-			XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new()
+			XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
 			{
 				anchorEditType = AnchorEditType.NONE,
-				from = new()
+				from = new AnchorPosition()
 				{
 					row = chartSetting.applicationSpecificSetting.from.row,
 					rowOffset = chartSetting.applicationSpecificSetting.from.rowOffset,
 					column = chartSetting.applicationSpecificSetting.from.column,
 					columnOffset = chartSetting.applicationSpecificSetting.from.columnOffset,
 				},
-				to = new()
+				to = new AnchorPosition()
 				{
 					row = chartSetting.applicationSpecificSetting.to.row,
 					rowOffset = chartSetting.applicationSpecificSetting.to.rowOffset,
 					column = chartSetting.applicationSpecificSetting.to.column,
 					columnOffset = chartSetting.applicationSpecificSetting.to.columnOffset,
 				},
-				drawingGraphicFrame = new()
+				drawingGraphicFrame = new DrawingGraphicFrame()
 				{
 					id = (uint)worksheet.GetDrawingsPart().Parts.Count(),
 					name = string.Format("Chart {0}", (uint)worksheet.GetDrawingsPart().Parts.Count()),
@@ -123,37 +124,37 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
 		{
-			AreaChart<ApplicationSpecificSetting> areaChart = new(areaChartSetting, chartDatas, dataRange);
+			AreaChart<ApplicationSpecificSetting> areaChart = new AreaChart<ApplicationSpecificSetting>(areaChartSetting, chartDatas, dataRange);
 			SaveChanges(areaChart);
 		}
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting)
 		{
-			BarChart<ApplicationSpecificSetting> barChart = new(barChartSetting, chartDatas, dataRange);
+			BarChart<ApplicationSpecificSetting> barChart = new BarChart<ApplicationSpecificSetting>(barChartSetting, chartDatas, dataRange);
 			SaveChanges(barChart);
 		}
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
 		{
-			ColumnChart<ApplicationSpecificSetting> columnChart = new(columnChartSetting, chartDatas, dataRange);
+			ColumnChart<ApplicationSpecificSetting> columnChart = new ColumnChart<ApplicationSpecificSetting>(columnChartSetting, chartDatas, dataRange);
 			SaveChanges(columnChart);
 		}
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
 		{
-			LineChart<ApplicationSpecificSetting> lineChart = new(lineChartSetting, chartDatas, dataRange);
+			LineChart<ApplicationSpecificSetting> lineChart = new LineChart<ApplicationSpecificSetting>(lineChartSetting, chartDatas, dataRange);
 			SaveChanges(lineChart);
 		}
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
 		{
-			PieChart<ApplicationSpecificSetting> pieChart = new(pieChartSetting, chartDatas, dataRange);
+			PieChart<ApplicationSpecificSetting> pieChart = new PieChart<ApplicationSpecificSetting>(pieChartSetting, chartDatas, dataRange);
 			SaveChanges(pieChart);
 		}
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
 		{
-			ScatterChart<ApplicationSpecificSetting> scatterChart = new(scatterChartSetting, chartDatas, dataRange);
+			ScatterChart<ApplicationSpecificSetting> scatterChart = new ScatterChart<ApplicationSpecificSetting>(scatterChartSetting, chartDatas, dataRange);
 			SaveChanges(scatterChart);
 		}
 		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting)
 		{
-			ComboChart<ApplicationSpecificSetting> comboChart = new(comboChartSetting, chartDatas, dataRange);
+			ComboChart<ApplicationSpecificSetting> comboChart = new ComboChart<ApplicationSpecificSetting>(comboChartSetting, chartDatas, dataRange);
 			SaveChanges(comboChart);
 		}
 		private void SaveChanges(ChartBase<ApplicationSpecificSetting> chart)
@@ -168,7 +169,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private ChartColorStylePart GetChartColorStylePart()
 		{
-			return openXMLChartPart.ChartColorStyleParts.FirstOrDefault()!;
+			return openXMLChartPart.ChartColorStyleParts.FirstOrDefault();
 		}
 		private ChartPart GetChartPart()
 		{
@@ -176,7 +177,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private ChartStylePart GetChartStylePart()
 		{
-			return openXMLChartPart.ChartStyleParts.FirstOrDefault()!;
+			return openXMLChartPart.ChartStyleParts.FirstOrDefault();
 		}
 		private void InitialiseChartParts()
 		{

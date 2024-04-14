@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Presentation;
 using LiteDB;
@@ -11,7 +13,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// </summary>
 	public class StylesService
 	{
-		private static readonly LiteDatabase liteDatabase = new(Path.ChangeExtension(Path.GetTempFileName(), "db"));
+		private static readonly LiteDatabase liteDatabase = new LiteDatabase(Path.ChangeExtension(Path.GetTempFileName(), "db"));
 		private readonly ILiteCollection<BorderStyle> borderStyleCollection;
 		private readonly ILiteCollection<CellXfs> cellXfsCollection;
 		private readonly ILiteCollection<FillStyle> fillStyleCollection;
@@ -30,13 +32,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public CellStyleSetting GetStyleForId(uint styleId)
 		{
-			CellXfs? cellXfs = cellXfsCollection.FindOne(item => item.Id == styleId);
-			FontStyle? fontStyle = fontStyleCollection.FindOne(item => item.Id == cellXfs.FontId);
-			BorderStyle? borderStyle = borderStyleCollection.FindOne(item => item.Id == cellXfs.BorderId);
-			FillStyle? fillStyle = fillStyleCollection.FindOne(item => item.Id == cellXfs.FillId);
-			NumberFormats? numberFormats = numberFormatCollection.FindOne(item =>
-				item.Id == cellXfs.NumberFormatId!);
-			CellStyleSetting cellStyleSetting = new()
+			CellXfs cellXfs = cellXfsCollection.FindOne(item => item.Id == styleId);
+			FontStyle fontStyle = fontStyleCollection.FindOne(item => item.Id == cellXfs.FontId);
+			BorderStyle borderStyle = borderStyleCollection.FindOne(item => item.Id == cellXfs.BorderId);
+			FillStyle fillStyle = fillStyleCollection.FindOne(item => item.Id == cellXfs.FillId);
+			NumberFormats numberFormats = numberFormatCollection.FindOne(item =>
+				item.Id == cellXfs.NumberFormatId);
+			CellStyleSetting cellStyleSetting = new CellStyleSetting()
 			{
 				isWrapText = cellXfs.IsWrapetext,
 				fontFamily = fontStyle.Name,
@@ -71,7 +73,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			bool IsBorder = BorderId > 0;
 			bool IsAlignment = CellStyleSetting.horizontalAlignment != HorizontalAlignmentValues.NONE ||
 				CellStyleSetting.verticalAlignment != VerticalAlignmentValues.NONE;
-			CellXfs? CellXfs = cellXfsCollection.FindOne(item =>
+			CellXfs CellXfs = cellXfsCollection.FindOne(item =>
 				item.FontId == FontId &&
 				item.BorderId == BorderId &&
 				item.FillId == FillId &&
@@ -108,8 +110,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Load the style from the Exisiting Sheet
 		/// </summary>
-		/// <exception cref="NotImplementedException">
-		/// </exception>
 		internal void LoadStyleFromSheet(X.Stylesheet Stylesheet)
 		{
 			SetFonts(Stylesheet.Fonts);
@@ -121,26 +121,24 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Save the style properties to the xlsx file
 		/// </summary>
-		/// <exception cref="NotImplementedException">
-		/// </exception>
 		internal void SaveStyleProps(X.Stylesheet Stylesheet)
 		{
 			Stylesheet.Fonts = GetFonts();
 			Stylesheet.Fills = GetFills();
 			Stylesheet.Borders = GetBorders();
-			Stylesheet.CellStyleFormats ??= new(
+			Stylesheet.CellStyleFormats = Stylesheet.CellStyleFormats ?? new X.CellStyleFormats(
 				new X.CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0 })
 			{ Count = 1 };//cellStyleXfs
 			Stylesheet.CellFormats = GetCellFormats();//cellXfs
-			Stylesheet.CellStyles ??= new(
+			Stylesheet.CellStyles = Stylesheet.CellStyles ?? new X.CellStyles(
 				new X.CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
 			{ Count = 1 };//cellStyles
-			Stylesheet.DifferentialFormats ??= new() { Count = 0 };//dxfs
+			Stylesheet.DifferentialFormats = Stylesheet.DifferentialFormats ?? new X.DifferentialFormats() { Count = 0 };//dxfs
 			Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
 		}
 		private uint GetBorderId(CellStyleSetting CellStyleSetting)
 		{
-			BorderStyle? BorderStyle = borderStyleCollection.FindOne(item =>
+			BorderStyle BorderStyle = borderStyleCollection.FindOne(item =>
 				item.Left == CellStyleSetting.borderLeft &&
 				item.Right == CellStyleSetting.borderRight &&
 				item.Top == CellStyleSetting.borderTop &&
@@ -162,36 +160,50 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return (uint)Result.AsInt64;
 			}
 		}
+		private static X.BorderStyleValues GetBorderStyle(StyleValues Style)
+		{
+			switch (Style)
+			{
+				case StyleValues.THIN:
+					return X.BorderStyleValues.Thin;
+				case StyleValues.THICK:
+					return X.BorderStyleValues.Thick;
+				case StyleValues.DOTTED:
+					return X.BorderStyleValues.Dotted;
+				case StyleValues.DOUBLE:
+					return X.BorderStyleValues.Double;
+				case StyleValues.DASHED:
+					return X.BorderStyleValues.Dashed;
+				case StyleValues.DASH_DOT:
+					return X.BorderStyleValues.DashDot;
+				case StyleValues.DASH_DOT_DOT:
+					return X.BorderStyleValues.DashDotDot;
+				case StyleValues.MEDIUM:
+					return X.BorderStyleValues.Medium;
+				case StyleValues.MEDIUM_DASHED:
+					return X.BorderStyleValues.MediumDashed;
+				case StyleValues.MEDIUM_DASH_DOT:
+					return X.BorderStyleValues.MediumDashDot;
+				case StyleValues.MEDIUM_DASH_DOT_DOT:
+					return X.BorderStyleValues.MediumDashDotDot;
+				case StyleValues.SLANT_DASH_DOT:
+					return X.BorderStyleValues.SlantDashDot;
+				case StyleValues.HAIR:
+					return X.BorderStyleValues.Hair;
+				default:
+					return X.BorderStyleValues.None;
+			}
+		}
 		private X.Borders GetBorders()
 		{
-			return new(borderStyleCollection.FindAll().ToList().Select(item =>
+			return new X.Borders(borderStyleCollection.FindAll().ToList().Select(item =>
 			{
-				static X.BorderStyleValues GetBorderStyle(StyleValues Style)
+				X.Border Border = new X.Border()
 				{
-					return Style switch
-					{
-						StyleValues.THIN => X.BorderStyleValues.Thin,
-						StyleValues.THICK => X.BorderStyleValues.Thick,
-						StyleValues.DOTTED => X.BorderStyleValues.Dotted,
-						StyleValues.DOUBLE => X.BorderStyleValues.Double,
-						StyleValues.DASHED => X.BorderStyleValues.Dashed,
-						StyleValues.DASH_DOT => X.BorderStyleValues.DashDot,
-						StyleValues.DASH_DOT_DOT => X.BorderStyleValues.DashDotDot,
-						StyleValues.MEDIUM => X.BorderStyleValues.Medium,
-						StyleValues.MEDIUM_DASHED => X.BorderStyleValues.MediumDashed,
-						StyleValues.MEDIUM_DASH_DOT => X.BorderStyleValues.MediumDashDot,
-						StyleValues.MEDIUM_DASH_DOT_DOT => X.BorderStyleValues.MediumDashDotDot,
-						StyleValues.SLANT_DASH_DOT => X.BorderStyleValues.SlantDashDot,
-						StyleValues.HAIR => X.BorderStyleValues.Hair,
-						_ => X.BorderStyleValues.None
-					};
-				}
-				X.Border Border = new()
-				{
-					LeftBorder = new(),
-					RightBorder = new(),
-					BottomBorder = new(),
-					TopBorder = new(),
+					LeftBorder = new X.LeftBorder(),
+					RightBorder = new X.RightBorder(),
+					BottomBorder = new X.BottomBorder(),
+					TopBorder = new X.TopBorder(),
 				};
 				if (item.Left.style != StyleValues.NONE)
 				{
@@ -219,10 +231,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private X.CellFormats GetCellFormats()
 		{
-			return new(
+			return new X.CellFormats(
 						cellXfsCollection.FindAll().ToList().Select(item =>
 						{
-							X.CellFormat CellFormat = new()
+							X.CellFormat CellFormat = new X.CellFormat()
 							{
 								NumberFormatId = item.NumberFormatId,
 								FontId = item.FontId,
@@ -239,24 +251,36 @@ namespace OpenXMLOffice.Spreadsheet_2007
 								item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
 								item.IsWrapetext)
 							{
-								CellFormat.Alignment = new();
+								CellFormat.Alignment = new X.Alignment();
 								if (item.VerticalAlignment != VerticalAlignmentValues.NONE)
 								{
-									CellFormat.Alignment.Vertical = item.VerticalAlignment switch
+									if (item.VerticalAlignment == VerticalAlignmentValues.TOP)
 									{
-										VerticalAlignmentValues.TOP => X.VerticalAlignmentValues.Top,
-										VerticalAlignmentValues.MIDDLE => X.VerticalAlignmentValues.Center,
-										_ => X.VerticalAlignmentValues.Bottom
-									};
+										CellFormat.Alignment.Vertical = X.VerticalAlignmentValues.Top;
+									}
+									else if (item.VerticalAlignment == VerticalAlignmentValues.MIDDLE)
+									{
+										CellFormat.Alignment.Vertical = X.VerticalAlignmentValues.Center;
+									}
+									else
+									{
+										CellFormat.Alignment.Vertical = X.VerticalAlignmentValues.Bottom;
+									}
 								}
 								if (item.HorizontalAlignment != HorizontalAlignmentValues.NONE)
 								{
-									CellFormat.Alignment.Horizontal = item.HorizontalAlignment switch
+									if (item.HorizontalAlignment == HorizontalAlignmentValues.LEFT)
 									{
-										HorizontalAlignmentValues.LEFT => X.HorizontalAlignmentValues.Left,
-										HorizontalAlignmentValues.CENTER => X.HorizontalAlignmentValues.Center,
-										_ => X.HorizontalAlignmentValues.Right
-									};
+										CellFormat.Alignment.Horizontal = X.HorizontalAlignmentValues.Left;
+									}
+									else if (item.HorizontalAlignment == HorizontalAlignmentValues.CENTER)
+									{
+										CellFormat.Alignment.Horizontal = X.HorizontalAlignmentValues.Center;
+									}
+									else
+									{
+										CellFormat.Alignment.Horizontal = X.HorizontalAlignmentValues.Right;
+									}
 								}
 								if (item.IsWrapetext)
 								{
@@ -269,7 +293,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private uint GetFillId(CellStyleSetting CellStyleSetting)
 		{
-			FillStyle? FillStyle = fillStyleCollection.FindOne(item =>
+			FillStyle FillStyle = fillStyleCollection.FindOne(item =>
 				item.BackgroundColor == CellStyleSetting.backgroundColor &&
 				item.ForegroundColor == CellStyleSetting.foregroundColor);
 			if (FillStyle != null)
@@ -289,34 +313,40 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private X.Fills GetFills()
 		{
-			return new(fillStyleCollection.FindAll().ToList().Select(item =>
+			return new X.Fills(fillStyleCollection.FindAll().ToList().Select(item =>
 			{
-				X.Fill Fill = new()
+				X.PatternValues patternType;
+				if (item.PatternType == PatternTypeValues.SOLID)
 				{
-					PatternFill = new()
-					{
-						PatternType = item.PatternType switch
-						{
-							PatternTypeValues.SOLID => X.PatternValues.Solid,
-							_ => X.PatternValues.None,
-						}
-					}
+					patternType = X.PatternValues.Solid;
+				}
+				else
+				{
+					patternType = X.PatternValues.None;
+				}
+				X.PatternFill patternFill = new X.PatternFill()
+				{
+					PatternType = patternType
+				};
+				X.Fill fill = new X.Fill()
+				{
+					PatternFill = patternFill
 				};
 				if (item.BackgroundColor != null)
 				{
-					Fill.PatternFill.BackgroundColor = new() { Rgb = item.BackgroundColor };
+					fill.PatternFill.BackgroundColor = new X.BackgroundColor() { Rgb = item.BackgroundColor };
 				}
 				if (item.ForegroundColor != null)
 				{
-					Fill.PatternFill.ForegroundColor = new() { Rgb = item.ForegroundColor };
+					fill.PatternFill.ForegroundColor = new X.ForegroundColor() { Rgb = item.ForegroundColor };
 				}
-				return Fill;
+				return fill;
 			}))
 			{ Count = (uint)fillStyleCollection.Count() };
 		}
 		private uint GetFontId(CellStyleSetting CellStyleSetting)
 		{
-			FontStyle? FontStyle = fontStyleCollection.FindOne(item =>
+			FontStyle FontStyle = fontStyleCollection.FindOne(item =>
 				item.IsBold == CellStyleSetting.isBold &&
 				item.IsItalic == CellStyleSetting.isItalic &&
 				item.IsUnderline == CellStyleSetting.isUnderline &&
@@ -339,7 +369,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					IsUnderline = CellStyleSetting.isUnderline,
 					IsDoubleUnderline = CellStyleSetting.isDoubleUnderline,
 					Size = CellStyleSetting.fontSize,
-					Color = new()
+					Color = new FontColor()
 					{
 						FontColorType = FontColorTypeValues.RGB,
 						Value = CellStyleSetting.textColor.Value,
@@ -351,45 +381,54 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private X.Fonts GetFonts()
 		{
-			return new(fontStyleCollection.FindAll().ToList().Select(item =>
+			return new X.Fonts(fontStyleCollection.FindAll().ToList().Select(item =>
 			{
-				X.Font Font = new()
+				X.FontSchemeValues fontScheme;
+				switch (item.FontScheme)
 				{
-					FontSize = new() { Val = item.Size },
-					FontName = new() { Val = item.Name },
-					FontFamilyNumbering = new() { Val = item.Family },
-					FontScheme = new()
-					{
-						Val = item.FontScheme switch
-						{
-							SchemeValues.MINOR => X.FontSchemeValues.Minor,
-							SchemeValues.MAJOR => X.FontSchemeValues.Major,
-							_ => X.FontSchemeValues.None
-						}
-					}
+					case SchemeValues.MINOR:
+						fontScheme = X.FontSchemeValues.Minor;
+						break;
+					case SchemeValues.MAJOR:
+						fontScheme = X.FontSchemeValues.Major;
+						break;
+					default:
+						fontScheme = X.FontSchemeValues.None;
+						break;
+				}
+				X.FontScheme fontSchemeElement = new X.FontScheme()
+				{
+					Val = fontScheme
+				};
+				X.Font Font = new X.Font()
+				{
+					FontSize = new X.FontSize() { Val = item.Size },
+					FontName = new X.FontName() { Val = item.Name },
+					FontFamilyNumbering = new X.FontFamilyNumbering() { Val = item.Family },
+					FontScheme = fontSchemeElement
 				};
 				if (item.Color.Value != null)
 				{
 					if (item.Color.FontColorType == FontColorTypeValues.RGB)
 					{
-						Font.Color = new() { Rgb = item.Color.Value };
+						Font.Color = new X.Color() { Rgb = item.Color.Value };
 					}
 					else
 					{
-						Font.Color = new() { Theme = new UInt32Value((uint)int.Parse(item.Color.Value)) };
+						Font.Color = new X.Color() { Theme = new UInt32Value((uint)int.Parse(item.Color.Value)) };
 					}
 				}
 				if (item.IsBold)
 				{
-					Font.Bold = new();
+					Font.Bold = new X.Bold();
 				}
 				if (item.IsItalic)
 				{
-					Font.Italic = new();
+					Font.Italic = new X.Italic();
 				}
 				if (item.IsUnderline || item.IsDoubleUnderline)
 				{
-					Font.Underline = item.IsDoubleUnderline ? new() { Val = X.UnderlineValues.Double } : new();
+					Font.Underline = item.IsDoubleUnderline ? new X.Underline() { Val = X.UnderlineValues.Double } : new X.Underline();
 				}
 				return Font;
 			}))
@@ -397,7 +436,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private uint GetNumberFormat(CellStyleSetting CellStyleSetting)
 		{
-			NumberFormats? NumberFormats = numberFormatCollection.FindOne(item =>
+			NumberFormats NumberFormats = numberFormatCollection.FindOne(item =>
 				item.FormatCode == CellStyleSetting.numberFormat);
 			if (NumberFormats != null)
 			{
@@ -420,9 +459,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private X.NumberingFormats GetNumberFormats()
 		{
-			return new(numberFormatCollection.FindAll().ToList().Select(item =>
+			return new X.NumberingFormats(numberFormatCollection.FindAll().ToList().Select(item =>
 			{
-				X.NumberingFormat NumberingFormat = new()
+				X.NumberingFormat NumberingFormat = new X.NumberingFormat()
 				{
 					NumberFormatId = item.Id,
 					FormatCode = item.FormatCode
@@ -431,25 +470,25 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}))
 			{ Count = (uint)numberFormatCollection.Count() };
 		}
-		private void SetNumberFormats(X.NumberingFormats? numberingFormats)
+		private void SetNumberFormats(X.NumberingFormats numberingFormats)
 		{
-			numberingFormats?.Descendants<X.NumberingFormat>().ToList()
+			numberingFormats.Descendants<X.NumberingFormat>().ToList()
 			.ForEach(numberingFormat =>
 			{
-				NumberFormats numFormat = new()
+				NumberFormats numFormat = new NumberFormats()
 				{
-					Id = numberingFormat.NumberFormatId!
+					Id = numberingFormat.NumberFormatId
 				};
 				if (numberingFormat.FormatCode != null)
 				{
-					numFormat.FormatCode = numberingFormat.FormatCode!;
+					numFormat.FormatCode = numberingFormat.FormatCode;
 				}
 				numberFormatCollection.Insert(numFormat);
 			});
 		}
-		private void SetCellFormats(X.CellFormats? cellFormats)
+		private void SetCellFormats(X.CellFormats cellFormats)
 		{
-			cellFormats?.Descendants<X.CellFormat>().ToList()
+			cellFormats.Descendants<X.CellFormat>().ToList()
 			.ForEach(cellFormat =>
 			{
 				if (cellFormat.NumberFormatId != null ||
@@ -457,7 +496,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				cellFormat.FillId != null ||
 				cellFormat.BorderId != null)
 				{
-					CellXfs cellXfs = new()
+					CellXfs cellXfs = new CellXfs()
 					{
 						Id = (uint)cellXfsCollection.Count()
 					};
@@ -481,30 +520,30 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				}
 			});
 		}
-		private void SetBorders(X.Borders? borders)
+		private void SetBorders(X.Borders borders)
 		{
-			borders?.Descendants<X.Border>().ToList()
+			borders.Descendants<X.Border>().ToList()
 			.ForEach(border =>
 			{
 			});
 		}
-		private void SetFills(X.Fills? fills)
+		private void SetFills(X.Fills fills)
 		{
-			fills?.Descendants<X.Fill>().ToList()
+			fills.Descendants<X.Fill>().ToList()
 			.ForEach(fill =>
 			{
-				if (fill.PatternFill?.BackgroundColor?.Rgb != null ||
-				fill.PatternFill?.ForegroundColor?.Rgb != null)
+				if (fill.PatternFill.BackgroundColor.Rgb != null ||
+				fill.PatternFill.ForegroundColor.Rgb != null)
 				{
-					FillStyle fillStyle = new()
+					FillStyle fillStyle = new FillStyle()
 					{
 						Id = (uint)fillStyleCollection.Count()
 					};
-					if (fill.PatternFill?.ForegroundColor?.Rgb != null)
+					if (fill.PatternFill.ForegroundColor.Rgb != null)
 					{
 						fillStyle.ForegroundColor = fill.PatternFill.ForegroundColor.Rgb;
 					}
-					if (fill.PatternFill?.BackgroundColor?.Rgb != null)
+					if (fill.PatternFill.BackgroundColor.Rgb != null)
 					{
 						fillStyle.BackgroundColor = fill.PatternFill.BackgroundColor.Rgb;
 					}
@@ -512,47 +551,55 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				}
 			});
 		}
-		private void SetFonts(X.Fonts? fonts)
+		private void SetFonts(X.Fonts fonts)
 		{
-			fonts?.Descendants<X.Font>().ToList()
+			fonts.Descendants<X.Font>().ToList()
 			.ForEach(font =>
 			{
-				FontStyle fontStyle = new()
+				FontStyle fontStyle = new FontStyle()
 				{
 					Id = (uint)fontStyleCollection.Count(),
 					IsBold = font.Bold != null,
 					IsItalic = font.Italic != null,
 					IsUnderline = font.Underline != null,
-					IsDoubleUnderline = font.Underline?.Val != null && font.Underline.Val == X.UnderlineValues.Double,
+					IsDoubleUnderline = font.Underline.Val != null && font.Underline.Val == X.UnderlineValues.Double,
 				};
-				if (font.FontSize?.Val != null)
+				if (font.FontSize.Val != null)
 				{
 					fontStyle.Size = (uint)font.FontSize.Val;
 				}
 				if (font.Color != null)
 				{
 					fontStyle.Color = font.Color.Rgb != null ?
-					new()
+					new FontColor()
 					{
 						FontColorType = FontColorTypeValues.RGB,
-						Value = font.Color.Rgb!
+						Value = font.Color.Rgb
 					} :
-					new() { Value = font.Color.Theme! ?? "1" };
+					new FontColor() { Value = font.Color.Theme ?? "1" };
 				}
-				if (font.FontName?.Val != null)
+				if (font.FontName.Val != null)
 				{
-					fontStyle.Name = font.FontName.Val!;
+					fontStyle.Name = font.FontName.Val;
 				}
-				if (font.FontFamilyNumbering?.Val != null)
+				if (font.FontFamilyNumbering.Val != null)
 				{
 					fontStyle.Family = font.FontFamilyNumbering.Val;
 				}
-				fontStyle.FontScheme = font.FontScheme?.Val?.InnerText switch
+				SchemeValues fontScheme;
+				switch (font.FontScheme.Val.InnerText)
 				{
-					"minor" => SchemeValues.MINOR,
-					"major" => SchemeValues.MAJOR,
-					_ => SchemeValues.NONE
-				};
+					case "minor":
+						fontScheme = SchemeValues.MINOR;
+						break;
+					case "major":
+						fontScheme = SchemeValues.MAJOR;
+						break;
+					default:
+						fontScheme = SchemeValues.NONE;
+						break;
+				}
+				fontStyle.FontScheme = fontScheme;
 				fontStyleCollection.Insert(fontStyle);
 			});
 		}

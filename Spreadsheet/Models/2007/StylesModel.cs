@@ -134,10 +134,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public BorderStyle()
 		{
-			Bottom = new();
-			Left = new();
-			Right = new();
-			Top = new();
+			Bottom = new BorderSetting();
+			Left = new BorderSetting();
+			Right = new BorderSetting();
+			Top = new BorderSetting();
 		}
 		/// <summary>
 		/// Bottom border style
@@ -168,23 +168,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the background color of the cell.
 		/// </summary>
-		public string? backgroundColor;
+		public string backgroundColor;
 		/// <summary>
 		/// Bottom border style
 		/// </summary>
-		public BorderSetting borderBottom = new();
+		public BorderSetting borderBottom = new BorderSetting();
 		/// <summary>
 		/// Left border style
 		/// </summary>
-		public BorderSetting borderLeft = new();
+		public BorderSetting borderLeft = new BorderSetting();
 		/// <summary>
 		/// Right border style
 		/// </summary>
-		public BorderSetting borderRight = new();
+		public BorderSetting borderRight = new BorderSetting();
 		/// <summary>
 		/// Top border style
 		/// </summary>
-		public BorderSetting borderTop = new();
+		public BorderSetting borderTop = new BorderSetting();
 		/// <summary>
 		/// Gets or sets the font family of the cell. default is Calibri
 		/// </summary>
@@ -196,7 +196,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Get or Set Foreground Color
 		/// </summary>
-		public string? foregroundColor;
+		public string foregroundColor;
 		/// <summary>
 		/// Horizontal alignment of the cell. default is left
 		/// </summary>
@@ -228,7 +228,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the text color of the cell. default is 000000
 		/// </summary>
-		public FontColor textColor = new()
+		public FontColor textColor = new FontColor()
 		{
 			FontColorType = FontColorTypeValues.RGB,
 			Value = "000000"
@@ -319,11 +319,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the background color of the cell.
 		/// </summary>
-		public string? BackgroundColor { get; set; }
+		public string BackgroundColor { get; set; }
 		/// <summary>
 		/// Gets or sets the foreground color of the cell.
 		/// </summary>
-		public string? ForegroundColor { get; set; }
+		public string ForegroundColor { get; set; }
 		/// <summary>
 		/// Fill style ID
 		/// </summary>
@@ -341,11 +341,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public FontColorTypeValues FontColorType { get; set; } = FontColorTypeValues.THEME;
+		public FontColorTypeValues FontColorType { get; set; }
 		/// <summary>
 		///
 		/// </summary>
-		public required string Value { get; set; }
+		public string Value { get; set; }
+		/// <summary>
+		///
+		/// </summary>
+		public FontColor()
+		{
+			FontColorType = FontColorTypeValues.THEME;
+		}
 	}
 	/// <summary>
 	/// Represents the font style of a cell in a worksheet.
@@ -357,7 +364,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public FontStyle()
 		{
-			Color = new() { Value = "1" };
+			Color = new FontColor() { Value = "1" };
 			Family = 2;
 			Size = 11;
 			Name = "Calibri";

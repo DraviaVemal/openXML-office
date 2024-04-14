@@ -46,7 +46,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the value of the cell.
 		/// </summary>
-		public string? cellValue;
+		public string cellValue;
 		/// <summary>
 		/// Gets or sets the data type of the cell.
 		/// </summary>
@@ -55,7 +55,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// It is highgly recomended to use styleId instead of styleSetting.
 		/// </summary>
 		/// warning: styleSetting will be ignored if styleId is not null
-		public CellStyleSetting? styleSetting = new();
+		public CellStyleSetting styleSetting = new CellStyleSetting();
 		/// <summary>
 		/// Use file level styleId instead of styleSetting.
 		/// Can get the styleId from spreadsheet.GetCellStyleId(CellStyleSetting)

@@ -1,4 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -12,24 +15,24 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	{
 		internal readonly Excel excel;
 		internal readonly SpreadsheetDocument spreadsheetDocument;
-		internal readonly SpreadsheetInfo spreadsheetInfo = new();
+		internal readonly SpreadsheetInfo spreadsheetInfo = new SpreadsheetInfo();
 		internal readonly SpreadsheetProperties spreadsheetProperties;
-		private readonly StylesService stylesService = new();
-		private readonly ShareStringService shareStringService = new();
-		internal SpreadsheetCore(Excel excel, SpreadsheetProperties? spreadsheetProperties = null)
+		private readonly StylesService stylesService = new StylesService();
+		private readonly ShareStringService shareStringService = new ShareStringService();
+		internal SpreadsheetCore(Excel excel, SpreadsheetProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new();
-			MemoryStream memoryStream = new();
+			this.spreadsheetProperties = spreadsheetProperties ?? new SpreadsheetProperties();
+			MemoryStream memoryStream = new MemoryStream();
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
 			InitialiseSpreadsheet(this.spreadsheetProperties);
 		}
-		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, SpreadsheetProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new();
-			FileStream reader = new(filePath, FileMode.Open);
-			MemoryStream memoryStream = new();
+			this.spreadsheetProperties = spreadsheetProperties ?? new SpreadsheetProperties();
+			FileStream reader = new FileStream(filePath, FileMode.Open);
+			MemoryStream memoryStream = new MemoryStream();
 			reader.CopyTo(memoryStream);
 			reader.Close();
 			spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
@@ -47,10 +50,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			ReadDataFromFile();
 		}
-		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties? spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new();
+			this.spreadsheetProperties = spreadsheetProperties ?? new SpreadsheetProperties();
 			spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings()
 			{
 				AutoSave = true
@@ -86,7 +89,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal SharedStringTable GetExcelShareString()
 		{
-			SharedStringTablePart? sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+			SharedStringTablePart sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
 			if (sharedStringPart == null)
 			{
 				sharedStringPart = GetWorkbookPart().AddNewPart<SharedStringTablePart>();
@@ -99,7 +102,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal Sheets GetSheets()
 		{
-			Sheets? Sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
+			Sheets Sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
 			if (Sheets == null)
 			{
 				Sheets = new Sheets();
@@ -123,10 +126,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal void LoadShareStringFromFileToCache()
 		{
-			List<string> Records = new();
+			List<string> Records = new List<string>();
 			GetExcelShareString().Elements<SharedStringItem>().ToList().ForEach(rec =>
 			{
-				Text? text = rec.GetFirstChild<Text>();
+				Text text = rec.GetFirstChild<Text>();
 				if (text != null)
 				{
 					Records.Add(text.Text);
@@ -139,7 +142,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal void LoadStyleFromFileToCache()
 		{
-			GetStyleService().LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+			GetStyleService().LoadStyleFromSheet(GetWorkbookPart().WorkbookStylesPart.Stylesheet);
 		}
 		/// <summary>
 		/// Update the cache data into spreadsheet
@@ -159,7 +162,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal void UpdateStyle()
 		{
-			GetStyleService().SaveStyleProps(GetWorkbookPart().WorkbookStylesPart!.Stylesheet);
+			GetStyleService().SaveStyleProps(GetWorkbookPart().WorkbookStylesPart.Stylesheet);
 		}
 		internal StylesService GetStyleService()
 		{
@@ -174,11 +177,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (GetWorkbookPart().WorkbookStylesPart == null)
 			{
 				GetWorkbookPart().AddNewPart<WorkbookStylesPart>();
-				GetWorkbookPart().WorkbookStylesPart!.Stylesheet = new();
+				GetWorkbookPart().WorkbookStylesPart.Stylesheet = new Stylesheet();
 			}
 			else
 			{
-				GetWorkbookPart().WorkbookStylesPart!.Stylesheet ??= new();
+				GetWorkbookPart().WorkbookStylesPart.Stylesheet = GetWorkbookPart().WorkbookStylesPart.Stylesheet ?? new Stylesheet();
 			}
 		}
 		/// <summary>
@@ -190,14 +193,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				spreadsheetDocument.AddCoreFilePropertiesPart();
 			}
-			G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			if (spreadsheetDocument.CustomFilePropertiesPart == null)
 			{
 				spreadsheetDocument.AddCustomFilePropertiesPart();
 			}
-			G.CustomProperties.AddOrUpdateOpenXMLCustomProperties(spreadsheetDocument.CustomFilePropertiesPart!.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
-			GetWorkbookPart().Workbook ??= new Workbook();
-			Sheets? sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
+			G.CustomProperties.AddOrUpdateOpenXMLCustomProperties(spreadsheetDocument.CustomFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			GetWorkbookPart().Workbook = GetWorkbookPart().Workbook ?? new Workbook();
+			Sheets sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
 			if (sheets == null)
 			{
 				sheets = new Sheets();
@@ -207,8 +210,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
 			}
-			G.Theme theme = new(SpreadsheetProperties?.theme);
-			GetWorkbookPart().ThemePart!.Theme = theme.GetTheme();
+			G.Theme theme = new G.Theme(SpreadsheetProperties.theme);
+			GetWorkbookPart().ThemePart.Theme = theme.GetTheme();
 			InitialiseStyle();
 			GetWorkbookPart().Workbook.Save();
 		}

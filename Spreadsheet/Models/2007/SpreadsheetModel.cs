@@ -10,11 +10,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Spreadsheet settings
 		/// </summary>
-		public SpreadsheetSettings settings = new();
+		public SpreadsheetSettings settings = new SpreadsheetSettings();
 		/// <summary>
 		/// Spreadsheet theme settings
 		/// </summary>
-		public ThemePallet theme = new();
+		public ThemePallet theme = new ThemePallet();
 	}
 	/// <summary>
 	/// Represents the settings of a spreadsheet.

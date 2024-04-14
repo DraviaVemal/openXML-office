@@ -142,7 +142,6 @@ namespace OpenXMLOffice.Global_2007
 				index < barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings.Count &&
 				barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings[(int)index] != null)
 				{
-
 					C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()
 					{
