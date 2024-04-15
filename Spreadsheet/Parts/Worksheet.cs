@@ -189,7 +189,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets the CellValues enumeration corresponding to the specified cell data type.
 		/// </summary>
-		private static X.CellValues GetCellValueType(CellDataType cellDataType)
+		private X.CellValues GetCellValueType(CellDataType cellDataType)
 		{
 			switch (cellDataType)
 			{
@@ -201,7 +201,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					return X.CellValues.String;
 			}
 		}
-		private static DataType GetCellDataType(EnumValue<X.CellValues> cellValueType)
+		private DataType GetCellDataType(EnumValue<X.CellValues> cellValueType)
 		{
 			if (cellValueType == null)
 			{

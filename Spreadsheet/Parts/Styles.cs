@@ -26,32 +26,59 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			fillStyleCollection = liteDatabase.GetCollection<FillStyle>("FillStyle");
 			borderStyleCollection = liteDatabase.GetCollection<BorderStyle>("BorderStyle");
 			cellXfsCollection = liteDatabase.GetCollection<CellXfs>("CellXfs");
-			InitializeDefault();
 		}
 		private void InitializeDefault()
 		{
-			fontStyleCollection.Insert(new FontStyle()
+			if (fontStyleCollection.FindOne(item =>
+				item.Color.Value == "1" &&
+				item.Size == 11 &&
+				item.Name == "Calibri" &&
+				item.FontScheme == SchemeValues.MINOR &&
+				item.Family == 2) == null)
 			{
-				Id = (uint)fontStyleCollection.Count()
-			});
-			fillStyleCollection.Insert(new FillStyle()
+				fontStyleCollection.Insert(new FontStyle()
+				{
+					Id = (uint)fontStyleCollection.Count()
+				});
+			}
+			if (fillStyleCollection.FindOne(item => item.PatternType == PatternTypeValues.NONE) == null)
 			{
-				Id = (uint)fillStyleCollection.Count(),
-				PatternType = PatternTypeValues.NONE,
-			});
-			fillStyleCollection.Insert(new FillStyle()
+				fillStyleCollection.Insert(new FillStyle()
+				{
+					Id = (uint)fillStyleCollection.Count(),
+					PatternType = PatternTypeValues.NONE,
+				});
+			}
+			if (fillStyleCollection.FindOne(item => item.PatternType == PatternTypeValues.GRAY125) == null)
 			{
-				Id = (uint)fillStyleCollection.Count(),
-				PatternType = PatternTypeValues.GRAY125,
-			});
-			borderStyleCollection.Insert(new BorderStyle()
+				fillStyleCollection.Insert(new FillStyle()
+				{
+					Id = (uint)fillStyleCollection.Count(),
+					PatternType = PatternTypeValues.GRAY125,
+				});
+
+			}
+			BorderSetting borderSetting = new BorderSetting();
+			if (borderStyleCollection.FindOne(
+				item => item.Left == borderSetting &&
+				item.Top == borderSetting &&
+				item.Right == borderSetting &&
+				item.Bottom == borderSetting) == null)
 			{
-				Id = (uint)borderStyleCollection.Count()
-			});
-			cellXfsCollection.Insert(new CellXfs()
+				borderStyleCollection.Insert(new BorderStyle()
+				{
+					Id = (uint)borderStyleCollection.Count()
+				});
+			}
+			if (cellXfsCollection.FindOne(item =>
+				item.HorizontalAlignment == HorizontalAlignmentValues.NONE &&
+				item.VerticalAlignment == VerticalAlignmentValues.NONE) == null)
 			{
-				Id = (uint)cellXfsCollection.Count()
-			});
+				cellXfsCollection.Insert(new CellXfs()
+				{
+					Id = (uint)cellXfsCollection.Count()
+				});
+			}
 		}
 		/// <summary>
 		/// Return Style details for the provided style ID
@@ -143,6 +170,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			SetBorders(Stylesheet.Borders);
 			SetCellFormats(Stylesheet.CellFormats);
 			SetNumberFormats(Stylesheet.NumberingFormats);
+			InitializeDefault();
 		}
 		/// <summary>
 		/// Save the style properties to the xlsx file
@@ -195,7 +223,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return (uint)Result.AsInt64;
 			}
 		}
-		private static X.BorderStyleValues GetBorderStyle(StyleValues Style)
+		private X.BorderStyleValues GetBorderStyle(StyleValues Style)
 		{
 			switch (Style)
 			{

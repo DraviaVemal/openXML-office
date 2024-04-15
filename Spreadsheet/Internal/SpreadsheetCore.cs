@@ -195,13 +195,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (spreadsheetDocument.CoreFilePropertiesPart == null)
 			{
 				spreadsheetDocument.AddCoreFilePropertiesPart();
+				G.CoreProperties.AddCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			}
-			G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
-			// if (spreadsheetDocument.CustomFilePropertiesPart == null)
-			// {
-			// 	spreadsheetDocument.AddCustomFilePropertiesPart();
-			// }
-			// G.CustomProperties.AddOrUpdateOpenXMLCustomProperties(spreadsheetDocument.CustomFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			if (GetWorkbookPart().Workbook == null)
 			{
 				GetWorkbookPart().Workbook = new Workbook();

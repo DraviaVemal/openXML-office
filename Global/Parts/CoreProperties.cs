@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public static void AddOrUpdateCoreProperties(Stream stream, CorePropertiesModel corePropertiesModel = null)
+		public static void AddCoreProperties(Stream stream, CorePropertiesModel corePropertiesModel = null)
 		{
 			try
 			{

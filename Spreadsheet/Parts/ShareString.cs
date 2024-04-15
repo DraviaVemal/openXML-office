@@ -104,7 +104,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			int? Index = GetIndex(data);
 			if (Index != null)
 			{
-				return (int)Index;
+				return (int)Index - 1;
 			}
 			BsonValue DocId = stringCollection.Insert(new StringRecord(data));
 			return (int)DocId.AsInt64 - 1;
