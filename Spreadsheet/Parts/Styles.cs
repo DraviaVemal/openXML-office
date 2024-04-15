@@ -105,8 +105,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				borderTop = borderStyle.Top,
 				borderRight = borderStyle.Right,
 				borderBottom = borderStyle.Bottom,
-				backgroundColor = fillStyle.BackgroundColor,
-				foregroundColor = fillStyle.ForegroundColor,
+				backgroundColor = fillStyle.BackgroundColor.Value,
+				foregroundColor = fillStyle.ForegroundColor.Value,
 				numberFormat = numberFormats.FormatCode,
 			};
 			return cellStyleSetting;
@@ -304,13 +304,28 @@ namespace OpenXMLOffice.Spreadsheet_2007
 								FontId = item.FontId,
 								FillId = item.FillId,
 								BorderId = item.BorderId,
-								FormatId = 0,
-								ApplyAlignment = item.ApplyAlignment,
-								ApplyBorder = item.ApplyBorder,
-								ApplyNumberFormat = item.ApplyNumberFormat,
-								ApplyFill = item.ApplyFill,
-								ApplyFont = item.ApplyFont,
+								FormatId = item.FormatId,
 							};
+							if (item.ApplyAlignment)
+							{
+								CellFormat.ApplyAlignment = item.ApplyAlignment;
+							}
+							if (item.ApplyBorder)
+							{
+								CellFormat.ApplyBorder = item.ApplyBorder;
+							}
+							if (item.ApplyNumberFormat)
+							{
+								CellFormat.ApplyNumberFormat = item.ApplyNumberFormat;
+							}
+							if (item.ApplyFill)
+							{
+								CellFormat.ApplyFill = item.ApplyFill;
+							}
+							if (item.ApplyFont)
+							{
+								CellFormat.ApplyFont = item.ApplyFont;
+							}
 							if (item.VerticalAlignment != VerticalAlignmentValues.NONE ||
 								item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
 								item.IsWrapetext)
@@ -358,8 +373,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		private uint GetFillId(CellStyleSetting CellStyleSetting)
 		{
 			FillStyle FillStyle = fillStyleCollection.FindOne(item =>
-				item.BackgroundColor == CellStyleSetting.backgroundColor &&
-				item.ForegroundColor == CellStyleSetting.foregroundColor);
+				item.BackgroundColor.StyleColorTypeValues == StyleColorTypeValues.RGB &&
+				item.BackgroundColor.Value == CellStyleSetting.backgroundColor &&
+				item.ForegroundColor.StyleColorTypeValues == StyleColorTypeValues.RGB &&
+				item.ForegroundColor.Value == CellStyleSetting.foregroundColor);
 			if (FillStyle != null)
 			{
 				return FillStyle.Id;
@@ -369,8 +386,16 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				BsonValue Result = fillStyleCollection.Insert(new FillStyle()
 				{
 					Id = (uint)fillStyleCollection.Count(),
-					BackgroundColor = CellStyleSetting.backgroundColor,
-					ForegroundColor = CellStyleSetting.foregroundColor
+					BackgroundColor = new StyleColor()
+					{
+						StyleColorTypeValues = StyleColorTypeValues.RGB,
+						Value = CellStyleSetting.backgroundColor
+					},
+					ForegroundColor = new StyleColor()
+					{
+						StyleColorTypeValues = StyleColorTypeValues.RGB,
+						Value = CellStyleSetting.foregroundColor
+					}
 				});
 				return (uint)Result.AsInt64;
 			}
@@ -402,11 +427,33 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				};
 				if (item.BackgroundColor != null)
 				{
-					fill.PatternFill.BackgroundColor = new X.BackgroundColor() { Rgb = item.BackgroundColor };
+					switch (item.BackgroundColor.StyleColorTypeValues)
+					{
+						case StyleColorTypeValues.INDEXED:
+							fill.PatternFill.BackgroundColor = new X.BackgroundColor() { Indexed = new UInt32Value((uint)int.Parse(item.BackgroundColor.Value)) };
+							break;
+						case StyleColorTypeValues.THEME:
+							fill.PatternFill.BackgroundColor = new X.BackgroundColor() { Theme = new UInt32Value((uint)int.Parse(item.BackgroundColor.Value)) };
+							break;
+						default:
+							fill.PatternFill.BackgroundColor = new X.BackgroundColor() { Rgb = item.BackgroundColor.Value };
+							break;
+					}
 				}
 				if (item.ForegroundColor != null)
 				{
-					fill.PatternFill.ForegroundColor = new X.ForegroundColor() { Rgb = item.ForegroundColor };
+					switch (item.ForegroundColor.StyleColorTypeValues)
+					{
+						case StyleColorTypeValues.INDEXED:
+							fill.PatternFill.ForegroundColor = new X.ForegroundColor() { Indexed = new UInt32Value((uint)int.Parse(item.ForegroundColor.Value)) };
+							break;
+						case StyleColorTypeValues.THEME:
+							fill.PatternFill.ForegroundColor = new X.ForegroundColor() { Theme = new UInt32Value((uint)int.Parse(item.ForegroundColor.Value)) };
+							break;
+						default:
+							fill.PatternFill.ForegroundColor = new X.ForegroundColor() { Rgb = item.ForegroundColor.Value };
+							break;
+					}
 				}
 				return fill;
 			}))
@@ -420,7 +467,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				item.IsUnderline == CellStyleSetting.isUnderline &&
 				item.IsDoubleUnderline == CellStyleSetting.isDoubleUnderline &&
 				item.Size == CellStyleSetting.fontSize &&
-				item.Color.FontColorType == CellStyleSetting.textColor.FontColorType &&
+				item.Color.StyleColorTypeValues == CellStyleSetting.textColor.StyleColorTypeValues &&
 				item.Color.Value == CellStyleSetting.textColor.Value &&
 				item.Name == CellStyleSetting.fontFamily);
 			if (FontStyle != null)
@@ -437,9 +484,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					IsUnderline = CellStyleSetting.isUnderline,
 					IsDoubleUnderline = CellStyleSetting.isDoubleUnderline,
 					Size = CellStyleSetting.fontSize,
-					Color = new FontColor()
+					Color = new StyleColor()
 					{
-						FontColorType = FontColorTypeValues.RGB,
+						StyleColorTypeValues = StyleColorTypeValues.RGB,
 						Value = CellStyleSetting.textColor.Value,
 					},
 					Name = CellStyleSetting.fontFamily
@@ -477,7 +524,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				};
 				if (item.Color.Value != null)
 				{
-					if (item.Color.FontColorType == FontColorTypeValues.RGB)
+					if (item.Color.StyleColorTypeValues == StyleColorTypeValues.RGB)
 					{
 						Font.Color = new X.Color() { Rgb = item.Color.Value };
 					}
@@ -559,33 +606,101 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			cellFormats.Descendants<X.CellFormat>().ToList()
 			.ForEach(cellFormat =>
 			{
-				if (cellFormat.NumberFormatId != null ||
-				cellFormat.FontId != null ||
-				cellFormat.FillId != null ||
-				cellFormat.BorderId != null)
+				CellXfs cellXfs = new CellXfs()
 				{
-					CellXfs cellXfs = new CellXfs()
-					{
-						Id = (uint)cellXfsCollection.Count()
-					};
-					if (cellFormat.NumberFormatId != null)
-					{
-						cellXfs.NumberFormatId = cellFormat.NumberFormatId;
-					}
-					if (cellFormat.FontId != null)
-					{
-						cellXfs.FontId = cellFormat.FontId;
-					}
-					if (cellFormat.FillId != null)
-					{
-						cellXfs.FillId = cellFormat.FillId;
-					}
-					if (cellFormat.BorderId != null)
-					{
-						cellXfs.BorderId = cellFormat.BorderId;
-					}
-					cellXfsCollection.Insert(cellXfs);
+					Id = (uint)cellXfsCollection.Count()
+				};
+				if (cellFormat.FormatId != null)
+				{
+					cellXfs.FormatId = cellFormat.FormatId;
 				}
+				if (cellFormat.NumberFormatId != null)
+				{
+					cellXfs.NumberFormatId = cellFormat.NumberFormatId;
+				}
+				if (cellFormat.FontId != null)
+				{
+					cellXfs.FontId = cellFormat.FontId;
+				}
+				if (cellFormat.FillId != null)
+				{
+					cellXfs.FillId = cellFormat.FillId;
+				}
+				if (cellFormat.BorderId != null)
+				{
+					cellXfs.BorderId = cellFormat.BorderId;
+				}
+				if (cellFormat.ApplyAlignment != null)
+				{
+					cellXfs.ApplyAlignment = cellFormat.ApplyAlignment;
+				}
+				if (cellFormat.ApplyBorder != null)
+				{
+					cellXfs.ApplyBorder = cellFormat.ApplyBorder;
+				}
+				if (cellFormat.ApplyFill != null)
+				{
+					cellXfs.ApplyFill = cellFormat.ApplyFill;
+				}
+				if (cellFormat.ApplyFont != null)
+				{
+					cellXfs.ApplyFont = cellFormat.ApplyFont;
+				}
+				if (cellFormat.ApplyNumberFormat != null)
+				{
+					cellXfs.ApplyNumberFormat = cellFormat.ApplyNumberFormat;
+				}
+				if (cellFormat.ApplyProtection != null)
+				{
+					cellXfs.ApplyProtection = cellFormat.ApplyProtection;
+				}
+				if (cellFormat.Alignment != null)
+				{
+					if (cellFormat.Alignment.Horizontal != null)
+					{
+						switch (cellFormat.Alignment.Horizontal.InnerText)
+						{
+							case "left":
+								cellXfs.HorizontalAlignment = HorizontalAlignmentValues.LEFT;
+								break;
+							case "center":
+								cellXfs.HorizontalAlignment = HorizontalAlignmentValues.CENTER;
+								break;
+							case "right":
+								cellXfs.HorizontalAlignment = HorizontalAlignmentValues.RIGHT;
+								break;
+							case "justify":
+								cellXfs.HorizontalAlignment = HorizontalAlignmentValues.JUSTIFY;
+								break;
+							default:
+								cellXfs.HorizontalAlignment = HorizontalAlignmentValues.NONE;
+								break;
+						}
+					}
+					if (cellFormat.Alignment.Vertical != null)
+					{
+						switch (cellFormat.Alignment.Vertical.InnerText)
+						{
+							case "top":
+								cellXfs.VerticalAlignment = VerticalAlignmentValues.TOP;
+								break;
+							case "center":
+								cellXfs.VerticalAlignment = VerticalAlignmentValues.MIDDLE;
+								break;
+							case "bottom":
+								cellXfs.VerticalAlignment = VerticalAlignmentValues.BOTTOM;
+								break;
+							default:
+								cellXfs.VerticalAlignment = VerticalAlignmentValues.NONE;
+								break;
+						}
+					}
+					if (cellFormat.Alignment.WrapText != null)
+					{
+						cellXfs.IsWrapetext = cellFormat.Alignment.WrapText;
+					}
+				}
+				cellXfsCollection.Insert(cellXfs);
 			});
 		}
 		private void SetBorders(X.Borders borders)
@@ -600,23 +715,77 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			fills.Descendants<X.Fill>().ToList()
 			.ForEach(fill =>
 			{
-				if ((fill.PatternFill.BackgroundColor != null && fill.PatternFill.BackgroundColor.Rgb != null) ||
-				(fill.PatternFill.BackgroundColor != null && fill.PatternFill.BackgroundColor.Rgb != null))
+				FillStyle fillStyle = new FillStyle()
 				{
-					FillStyle fillStyle = new FillStyle()
+					Id = (uint)fillStyleCollection.Count()
+				};
+				if (fill.PatternFill.ForegroundColor != null)
+				{
+					if (fill.PatternFill.ForegroundColor.Indexed != null)
 					{
-						Id = (uint)fillStyleCollection.Count()
-					};
-					if (fill.PatternFill.BackgroundColor != null && fill.PatternFill.ForegroundColor.Rgb != null)
-					{
-						fillStyle.ForegroundColor = fill.PatternFill.ForegroundColor.Rgb;
+						fillStyle.ForegroundColor = new StyleColor()
+						{
+							StyleColorTypeValues = StyleColorTypeValues.INDEXED,
+							Value = fill.PatternFill.ForegroundColor.Indexed
+						};
 					}
-					if (fill.PatternFill.BackgroundColor != null && fill.PatternFill.BackgroundColor.Rgb != null)
+					else if (fill.PatternFill.ForegroundColor.Theme != null)
 					{
-						fillStyle.BackgroundColor = fill.PatternFill.BackgroundColor.Rgb;
+						fillStyle.ForegroundColor = new StyleColor()
+						{
+							StyleColorTypeValues = StyleColorTypeValues.THEME,
+							Value = fill.PatternFill.ForegroundColor.Theme
+						};
 					}
-					fillStyleCollection.Insert(fillStyle);
+					else if (fill.PatternFill.ForegroundColor.Rgb != null)
+					{
+						fillStyle.ForegroundColor = new StyleColor()
+						{
+							StyleColorTypeValues = StyleColorTypeValues.RGB,
+							Value = fill.PatternFill.ForegroundColor.Rgb
+						};
+					}
 				}
+				if (fill.PatternFill.BackgroundColor != null)
+				{
+					if (fill.PatternFill.BackgroundColor.Indexed != null)
+					{
+						fillStyle.BackgroundColor = new StyleColor()
+						{
+							StyleColorTypeValues = StyleColorTypeValues.INDEXED,
+							Value = fill.PatternFill.BackgroundColor.Indexed
+						};
+					}
+					else if (fill.PatternFill.BackgroundColor.Theme != null)
+					{
+						fillStyle.BackgroundColor = new StyleColor()
+						{
+							StyleColorTypeValues = StyleColorTypeValues.THEME,
+							Value = fill.PatternFill.BackgroundColor.Theme
+						};
+					}
+					else if (fill.PatternFill.BackgroundColor.Rgb != null)
+					{
+						fillStyle.BackgroundColor = new StyleColor()
+						{
+							StyleColorTypeValues = StyleColorTypeValues.RGB,
+							Value = fill.PatternFill.BackgroundColor.Rgb
+						};
+					}
+				}
+				switch (fill.PatternFill.PatternType.InnerText)
+				{
+					case "gray125":
+						fillStyle.PatternType = PatternTypeValues.GRAY125;
+						break;
+					case "solid":
+						fillStyle.PatternType = PatternTypeValues.SOLID;
+						break;
+					default:
+						fillStyle.PatternType = PatternTypeValues.NONE;
+						break;
+				}
+				fillStyleCollection.Insert(fillStyle);
 			});
 		}
 		private void SetFonts(X.Fonts fonts)
@@ -639,12 +808,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				if (font.Color != null)
 				{
 					fontStyle.Color = font.Color.Rgb != null ?
-					new FontColor()
+					new StyleColor()
 					{
-						FontColorType = FontColorTypeValues.RGB,
+						StyleColorTypeValues = StyleColorTypeValues.RGB,
 						Value = font.Color.Rgb
 					} :
-					new FontColor() { Value = font.Color.Theme ?? "1" };
+					new StyleColor() { Value = font.Color.Theme ?? "1" };
 				}
 				if (font.FontName.Val != null)
 				{

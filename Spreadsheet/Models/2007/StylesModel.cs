@@ -103,8 +103,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public enum FontColorTypeValues
+	public enum StyleColorTypeValues
 	{
+		/// <summary>
+		///
+		/// </summary>
+		INDEXED,
 		/// <summary>
 		///
 		/// </summary>
@@ -232,9 +236,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the text color of the cell. default is 000000
 		/// </summary>
-		public FontColor textColor = new FontColor()
+		public StyleColor textColor = new StyleColor()
 		{
-			FontColorType = FontColorTypeValues.RGB,
+			StyleColorTypeValues = StyleColorTypeValues.RGB,
 			Value = "000000"
 		};
 		/// <summary>
@@ -254,55 +258,64 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			HorizontalAlignment = HorizontalAlignmentValues.NONE;
 			VerticalAlignment = VerticalAlignmentValues.NONE;
+			FormatId = 0;
 		}
-		/// <summary>
-		/// Apply Alignment
-		/// </summary>
-		public bool ApplyAlignment { get; set; }
-		/// <summary>
-		/// Apply Border style
-		/// </summary>
-		public bool ApplyBorder { get; set; }
-		/// <summary>
-		/// Apply Fill style
-		/// </summary>
-		public bool ApplyFill { get; set; }
-		/// <summary>
-		/// Apply Font style
-		/// </summary>
-		public bool ApplyFont { get; set; }
-		/// <summary>
-		/// Apply Number Format
-		/// </summary>
-		public bool ApplyNumberFormat { get; set; }
-		/// <summary>
-		/// Border Id from collection
-		/// </summary>
-		public uint BorderId { get; set; }
-		/// <summary>
-		/// Fill Id from collection
-		/// </summary>
-		public uint FillId { get; set; }
-		/// <summary>
-		/// Font Id from collection
-		/// </summary>
-		public uint FontId { get; set; }
-		/// <summary>
-		/// Horizontal alignment of the cell. default is left
-		/// </summary>
-		public HorizontalAlignmentValues HorizontalAlignment { get; set; }
 		/// <summary>
 		/// CellXfs ID
 		/// </summary>
 		public uint Id { get; set; }
 		/// <summary>
-		/// Is Wrap Text. default is false
+		/// Format Id from collection
 		/// </summary>
-		public bool IsWrapetext { get; internal set; }
+		public uint FormatId { get; set; }
 		/// <summary>
 		/// Number Format Id from collection
 		/// </summary>
 		public uint NumberFormatId { get; set; }
+		/// <summary>
+		/// Font Id from collection
+		/// </summary>
+		public uint FontId { get; set; }
+		/// <summary>
+		/// Fill Id from collection
+		/// </summary>
+		public uint FillId { get; set; }
+		/// <summary>
+		/// Border Id from collection
+		/// </summary>
+		public uint BorderId { get; set; }
+		/// <summary>
+		/// Apply Font style
+		/// </summary>
+		public bool ApplyFont { get; set; }
+		/// <summary>
+		/// Apply Alignment
+		/// </summary>
+		public bool ApplyAlignment { get; set; }
+		/// <summary>
+		/// Apply Fill style
+		/// </summary>
+		public bool ApplyFill { get; set; }
+		/// <summary>
+		/// Apply Border style
+		/// </summary>
+		public bool ApplyBorder { get; set; }
+		/// <summary>
+		/// Apply Number Format
+		/// </summary>
+		public bool ApplyNumberFormat { get; set; }
+		/// <summary>
+		/// Apply Protection
+		/// </summary>
+		public bool ApplyProtection { get; set; }
+		/// <summary>
+		/// Is Wrap Text. default is false
+		/// </summary>
+		public bool IsWrapetext { get; internal set; }
+		/// <summary>
+		/// Horizontal alignment of the cell. default is left
+		/// </summary>
+		public HorizontalAlignmentValues HorizontalAlignment { get; set; }
 		/// <summary>
 		/// Vertical alignment of the cell. default is bottom
 		/// </summary>
@@ -323,11 +336,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the background color of the cell.
 		/// </summary>
-		public string BackgroundColor { get; set; }
+		public StyleColor BackgroundColor { get; set; }
 		/// <summary>
 		/// Gets or sets the foreground color of the cell.
 		/// </summary>
-		public string ForegroundColor { get; set; }
+		public StyleColor ForegroundColor { get; set; }
 		/// <summary>
 		/// Fill style ID
 		/// </summary>
@@ -340,12 +353,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class FontColor
+	public class StyleColor
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public FontColorTypeValues FontColorType { get; set; }
+		public StyleColorTypeValues StyleColorTypeValues { get; set; }
 		/// <summary>
 		///
 		/// </summary>
@@ -353,9 +366,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public FontColor()
+		public StyleColor()
 		{
-			FontColorType = FontColorTypeValues.THEME;
+			StyleColorTypeValues = StyleColorTypeValues.THEME;
 		}
 	}
 	/// <summary>
@@ -368,7 +381,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public FontStyle()
 		{
-			Color = new FontColor() { Value = "1" };
+			Color = new StyleColor() { Value = "1" };
 			Family = 2;
 			Size = 11;
 			Name = "Calibri";
@@ -381,7 +394,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the color of the font. default is accent1
 		/// </summary>
-		public FontColor Color { get; set; }
+		public StyleColor Color { get; set; }
 		/// <summary>
 		/// Gets or sets the font family of the font.
 		/// </summary>
