@@ -662,6 +662,17 @@ namespace OpenXMLOffice.Tests
 			excel1.SaveAs(string.Format("{1}/Edit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
+
+		/// <summary>
+		/// Test existing file
+		/// </summary>
+		[TestMethod]
+		public void OpenExistingExcelStyleString()
+		{
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
+			excel1.SaveAs(string.Format("{1}/EditStyle-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+			Assert.IsTrue(true);
+		}
 		private static DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
 		{
 			Random random = new();

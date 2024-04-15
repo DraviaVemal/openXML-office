@@ -29,11 +29,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private void InitializeDefault()
 		{
-			if (fontStyleCollection.FindOne(item =>
+			if (fontStyleCollection.Count() < 1 && fontStyleCollection.FindOne(item =>
 				item.Color.Value == "1" &&
 				item.Size == 11 &&
 				item.Name == "Calibri" &&
-				item.FontScheme == SchemeValues.MINOR &&
+				item.FontScheme == SchemeValues.NONE &&
 				item.Family == 2) == null)
 			{
 				fontStyleCollection.Insert(new FontStyle()
@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					Id = (uint)fontStyleCollection.Count()
 				});
 			}
-			if (fillStyleCollection.FindOne(item => item.PatternType == PatternTypeValues.NONE) == null)
+			if (fillStyleCollection.Count() < 1 && fillStyleCollection.FindOne(item => item.PatternType == PatternTypeValues.NONE) == null)
 			{
 				fillStyleCollection.Insert(new FillStyle()
 				{
@@ -49,7 +49,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					PatternType = PatternTypeValues.NONE,
 				});
 			}
-			if (fillStyleCollection.FindOne(item => item.PatternType == PatternTypeValues.GRAY125) == null)
+			if (fillStyleCollection.Count() < 2 && fillStyleCollection.FindOne(item => item.PatternType == PatternTypeValues.GRAY125) == null)
 			{
 				fillStyleCollection.Insert(new FillStyle()
 				{
@@ -59,7 +59,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 
 			}
 			BorderSetting borderSetting = new BorderSetting();
-			if (borderStyleCollection.FindOne(
+			if (borderStyleCollection.Count() < 1 && borderStyleCollection.FindOne(
 				item => item.Left == borderSetting &&
 				item.Top == borderSetting &&
 				item.Right == borderSetting &&
@@ -70,7 +70,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					Id = (uint)borderStyleCollection.Count()
 				});
 			}
-			if (cellXfsCollection.FindOne(item =>
+			if (cellXfsCollection.Count() < 1 && cellXfsCollection.FindOne(item =>
 				item.HorizontalAlignment == HorizontalAlignmentValues.NONE &&
 				item.VerticalAlignment == VerticalAlignmentValues.NONE) == null)
 			{

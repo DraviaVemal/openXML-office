@@ -372,7 +372,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			Family = 2;
 			Size = 11;
 			Name = "Calibri";
-			FontScheme = SchemeValues.MINOR;
+			FontScheme = SchemeValues.NONE;
 		}
 		/// <summary>
 		/// Font style ID
