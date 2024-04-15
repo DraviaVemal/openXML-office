@@ -5,7 +5,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <TargetFramework>net4.5;netstandard1.3;netstandard2.0</TargetFramework>
+        <TargetFrameworks>net4.5;netstandard2.0;net7.0</TargetFrameworks>
         <TestTargetFrameworks>net7.0</TestTargetFrameworks>
         <LangVersion>5.0</LangVersion>
         <OutputPath>..\bin\</OutputPath>
