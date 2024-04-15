@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// </summary>
 	internal class ShareStringService : IDisposable
 	{
-		private static readonly LiteDatabase liteDatabase = new LiteDatabase(Path.ChangeExtension(Path.GetTempFileName(), "db"));
+		private readonly LiteDatabase liteDatabase = new LiteDatabase(Path.ChangeExtension(Path.GetTempFileName(), "db"));
 		private readonly ILiteCollection<StringRecord> stringCollection;
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ShareStringService"/> class.
