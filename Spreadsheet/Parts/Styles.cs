@@ -152,14 +152,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			Stylesheet.Fonts = GetFonts();
 			Stylesheet.Fills = GetFills();
 			Stylesheet.Borders = GetBorders();
-			Stylesheet.CellStyleFormats = Stylesheet.CellStyleFormats ?? new X.CellStyleFormats(
+			if (Stylesheet.CellStyleFormats == null)
+			{
+				Stylesheet.CellStyleFormats = new X.CellStyleFormats(
 				new X.CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0 })
-			{ Count = 1 };//cellStyleXfs
+				{ Count = 1 };//cellStyleXfs
+			}
 			Stylesheet.CellFormats = GetCellFormats();//cellXfs
-			Stylesheet.CellStyles = Stylesheet.CellStyles ?? new X.CellStyles(
-				new X.CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
-			{ Count = 1 };//cellStyles
-			Stylesheet.DifferentialFormats = Stylesheet.DifferentialFormats ?? new X.DifferentialFormats() { Count = 0 };//dxfs
+			if (Stylesheet.CellStyles == null)
+			{
+				Stylesheet.CellStyles = new X.CellStyles(
+					new X.CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
+				{ Count = 1 };//cellStyles
+			}
+			if (Stylesheet.DifferentialFormats == null)
+			{
+				Stylesheet.DifferentialFormats = new X.DifferentialFormats() { Count = 0 };//dxfs
+			}
 			Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
 		}
 		private uint GetBorderId(CellStyleSetting CellStyleSetting)

@@ -170,7 +170,10 @@ namespace OpenXMLOffice.Presentation_2007
 			if (presentationPart.PresentationPropertiesPart == null)
 			{
 				PresentationPropertiesPart presentationPropertiesPart = presentationPart.AddNewPart<PresentationPropertiesPart>(GetNextPresentationRelationId());
-				presentationPropertiesPart.PresentationProperties = presentationPropertiesPart.PresentationProperties ?? new P.PresentationProperties();
+				if (presentationPropertiesPart.PresentationProperties == null)
+				{
+					presentationPropertiesPart.PresentationProperties = new P.PresentationProperties();
+				}
 				presentationPropertiesPart.PresentationProperties.Save();
 			}
 			if (!presentationPart.SlideMasterParts.Any())
@@ -189,16 +192,22 @@ namespace OpenXMLOffice.Presentation_2007
 			if (presentationDocument.ExtendedFilePropertiesPart == null)
 			{
 				extendedFilePropertiesPart = presentationDocument.AddExtendedFilePropertiesPart();
-				extendedFilePropertiesPart.Properties = extendedFilePropertiesPart.Properties ?? new DocumentFormat.OpenXml.ExtendedProperties.Properties();
+				if (extendedFilePropertiesPart.Properties == null)
+				{
+					extendedFilePropertiesPart.Properties = new DocumentFormat.OpenXml.ExtendedProperties.Properties();
+				}
 				extendedFilePropertiesPart.Properties.Save();
 			}
 			if (presentationPart.TableStylesPart == null)
 			{
 				TableStylesPart tableStylesPart = presentationPart.AddNewPart<TableStylesPart>(GetNextPresentationRelationId());
-				tableStylesPart.TableStyleList = tableStylesPart.TableStyleList ?? new A.TableStyleList()
+				if (tableStylesPart.TableStyleList == null)
 				{
-					Default = GeneratorUtils.GenerateNewGUID()
-				};
+					tableStylesPart.TableStyleList = new A.TableStyleList()
+					{
+						Default = GeneratorUtils.GenerateNewGUID()
+					};
+				}
 				tableStylesPart.TableStyleList.Save();
 			}
 			if (presentationPart.ThemePart == null)

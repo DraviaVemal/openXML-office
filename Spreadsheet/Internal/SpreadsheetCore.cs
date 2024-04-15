@@ -181,7 +181,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			else
 			{
-				GetWorkbookPart().WorkbookStylesPart.Stylesheet = GetWorkbookPart().WorkbookStylesPart.Stylesheet ?? new Stylesheet();
+				if (GetWorkbookPart().WorkbookStylesPart.Stylesheet == null)
+				{
+					GetWorkbookPart().WorkbookStylesPart.Stylesheet = new Stylesheet();
+				}
 			}
 		}
 		/// <summary>

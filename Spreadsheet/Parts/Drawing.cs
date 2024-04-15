@@ -21,7 +21,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				worksheet.GetWorksheetPart().AddNewPart<DrawingsPart>(worksheet.GetNextSheetPartRelationId());
 				worksheet.GetWorksheet().Append(new X.Drawing() { Id = worksheet.GetWorksheetPart().GetIdOfPart(worksheet.GetDrawingsPart()) });
 				worksheet.GetWorksheetPart().Worksheet.Save();
-				worksheet.GetWorksheetPart().DrawingsPart.WorksheetDrawing = worksheet.GetWorksheetPart().DrawingsPart.WorksheetDrawing ?? new XDR.WorksheetDrawing();
+				if (worksheet.GetWorksheetPart().DrawingsPart.WorksheetDrawing == null)
+				{
+					worksheet.GetWorksheetPart().DrawingsPart.WorksheetDrawing = new XDR.WorksheetDrawing();
+				}
 			}
 			return worksheet.GetWorksheetPart().DrawingsPart;
 		}
