@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Global_2007
 					writer.Formatting = Formatting.Indented;
 					writer.Indentation = 2;
 					writer.WriteStartDocument(true);
-					writer.WriteStartElement("cp", "coreProperties", "https://schemas.openxmlformats.org/package/2006/metadata/core-properties");
+					writer.WriteStartElement("cp", "coreProperties", "http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
 					writer.WriteAttributeString("xmlns", "dc", null, "http://purl.org/dc/elements/1.1/");
 					writer.WriteAttributeString("xmlns", "dcmitype", null, "http://purl.org/dc/dcmitype/");
 					writer.WriteAttributeString("xmlns", "dcterms", null, "http://purl.org/dc/terms/");

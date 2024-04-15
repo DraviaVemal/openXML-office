@@ -189,11 +189,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		private void InitialiseSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
 		{
-			// if (spreadsheetDocument.CoreFilePropertiesPart == null)
-			// {
-			// 	spreadsheetDocument.AddCoreFilePropertiesPart();
-			// }
-			// G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			if (spreadsheetDocument.CoreFilePropertiesPart == null)
+			{
+				spreadsheetDocument.AddCoreFilePropertiesPart();
+			}
+			G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			// if (spreadsheetDocument.CustomFilePropertiesPart == null)
 			// {
 			// 	spreadsheetDocument.AddCustomFilePropertiesPart();

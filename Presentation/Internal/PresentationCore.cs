@@ -122,11 +122,11 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			SlideMaster slideMaster = new SlideMaster();
 			SlideLayout slideLayout = new SlideLayout();
-			// if (presentationDocument.CoreFilePropertiesPart == null)
-			// {
-			// 	presentationDocument.AddCoreFilePropertiesPart();
-			// }
-			// CoreProperties.AddOrUpdateCoreProperties(presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			if (presentationDocument.CoreFilePropertiesPart == null)
+			{
+				presentationDocument.AddCoreFilePropertiesPart();
+			}
+			CoreProperties.AddOrUpdateCoreProperties(presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
 			// if (presentationDocument.CustomFilePropertiesPart == null)
 			// {
 			// 	presentationDocument.AddCustomFilePropertiesPart();
