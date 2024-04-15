@@ -25,5 +25,4 @@ namespace OpenXMLOffice.Presentation_2007
 			return transposedArray;
 		}
 	}
-
 }

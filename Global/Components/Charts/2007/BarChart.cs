@@ -126,7 +126,6 @@ namespace OpenXMLOffice.Global_2007
 				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateBarDataLabels(barChartDataLabel ?? new BarChartDataLabel(), dataLabelCellsLength);
 			}
-
 			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
 				solidFill = GetSeriesFillColor(seriesIndex, chartDataGrouping),
@@ -151,7 +150,6 @@ namespace OpenXMLOffice.Global_2007
 					dataPointCount = dataPointSettings.Count;
 				}
 			}
-
 			for (uint index = 0; index < dataPointCount; index++)
 			{
 				if (barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings != null &&

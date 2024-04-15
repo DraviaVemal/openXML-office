@@ -6,6 +6,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <TargetFramework>net45</TargetFramework>
+        <TestTargetFrameworks>net7.0</TestTargetFrameworks>
         <LangVersion>5.0</LangVersion>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>

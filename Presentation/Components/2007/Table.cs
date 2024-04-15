@@ -101,9 +101,7 @@ namespace OpenXMLOffice.Presentation_2007
 					calculatedWidth = Convert.ToInt32(InputWidth);
 					break;
 			}
-
 			return calculatedWidth;
-
 		}
 		private A.Table CreateTable(TableRow[] TableRows)
 		{
@@ -155,12 +153,10 @@ namespace OpenXMLOffice.Presentation_2007
 						alignment = A.TextAlignmentTypeValues.Left;
 						break;
 				}
-
 				paragraph.Append(new A.ParagraphProperties()
 				{
 					Alignment = alignment
 				});
-
 			}
 			if (cell.value == null)
 			{
@@ -216,12 +212,10 @@ namespace OpenXMLOffice.Presentation_2007
 					anchor = A.TextAnchoringTypeValues.Top;
 					break;
 			}
-
 			A.TableCellProperties tableCellProperties = new A.TableCellProperties()
 			{
 				Anchor = anchor
 			};
-
 			if (cell.borderSettings.leftBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.LeftBorderLineProperties(

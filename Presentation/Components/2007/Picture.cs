@@ -42,7 +42,6 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/jpeg", EmbedId);
 			}
-
 			ImagePart.FeedData(stream);
 		}
 		/// <summary>
@@ -72,7 +71,6 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/jpeg", EmbedId);
 			}
-
 			ImagePart.FeedData(new FileStream(filePath, FileMode.Open, FileAccess.Read));
 		}
 		/// <summary>

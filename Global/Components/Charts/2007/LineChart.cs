@@ -145,9 +145,7 @@ namespace OpenXMLOffice.Global_2007
 				int labelCount = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateLineDataLabels(lineChartSeriesSetting.lineChartDataLabel, labelCount);
 			}
-
 			var lineChartLineFormat = lineChartSeriesSetting != null ? lineChartSeriesSetting.lineChartLineFormat : null;
-
 			OutlineModel outlineModel = new OutlineModel()
 			{
 				solidFill = GetBorderColor(seriesIndex, chartDataGrouping, lineChartLineFormat),

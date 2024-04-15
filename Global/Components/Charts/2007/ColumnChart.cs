@@ -278,7 +278,6 @@ namespace OpenXMLOffice.Global_2007
 				ColumnChartDataLabel columnChartDataLabel = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataLabel : null;
 				dataLabels = CreateColumnDataLabels(columnChartDataLabel ?? new ColumnChartDataLabel(), labelCounter);
 			}
-
 			C.BarChartSeries series = new C.BarChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
@@ -291,7 +290,6 @@ namespace OpenXMLOffice.Global_2007
 			{
 				dataPointCount = columnChartSeriesSetting.columnChartDataPointSettings.Count;
 			}
-
 			for (uint index = 0; index < dataPointCount; index++)
 			{
 				if (columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings != null &&

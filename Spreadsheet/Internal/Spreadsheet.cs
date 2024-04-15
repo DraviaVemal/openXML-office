@@ -61,7 +61,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			WorkbookPart workbookPart = GetWorkbookPart();
 			WorksheetPart sheetPart = workbookPart.GetPartById(sheet.Id) as WorksheetPart;
 			if (sheetPart == null) { return null; }
-
 			return new Worksheet(excel, sheetPart.Worksheet, sheet);
 		}
 		internal bool RemoveSheet(string sheetName)

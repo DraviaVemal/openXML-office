@@ -201,7 +201,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					return X.CellValues.String;
 			}
 		}
-
 		private static DataType GetCellDataType(EnumValue<X.CellValues> cellValueType)
 		{
 			if (cellValueType == null)
@@ -222,7 +221,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				}
 			}
 		}
-
 		/// <summary>
 		///
 		/// </summary>
