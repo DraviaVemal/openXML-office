@@ -254,7 +254,7 @@ namespace OpenXMLOffice.Global_2007
 				{
 					columnName = ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1);
 					List<ChartData> dataLabelCells = ((ChartData[])dataCols[DataValueColumn].Clone()).Skip((int)chartDataSetting.chartDataRowStart).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-					var endRowNumberD = chartDataSetting.chartDataRowStart + dataLabelCells.Count;
+					long endRowNumberD = chartDataSetting.chartDataRowStart + dataLabelCells.Count;
 					chartDataGrouping.dataLabelFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberD);
 					chartDataGrouping.dataLabelCells = dataLabelCells.ToArray();
 				}

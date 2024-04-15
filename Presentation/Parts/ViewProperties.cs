@@ -70,7 +70,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private static P.SlideViewProperties CreateSlideViewProperties()
 		{
-			var slideViewProperties = new P.SlideViewProperties(
+			P.SlideViewProperties slideViewProperties = new P.SlideViewProperties(
 				new P.CommonSlideViewProperties(
 					new P.CommonViewProperties
 					{

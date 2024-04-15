@@ -39,7 +39,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(columnChartSetting.plotAreaOptions.manualLayout));
+			plotArea.Append(CreateLayout(columnChartSetting.plotAreaOptions != null ? columnChartSetting.plotAreaOptions.manualLayout : null));
 			if (columnChartSetting.is3DChart)
 			{
 				plotArea.Append(CreateColumnChart<C.Bar3DChart>(CreateDataSeries(columnChartSetting.chartDataSetting, dataCols, dataRange)));
@@ -181,7 +181,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
 			string hexColor = columnChartSetting.columnChartSeriesSettings
-						.Select(item => item.fillColor)
+						.Select(item => item != null ? item.fillColor : null)
 						.ToList().ElementAtOrDefault(seriesIndex);
 			if (hexColor != null)
 			{
@@ -201,7 +201,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
 			string hexColor = columnChartSetting.columnChartSeriesSettings
-						.Select(item => item.borderColor)
+						.Select(item => item != null ? item.borderColor : null)
 						.ToList().ElementAtOrDefault(seriesIndex);
 			if (hexColor != null)
 			{
@@ -220,9 +220,9 @@ namespace OpenXMLOffice.Global_2007
 		private SolidFillModel GetDataPointFill(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
-			string hexColor = columnChartSetting.columnChartSeriesSettings[seriesIndex].columnChartDataPointSettings
-						.Select(item => item.fillColor)
-						.ToList().ElementAtOrDefault((int)index);
+			string hexColor = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings
+						.Select(item => item != null ? item.fillColor : null)
+						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
 				solidFillModel.hexColor = hexColor;
@@ -240,9 +240,9 @@ namespace OpenXMLOffice.Global_2007
 		private SolidFillModel GetDataPointBorder(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
-			string hexColor = columnChartSetting.columnChartSeriesSettings[seriesIndex].columnChartDataPointSettings
-						.Select(item => item.borderColor)
-						.ToList().ElementAtOrDefault((int)index);
+			string hexColor = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings
+						.Select(item => item != null ? item.borderColor : null)
+						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
 				solidFillModel.hexColor = hexColor;
@@ -267,20 +267,36 @@ namespace OpenXMLOffice.Global_2007
 					solidFill = GetSeriesBorderColor(seriesIndex, chartDataGrouping),
 				}
 			};
-			C.DataLabels dataLabels = seriesIndex < columnChartSetting.columnChartSeriesSettings.Count ?
-				CreateColumnDataLabels(columnChartSetting.columnChartSeriesSettings[seriesIndex].columnChartDataLabel ?? new ColumnChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+			int? labelCounter = null;
+			if (chartDataGrouping.dataLabelCells != null)
+			{
+				labelCounter = chartDataGrouping.dataLabelCells.Length;
+			}
+			C.DataLabels dataLabels = null;
+			if (seriesIndex < columnChartSetting.columnChartSeriesSettings.Count)
+			{
+				ColumnChartDataLabel columnChartDataLabel = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataLabel : null;
+				dataLabels = CreateColumnDataLabels(columnChartDataLabel ?? new ColumnChartDataLabel(), labelCounter);
+			}
+
 			C.BarChartSeries series = new C.BarChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.InvertIfNegative { Val = true },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
-			int dataPointCount = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings.Count;
+			int dataPointCount = 0;
+			ColumnChartSeriesSetting columnChartSeriesSetting = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex);
+			if (columnChartSeriesSetting != null && columnChartSeriesSetting.columnChartDataPointSettings != null)
+			{
+				dataPointCount = columnChartSeriesSetting.columnChartDataPointSettings.Count;
+			}
+
 			for (uint index = 0; index < dataPointCount; index++)
 			{
-				if (columnChartSetting.columnChartSeriesSettings[seriesIndex].columnChartDataPointSettings != null &&
-				index < columnChartSetting.columnChartSeriesSettings[seriesIndex].columnChartDataPointSettings.Count &&
-				columnChartSetting.columnChartSeriesSettings[seriesIndex].columnChartDataPointSettings[(int)index] != null)
+				if (columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings != null &&
+				index < columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings.Count &&
+				columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings[(int)index] != null)
 				{
 					C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()

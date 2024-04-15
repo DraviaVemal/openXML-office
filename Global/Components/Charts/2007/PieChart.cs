@@ -36,7 +36,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(pieChartSetting.plotAreaOptions.manualLayout));
+			plotArea.Append(CreateLayout(pieChartSetting.plotAreaOptions != null ? pieChartSetting.plotAreaOptions.manualLayout : null));
 			if (pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT)
 			{
 				plotArea.Append(CreateChart<C.DoughnutChart>(CreateDataSeries(pieChartSetting.chartDataSetting, dataCols, dataRange)));
@@ -77,9 +77,9 @@ namespace OpenXMLOffice.Global_2007
 		private SolidFillModel GetDataPointFill(uint index, int seriesIndex)
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
-			string hexColor = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
-						.Select(item => item.fillColor)
-						.ToList().ElementAtOrDefault((int)index);
+			string hexColor = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
+						.Select(item => item != null ? item.fillColor : null)
+						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
 				solidFillModel.hexColor = hexColor;
@@ -97,9 +97,9 @@ namespace OpenXMLOffice.Global_2007
 		private SolidFillModel GetDataPointBorder(uint index, int seriesIndex)
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
-			string hexColor = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
+			string hexColor = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
 						.Select(item => item.borderColor)
-						.ToList().ElementAtOrDefault((int)index);
+						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
 				solidFillModel.hexColor = hexColor;
@@ -117,7 +117,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			C.DataLabels dataLabels = seriesIndex < pieChartSetting.pieChartSeriesSettings.Count ?
-				CreatePieDataLabels(pieChartSetting.pieChartSeriesSettings[seriesIndex].pieChartDataLabel ?? new PieChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+				CreatePieDataLabels(pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataLabel ?? new PieChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
 			C.PieChartSeries series = new C.PieChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },

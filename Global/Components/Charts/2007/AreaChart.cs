@@ -85,7 +85,7 @@ namespace OpenXMLOffice.Global_2007
 				}
 			};
 			C.DataLabels dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
-				CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings[seriesIndex].areaChartDataLabel ?? new AreaChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+				CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings.ElementAtOrDefault(seriesIndex).areaChartDataLabel ?? new AreaChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
 			C.AreaChartSeries series = new C.AreaChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
@@ -128,7 +128,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(areaChartSetting.plotAreaOptions.manualLayout));
+			plotArea.Append(CreateLayout(areaChartSetting.plotAreaOptions != null ? areaChartSetting.plotAreaOptions.manualLayout : null));
 			if (areaChartSetting.is3DChart)
 			{
 				plotArea.Append(CreateAreaChart<C.Area3DChart>(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));

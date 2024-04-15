@@ -39,7 +39,7 @@ namespace OpenXMLOffice.Global_2007
 				}
 			}
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions.manualLayout));
+			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions != null ? scatterChartSetting.plotAreaOptions.manualLayout : null));
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
 				plotArea.Append(CreateChart<C.BubbleChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
@@ -144,7 +144,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			C.DataLabels dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
-				CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings[seriesIndex].scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+				CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings.ElementAtOrDefault(seriesIndex).scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
 			MarkerModel markerModel = new MarkerModel();
 			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{

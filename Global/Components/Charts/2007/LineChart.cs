@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions.manualLayout));
+			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions != null ? lineChartSetting.plotAreaOptions.manualLayout : null));
 			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
@@ -94,7 +94,7 @@ namespace OpenXMLOffice.Global_2007
 			string hexColor = lineChartSetting.lineChartSeriesSettings
 						.Select(item => item.borderColor)
 						.ToList().ElementAtOrDefault(seriesIndex);
-			if ((lineChartLineFormat.lineColor ?? hexColor) != null)
+			if ((lineChartLineFormat != null && lineChartLineFormat.lineColor != null) || hexColor != null)
 			{
 				solidFillModel.hexColor = lineChartLineFormat.lineColor ?? hexColor;
 				return solidFillModel;
@@ -138,9 +138,16 @@ namespace OpenXMLOffice.Global_2007
 					}
 				};
 			}
-			C.DataLabels dataLabels = seriesIndex < lineChartSetting.lineChartSeriesSettings.Count ?
-				CreateLineDataLabels(lineChartSetting.lineChartSeriesSettings[seriesIndex].lineChartDataLabel ?? new LineChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
-			LineChartLineFormat lineChartLineFormat = lineChartSetting.lineChartSeriesSettings.ElementAtOrDefault(seriesIndex).lineChartLineFormat;
+			LineChartSeriesSetting lineChartSeriesSetting = lineChartSetting.lineChartSeriesSettings.ElementAtOrDefault(seriesIndex);
+			C.DataLabels dataLabels = null;
+			if (lineChartSeriesSetting != null && lineChartSeriesSetting.lineChartDataLabel != null)
+			{
+				int labelCount = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+				dataLabels = CreateLineDataLabels(lineChartSeriesSetting.lineChartDataLabel, labelCount);
+			}
+
+			var lineChartLineFormat = lineChartSeriesSetting != null ? lineChartSeriesSetting.lineChartLineFormat : null;
+
 			OutlineModel outlineModel = new OutlineModel()
 			{
 				solidFill = GetBorderColor(seriesIndex, chartDataGrouping, lineChartLineFormat),

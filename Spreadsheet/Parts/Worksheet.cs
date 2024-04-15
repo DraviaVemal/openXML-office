@@ -150,34 +150,37 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			foreach (DataCell DataCell in dataCells)
 			{
-				string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
-				columnIndex++;
-				X.Cell cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference.Value == currentCellId);
-				if (string.IsNullOrEmpty(DataCell.cellValue))
+				if (DataCell != null)
 				{
-					cell.Remove();
-				}
-				else
-				{
-					if (cell == null)
+					string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
+					columnIndex++;
+					X.Cell cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference.Value == currentCellId);
+					if (string.IsNullOrEmpty(DataCell.cellValue))
 					{
-						cell = new X.Cell
-						{
-							CellReference = currentCellId
-						};
-						row.AppendChild(cell);
-					}
-					X.CellValues dataType = GetCellValueType(DataCell.dataType);
-					cell.StyleIndex = DataCell.styleId ?? excel.GetStyleService().GetCellStyleId(DataCell.styleSetting ?? new CellStyleSetting());
-					if (dataType == X.CellValues.String)
-					{
-						cell.DataType = X.CellValues.SharedString;
-						cell.CellValue = new X.CellValue(excel.GetShareStringService().InsertUnique(DataCell.cellValue));
+						cell.Remove();
 					}
 					else
 					{
-						cell.DataType = dataType;
-						cell.CellValue = new X.CellValue(DataCell.cellValue);
+						if (cell == null)
+						{
+							cell = new X.Cell
+							{
+								CellReference = currentCellId
+							};
+							row.AppendChild(cell);
+						}
+						X.CellValues dataType = GetCellValueType(DataCell.dataType);
+						cell.StyleIndex = DataCell.styleId ?? excel.GetStyleService().GetCellStyleId(DataCell.styleSetting ?? new CellStyleSetting());
+						if (dataType == X.CellValues.String)
+						{
+							cell.DataType = X.CellValues.SharedString;
+							cell.CellValue = new X.CellValue(excel.GetShareStringService().InsertUnique(DataCell.cellValue));
+						}
+						else
+						{
+							cell.DataType = dataType;
+							cell.CellValue = new X.CellValue(DataCell.cellValue);
+						}
 					}
 				}
 			}

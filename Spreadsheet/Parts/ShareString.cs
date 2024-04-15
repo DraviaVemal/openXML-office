@@ -39,7 +39,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </returns>
 		public int? GetIndex(string value)
 		{
-			return stringCollection.FindOne(col => col.Value == value).Id - 1;
+			StringRecord stringRecord = stringCollection.FindOne(col => col.Value == value);
+			if (stringRecord != null)
+			{
+				return stringRecord.Id;
+			}
+			return null;
 		}
 		/// <summary>
 		/// Gets all the records in the shared string collection.
@@ -62,7 +67,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </returns>
 		public string GetValue(int index)
 		{
-			return stringCollection.FindById(index).Value;
+			StringRecord stringRecord = stringCollection.FindById(index);
+			return stringRecord != null ? stringRecord.Value : null;
 		}
 		/// <summary>
 		/// Inserts a new value into the shared string collection.

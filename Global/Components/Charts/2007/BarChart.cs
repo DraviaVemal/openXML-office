@@ -80,9 +80,9 @@ namespace OpenXMLOffice.Global_2007
 		private SolidFillModel GetDataPointFill(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
-			string hexColor = barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings
+			string hexColor = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings
 						.Select(item => item.fillColor)
-						.ToList().ElementAtOrDefault((int)index);
+						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
 				solidFillModel.hexColor = hexColor;
@@ -100,9 +100,9 @@ namespace OpenXMLOffice.Global_2007
 		private SolidFillModel GetDataPointBorder(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			SolidFillModel solidFillModel = new SolidFillModel();
-			string hexColor = barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings
+			string hexColor = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings
 						.Select(item => item.borderColor)
-						.ToList().ElementAtOrDefault((int)index);
+						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
 				solidFillModel.hexColor = hexColor;
@@ -119,8 +119,14 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			C.DataLabels dataLabels = seriesIndex < barChartSetting.barChartSeriesSettings.Count ?
-				CreateBarDataLabels(barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataLabel ?? new BarChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+			C.DataLabels dataLabels = null;
+			if (seriesIndex < barChartSetting.barChartSeriesSettings.Count)
+			{
+				BarChartDataLabel barChartDataLabel = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataLabel;
+				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+				dataLabels = CreateBarDataLabels(barChartDataLabel ?? new BarChartDataLabel(), dataLabelCellsLength);
+			}
+
 			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 			{
 				solidFill = GetSeriesFillColor(seriesIndex, chartDataGrouping),
@@ -135,12 +141,22 @@ namespace OpenXMLOffice.Global_2007
 				new C.InvertIfNegative { Val = true },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
-			int dataPointCount = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings.Count;
+			int dataPointCount = 0;
+			BarChartSeriesSetting seriesSettings = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex);
+			if (seriesSettings != null)
+			{
+				List<BarChartDataPointSetting> dataPointSettings = seriesSettings.barChartDataPointSettings;
+				if (dataPointSettings != null)
+				{
+					dataPointCount = dataPointSettings.Count;
+				}
+			}
+
 			for (uint index = 0; index < dataPointCount; index++)
 			{
-				if (barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings != null &&
-				index < barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings.Count &&
-				barChartSetting.barChartSeriesSettings[seriesIndex].barChartDataPointSettings[(int)index] != null)
+				if (barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings != null &&
+				index < barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings.Count &&
+				barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataPointSettings[(int)index] != null)
 				{
 					C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()
@@ -194,7 +210,7 @@ namespace OpenXMLOffice.Global_2007
 						positionValue = C.DataLabelPositionValues.Center;
 						break;
 				}
-				var dataLabelPosition = new C.DataLabelPosition { Val = positionValue };
+				C.DataLabelPosition dataLabelPosition = new C.DataLabelPosition { Val = positionValue };
 				dataLabels.InsertAt(dataLabelPosition, 0);
 				return dataLabels;
 			}
@@ -203,7 +219,7 @@ namespace OpenXMLOffice.Global_2007
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
 			C.PlotArea plotArea = new C.PlotArea();
-			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions.manualLayout));
+			plotArea.Append(CreateLayout(barChartSetting.plotAreaOptions != null ? barChartSetting.plotAreaOptions.manualLayout : null));
 			if (barChartSetting.is3DChart)
 			{
 				plotArea.Append(CreateBarChart<C.Bar3DChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
@@ -299,7 +315,7 @@ namespace OpenXMLOffice.Global_2007
 				case BarChartTypes.STACKED_3D:
 				case BarChartTypes.PERCENT_STACKED_3D:
 					barChart.Append(new C.GapWidth { Val = new UInt16Value((ushort)barChartSetting.barGraphicsSetting.categoryGap) });
-					var shapeValue = GetShapeValue(barChartSetting.barGraphicsSetting.barShapeType);
+					C.ShapeValues shapeValue = GetShapeValue(barChartSetting.barGraphicsSetting.barShapeType);
 					barChart.Append(new C.Shape { Val = shapeValue });
 					break;
 				default:

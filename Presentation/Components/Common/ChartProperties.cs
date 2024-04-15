@@ -122,22 +122,22 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <returns></returns>
 		internal static ChartData[][] ExcelToPPTdata(DataCell[][] dataRows)
 		{
-			return CommonTools.TransposeArray(dataRows).Select(col => col.Select(Cell =>
+			return CommonTools.TransposeArray(dataRows).Select(col => col.Select(cell =>
 			{
-				var numberFormat = Cell.styleSetting.numberFormat ?? "General";
-				var dataType = DataType.STRING;
-				if (Cell.dataType == CellDataType.NUMBER)
+				string numberFormat = cell != null && cell.styleSetting != null && cell.styleSetting.numberFormat != null ? cell.styleSetting.numberFormat : "General";
+				DataType dataType = DataType.STRING;
+				if (cell != null && cell.dataType == CellDataType.NUMBER)
 				{
 					dataType = DataType.NUMBER;
 				}
-				else if (Cell.dataType == CellDataType.DATE)
+				else if (cell != null && cell.dataType == CellDataType.DATE)
 				{
 					dataType = DataType.DATE;
 				}
 				return new ChartData
 				{
 					numberFormat = numberFormat,
-					value = Cell.cellValue,
+					value = cell != null ? cell.cellValue : null,
 					dataType = dataType
 				};
 			}).ToArray()).ToArray();
