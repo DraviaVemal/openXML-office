@@ -189,17 +189,20 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		private void InitialiseSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
 		{
-			if (spreadsheetDocument.CoreFilePropertiesPart == null)
+			// if (spreadsheetDocument.CoreFilePropertiesPart == null)
+			// {
+			// 	spreadsheetDocument.AddCoreFilePropertiesPart();
+			// }
+			// G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			// if (spreadsheetDocument.CustomFilePropertiesPart == null)
+			// {
+			// 	spreadsheetDocument.AddCustomFilePropertiesPart();
+			// }
+			// G.CustomProperties.AddOrUpdateOpenXMLCustomProperties(spreadsheetDocument.CustomFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+			if (GetWorkbookPart().Workbook == null)
 			{
-				spreadsheetDocument.AddCoreFilePropertiesPart();
+				GetWorkbookPart().Workbook = new Workbook();
 			}
-			G.CoreProperties.AddOrUpdateCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
-			if (spreadsheetDocument.CustomFilePropertiesPart == null)
-			{
-				spreadsheetDocument.AddCustomFilePropertiesPart();
-			}
-			G.CustomProperties.AddOrUpdateOpenXMLCustomProperties(spreadsheetDocument.CustomFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
-			GetWorkbookPart().Workbook = GetWorkbookPart().Workbook ?? new Workbook();
 			Sheets sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
 			if (sheets == null)
 			{

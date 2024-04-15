@@ -532,18 +532,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			fills.Descendants<X.Fill>().ToList()
 			.ForEach(fill =>
 			{
-				if (fill.PatternFill.BackgroundColor.Rgb != null ||
-				fill.PatternFill.ForegroundColor.Rgb != null)
+				if ((fill.PatternFill.BackgroundColor != null && fill.PatternFill.BackgroundColor.Rgb != null) ||
+				(fill.PatternFill.BackgroundColor != null && fill.PatternFill.BackgroundColor.Rgb != null))
 				{
 					FillStyle fillStyle = new FillStyle()
 					{
 						Id = (uint)fillStyleCollection.Count()
 					};
-					if (fill.PatternFill.ForegroundColor.Rgb != null)
+					if (fill.PatternFill.BackgroundColor != null && fill.PatternFill.ForegroundColor.Rgb != null)
 					{
 						fillStyle.ForegroundColor = fill.PatternFill.ForegroundColor.Rgb;
 					}
-					if (fill.PatternFill.BackgroundColor.Rgb != null)
+					if (fill.PatternFill.BackgroundColor != null && fill.PatternFill.BackgroundColor.Rgb != null)
 					{
 						fillStyle.BackgroundColor = fill.PatternFill.BackgroundColor.Rgb;
 					}
@@ -562,7 +562,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					IsBold = font.Bold != null,
 					IsItalic = font.Italic != null,
 					IsUnderline = font.Underline != null,
-					IsDoubleUnderline = font.Underline.Val != null && font.Underline.Val == X.UnderlineValues.Double,
+					IsDoubleUnderline = font.Underline != null && font.Underline.Val != null && font.Underline.Val == X.UnderlineValues.Double,
 				};
 				if (font.FontSize.Val != null)
 				{
@@ -586,20 +586,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				{
 					fontStyle.Family = font.FontFamilyNumbering.Val;
 				}
-				SchemeValues fontScheme;
-				switch (font.FontScheme.Val.InnerText)
+				if (font.FontScheme != null && font.FontScheme.Val != null && font.FontScheme.Val.InnerText != null)
 				{
-					case "minor":
-						fontScheme = SchemeValues.MINOR;
-						break;
-					case "major":
-						fontScheme = SchemeValues.MAJOR;
-						break;
-					default:
-						fontScheme = SchemeValues.NONE;
-						break;
+					SchemeValues fontScheme;
+					switch (font.FontScheme.Val.InnerText)
+					{
+						case "minor":
+							fontScheme = SchemeValues.MINOR;
+							break;
+						case "major":
+							fontScheme = SchemeValues.MAJOR;
+							break;
+						default:
+							fontScheme = SchemeValues.NONE;
+							break;
+					}
+					fontStyle.FontScheme = fontScheme;
 				}
-				fontStyle.FontScheme = fontScheme;
 				fontStyleCollection.Insert(fontStyle);
 			});
 		}

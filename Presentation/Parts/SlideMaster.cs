@@ -27,7 +27,11 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
 		{
-			return openXMLSlideMaster.SlideMasterPart.CreateRelationshipToPart(openXmlPart, RelationshipId);
+			if (openXMLSlideMaster.SlideMasterPart != null)
+			{
+				return openXMLSlideMaster.SlideMasterPart.CreateRelationshipToPart(openXmlPart, RelationshipId);
+			}
+			return null;
 		}
 		private void CreateSlideMaster()
 		{
