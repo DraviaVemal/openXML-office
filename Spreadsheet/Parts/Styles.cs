@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// </summary>
 	public class StylesService
 	{
-		private static readonly LiteDatabase liteDatabase = new LiteDatabase(Path.ChangeExtension(Path.GetTempFileName(), "db"));
+		private readonly LiteDatabase liteDatabase = new LiteDatabase(Path.ChangeExtension(Path.GetTempFileName(), "db"));
 		private readonly ILiteCollection<BorderStyle> borderStyleCollection;
 		private readonly ILiteCollection<CellXfs> cellXfsCollection;
 		private readonly ILiteCollection<FillStyle> fillStyleCollection;
@@ -26,6 +26,32 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			fillStyleCollection = liteDatabase.GetCollection<FillStyle>("FillStyle");
 			borderStyleCollection = liteDatabase.GetCollection<BorderStyle>("BorderStyle");
 			cellXfsCollection = liteDatabase.GetCollection<CellXfs>("CellXfs");
+			InitializeDefault();
+		}
+		private void InitializeDefault()
+		{
+			fontStyleCollection.Insert(new FontStyle()
+			{
+				Id = (uint)fontStyleCollection.Count()
+			});
+			fillStyleCollection.Insert(new FillStyle()
+			{
+				Id = (uint)fillStyleCollection.Count(),
+				PatternType = PatternTypeValues.NONE,
+			});
+			fillStyleCollection.Insert(new FillStyle()
+			{
+				Id = (uint)fillStyleCollection.Count(),
+				PatternType = PatternTypeValues.GRAY125,
+			});
+			borderStyleCollection.Insert(new BorderStyle()
+			{
+				Id = (uint)borderStyleCollection.Count()
+			});
+			cellXfsCollection.Insert(new CellXfs()
+			{
+				Id = (uint)cellXfsCollection.Count()
+			});
 		}
 		/// <summary>
 		/// Return Style details for the provided style ID
@@ -204,6 +230,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					RightBorder = new X.RightBorder(),
 					BottomBorder = new X.BottomBorder(),
 					TopBorder = new X.TopBorder(),
+					DiagonalBorder = new X.DiagonalBorder(),
 				};
 				if (item.Left.style != StyleValues.NONE)
 				{
@@ -316,13 +343,17 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return new X.Fills(fillStyleCollection.FindAll().ToList().Select(item =>
 			{
 				X.PatternValues patternType;
-				if (item.PatternType == PatternTypeValues.SOLID)
+				switch (item.PatternType)
 				{
-					patternType = X.PatternValues.Solid;
-				}
-				else
-				{
-					patternType = X.PatternValues.None;
+					case PatternTypeValues.SOLID:
+						patternType = X.PatternValues.Solid;
+						break;
+					case PatternTypeValues.GRAY125:
+						patternType = X.PatternValues.Gray125;
+						break;
+					default:
+						patternType = X.PatternValues.None;
+						break;
 				}
 				X.PatternFill patternFill = new X.PatternFill()
 				{

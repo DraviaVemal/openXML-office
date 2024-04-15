@@ -13,6 +13,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		NONE,
 		/// <summary>
+		///
+		/// </summary>
+		GRAY125,
+		/// <summary>
 		/// Solid Pattern Type
 		/// </summary>
 		SOLID
@@ -368,7 +372,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			Family = 2;
 			Size = 11;
 			Name = "Calibri";
-			FontScheme = SchemeValues.NONE;
+			FontScheme = SchemeValues.MINOR;
 		}
 		/// <summary>
 		/// Font style ID
