@@ -15,22 +15,22 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	{
 		internal readonly Excel excel;
 		internal readonly SpreadsheetDocument spreadsheetDocument;
-		internal readonly SpreadsheetInfo spreadsheetInfo = new SpreadsheetInfo();
-		internal readonly SpreadsheetProperties spreadsheetProperties;
+		internal readonly ExcelInfo spreadsheetInfo = new ExcelInfo();
+		internal readonly ExcelProperties spreadsheetProperties;
 		private readonly StylesService stylesService = new StylesService();
 		private readonly ShareStringService shareStringService = new ShareStringService();
-		internal SpreadsheetCore(Excel excel, SpreadsheetProperties spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new SpreadsheetProperties();
+			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
 			MemoryStream memoryStream = new MemoryStream();
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
 			InitialiseSpreadsheet(this.spreadsheetProperties);
 		}
-		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, SpreadsheetProperties spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new SpreadsheetProperties();
+			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
 			FileStream reader = new FileStream(filePath, FileMode.Open);
 			MemoryStream memoryStream = new MemoryStream();
 			reader.CopyTo(memoryStream);
@@ -50,10 +50,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			ReadDataFromFile();
 		}
-		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new SpreadsheetProperties();
+			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
 			spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings()
 			{
 				AutoSave = true
@@ -190,12 +190,16 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Common Spreadsheet perparation process used by all constructor
 		/// </summary>
-		private void InitialiseSpreadsheet(SpreadsheetProperties SpreadsheetProperties)
+		private void InitialiseSpreadsheet(ExcelProperties excelProperties)
 		{
 			if (spreadsheetDocument.CoreFilePropertiesPart == null)
 			{
 				spreadsheetDocument.AddCoreFilePropertiesPart();
-				G.CoreProperties.AddCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+				G.CoreProperties.AddCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), excelProperties.coreProperties);
+			}
+			else
+			{
+				G.CoreProperties.UpdateModifiedDetails(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), excelProperties.coreProperties);
 			}
 			if (GetWorkbookPart().Workbook == null)
 			{
@@ -211,7 +215,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
 			}
-			G.Theme theme = new G.Theme(SpreadsheetProperties.theme);
+			G.Theme theme = new G.Theme(excelProperties.theme);
 			GetWorkbookPart().ThemePart.Theme = theme.GetTheme();
 			InitialiseStyle();
 			GetWorkbookPart().Workbook.Save();

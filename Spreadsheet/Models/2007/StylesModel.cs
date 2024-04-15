@@ -20,9 +20,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Solid Pattern Type
 		/// </summary>
 		SOLID
-	}/// <summary>
-	 /// Font Scheme values
-	 /// </summary>
+	}
+	/// <summary>
+	/// Font Scheme values
+	/// </summary>
 	public enum SchemeValues
 	{
 		/// <summary>
@@ -103,7 +104,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public enum StyleColorTypeValues
+	public enum ColorSettingTypeValues
 	{
 		/// <summary>
 		///
@@ -126,11 +127,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the color of the border.
 		/// </summary>
-		public string color = "64";
+		public ColorSetting BorderColor { get; set; }
 		/// <summary>
 		/// Gets or sets the style of the border.
 		/// </summary>
-		public StyleValues style = StyleValues.NONE;
+		public StyleValues Style { get; set; }
+		/// <summary>
+		///
+		/// </summary>
+		public BorderSetting()
+		{
+			BorderColor = new ColorSetting()
+			{
+				ColorSettingTypeValues = ColorSettingTypeValues.INDEXED,
+				Value = "64"
+			};
+			Style = StyleValues.NONE;
+		}
 	}
 	/// <summary>
 	/// Represents the border style of a cell in a worksheet.
@@ -138,23 +151,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	public class BorderStyle
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BorderStyle"/> class.
+		/// Gets or sets the ID of the border style.
 		/// </summary>
-		public BorderStyle()
-		{
-			Bottom = new BorderSetting();
-			Left = new BorderSetting();
-			Right = new BorderSetting();
-			Top = new BorderSetting();
-		}
+		public uint Id { get; set; }
 		/// <summary>
 		/// Bottom border style
 		/// </summary>
 		public BorderSetting Bottom { get; set; }
-		/// <summary>
-		/// Gets or sets the ID of the border style.
-		/// </summary>
-		public uint Id { get; set; }
 		/// <summary>
 		/// Left border style
 		/// </summary>
@@ -167,6 +170,16 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Top border style
 		/// </summary>
 		public BorderSetting Top { get; set; }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BorderStyle"/> class.
+		/// </summary>
+		public BorderStyle()
+		{
+			Bottom = new BorderSetting();
+			Left = new BorderSetting();
+			Right = new BorderSetting();
+			Top = new BorderSetting();
+		}
 	}
 	/// <summary>
 	/// Represents the style of a cell in a worksheet.
@@ -236,9 +249,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the text color of the cell. default is 000000
 		/// </summary>
-		public StyleColor textColor = new StyleColor()
+		public ColorSetting textColor = new ColorSetting()
 		{
-			StyleColorTypeValues = StyleColorTypeValues.RGB,
+			ColorSettingTypeValues = ColorSettingTypeValues.RGB,
 			Value = "000000"
 		};
 		/// <summary>
@@ -336,11 +349,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the background color of the cell.
 		/// </summary>
-		public StyleColor BackgroundColor { get; set; }
+		public ColorSetting BackgroundColor { get; set; }
 		/// <summary>
 		/// Gets or sets the foreground color of the cell.
 		/// </summary>
-		public StyleColor ForegroundColor { get; set; }
+		public ColorSetting ForegroundColor { get; set; }
 		/// <summary>
 		/// Fill style ID
 		/// </summary>
@@ -353,12 +366,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class StyleColor
+	public class ColorSetting
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public StyleColorTypeValues StyleColorTypeValues { get; set; }
+		public ColorSettingTypeValues ColorSettingTypeValues { get; set; }
 		/// <summary>
 		///
 		/// </summary>
@@ -366,9 +379,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public StyleColor()
+		public ColorSetting()
 		{
-			StyleColorTypeValues = StyleColorTypeValues.THEME;
+			ColorSettingTypeValues = ColorSettingTypeValues.THEME;
+			Value = "1";
 		}
 	}
 	/// <summary>
@@ -381,7 +395,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public FontStyle()
 		{
-			Color = new StyleColor() { Value = "1" };
+			Color = new ColorSetting() { Value = "1" };
 			Family = 2;
 			Size = 11;
 			Name = "Calibri";
@@ -394,7 +408,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets or sets the color of the font. default is accent1
 		/// </summary>
-		public StyleColor Color { get; set; }
+		public ColorSetting Color { get; set; }
 		/// <summary>
 		/// Gets or sets the font family of the font.
 		/// </summary>

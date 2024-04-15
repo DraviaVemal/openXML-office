@@ -15,21 +15,21 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Create New file in the system
 		/// </summary>
-		public Excel(SpreadsheetProperties spreadsheetProperties = null)
+		public Excel(ExcelProperties spreadsheetProperties = null)
 		{
 			spreadsheet = new Spreadsheet(this, spreadsheetProperties);
 		}
 		/// <summary>
 		/// Open and work with existing file
 		/// </summary>
-		public Excel(string filePath, bool isEditable, SpreadsheetProperties spreadsheetProperties = null)
+		public Excel(string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			spreadsheet = new Spreadsheet(this, filePath, isEditable, spreadsheetProperties);
 		}
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point
 		/// </summary>
-		public Excel(Stream Stream, bool IsEditable, SpreadsheetProperties spreadsheetProperties = null)
+		public Excel(Stream Stream, bool IsEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			spreadsheet = new Spreadsheet(this, Stream, IsEditable, spreadsheetProperties);
 		}

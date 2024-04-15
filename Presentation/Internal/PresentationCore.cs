@@ -125,7 +125,11 @@ namespace OpenXMLOffice.Presentation_2007
 			if (presentationDocument.CoreFilePropertiesPart == null)
 			{
 				presentationDocument.AddCoreFilePropertiesPart();
-				CoreProperties.AddCoreProperties(presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite));
+				CoreProperties.AddCoreProperties(presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), powerPointProperties.coreProperties);
+			}
+			else
+			{
+				CoreProperties.UpdateModifiedDetails(presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), powerPointProperties.coreProperties);
 			}
 			PresentationPart presentationPart = presentationDocument.PresentationPart ?? presentationDocument.AddPresentationPart();
 			if (presentationPart.Presentation == null)

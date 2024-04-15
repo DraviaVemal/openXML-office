@@ -1,7 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -12,14 +14,10 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public static void AddCoreProperties(Stream stream, CorePropertiesModel corePropertiesModel = null)
+		public static void AddCoreProperties(Stream stream, CorePropertiesModel corePropertiesModel)
 		{
 			try
 			{
-				if (corePropertiesModel == null)
-				{
-					corePropertiesModel = new CorePropertiesModel();
-				}
 				string timeStamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
 				using (XmlTextWriter writer = new XmlTextWriter(stream, System.Text.Encoding.UTF8))
 				{
@@ -70,6 +68,20 @@ namespace OpenXMLOffice.Global_2007
 			{
 				Console.WriteLine("Core Property Error" + ex.Message);
 			}
+		}
+		/// <summary>
+		///
+		/// </summary>
+		public static void UpdateModifiedDetails(Stream stream, CorePropertiesModel corePropertiesModel = null)
+		{
+			XDocument doc = XDocument.Load(stream);
+			stream.Position = 0;
+			stream.SetLength(0);
+			XElement lastModifiedByElement = doc.Descendants().First(e => e.Name.LocalName == "lastModifiedBy");
+			XElement modifiedElement = doc.Descendants().First(e => e.Name.LocalName == "modified");
+			lastModifiedByElement.SetValue(corePropertiesModel.creator);
+			modifiedElement.SetValue(DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+			doc.Save(stream);
 		}
 	}
 }

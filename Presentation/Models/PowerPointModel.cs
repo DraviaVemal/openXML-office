@@ -23,6 +23,10 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Gets or sets the theme of the presentation.
 		/// </summary>
 		public ThemePallet theme = new ThemePallet();
+		/// <summary>
+		/// Add Meta Data Details to File
+		/// </summary>
+		public CorePropertiesModel coreProperties = new CorePropertiesModel();
 	}
 	/// <summary>
 	/// Represents the settings of a presentation.

@@ -9,9 +9,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 {
 	internal class Spreadsheet : SpreadsheetCore
 	{
-		internal Spreadsheet(Excel excel, SpreadsheetProperties spreadsheetProperties) : base(excel, spreadsheetProperties) { }
-		internal Spreadsheet(Excel excel, string filePath, bool isEditable, SpreadsheetProperties spreadsheetProperties) : base(excel, filePath, isEditable, spreadsheetProperties) { }
-		internal Spreadsheet(Excel excel, Stream stream, bool isEditable, SpreadsheetProperties spreadsheetProperties) : base(excel, stream, isEditable, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, ExcelProperties spreadsheetProperties) : base(excel, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, string filePath, bool isEditable, ExcelProperties spreadsheetProperties) : base(excel, filePath, isEditable, spreadsheetProperties) { }
+		internal Spreadsheet(Excel excel, Stream stream, bool isEditable, ExcelProperties spreadsheetProperties) : base(excel, stream, isEditable, spreadsheetProperties) { }
 		internal Worksheet AddSheet(string sheetName)
 		{
 			sheetName = sheetName ?? string.Format("Sheet{0}", GetMaxSheetId() + 1);
