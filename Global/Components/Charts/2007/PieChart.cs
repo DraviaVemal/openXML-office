@@ -116,19 +116,19 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.PieChartSeries CreateChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			C.DataLabels dataLabels = null;
-			if (seriesIndex < pieChartSetting.pieChartSeriesSettings.Count)
-			{
-				PieChartDataLabel pieChartDataLabel1 = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataLabel : null;
-				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
-				dataLabels = CreatePieDataLabels(pieChartDataLabel1 ?? new PieChartDataLabel(), dataLabelCellsLength);
-			}
 			C.PieChartSeries series = new C.PieChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			for (uint index = 0; index < chartDataGrouping.xAxisCells.Length; index++)
 			{
+				C.DataLabels dataLabels = null;
+				if (seriesIndex < pieChartSetting.pieChartSeriesSettings.Count)
+				{
+					PieChartDataLabel pieChartDataLabel1 = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataLabel : null;
+					int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+					dataLabels = CreatePieDataLabels(pieChartDataLabel1 ?? new PieChartDataLabel(), dataLabelCellsLength);
+				}
 				C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 				ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
 				{

@@ -65,7 +65,18 @@ namespace OpenXMLOffice.Presentation_2007
 				P.SlideId SlideId = (P.SlideId)GetSlideIdList().ElementAt(SlideIndex);
 				SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId.Value);
 				GetSlideIdList().RemoveChild(SlideId);
-				GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value);
+				try
+				{
+					GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value);
+				}
+				catch (ArgumentNullException)
+				{
+					//ignore
+				}
+				catch (Exception ex)
+				{
+					throw ex;
+				}
 				GetPresentationPart().DeletePart(SlidePart);
 			}
 			else
