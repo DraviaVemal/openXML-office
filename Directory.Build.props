@@ -2,6 +2,8 @@
     <PropertyGroup>
         <PackageProjectUrl>https://draviavemal.gitbook.io/openxml-office/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DraviaVemal/OpenXML-Office</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -10,7 +12,7 @@
         <LangVersion>5.0</LangVersion>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>2.6.9</Version>
+        <Version>2.6.10</Version>
         <Company>DraviaVemal</Company>
         <Copyright>Copyright (c) 2023 DraviaVemal
             Permission is hereby granted, free of charge, to any person obtaining a copy of this
