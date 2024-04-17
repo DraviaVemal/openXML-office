@@ -2,6 +2,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Global\Global.csproj" />
 		<ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Internal/" />
@@ -36,5 +37,8 @@
 			manipulation. Get started with ease and enhance your application's document handling
 			capabilities.</PackageDescription>
 		<PackageTags>OpenXML;Power Point;Presentation;Office;ppt;pptx</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 </Project>

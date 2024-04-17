@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\Global\Global.csproj" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Models/" />
@@ -31,5 +32,8 @@
 			the OpenXML Excel Integrator offers a streamlined approach to handle Excel documents
 			efficiently and accurately, enhancing your application's data management capabilities.</PackageDescription>
 		<PackageTags>OpenXML;Excel;SpreadSheet;Office;xls;xlsx</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 </Project>
