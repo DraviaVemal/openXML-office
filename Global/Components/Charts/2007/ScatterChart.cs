@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the types of scatter charts.
 	/// </summary>
-	public class ScatterChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class ScatterChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// Scatter Chart Setting

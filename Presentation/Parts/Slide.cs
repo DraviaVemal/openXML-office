@@ -38,7 +38,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, AreaChartSetting<ApplicationSpecificSetting> AreaChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, AreaChartSetting<ApplicationSpecificSetting> AreaChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, AreaChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -47,7 +47,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Bar chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, BarChartSetting<ApplicationSpecificSetting> BarChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, BarChartSetting<ApplicationSpecificSetting> BarChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, BarChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -56,7 +56,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Column chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ColumnChartSetting<ApplicationSpecificSetting> ColumnChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ColumnChartSetting<ApplicationSpecificSetting> ColumnChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, ColumnChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -65,7 +65,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Line chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, LineChartSetting<ApplicationSpecificSetting> LineChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, LineChartSetting<ApplicationSpecificSetting> LineChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, LineChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -74,7 +74,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Pie chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, PieChartSetting<ApplicationSpecificSetting> PieChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, PieChartSetting<ApplicationSpecificSetting> PieChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, PieChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -83,7 +83,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Scatter chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ScatterChartSetting<ApplicationSpecificSetting> ScatterChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ScatterChartSetting<ApplicationSpecificSetting> ScatterChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, ScatterChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -92,7 +92,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, comboChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -101,7 +101,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public P16.Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting) where ApplicationSpecificSetting : PresentationSetting
+		public P16.Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			P16.Chart<ApplicationSpecificSetting> Chart = new P16.Chart<ApplicationSpecificSetting>(this, DataCells, waterfallChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetAlternateContent());

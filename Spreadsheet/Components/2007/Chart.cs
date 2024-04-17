@@ -9,7 +9,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	/// Chart Class Exported out of Excel importing from Global
 	/// </summary>
-	public class Chart<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : ExcelSetting
+	public class Chart<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : ExcelSetting, new()
 	{
 		private readonly ChartPart openXMLChartPart;
 		/// <summary>

@@ -144,7 +144,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a column chart.
 	/// </summary>
-	public class ColumnChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class ColumnChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// Chart Axes Options

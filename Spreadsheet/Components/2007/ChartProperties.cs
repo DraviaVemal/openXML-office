@@ -5,7 +5,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : ExcelSetting
+	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : ExcelSetting, new()
 	{
 		/// <summary>
 		///

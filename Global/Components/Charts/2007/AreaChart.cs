@@ -9,7 +9,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Aread Chart Core data
 	/// </summary>
-	public class AreaChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class AreaChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// Area Chart Setting

@@ -9,7 +9,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a column chart.
 	/// </summary>
-	public class ColumnChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class ColumnChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		private const int DefaultGapWidth = 150;
 		private const int DefaultOverlap = 100;

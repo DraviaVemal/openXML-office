@@ -9,7 +9,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a line chart.
 	/// </summary>
-	public class LineChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class LineChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The settings for the line chart.

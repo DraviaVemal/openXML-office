@@ -5,7 +5,7 @@ namespace OpenXMLOffice.Global_2016
 	/// <summary>
 	///
 	/// </summary>
-	public class WaterfallChart<ApplicationSpecificSetting> : AdvanceCharts<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class WaterfallChart<ApplicationSpecificSetting> : AdvanceCharts<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		private readonly WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting;
 		/// <summary>

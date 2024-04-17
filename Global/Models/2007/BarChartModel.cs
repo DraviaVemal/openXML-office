@@ -144,7 +144,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a bar chart.
 	/// </summary>
-	public class BarChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class BarChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The data label settings for the entire chart. This will get overridden by series level setting.

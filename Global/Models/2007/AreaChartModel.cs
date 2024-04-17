@@ -73,7 +73,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for an area chart.
 	/// </summary>
-	public class AreaChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class AreaChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The data label settings for the entire chart. This will get overridden by series level setting.

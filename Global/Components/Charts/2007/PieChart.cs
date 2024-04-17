@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the types of pie charts.
 	/// </summary>
-	public class PieChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class PieChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The settings for the pie chart.

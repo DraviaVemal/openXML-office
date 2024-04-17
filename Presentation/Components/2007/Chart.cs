@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Chart Class Exported out of PPT importing from Global
 	/// </summary>
-	public class Chart<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting
+	public class Chart<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting, new()
 	{
 		private readonly ChartPart openXMLChartPart;
 		/// <summary>

@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Presentation_2016
 	/// <summary>
 	///
 	/// </summary>
-	public class Chart<ApplicationSpecificSetting> : AdvancedChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting
+	public class Chart<ApplicationSpecificSetting> : AdvancedChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting, new()
 	{
 		/// <summary>
 		///

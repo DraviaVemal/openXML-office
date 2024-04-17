@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Replace Chart for the source Shape
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting
+		public Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
 			if (parent == null)
@@ -52,7 +52,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Replace 2016 Support Chart for the source Shape
 		/// </summary>
-		public P16.Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(P16.Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting
+		public P16.Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(P16.Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
 			if (parent == null)

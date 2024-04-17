@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting
+	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting, new()
 	{
 		/// <summary>
 		///
