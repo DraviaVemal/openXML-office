@@ -6,19 +6,19 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Represents the properties of a presentation.
 	/// </summary>
-	public class PresentationProperties
+	public class PowerPointProperties
 	{
 		/// <summary>
 		/// Gets or sets the presentation settings.
 		/// </summary>
-		public PresentationSettings settings = new PresentationSettings();
+		public PowerPointSettings settings = new PowerPointSettings();
 		/// <summary>
 		/// Gets or sets the slide masters of the presentation.
 		/// </summary>
 		/// <remarks>
 		/// TODO: Multi Theme Slide Master Support
 		/// </remarks>
-		public Dictionary<string, PresentationSlideMaster> slideMasters;
+		public Dictionary<string, PowerPointSlideMaster> slideMasters;
 		/// <summary>
 		/// Gets or sets the theme of the presentation.
 		/// </summary>
@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Represents the settings of a presentation.
 	/// </summary>
-	public class PresentationSettings
+	public class PowerPointSettings
 	{
 		/// <summary>
 		/// Gets or sets a value indicating whether the presentation has multiple slide masters.
@@ -45,14 +45,14 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Represents a slide master in a presentation.
 	/// </summary>
-	public class PresentationSlideMaster
+	public class PowerPointSlideMaster
 	{
 		/// <summary>
 		/// Gets or sets the theme of the slide master.
 		/// </summary>
 		public ThemePallet theme = new ThemePallet();
 	}
-	internal class PresentationInfo
+	internal class PowerPointInfo
 	{
 		public bool isEditable = true;
 		public bool isExistingFile = false;

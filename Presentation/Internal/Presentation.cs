@@ -8,11 +8,11 @@ namespace OpenXMLOffice.Presentation_2007
 {
 	internal class Presentation : PresentationCore
 	{
-		internal Presentation(PresentationProperties presentationProperties = null)
+		internal Presentation(PowerPointProperties presentationProperties = null)
 		: base(presentationProperties) { }
-		internal Presentation(string filePath, bool isEditable, PresentationProperties presentationProperties = null, bool autosave = true)
+		internal Presentation(string filePath, bool isEditable, PowerPointProperties presentationProperties = null, bool autosave = true)
 		: base(filePath, isEditable, presentationProperties) { }
-		internal Presentation(Stream stream, bool isEditable, PresentationProperties presentationProperties = null)
+		internal Presentation(Stream stream, bool isEditable, PowerPointProperties presentationProperties = null)
 		: base(stream, isEditable, presentationProperties) { }
 		internal Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
 		{

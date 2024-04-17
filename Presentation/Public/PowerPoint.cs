@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create New file in the system
 		/// </summary>
-		public PowerPoint(PresentationProperties powerPointProperties = null)
+		public PowerPoint(PowerPointProperties powerPointProperties = null)
 		{
 			presentation = new Presentation(powerPointProperties);
 		}
@@ -24,14 +24,14 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </param>
 		/// <param name="powerPointProperties">
 		/// </param>
-		public PowerPoint(string filePath, bool isEditable, PresentationProperties powerPointProperties = null)
+		public PowerPoint(string filePath, bool isEditable, PowerPointProperties powerPointProperties = null)
 		{
 			presentation = new Presentation(filePath, isEditable, powerPointProperties);
 		}
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point
 		/// </summary>
-		public PowerPoint(Stream Stream, bool IsEditable, PresentationProperties powerPointProperties = null)
+		public PowerPoint(Stream Stream, bool IsEditable, PowerPointProperties powerPointProperties = null)
 		{
 			presentation = new Presentation(Stream, IsEditable, powerPointProperties);
 		}

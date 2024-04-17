@@ -520,7 +520,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a chart.
 	/// </summary>
-	public class ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition
+	public class ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		internal uint? categoryAxisId;
 		internal uint? valueAxisId;
@@ -552,7 +552,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public ApplicationSpecificSetting applicationSpecificSetting;
+		public ApplicationSpecificSetting applicationSpecificSetting = new ApplicationSpecificSetting();
 		internal ChartSetting() { }
 	}
 	/// <summary>

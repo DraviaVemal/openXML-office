@@ -10,7 +10,7 @@
         <LangVersion>5.0</LangVersion>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>2.6.7</Version>
+        <Version>2.6.8</Version>
         <Company>DraviaVemal</Company>
         <Copyright>Copyright (c) 2023 DraviaVemal
             Permission is hereby granted, free of charge, to any person obtaining a copy of this

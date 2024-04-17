@@ -11,22 +11,22 @@ namespace OpenXMLOffice.Presentation_2007
 	internal class PresentationCore
 	{
 		internal readonly PresentationDocument presentationDocument;
-		internal readonly PresentationInfo presentationInfo = new PresentationInfo();
-		internal readonly PresentationProperties presentationProperties;
+		internal readonly PowerPointInfo presentationInfo = new PowerPointInfo();
+		internal readonly PowerPointProperties presentationProperties;
 		internal ExtendedFilePropertiesPart extendedFilePropertiesPart;
 		//#### Presentation Constants ####//
 		private readonly uint slideIdStart = 255;
 		private readonly uint slideMasterIdStart = 2147483647;
-		public PresentationCore(PresentationProperties presentationProperties = null)
+		public PresentationCore(PowerPointProperties presentationProperties = null)
 		{
-			this.presentationProperties = presentationProperties ?? new PresentationProperties();
+			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
 			presentationDocument = PresentationDocument.Create(new MemoryStream(), PresentationDocumentType.Presentation, true);
 			InitialisePresentation(this.presentationProperties);
 		}
-		public PresentationCore(string filePath, bool isEditable = true, PresentationProperties presentationProperties = null)
+		public PresentationCore(string filePath, bool isEditable = true, PowerPointProperties presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
-			this.presentationProperties = presentationProperties ?? new PresentationProperties();
+			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
 			FileStream reader = new FileStream(filePath, FileMode.Open);
 			MemoryStream memoryStream = new MemoryStream();
 			reader.CopyTo(memoryStream);
@@ -41,10 +41,10 @@ namespace OpenXMLOffice.Presentation_2007
 				presentationInfo.isExistingFile = true;
 			}
 		}
-		internal PresentationCore(Stream stream, bool isEditable = true, PresentationProperties presentationProperties = null)
+		internal PresentationCore(Stream stream, bool isEditable = true, PowerPointProperties presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
-			this.presentationProperties = presentationProperties ?? new PresentationProperties();
+			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
 			presentationDocument = PresentationDocument.Open(stream, isEditable, new OpenSettings()
 			{
 				AutoSave = true
@@ -118,7 +118,7 @@ namespace OpenXMLOffice.Presentation_2007
 			defaultTextStyle.Append(levelParagraphProperties);
 			return defaultTextStyle;
 		}
-		private void InitialisePresentation(PresentationProperties powerPointProperties)
+		private void InitialisePresentation(PowerPointProperties powerPointProperties)
 		{
 			SlideMaster slideMaster = new SlideMaster();
 			SlideLayout slideLayout = new SlideLayout();
