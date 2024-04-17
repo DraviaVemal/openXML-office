@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
@@ -69,10 +70,7 @@ namespace OpenXMLOffice.Presentation_2007
 				{
 					GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value);
 				}
-				catch (ArgumentNullException)
-				{
-					//ignore
-				}
+				catch (KeyNotFoundException) { }//ignore
 				catch (Exception ex)
 				{
 					throw ex;
