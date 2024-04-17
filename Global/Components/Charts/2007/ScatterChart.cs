@@ -143,8 +143,13 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			C.DataLabels dataLabels = seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count ?
-				CreateScatterDataLabels(scatterChartSetting.scatterChartSeriesSettings.ElementAtOrDefault(seriesIndex).scatterChartDataLabel ?? new ScatterChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+			C.DataLabels dataLabels = null;
+			if (seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count)
+			{
+				ScatterChartDataLabel scatterChartDataLabel = scatterChartSetting.scatterChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? scatterChartSetting.scatterChartSeriesSettings.ElementAtOrDefault(seriesIndex).scatterChartDataLabel : null;
+				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+				dataLabels = CreateScatterDataLabels(scatterChartDataLabel ?? new ScatterChartDataLabel(), dataLabelCellsLength);
+			}
 			MarkerModel markerModel = new MarkerModel();
 			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{

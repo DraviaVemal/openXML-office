@@ -267,16 +267,12 @@ namespace OpenXMLOffice.Global_2007
 					solidFill = GetSeriesBorderColor(seriesIndex, chartDataGrouping),
 				}
 			};
-			int? labelCounter = null;
-			if (chartDataGrouping.dataLabelCells != null)
-			{
-				labelCounter = chartDataGrouping.dataLabelCells.Length;
-			}
 			C.DataLabels dataLabels = null;
 			if (seriesIndex < columnChartSetting.columnChartSeriesSettings.Count)
 			{
 				ColumnChartDataLabel columnChartDataLabel = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataLabel : null;
-				dataLabels = CreateColumnDataLabels(columnChartDataLabel ?? new ColumnChartDataLabel(), labelCounter);
+				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+				dataLabels = CreateColumnDataLabels(columnChartDataLabel ?? new ColumnChartDataLabel(), dataLabelCellsLength);
 			}
 			C.BarChartSeries series = new C.BarChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },

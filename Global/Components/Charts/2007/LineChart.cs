@@ -140,12 +140,13 @@ namespace OpenXMLOffice.Global_2007
 			}
 			LineChartSeriesSetting lineChartSeriesSetting = lineChartSetting.lineChartSeriesSettings.ElementAtOrDefault(seriesIndex);
 			C.DataLabels dataLabels = null;
-			if (lineChartSeriesSetting != null && lineChartSeriesSetting.lineChartDataLabel != null)
+			if (seriesIndex < lineChartSetting.lineChartSeriesSettings.Count)
 			{
-				int labelCount = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
-				dataLabels = CreateLineDataLabels(lineChartSeriesSetting.lineChartDataLabel, labelCount);
+				LineChartDataLabel lineChartDataLabel = lineChartSeriesSetting != null ? lineChartSeriesSetting.lineChartDataLabel : null;
+				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+				dataLabels = CreateLineDataLabels(lineChartDataLabel ?? new LineChartDataLabel(), dataLabelCellsLength);
 			}
-			var lineChartLineFormat = lineChartSeriesSetting != null ? lineChartSeriesSetting.lineChartLineFormat : null;
+			LineChartLineFormat lineChartLineFormat = lineChartSeriesSetting != null ? lineChartSeriesSetting.lineChartLineFormat : null;
 			OutlineModel outlineModel = new OutlineModel()
 			{
 				solidFill = GetBorderColor(seriesIndex, chartDataGrouping, lineChartLineFormat),

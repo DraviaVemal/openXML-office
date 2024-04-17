@@ -84,8 +84,13 @@ namespace OpenXMLOffice.Global_2007
 					solidFill = GetSeriesBorderColor(seriesIndex, chartDataGrouping)
 				}
 			};
-			C.DataLabels dataLabels = seriesIndex < areaChartSetting.areaChartSeriesSettings.Count ?
-				CreateAreaDataLabels(areaChartSetting.areaChartSeriesSettings.ElementAtOrDefault(seriesIndex).areaChartDataLabel ?? new AreaChartDataLabel(), chartDataGrouping.dataLabelCells.Length) : null;
+			C.DataLabels dataLabels = null;
+			if (seriesIndex < areaChartSetting.areaChartSeriesSettings.Count)
+			{
+				AreaChartDataLabel areaChartDataLabel = areaChartSetting.areaChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? areaChartSetting.areaChartSeriesSettings.ElementAtOrDefault(seriesIndex).areaChartDataLabel : null;
+				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+				dataLabels = CreateAreaDataLabels(areaChartDataLabel ?? new AreaChartDataLabel(), dataLabelCellsLength);
+			}
 			C.AreaChartSeries series = new C.AreaChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },

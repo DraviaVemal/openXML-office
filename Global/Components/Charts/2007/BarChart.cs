@@ -122,7 +122,7 @@ namespace OpenXMLOffice.Global_2007
 			C.DataLabels dataLabels = null;
 			if (seriesIndex < barChartSetting.barChartSeriesSettings.Count)
 			{
-				BarChartDataLabel barChartDataLabel = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataLabel;
+				BarChartDataLabel barChartDataLabel = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataLabel : null;
 				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateBarDataLabels(barChartDataLabel ?? new BarChartDataLabel(), dataLabelCellsLength);
 			}
