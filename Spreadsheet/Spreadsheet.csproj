@@ -6,14 +6,6 @@
 	<ItemGroup>
 		<Folder Include="Models/" />
 	</ItemGroup>
-	<ItemGroup>
-		<None Include="$(OutputPath)\netstandard2.0\$(AssemblyName).pdb" Pack="true"
-			PackagePath="lib\netstandard2.0" />
-		<None Include="$(OutputPath)\net4.5\$(AssemblyName).pdb" Pack="true"
-			PackagePath="lib\net45" />
-		<None Include="$(OutputPath)\net7.0\$(AssemblyName).pdb" Pack="true"
-			PackagePath="lib\net7.0" />
-	</ItemGroup>
 	<PropertyGroup>
 		<PackageId>OpenXMLOffice.Spreadsheet</PackageId>
 		<RootNamespace>OpenXMLOffice.Spreadsheet_2007</RootNamespace>
