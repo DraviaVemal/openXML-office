@@ -155,7 +155,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
 					columnIndex++;
 					X.Cell cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference.Value == currentCellId);
-					if (string.IsNullOrEmpty(DataCell.cellValue))
+					if (cell != null && string.IsNullOrEmpty(DataCell.cellValue))
 					{
 						cell.Remove();
 					}

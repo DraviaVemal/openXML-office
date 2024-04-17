@@ -13,7 +13,6 @@
 		<PackageId>OpenXMLOffice.Presentation</PackageId>
 		<RootNamespace>OpenXMLOffice.Presentation_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
-		<CosturaOutputType>SingleFile</CosturaOutputType>
 		<PackageDescription>OpenXML PowerPoint Builder is a comprehensive .NET library designed to
 			simplify the creation of PowerPoint presentations using the OpenXML SDK. This library
 			provides

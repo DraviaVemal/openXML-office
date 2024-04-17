@@ -12,7 +12,6 @@
 		<PackageId>OpenXMLOffice.Global</PackageId>
 		<RootNamespace>OpenXMLOffice.Global_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
-		<CosturaOutputType>SingleFile</CosturaOutputType>
 		<PackageDescription>This is OpenXML-Office Common package. Bundles shared components and
 			parts.</PackageDescription>
 	</PropertyGroup>
