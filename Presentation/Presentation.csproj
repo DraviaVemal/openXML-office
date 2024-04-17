@@ -9,11 +9,11 @@
 		<Folder Include="Models/" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true"
+		<None Include="$(OutputPath)\netstandard2.0\$(AssemblyName).pdb" Pack="true"
 			PackagePath="lib\netstandard2.0" />
-		<None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true"
+		<None Include="$(OutputPath)\net4.5\$(AssemblyName).pdb" Pack="true"
 			PackagePath="lib\net4.5" />
-		<None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true"
+		<None Include="$(OutputPath)\net7.0\$(AssemblyName).pdb" Pack="true"
 			PackagePath="lib\net7.0" />
 	</ItemGroup>
 	<PropertyGroup>
