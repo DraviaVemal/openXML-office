@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\Global\Global.csproj" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 	<PropertyGroup>
 		<PackageId>OpenXMLOffice.Document</PackageId>
@@ -22,5 +23,8 @@
 			application's
 			document processing functionality.</PackageDescription>
 		<PackageTags>OpenXML;Document;Word;Office</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 </Project>
