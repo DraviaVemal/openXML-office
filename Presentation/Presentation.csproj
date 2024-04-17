@@ -8,6 +8,14 @@
 		<Folder Include="Public/" />
 		<Folder Include="Models/" />
 	</ItemGroup>
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true"
+			PackagePath="lib\netstandard2.0" />
+		<None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true"
+			PackagePath="lib\net4.5" />
+		<None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true"
+			PackagePath="lib\net7.0" />
+	</ItemGroup>
 	<PropertyGroup>
 		<PackageId>OpenXMLOffice.Presentation</PackageId>
 		<RootNamespace>OpenXMLOffice.Presentation_2007</RootNamespace>
