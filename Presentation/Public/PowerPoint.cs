@@ -84,13 +84,22 @@ namespace OpenXMLOffice.Presentation_2007
 			presentation.RemoveSlideByIndex(SlideIndex);
 		}
 		/// <summary>
-		/// Save the file as new file
+		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
+		/// You can save the document at the end of lifecycle targetting the edit file to update or new file.
+		/// This is supported for both file path and data stream
 		/// </summary>
-		/// <param name="filePath">
-		/// </param>
 		public void SaveAs(string filePath)
 		{
 			presentation.SaveAs(filePath);
+		}
+		/// <summary>
+		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
+		/// You can save the document at the end of lifecycle targetting the edit file to update or new file.
+		/// This is supported for both file path and data stream
+		/// </summary>
+		public void SaveAs(Stream stream)
+		{
+			presentation.SaveAs(stream);
 		}
 	}
 }

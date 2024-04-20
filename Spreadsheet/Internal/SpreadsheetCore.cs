@@ -23,54 +23,60 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
-			MemoryStream memoryStream = new MemoryStream();
-			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
-			InitialiseSpreadsheet(this.spreadsheetProperties);
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
+				InitialiseSpreadsheet(this.spreadsheetProperties);
+			}
 		}
 		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
 			FileStream reader = new FileStream(filePath, FileMode.Open);
-			MemoryStream memoryStream = new MemoryStream();
-			reader.CopyTo(memoryStream);
-			reader.Close();
-			spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
+			using (MemoryStream memoryStream = new MemoryStream())
 			{
-				AutoSave = true
-			});
-			if (isEditable)
-			{
-				spreadsheetInfo.isExistingFile = true;
-				InitialiseSpreadsheet(this.spreadsheetProperties);
+				reader.CopyTo(memoryStream);
+				reader.Close();
+				spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
+				{
+					AutoSave = true
+				});
+				if (isEditable)
+				{
+					spreadsheetInfo.isExistingFile = true;
+					InitialiseSpreadsheet(this.spreadsheetProperties);
+				}
+				else
+				{
+					spreadsheetInfo.isEditable = false;
+				}
+				ReadDataFromFile();
 			}
-			else
-			{
-				spreadsheetInfo.isEditable = false;
-			}
-			ReadDataFromFile();
 		}
 		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
-			MemoryStream memoryStream = new MemoryStream();
-			stream.CopyTo(memoryStream);
-			stream.Dispose();
-			spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
+			using (MemoryStream memoryStream = new MemoryStream())
 			{
-				AutoSave = true
-			});
-			if (isEditable)
-			{
-				spreadsheetInfo.isExistingFile = true;
-				InitialiseSpreadsheet(this.spreadsheetProperties);
+				stream.CopyTo(memoryStream);
+				stream.Dispose();
+				spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
+				{
+					AutoSave = true
+				});
+				if (isEditable)
+				{
+					spreadsheetInfo.isExistingFile = true;
+					InitialiseSpreadsheet(this.spreadsheetProperties);
+				}
+				else
+				{
+					spreadsheetInfo.isEditable = false;
+				}
+				ReadDataFromFile();
 			}
-			else
-			{
-				spreadsheetInfo.isEditable = false;
-			}
-			ReadDataFromFile();
 		}
 		/// <summary>
 		/// Read Data from exiting file
@@ -198,11 +204,17 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (spreadsheetDocument.CoreFilePropertiesPart == null)
 			{
 				spreadsheetDocument.AddCoreFilePropertiesPart();
-				G.CoreProperties.AddCoreProperties(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), excelProperties.coreProperties);
+				using (Stream stream = spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+				{
+					G.CoreProperties.AddCoreProperties(stream, excelProperties.coreProperties);
+				}
 			}
 			else
 			{
-				G.CoreProperties.UpdateModifiedDetails(spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), excelProperties.coreProperties);
+				using (Stream stream = spreadsheetDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+				{
+					G.CoreProperties.UpdateModifiedDetails(stream, excelProperties.coreProperties);
+				}
 			}
 			if (GetWorkbookPart().Workbook == null)
 			{

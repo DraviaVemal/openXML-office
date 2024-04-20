@@ -84,8 +84,13 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal void SaveAs(string filePath)
 		{
+			presentationDocument.Save();
 			presentationDocument.Clone(filePath).Dispose();
-			presentationDocument.Dispose();
+		}
+		internal void SaveAs(Stream stream)
+		{
+			presentationDocument.Save();
+			presentationDocument.Clone(stream).Dispose();
 		}
 	}
 }

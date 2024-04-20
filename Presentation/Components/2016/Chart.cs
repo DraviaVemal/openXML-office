@@ -47,8 +47,10 @@ namespace OpenXMLOffice.Presentation_2016
 		}
 		private void CreateChart(DataCell[][] dataRows, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			WaterfallChart<ApplicationSpecificSetting> waterfallChart = new WaterfallChart<ApplicationSpecificSetting>(waterfallChartSetting, ExcelToPPTdata(dataRows));
 			CreateExtendedChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(waterfallChart);

@@ -20,41 +20,48 @@ namespace OpenXMLOffice.Presentation_2007
 		public PresentationCore(PowerPointProperties presentationProperties = null)
 		{
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
-			presentationDocument = PresentationDocument.Create(new MemoryStream(), PresentationDocumentType.Presentation, true);
-			InitialisePresentation(this.presentationProperties);
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				presentationDocument = PresentationDocument.Create(memoryStream, PresentationDocumentType.Presentation, true);
+				InitialisePresentation(this.presentationProperties);
+			}
 		}
 		public PresentationCore(string filePath, bool isEditable = true, PowerPointProperties presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
 			FileStream reader = new FileStream(filePath, FileMode.Open);
-			MemoryStream memoryStream = new MemoryStream();
-			reader.CopyTo(memoryStream);
-			reader.Close();
-			presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
+			using (MemoryStream memoryStream = new MemoryStream())
 			{
-				AutoSave = true
-			});
-			if (presentationInfo.isEditable)
-			{
-				InitialisePresentation(this.presentationProperties);
-				presentationInfo.isExistingFile = true;
+				reader.CopyTo(memoryStream);
+				reader.Close();
+				presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
+				{
+					AutoSave = true
+				});
+				if (presentationInfo.isEditable)
+				{
+					InitialisePresentation(this.presentationProperties);
+					presentationInfo.isExistingFile = true;
+				}
 			}
 		}
 		internal PresentationCore(Stream stream, bool isEditable = true, PowerPointProperties presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
-			MemoryStream memoryStream = new MemoryStream();
-			stream.CopyTo(memoryStream);
-			stream.Dispose();
-			presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
+			using (MemoryStream memoryStream = new MemoryStream())
 			{
-				AutoSave = true
-			});
-			if (presentationInfo.isEditable)
-			{
-				InitialisePresentation(this.presentationProperties);
+				stream.CopyTo(memoryStream);
+				stream.Dispose();
+				presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
+				{
+					AutoSave = true
+				});
+				if (presentationInfo.isEditable)
+				{
+					InitialisePresentation(this.presentationProperties);
+				}
 			}
 		}
 		internal string GetNextPresentationRelationId()
@@ -128,11 +135,17 @@ namespace OpenXMLOffice.Presentation_2007
 			if (presentationDocument.CoreFilePropertiesPart == null)
 			{
 				presentationDocument.AddCoreFilePropertiesPart();
-				CoreProperties.AddCoreProperties(presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), powerPointProperties.coreProperties);
+				using (Stream stream = presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+				{
+					CoreProperties.AddCoreProperties(stream, powerPointProperties.coreProperties);
+				}
 			}
 			else
 			{
-				CoreProperties.UpdateModifiedDetails(presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite), powerPointProperties.coreProperties);
+				using (Stream stream = presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+				{
+					CoreProperties.UpdateModifiedDetails(stream, powerPointProperties.coreProperties);
+				}
 			}
 			PresentationPart presentationPart = presentationDocument.PresentationPart ?? presentationDocument.AddPresentationPart();
 			if (presentationPart.Presentation == null)

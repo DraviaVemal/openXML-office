@@ -93,56 +93,70 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private void CreateChart(DataCell[][] dataRows, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			AreaChart<ApplicationSpecificSetting> areaChart = new AreaChart<ApplicationSpecificSetting>(areaChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(areaChart);
 		}
 		private void CreateChart(DataCell[][] dataRows, BarChartSetting<ApplicationSpecificSetting> barChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			BarChart<ApplicationSpecificSetting> barChart = new BarChart<ApplicationSpecificSetting>(barChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(barChart);
 		}
 		private void CreateChart(DataCell[][] dataRows, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			ColumnChart<ApplicationSpecificSetting> columnChart = new ColumnChart<ApplicationSpecificSetting>(columnChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(columnChart);
 		}
 		private void CreateChart(DataCell[][] dataRows, LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			LineChart<ApplicationSpecificSetting> lineChart = new LineChart<ApplicationSpecificSetting>(lineChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(lineChart);
 		}
 		private void CreateChart(DataCell[][] dataRows, PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			PieChart<ApplicationSpecificSetting> pieChart = new PieChart<ApplicationSpecificSetting>(pieChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(pieChart);
 		}
 		private void CreateChart(DataCell[][] dataRows, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			ScatterChart<ApplicationSpecificSetting> scatterChart = new ScatterChart<ApplicationSpecificSetting>(scatterChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(scatterChart);
 		}
 		private void CreateChart(DataCell[][] dataRows, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting)
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			WriteDataToExcel(dataRows, stream);
+			using (Stream stream = GetWorkBookStream())
+			{
+				WriteDataToExcel(dataRows, stream);
+			};
 			ComboChart<ApplicationSpecificSetting> comboChart = new ComboChart<ApplicationSpecificSetting>(comboChartSetting, ExcelToPPTdata(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
 			SaveChanges(comboChart);
