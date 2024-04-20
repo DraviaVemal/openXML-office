@@ -32,10 +32,11 @@ namespace OpenXMLOffice.Presentation_2016
 		/// </summary>
 		/// <returns>
 		/// </returns>
-		public Excel GetChartWorkBook()
+		public Worksheet GetWorkSheet()
 		{
 			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
-			return new Excel(stream, true);
+			Excel excel = new Excel(stream, true);
+			return excel.GetWorksheet("Sheet1");
 		}
 		internal string GetNextChartRelationId()
 		{
