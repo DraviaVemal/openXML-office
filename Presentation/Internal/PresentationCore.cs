@@ -20,48 +20,42 @@ namespace OpenXMLOffice.Presentation_2007
 		public PresentationCore(PowerPointProperties presentationProperties = null)
 		{
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
-			using (MemoryStream memoryStream = new MemoryStream())
-			{
-				presentationDocument = PresentationDocument.Create(memoryStream, PresentationDocumentType.Presentation, true);
-				InitialisePresentation(this.presentationProperties);
-			}
+			MemoryStream memoryStream = new MemoryStream();
+			presentationDocument = PresentationDocument.Create(memoryStream, PresentationDocumentType.Presentation, true);
+			InitialisePresentation(this.presentationProperties);
 		}
 		public PresentationCore(string filePath, bool isEditable = true, PowerPointProperties presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
 			FileStream reader = new FileStream(filePath, FileMode.Open);
-			using (MemoryStream memoryStream = new MemoryStream())
+			MemoryStream memoryStream = new MemoryStream();
+			reader.CopyTo(memoryStream);
+			reader.Close();
+			presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
 			{
-				reader.CopyTo(memoryStream);
-				reader.Close();
-				presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
-				{
-					AutoSave = true
-				});
-				if (presentationInfo.isEditable)
-				{
-					InitialisePresentation(this.presentationProperties);
-					presentationInfo.isExistingFile = true;
-				}
+				AutoSave = true
+			});
+			if (presentationInfo.isEditable)
+			{
+				InitialisePresentation(this.presentationProperties);
+				presentationInfo.isExistingFile = true;
 			}
 		}
 		internal PresentationCore(Stream stream, bool isEditable = true, PowerPointProperties presentationProperties = null)
 		{
 			presentationInfo.isEditable = isEditable;
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
-			using (MemoryStream memoryStream = new MemoryStream())
+			MemoryStream memoryStream = new MemoryStream();
+			stream.CopyTo(memoryStream);
+			stream.Dispose();
+			presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
 			{
-				stream.CopyTo(memoryStream);
-				stream.Dispose();
-				presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
-				{
-					AutoSave = true
-				});
-				if (presentationInfo.isEditable)
-				{
-					InitialisePresentation(this.presentationProperties);
-				}
+				AutoSave = true
+			});
+			if (presentationInfo.isEditable)
+			{
+				InitialisePresentation(this.presentationProperties);
 			}
 		}
 		internal string GetNextPresentationRelationId()

@@ -23,60 +23,54 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
-			using (MemoryStream memoryStream = new MemoryStream())
-			{
-				spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
-				InitialiseSpreadsheet(this.spreadsheetProperties);
-			}
+			MemoryStream memoryStream = new MemoryStream();
+			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
+			InitialiseSpreadsheet(this.spreadsheetProperties);
 		}
 		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
 			FileStream reader = new FileStream(filePath, FileMode.Open);
-			using (MemoryStream memoryStream = new MemoryStream())
+			MemoryStream memoryStream = new MemoryStream();
+			reader.CopyTo(memoryStream);
+			reader.Close();
+			spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
 			{
-				reader.CopyTo(memoryStream);
-				reader.Close();
-				spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
-				{
-					AutoSave = true
-				});
-				if (isEditable)
-				{
-					spreadsheetInfo.isExistingFile = true;
-					InitialiseSpreadsheet(this.spreadsheetProperties);
-				}
-				else
-				{
-					spreadsheetInfo.isEditable = false;
-				}
-				ReadDataFromFile();
+				AutoSave = true
+			});
+			if (isEditable)
+			{
+				spreadsheetInfo.isExistingFile = true;
+				InitialiseSpreadsheet(this.spreadsheetProperties);
 			}
+			else
+			{
+				spreadsheetInfo.isEditable = false;
+			}
+			ReadDataFromFile();
 		}
 		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
-			using (MemoryStream memoryStream = new MemoryStream())
+			MemoryStream memoryStream = new MemoryStream();
+			stream.CopyTo(memoryStream);
+			stream.Dispose();
+			spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
 			{
-				stream.CopyTo(memoryStream);
-				stream.Dispose();
-				spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
-				{
-					AutoSave = true
-				});
-				if (isEditable)
-				{
-					spreadsheetInfo.isExistingFile = true;
-					InitialiseSpreadsheet(this.spreadsheetProperties);
-				}
-				else
-				{
-					spreadsheetInfo.isEditable = false;
-				}
-				ReadDataFromFile();
+				AutoSave = true
+			});
+			if (isEditable)
+			{
+				spreadsheetInfo.isExistingFile = true;
+				InitialiseSpreadsheet(this.spreadsheetProperties);
 			}
+			else
+			{
+				spreadsheetInfo.isEditable = false;
+			}
+			ReadDataFromFile();
 		}
 		/// <summary>
 		/// Read Data from exiting file
