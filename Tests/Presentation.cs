@@ -47,7 +47,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new()
 			});
 			//2
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			Chart<G.PresentationSetting> chart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				areaChartType = G.AreaChartTypes.STACKED,
@@ -57,6 +57,12 @@ namespace OpenXMLOffice.Tests
 					verticalFontSize = 25
 				}
 			});
+			Stream stream = chart.GetWorkBookStream();
+			X.Excel excel = new(stream, true);
+			X.Worksheet sheet = excel.GetWorksheet("Sheet1");
+			sheet.SetRow(10, 1, CreateDataCellPayload()[1], null);
+			sheet.SetRow(11, 1, CreateDataCellPayload()[2], null);
+			excel.SaveAs(chart.GetWorkBookStream());
 			//3
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{

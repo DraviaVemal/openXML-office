@@ -16,20 +16,17 @@ namespace OpenXMLOffice.Presentation_2007
 			presentation = new Presentation(powerPointProperties);
 		}
 		/// <summary>
-		/// Open and work with existing file
+		/// Works with in memory object can be saved to file at later point.
+		/// Source file will be cloned and released. hence can be replace by saveAs method if you want to update the same file.
 		/// </summary>
-		/// <param name="filePath">
-		/// </param>
-		/// <param name="isEditable">
-		/// </param>
-		/// <param name="powerPointProperties">
-		/// </param>
 		public PowerPoint(string filePath, bool isEditable, PowerPointProperties powerPointProperties = null)
 		{
 			presentation = new Presentation(filePath, isEditable, powerPointProperties);
 		}
 		/// <summary>
-		/// Works with in memory object can be saved to file at later point
+		/// Works with in memory object can be saved to file at later point.
+		/// Source stream is copied and closed.
+		/// Note : Make Clone in your source application if you want to retain the stream handle
 		/// </summary>
 		public PowerPoint(Stream Stream, bool IsEditable, PowerPointProperties powerPointProperties = null)
 		{

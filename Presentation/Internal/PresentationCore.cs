@@ -45,7 +45,10 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			presentationInfo.isEditable = isEditable;
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
-			presentationDocument = PresentationDocument.Open(stream, isEditable, new OpenSettings()
+			MemoryStream memoryStream = new MemoryStream();
+			stream.CopyTo(memoryStream);
+			stream.Dispose();
+			presentationDocument = PresentationDocument.Open(memoryStream, isEditable, new OpenSettings()
 			{
 				AutoSave = true
 			});

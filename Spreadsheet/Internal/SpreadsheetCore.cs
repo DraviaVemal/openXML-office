@@ -54,7 +54,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			this.excel = excel;
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
-			spreadsheetDocument = SpreadsheetDocument.Open(stream, isEditable, new OpenSettings()
+			MemoryStream memoryStream = new MemoryStream();
+			stream.CopyTo(memoryStream);
+			stream.Dispose();
+			spreadsheetDocument = SpreadsheetDocument.Open(memoryStream, isEditable, new OpenSettings()
 			{
 				AutoSave = true
 			});

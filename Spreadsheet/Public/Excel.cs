@@ -20,14 +20,17 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			spreadsheet = new Spreadsheet(this, spreadsheetProperties);
 		}
 		/// <summary>
-		/// Open and work with existing file
+		/// Works with in memory object can be saved to file at later point.
+		/// Source file will be cloned and released. hence can be replace by saveAs method if you want to update the same file.
 		/// </summary>
 		public Excel(string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
 			spreadsheet = new Spreadsheet(this, filePath, isEditable, spreadsheetProperties);
 		}
 		/// <summary>
-		/// Works with in memory object can be saved to file at later point
+		/// Works with in memory object can be saved to file at later point.
+		/// Source stream is copied and closed.
+		/// Note : Make Clone in your source application if you want to retain the stream handle
 		/// </summary>
 		public Excel(Stream Stream, bool IsEditable, ExcelProperties spreadsheetProperties = null)
 		{
@@ -108,14 +111,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return spreadsheet.RenameSheet(sheetId, newSheetName);
 		}
 		/// <summary>
-		/// Save Copy of the content that updated to the source file
+		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
+		/// You can save the document at the end of lifecycle targetting the edit file to update or new file.
+		/// This is supported for both file path and data stream
 		/// </summary>
 		public void SaveAs(string filePath)
 		{
 			spreadsheet.SaveAs(filePath);
 		}
 		/// <summary>
-		/// Save Copy of the content that updated to the source file
+		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
+		/// You can save the document at the end of lifecycle targetting the edit file to update or new file.
+		/// This is supported for both file path and data stream
 		/// </summary>
 		public void SaveAs(Stream stream)
 		{
