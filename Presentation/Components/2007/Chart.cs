@@ -84,7 +84,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </returns>
 		public Worksheet GetWorkSheet()
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream();
+			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite);
 			Excel excel = new Excel(stream, true);
 			return excel.GetWorksheet("Sheet1");
 		}
