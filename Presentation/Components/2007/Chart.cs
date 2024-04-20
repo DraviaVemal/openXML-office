@@ -78,15 +78,14 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateChart(dataRows, comboChartSetting);
 		}
 		/// <summary>
-		/// Get Worksheet control for the chart embedded object
+		/// Get Workbook control for the chart embedded object.
+		/// use OpenXML-Office.SpreadSheet Excel to load the stream and update the excel if furthere data addition needed other than actual chart data
 		/// </summary>
-		/// <returns>
+		/// <returns> Chart attached workbook scheme
 		/// </returns>
-		public Worksheet GetWorkSheet()
+		public Stream GetWorkBookStream()
 		{
-			Stream stream = GetChartPart().EmbeddedPackagePart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite);
-			Excel excel = new Excel(stream, true);
-			return excel.GetWorksheet("Sheet1");
+			return GetChartPart().EmbeddedPackagePart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite);
 		}
 		internal string GetNextChartRelationId()
 		{
