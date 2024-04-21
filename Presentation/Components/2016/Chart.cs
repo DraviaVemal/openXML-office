@@ -52,7 +52,7 @@ namespace OpenXMLOffice.Presentation_2016
 				WriteDataToExcel(dataRows, stream);
 			};
 			WaterfallChart<ApplicationSpecificSetting> waterfallChart = new WaterfallChart<ApplicationSpecificSetting>(waterfallChartSetting, ExcelToPPTdata(dataRows));
-			CreateExtendedChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count());
+			CreateExtendedChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), waterfallChartSetting.hyperlinkProperties);
 			SaveChanges(waterfallChart);
 		}
 		private void SaveChanges(AdvanceCharts<ApplicationSpecificSetting> chart)

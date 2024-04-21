@@ -180,16 +180,16 @@ namespace OpenXMLOffice.Presentation_2007
 				{
 					new G.DrawingRunModel(){
 						text = cell.value,
-										textHightlight = cell.textBackground,
-										drawingRunProperties = new G.DrawingRunPropertiesModel()
-										{
-											solidFill = solidFillModel,
-											fontFamily = cell.fontFamily,
-											fontSize = cell.fontSize,
-											isBold = cell.isBold,
-											isItalic = cell.isItalic,
-											underline = cell.isUnderline ? G.UnderLineValues.SINGLE : G.UnderLineValues.NONE,
-										}
+						textHightlight = cell.textBackground,
+						drawingRunProperties = new G.DrawingRunPropertiesModel()
+						{
+							solidFill = solidFillModel,
+							fontFamily = cell.fontFamily,
+							fontSize = cell.fontSize,
+							isBold = cell.isBold,
+							isItalic = cell.isItalic,
+							underline = cell.isUnderline ? G.UnderLineValues.SINGLE : G.UnderLineValues.NONE,
+						}
 					}
 				}.ToArray()));
 			}

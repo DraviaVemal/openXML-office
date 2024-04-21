@@ -16,6 +16,14 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create Textbox with provided settings
 		/// </summary>
+		internal TextBox(TextBoxSetting TextBoxSetting)
+		{
+			textBoxSetting = TextBoxSetting;
+			CreateTextBox();
+		}
+		/// <summary>
+		/// Create Textbox with provided settings
+		/// </summary>
 		public TextBox(Slide Slide, TextBoxSetting TextBoxSetting)
 		{
 			slide = Slide;

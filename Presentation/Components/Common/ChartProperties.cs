@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting, new()
+	public class ChartProperties<ApplicationSpecificSetting> : CommonProperties where ApplicationSpecificSetting : PresentationSetting, new()
 	{
 		/// <summary>
 		///
@@ -145,15 +145,19 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal void CreateChartGraphicFrame(string relationshipId, uint id)
+		internal void CreateChartGraphicFrame(string relationshipId, uint id, HyperlinkProperties hyperlinkProperties)
 		{
 			// Load Chart Part To Graphics Frame For Export
 			P.NonVisualGraphicFrameProperties nonVisualProperties = new P.NonVisualGraphicFrameProperties()
 			{
-				NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = id, Name = "Chart" },
+				NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = id, Name = string.Format("Chart {0}", id) },
 				NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
 				ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
 			};
+			if (hyperlinkProperties != null)
+			{
+				nonVisualProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
+			}
 			graphicFrame = new P.GraphicFrame()
 			{
 				NonVisualGraphicFrameProperties = nonVisualProperties,

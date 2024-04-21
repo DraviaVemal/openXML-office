@@ -33,6 +33,10 @@ namespace OpenXMLOffice.Global_2007
 	public class PictureSetting
 	{
 		/// <summary>
+		///
+		/// </summary>
+		public HyperlinkProperties hyperlinkProperties = null;
+		/// <summary>
 		/// The type of image.
 		/// </summary>
 		public ImageType imageType = ImageType.JPEG;

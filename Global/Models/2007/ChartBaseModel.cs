@@ -526,6 +526,10 @@ namespace OpenXMLOffice.Global_2007
 		internal uint? valueAxisId;
 		internal bool is3DChart = false;
 		/// <summary>
+		///
+		/// </summary>
+		public HyperlinkProperties hyperlinkProperties = null;
+		/// <summary>
 		/// Only useful when used with Combo chart
 		/// </summary>
 		public bool isSecondaryAxis = false;

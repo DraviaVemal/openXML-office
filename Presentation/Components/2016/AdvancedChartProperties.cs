@@ -22,7 +22,7 @@ namespace OpenXMLOffice.Presentation_2016
 		/// </summary>
 		public AdvancedChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting) : base(slide, chartSetting)
 		{
-			errorMessage = new TextBox(slide, new TextBoxSetting()
+			errorMessage = new TextBox(new TextBoxSetting()
 			{
 				textBlocks = new List<TextBlock>() { new TextBlock() { text = "This chart is not supported in this version of PowerPoint. Requires PowerPoint 2016 or later.", } }.ToArray(),
 				x = chartSetting.applicationSpecificSetting.x,
@@ -34,15 +34,19 @@ namespace OpenXMLOffice.Presentation_2016
 		/// <summary>
 		///
 		/// </summary>
-		internal void CreateExtendedChartGraphicFrame(string relationshipId, uint id)
+		internal void CreateExtendedChartGraphicFrame(string relationshipId, uint id, HyperlinkProperties hyperlinkProperties)
 		{
 			// Load Chart Part To Graphics Frame For Export
 			P.NonVisualGraphicFrameProperties nonVisualProperties = new P.NonVisualGraphicFrameProperties()
 			{
-				NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = id, Name = "Chart" },
+				NonVisualDrawingProperties = new P.NonVisualDrawingProperties { Id = id, Name = string.Format("Chart {0}", id) },
 				NonVisualGraphicFrameDrawingProperties = new P.NonVisualGraphicFrameDrawingProperties(),
 				ApplicationNonVisualDrawingProperties = new P.ApplicationNonVisualDrawingProperties()
 			};
+			if (hyperlinkProperties != null)
+			{
+				nonVisualProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
+			}
 			graphicFrame = new P.GraphicFrame()
 			{
 				NonVisualGraphicFrameProperties = nonVisualProperties,

@@ -717,8 +717,10 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return runProperties;
 		}
-
-		private static A.HyperlinkOnClick CreateHyperLink(HyperlinkProperties hyperlinkProperties)
+		/// <summary>
+		///
+		/// </summary>
+		protected static A.HyperlinkOnClick CreateHyperLink(HyperlinkProperties hyperlinkProperties)
 		{
 			A.HyperlinkOnClick hyperlinkOnClick = new A.HyperlinkOnClick()
 			{
