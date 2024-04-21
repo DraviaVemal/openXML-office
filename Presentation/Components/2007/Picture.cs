@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Presentation_2007
 			if (pictureSetting.hyperlinkProperties != null)
 			{
 				string relationId = slide.GetNextSlideRelationId();
-				switch (pictureSetting.hyperlinkProperties.HyperlinkPropertyType)
+				switch (pictureSetting.hyperlinkProperties.hyperlinkPropertyType)
 				{
 					case HyperlinkPropertyType.EXISTING_FILE:
 						pictureSetting.hyperlinkProperties.relationId = relationId;

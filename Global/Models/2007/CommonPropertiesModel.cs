@@ -639,13 +639,17 @@ namespace OpenXMLOffice.Global_2007
 	public class HyperlinkProperties
 	{
 		/// <summary>
-		///
+		/// Hyperlink option type additional address detail can be set using value
 		/// </summary>
-		public HyperlinkPropertyType HyperlinkPropertyType = HyperlinkPropertyType.WEB_URL;
+		public HyperlinkPropertyType hyperlinkPropertyType = HyperlinkPropertyType.WEB_URL;
 		/// <summary>
 		///	Web Url or file path or slide ID use based on "HyperlinkPropertyType"
 		/// </summary>
 		public string value = null;
+		/// <summary>
+		/// Screen Tool Tip
+		/// </summary>
+		public string toolTip = null;
 		/// <summary>
 		/// Internal Use property
 		/// </summary>

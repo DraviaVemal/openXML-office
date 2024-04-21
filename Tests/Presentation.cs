@@ -523,7 +523,7 @@ namespace OpenXMLOffice.Tests
 						isBold = true,
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
-							HyperlinkPropertyType = G.HyperlinkPropertyType.PREVIOUS_SLIDE,
+							hyperlinkPropertyType = G.HyperlinkPropertyType.PREVIOUS_SLIDE,
 						}
 					}
 				}.ToArray()
@@ -542,7 +542,7 @@ namespace OpenXMLOffice.Tests
 						isBold = true,
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
-							HyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
+							hyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
 							value="https://openxml-office.draviavemal.com/"
 						}
 					}
@@ -563,7 +563,7 @@ namespace OpenXMLOffice.Tests
 						isBold = true,
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
-							HyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
+							hyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
 							value="https://openxml-office.draviavemal.com/"
 						}
 					}

@@ -100,7 +100,7 @@ namespace OpenXMLOffice.Presentation_2007
 				if (textBlock.hyperlinkProperties != null)
 				{
 					string relationId = slide.GetNextSlideRelationId();
-					switch (textBlock.hyperlinkProperties.HyperlinkPropertyType)
+					switch (textBlock.hyperlinkProperties.hyperlinkPropertyType)
 					{
 						case HyperlinkPropertyType.EXISTING_FILE:
 							textBlock.hyperlinkProperties.relationId = relationId;

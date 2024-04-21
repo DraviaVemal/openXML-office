@@ -730,6 +730,10 @@ namespace OpenXMLOffice.Global_2007
 			{
 				hyperlinkOnClick.Action = hyperlinkProperties.action;
 			}
+			if (hyperlinkProperties.toolTip != null)
+			{
+				hyperlinkOnClick.Tooltip = hyperlinkProperties.toolTip;
+			}
 			return hyperlinkOnClick;
 		}
 
