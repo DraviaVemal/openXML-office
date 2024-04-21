@@ -18,34 +18,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public uint fromCol = 1;
+		public AnchorEditType anchorEditType = AnchorEditType.NONE;
 		/// <summary>
 		///
 		/// </summary>
-		public uint fromColOff = 0;
+		public AnchorPosition from = new AnchorPosition();
 		/// <summary>
 		///
 		/// </summary>
-		public uint fromRow = 2;
-		/// <summary>
-		///
-		/// </summary>
-		public uint fromRowOff = 0;
-		/// <summary>
-		///
-		/// </summary>
-		public uint toCol = 1;
-		/// <summary>
-		///
-		/// </summary>
-		public uint toColOff = 0;
-		/// <summary>
-		///
-		/// </summary>
-		public uint toRow = 3;
-		/// <summary>
-		///
-		/// </summary>
-		public uint toRowOff = 0;
+		public AnchorPosition to = new AnchorPosition();
 	}
 }

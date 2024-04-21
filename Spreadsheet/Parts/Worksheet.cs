@@ -226,24 +226,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public void AddPicture(string filePath, ExcelPictureSetting pictureSetting)
+		public Picture AddPicture(string filePath, ExcelPictureSetting pictureSetting)
 		{
-			AddPicture(new FileStream(filePath, FileMode.Open, FileAccess.Read), pictureSetting);
+			return AddPicture(new FileStream(filePath, FileMode.Open, FileAccess.Read), pictureSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public Picture AddPicture(Stream stream, ExcelPictureSetting pictureSetting)
 		{
-			if (pictureSetting.fromCol < pictureSetting.toCol || pictureSetting.fromRow < pictureSetting.toRow)
+			if (pictureSetting.from.column < pictureSetting.to.column || pictureSetting.from.row < pictureSetting.to.row)
 			{
-				return new Picture(this, stream, new ExcelPictureSetting()
-				{
-					fromCol = pictureSetting.fromCol,
-					fromRow = pictureSetting.fromRow,
-					toCol = pictureSetting.toCol,
-					toRow = pictureSetting.toRow,
-				});
+				return new Picture(this, stream, pictureSetting);
 			}
 			throw new ArgumentException("At least one cell range must be covered by the picture.");
 		}

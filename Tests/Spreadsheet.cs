@@ -152,10 +152,16 @@ namespace OpenXMLOffice.Tests
 			worksheet.AddPicture("./TestFiles/tom_and_jerry.jpg", new()
 			{
 				imageType = ImageType.JPEG,
-				fromCol = 6,
-				fromRow = 6,
-				toCol = 8,
-				toRow = 8
+				from = new()
+				{
+					column = 6,
+					row = 6
+				},
+				to = new()
+				{
+					column = 8,
+					row = 8
+				}
 			});
 			Assert.IsTrue(true);
 		}
@@ -179,10 +185,16 @@ namespace OpenXMLOffice.Tests
 			worksheet.AddPicture("./TestFiles/tom_and_jerry.jpg", new()
 			{
 				imageType = ImageType.JPEG,
-				fromCol = 6,
-				fromRow = 6,
-				toCol = 8,
-				toRow = 8,
+				from = new()
+				{
+					column = 6,
+					row = 6
+				},
+				to = new()
+				{
+					column = 8,
+					row = 8
+				},
 				hyperlinkProperties = new()
 				{
 					value = "https://openxml-office.draviavemal.com/"

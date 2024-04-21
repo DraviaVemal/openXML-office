@@ -3,6 +3,7 @@ using System.IO;
 using OpenXMLOffice.Global_2007;
 using DocumentFormat.OpenXml.Packaging;
 using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using System;
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -41,23 +42,45 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					break;
 			}
 			imagePart.FeedData(stream);
+			if (excelPictureSetting.hyperlinkProperties != null)
+			{
+				string relationId = currentWorksheet.GetNextDrawingPartRelationId();
+				switch (excelPictureSetting.hyperlinkProperties.hyperlinkPropertyType)
+				{
+					case HyperlinkPropertyType.EXISTING_FILE:
+						excelPictureSetting.hyperlinkProperties.relationId = relationId;
+						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinkfile";
+						currentWorksheet.GetDrawingsPart().AddHyperlinkRelationship(new Uri(excelPictureSetting.hyperlinkProperties.value), true, relationId);
+						break;
+					case HyperlinkPropertyType.TARGET_SLIDE:
+						excelPictureSetting.hyperlinkProperties.relationId = relationId;
+						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinksldjump";
+						//TODO: Update Target Slide Prop
+						currentWorksheet.GetDrawingsPart().AddHyperlinkRelationship(new Uri(excelPictureSetting.hyperlinkProperties.value), true, relationId);
+						break;
+					case HyperlinkPropertyType.FIRST_SLIDE:
+						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=firstslide";
+						break;
+					case HyperlinkPropertyType.LAST_SLIDE:
+						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=lastslide";
+						break;
+					case HyperlinkPropertyType.NEXT_SLIDE:
+						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=nextslide";
+						break;
+					case HyperlinkPropertyType.PREVIOUS_SLIDE:
+						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=previousslide";
+						break;
+					default:// Web URL
+						excelPictureSetting.hyperlinkProperties.relationId = relationId;
+						currentWorksheet.GetDrawingsPart().AddHyperlinkRelationship(new Uri(excelPictureSetting.hyperlinkProperties.value), true, relationId);
+						break;
+				}
+			}
 			XDR.TwoCellAnchor twoCellAnchor = currentWorksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
 			{
 				anchorEditType = AnchorEditType.ONE_CELL,
-				from = new AnchorPosition()
-				{
-					column = excelPictureSetting.fromCol,
-					columnOffset = excelPictureSetting.fromColOff,
-					row = excelPictureSetting.fromRow,
-					rowOffset = excelPictureSetting.fromRowOff,
-				},
-				to = new AnchorPosition()
-				{
-					column = excelPictureSetting.toCol,
-					columnOffset = excelPictureSetting.toColOff,
-					row = excelPictureSetting.toRow,
-					rowOffset = excelPictureSetting.toRowOff
-				},
+				from = excelPictureSetting.from,
+				to = excelPictureSetting.to,
 				drawingPictureModel = new DrawingPictureModel()
 				{
 					id = 2U,
