@@ -85,7 +85,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal string GetNextSpreadSheetRelationId()
 		{
-			return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + 1);
+			return string.Format("rId{0}", GetWorkbookPart().Parts.Count() + GetWorkbookPart().ExternalRelationships.Count() + GetWorkbookPart().HyperlinkRelationships.Count() + GetWorkbookPart().DataPartReferenceRelationships.Count() + 1);
 		}
 		/// <summary>
 		/// Return the Shared String Table for the Spreadsheet

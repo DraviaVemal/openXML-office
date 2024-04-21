@@ -7,6 +7,7 @@ using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 using CX = DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using System.Reflection;
+using System.Collections.Generic;
 namespace OpenXMLOffice.Presentation_2016
 {
 	/// <summary>
@@ -21,9 +22,9 @@ namespace OpenXMLOffice.Presentation_2016
 		/// </summary>
 		public AdvancedChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting) : base(slide, chartSetting)
 		{
-			errorMessage = new TextBox(new TextBoxSetting()
+			errorMessage = new TextBox(slide, new TextBoxSetting()
 			{
-				text = "This chart is not supported in this version of PowerPoint. Requires PowerPoint 2016 or later.",
+				textBlocks = new List<TextBlock>() { new TextBlock() { text = "This chart is not supported in this version of PowerPoint. Requires PowerPoint 2016 or later.", } }.ToArray(),
 				x = chartSetting.applicationSpecificSetting.x,
 				y = chartSetting.applicationSpecificSetting.y,
 				width = chartSetting.applicationSpecificSetting.width,

@@ -28,19 +28,19 @@ namespace OpenXMLOffice.Presentation_2007
 			ImagePart ImagePart;
 			if (pictureSetting.imageType == ImageType.PNG)
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/png", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/png", EmbedId);
 			}
 			else if (pictureSetting.imageType == ImageType.GIF)
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/gif", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/gif", EmbedId);
 			}
 			else if (pictureSetting.imageType == ImageType.TIFF)
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/tiff", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/tiff", EmbedId);
 			}
 			else
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/jpeg", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/jpeg", EmbedId);
 			}
 			ImagePart.FeedData(stream);
 		}
@@ -57,19 +57,19 @@ namespace OpenXMLOffice.Presentation_2007
 			ImagePart ImagePart;
 			if (pictureSetting.imageType == ImageType.PNG)
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/png", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/png", EmbedId);
 			}
 			else if (pictureSetting.imageType == ImageType.GIF)
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/gif", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/gif", EmbedId);
 			}
 			else if (pictureSetting.imageType == ImageType.TIFF)
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/tiff", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/tiff", EmbedId);
 			}
 			else
 			{
-				ImagePart = currentSlide.GetSlide().SlidePart.AddNewPart<ImagePart>("image/jpeg", EmbedId);
+				ImagePart = currentSlide.GetSlidePart().AddNewPart<ImagePart>("image/jpeg", EmbedId);
 			}
 			ImagePart.FeedData(new FileStream(filePath, FileMode.Open, FileAccess.Read));
 		}

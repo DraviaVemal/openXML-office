@@ -50,14 +50,14 @@ namespace OpenXMLOffice.Global_2007
 		BOTTOM
 	}
 	/// <summary>
-	/// Represents the settings for a text box.
+	///
 	/// </summary>
-	public class TextBoxSetting
+	public class TextBlock
 	{
 		/// <summary>
-		/// Cell Alignment Option
+		///
 		/// </summary>
-		public HorizontalAlignmentValues? horizontalAlignment;
+		public HyperlinkProperties hyperlinkProperties = null;
 		/// <summary>
 		/// Gets or sets the font family of the text.
 		/// </summary>
@@ -66,10 +66,6 @@ namespace OpenXMLOffice.Global_2007
 		/// Gets or sets the font size of the text.
 		/// </summary>
 		public int fontSize = 18;
-		/// <summary>
-		/// Gets or sets the height of the text box.
-		/// </summary>
-		public uint height = 100;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text is bold.
 		/// </summary>
@@ -83,10 +79,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public bool isUnderline = false;
 		/// <summary>
-		/// Gets or sets the background color of the text box shape.
-		/// </summary>
-		public string shapeBackground;
-		/// <summary>
 		/// Gets or sets the text content of the text box.
 		/// </summary>
 		public string text = "Text Box";
@@ -98,6 +90,29 @@ namespace OpenXMLOffice.Global_2007
 		/// Gets or sets the color of the text.
 		/// </summary>
 		public string textColor = "000000";
+	}
+
+	/// <summary>
+	/// Represents the settings for a text box.
+	/// </summary>
+	public class TextBoxSetting
+	{
+		/// <summary>
+		/// Define Each section of string and its property that goes in same Textbox
+		/// </summary>
+		public TextBlock[] textBlocks;
+		/// <summary>
+		/// Gets or sets the background color of the text box shape.
+		/// </summary>
+		public string shapeBackground;
+		/// <summary>
+		/// Cell Alignment Option
+		/// </summary>
+		public HorizontalAlignmentValues? horizontalAlignment;
+		/// <summary>
+		/// Gets or sets the height of the text box.
+		/// </summary>
+		public uint height = 100;
 		/// <summary>
 		/// Gets or sets the width of the text box.
 		/// </summary>

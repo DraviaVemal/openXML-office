@@ -176,20 +176,22 @@ namespace OpenXMLOffice.Presentation_2007
 					solidFillModel.hexColor = cell.textColor;
 					solidFillModel.schemeColorModel = null;
 				}
-				paragraph.Append(CreateDrawingRun(new G.DrawingRunModel()
+				paragraph.Append(CreateDrawingRun(new List<G.DrawingRunModel>()
 				{
-					text = cell.value,
-					textHightlight = cell.textBackground,
-					drawingRunProperties = new G.DrawingRunPropertiesModel()
-					{
-						solidFill = solidFillModel,
-						fontFamily = cell.fontFamily,
-						fontSize = cell.fontSize,
-						isBold = cell.isBold,
-						isItalic = cell.isItalic,
-						underline = cell.isUnderline ? G.UnderLineValues.SINGLE : G.UnderLineValues.NONE,
+					new G.DrawingRunModel(){
+						text = cell.value,
+										textHightlight = cell.textBackground,
+										drawingRunProperties = new G.DrawingRunPropertiesModel()
+										{
+											solidFill = solidFillModel,
+											fontFamily = cell.fontFamily,
+											fontSize = cell.fontSize,
+											isBold = cell.isBold,
+											isItalic = cell.isItalic,
+											underline = cell.isUnderline ? G.UnderLineValues.SINGLE : G.UnderLineValues.NONE,
+										}
 					}
-				}));
+				}.ToArray()));
 			}
 			A.TableCell tableCellXML = new A.TableCell(new A.TextBody(
 				new A.BodyProperties(),

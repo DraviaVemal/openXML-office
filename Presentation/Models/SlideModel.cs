@@ -6,5 +6,9 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class SlideModel
 	{
+		/// <summary>
+		/// Hide the current slide
+		/// </summary>
+		public bool hideSlide = false;
 	}
 }

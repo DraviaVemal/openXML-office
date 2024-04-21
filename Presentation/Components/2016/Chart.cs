@@ -39,7 +39,7 @@ namespace OpenXMLOffice.Presentation_2016
 		}
 		internal string GetNextChartRelationId()
 		{
-			return string.Format("rId{0}", GetChartPart().Parts.Count() + 1);
+			return string.Format("rId{0}", GetChartPart().Parts.Count() + GetChartPart().ExternalRelationships.Count() + GetChartPart().HyperlinkRelationships.Count() + GetChartPart().DataPartReferenceRelationships.Count() + 1);
 		}
 		private ExtendedChartPart GetChartPart()
 		{

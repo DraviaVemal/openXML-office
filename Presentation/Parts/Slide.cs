@@ -17,8 +17,26 @@ namespace OpenXMLOffice.Presentation_2007
 	public class Slide
 	{
 		private readonly P.Slide openXMLSlide = new P.Slide();
+		/// <summary>
+		///
+		/// </summary>
+		public bool ShowHideSlide
+		{
+			get
+			{
+				return openXMLSlide.Show;
+			}
+			set
+			{
+				openXMLSlide.Show = value;
+			}
+		}
 		internal Slide(P.Slide OpenXMLSlide = null, SlideModel slideModel = null)
 		{
+			if (slideModel == null)
+			{
+				slideModel = new SlideModel();
+			}
 			if (OpenXMLSlide != null)
 			{
 				openXMLSlide = OpenXMLSlide;
@@ -34,7 +52,9 @@ namespace OpenXMLOffice.Presentation_2007
 				openXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 				openXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			}
+			openXMLSlide.Show = !slideModel.hideSlide;
 		}
+
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
@@ -140,9 +160,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public TextBox AddTextBox(TextBoxSetting TextBoxSetting)
 		{
-			TextBox TextBox = new TextBox(TextBoxSetting);
-			P.Shape Shape = TextBox.GetTextBoxShape();
-			GetSlide().CommonSlideData.ShapeTree.Append(Shape);
+			TextBox TextBox = new TextBox(this, TextBoxSetting);
 			return TextBox;
 		}
 		/// <summary>
@@ -161,7 +179,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal string GetNextSlideRelationId()
 		{
-			return string.Format("rId{0}", GetSlidePart().Parts.Count() + 1);
+			return string.Format("rId{0}", GetSlidePart().Parts.Count() + GetSlidePart().ExternalRelationships.Count() + GetSlidePart().HyperlinkRelationships.Count() + GetSlidePart().DataPartReferenceRelationships.Count() + GetSlidePart().Model3DReferenceRelationshipParts.Count() + 1);
 		}
 		internal P.Slide GetSlide()
 		{

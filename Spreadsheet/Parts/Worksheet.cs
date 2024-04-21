@@ -51,11 +51,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal string GetNextSheetPartRelationId()
 		{
-			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + 1);
+			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
+			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
 		}
 		internal string GetNextDrawingPartRelationId()
 		{
-			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + 1);
+			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
+			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
 		}
 		/// <summary>
 		/// Returns the sheet name of the current worksheet.

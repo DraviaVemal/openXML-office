@@ -1,5 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 using System;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 namespace OpenXMLOffice.Global_2007
@@ -586,9 +588,9 @@ namespace OpenXMLOffice.Global_2007
 			{
 				paragraph.Append(CreateDrawingParagraphProperties(drawingParagraphModel.paragraphPropertiesModel));
 			}
-			if (drawingParagraphModel.drawingRun != null)
+			if (drawingParagraphModel.drawingRuns != null && drawingParagraphModel.drawingRuns.Length > 0)
 			{
-				paragraph.Append(CreateDrawingRun(drawingParagraphModel.drawingRun));
+				paragraph.Append(CreateDrawingRun(drawingParagraphModel.drawingRuns));
 			}
 			else
 			{
@@ -659,18 +661,23 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		protected static A.Run CreateDrawingRun(DrawingRunModel drawingRunModel)
+		protected static A.Run[] CreateDrawingRun(DrawingRunModel[] drawingRunModels)
 		{
-			A.Run run = new A.Run(CreateDrawingRunProperties(drawingRunModel.drawingRunProperties));
-			if (drawingRunModel.text != null)
+			List<A.Run> runs = new List<A.Run>();
+			foreach (DrawingRunModel drawingRunModel in drawingRunModels)
 			{
-				run.Append(new A.Text(drawingRunModel.text));
+				A.Run run = new A.Run(CreateDrawingRunProperties(drawingRunModel.drawingRunProperties));
+				if (drawingRunModel.text != null)
+				{
+					run.Append(new A.Text(drawingRunModel.text));
+				}
+				if (drawingRunModel.textHightlight != null)
+				{
+					run.Append(new A.Highlight(new A.RgbColorModelHex { Val = drawingRunModel.textHightlight }));
+				}
+				runs.Add(run);
 			}
-			if (drawingRunModel.textHightlight != null)
-			{
-				run.Append(new A.Highlight(new A.RgbColorModelHex { Val = drawingRunModel.textHightlight }));
-			}
-			return run;
+			return runs.ToArray();
 		}
 		/// <summary>
 		///
@@ -682,8 +689,12 @@ namespace OpenXMLOffice.Global_2007
 				FontSize = ConverterUtils.FontSizeToFontSize(drawingRunPropertiesModel.fontSize),
 				Bold = drawingRunPropertiesModel.isBold,
 				Italic = drawingRunPropertiesModel.isItalic,
-				Dirty = false
+				Dirty = false,
 			};
+			if (drawingRunPropertiesModel.hyperlinkProperties != null)
+			{
+				runProperties.Append(CreateHyperLink(drawingRunPropertiesModel.hyperlinkProperties));
+			}
 			if (drawingRunPropertiesModel.solidFill != null)
 			{
 				runProperties.Append(CreateSolidFill(drawingRunPropertiesModel.solidFill));
@@ -706,6 +717,20 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return runProperties;
 		}
+
+		private static A.HyperlinkOnClick CreateHyperLink(HyperlinkProperties hyperlinkProperties)
+		{
+			A.HyperlinkOnClick hyperlinkOnClick = new A.HyperlinkOnClick()
+			{
+				Id = hyperlinkProperties.relationId ?? ""
+			};
+			if (hyperlinkProperties.action != null)
+			{
+				hyperlinkOnClick.Action = hyperlinkProperties.action;
+			}
+			return hyperlinkOnClick;
+		}
+
 		/// <summary>
 		///    Create Drawing Body Properties
 		/// </summary>

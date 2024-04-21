@@ -60,7 +60,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal string GetNextPresentationRelationId()
 		{
-			return string.Format("rId{0}", GetPresentationPart().Parts.Count() + 1);
+			return string.Format("rId{0}", GetPresentationPart().Parts.Count() + GetPresentationPart().ExternalRelationships.Count() + GetPresentationPart().HyperlinkRelationships.Count() + GetPresentationPart().DataPartReferenceRelationships.Count() + 1);
 		}
 		internal uint GetNextSlideId()
 		{

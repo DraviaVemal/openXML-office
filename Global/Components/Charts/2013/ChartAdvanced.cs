@@ -1,4 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.Collections.Generic;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -38,17 +39,17 @@ namespace OpenXMLOffice.Global_2013
 					A.Paragraph Paragraph = new A.Paragraph(CreateField("CELLRANGE", "[CELLRANGE]"));
 					if (chartDataLabel.showSeriesName)
 					{
-						Paragraph.Append(CreateDrawingRun(new DrawingRunModel() { text = chartDataLabel.separator }));
+						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>() { new DrawingRunModel() { text = chartDataLabel.separator } }.ToArray()));
 						Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
 					}
 					if (chartDataLabel.showCategoryName)
 					{
-						Paragraph.Append(CreateDrawingRun(new DrawingRunModel() { text = chartDataLabel.separator }));
+						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>() { new DrawingRunModel() { text = chartDataLabel.separator } }.ToArray()));
 						Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
 					}
 					if (chartDataLabel.showValue)
 					{
-						Paragraph.Append(CreateDrawingRun(new DrawingRunModel() { text = chartDataLabel.separator }));
+						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>() { new DrawingRunModel() { text = chartDataLabel.separator } }.ToArray()));
 						Paragraph.Append(CreateField("VALUE", "[VALUE]"));
 					}
 					Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });

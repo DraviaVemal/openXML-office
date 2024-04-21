@@ -738,8 +738,9 @@ namespace OpenXMLOffice.Global_2007
 				drawingParagraph = new DrawingParagraphModel()
 				{
 					paragraphPropertiesModel = new ParagraphPropertiesModel(),
-					drawingRun = new DrawingRunModel()
+					drawingRuns = new List<DrawingRunModel>()
 					{
+						new DrawingRunModel(){
 						text = titleModel.title,
 						drawingRunProperties = new DrawingRunPropertiesModel()
 						{
@@ -749,7 +750,8 @@ namespace OpenXMLOffice.Global_2007
 							isItalic = titleModel.isItalic,
 							underline = titleModel.underLineValues,
 						}
-					}
+						}
+					}.ToArray()
 				}
 			})));
 			title.Append(new C.Overlay { Val = false });

@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 using System;
+using System.Collections.Generic;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -173,9 +174,10 @@ namespace OpenXMLOffice.Presentation_2007
 						solidFillModel.hexColor = shapeTextModel.fontColor;
 						solidFillModel.schemeColorModel = null;
 					}
-					paragraph.Append(CreateDrawingRun(new DrawingRunModel()
+					paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>()
 					{
-						text = shapeTextModel.text,
+						new DrawingRunModel(){
+							text = shapeTextModel.text,
 						drawingRunProperties = new DrawingRunPropertiesModel()
 						{
 							solidFill = solidFillModel,
@@ -185,7 +187,8 @@ namespace OpenXMLOffice.Presentation_2007
 							isItalic = shapeTextModel.isItalic,
 							underline = shapeTextModel.underline
 						}
-					}));
+						}
+					}.ToArray()));
 				}
 			}
 		}

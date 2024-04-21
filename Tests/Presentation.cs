@@ -502,21 +502,62 @@ namespace OpenXMLOffice.Tests
 			List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
 			shapes1[0].ReplaceTextBox(slide.AddTextBox(new G.TextBoxSetting()
 			{
-				text = "This is text box Font Family",
-				fontFamily = "Bernard MT Condensed"
+				textBlocks = new List<G.TextBlock>(){
+					new(){
+						text = "This is text box Font Family",
+						fontFamily = "Bernard MT Condensed"
+					},
+					new(){
+						text = "Prev",
+						fontSize = 25,
+						isBold = true,
+						textColor = "AAAAAA",
+						hyperlinkProperties = new(){
+							HyperlinkPropertyType = G.HyperlinkPropertyType.PREVIOUS_SLIDE,
+						}
+					}
+				}.ToArray()
 			}));
-			shapes2[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()
+			shapes2[0].ReplaceTextBox(new TextBox(slide, new G.TextBoxSetting()
 			{
-				text = "This is text box background",
 				horizontalAlignment = G.HorizontalAlignmentValues.CENTER,
-				textBackground = "777777"
+				textBlocks = new List<G.TextBlock>(){
+					new(){
+						text = "This is text box background",
+						textBackground = "777777"
+					},
+					new(){
+						text = "Hyperlink",
+						fontSize = 25,
+						isBold = true,
+						textColor = "AAAAAA",
+						hyperlinkProperties = new(){
+							HyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
+							value="https://google.com"
+						}
+					}
+				}.ToArray()
 			}));
-			shapes3[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()
+			shapes3[0].ReplaceTextBox(new TextBox(slide, new G.TextBoxSetting()
 			{
-				text = "This is text box",
-				fontSize = 22,
-				isBold = true,
-				textColor = "AAAAAA"
+				textBlocks = new List<G.TextBlock>(){
+					new(){
+						text = "This is text box ",
+						fontSize = 22,
+						isBold = true,
+						textColor = "AAAAAA"
+					},
+					new(){
+						text = "Hyperlink",
+						fontSize = 25,
+						isBold = true,
+						textColor = "AAAAAA",
+						hyperlinkProperties = new(){
+							HyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
+							value="https://google.com"
+						}
+					}
+				}.ToArray()
 			}));
 			powerPoint1.MoveSlideByIndex(4, 0);
 			powerPoint1.SaveAs(string.Format("{1}/edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
@@ -529,14 +570,14 @@ namespace OpenXMLOffice.Tests
 		public void OpenExistingPresentationEditBarChart()
 		{
 			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
-			Slide Slide = powerPoint1.GetSlideByIndex(0);
-			List<Shape> shape1 = Slide.FindShapeByText("Slide_1_Shape_1").ToList();
-			List<Shape> shape2 = Slide.FindShapeByText("Slide_1_Shape_2").ToList();
-			List<Shape> shape3 = Slide.FindShapeByText("Slide_1_Shape_3").ToList();
-			List<Shape> shape4 = Slide.FindShapeByText("Slide_1_Shape_4").ToList();
-			List<Shape> shape5 = Slide.FindShapeByText("Slide_1_Shape_5").ToList();
-			List<Shape> shape6 = Slide.FindShapeByText("Slide_1_Shape_6").ToList();
-			shape1[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(),
+			Slide slide = powerPoint1.GetSlideByIndex(0);
+			List<Shape> shape1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
+			List<Shape> shape2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
+			List<Shape> shape3 = slide.FindShapeByText("Slide_1_Shape_3").ToList();
+			List<Shape> shape4 = slide.FindShapeByText("Slide_1_Shape_4").ToList();
+			List<Shape> shape5 = slide.FindShapeByText("Slide_1_Shape_5").ToList();
+			List<Shape> shape6 = slide.FindShapeByText("Slide_1_Shape_6").ToList();
+			shape1[0].ReplaceChart(new Chart<G.PresentationSetting>(slide, CreateDataCellPayload(),
 			new G.ColumnChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
@@ -545,7 +586,7 @@ namespace OpenXMLOffice.Tests
 					isEnableLegend = false
 				},
 			}));
-			shape2[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(),
+			shape2[0].ReplaceChart(new Chart<G.PresentationSetting>(slide, CreateDataCellPayload(),
 			new G.BarChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
@@ -554,7 +595,7 @@ namespace OpenXMLOffice.Tests
 					legendPosition = G.ChartLegendOptions.LegendPositionValues.RIGHT
 				}
 			}));
-			shape3[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
+			shape3[0].ReplaceChart(new Chart<G.PresentationSetting>(slide, CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				chartAxesOptions = new G.ChartAxesOptions()
@@ -569,17 +610,21 @@ namespace OpenXMLOffice.Tests
 					isMinorValueLinesEnabled = true,
 				}
 			}));
-			shape4[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
+			shape4[0].ReplaceChart(new Chart<G.PresentationSetting>(slide, CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new()
 			}));
-			shape5[0].ReplaceChart(new Chart<G.PresentationSetting>(Slide, CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			shape5[0].ReplaceChart(new Chart<G.PresentationSetting>(slide, CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new()
 			}));
-			shape6[0].ReplaceTextBox(new TextBox(new G.TextBoxSetting()
+			shape6[0].ReplaceTextBox(new TextBox(slide, new G.TextBoxSetting()
 			{
-				text = "Test"
+				textBlocks = new List<G.TextBlock>(){
+					new(){
+						text = "Test"
+					}
+				}.ToArray()
 			}));
 			powerPoint1.SaveAs(string.Format("{1}/chart-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
