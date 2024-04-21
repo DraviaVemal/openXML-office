@@ -77,6 +77,7 @@ namespace OpenXMLOffice.Presentation_2007
 				}
 			}
 			CreatePicture(EmbedId, pictureSetting.hyperlinkProperties);
+			slide.GetSlide().CommonSlideData.ShapeTree.Append(GetPicture());
 			ImagePart.FeedData(stream);
 		}
 		/// <summary>

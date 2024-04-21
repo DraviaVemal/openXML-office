@@ -44,6 +44,10 @@ namespace OpenXMLOffice.Tests
 			//1
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
+				hyperlinkProperties = new()
+				{
+					value = "https://openxml-office.draviavemal.com/"
+				},
 				applicationSpecificSetting = new()
 			});
 			//2
@@ -360,7 +364,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "Combo Chart"
+					title = "Combo Chart Before Picture"
 				},
 			};
 			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting<G.PresentationSetting>()
@@ -395,7 +399,13 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Picture")]
 		public void AddPicture()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting());
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
+			{
+				hyperlinkProperties = new G.HyperlinkProperties()
+				{
+					value = "https://openxml-office.draviavemal.com/"
+				}
+			});
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting());
 			Assert.IsTrue(true);
 		}
@@ -533,7 +543,7 @@ namespace OpenXMLOffice.Tests
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
 							HyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
-							value="https://google.com"
+							value="https://openxml-office.draviavemal.com/"
 						}
 					}
 				}.ToArray()
@@ -554,7 +564,7 @@ namespace OpenXMLOffice.Tests
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
 							HyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
-							value="https://google.com"
+							value="https://openxml-office.draviavemal.com/"
 						}
 					}
 				}.ToArray()

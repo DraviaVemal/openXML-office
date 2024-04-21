@@ -133,7 +133,6 @@ namespace OpenXMLOffice.Presentation_2007
 		public Picture AddPicture(string FilePath, PictureSetting PictureSetting)
 		{
 			Picture Picture = new Picture(FilePath, this, PictureSetting);
-			GetSlide().CommonSlideData.ShapeTree.Append(Picture.GetPicture());
 			return Picture;
 		}
 		/// <summary>
@@ -142,7 +141,6 @@ namespace OpenXMLOffice.Presentation_2007
 		public Picture AddPicture(Stream Stream, PictureSetting PictureSetting)
 		{
 			Picture Picture = new Picture(Stream, this, PictureSetting);
-			GetSlide().CommonSlideData.ShapeTree.Append(Picture.GetPicture());
 			return Picture;
 		}
 		/// <summary>
