@@ -6,7 +6,7 @@ using P = DocumentFormat.OpenXml.Presentation;
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
-	/// Represents Textbox base class to build on
+	/// Represents Textbox class to build on
 	/// </summary>
 	public class TextBox : CommonProperties
 	{

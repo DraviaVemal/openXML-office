@@ -1,13 +1,14 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System.IO;
 using OpenXMLOffice.Global_2007;
 using DocumentFormat.OpenXml.Packaging;
-using System.IO;
+using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
 	/// Excel Picture
 	/// </summary>
-	public class Picture
+	public class Picture : CommonProperties
 	{
 		private readonly ExcelPictureSetting excelPictureSetting;
 		private readonly Worksheet currentWorksheet;
@@ -40,7 +41,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					break;
 			}
 			imagePart.FeedData(stream);
-			currentWorksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
+			XDR.TwoCellAnchor twoCellAnchor = currentWorksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
 			{
 				anchorEditType = AnchorEditType.ONE_CELL,
 				from = new AnchorPosition()
@@ -62,9 +63,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					id = 2U,
 					name = "Picture 1",
 					noChangeAspectRatio = true,
-					blipEmbed = embedId
+					blipEmbed = embedId,
+					hyperlinkProperties = excelPictureSetting.hyperlinkProperties
 				}
 			});
+			currentWorksheet.GetDrawing().AppendChild(twoCellAnchor);
 		}
 	}
 }

@@ -4,17 +4,18 @@ using DocumentFormat.OpenXml.Packaging;
 using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
 using X = DocumentFormat.OpenXml.Spreadsheet;
+using OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
 	///
 	/// </summary>
-	public class Drawing
+	public class Drawing : CommonProperties
 	{
 		/// <summary>
 		///
 		/// </summary>
-		protected static DrawingsPart GetDrawingsPart(Worksheet worksheet)
+		protected DrawingsPart GetDrawingsPart(Worksheet worksheet)
 		{
 			if (worksheet.GetWorksheetPart().DrawingsPart == null)
 			{
@@ -31,7 +32,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		protected static XDR.WorksheetDrawing GetDrawing(Worksheet worksheet)
+		protected XDR.WorksheetDrawing GetDrawing(Worksheet worksheet)
 		{
 			return GetDrawingsPart(worksheet).WorksheetDrawing;
 		}
@@ -123,7 +124,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private static XDR.Picture CreatePicture(DrawingPictureModel drawingPictureModel)
 		{
-			return new XDR.Picture()
+			XDR.Picture picture = new XDR.Picture()
 			{
 				NonVisualPictureProperties = new XDR.NonVisualPictureProperties()
 				{
@@ -149,6 +150,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					Preset = A.ShapeTypeValues.Rectangle
 				})
 			};
+			if (drawingPictureModel.hyperlinkProperties != null)
+			{
+				picture.NonVisualPictureProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(drawingPictureModel.hyperlinkProperties), 0);
+			}
+			return picture;
 		}
 	}
 }
