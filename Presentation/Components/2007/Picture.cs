@@ -58,6 +58,8 @@ namespace OpenXMLOffice.Presentation_2007
 						//TODO: Update Target Slide Prop
 						slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
+					case HyperlinkPropertyType.TARGET_SHEET:
+						throw new ArgumentException("This Option is valid only for Excel Files");
 					case HyperlinkPropertyType.FIRST_SLIDE:
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=firstslide";
 						break;

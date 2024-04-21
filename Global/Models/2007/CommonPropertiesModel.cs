@@ -613,6 +613,10 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		WEB_URL,
 		/// <summary>
+		/// 
+		/// </summary>
+		TARGET_SHEET,
+		/// <summary>
 		///
 		/// </summary>
 		TARGET_SLIDE,

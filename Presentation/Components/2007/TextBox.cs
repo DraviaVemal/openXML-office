@@ -1,4 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using System;
 using System.Collections.Generic;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -113,6 +114,8 @@ namespace OpenXMLOffice.Presentation_2007
 							//TODO: Update Target Slide Prop
 							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
+						case HyperlinkPropertyType.TARGET_SHEET:
+							throw new ArgumentException("This Option is valid only for Excel Files");
 						case HyperlinkPropertyType.FIRST_SLIDE:
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=firstslide";
 							break;
