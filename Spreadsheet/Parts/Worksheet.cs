@@ -43,7 +43,21 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal X.SheetData GetWorkSheetData()
 		{
-			return openXMLworksheet.Elements<X.SheetData>().First();
+			X.SheetData SheetData = openXMLworksheet.Elements<X.SheetData>().FirstOrDefault();
+			if (SheetData == null)
+			{
+				return openXMLworksheet.AppendChild(new X.SheetData());
+			}
+			return SheetData;
+		}
+		internal X.Hyperlinks GetWorkSheetHyperlinks()
+		{
+			var hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
+			if (hyperlinks == null)
+			{
+				return openXMLworksheet.AppendChild(new X.Hyperlinks());
+			}
+			return hyperlinks;
 		}
 		internal WorksheetPart GetWorksheetPart()
 		{
@@ -150,16 +164,22 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				}
 				row.Hidden = rowProperties.hidden;
 			}
-			foreach (DataCell DataCell in dataCells)
+			foreach (DataCell dataCell in dataCells)
 			{
-				if (DataCell != null)
+				if (dataCell != null)
 				{
 					string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
 					columnIndex++;
 					X.Cell cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference.Value == currentCellId);
-					if (cell != null && string.IsNullOrEmpty(DataCell.cellValue))
+					X.Hyperlink hyperlink = GetWorkSheetHyperlinks().Elements<X.Hyperlink>().FirstOrDefault(h => h.Reference == cellId);
+					if (cell != null && string.IsNullOrEmpty(dataCell.cellValue))
 					{
 						cell.Remove();
+						if (hyperlink != null)
+						{
+							hyperlink.Remove();
+							// TODO : Remove the relationship
+						}
 					}
 					else
 					{
@@ -171,17 +191,58 @@ namespace OpenXMLOffice.Spreadsheet_2007
 							};
 							row.AppendChild(cell);
 						}
-						X.CellValues dataType = GetCellValueType(DataCell.dataType);
-						cell.StyleIndex = DataCell.styleId ?? excel.GetStyleService().GetCellStyleId(DataCell.styleSetting ?? new CellStyleSetting());
+						X.CellValues dataType = GetCellValueType(dataCell.dataType);
+						cell.StyleIndex = dataCell.styleId ?? excel.GetStyleService().GetCellStyleId(dataCell.styleSetting ?? new CellStyleSetting());
 						if (dataType == X.CellValues.String)
 						{
 							cell.DataType = X.CellValues.SharedString;
-							cell.CellValue = new X.CellValue(excel.GetShareStringService().InsertUnique(DataCell.cellValue));
+							cell.CellValue = new X.CellValue(excel.GetShareStringService().InsertUnique(dataCell.cellValue));
 						}
 						else
 						{
 							cell.DataType = dataType;
-							cell.CellValue = new X.CellValue(DataCell.cellValue);
+							cell.CellValue = new X.CellValue(dataCell.cellValue);
+						}
+						if (dataCell.hyperlinkProperties != null)
+						{
+							string relationshipId = GetNextSheetPartRelationId();
+							switch (dataCell.hyperlinkProperties.hyperlinkPropertyType)
+							{
+								case HyperlinkPropertyType.EXISTING_FILE:
+									dataCell.hyperlinkProperties.relationId = relationshipId;
+									dataCell.hyperlinkProperties.action = "ppaction://hlinkfile";
+									GetWorksheetPart().AddHyperlinkRelationship(new Uri(dataCell.hyperlinkProperties.value), true, relationshipId);
+									break;
+								case HyperlinkPropertyType.TARGET_SHEET: // Target use location Do nothing in relation
+									break;
+								case HyperlinkPropertyType.TARGET_SLIDE:
+								case HyperlinkPropertyType.FIRST_SLIDE:
+								case HyperlinkPropertyType.LAST_SLIDE:
+								case HyperlinkPropertyType.NEXT_SLIDE:
+								case HyperlinkPropertyType.PREVIOUS_SLIDE:
+									throw new ArgumentException("This Option is valid only for Powerpoint Files");
+								default:// Web URL
+									dataCell.hyperlinkProperties.relationId = relationshipId;
+									GetWorksheetPart().AddHyperlinkRelationship(new Uri(dataCell.hyperlinkProperties.value), true, relationshipId);
+									break;
+							}
+							if (dataCell.hyperlinkProperties.hyperlinkPropertyType == HyperlinkPropertyType.TARGET_SHEET)
+							{
+								GetWorkSheetHyperlinks().AppendChild(new X.Hyperlink()
+								{
+									Reference = relationshipId,
+									Location = dataCell.hyperlinkProperties.value,
+									Tooltip = dataCell.hyperlinkProperties.toolTip,
+								});
+							}
+							else
+							{
+								GetWorkSheetHyperlinks().AppendChild(new X.Hyperlink()
+								{
+									Reference = relationshipId,
+									Tooltip = dataCell.hyperlinkProperties.toolTip,
+								});
+							}
 						}
 					}
 				}

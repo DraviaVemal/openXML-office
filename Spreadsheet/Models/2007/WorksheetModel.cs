@@ -1,4 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+using OpenXMLOffice.Global_2007;
+
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -17,7 +19,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Represents a string cell.
 		/// </summary>
-		STRING
+		STRING,
+		/// <summary>
+		/// 
+		/// </summary>
+		FORMULA
 	}
 	/// <summary>
 	/// Represents the properties of a column in a worksheet.
@@ -51,6 +57,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Gets or sets the data type of the cell.
 		/// </summary>
 		public CellDataType dataType;
+		/// <summary>
+		/// Cell hyperlink
+		/// </summary>
+		public HyperlinkProperties hyperlinkProperties;
 		/// <summary>
 		/// It is highgly recomended to use styleId instead of styleSetting.
 		/// </summary>
