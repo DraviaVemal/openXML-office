@@ -7,6 +7,8 @@
 		<PackageId>OpenXMLOffice.Document</PackageId>
 		<RootNamespace>OpenXMLOffice.Document_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+        <TargetFrameworks>net4.5;netstandard2.0;net7.0</TargetFrameworks>
+        <LangVersion>5.0</LangVersion>
 		<IsPackable>false</IsPackable>
 		<PackageDescription>OpenXML Word Processor is a versatile .NET library that streamlines the
 			creation and manipulation of Word documents using the OpenXML SDK. Designed for ease of

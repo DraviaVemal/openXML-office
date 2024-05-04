@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Tests
 	public class Presentation
 	{
 		private static readonly PowerPoint powerPoint = new();
-		private static readonly string resultPath = "../../testResult";
+		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
 		/// Save Presenation on text completion cleanup
 		/// </summary>

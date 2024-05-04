@@ -12,6 +12,8 @@
 		<PackageId>OpenXMLOffice.Global</PackageId>
 		<RootNamespace>OpenXMLOffice.Global_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+        <TargetFrameworks>net4.5;netstandard2.0;net7.0</TargetFrameworks>
+        <LangVersion>5.0</LangVersion>
 		<PackageDescription>This is OpenXML-Office Common package. Bundles shared components and
 			parts.</PackageDescription>
 	</PropertyGroup>

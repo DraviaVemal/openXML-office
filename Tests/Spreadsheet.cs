@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Tests
 	public class Spreadsheet
 	{
 		private static readonly Excel excel = new();
-		private static readonly string resultPath = "../../testResult";
+		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
 		/// Initialize excel Test
 		/// </summary>

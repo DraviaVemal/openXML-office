@@ -10,6 +10,8 @@
 		<PackageId>OpenXMLOffice.Spreadsheet</PackageId>
 		<RootNamespace>OpenXMLOffice.Spreadsheet_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+        <TargetFrameworks>net4.5;netstandard2.0;net7.0</TargetFrameworks>
+        <LangVersion>5.0</LangVersion>
 		<PackageDescription>OpenXML Excel Integrator is a robust .NET library tailored for managing
 			and
 			manipulating Excel files using the OpenXML SDK. This toolkit simplifies complex tasks
