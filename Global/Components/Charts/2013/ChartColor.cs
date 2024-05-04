@@ -1,4 +1,5 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+
 using A = DocumentFormat.OpenXml.Drawing;
 using CS = DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 namespace OpenXMLOffice.Global_2013
