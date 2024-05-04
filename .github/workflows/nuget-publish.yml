@@ -12,7 +12,6 @@ on:
 jobs:
   coverage:
     runs-on: ubuntu-latest
-    environment: Build
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET 7
@@ -24,7 +23,7 @@ jobs:
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml
       - name: Publish Coverage
         working-directory: TestResults
-        run: export CODACY_PROJECT_TOKEN=${{env.CODACY_PROJECT_TOKEN}} && curl -Ls https://coverage.codacy.com/get.sh | bash
+        run: export CODACY_PROJECT_TOKEN=${{secrets.CODACY_PROJECT_TOKEN}} && curl -Ls https://coverage.codacy.com/get.sh | bash
   build-CsProj:
     needs: coverage
     runs-on: ubuntu-latest
