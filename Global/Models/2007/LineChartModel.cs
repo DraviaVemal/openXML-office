@@ -82,15 +82,15 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string lineColor = null;
+		public string lineColor;
 		/// <summary>
 		/// /
 		/// </summary>
-		public int? transparency = null;
+		public int? transparency;
 		/// <summary>
 		/// /
 		/// </summary>
-		public int? width = null;
+		public int? width;
 		/// <summary>
 		///
 		/// </summary>
@@ -129,7 +129,7 @@ namespace OpenXMLOffice.Global_2007
 		// /// Format applied at data point level
 		// /// TODO : Data Point Implementation
 		// /// </summary>
-		// public LineChartLineFormat? lineChartLineFormat = null;
+		// public LineChartLineFormat? lineChartLineFormat;
 	}
 	/// <summary>
 	/// Represents the series settings for a line chart.
@@ -139,7 +139,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Format Applied at series level
 		/// </summary>
-		public LineChartLineFormat lineChartLineFormat = null;
+		public LineChartLineFormat lineChartLineFormat;
 		/// <summary>
 		///
 		/// </summary>

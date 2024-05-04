@@ -10,6 +10,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Hide the current slide
 		/// </summary>
-		public bool hideSlide = false;
+		public bool hideSlide;
 	}
 }

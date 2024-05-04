@@ -58,7 +58,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public HyperlinkProperties hyperlinkProperties = null;
+		public HyperlinkProperties hyperlinkProperties;
 		/// <summary>
 		/// Gets or sets the font family of the text.
 		/// </summary>
@@ -70,15 +70,15 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Gets or sets a value indicating whether the text is bold.
 		/// </summary>
-		public bool isBold = false;
+		public bool isBold;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text is italic.
 		/// </summary>
-		public bool isItalic = false;
+		public bool isItalic;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text is underlined.
 		/// </summary>
-		public bool isUnderline = false;
+		public bool isUnderline;
 		/// <summary>
 		/// Gets or sets the text content of the text box.
 		/// </summary>

@@ -10,23 +10,23 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string title = null;
+		public string title;
 		/// <summary>
 		///
 		/// </summary>
-		public string subject = null;
+		public string subject;
 		/// <summary>
 		///
 		/// </summary>
-		public string description = null;
+		public string description;
 		/// <summary>
 		///
 		/// </summary>
-		public string tags = null;
+		public string tags;
 		/// <summary>
 		///
 		/// </summary>
-		public string category = null;
+		public string category;
 		/// <summary>
 		///
 		/// </summary>

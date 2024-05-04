@@ -36,7 +36,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public HyperlinkProperties hyperlinkProperties = null;
+		public HyperlinkProperties hyperlinkProperties;
 		/// <summary>
 		/// The type of image.
 		/// </summary>

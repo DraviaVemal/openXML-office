@@ -32,12 +32,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			worksheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(new SheetData());
 			return new Worksheet(excel, worksheetPart.Worksheet, sheet);
 		}
-		internal int? GetSheetId(string sheetName)
+		internal string GetSheetId(string sheetName)
 		{
 			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Name == sheetName) as Sheet;
 			if (sheet != null)
 			{
-				return int.Parse(sheet.Id.Value);
+				return sheet.Id.Value;
 			}
 			return null;
 		}
@@ -79,7 +79,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return false;
 		}
-		internal bool RemoveSheet(int sheetId)
+		internal bool RemoveSheetById(string sheetId)
 		{
 			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Id.Value == sheetId.ToString()) as Sheet;
 			if (sheet != null)
@@ -108,11 +108,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			sheet.Name = newSheetName;
 			return true;
 		}
-		internal bool RenameSheet(int sheetId, string newSheetName)
+		internal bool RenameSheetById(string sheetId, string newSheetName)
 		{
 			if (CheckIfSheetNameExist(newSheetName))
 			{
-				throw new ArgumentException("New Sheet with name already exist.");
+				throw new ArgumentException(string.Format("New Sheet with name '{0}' already exist.", newSheetName));
 			}
 			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Id.Value == sheetId.ToString()) as Sheet;
 			if (sheet == null)

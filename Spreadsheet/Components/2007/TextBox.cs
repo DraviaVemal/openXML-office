@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	public class TextBox : CommonProperties
 	{
 		private readonly TextBoxSetting textBoxSetting;
-		private XDR.Shape openXMLShape;
+		private readonly XDR.Shape openXMLShape;
 		private readonly Worksheet worksheet;
 		/// <summary>
 		/// Create Textbox with provided settings

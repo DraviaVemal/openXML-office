@@ -30,6 +30,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	internal class ExcelInfo
 	{
 		public bool isEditable = true;
-		public bool isExistingFile = false;
+		public bool isExistingFile;
 	}
 }

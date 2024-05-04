@@ -12,7 +12,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		public bool showBorder = false;
+		public bool showBorder;
 		/// <summary>
 		///
 		/// </summary>
@@ -93,15 +93,15 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Is Bold text
 		/// </summary>
-		public bool isBold = false;
+		public bool isBold;
 		/// <summary>
 		/// Is Italic text
 		/// </summary>
-		public bool isItalic = false;
+		public bool isItalic;
 		/// <summary>
 		/// Is Underline text
 		/// </summary>
-		public bool isUnderline = false;
+		public bool isUnderline;
 		/// <summary>
 		/// Text Background Color aka Highlight Color
 		/// </summary>

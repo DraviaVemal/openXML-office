@@ -31,9 +31,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Returns the sheet ID of the current worksheet.
 		/// </summary>
-		public int GetSheetId()
+		public string GetSheetId()
 		{
-			return int.Parse(sheet.Id.Value);
+			return sheet.Id.Value;
 		}
 		/// <summary>
 		///

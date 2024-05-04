@@ -46,7 +46,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Determines whether to show the bubble size in the data labels.
 		/// </summary>
-		public bool showBubbleSize = false;
+		public bool showBubbleSize;
 		/// <summary>
 		/// The possible positions for the data labels.
 		/// </summary>

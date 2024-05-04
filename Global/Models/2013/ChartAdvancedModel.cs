@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Determines whether to show the value from a column in the chart.
 		/// </summary>
-		public bool showValueFromColumn = false;
+		public bool showValueFromColumn;
 		/// <summary>
 		/// Key For Data Column Value For Data Label Column If Data Label Column Are Present
 		/// Inbetween and Used in the list it will be auto skipped By Data Column

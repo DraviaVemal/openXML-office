@@ -45,6 +45,31 @@ namespace OpenXMLOffice.Tests
 			Assert.AreEqual("TestSheet1", worksheet.GetSheetName());
 		}
 		/// <summary>
+		/// Add Sheet Test
+		/// </summary>
+		[TestMethod]
+		public void AddSecondSheet()
+		{
+			Worksheet worksheet = excel.AddSheet("TestSheet2");
+			Assert.IsNotNull(worksheet);
+			string sheetId = excel.GetSheetId("TestSheet2");
+			Assert.IsNotNull(sheetId);
+			Assert.AreEqual(sheetId, worksheet.GetSheetId());
+			Assert.AreEqual(excel.GetSheetName(sheetId), worksheet.GetSheetName());
+			Assert.IsTrue(excel.RemoveSheetById(sheetId));
+		}
+		/// <summary>
+		/// Rename Sheet Based on Index Test
+		/// </summary>
+		[TestMethod]
+		public void RenameBySheetId()
+		{
+			Worksheet worksheet = excel.AddSheet("TestSheet3");
+			Assert.IsNotNull(worksheet);
+			string sheetId = excel.GetSheetId("TestSheet3");
+			Assert.IsTrue(excel.RenameSheetById(sheetId, "RenameTestSheet3"));
+		}
+		/// <summary>
 		/// Rename Sheet Based on Index Test
 		/// </summary>
 		[TestMethod]
@@ -52,7 +77,7 @@ namespace OpenXMLOffice.Tests
 		{
 			Worksheet worksheet = excel.AddSheet("Sheet11");
 			Assert.IsNotNull(worksheet);
-			Assert.IsTrue(excel.RenameSheet("Sheet11", "Data1"));
+			Assert.IsTrue(excel.RenameSheet("Sheet11", "RenameSheet11"));
 		}
 		/// <summary>
 		/// Set Cell Test
@@ -84,6 +109,10 @@ namespace OpenXMLOffice.Tests
 		public void SetRow()
 		{
 			Worksheet worksheet = excel.AddSheet("Data2");
+			uint styleId = excel.GetStyleId(new CellStyleSetting()
+			{
+				numberFormat = "00.000",
+			});
 			Assert.IsNotNull(worksheet);
 			worksheet.SetRow("A1", new DataCell[6]{
 				new(){
@@ -108,9 +137,7 @@ namespace OpenXMLOffice.Tests
 				 new(){
 					cellValue = "2.51",
 					dataType = CellDataType.NUMBER,
-					styleSetting = new(){
-						numberFormat = "00.000",
-					}
+					styleId=styleId
 				},new(){
 					cellValue = "5.51",
 					dataType = CellDataType.NUMBER,
@@ -139,7 +166,7 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void AddPicture()
 		{
-			Worksheet worksheet = excel.AddSheet("Data4");
+			Worksheet worksheet = excel.AddSheet("Add Picture");
 			Assert.IsNotNull(worksheet);
 			worksheet.SetRow("D3", new DataCell[1]{
 				new(){
@@ -172,7 +199,7 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void AddPictureHyperlink()
 		{
-			Worksheet worksheet = excel.AddSheet("hyperLink4");
+			Worksheet worksheet = excel.AddSheet("hyperLink pic");
 			Assert.IsNotNull(worksheet);
 			worksheet.SetRow("D3", new DataCell[1]{
 				new(){
@@ -633,6 +660,7 @@ namespace OpenXMLOffice.Tests
 				cellIdStart = "A1",
 				cellIdEnd = "D4"
 			}, comboChartSetting);
+			Assert.IsTrue(true);
 		}
 		/// <summary>
 		/// Open and close Excel without editing

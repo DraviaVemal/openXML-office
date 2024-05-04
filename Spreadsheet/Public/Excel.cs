@@ -48,7 +48,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Returns the Sheet ID for the give Sheet Name
 		/// </summary>
-		public int? GetSheetId(string sheetName)
+		public string GetSheetId(string sheetName)
 		{
 			return spreadsheet.GetSheetId(sheetName);
 		}
@@ -92,9 +92,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Removes a sheet with the specified ID from the OpenXMLOffice
 		/// </summary>
-		public bool RemoveSheet(int sheetId)
+		public bool RemoveSheetById(string sheetId)
 		{
-			return spreadsheet.RemoveSheet(sheetId);
+			return spreadsheet.RemoveSheetById(sheetId);
 		}
 		/// <summary>
 		/// Creates a new sheet with the specified name and adds its relevant components to the
@@ -107,9 +107,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Renames an existing sheet in the OpenXMLOffice.
 		/// </summary>
-		public bool RenameSheet(int sheetId, string newSheetName)
+		public bool RenameSheetById(string sheetId, string newSheetName)
 		{
-			return spreadsheet.RenameSheet(sheetId, newSheetName);
+			return spreadsheet.RenameSheetById(sheetId, newSheetName);
 		}
 		/// <summary>
 		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.

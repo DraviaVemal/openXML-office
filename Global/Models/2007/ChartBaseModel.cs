@@ -38,11 +38,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
-		internal bool isBold = false;
+		internal bool isBold;
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		internal bool isItalic = false;
+		internal bool isItalic;
 		/// <summary>
 		///  Font Size
 		/// </summary>
@@ -50,7 +50,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal string fontColor = null;
+		internal string fontColor;
 		/// <summary>
 		///
 		/// </summary>
@@ -85,11 +85,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
-		public bool isHorizontalBold = false;
+		public bool isHorizontalBold;
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		public bool isHorizontalItalic = false;
+		public bool isHorizontalItalic;
 		/// <summary>
 		///  Font Size
 		/// </summary>
@@ -97,7 +97,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string horizontalFontColor = null;
+		public string horizontalFontColor;
 		/// <summary>
 		///
 		/// </summary>
@@ -109,11 +109,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
-		public bool isVerticalBold = false;
+		public bool isVerticalBold;
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		public bool isVerticalItalic = false;
+		public bool isVerticalItalic;
 		/// <summary>
 		///  Font Size
 		/// </summary>
@@ -121,7 +121,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string verticalFontColor = null;
+		public string verticalFontColor;
 		/// <summary>
 		///
 		/// </summary>
@@ -227,27 +227,27 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Determines whether to show the category name in the chart.
 		/// </summary>
-		public bool showCategoryName = false;
+		public bool showCategoryName;
 		/// <summary>
 		/// Determines whether to show the legend key in the chart.
 		/// </summary>
-		public bool showLegendKey = false;
+		public bool showLegendKey;
 		/// <summary>
 		/// Determines whether to show the series name in the chart.
 		/// </summary>
-		public bool showSeriesName = false;
+		public bool showSeriesName;
 		/// <summary>
 		/// Determines whether to show the value in the chart.
 		/// </summary>
-		public bool showValue = false;
+		public bool showValue;
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
-		public bool isBold = false;
+		public bool isBold;
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		internal bool isItalic = false;
+		internal bool isItalic;
 		/// <summary>
 		/// Font Size
 		/// </summary>
@@ -255,7 +255,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string fontColor = null;
+		public string fontColor;
 		/// <summary>
 		///
 		/// </summary>
@@ -305,7 +305,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Major Category Lines Enabled
 		/// </summary>
-		public bool isMajorCategoryLinesEnabled = false;
+		public bool isMajorCategoryLinesEnabled;
 		/// <summary>
 		/// Is Major Value Lines Enabled
 		/// </summary>
@@ -313,11 +313,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Minor Category Lines Enabled
 		/// </summary>
-		public bool isMinorCategoryLinesEnabled = false;
+		public bool isMinorCategoryLinesEnabled;
 		/// <summary>
 		/// Is Minor Value Lines Enabled
 		/// </summary>
-		public bool isMinorValueLinesEnabled = false;
+		public bool isMinorValueLinesEnabled;
 	}
 	/// <summary>
 	/// Represents the options for chart legend.
@@ -331,15 +331,15 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Legend Chart OverLap
 		/// </summary>
-		public bool isLegendChartOverLap = false;
+		public bool isLegendChartOverLap;
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
-		public bool isBold = false;
+		public bool isBold;
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		internal bool isItalic = false;
+		internal bool isItalic;
 		/// <summary>
 		/// Font Size
 		/// </summary>
@@ -347,7 +347,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string fontColor = null;
+		public string fontColor;
 		/// <summary>
 		///
 		/// </summary>
@@ -525,15 +525,15 @@ namespace OpenXMLOffice.Global_2007
 	{
 		internal uint? categoryAxisId;
 		internal uint? valueAxisId;
-		internal bool is3DChart = false;
+		internal bool is3DChart;
 		/// <summary>
 		///
 		/// </summary>
-		public HyperlinkProperties hyperlinkProperties = null;
+		public HyperlinkProperties hyperlinkProperties;
 		/// <summary>
 		/// Only useful when used with Combo chart
 		/// </summary>
-		public bool isSecondaryAxis = false;
+		public bool isSecondaryAxis;
 		/// <summary>
 		///
 		/// </summary>
@@ -571,11 +571,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
-		internal bool isBold = false;
+		internal bool isBold;
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		internal bool isItalic = false;
+		internal bool isItalic;
 		/// <summary>
 		/// Font Size
 		/// </summary>
@@ -583,7 +583,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal string fontColor = null;
+		internal string fontColor;
 		/// <summary>
 		///
 		/// </summary>

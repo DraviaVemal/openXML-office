@@ -380,11 +380,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public int? width = null;
+		public int? width;
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill = null;
+		public SolidFillModel solidFill;
 		/// <summary>
 		///
 		/// </summary>
@@ -466,11 +466,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string hexColor = null;
+		public string hexColor;
 		/// <summary>
 		///
 		/// </summary>
-		public SchemeColorModel schemeColorModel = null;
+		public SchemeColorModel schemeColorModel;
 		/// <summary>
 		///
 		/// </summary>
@@ -484,7 +484,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill = null;
+		public SolidFillModel solidFill;
 		/// <summary>
 		///
 		/// </summary>
@@ -492,11 +492,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public EffectListModel effectList = null;
+		public EffectListModel effectList;
 		/// <summary>
 		///
 		/// </summary>
-		public ShapeProperty3D shapeProperty3D = null;
+		public ShapeProperty3D shapeProperty3D;
 	}
 	/// <summary>
 	///
@@ -650,19 +650,19 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///	Web Url or file path or slide ID use based on "HyperlinkPropertyType"
 		/// </summary>
-		public string value = null;
+		public string value;
 		/// <summary>
 		/// Screen Tool Tip
 		/// </summary>
-		public string toolTip = null;
+		public string toolTip;
 		/// <summary>
 		/// Internal Use property
 		/// </summary>
-		public string relationId = null;
+		public string relationId;
 		/// <summary>
 		/// Internal Use property
 		/// </summary>
-		public string action = null;
+		public string action;
 	}
 	/// <summary>
 	///
@@ -672,11 +672,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public HyperlinkProperties hyperlinkProperties = null;
+		public HyperlinkProperties hyperlinkProperties;
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill = null;
+		public SolidFillModel solidFill;
 		/// <summary>
 		///
 		/// </summary>
@@ -696,7 +696,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public UnderLineValues? underline = null;
+		public UnderLineValues? underline;
 	}
 	/// <summary>
 	///
@@ -706,11 +706,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill = null;
+		public SolidFillModel solidFill;
 		/// <summary>
 		///
 		/// </summary>
-		public UnderLineValues? underline = null;
+		public UnderLineValues? underline;
 		/// <summary>
 		///
 		/// </summary>
@@ -774,11 +774,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public ParagraphPropertiesModel paragraphPropertiesModel = null;
+		public ParagraphPropertiesModel paragraphPropertiesModel;
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingRunModel[] drawingRuns = null;
+		public DrawingRunModel[] drawingRuns;
 	}
 	/// <summary>
 	/// /
@@ -788,7 +788,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public DefaultRunPropertiesModel defaultRunProperties = null;
+		public DefaultRunPropertiesModel defaultRunProperties;
 		/// <summary>
 		/// Cell Alignment Option
 		/// </summary>
@@ -806,43 +806,43 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public int? leftInset = null;
+		public int? leftInset;
 		/// <summary>
 		///
 		/// </summary>
-		public int? topInset = null;
+		public int? topInset;
 		/// <summary>
 		///
 		/// </summary>
-		public int? rightInset = null;
+		public int? rightInset;
 		/// <summary>
 		///
 		/// </summary>
-		public int? bottomInset = null;
+		public int? bottomInset;
 		/// <summary>
 		///
 		/// </summary>
-		public bool? useParagraphSpacing = null;
+		public bool? useParagraphSpacing;
 		/// <summary>
 		///
 		/// </summary>
-		public TextVerticalOverflowValues? verticalOverflow = null;
+		public TextVerticalOverflowValues? verticalOverflow;
 		/// <summary>
 		///
 		/// </summary>
-		public TextVerticalAlignmentValues? vertical = null;
+		public TextVerticalAlignmentValues? vertical;
 		/// <summary>
 		///
 		/// </summary>
-		public TextWrappingValues? wrap = null;
+		public TextWrappingValues? wrap;
 		/// <summary>
 		///
 		/// </summary>
-		public TextAnchoringValues? anchor = null;
+		public TextAnchoringValues? anchor;
 		/// <summary>
 		///
 		/// </summary>
-		public bool? anchorCenter = null;
+		public bool? anchorCenter;
 	}
 	/// <summary>
 	///
@@ -852,10 +852,10 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingBodyPropertiesModel drawingBodyProperties = null;
+		public DrawingBodyPropertiesModel drawingBodyProperties;
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingParagraphModel drawingParagraph = null;
+		public DrawingParagraphModel drawingParagraph;
 	}
 }
