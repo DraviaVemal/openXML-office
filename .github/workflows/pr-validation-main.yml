@@ -22,11 +22,10 @@ jobs:
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml
       - name: Publish Coverage
         working-directory: TestResults
-        run: curl -Ls https://coverage.codacy.com/get.sh | sh
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
   build:
     needs: coverage
     runs-on: ubuntu-latest
-    environment: Build
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET 7

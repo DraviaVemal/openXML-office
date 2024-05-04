@@ -24,7 +24,7 @@ jobs:
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml
       - name: Publish Coverage
         working-directory: TestResults
-        run: set CODACY_PROJECT_TOKEN=${{env.CODACY_PROJECT_TOKEN}} &&  curl -Ls https://coverage.codacy.com/get.sh | bash
+        run: curl -Ls https://coverage.codacy.com/get.sh | bash
   build-CsProj:
     needs: coverage
     runs-on: ubuntu-latest
