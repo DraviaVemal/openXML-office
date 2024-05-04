@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release
       - name: Test Runner
-        working-directory: TestResults
+        working-directory: Tests
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml --no-build --verbosity quiet
       - name: Publish Coverage
         working-directory: TestResults
