@@ -11,7 +11,7 @@ on:
       - "Directory.Build.props"
 jobs:
   coverage:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     environment: Build
     steps:
       - uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
         run: set CODACY_PROJECT_TOKEN=${{env.CODACY_PROJECT_TOKEN}} &&  curl -Ls https://coverage.codacy.com/get.sh | bash
   build-CsProj:
     needs: coverage
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET 7
