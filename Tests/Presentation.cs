@@ -288,7 +288,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.BUBBLE
 			});
-			Assert.IsTrue(true);
+			Assert.IsTrue(powerPoint.GetSlideCount() > 0);
 		}
 		/// <summary>
 		///
