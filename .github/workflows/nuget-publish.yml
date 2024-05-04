@@ -25,7 +25,7 @@ jobs:
         run: dotnet build --no-restore -c Release
       - name: Publish Coverage
         working-directory: ./TestResults
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
+        run: curl -Ls https://coverage.codacy.com/get.sh | bash
       - name: Pack Project DLL
         run: dotnet pack -c Release -o nupkgs
       - name: Upload Artifacts

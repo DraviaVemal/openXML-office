@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    environment: Build
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET 7
@@ -20,6 +21,9 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore -c Release
+      - name: Publish Coverage
+        working-directory: ./TestResults
+        run: curl -Ls https://coverage.codacy.com/get.sh | bash
       - name: Pack Project DLL
         run: dotnet pack -c Release -o nupkgs
       - name: Upload Artifacts
