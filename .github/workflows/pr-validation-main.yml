@@ -22,8 +22,9 @@ jobs:
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml --verbosity quiet
       - name: Publish Coverage
         working-directory: TestResults
-        run: curl -Ls https://coverage.codacy.com/get.sh | bash
+        run: export CODACY_PROJECT_TOKEN=${{env.CODACY_PROJECT_TOKEN}} && curl -Ls https://coverage.codacy.com/get.sh | bash
   build:
+    needs: coverage
     runs-on: windows-latest
     environment: Build
     steps:
@@ -36,11 +37,5 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore -c Release
-      - name: Test Runner
-        working-directory: Tests
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml --no-build --verbosity quiet
-      - name: Publish Coverage
-        working-directory: TestResults
-        run: curl -Ls https://coverage.codacy.com/get.sh | bash
       - name: Pack Project DLL
         run: dotnet pack -c Release -o nupkgs
