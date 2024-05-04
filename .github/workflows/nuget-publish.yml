@@ -8,11 +8,25 @@ on:
     branches:
       - main
     paths:
-      - 'Directory.Build.props'
+      - "Directory.Build.props"
 jobs:
-  build-CsProj:
+  coverage:
     runs-on: windows-latest
     environment: Build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET 7
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "7.0"
+      - name: Test Runner
+        working-directory: Tests
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml --verbosity quiet
+      - name: Publish Coverage
+        working-directory: TestResults
+        run: curl -Ls https://coverage.codacy.com/get.sh | bash
+  build-CsProj:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET 7
@@ -23,12 +37,6 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore -c Release
-      - name: Test Runner
-        working-directory: Tests
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml --no-build --verbosity quiet
-      - name: Publish Coverage
-        working-directory: TestResults
-        run: curl -Ls https://coverage.codacy.com/get.sh | bash
       - name: Pack Project DLL
         run: dotnet pack -c Release -o nupkgs
       - name: Upload Artifacts
