@@ -323,6 +323,7 @@ namespace OpenXMLOffice.Tests
 			{
 				applicationSpecificSetting = new(),
 			});
+			Assert.IsTrue(true);
 		}
 		/// <summary>
 		/// Add Blank Slide to the PPT
