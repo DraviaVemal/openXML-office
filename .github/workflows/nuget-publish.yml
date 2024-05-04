@@ -20,7 +20,7 @@ jobs:
           dotnet-version: "7.0"
       - name: Test Runner
         working-directory: Tests
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/cobertura.xml
       - name: Publish Coverage
         working-directory: TestResults
         run: export CODACY_PROJECT_TOKEN=${{secrets.CODACY_PROJECT_TOKEN}} && curl -Ls https://coverage.codacy.com/get.sh | bash
