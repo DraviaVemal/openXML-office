@@ -21,6 +21,9 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore -c Release
+      - name: Test Runner
+        working-directory: ./TestResults
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml --no-build --verbosity quiet
       - name: Publish Coverage
         working-directory: ./TestResults
         run: curl -Ls https://coverage.codacy.com/get.sh | bash

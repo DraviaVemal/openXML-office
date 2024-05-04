@@ -30,6 +30,5 @@
 			<CopyCommand>cp -r </CopyCommand>
 		</PropertyGroup>
 		<Exec Command="$(CopyCommand) $(ProjectDir)TestFiles $(TargetDir)TestFiles" />
-		<Exec Command="dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/coverage.xml --no-build --verbosity quiet" />
 	</Target>
 </Project>
