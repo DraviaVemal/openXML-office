@@ -92,9 +92,9 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Update Chart Size
 		/// </summary>
-		/// <param name="Width">
+		/// <param name="Width"> In Px
 		/// </param>
-		/// <param name="Height">
+		/// <param name="Height">In Px
 		/// </param>
 		public virtual void UpdateSize(uint Width, uint Height)
 		{

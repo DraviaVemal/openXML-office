@@ -45,8 +45,8 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public void UpdatePosition(uint X, uint Y)
 		{
-			textBoxSetting.x = X;
-			textBoxSetting.y = Y;
+			textBoxSetting.x = (uint)ConverterUtils.PixelsToEmu((int)X);
+			textBoxSetting.y = (uint)ConverterUtils.PixelsToEmu((int)Y);
 			if (openXMLShape != null)
 			{
 				openXMLShape.ShapeProperties.Transform2D = new A.Transform2D
@@ -61,8 +61,8 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public void UpdateSize(uint Width, uint Height)
 		{
-			textBoxSetting.width = Width;
-			textBoxSetting.height = Height;
+			textBoxSetting.width = (uint)ConverterUtils.PixelsToEmu((int)Width);
+			textBoxSetting.height = (uint)ConverterUtils.PixelsToEmu((int)Height);
 			if (openXMLShape != null)
 			{
 				openXMLShape.ShapeProperties.Transform2D = new A.Transform2D

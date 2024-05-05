@@ -43,8 +43,8 @@ namespace OpenXMLOffice.Presentation_2007
 			if (openXMLShape.ShapeProperties.Transform2D != null)
 			{
 				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
-				chart.UpdateSize((uint)oldTransform.Extents.Cx, (uint)oldTransform.Extents.Cy);
-				chart.UpdatePosition((uint)oldTransform.Offset.X, (uint)oldTransform.Offset.Y);
+				chart.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
+				chart.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (chart.GetChartGraphicFrame().Parent == null)
 			{
@@ -67,8 +67,8 @@ namespace OpenXMLOffice.Presentation_2007
 			if (openXMLShape.ShapeProperties.Transform2D != null)
 			{
 				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
-				chart.UpdateSize((uint)oldTransform.Extents.Cx, (uint)oldTransform.Extents.Cy);
-				chart.UpdatePosition((uint)oldTransform.Offset.X, (uint)oldTransform.Offset.Y);
+				chart.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
+				chart.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (chart.GetAlternateContent().Parent == null)
 			{
@@ -91,8 +91,8 @@ namespace OpenXMLOffice.Presentation_2007
 			if (openXMLShape.ShapeProperties.Transform2D != null)
 			{
 				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
-				picture.UpdateSize((uint)oldTransform.Extents.Cx, (uint)oldTransform.Extents.Cy);
-				picture.UpdatePosition((uint)oldTransform.Offset.X, (uint)oldTransform.Offset.Y);
+				picture.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
+				picture.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (picture.GetPicture().Parent == null)
 			{
@@ -115,8 +115,8 @@ namespace OpenXMLOffice.Presentation_2007
 			if (openXMLShape.ShapeProperties.Transform2D != null)
 			{
 				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
-				table.UpdateSize((uint)oldTransform.Extents.Cx, (uint)oldTransform.Extents.Cy);
-				table.UpdatePosition((uint)oldTransform.Offset.X, (uint)oldTransform.Offset.Y);
+				table.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
+				table.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (table.GetTableGraphicFrame().Parent == null)
 			{
@@ -139,8 +139,8 @@ namespace OpenXMLOffice.Presentation_2007
 			if (openXMLShape.ShapeProperties.Transform2D != null)
 			{
 				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
-				textBox.UpdateSize((uint)oldTransform.Extents.Cx, (uint)oldTransform.Extents.Cy);
-				textBox.UpdatePosition((uint)oldTransform.Offset.X, (uint)oldTransform.Offset.Y);
+				textBox.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
+				textBox.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 				if (openXMLShape.ShapeStyle != null)
 				{
 					P.ShapeStyle ShapeStyle = (P.ShapeStyle)openXMLShape.ShapeStyle.Clone();
