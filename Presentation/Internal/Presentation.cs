@@ -72,9 +72,9 @@ namespace OpenXMLOffice.Presentation_2007
 					GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value);
 				}
 				catch (KeyNotFoundException) { }//ignore
-				catch (Exception ex)
+				catch
 				{
-					throw ex;
+					throw;
 				}
 				GetPresentationPart().DeletePart(SlidePart);
 			}

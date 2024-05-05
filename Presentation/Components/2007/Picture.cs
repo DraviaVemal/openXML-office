@@ -112,8 +112,8 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public void UpdatePosition(uint X, uint Y)
 		{
-			pictureSetting.x = X;
-			pictureSetting.y = Y;
+			pictureSetting.x = (uint)ConverterUtils.PixelsToEmu((int)X);
+			pictureSetting.y = (uint)ConverterUtils.PixelsToEmu((int)Y);
 			if (openXMLPicture != null)
 			{
 				openXMLPicture.ShapeProperties.Transform2D = new A.Transform2D
@@ -128,8 +128,8 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public void UpdateSize(uint Width, uint Height)
 		{
-			pictureSetting.width = Width;
-			pictureSetting.height = Height;
+			pictureSetting.width = (uint)ConverterUtils.PixelsToEmu((int)Width);
+			pictureSetting.height = (uint)ConverterUtils.PixelsToEmu((int)Height);
 			if (openXMLPicture != null)
 			{
 				openXMLPicture.ShapeProperties.Transform2D = new A.Transform2D

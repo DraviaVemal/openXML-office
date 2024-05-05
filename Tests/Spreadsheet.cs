@@ -620,6 +620,33 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			row = 0;
+			worksheet = excel.AddSheet("Scatter Chart");
+			CreateDataCellPayload(6, true).ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			// worksheet.AddChart(new()
+			// {
+			// 	cellIdStart = "A1",
+			// 	cellIdEnd = "F4"
+			// }, new ScatterChartSetting<ExcelSetting>()
+			// {
+			// 	scatterChartType = ScatterChartTypes.SCATTER,
+			// 	applicationSpecificSetting = new()
+			// 	{
+			// 		from = new()
+			// 		{
+			// 			row = 5,
+			// 			column = 5
+			// 		},
+			// 		to = new()
+			// 		{
+			// 			row = 5,
+			// 			column = 20
+			// 		}
+			// 	}
+			// });
+			row = 0;
 			worksheet = excel.AddSheet("Combo Chart");
 			CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
@@ -660,6 +687,43 @@ namespace OpenXMLOffice.Tests
 				cellIdStart = "A1",
 				cellIdEnd = "D4"
 			}, comboChartSetting);
+			Assert.IsTrue(true);
+		}
+
+		/// <summary>
+		/// Test All Chart Implementation
+		/// </summary>
+		[TestMethod]
+		public void AddScatterCharts()
+		{
+			Worksheet worksheet = excel.AddSheet("Only Scatter Chart");
+			excel.RemoveSheet("Sheet1");
+			int row = 0;
+			CreateDataCellPayload(6, true).ToList().ForEach(rowData =>
+			{
+				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
+			});
+			// worksheet.AddChart(new()
+			// {
+			// 	cellIdStart = "A1",
+			// 	cellIdEnd = "F4"
+			// }, new ScatterChartSetting<ExcelSetting>()
+			// {
+			// 	scatterChartType = ScatterChartTypes.SCATTER,
+			// 	applicationSpecificSetting = new()
+			// 	{
+			// 		from = new()
+			// 		{
+			// 			row = 5,
+			// 			column = 5
+			// 		},
+			// 		to = new()
+			// 		{
+			// 			row = 5,
+			// 			column = 20
+			// 		}
+			// 	}
+			// });
 			Assert.IsTrue(true);
 		}
 		/// <summary>
@@ -777,6 +841,14 @@ namespace OpenXMLOffice.Tests
 							numberFormat = "0.00",
 						}
 					};
+					if ((col + 1) == payloadSize)
+					{
+						data[row][col].hyperlinkProperties = new()
+						{
+							hyperlinkPropertyType = HyperlinkPropertyType.WEB_URL,
+							value = "https://openxml-office.draviavemal.com/",
+						};
+					}
 				}
 			}
 			return data;

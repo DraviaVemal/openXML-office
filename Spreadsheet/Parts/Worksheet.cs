@@ -53,12 +53,33 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal X.Hyperlinks GetWorkSheetHyperlinks()
 		{
-			var hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
-			if (hyperlinks == null)
-			{
-				return openXMLworksheet.AppendChild(new X.Hyperlinks());
-			}
+			X.Hyperlinks hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
 			return hyperlinks;
+		}
+		internal void AddHyperlink(string relationshipId, string toolTip)
+		{
+			AddHyperlink(relationshipId, toolTip, null);
+		}
+		internal void AddHyperlink(string relationshipId, string toolTip, string location)
+		{
+			X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks() ?? openXMLworksheet.AppendChild(new X.Hyperlinks());
+			if (location != null)
+			{
+				hyperlinks.AppendChild(new X.Hyperlink()
+				{
+					Reference = relationshipId,
+					Tooltip = toolTip,
+					Location = location,
+				});
+			}
+			else
+			{
+				hyperlinks.AppendChild(new X.Hyperlink()
+				{
+					Reference = relationshipId,
+					Tooltip = toolTip,
+				});
+			}
 		}
 		internal WorksheetPart GetWorksheetPart()
 		{
@@ -167,19 +188,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			foreach (DataCell dataCell in dataCells)
 			{
+				string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
+				columnIndex++;
 				if (dataCell != null)
 				{
-					string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
-					columnIndex++;
 					X.Cell cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference.Value == currentCellId);
-					X.Hyperlink hyperlink = GetWorkSheetHyperlinks().Elements<X.Hyperlink>().FirstOrDefault(h => h.Reference == cellId);
 					if (cell != null && string.IsNullOrEmpty(dataCell.cellValue))
 					{
 						cell.Remove();
-						if (hyperlink != null)
+						X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks();
+						if (hyperlinks != null)
 						{
-							hyperlink.Remove();
-							// TODO : Remove the relationship
+							X.Hyperlink hyperlink = hyperlinks.Elements<X.Hyperlink>().FirstOrDefault(h => h.Reference == cellId);
+							if (hyperlink != null)
+							{
+								hyperlink.Remove();
+								// TODO : Remove the relationship
+							}
 						}
 					}
 					else
@@ -229,20 +254,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 							}
 							if (dataCell.hyperlinkProperties.hyperlinkPropertyType == HyperlinkPropertyType.TARGET_SHEET)
 							{
-								GetWorkSheetHyperlinks().AppendChild(new X.Hyperlink()
-								{
-									Reference = relationshipId,
-									Location = dataCell.hyperlinkProperties.value,
-									Tooltip = dataCell.hyperlinkProperties.toolTip,
-								});
+								AddHyperlink(relationshipId, dataCell.hyperlinkProperties.toolTip, dataCell.hyperlinkProperties.value);
 							}
 							else
 							{
-								GetWorkSheetHyperlinks().AppendChild(new X.Hyperlink()
-								{
-									Reference = relationshipId,
-									Tooltip = dataCell.hyperlinkProperties.toolTip,
-								});
+								AddHyperlink(relationshipId, dataCell.hyperlinkProperties.toolTip);
 							}
 						}
 					}
@@ -416,6 +432,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					{
 						cellValue = excel.GetShareStringService().GetValue(int.Parse(cellValue));
 					}
+					Console.WriteLine(cellValue ?? "");
 					chartDatas[(int)(row.RowIndex.Value - rowStart)][colIndex - colStart] = new ChartData()
 					{
 						dataType = cellDataType,

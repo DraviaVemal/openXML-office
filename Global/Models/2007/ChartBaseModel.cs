@@ -50,7 +50,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal string fontColor;
+		internal string fontColor = null;
 		/// <summary>
 		///
 		/// </summary>
@@ -247,7 +247,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		internal bool isItalic;
+		internal bool isItalic = false;
 		/// <summary>
 		/// Font Size
 		/// </summary>
@@ -339,7 +339,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		internal bool isItalic;
+		internal bool isItalic = false;
 		/// <summary>
 		/// Font Size
 		/// </summary>
@@ -583,7 +583,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal string fontColor;
+		internal string fontColor = null;
 		/// <summary>
 		///
 		/// </summary>

@@ -69,7 +69,7 @@ namespace OpenXMLOffice.Tests
 			sheet.SetRow(11, 1, CreateDataCellPayload()[2], null);
 			excel.SaveAs(chart.GetWorkBookStream());
 			//3
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			Chart<G.PresentationSetting> areaChart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -82,6 +82,8 @@ namespace OpenXMLOffice.Tests
 					chartDataColumnEnd = 2
 				}
 			});
+			areaChart.UpdatePosition(100, 100);
+			areaChart.UpdateSize(250, 250);
 			//4
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
 			{
@@ -125,6 +127,11 @@ namespace OpenXMLOffice.Tests
 			//7
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
 			{
+				columnChartDataLabel = new()
+				{
+					dataLabelPosition = G.ColumnChartDataLabel.DataLabelPositionValues.INSIDE_END,
+					showValue = true
+				},
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
@@ -169,6 +176,11 @@ namespace OpenXMLOffice.Tests
 			//10
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
+				lineChartDataLabel = new()
+				{
+					dataLabelPosition = G.LineChartDataLabel.DataLabelPositionValues.RIGHT,
+					showValue = true
+				},
 				applicationSpecificSetting = new(),
 				lineChartSeriesSettings = new(){
 					new(){
@@ -239,6 +251,11 @@ namespace OpenXMLOffice.Tests
 			//16
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
 			{
+				pieChartDataLabel = new()
+				{
+					dataLabelPosition = G.PieChartDataLabel.DataLabelPositionValues.SHOW,
+					showValue = true,
+				},
 				applicationSpecificSetting = new(),
 			});
 			//17
@@ -257,6 +274,11 @@ namespace OpenXMLOffice.Tests
 			//18
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
+				scatterChartDataLabel = new()
+				{
+					dataLabelPosition = G.ScatterChartDataLabel.DataLabelPositionValues.BELOW,
+					showValue = true
+				},
 				applicationSpecificSetting = new(),
 			});
 			//19
@@ -355,6 +377,23 @@ namespace OpenXMLOffice.Tests
 			Assert.IsTrue(true);
 		}
 		/// <summary>
+		/// Add Single Chart to the Slide
+		/// </summary>
+		[TestMethod]
+		[TestCategory("Chart")]
+		public void AddColumnLabelChart()
+		{
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				titleOptions = new()
+				{
+					title = "Column Label Chart"
+				}
+			});
+			Assert.IsTrue(true);
+		}
+		/// <summary>
 		/// Add Combo Chart to the Slide
 		/// </summary>
 		[TestMethod]
@@ -409,7 +448,23 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting());
+			using (FileStream fileStream = new("./TestFiles/tom_and_jerry.jpg", FileMode.Open, FileAccess.Read))
+			{
+				Picture pictures = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture(fileStream, new G.PictureSetting());
+				pictures.UpdateSize(300, 300);
+				pictures.UpdatePosition(100, 100);
+			}
 			Assert.IsTrue(true);
+		}
+		/// <summary>
+		/// Remove Slide Test
+		/// </summary>
+		[TestMethod]
+		public void RemoveSlideByIndex()
+		{
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			int totalCount = powerPoint.GetSlideCount();
+			powerPoint.RemoveSlideByIndex(totalCount - 1);
 		}
 		/// <summary>
 		/// Add All type of sctter charts

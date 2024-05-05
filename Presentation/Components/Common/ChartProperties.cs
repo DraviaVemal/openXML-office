@@ -70,23 +70,16 @@ namespace OpenXMLOffice.Presentation_2007
 			return Tuple.Create(chartSetting.applicationSpecificSetting.width, chartSetting.applicationSpecificSetting.height);
 		}
 		/// <summary>
-		/// Save Chart Part
-		/// </summary>
-		internal void Save()
-		{
-			currentSlide.GetSlidePart().Slide.Save();
-		}
-		/// <summary>
 		/// Update Chart Position
 		/// </summary>
-		/// <param name="X">
+		/// <param name="X"> in pix
 		/// </param>
-		/// <param name="Y">
+		/// <param name="Y"> in pix
 		/// </param>
 		public virtual void UpdatePosition(uint X, uint Y)
 		{
-			chartSetting.applicationSpecificSetting.x = X;
-			chartSetting.applicationSpecificSetting.y = Y;
+			chartSetting.applicationSpecificSetting.x = (uint)ConverterUtils.PixelsToEmu((int)X);
+			chartSetting.applicationSpecificSetting.y = (uint)ConverterUtils.PixelsToEmu((int)Y);
 			if (graphicFrame != null)
 			{
 				graphicFrame.Transform = new P.Transform
@@ -105,8 +98,8 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </param>
 		public virtual void UpdateSize(uint Width, uint Height)
 		{
-			chartSetting.applicationSpecificSetting.width = Width;
-			chartSetting.applicationSpecificSetting.height = Height;
+			chartSetting.applicationSpecificSetting.width = (uint)ConverterUtils.PixelsToEmu((int)Width);
+			chartSetting.applicationSpecificSetting.height = (uint)ConverterUtils.PixelsToEmu((int)Height);
 			if (graphicFrame != null)
 			{
 				graphicFrame.Transform = new P.Transform

@@ -551,7 +551,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			if (defaultRunPropertiesModel.fontSize != null)
 			{
-				defaultRunProperties.FontSize = defaultRunPropertiesModel.fontSize;
+				defaultRunProperties.FontSize = (int)defaultRunPropertiesModel.fontSize;
 			}
 			if (defaultRunPropertiesModel.isBold != null)
 			{
@@ -687,7 +687,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			A.RunProperties runProperties = new A.RunProperties()
 			{
-				FontSize = ConverterUtils.FontSizeToFontSize(drawingRunPropertiesModel.fontSize),
+				FontSize = (int)ConverterUtils.FontSizeToFontSize(drawingRunPropertiesModel.fontSize),
 				Bold = drawingRunPropertiesModel.isBold,
 				Italic = drawingRunPropertiesModel.isItalic,
 				Dirty = false,
