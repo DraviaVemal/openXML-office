@@ -48,22 +48,22 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				string relationId = currentWorksheet.GetNextDrawingPartRelationId();
 				switch (excelPictureSetting.hyperlinkProperties.hyperlinkPropertyType)
 				{
-					case HyperlinkPropertyType.EXISTING_FILE:
+					case HyperlinkPropertyTypeValues.EXISTING_FILE:
 						excelPictureSetting.hyperlinkProperties.relationId = relationId;
 						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinkfile";
 						currentWorksheet.GetDrawingsPart().AddHyperlinkRelationship(new Uri(excelPictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
-					case HyperlinkPropertyType.TARGET_SHEET:
+					case HyperlinkPropertyTypeValues.TARGET_SHEET:
 						excelPictureSetting.hyperlinkProperties.relationId = relationId;
 						excelPictureSetting.hyperlinkProperties.action = "ppaction://hlinksldjump";
 						//TODO: Update Target Slide Prop
 						currentWorksheet.GetDrawingsPart().AddHyperlinkRelationship(new Uri(excelPictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
-					case HyperlinkPropertyType.TARGET_SLIDE:
-					case HyperlinkPropertyType.FIRST_SLIDE:
-					case HyperlinkPropertyType.LAST_SLIDE:
-					case HyperlinkPropertyType.NEXT_SLIDE:
-					case HyperlinkPropertyType.PREVIOUS_SLIDE:
+					case HyperlinkPropertyTypeValues.TARGET_SLIDE:
+					case HyperlinkPropertyTypeValues.FIRST_SLIDE:
+					case HyperlinkPropertyTypeValues.LAST_SLIDE:
+					case HyperlinkPropertyTypeValues.NEXT_SLIDE:
+					case HyperlinkPropertyTypeValues.PREVIOUS_SLIDE:
 						throw new ArgumentException("This Option is valid only for Powerpoint Files");
 					default:// Web URL
 						excelPictureSetting.hyperlinkProperties.relationId = relationId;

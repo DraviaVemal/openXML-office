@@ -845,7 +845,7 @@ namespace OpenXMLOffice.Tests
 					{
 						data[row][col].hyperlinkProperties = new()
 						{
-							hyperlinkPropertyType = HyperlinkPropertyType.WEB_URL,
+							hyperlinkPropertyType = HyperlinkPropertyTypeValues.WEB_URL,
 							value = "https://openxml-office.draviavemal.com/",
 						};
 					}

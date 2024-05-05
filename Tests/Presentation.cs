@@ -447,6 +447,34 @@ namespace OpenXMLOffice.Tests
 					value = "https://openxml-office.draviavemal.com/"
 				}
 			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
+			{
+				hyperlinkProperties = new G.HyperlinkProperties()
+				{
+					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.FIRST_SLIDE
+				}
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
+			{
+				hyperlinkProperties = new G.HyperlinkProperties()
+				{
+					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.PREVIOUS_SLIDE
+				}
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
+			{
+				hyperlinkProperties = new G.HyperlinkProperties()
+				{
+					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.NEXT_SLIDE
+				}
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
+			{
+				hyperlinkProperties = new G.HyperlinkProperties()
+				{
+					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.LAST_SLIDE
+				}
+			});
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting());
 			using (FileStream fileStream = new("./TestFiles/tom_and_jerry.jpg", FileMode.Open, FileAccess.Read))
 			{
@@ -580,7 +608,7 @@ namespace OpenXMLOffice.Tests
 						isBold = true,
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
-							hyperlinkPropertyType = G.HyperlinkPropertyType.PREVIOUS_SLIDE,
+							hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.PREVIOUS_SLIDE,
 						}
 					}
 				}.ToArray()
@@ -599,7 +627,7 @@ namespace OpenXMLOffice.Tests
 						isBold = true,
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
-							hyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
+							hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.WEB_URL,
 							value="https://openxml-office.draviavemal.com/"
 						}
 					}
@@ -620,8 +648,115 @@ namespace OpenXMLOffice.Tests
 						isBold = true,
 						textColor = "AAAAAA",
 						hyperlinkProperties = new(){
-							hyperlinkPropertyType = G.HyperlinkPropertyType.WEB_URL,
+							hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.WEB_URL,
 							value="https://openxml-office.draviavemal.com/"
+						}
+					}
+				}.ToArray()
+			}));
+			powerPoint1.MoveSlideByIndex(4, 0);
+			powerPoint1.SaveAs(string.Format("{1}/edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+			Assert.IsTrue(true);
+		}
+		/// <summary>
+		/// Open and Edit Existing Presentation
+		/// </summary>
+		[TestMethod]
+		public void OpenExistingPresentationShapeEdit()
+		{
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
+			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			Slide slide = powerPoint1.GetSlideByIndex(0);
+			List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
+			List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
+			List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
+			shapes1[0].ReplaceTable(slide.AddTable(CreateTableRowPayload(10), new TableSetting()
+			{
+				name = "New Table",
+				widthType = TableSetting.WidthOptionValues.PERCENTAGE,
+				tableColumnWidth = new() { 80, 20 },
+			}));
+			shapes2[0].ReplacePicture(slide.AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
+			{
+				hyperlinkProperties = new G.HyperlinkProperties()
+				{
+					value = "https://openxml-office.draviavemal.com/"
+				}
+			}));
+			shapes3[0].UpdateShape(new()
+			{
+				text = "Direct Shape Content Update"
+			});
+			powerPoint1.MoveSlideByIndex(4, 0);
+			powerPoint1.SaveAs(string.Format("{1}/edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+			Assert.IsTrue(true);
+		}
+		/// <summary>
+		/// Open and Edit Existing Presentation
+		/// </summary>
+		[TestMethod]
+		public void OpenExistingPresentationShape()
+		{
+			X.DataCell[][] data = new X.DataCell[9][];
+			data[0] = new X.DataCell[2];
+			data[0][1] = new()
+			{
+				cellValue = "Series 1",
+				dataType = X.CellDataType.STRING
+			};
+			for (int i = 1; i < 9; i++)
+			{
+				data[i] = new X.DataCell[2];
+				data[i][0] = new X.DataCell()
+				{
+					cellValue = $"Category {i}",
+					dataType = X.CellDataType.STRING
+				};
+				int val = (i % 2) == 0 ? -i : i;
+				data[i][1] = new X.DataCell()
+				{
+					cellValue = $"{val}",
+					dataType = X.CellDataType.NUMBER
+				};
+			}
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
+			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			Slide slide = powerPoint1.GetSlideByIndex(0);
+			List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
+			List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
+			List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
+			shapes1[0].ReplaceChart(slide.AddChart(data, new WaterfallChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+			}));
+			shapes2[0].RemoveShape();
+			shapes3[0].ReplaceTextBox(new TextBox(slide, new()
+			{
+				textBlocks = new List<G.TextBlock>(){
+					new(){
+						text = "First Slide ",
+						hyperlinkProperties = new(){
+							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.FIRST_SLIDE
+						}
+					},
+					new(){
+						text = "Prev Slide ",
+						hyperlinkProperties = new(){
+							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.PREVIOUS_SLIDE
+						}
+					},
+					new(){
+						text = "Next Slide ",
+						hyperlinkProperties = new(){
+							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.NEXT_SLIDE
+						}
+					},
+					new(){
+						text = "Last Slide ",
+						hyperlinkProperties = new(){
+							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.LAST_SLIDE
 						}
 					}
 				}.ToArray()

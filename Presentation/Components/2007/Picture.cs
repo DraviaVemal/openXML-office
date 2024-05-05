@@ -16,15 +16,35 @@ namespace OpenXMLOffice.Presentation_2007
 		private readonly Slide currentSlide;
 		private readonly P.Picture openXMLPicture;
 		private readonly PictureSetting pictureSetting;
+
+		/// <summary>
+		/// Create Picture Object with provided settings
+		/// </summary>
+		public Picture(string filePath, Slide slide, PictureSetting pictureSetting)
+		{
+			currentSlide = slide;
+			this.pictureSetting = pictureSetting;
+			openXMLPicture = new P.Picture();
+			using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+			{
+				Initialize(fileStream, slide, pictureSetting);
+			}
+		}
+
 		/// <summary>
 		/// Create Picture Object with provided settings
 		/// </summary>
 		public Picture(Stream stream, Slide slide, PictureSetting pictureSetting)
 		{
 			currentSlide = slide;
-			string EmbedId = currentSlide.GetNextSlideRelationId();
 			this.pictureSetting = pictureSetting;
 			openXMLPicture = new P.Picture();
+			Initialize(stream, slide, pictureSetting);
+		}
+
+		private void Initialize(Stream stream, Slide slide, PictureSetting pictureSetting)
+		{
+			string EmbedId = currentSlide.GetNextSlideRelationId();
 			ImagePart ImagePart;
 			if (pictureSetting.imageType == ImageType.PNG)
 			{
@@ -48,29 +68,29 @@ namespace OpenXMLOffice.Presentation_2007
 				string relationId = slide.GetNextSlideRelationId();
 				switch (pictureSetting.hyperlinkProperties.hyperlinkPropertyType)
 				{
-					case HyperlinkPropertyType.EXISTING_FILE:
+					case HyperlinkPropertyTypeValues.EXISTING_FILE:
 						pictureSetting.hyperlinkProperties.relationId = relationId;
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinkfile";
 						slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
-					case HyperlinkPropertyType.TARGET_SLIDE:
+					case HyperlinkPropertyTypeValues.TARGET_SLIDE:
 						pictureSetting.hyperlinkProperties.relationId = relationId;
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinksldjump";
 						//TODO: Update Target Slide Prop
 						slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
-					case HyperlinkPropertyType.TARGET_SHEET:
+					case HyperlinkPropertyTypeValues.TARGET_SHEET:
 						throw new ArgumentException("This Option is valid only for Excel Files");
-					case HyperlinkPropertyType.FIRST_SLIDE:
+					case HyperlinkPropertyTypeValues.FIRST_SLIDE:
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=firstslide";
 						break;
-					case HyperlinkPropertyType.LAST_SLIDE:
+					case HyperlinkPropertyTypeValues.LAST_SLIDE:
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=lastslide";
 						break;
-					case HyperlinkPropertyType.NEXT_SLIDE:
+					case HyperlinkPropertyTypeValues.NEXT_SLIDE:
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=nextslide";
 						break;
-					case HyperlinkPropertyType.PREVIOUS_SLIDE:
+					case HyperlinkPropertyTypeValues.PREVIOUS_SLIDE:
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=previousslide";
 						break;
 					default:// Web URL
@@ -83,16 +103,7 @@ namespace OpenXMLOffice.Presentation_2007
 			slide.GetSlide().CommonSlideData.ShapeTree.Append(GetPicture());
 			ImagePart.FeedData(stream);
 		}
-		/// <summary>
-		/// Create Picture Object with provided settings
-		/// </summary>
-		public Picture(string filePath, Slide slide, PictureSetting pictureSetting)
-		{
-			using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-			{
-				new Picture(fileStream, slide, pictureSetting);
-			}
-		}
+
 		/// <summary>
 		/// X,Y
 		/// </summary>

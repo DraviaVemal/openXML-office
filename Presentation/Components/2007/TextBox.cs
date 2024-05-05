@@ -104,29 +104,29 @@ namespace OpenXMLOffice.Presentation_2007
 					string relationId = slide.GetNextSlideRelationId();
 					switch (textBlock.hyperlinkProperties.hyperlinkPropertyType)
 					{
-						case HyperlinkPropertyType.EXISTING_FILE:
+						case HyperlinkPropertyTypeValues.EXISTING_FILE:
 							textBlock.hyperlinkProperties.relationId = relationId;
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkfile";
 							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
-						case HyperlinkPropertyType.TARGET_SLIDE:
+						case HyperlinkPropertyTypeValues.TARGET_SLIDE:
 							textBlock.hyperlinkProperties.relationId = relationId;
 							textBlock.hyperlinkProperties.action = "ppaction://hlinksldjump";
 							//TODO: Update Target Slide Prop
 							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
-						case HyperlinkPropertyType.TARGET_SHEET:
+						case HyperlinkPropertyTypeValues.TARGET_SHEET:
 							throw new ArgumentException("This Option is valid only for Excel Files");
-						case HyperlinkPropertyType.FIRST_SLIDE:
+						case HyperlinkPropertyTypeValues.FIRST_SLIDE:
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=firstslide";
 							break;
-						case HyperlinkPropertyType.LAST_SLIDE:
+						case HyperlinkPropertyTypeValues.LAST_SLIDE:
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=lastslide";
 							break;
-						case HyperlinkPropertyType.NEXT_SLIDE:
+						case HyperlinkPropertyTypeValues.NEXT_SLIDE:
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=nextslide";
 							break;
-						case HyperlinkPropertyType.PREVIOUS_SLIDE:
+						case HyperlinkPropertyTypeValues.PREVIOUS_SLIDE:
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkshowjump?jump=previousslide";
 							break;
 						default:// Web URL

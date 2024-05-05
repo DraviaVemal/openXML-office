@@ -234,25 +234,25 @@ namespace OpenXMLOffice.Spreadsheet_2007
 							string relationshipId = GetNextSheetPartRelationId();
 							switch (dataCell.hyperlinkProperties.hyperlinkPropertyType)
 							{
-								case HyperlinkPropertyType.EXISTING_FILE:
+								case HyperlinkPropertyTypeValues.EXISTING_FILE:
 									dataCell.hyperlinkProperties.relationId = relationshipId;
 									dataCell.hyperlinkProperties.action = "ppaction://hlinkfile";
 									GetWorksheetPart().AddHyperlinkRelationship(new Uri(dataCell.hyperlinkProperties.value), true, relationshipId);
 									break;
-								case HyperlinkPropertyType.TARGET_SHEET: // Target use location Do nothing in relation
+								case HyperlinkPropertyTypeValues.TARGET_SHEET: // Target use location Do nothing in relation
 									break;
-								case HyperlinkPropertyType.TARGET_SLIDE:
-								case HyperlinkPropertyType.FIRST_SLIDE:
-								case HyperlinkPropertyType.LAST_SLIDE:
-								case HyperlinkPropertyType.NEXT_SLIDE:
-								case HyperlinkPropertyType.PREVIOUS_SLIDE:
+								case HyperlinkPropertyTypeValues.TARGET_SLIDE:
+								case HyperlinkPropertyTypeValues.FIRST_SLIDE:
+								case HyperlinkPropertyTypeValues.LAST_SLIDE:
+								case HyperlinkPropertyTypeValues.NEXT_SLIDE:
+								case HyperlinkPropertyTypeValues.PREVIOUS_SLIDE:
 									throw new ArgumentException("This Option is valid only for Powerpoint Files");
 								default:// Web URL
 									dataCell.hyperlinkProperties.relationId = relationshipId;
 									GetWorksheetPart().AddHyperlinkRelationship(new Uri(dataCell.hyperlinkProperties.value), true, relationshipId);
 									break;
 							}
-							if (dataCell.hyperlinkProperties.hyperlinkPropertyType == HyperlinkPropertyType.TARGET_SHEET)
+							if (dataCell.hyperlinkProperties.hyperlinkPropertyType == HyperlinkPropertyTypeValues.TARGET_SHEET)
 							{
 								AddHyperlink(relationshipId, dataCell.hyperlinkProperties.toolTip, dataCell.hyperlinkProperties.value);
 							}

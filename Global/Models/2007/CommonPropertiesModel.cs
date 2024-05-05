@@ -603,7 +603,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public enum HyperlinkPropertyType
+	public enum HyperlinkPropertyTypeValues
 	{
 		/// <summary>
 		///
@@ -646,7 +646,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Hyperlink option type additional address detail can be set using value
 		/// </summary>
-		public HyperlinkPropertyType hyperlinkPropertyType = HyperlinkPropertyType.WEB_URL;
+		public HyperlinkPropertyTypeValues hyperlinkPropertyType = HyperlinkPropertyTypeValues.WEB_URL;
 		/// <summary>
 		///	Web Url or file path or slide ID use based on "HyperlinkPropertyType"
 		/// </summary>

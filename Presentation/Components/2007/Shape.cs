@@ -21,6 +21,7 @@ namespace OpenXMLOffice.Presentation_2007
 				openXMLShape = shape;
 			}
 		}
+
 		/// <summary>
 		/// Remove Found Shape
 		/// </summary>
@@ -28,6 +29,7 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			openXMLShape.Remove();
 		}
+
 		/// <summary>
 		/// Replace Chart for the source Shape
 		/// </summary>
@@ -51,6 +53,7 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 			return chart;
 		}
+
 		/// <summary>
 		/// Replace 2016 Support Chart for the source Shape
 		/// </summary>
@@ -74,6 +77,7 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 			return chart;
 		}
+
 		/// <summary>
 		/// Replace Picture for the source Shape
 		/// </summary>
@@ -97,6 +101,7 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 			return picture;
 		}
+
 		/// <summary>
 		/// Replace Table for the source Shape
 		/// </summary>
@@ -120,6 +125,7 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 			return table;
 		}
+
 		/// <summary>
 		/// Replace Textbox for the source Shape
 		/// </summary>
@@ -148,10 +154,7 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 			return textBox;
 		}
-		internal P.Shape GetShape()
-		{
-			return openXMLShape;
-		}
+
 		/// <summary>
 		/// Update Shape Text without changing any other properties
 		/// </summary>
