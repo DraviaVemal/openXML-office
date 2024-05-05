@@ -361,7 +361,7 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
-				throw new ArgumentException("Value Axis Data Should Be numaric.");
+				LogUtils.ShowWarning("Not Every Values is numeric some assumptions are made in chart construction");
 			}
 			return new C.Values(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -375,7 +375,7 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
-				throw new ArgumentException("X Axis Data Should Be numaric.");
+				LogUtils.ShowWarning("Not Every Values is numeric some assumptions are made in chart construction");
 			}
 			return new C.XValues(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -389,7 +389,7 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
-				throw new ArgumentException("Y Axis Data Should be numaric.");
+				LogUtils.ShowWarning("Not Every Values is numeric some assumptions are made in chart construction");
 			}
 			return new C.YValues(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -426,7 +426,14 @@ namespace OpenXMLOffice.Global_2007
 						Index = (UInt32Value)(uint)count,
 						FormatCode = Cell.numberFormat,
 					};
-					numericPoint.AppendChild(new C.NumericValue(Cell.value ?? ""));
+					if (Cell.dataType == DataType.NUMBER)
+					{
+						numericPoint.AppendChild(new C.NumericValue(Cell.value ?? "0"));
+					}
+					else
+					{
+						numericPoint.AppendChild(new C.NumericValue("0"));
+					}
 					numberingCache.AppendChild(numericPoint);
 					++count;
 				}
