@@ -322,6 +322,12 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.BUBBLE
 			});
+			//24
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				scatterChartType = G.ScatterChartTypes.BUBBLE
+			});
 			Assert.IsTrue(powerPoint.GetSlideCount() > 0);
 		}
 		/// <summary>

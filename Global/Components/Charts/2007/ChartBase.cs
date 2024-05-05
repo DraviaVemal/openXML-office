@@ -59,7 +59,7 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine(string.Format("Object Details Value : {0} is not numeric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
-				throw new ArgumentException("Bubble Size Data Should Be numaric.");
+				LogUtils.ShowWarning("Bubble Size Data Prefered in numaric.");
 			}
 			return new C.BubbleSize(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -241,7 +241,7 @@ namespace OpenXMLOffice.Global_2007
 					yAxisFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberY),
 					yAxisCells = yAxisCells.ToArray(),
 				};
-				if (chartDataSetting.is3Ddata)
+				if (chartDataSetting.is3Ddata && seriesColumns.Count > i + 1)
 				{
 					i++;
 					column = seriesColumns[i];

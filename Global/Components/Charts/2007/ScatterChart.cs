@@ -36,7 +36,7 @@ namespace OpenXMLOffice.Global_2007
 				scatterChartSetting.chartDataSetting.is3Ddata = true;
 				if ((dataCols.Length - 1) % 2 != 0)
 				{
-					throw new ArgumentOutOfRangeException("Required 3D Data Size is not met.");
+					LogUtils.ShowWarning("Not All Required Data Standards met for 3D chart type.");
 				}
 			}
 			C.PlotArea plotArea = new C.PlotArea();
