@@ -270,7 +270,6 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public class ChartDataSetting
 	{
-		internal Dictionary<uint, uint> valueFromColumn = new Dictionary<uint, uint>();
 		/// <summary>
 		/// Set 0 To Use Till End
 		/// </summary>

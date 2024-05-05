@@ -116,7 +116,23 @@ namespace OpenXMLOffice.Tests
 					isItalic = true,
 					title = "Bar Chart"
 				},
-				barChartType = G.BarChartTypes.STACKED
+				barChartType = G.BarChartTypes.STACKED,
+				barChartDataLabel = new()
+				{
+					dataLabelPosition = G.BarChartDataLabel.DataLabelPositionValues.INSIDE_END,
+					showValue = true
+				},
+				chartDataSetting = new()
+				{
+					advancedDataLabel = new Global_2013.AdvancedDataLabel()
+					{
+						showValueFromColumn = true,
+						valueFromColumn = new()
+						{
+							[3] = 1
+						}
+					}
+				}
 			});
 			//6
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
@@ -173,7 +189,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				columnChartType = G.ColumnChartTypes.PERCENT_STACKED
 			});
-			//10
+			// 10
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				lineChartDataLabel = new()
@@ -274,11 +290,6 @@ namespace OpenXMLOffice.Tests
 			//18
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
-				scatterChartDataLabel = new()
-				{
-					dataLabelPosition = G.ScatterChartDataLabel.DataLabelPositionValues.BELOW,
-					showValue = true
-				},
 				applicationSpecificSetting = new(),
 			});
 			//19
