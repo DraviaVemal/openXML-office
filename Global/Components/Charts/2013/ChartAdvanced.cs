@@ -6,6 +6,7 @@ using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using C15 = DocumentFormat.OpenXml.Office2013.Drawing.Chart;
+
 namespace OpenXMLOffice.Global_2013
 {
 	/// <summary>

@@ -4,6 +4,40 @@ using System.Collections.Generic;
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
+	/// 
+	/// </summary>
+	public enum TrendLineTypes
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		EXPONENTIAL,
+		/// <summary>
+		/// 
+		/// </summary>
+		LINEAR,
+		/// <summary>
+		/// 
+		/// </summary>
+		LOGARITHMIC,
+		/// <summary>
+		/// 
+		/// </summary>
+		POLYNOMIAL,
+		/// <summary>
+		/// 
+		/// </summary>
+		POWER,
+		/// <summary>
+		/// 
+		/// </summary>
+		MOVING_AVERAGE,
+		/// <summary>
+		/// 
+		/// </summary>
+		NONE
+	}
+	/// <summary>
 	/// Represents the types of line charts.
 	/// </summary>
 	public enum LineChartTypes
@@ -132,10 +166,61 @@ namespace OpenXMLOffice.Global_2007
 		// public LineChartLineFormat? lineChartLineFormat;
 	}
 	/// <summary>
+	/// 
+	/// </summary>
+	public class TrendLineSettings
+	{
+		/// <summary>
+		/// Set type of treand line.
+		/// </summary>
+		public TrendLineTypes trendLineType = TrendLineTypes.NONE;
+		/// <summary>
+		/// Use for Order value if 'Polynomial' type else Period for 'Moving Average'
+		/// Default 2
+		/// </summary>
+		public int secondaryValue = 2;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string trendLineName = null;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool setIntercept = false;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showEquation = false;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showRsquareValue = false;
+		/// <summary>
+		/// Default 0.0
+		/// </summary>
+		public float forcastForward = 0.0F;
+		/// <summary>
+		/// Default 0.0
+		/// </summary>
+		public float forcastBackward = 0.0F;
+		/// <summary>
+		/// 
+		/// </summary>
+		public float interceptValue = 0.0F;
+	}
+	/// <summary>
 	/// Represents the series settings for a line chart.
 	/// </summary>
 	public class LineChartSeriesSetting : ChartSeriesSetting
 	{
+		/// <summary>
+		/// Threadline setting for particulart series
+		/// </summary>
+		public List<TrendLineSettings> trendLines = new List<TrendLineSettings>();
+		/// <summary>
+		/// Line Marker Options
+		/// </summary>
+		public MarkerShapeTypes markerShapeType = MarkerShapeTypes.NONE;
 		/// <summary>
 		/// Format Applied at series level
 		/// </summary>

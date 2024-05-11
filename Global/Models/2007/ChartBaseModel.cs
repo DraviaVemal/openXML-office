@@ -2,7 +2,8 @@
 
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OpenXMLOffice.Global_2013;
-using System.Collections.Generic;
+
+
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
@@ -26,6 +27,60 @@ namespace OpenXMLOffice.Global_2007
 		/// Right
 		/// </summary>
 		RIGHT
+	}
+	/// <summary>
+	///
+	/// </summary>
+	public enum MarkerShapeTypes
+	{
+		/// <summary>
+		///
+		/// </summary>
+		NONE,
+		/// <summary>
+		///
+		/// </summary>
+		AUTO,
+		/// <summary>
+		///
+		/// </summary>
+		CIRCLE,
+		/// <summary>
+		///
+		/// </summary>
+		DASH,
+		/// <summary>
+		///
+		/// </summary>
+		DIAMOND,
+		/// <summary>
+		///
+		/// </summary>
+		DOT,
+		/// <summary>
+		///
+		/// </summary>
+		PICTURE,
+		/// <summary>
+		///
+		/// </summary>
+		PLUSE,
+		/// <summary>
+		///
+		/// </summary>
+		SQUARE,
+		/// <summary>
+		///
+		/// </summary>
+		STAR,
+		/// <summary>
+		///
+		/// </summary>
+		TRIANGLE,
+		/// <summary>
+		///
+		/// </summary>
+		X
 	}
 	/// <summary>
 	/// Represents the settings for a category axis in a chart.
@@ -628,6 +683,69 @@ namespace OpenXMLOffice.Global_2007
 		public float height = 1;
 	}
 	/// <summary>
+	/// 
+	/// </summary>
+	public class TrendLineModel
+	{
+		/// <summary>
+		/// Use for Order value if 'Polynomial' type else Period for 'Moving Average'
+		/// Default 2
+		/// </summary>
+		public int secondaryValue = 2;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool setIntercept = false;
+		/// <summary>
+		/// 
+		/// </summary>
+		public float interceptValue = 0.0F;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showEquation = false;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showRsquareValue = false;
+		/// <summary>
+		/// Default 0.0
+		/// </summary>
+		public float forcastForward = 0.0F;
+		/// <summary>
+		/// Default 0.0
+		/// </summary>
+		public float forcastBackward = 0.0F;
+		/// <summary>
+		/// This is to set custom Trendline if null it will assume automatic 
+		/// </summary>
+		public string trendLineName = null;
+		/// <summary>
+		/// 
+		/// </summary>
+		public TrendLineTypes trendLineType = TrendLineTypes.NONE;
+		internal static C.TrendlineValues GetTrendlineValues(TrendLineTypes trendLineType)
+		{
+			switch (trendLineType)
+			{
+				case TrendLineTypes.EXPONENTIAL:
+					return C.TrendlineValues.Exponential;
+				case TrendLineTypes.LINEAR:
+					return C.TrendlineValues.Linear;
+				case TrendLineTypes.LOGARITHMIC:
+					return C.TrendlineValues.Logarithmic;
+				case TrendLineTypes.POLYNOMIAL:
+					return C.TrendlineValues.Polynomial;
+				case TrendLineTypes.POWER:
+					return C.TrendlineValues.Power;
+				case TrendLineTypes.MOVING_AVERAGE:
+					return C.TrendlineValues.MovingAverage;
+				default:
+					return C.TrendlineValues.MovingAverage;
+			}
+		}
+	}
+	/// <summary>
 	///
 	/// </summary>
 	public class MarkerModel
@@ -639,90 +757,36 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public MarkerShapeValues markerShapeValues = MarkerShapeValues.NONE;
+		public MarkerShapeTypes markerShapeType = MarkerShapeTypes.NONE;
 		/// <summary>
 		///
 		/// </summary>
 		public ShapePropertiesModel shapeProperties = new ShapePropertiesModel();
-		/// <summary>
-		///
-		/// </summary>
-		public enum MarkerShapeValues
+		internal static C.MarkerStyleValues GetMarkerStyleValues(MarkerShapeTypes markerShapeType)
 		{
-			/// <summary>
-			///
-			/// </summary>
-			NONE,
-			/// <summary>
-			///
-			/// </summary>
-			AUTO,
-			/// <summary>
-			///
-			/// </summary>
-			CIRCLE,
-			/// <summary>
-			///
-			/// </summary>
-			DASH,
-			/// <summary>
-			///
-			/// </summary>
-			DIAMOND,
-			/// <summary>
-			///
-			/// </summary>
-			DOT,
-			/// <summary>
-			///
-			/// </summary>
-			PICTURE,
-			/// <summary>
-			///
-			/// </summary>
-			PLUSE,
-			/// <summary>
-			///
-			/// </summary>
-			SQUARE,
-			/// <summary>
-			///
-			/// </summary>
-			STAR,
-			/// <summary>
-			///
-			/// </summary>
-			TRIANGLE,
-			/// <summary>
-			///
-			/// </summary>
-			X
-		}
-		internal static C.MarkerStyleValues GetMarkerStyleValues(MarkerShapeValues markerShapeValues)
-		{
-			switch (markerShapeValues)
+			switch (markerShapeType)
 			{
-				case MarkerShapeValues.AUTO:
+				case MarkerShapeTypes.AUTO:
 					return C.MarkerStyleValues.Auto;
-				case MarkerShapeValues.CIRCLE:
+				case MarkerShapeTypes.CIRCLE:
 					return C.MarkerStyleValues.Circle;
-				case MarkerShapeValues.DASH:
+				case MarkerShapeTypes.DASH:
 					return C.MarkerStyleValues.Dash;
-				case MarkerShapeValues.DIAMOND:
+				case MarkerShapeTypes.DIAMOND:
 					return C.MarkerStyleValues.Diamond;
-				case MarkerShapeValues.DOT:
+				case MarkerShapeTypes.DOT:
 					return C.MarkerStyleValues.Dot;
-				case MarkerShapeValues.PICTURE:
+				case MarkerShapeTypes.PICTURE:
 					return C.MarkerStyleValues.Picture;
-				case MarkerShapeValues.PLUSE:
+				case MarkerShapeTypes.PLUSE:
 					return C.MarkerStyleValues.Plus;
-				case MarkerShapeValues.SQUARE:
+				case MarkerShapeTypes.SQUARE:
 					return C.MarkerStyleValues.Square;
-				case MarkerShapeValues.STAR:
+				case MarkerShapeTypes.STAR:
 					return C.MarkerStyleValues.Star;
-				case MarkerShapeValues.TRIANGLE:
+				case MarkerShapeTypes.TRIANGLE:
 					return C.MarkerStyleValues.Triangle;
-				case MarkerShapeValues.X:
+				case MarkerShapeTypes.X:
 					return C.MarkerStyleValues.X;
 				default:
 					return C.MarkerStyleValues.None;

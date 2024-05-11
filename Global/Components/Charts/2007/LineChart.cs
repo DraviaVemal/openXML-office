@@ -113,11 +113,11 @@ namespace OpenXMLOffice.Global_2007
 		{
 			MarkerModel marketModel = new MarkerModel()
 			{
-				markerShapeValues = MarkerModel.MarkerShapeValues.NONE,
+				markerShapeType = MarkerShapeTypes.NONE,
 			};
 			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartType))
 			{
-				marketModel.markerShapeValues = MarkerModel.MarkerShapeValues.CIRCLE;
+				marketModel.markerShapeType = MarkerShapeTypes.CIRCLE;
 				marketModel.shapeProperties = new ShapePropertiesModel()
 				{
 					solidFill = new SolidFillModel()
@@ -140,6 +140,10 @@ namespace OpenXMLOffice.Global_2007
 				};
 			}
 			LineChartSeriesSetting lineChartSeriesSetting = lineChartSetting.lineChartSeriesSettings.ElementAtOrDefault(seriesIndex);
+			if (lineChartSeriesSetting != null)
+			{
+				marketModel.markerShapeType = lineChartSeriesSetting.markerShapeType != MarkerShapeTypes.NONE ? lineChartSeriesSetting.markerShapeType : marketModel.markerShapeType;
+			}
 			C.DataLabels dataLabels = null;
 			if (seriesIndex < lineChartSetting.lineChartSeriesSettings.Count)
 			{
@@ -191,6 +195,25 @@ namespace OpenXMLOffice.Global_2007
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			series.Append(CreateMarker(marketModel));
+			if (lineChartSeriesSetting != null)
+			{
+				lineChartSeriesSetting.trendLines.ForEach(trendLine =>
+				{
+					TrendLineModel trendLineModel = new TrendLineModel
+					{
+						secondaryValue = trendLine.secondaryValue,
+						trendLineType = trendLine.trendLineType,
+						trendLineName = trendLine.trendLineName,
+						forcastBackward = trendLine.forcastBackward,
+						forcastForward = trendLine.forcastForward,
+						setIntercept = trendLine.setIntercept,
+						showEquation = trendLine.showEquation,
+						showRsquareValue = trendLine.showRsquareValue,
+						interceptValue = trendLine.interceptValue
+					};
+					series.Append(CreateTrendLine(trendLineModel));
+				});
+			}
 			if (dataLabels != null)
 			{
 				series.Append(dataLabels);

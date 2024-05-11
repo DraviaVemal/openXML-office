@@ -382,13 +382,39 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void AddDevChart()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, true), new G.LineChartSetting<G.PresentationSetting>()
 			{
-				scatterChartType = G.ScatterChartTypes.BUBBLE,
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
 					title = "Dev Chart"
+				},
+				lineChartSeriesSettings = new(){
+					new(){
+						markerShapeType=G.MarkerShapeTypes.SQUARE,
+						trendLines = new(){
+							new(){
+								trendLineType = G.TrendLineTypes.POLYNOMIAL,
+								secondaryValue =2,
+								interceptValue = 5,
+								trendLineName = "Dravia",
+								forcastForward=1,
+								setIntercept=true,
+								showEquation=true,
+								showRsquareValue=true
+							},
+							new(){
+								trendLineType = G.TrendLineTypes.EXPONENTIAL,
+								secondaryValue =2,
+								interceptValue = 5,
+								trendLineName = "vemal",
+								forcastForward=1,
+								setIntercept=true,
+								showEquation=true,
+								showRsquareValue=true
+							}
+						}
+					}
 				}
 			});
 			Assert.IsTrue(true);

@@ -153,6 +153,59 @@ namespace OpenXMLOffice.Global_2007
 			return CategoryAxis;
 		}
 		/// <summary>
+		/// 
+		/// </summary>
+		internal C.TrendlineLabel CreateTrendLineLabel()
+		{
+			C.TrendlineLabel trendlineLabel = new C.TrendlineLabel
+			{
+				NumberingFormat = new C.NumberingFormat() { FormatCode = "General", SourceLinked = false },
+			};
+			trendlineLabel.Append(CreateChartShapeProperties(new ShapePropertiesModel()));
+			trendlineLabel.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+			{
+				drawingBodyProperties = new DrawingBodyPropertiesModel()
+				{
+					rotation = 0,
+					useParagraphSpacing = true,
+					verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
+					vertical = TextVerticalAlignmentValues.HORIZONTAL,
+					wrap = TextWrappingValues.SQUARE,
+					anchor = TextAnchoringValues.CENTER,
+					anchorCenter = true,
+				},
+				drawingParagraph = new DrawingParagraphModel()
+				{
+					paragraphPropertiesModel = new ParagraphPropertiesModel()
+					{
+						defaultRunProperties = new DefaultRunPropertiesModel()
+						{
+							fontSize = 1197,
+							isBold = false,
+							isItalic = false,
+							underline = UnderLineValues.NONE,
+							strike = StrikeValues.NO_STRIKE,
+							kerning = 1200,
+							baseline = 0,
+							solidFill = new SolidFillModel()
+							{
+								schemeColorModel = new SchemeColorModel()
+								{
+									themeColorValues = ThemeColorValues.TEXT_1,
+									luminanceModulation = 65000,
+									luminanceOffset = 35000,
+								},
+							},
+							complexScriptFont = "+mn-cs",
+							eastAsianFont = "+mn-ea",
+							latinFont = "+mn-lt",
+						}
+					},
+				}
+			}));
+			return trendlineLabel;
+		}
+		/// <summary>
 		/// Create Chart Shape Properties for the chart
 		/// </summary>
 		internal static C.Layout CreateLayout(LayoutModel layoutModel = null)
@@ -770,18 +823,63 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal C.Marker CreateMarker(MarkerModel marketModel)
+		internal static C.Marker CreateMarker(MarkerModel marketModel)
 		{
 			C.Marker marker = new C.Marker()
 			{
-				Symbol = new C.Symbol() { Val = MarkerModel.GetMarkerStyleValues(marketModel.markerShapeValues) },
+				Symbol = new C.Symbol() { Val = MarkerModel.GetMarkerStyleValues(marketModel.markerShapeType) },
 			};
-			if (marketModel.markerShapeValues != MarkerModel.MarkerShapeValues.NONE)
+			if (marketModel.markerShapeType != MarkerShapeTypes.NONE)
 			{
 				marker.Size = new C.Size() { Val = (ByteValue)marketModel.size };
 				marker.Append(CreateChartShapeProperties(marketModel.shapeProperties));
 			}
 			return marker;
+		}
+		internal C.Trendline CreateTrendLine(TrendLineModel trendLineModel)
+		{
+			C.Trendline trendLine = new C.Trendline()
+			{
+				TrendlineName = new C.TrendlineName(trendLineModel.trendLineName),
+				TrendlineType = new C.TrendlineType() { Val = TrendLineModel.GetTrendlineValues(trendLineModel.trendLineType) },
+				Forward = new C.Forward() { Val = trendLineModel.forcastForward },
+				DisplayEquation = new C.DisplayEquation() { Val = trendLineModel.showEquation },
+				DisplayRSquaredValue = new C.DisplayRSquaredValue() { Val = trendLineModel.showRsquareValue }
+			};
+			trendLine.Append(CreateChartShapeProperties(new ShapePropertiesModel()
+			{
+				outline = new OutlineModel()
+				{
+					width = 19050,
+					outlineCapTypeValues = OutlineCapTypeValues.ROUND,
+					solidFill = new SolidFillModel()
+					{
+						schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.ACCENT_1
+						}
+					},
+					dashType = DrawingPresetLineDashValues.SYSTEM_DOT,
+				},
+				effectList = new EffectListModel()
+			}));
+			if (trendLineModel.trendLineType == TrendLineTypes.POLYNOMIAL)
+			{
+				trendLine.PolynomialOrder = new C.PolynomialOrder() { Val = (ByteValue)trendLineModel.secondaryValue };
+			}
+			if (trendLineModel.trendLineType == TrendLineTypes.MOVING_AVERAGE)
+			{
+				trendLine.Period = new C.Period { Val = (UInt32Value)(uint)trendLineModel.secondaryValue };
+			}
+			if (trendLineModel.setIntercept)
+			{
+				trendLine.Intercept = new C.Intercept() { Val = trendLineModel.interceptValue };
+			}
+			if (trendLineModel.setIntercept || trendLineModel.showEquation || trendLineModel.showRsquareValue)
+			{
+				trendLine.Append(CreateTrendLineLabel());
+			}
+			return trendLine;
 		}
 	}
 }

@@ -170,7 +170,7 @@ namespace OpenXMLOffice.Global_2007
 			MarkerModel markerModel = new MarkerModel();
 			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{
-				markerModel.markerShapeValues = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? MarkerModel.MarkerShapeValues.AUTO : MarkerModel.MarkerShapeValues.CIRCLE;
+				markerModel.markerShapeType = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? MarkerShapeTypes.AUTO : MarkerShapeTypes.CIRCLE;
 				markerModel.shapeProperties = new ShapePropertiesModel()
 				{
 					solidFill = new SolidFillModel()
@@ -218,7 +218,7 @@ namespace OpenXMLOffice.Global_2007
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE)
 			{
-				series.Append(CreateMarker(markerModel));
+				series.Append(ChartBase<ApplicationSpecificSetting>.CreateMarker(markerModel));
 			}
 			if (dataLabels != null)
 			{
