@@ -382,9 +382,9 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void AddDevChart()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
-				pieChartType = G.PieChartTypes.PIE_3D,
+				scatterChartType = G.ScatterChartTypes.BUBBLE,
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{

@@ -77,30 +77,46 @@ namespace OpenXMLOffice.Global_2007
 		{
 			ChartType chart = new ChartType();
 			C.ScatterStyleValues scatterStyleValue;
-			if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_SMOOTH)
+			switch (scatterChartSetting.scatterChartType)
 			{
-				scatterStyleValue = C.ScatterStyleValues.Smooth;
+				case ScatterChartTypes.SCATTER:
+					scatterStyleValue = C.ScatterStyleValues.LineMarker;
+					chart.Append(new C.ScatterStyle
+					{
+						Val = scatterStyleValue
+					});
+					break;
+				case ScatterChartTypes.SCATTER_SMOOTH:
+					scatterStyleValue = C.ScatterStyleValues.Smooth;
+					chart.Append(new C.ScatterStyle
+					{
+						Val = scatterStyleValue
+					});
+					break;
+				case ScatterChartTypes.SCATTER_SMOOTH_MARKER:
+					scatterStyleValue = C.ScatterStyleValues.SmoothMarker;
+					chart.Append(new C.ScatterStyle
+					{
+						Val = scatterStyleValue
+					});
+					break;
+				case ScatterChartTypes.SCATTER_STRIGHT:
+					scatterStyleValue = C.ScatterStyleValues.Line;
+					chart.Append(new C.ScatterStyle
+					{
+						Val = scatterStyleValue
+					});
+					break;
+				case ScatterChartTypes.SCATTER_STRIGHT_MARKER:
+					scatterStyleValue = C.ScatterStyleValues.LineMarker;
+					chart.Append(new C.ScatterStyle
+					{
+						Val = scatterStyleValue
+					});
+					break;
+				default:
+					break;
 			}
-			else if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_SMOOTH_MARKER)
-			{
-				scatterStyleValue = C.ScatterStyleValues.SmoothMarker;
-			}
-			else if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_STRIGHT)
-			{
-				scatterStyleValue = C.ScatterStyleValues.Line;
-			}
-			else if (scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER_STRIGHT_MARKER)
-			{
-				scatterStyleValue = C.ScatterStyleValues.LineMarker;
-			}
-			else
-			{
-				scatterStyleValue = C.ScatterStyleValues.LineMarker;
-			}
-			chart.Append(new C.ScatterStyle
-			{
-				Val = scatterStyleValue
-			});
 			chart.Append(new C.VaryColors() { Val = false });
 			int seriesIndex = 0;
 			chartDataGroupings.ForEach(Series =>

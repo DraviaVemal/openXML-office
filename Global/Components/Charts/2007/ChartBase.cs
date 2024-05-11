@@ -234,11 +234,11 @@ namespace OpenXMLOffice.Global_2007
 				ChartDataGrouping chartDataGrouping = new ChartDataGrouping()
 				{
 					id = i,
-					seriesHeaderFormula = string.Format("'{0}'!{1}{2}", sheetName, columnName, rowNumber),
+					seriesHeaderFormula = string.Format("'{0}'!${1}${2}", sheetName, columnName, rowNumber),
 					seriesHeaderCells = ((ChartData[])dataCols[column].Clone())[chartDataSetting.chartDataRowStart],
-					xAxisFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, startColumnName, startRowNumber, endColumnName, endRowNumberX),
+					xAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, startColumnName, startRowNumber, endColumnName, endRowNumberX),
 					xAxisCells = xAxisCells.ToArray(),
-					yAxisFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberY),
+					yAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberY),
 					yAxisCells = yAxisCells.ToArray(),
 				};
 				if (chartDataSetting.is3Ddata && seriesColumns.Count > i + 1)
@@ -247,7 +247,7 @@ namespace OpenXMLOffice.Global_2007
 					column = seriesColumns[i];
 					List<ChartData> zAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 					long endRowNumberZ = chartDataSetting.chartDataRowStart + zAxisCells.Count + 1;
-					chartDataGrouping.zAxisFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberZ);
+					chartDataGrouping.zAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberZ);
 					chartDataGrouping.zAxisCells = zAxisCells.ToArray();
 				}
 				// TODO: Reorganise to Move to 2013 Namespace extension
@@ -257,7 +257,7 @@ namespace OpenXMLOffice.Global_2007
 					columnName = ConverterUtils.ConvertIntToColumnName((int)DataValueColumn + 1);
 					List<ChartData> dataLabelCells = ((ChartData[])dataCols[DataValueColumn].Clone()).Skip((int)chartDataSetting.chartDataRowStart).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 					long endRowNumberD = chartDataSetting.chartDataRowStart + dataLabelCells.Count;
-					chartDataGrouping.dataLabelFormula = string.Format("'{0}'!{1}{2}:{3}{4}", sheetName, columnName, startRowNumber, columnName, endRowNumberD);
+					chartDataGrouping.dataLabelFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberD);
 					chartDataGrouping.dataLabelCells = dataLabelCells.ToArray();
 				}
 				chartDataGroupings.Add(chartDataGrouping);
