@@ -294,7 +294,7 @@ namespace OpenXMLOffice.Global_2007
 					yAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberY),
 					yAxisCells = yAxisCells.ToArray(),
 				};
-				if (chartDataSetting.is3Ddata && seriesColumns.Count > i + 1)
+				if (chartDataSetting.is3dData && seriesColumns.Count > i + 1)
 				{
 					i++;
 					column = seriesColumns[i];
@@ -842,9 +842,9 @@ namespace OpenXMLOffice.Global_2007
 			{
 				TrendlineName = new C.TrendlineName(trendLineModel.trendLineName),
 				TrendlineType = new C.TrendlineType() { Val = TrendLineModel.GetTrendlineValues(trendLineModel.trendLineType) },
-				Forward = new C.Forward() { Val = trendLineModel.forcastForward },
+				Forward = new C.Forward() { Val = trendLineModel.forecastForward },
 				DisplayEquation = new C.DisplayEquation() { Val = trendLineModel.showEquation },
-				DisplayRSquaredValue = new C.DisplayRSquaredValue() { Val = trendLineModel.showRsquareValue }
+				DisplayRSquaredValue = new C.DisplayRSquaredValue() { Val = trendLineModel.showRSquareValue }
 			};
 			trendLine.Append(CreateChartShapeProperties(new ShapePropertiesModel()
 			{
@@ -875,7 +875,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				trendLine.Intercept = new C.Intercept() { Val = trendLineModel.interceptValue };
 			}
-			if (trendLineModel.setIntercept || trendLineModel.showEquation || trendLineModel.showRsquareValue)
+			if (trendLineModel.setIntercept || trendLineModel.showEquation || trendLineModel.showRSquareValue)
 			{
 				trendLine.Append(CreateTrendLineLabel());
 			}

@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Global_2007
 	/// Common Theme Class used by both presentation and spreadsheet.
 	/// </summary>
 	public class Theme
-	{        // TODO : Understand the purpose and migrate it to right place Postition, sat, lum, shade, tint
+	{        // TODO : Understand the purpose and migrate it to right place Position, sat, lum, shade, tint
 		private readonly int?[][] gsLst1 = new int?[][]{
 			new int?[]{0,105000,110000,null, 67000},
 			new int?[]{50000, 103000,105000,null, 73000},

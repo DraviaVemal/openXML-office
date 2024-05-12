@@ -25,12 +25,12 @@ namespace OpenXMLOffice.Presentation_2016
 		public Chart(Slide slide, DataCell[][] dataRows, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting) : base(slide, waterfallChartSetting)
 		{
 			OpenXMLChartPart = slide.GetSlidePart().AddNewPart<ExtendedChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, waterfallChartSetting);
 		}
 		/// <summary>
 		/// Get Workbook control for the chart embedded object.
-		/// use OpenXML-Office.SpreadSheet Excel to load the stream and update the excel if furthere data addition needed other than actual chart data
+		/// use OpenXML-Office.SpreadSheet Excel to load the stream and update the excel if further data addition needed other than actual chart data
 		/// </summary>
 		/// <returns> Chart attached workbook scheme
 		/// </returns>
@@ -74,7 +74,7 @@ namespace OpenXMLOffice.Presentation_2016
 		{
 			return OpenXMLChartPart.ChartStyleParts.FirstOrDefault();
 		}
-		private void InitialiseChartParts()
+		private void InitializeChartParts()
 		{
 			GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
 			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());

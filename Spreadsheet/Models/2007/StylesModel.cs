@@ -325,7 +325,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Is Wrap Text. default is false
 		/// </summary>
-		public bool IsWrapetext { get; internal set; }
+		public bool IsWrapText { get; internal set; }
 		/// <summary>
 		/// Horizontal alignment of the cell. default is left
 		/// </summary>

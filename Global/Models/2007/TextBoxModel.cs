@@ -99,7 +99,7 @@ namespace OpenXMLOffice.Global_2007
 	public class TextBoxSetting
 	{
 		/// <summary>
-		/// Define Each section of string and its property that goes in same Textbox
+		/// Define Each section of string and its property that goes in same Text box
 		/// </summary>
 		public TextBlock[] textBlocks;
 		/// <summary>

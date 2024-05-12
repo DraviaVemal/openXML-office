@@ -147,23 +147,23 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				axisPosition = areaChartSetting.chartAxisOptions.valuesInRevereseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
+				axisPosition = areaChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = areaChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = areaChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = areaChartSetting.chartAxesOptions.isHorizontalItalic,
 				isVisible = areaChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
-				invertOrder = areaChartSetting.chartAxisOptions.categoryInRevereseOrder,
+				invertOrder = areaChartSetting.chartAxisOptions.categoryInReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				axisPosition = areaChartSetting.chartAxisOptions.categoryInRevereseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
+				axisPosition = areaChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = areaChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = areaChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = areaChartSetting.chartAxesOptions.isVerticalItalic,
 				isVisible = areaChartSetting.chartAxesOptions.isVerticalAxesEnabled,
-				invertOrder = areaChartSetting.chartAxisOptions.valuesInRevereseOrder,
+				invertOrder = areaChartSetting.chartAxisOptions.valuesInReverseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

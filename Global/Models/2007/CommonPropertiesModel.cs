@@ -760,7 +760,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public string textHightlight;
+		public string textHighlight;
 		/// <summary>
 		///
 		/// </summary>

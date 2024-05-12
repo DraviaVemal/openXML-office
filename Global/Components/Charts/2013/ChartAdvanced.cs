@@ -10,7 +10,7 @@ using C15 = DocumentFormat.OpenXml.Office2013.Drawing.Chart;
 namespace OpenXMLOffice.Global_2013
 {
 	/// <summary>
-	/// TODO: Reorganise to skip the loop back to 2007 namespace
+	/// TODO: Reorganize to skip the loop back to 2007 namespace
 	/// </summary>
 	public class ChartAdvance<ApplicationSpecificSetting> : ChartBase<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{

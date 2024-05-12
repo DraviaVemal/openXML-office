@@ -70,7 +70,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		/// <summary>
 		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
-		/// You can save the document at the end of lifecycle targetting the edit file to update or new file.
+		/// You can save the document at the end of lifecycle targeting the edit file to update or new file.
 		/// This is supported for both file path and data stream
 		/// </summary>
 		public void SaveAs(string filePath)
@@ -79,7 +79,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		/// <summary>
 		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
-		/// You can save the document at the end of lifecycle targetting the edit file to update or new file.
+		/// You can save the document at the end of lifecycle targeting the edit file to update or new file.
 		/// This is supported for both file path and data stream
 		/// </summary>
 		public void SaveAs(Stream stream)

@@ -52,7 +52,7 @@ namespace OpenXMLOffice.Global_2007
 			/// </summary>
 			SHOW,
 			// /// <summary>
-			// /// Select Data Callout as Data label style
+			// /// Select Data Call out as Data label style
 			// /// </summary>
 			// DATA_CALLOUT
 		}

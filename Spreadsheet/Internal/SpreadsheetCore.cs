@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
 			MemoryStream memoryStream = new MemoryStream();
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
-			InitialiseSpreadsheet(this.spreadsheetProperties);
+			InitializeSpreadsheet(this.spreadsheetProperties);
 		}
 		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
@@ -43,7 +43,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (isEditable)
 			{
 				spreadsheetInfo.isExistingFile = true;
-				InitialiseSpreadsheet(this.spreadsheetProperties);
+				InitializeSpreadsheet(this.spreadsheetProperties);
 			}
 			else
 			{
@@ -65,7 +65,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (isEditable)
 			{
 				spreadsheetInfo.isExistingFile = true;
-				InitialiseSpreadsheet(this.spreadsheetProperties);
+				InitializeSpreadsheet(this.spreadsheetProperties);
 			}
 			else
 			{
@@ -115,7 +115,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return Sheets;
 		}
 		/// <summary>
-		/// Return Woorkbook Part for the Spreadsheet
+		/// Return Workbook Part for the Spreadsheet
 		/// </summary>
 		internal WorkbookPart GetWorkbookPart()
 		{
@@ -126,7 +126,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return spreadsheetDocument.WorkbookPart;
 		}
 		/// <summary>
-		/// Load the Shared String to the Cache (aka in memeory database lightdb)
+		/// Load the Shared String to the Cache (aka in memory database lightdb)
 		/// </summary>
 		internal void LoadShareStringFromFileToCache()
 		{
@@ -142,7 +142,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			GetShareStringService().InsertBulk(Records);
 		}
 		/// <summary>
-		/// Load Exisiting Style from the Sheet
+		/// Load Existing Style from the Sheet
 		/// </summary>
 		internal void LoadStyleFromFileToCache()
 		{
@@ -176,7 +176,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return shareStringService;
 		}
-		private void InitialiseStyle()
+		private void InitializeStyle()
 		{
 			if (GetWorkbookPart().WorkbookStylesPart == null)
 			{
@@ -192,9 +192,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 		}
 		/// <summary>
-		/// Common Spreadsheet perparation process used by all constructor
+		/// Common Spreadsheet preparation process used by all constructor
 		/// </summary>
-		private void InitialiseSpreadsheet(ExcelProperties excelProperties)
+		private void InitializeSpreadsheet(ExcelProperties excelProperties)
 		{
 			if (spreadsheetDocument.CoreFilePropertiesPart == null)
 			{
@@ -227,7 +227,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			G.Theme theme = new G.Theme(excelProperties.theme);
 			GetWorkbookPart().ThemePart.Theme = theme.GetTheme();
-			InitialiseStyle();
+			InitializeStyle();
 			GetWorkbookPart().Workbook.Save();
 		}
 	}

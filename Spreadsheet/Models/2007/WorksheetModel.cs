@@ -63,7 +63,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public HyperlinkProperties hyperlinkProperties;
 		/// <summary>
-		/// It is highgly recomended to use styleId instead of styleSetting.
+		/// It is highly recommended to use styleId instead of styleSetting.
 		/// </summary>
 		/// warning: styleSetting will be ignored if styleId is not null
 		public CellStyleSetting styleSetting = new CellStyleSetting();
@@ -110,5 +110,19 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Gets or sets a value indicating whether the row is hidden.
 		/// </summary>
 		public bool hidden;
+	}
+	/// <summary>
+	/// Merge Cell Options
+	/// </summary>
+	public class MergeCellRange
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public string topLeftCell;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string bottomRightCell;
 	}
 }

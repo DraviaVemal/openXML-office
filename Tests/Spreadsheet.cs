@@ -161,6 +161,28 @@ namespace OpenXMLOffice.Tests
 			Assert.IsTrue(true);
 		}
 		/// <summary>
+		/// 
+		/// </summary>
+		[TestMethod]
+		public void AddMergeCell()
+		{
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
+			Worksheet worksheet = excel1.GetWorksheet("Sheet1");
+			List<MergeCellRange> mergedCellRange = worksheet.GetMergeCellList();
+			Assert.AreEqual(1, mergedCellRange.Count);
+			Assert.IsTrue(worksheet.SetMergeCell(new MergeCellRange()
+			{
+				topLeftCell = "D30",
+				bottomRightCell = "F33"
+			}));
+			Assert.IsFalse(worksheet.SetMergeCell(new MergeCellRange()
+			{
+				topLeftCell = "F26",
+				bottomRightCell = "J30",
+			}));
+			excel1.SaveAs(string.Format("{1}/ReadEdit-MergeCell-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+		}
+		/// <summary>
 		///
 		/// </summary>
 		[TestMethod]
@@ -730,7 +752,7 @@ namespace OpenXMLOffice.Tests
 		/// Open and close Excel without editing
 		/// </summary>
 		[TestMethod]
-		public void OpenExistingexcelNonEdit()
+		public void OpenExistingExcelNonEdit()
 		{
 			Excel excel1 = new("./TestFiles/basic_test.xlsx", false);
 			excel1.SaveAs(string.Format("{1}/ReadEdit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));

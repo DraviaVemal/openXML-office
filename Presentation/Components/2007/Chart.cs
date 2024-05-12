@@ -21,7 +21,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public Chart(Slide slide, DataCell[][] dataRows, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) : base(slide, areaChartSetting)
 		{
 			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, areaChartSetting);
 		}
 		/// <summary>
@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public Chart(Slide slide, DataCell[][] dataRows, BarChartSetting<ApplicationSpecificSetting> barChartSetting) : base(slide, barChartSetting)
 		{
 			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, barChartSetting);
 		}
 		/// <summary>
@@ -39,7 +39,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public Chart(Slide slide, DataCell[][] dataRows, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) : base(slide, columnChartSetting)
 		{
 			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, columnChartSetting);
 		}
 		/// <summary>
@@ -48,7 +48,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public Chart(Slide slide, DataCell[][] dataRows, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) : base(slide, lineChartSetting)
 		{
 			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, lineChartSetting);
 		}
 		/// <summary>
@@ -57,7 +57,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public Chart(Slide slide, DataCell[][] dataRows, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) : base(slide, pieChartSetting)
 		{
 			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, pieChartSetting);
 		}
 		/// <summary>
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public Chart(Slide slide, DataCell[][] dataRows, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) : base(slide, scatterChartSetting)
 		{
 			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, scatterChartSetting);
 		}
 		/// <summary>
@@ -75,12 +75,12 @@ namespace OpenXMLOffice.Presentation_2007
 		public Chart(Slide slide, DataCell[][] dataRows, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) : base(slide, comboChartSetting)
 		{
 			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
-			InitialiseChartParts();
+			InitializeChartParts();
 			CreateChart(dataRows, comboChartSetting);
 		}
 		/// <summary>
 		/// Get Workbook control for the chart embedded object.
-		/// use OpenXML-Office.SpreadSheet Excel to load the stream and update the excel if furthere data addition needed other than actual chart data
+		/// use OpenXML-Office.SpreadSheet Excel to load the stream and update the excel if further data addition needed other than actual chart data
 		/// </summary>
 		/// <returns> Chart attached workbook scheme
 		/// </returns>
@@ -187,7 +187,7 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			return openXMLChartPart.ChartStyleParts.FirstOrDefault();
 		}
-		private void InitialiseChartParts()
+		private void InitializeChartParts()
 		{
 			GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
 			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());

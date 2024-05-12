@@ -127,7 +127,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 
 		/// <summary>
-		/// Replace Textbox for the source Shape
+		/// Replace Text box for the source Shape
 		/// </summary>
 		public TextBox ReplaceTextBox(TextBox textBox)
 		{

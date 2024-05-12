@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
-				scatterChartSetting.chartDataSetting.is3Ddata = true;
+				scatterChartSetting.chartDataSetting.is3dData = true;
 				if ((dataCols.Length - 1) % 2 != 0)
 				{
 					LogUtils.ShowWarning("Not All Required Data Standards met for 3D chart type.");
@@ -53,23 +53,23 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				axisPosition = scatterChartSetting.chartAxisOptions.valuesInRevereseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
+				axisPosition = scatterChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = scatterChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = scatterChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = scatterChartSetting.chartAxesOptions.isHorizontalItalic,
 				isVisible = scatterChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
-				invertOrder = scatterChartSetting.chartAxisOptions.categoryInRevereseOrder,
+				invertOrder = scatterChartSetting.chartAxisOptions.categoryInReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				axisPosition = scatterChartSetting.chartAxisOptions.categoryInRevereseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
+				axisPosition = scatterChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = scatterChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = scatterChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = scatterChartSetting.chartAxesOptions.isVerticalItalic,
 				isVisible = scatterChartSetting.chartAxesOptions.isVerticalAxesEnabled,
-				invertOrder = scatterChartSetting.chartAxisOptions.valuesInRevereseOrder,
+				invertOrder = scatterChartSetting.chartAxisOptions.valuesInReverseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
@@ -101,14 +101,14 @@ namespace OpenXMLOffice.Global_2007
 						Val = scatterStyleValue
 					});
 					break;
-				case ScatterChartTypes.SCATTER_STRIGHT:
+				case ScatterChartTypes.SCATTER_STRAIGHT:
 					scatterStyleValue = C.ScatterStyleValues.Line;
 					chart.Append(new C.ScatterStyle
 					{
 						Val = scatterStyleValue
 					});
 					break;
-				case ScatterChartTypes.SCATTER_STRIGHT_MARKER:
+				case ScatterChartTypes.SCATTER_STRAIGHT_MARKER:
 					scatterStyleValue = C.ScatterStyleValues.LineMarker;
 					chart.Append(new C.ScatterStyle
 					{
@@ -169,7 +169,7 @@ namespace OpenXMLOffice.Global_2007
 				dataLabels = CreateScatterDataLabels(scatterChartDataLabel ?? new ScatterChartDataLabel(), dataLabelCellsLength);
 			}
 			MarkerModel markerModel = new MarkerModel();
-			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
+			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRAIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{
 				markerModel.markerShapeType = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? MarkerShapeTypes.AUTO : MarkerShapeTypes.CIRCLE;
 				markerModel.shapeProperties = new ShapePropertiesModel()

@@ -15,7 +15,7 @@ namespace OpenXMLOffice.Tests
 		private static readonly PowerPoint powerPoint = new();
 		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
-		/// Save Presenation on text completion cleanup
+		/// Save Presentation on text completion cleanup
 		/// </summary>
 		[ClassCleanup]
 		public static void ClassCleanup()
@@ -112,8 +112,8 @@ namespace OpenXMLOffice.Tests
 			{
 				chartAxisOptions = new()
 				{
-					categoryInRevereseOrder = true,
-					valuesInRevereseOrder = true
+					categoryInReverseOrder = true,
+					valuesInReverseOrder = true
 				},
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -313,13 +313,13 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
-				scatterChartType = G.ScatterChartTypes.SCATTER_STRIGHT
+				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT
 			});
 			//22
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
-				scatterChartType = G.ScatterChartTypes.SCATTER_STRIGHT_MARKER
+				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT_MARKER
 			});
 			//23
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
@@ -403,20 +403,20 @@ namespace OpenXMLOffice.Tests
 								secondaryValue =2,
 								interceptValue = 5,
 								trendLineName = "Dravia",
-								forcastForward=1,
+								forecastForward=1,
 								setIntercept=true,
 								showEquation=true,
-								showRsquareValue=true
+								showRSquareValue=true
 							},
 							new(){
 								trendLineType = G.TrendLineTypes.EXPONENTIAL,
 								secondaryValue =2,
 								interceptValue = 5,
 								trendLineName = "vemal",
-								forcastForward=1,
+								forecastForward=1,
 								setIntercept=true,
 								showEquation=true,
-								showRsquareValue=true
+								showRSquareValue=true
 							}
 						}
 					}
@@ -543,7 +543,7 @@ namespace OpenXMLOffice.Tests
 			powerPoint.RemoveSlideByIndex(totalCount - 1);
 		}
 		/// <summary>
-		/// Add All type of sctter charts
+		/// Add All type of scatter charts
 		/// </summary>
 		[TestMethod]
 		[TestCategory("Chart")]
@@ -582,10 +582,10 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
-				scatterChartType = G.ScatterChartTypes.SCATTER_STRIGHT,
+				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT,
 				titleOptions = new()
 				{
-					title = "Scatter Stright",
+					title = "Scatter Straight",
 					fontSize = 20
 				}
 			});
@@ -593,11 +593,11 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
-				scatterChartType = G.ScatterChartTypes.SCATTER_STRIGHT_MARKER,
+				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT_MARKER,
 				titleOptions = new()
 				{
 					fontColor = "FF0000",
-					title = "Scatter Stright Marker"
+					title = "Scatter Straight Marker"
 				}
 			});
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()

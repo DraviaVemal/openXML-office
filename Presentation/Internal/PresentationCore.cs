@@ -23,7 +23,7 @@ namespace OpenXMLOffice.Presentation_2007
 			this.presentationProperties = presentationProperties ?? new PowerPointProperties();
 			MemoryStream memoryStream = new MemoryStream();
 			presentationDocument = PresentationDocument.Create(memoryStream, PresentationDocumentType.Presentation, true);
-			InitialisePresentation(this.presentationProperties);
+			InitializePresentation(this.presentationProperties);
 		}
 		public PresentationCore(string filePath, bool isEditable = true, PowerPointProperties presentationProperties = null)
 		{
@@ -39,7 +39,7 @@ namespace OpenXMLOffice.Presentation_2007
 			});
 			if (presentationInfo.isEditable)
 			{
-				InitialisePresentation(this.presentationProperties);
+				InitializePresentation(this.presentationProperties);
 				presentationInfo.isExistingFile = true;
 			}
 		}
@@ -56,7 +56,7 @@ namespace OpenXMLOffice.Presentation_2007
 			});
 			if (presentationInfo.isEditable)
 			{
-				InitialisePresentation(this.presentationProperties);
+				InitializePresentation(this.presentationProperties);
 			}
 		}
 		internal string GetNextPresentationRelationId()
@@ -123,7 +123,7 @@ namespace OpenXMLOffice.Presentation_2007
 			defaultTextStyle.Append(levelParagraphProperties);
 			return defaultTextStyle;
 		}
-		private void InitialisePresentation(PowerPointProperties powerPointProperties)
+		private void InitializePresentation(PowerPointProperties powerPointProperties)
 		{
 			SlideMaster slideMaster = new SlideMaster();
 			SlideLayout slideLayout = new SlideLayout();

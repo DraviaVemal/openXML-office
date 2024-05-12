@@ -23,11 +23,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Scatter Chart with Straight Lines
 		/// </summary>
-		SCATTER_STRIGHT,
+		SCATTER_STRAIGHT,
 		/// <summary>
 		/// Scatter Chart with Straight Lines and Markers
 		/// </summary>
-		SCATTER_STRIGHT_MARKER,
+		SCATTER_STRAIGHT_MARKER,
 		/// <summary>
 		/// Bubble Chart
 		/// </summary>
@@ -73,7 +73,7 @@ namespace OpenXMLOffice.Global_2007
 			/// </summary>
 			BELOW,
 			// /// <summary>
-			// /// Data Callout Style
+			// /// Data Call out Style
 			// /// </summary>
 			// DATA_CALLOUT
 		}

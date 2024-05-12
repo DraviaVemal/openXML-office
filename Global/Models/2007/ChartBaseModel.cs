@@ -64,7 +64,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		PLUSE,
+		PLUS,
 		/// <summary>
 		///
 		/// </summary>
@@ -198,11 +198,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Category Axis will get inverted with the flag 
 		/// </summary>
-		public bool categoryInRevereseOrder = false;
+		public bool categoryInReverseOrder = false;
 		/// <summary>
 		/// Value Axis will get inverted with the flag 
 		/// </summary>
-		public bool valuesInRevereseOrder = false;
+		public bool valuesInReverseOrder = false;
 	}
 	/// <summary>
 	/// Represents the grouping options for chart data.
@@ -344,11 +344,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Data is used in 3D chart type
 		/// </summary>
-		internal bool is3Ddata;
+		internal bool is3dData;
 		/// <summary>
 		/// Use 2013 Version Data Label Option
 		/// </summary>
-		/// <remarks>This Proprty May get updated in future be in lookout.</remarks>
+		/// <remarks>This Property May get updated in future be in lookout.</remarks>
 		public AdvancedDataLabel advancedDataLabel = new AdvancedDataLabel();
 	}
 	/// <summary>
@@ -476,7 +476,7 @@ namespace OpenXMLOffice.Global_2007
 	public class PlotAreaModel
 	{
 		/// <summary>
-		/// Manual Position Char Ghaph Area
+		/// Manual Position Char Graph Area
 		/// </summary>
 		public LayoutModel manualLayout;
 	}
@@ -707,17 +707,17 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool showRsquareValue = false;
+		public bool showRSquareValue = false;
 		/// <summary>
 		/// Default 0.0
 		/// </summary>
-		public float forcastForward = 0.0F;
+		public float forecastForward = 0.0F;
 		/// <summary>
 		/// Default 0.0
 		/// </summary>
-		public float forcastBackward = 0.0F;
+		public float forecastBackward = 0.0F;
 		/// <summary>
-		/// This is to set custom Trendline if null it will assume automatic 
+		/// This is to set custom Trending if null it will assume automatic 
 		/// </summary>
 		public string trendLineName = null;
 		/// <summary>
@@ -778,7 +778,7 @@ namespace OpenXMLOffice.Global_2007
 					return C.MarkerStyleValues.Dot;
 				case MarkerShapeTypes.PICTURE:
 					return C.MarkerStyleValues.Picture;
-				case MarkerShapeTypes.PLUSE:
+				case MarkerShapeTypes.PLUS:
 					return C.MarkerStyleValues.Plus;
 				case MarkerShapeTypes.SQUARE:
 					return C.MarkerStyleValues.Square;

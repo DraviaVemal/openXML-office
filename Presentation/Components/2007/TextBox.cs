@@ -150,7 +150,7 @@ namespace OpenXMLOffice.Presentation_2007
 				DrawingRunModel drawingRunModel = new DrawingRunModel()
 				{
 					text = textBlock.text,
-					textHightlight = textBlock.textBackground,
+					textHighlight = textBlock.textBackground,
 					drawingRunProperties = new DrawingRunPropertiesModel()
 					{
 						solidFill = solidFillModel,

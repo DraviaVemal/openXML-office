@@ -56,6 +56,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			X.Hyperlinks hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
 			return hyperlinks;
 		}
+		internal X.MergeCells GetWorkSheetMergeCell()
+		{
+			X.MergeCells mergeCells = openXMLworksheet.Elements<X.MergeCells>().FirstOrDefault();
+			return mergeCells;
+		}
 		internal void AddHyperlink(string relationshipId, string toolTip)
 		{
 			AddHyperlink(relationshipId, toolTip, null);
@@ -332,63 +337,124 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
 		{
-			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, areaChartSetting);
+			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, areaChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
 		{
-			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, barChartSetting);
+			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, barChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
 		{
-			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, columnChartSetting);
+			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, columnChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
 		{
-			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, lineChartSetting);
+			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, lineChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
 		{
-			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, pieChartSetting);
+			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, pieChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
 		{
-			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, scatterChartSetting);
+			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, scatterChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
 		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
 		{
-			ChartData[][] chartDatas = PrepareCacheData(dataRange);
+			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartDatas, dataRange, comboChartSetting);
+			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, comboChartSetting);
+		}
+		/// <summary>
+		/// Add Merge cell range to the current sheet if it's not overlapping with existing range
+		/// </summary>
+		/// <returns>Return true is inserted and false if failed</returns>
+		public bool SetMergeCell(MergeCellRange mergeCellRange)
+		{
+			List<MergeCellRange> existingMergeCellRange = GetMergeCellList();
+			Tuple<int, int> newTopLeft = ConverterUtils.ConvertFromExcelCellReference(mergeCellRange.topLeftCell);
+			Tuple<int, int> newBottomRight = ConverterUtils.ConvertFromExcelCellReference(mergeCellRange.bottomRightCell);
+			if (existingMergeCellRange.Any(range =>
+			{
+				Tuple<int, int> topLeft = ConverterUtils.ConvertFromExcelCellReference(range.topLeftCell);
+				Tuple<int, int> bottomRight = ConverterUtils.ConvertFromExcelCellReference(range.bottomRightCell);
+				return IsWithinRange(newTopLeft.Item1, newTopLeft.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2) ||
+				IsWithinRange(newBottomRight.Item1, newBottomRight.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2);
+			}))
+			{
+				return false;
+			}
+			else
+			{
+				X.MergeCells mergeCells = GetWorkSheetMergeCell();
+				if (mergeCells == null)
+				{
+					mergeCells = new X.MergeCells();
+					openXMLworksheet.Append(mergeCells);
+				}
+				if (mergeCells != null && mergeCells.Count > 0)
+				{
+					mergeCells.Append(new X.MergeCell()
+					{
+						Reference = string.Format("{0}:{1}", mergeCellRange.topLeftCell, mergeCellRange.bottomRightCell)
+					});
+				}
+				return true;
+			}
+		}
+		/// <summary>
+		/// Return every merged cell range in current sheet
+		/// </summary>
+		public List<MergeCellRange> GetMergeCellList()
+		{
+			List<MergeCellRange> mergeCellRanges = new List<MergeCellRange>();
+			X.MergeCells mergeCells = GetWorkSheetMergeCell();
+			if (mergeCells != null && mergeCells.Count > 0)
+			{
+				mergeCells.Descendants<X.MergeCell>().ToList().ForEach(mergeCell =>
+				{
+					mergeCellRanges.Add(new MergeCellRange()
+					{
+						topLeftCell = mergeCell.Reference.ToString().Split(':')[0],
+						bottomRightCell = mergeCell.Reference.ToString().Split(':')[1]
+					});
+				});
+			}
+			return mergeCellRanges;
+		}
+		private static bool IsWithinRange(int x, int y, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
+		{
+			return x >= topLeftX && x <= bottomRightX && y >= topLeftY && y <= bottomRightY;
 		}
 		private ChartData[][] PrepareCacheData(DataRange dataRange)
 		{
@@ -405,10 +471,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			int rowEnd = result.Item1;
 			int colEnd = result.Item2;
 			List<X.Row> dataRows = GetWorkSheetData().Elements<X.Row>().Where(row => row.RowIndex.Value >= rowStart && row.RowIndex.Value <= rowEnd).ToList();
-			ChartData[][] chartDatas = new ChartData[rowEnd - rowStart + 1][];
+			ChartData[][] chartData = new ChartData[rowEnd - rowStart + 1][];
 			dataRows.ForEach(row =>
 			{
-				chartDatas[(int)(row.RowIndex.Value - rowStart)] = new ChartData[colEnd - colStart + 1];
+				chartData[(int)(row.RowIndex.Value - rowStart)] = new ChartData[colEnd - colStart + 1];
 				List<string> cellIds = new List<string>();
 				for (int col = colStart; col <= colEnd; col++)
 				{
@@ -419,7 +485,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				{
 					result = ConverterUtils.ConvertFromExcelCellReference(cell.CellReference.Value);
 					int colIndex = result.Item2;
-					// TODO : Cell Value is bit confusing for value types and formula do furter research for extending the functionality
+					// TODO : Cell Value is bit confusing for value types and formula do further research for extending the functionality
 					DataType cellDataType = GetCellDataType(cell.DataType);
 					string cellValue;
 					switch (cellDataType)
@@ -433,7 +499,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 						cellValue = excel.GetShareStringService().GetValue(int.Parse(cellValue));
 					}
 					Console.WriteLine(cellValue ?? "");
-					chartDatas[(int)(row.RowIndex.Value - rowStart)][colIndex - colStart] = new ChartData()
+					chartData[(int)(row.RowIndex.Value - rowStart)][colIndex - colStart] = new ChartData()
 					{
 						dataType = cellDataType,
 						// TODO : Do Performance Update
@@ -442,7 +508,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					};
 				});
 			});
-			return chartDatas;
+			return chartData;
 		}
 	}
 }

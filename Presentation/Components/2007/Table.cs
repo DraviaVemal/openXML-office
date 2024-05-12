@@ -182,7 +182,7 @@ namespace OpenXMLOffice.Presentation_2007
 				{
 					new G.DrawingRunModel(){
 						text = cell.value,
-						textHightlight = cell.textBackground,
+						textHighlight = cell.textBackground,
 						drawingRunProperties = new G.DrawingRunPropertiesModel()
 						{
 							solidFill = solidFillModel,

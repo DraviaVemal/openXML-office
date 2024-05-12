@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Global_2007
 	{
 		/// <summary>
 		/// Sheet name
-		/// Default : Current Sheet the chart is targetted for
+		/// Default : Current Sheet the chart is targeted for
 		/// </summary>
 		public string sheetName { get; set; }
 		/// <summary>

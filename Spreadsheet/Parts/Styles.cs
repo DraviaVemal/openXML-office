@@ -85,7 +85,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				item.Id == cellXfs.NumberFormatId);
 			CellStyleSetting cellStyleSetting = new CellStyleSetting()
 			{
-				isWrapText = cellXfs.IsWrapetext,
+				isWrapText = cellXfs.IsWrapText,
 				fontFamily = fontStyle.Name,
 				fontSize = fontStyle.Size,
 				isItalic = fontStyle.IsItalic,
@@ -128,7 +128,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				item.ApplyBorder == IsBorder &&
 				item.ApplyAlignment == IsAlignment &&
 				item.ApplyNumberFormat == IsNumberFormat &&
-				item.IsWrapetext == CellStyleSetting.isWrapText);
+				item.IsWrapText == CellStyleSetting.isWrapText);
 			if (CellXfs != null)
 			{
 				return CellXfs.Id;
@@ -147,13 +147,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					ApplyBorder = IsBorder,
 					ApplyAlignment = IsAlignment,
 					ApplyNumberFormat = IsNumberFormat,
-					IsWrapetext = CellStyleSetting.isWrapText
+					IsWrapText = CellStyleSetting.isWrapText
 				});
 				return (uint)Result.AsInt64;
 			}
 		}
 		/// <summary>
-		/// Load the style from the Exisiting Sheet
+		/// Load the style from the Existing Sheet
 		/// </summary>
 		internal void LoadStyleFromSheet(X.Stylesheet Stylesheet)
 		{
@@ -371,7 +371,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 							}
 							if (item.VerticalAlignment != VerticalAlignmentValues.NONE ||
 								item.HorizontalAlignment != HorizontalAlignmentValues.NONE ||
-								item.IsWrapetext)
+								item.IsWrapText)
 							{
 								CellFormat.Alignment = new X.Alignment();
 								if (item.VerticalAlignment != VerticalAlignmentValues.NONE)
@@ -404,7 +404,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 										CellFormat.Alignment.Horizontal = X.HorizontalAlignmentValues.Right;
 									}
 								}
-								if (item.IsWrapetext)
+								if (item.IsWrapText)
 								{
 									CellFormat.Alignment.WrapText = true;
 								}
@@ -740,7 +740,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					}
 					if (cellFormat.Alignment.WrapText != null)
 					{
-						cellXfs.IsWrapetext = cellFormat.Alignment.WrapText;
+						cellXfs.IsWrapText = cellFormat.Alignment.WrapText;
 					}
 				}
 				cellXfsCollection.Insert(cellXfs);

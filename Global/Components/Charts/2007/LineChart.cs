@@ -37,23 +37,23 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				axisPosition = lineChartSetting.chartAxisOptions.valuesInRevereseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
+				axisPosition = lineChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = lineChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = lineChartSetting.chartAxesOptions.isHorizontalItalic,
 				isVisible = lineChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
-				invertOrder = lineChartSetting.chartAxisOptions.categoryInRevereseOrder,
+				invertOrder = lineChartSetting.chartAxisOptions.categoryInReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				axisPosition = lineChartSetting.chartAxisOptions.categoryInRevereseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
+				axisPosition = lineChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = lineChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = lineChartSetting.chartAxesOptions.isVerticalItalic,
 				isVisible = lineChartSetting.chartAxesOptions.isVerticalAxesEnabled,
-				invertOrder = lineChartSetting.chartAxisOptions.valuesInRevereseOrder,
+				invertOrder = lineChartSetting.chartAxisOptions.valuesInReverseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;
@@ -206,11 +206,11 @@ namespace OpenXMLOffice.Global_2007
 						secondaryValue = trendLine.secondaryValue,
 						trendLineType = trendLine.trendLineType,
 						trendLineName = trendLine.trendLineName,
-						forcastBackward = trendLine.forcastBackward,
-						forcastForward = trendLine.forcastForward,
+						forecastBackward = trendLine.forecastBackward,
+						forecastForward = trendLine.forecastForward,
 						setIntercept = trendLine.setIntercept,
 						showEquation = trendLine.showEquation,
-						showRsquareValue = trendLine.showRsquareValue,
+						showRSquareValue = trendLine.showRSquareValue,
 						interceptValue = trendLine.interceptValue
 					};
 					series.Append(CreateTrendLine(trendLineModel));

@@ -672,9 +672,9 @@ namespace OpenXMLOffice.Global_2007
 				{
 					run.Append(new A.Text(drawingRunModel.text));
 				}
-				if (drawingRunModel.textHightlight != null)
+				if (drawingRunModel.textHighlight != null)
 				{
-					run.Append(new A.Highlight(new A.RgbColorModelHex { Val = drawingRunModel.textHightlight }));
+					run.Append(new A.Highlight(new A.RgbColorModelHex { Val = drawingRunModel.textHighlight }));
 				}
 				runs.Add(run);
 			}

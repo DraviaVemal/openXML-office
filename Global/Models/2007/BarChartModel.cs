@@ -113,7 +113,7 @@ namespace OpenXMLOffice.Global_2007
 			/// </summary>
 			OUTSIDE_END,
 			// /// <summary>
-			// /// Data Callout
+			// /// Data Call out
 			// /// </summary>
 			// DATA_CALLOUT
 		}

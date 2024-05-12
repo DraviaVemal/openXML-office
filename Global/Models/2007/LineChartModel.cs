@@ -171,7 +171,7 @@ namespace OpenXMLOffice.Global_2007
 	public class TrendLineSettings
 	{
 		/// <summary>
-		/// Set type of treand line.
+		/// Set type of trend line.
 		/// </summary>
 		public TrendLineTypes trendLineType = TrendLineTypes.NONE;
 		/// <summary>
@@ -194,15 +194,15 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool showRsquareValue = false;
+		public bool showRSquareValue = false;
 		/// <summary>
 		/// Default 0.0
 		/// </summary>
-		public float forcastForward = 0.0F;
+		public float forecastForward = 0.0F;
 		/// <summary>
 		/// Default 0.0
 		/// </summary>
-		public float forcastBackward = 0.0F;
+		public float forecastBackward = 0.0F;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -214,7 +214,7 @@ namespace OpenXMLOffice.Global_2007
 	public class LineChartSeriesSetting : ChartSeriesSetting
 	{
 		/// <summary>
-		/// Threadline setting for particulart series
+		/// Treadline setting for particular series
 		/// </summary>
 		public List<TrendLineSettings> trendLines = new List<TrendLineSettings>();
 		/// <summary>

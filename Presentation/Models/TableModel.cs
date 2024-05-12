@@ -116,7 +116,7 @@ namespace OpenXMLOffice.Presentation_2007
 		public string value;
 	}
 	/// <summary>
-	/// Table Row Customisation Properties
+	/// Table Row Customization Properties
 	/// </summary>
 	public class TableRow
 	{
@@ -125,7 +125,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public int height = 370840;
 		/// <summary>
-		/// Row Background Color.Will get overriden by TableCell.CellBackground
+		/// Row Background Color.Will get overridden by TableCell.CellBackground
 		/// </summary>
 		public string rowBackground;
 		/// <summary>
@@ -133,12 +133,12 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public List<TableCell> tableCells = new List<TableCell>();
 		/// <summary>
-		/// Default Text Color for the row. Will get overriden by TableCell.TextColor
+		/// Default Text Color for the row. Will get overridden by TableCell.TextColor
 		/// </summary>
 		public string textColor = "000000";
 	}
 	/// <summary>
-	/// Table Customisation Properties
+	/// Table Customization Properties
 	/// </summary>
 	public class TableSetting
 	{

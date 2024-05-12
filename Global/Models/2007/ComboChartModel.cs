@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Global_2007
 	public class ComboChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
-		/// Secondary Axis postion
+		/// Secondary Axis position
 		/// </summary>
 		public AxisPosition secondaryAxisPosition = AxisPosition.RIGHT;
 		/// <summary>
