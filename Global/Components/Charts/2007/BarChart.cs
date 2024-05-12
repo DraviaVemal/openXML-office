@@ -231,26 +231,28 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				title = barChartSetting.chartAxisOptions.categoryAxisTitle,
 				axisLabelPosition = barChartSetting.chartAxisOptions.categoryAxisLabelPosition,
 				axisLabelRotationAngle = barChartSetting.chartAxisOptions.categoryAxisLabelAngle,
 				axisPosition = barChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = barChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = barChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = barChartSetting.chartAxesOptions.isVerticalItalic,
-				isVisible = barChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+				isVisible = barChartSetting.chartAxesOptions.isVerticalAxesVisible,
 				invertOrder = barChartSetting.chartAxisOptions.categoryInReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				title = barChartSetting.chartAxisOptions.valueAxisTitle,
 				axisLabelPosition = barChartSetting.chartAxisOptions.valueAxisLabelPosition,
 				axisLabelRotationAngle = barChartSetting.chartAxisOptions.valueAxisLabelAngle,
 				axisPosition = barChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = barChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = barChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = barChartSetting.chartAxesOptions.isHorizontalItalic,
-				isVisible = barChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+				isVisible = barChartSetting.chartAxesOptions.isHorizontalAxesVisible,
 				invertOrder = barChartSetting.chartAxisOptions.valuesInReverseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());

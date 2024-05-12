@@ -88,7 +88,7 @@ namespace OpenXMLOffice.Global_2007
 					axisPositionValue = C.AxisPositionValues.Bottom;
 					break;
 			}
-			C.CategoryAxis CategoryAxis = new C.CategoryAxis(
+			C.CategoryAxis categoryAxis = new C.CategoryAxis(
 				new C.AxisId { Val = categoryAxisSetting.id },
 				new C.Scaling(new C.Orientation { Val = categoryAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
 				new C.Delete { Val = !categoryAxisSetting.isVisible },
@@ -97,17 +97,24 @@ namespace OpenXMLOffice.Global_2007
 				new C.MinorTickMark { Val = C.TickMarkValues.None },
 				new C.TickLabelPosition { Val = CategoryAxisSetting.GetLabelAxisPosition(categoryAxisSetting.axisLabelPosition) }
 			);
+			if (categoryAxisSetting.title != null)
+			{
+				categoryAxis.Append(CreateTitle(new ChartTitleModel()
+				{
+					title = categoryAxisSetting.title,
+				}));
+			}
 			if (categoryAxisSetting.isVisible)
 			{
 				if (chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled)
 				{
-					CategoryAxis.Append(CreateMajorGridLine());
+					categoryAxis.Append(CreateMajorGridLine());
 				}
 				if (chartSetting.chartGridLinesOptions.isMinorCategoryLinesEnabled)
 				{
-					CategoryAxis.Append(CreateMinorGridLine());
+					categoryAxis.Append(CreateMinorGridLine());
 				}
-				CategoryAxis.Append(CreateChartShapeProperties());
+				categoryAxis.Append(CreateChartShapeProperties());
 				SolidFillModel solidFillModel = new SolidFillModel()
 				{
 					schemeColorModel = new SchemeColorModel()
@@ -122,7 +129,7 @@ namespace OpenXMLOffice.Global_2007
 					solidFillModel.hexColor = categoryAxisSetting.fontColor;
 					solidFillModel.schemeColorModel = null;
 				}
-				CategoryAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+				categoryAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 				{
 					drawingBodyProperties = new DrawingBodyPropertiesModel()
 					{
@@ -146,14 +153,14 @@ namespace OpenXMLOffice.Global_2007
 					}
 				}));
 			}
-			CategoryAxis.Append(
+			categoryAxis.Append(
 				new C.CrossingAxis { Val = categoryAxisSetting.crossAxisId },
 				new C.Crosses { Val = C.CrossesValues.AutoZero },
 				new C.AutoLabeled { Val = true },
 				new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
 				new C.LabelOffset { Val = 100 },
 				new C.NoMultiLevelLabels { Val = false });
-			return CategoryAxis;
+			return categoryAxis;
 		}
 		/// <summary>
 		/// 
@@ -353,57 +360,67 @@ namespace OpenXMLOffice.Global_2007
 				new C.Scaling(new C.Orientation { Val = valueAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
 				new C.Delete { Val = !valueAxisSetting.isVisible },
 				new C.AxisPosition { Val = axisPositionValue });
-			if (chartSetting.chartGridLinesOptions.isMajorValueLinesEnabled)
+			if (valueAxisSetting.title != null)
 			{
-				valueAxis.Append(CreateMajorGridLine());
-			}
-			if (chartSetting.chartGridLinesOptions.isMinorValueLinesEnabled)
-			{
-				valueAxis.Append(CreateMinorGridLine());
-			}
-			valueAxis.Append(
-				new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
-				new C.MajorTickMark { Val = valueAxisSetting.majorTickMark },
-				new C.MinorTickMark { Val = valueAxisSetting.minorTickMark },
-				new C.TickLabelPosition { Val = ValueAxisSetting.GetLabelAxisPosition(valueAxisSetting.axisLabelPosition) });
-			valueAxis.Append(CreateChartShapeProperties());
-			SolidFillModel solidFillModel = new SolidFillModel()
-			{
-				schemeColorModel = new SchemeColorModel()
+				valueAxis.Append(CreateTitle(new ChartTitleModel()
 				{
-					themeColorValues = ThemeColorValues.TEXT_1,
-					luminanceModulation = 65000,
-					luminanceOffset = 35000
+					title = valueAxisSetting.title,
+				}));
+			}
+			if (valueAxisSetting.isVisible)
+			{
+				if (chartSetting.chartGridLinesOptions.isMajorValueLinesEnabled)
+				{
+					valueAxis.Append(CreateMajorGridLine());
 				}
-			};
-			if (valueAxisSetting.fontColor != null)
-			{
-				solidFillModel.hexColor = valueAxisSetting.fontColor;
-				solidFillModel.schemeColorModel = null;
-			}
-			valueAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
-			{
-				drawingBodyProperties = new DrawingBodyPropertiesModel()
+				if (chartSetting.chartGridLinesOptions.isMinorValueLinesEnabled)
 				{
-					rotation = valueAxisSetting.axisLabelRotationAngle
-				},
-				drawingParagraph = new DrawingParagraphModel()
+					valueAxis.Append(CreateMinorGridLine());
+				}
+				valueAxis.Append(
+					new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
+					new C.MajorTickMark { Val = valueAxisSetting.majorTickMark },
+					new C.MinorTickMark { Val = valueAxisSetting.minorTickMark },
+					new C.TickLabelPosition { Val = ValueAxisSetting.GetLabelAxisPosition(valueAxisSetting.axisLabelPosition) });
+				valueAxis.Append(CreateChartShapeProperties());
+				SolidFillModel solidFillModel = new SolidFillModel()
 				{
-					paragraphPropertiesModel = new ParagraphPropertiesModel()
+					schemeColorModel = new SchemeColorModel()
 					{
-						defaultRunProperties = new DefaultRunPropertiesModel()
+						themeColorValues = ThemeColorValues.TEXT_1,
+						luminanceModulation = 65000,
+						luminanceOffset = 35000
+					}
+				};
+				if (valueAxisSetting.fontColor != null)
+				{
+					solidFillModel.hexColor = valueAxisSetting.fontColor;
+					solidFillModel.schemeColorModel = null;
+				}
+				valueAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+				{
+					drawingBodyProperties = new DrawingBodyPropertiesModel()
+					{
+						rotation = valueAxisSetting.axisLabelRotationAngle
+					},
+					drawingParagraph = new DrawingParagraphModel()
+					{
+						paragraphPropertiesModel = new ParagraphPropertiesModel()
 						{
-							solidFill = solidFillModel,
-							fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
-							isBold = valueAxisSetting.isBold,
-							isItalic = valueAxisSetting.isItalic,
-							underline = valueAxisSetting.underLineValues,
-							strike = valueAxisSetting.strikeValues,
-							baseline = 0
+							defaultRunProperties = new DefaultRunPropertiesModel()
+							{
+								solidFill = solidFillModel,
+								fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
+								isBold = valueAxisSetting.isBold,
+								isItalic = valueAxisSetting.isItalic,
+								underline = valueAxisSetting.underLineValues,
+								strike = valueAxisSetting.strikeValues,
+								baseline = 0
+							}
 						}
 					}
-				}
-			}));
+				}));
+			}
 			valueAxis.Append(
 				new C.CrossingAxis { Val = valueAxisSetting.crossAxisId },
 				new C.Crosses { Val = valueAxisSetting.crosses },

@@ -12,7 +12,13 @@ namespace OpenXMLOffice.Tests
 	[TestClass]
 	public class Presentation
 	{
-		private static readonly PowerPoint powerPoint = new();
+		private static readonly PowerPoint powerPoint = new(new()
+		{
+			theme = new()
+			{
+				accent1 = "ABCDEF"
+			}
+		});
 		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
 		/// Save Presentation on text completion cleanup
@@ -52,7 +58,8 @@ namespace OpenXMLOffice.Tests
 				chartAxisOptions = new()
 				{
 					categoryAxisLabelPosition = G.AxisLabelPosition.HIGH,
-					categoryAxisLabelAngle = 20
+					categoryAxisLabelAngle = 20,
+					categoryAxisTitle = "cat ax"
 				},
 				applicationSpecificSetting = new()
 			});
@@ -85,6 +92,14 @@ namespace OpenXMLOffice.Tests
 				chartDataSetting = new()
 				{
 					chartDataColumnEnd = 2
+				},
+				chartAxesOptions = new()
+				{
+					isVerticalAxesVisible = false,
+				},
+				chartAxisOptions = new()
+				{
+					valueAxisTitle = "Value"
 				}
 			});
 			areaChart.UpdatePosition(100, 100);
@@ -95,7 +110,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				chartAxesOptions = new()
 				{
-					isHorizontalAxesEnabled = false,
+					isHorizontalAxesVisible = false,
 				},
 				barChartDataLabel = new G.BarChartDataLabel()
 				{
@@ -652,7 +667,13 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationEdit()
 		{
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true, new()
+			{
+				theme = new()
+				{
+					accent2 = "FEDCBA"
+				}
+			});
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
@@ -866,7 +887,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				chartAxesOptions = new G.ChartAxesOptions()
 				{
-					isHorizontalAxesEnabled = false
+					isHorizontalAxesVisible = false
 				},
 				chartGridLinesOptions = new G.ChartGridLinesOptions()
 				{

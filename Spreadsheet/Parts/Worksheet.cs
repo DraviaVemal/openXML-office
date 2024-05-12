@@ -36,71 +36,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return sheet.Id.Value;
 		}
 		/// <summary>
-		///
-		/// </summary>
-		internal X.Worksheet GetWorksheet()
-		{
-			return openXMLworksheet;
-		}
-		internal X.SheetData GetWorkSheetData()
-		{
-			X.SheetData SheetData = openXMLworksheet.Elements<X.SheetData>().FirstOrDefault();
-			if (SheetData == null)
-			{
-				return openXMLworksheet.AppendChild(new X.SheetData());
-			}
-			return SheetData;
-		}
-		internal X.Hyperlinks GetWorkSheetHyperlinks()
-		{
-			X.Hyperlinks hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
-			return hyperlinks;
-		}
-		internal X.MergeCells GetWorkSheetMergeCell()
-		{
-			X.MergeCells mergeCells = openXMLworksheet.Elements<X.MergeCells>().FirstOrDefault();
-			return mergeCells;
-		}
-		internal void AddHyperlink(string relationshipId, string toolTip)
-		{
-			AddHyperlink(relationshipId, toolTip, null);
-		}
-		internal void AddHyperlink(string relationshipId, string toolTip, string location)
-		{
-			X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks() ?? openXMLworksheet.AppendChild(new X.Hyperlinks());
-			if (location != null)
-			{
-				hyperlinks.AppendChild(new X.Hyperlink()
-				{
-					Reference = relationshipId,
-					Tooltip = toolTip,
-					Location = location,
-				});
-			}
-			else
-			{
-				hyperlinks.AppendChild(new X.Hyperlink()
-				{
-					Reference = relationshipId,
-					Tooltip = toolTip,
-				});
-			}
-		}
-		internal WorksheetPart GetWorksheetPart()
-		{
-			return openXMLworksheet.WorksheetPart;
-		}
-		internal string GetNextSheetPartRelationId()
-		{
-			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
-			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
-		}
-		internal string GetNextDrawingPartRelationId()
-		{
-			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
-			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
-		}
-		/// <summary>
 		/// Returns the sheet name of the current worksheet.
 		/// </summary>
 		public string GetSheetName()
@@ -272,41 +207,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			openXMLworksheet.Save();
 		}
 		/// <summary>
-		/// Gets the CellValues enumeration corresponding to the specified cell data type.
-		/// </summary>
-		private X.CellValues GetCellValueType(CellDataType cellDataType)
-		{
-			switch (cellDataType)
-			{
-				case CellDataType.DATE:
-					return X.CellValues.Date;
-				case CellDataType.NUMBER:
-					return X.CellValues.Number;
-				default:
-					return X.CellValues.String;
-			}
-		}
-		private DataType GetCellDataType(EnumValue<X.CellValues> cellValueType)
-		{
-			if (cellValueType == null)
-			{
-				return DataType.STRING;
-			}
-			else
-			{
-				string valueType = cellValueType.ToString();
-				switch (valueType)
-				{
-					case "d":
-						return DataType.DATE;
-					case "n":
-						return DataType.NUMBER;
-					default:
-						return DataType.STRING;
-				}
-			}
-		}
-		/// <summary>
 		///
 		/// </summary>
 		public Picture AddPicture(string filePath, ExcelPictureSetting pictureSetting)
@@ -323,14 +223,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return new Picture(this, stream, pictureSetting);
 			}
 			throw new ArgumentException("At least one cell range must be covered by the picture.");
-		}
-		internal DrawingsPart GetDrawingsPart()
-		{
-			return GetDrawingsPart(this);
-		}
-		internal XDR.WorksheetDrawing GetDrawing()
-		{
-			return GetDrawing(this);
 		}
 		/// <summary>
 		///
@@ -481,6 +373,111 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				});
 			}
 			return mergeCellRanges;
+		}
+		internal X.Worksheet GetWorksheet()
+		{
+			return openXMLworksheet;
+		}
+		internal X.SheetData GetWorkSheetData()
+		{
+			X.SheetData SheetData = openXMLworksheet.Elements<X.SheetData>().FirstOrDefault();
+			if (SheetData == null)
+			{
+				return openXMLworksheet.AppendChild(new X.SheetData());
+			}
+			return SheetData;
+		}
+		internal X.Hyperlinks GetWorkSheetHyperlinks()
+		{
+			X.Hyperlinks hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
+			return hyperlinks;
+		}
+		internal X.MergeCells GetWorkSheetMergeCell()
+		{
+			X.MergeCells mergeCells = openXMLworksheet.Elements<X.MergeCells>().FirstOrDefault();
+			return mergeCells;
+		}
+		internal void AddHyperlink(string relationshipId, string toolTip)
+		{
+			AddHyperlink(relationshipId, toolTip, null);
+		}
+		internal void AddHyperlink(string relationshipId, string toolTip, string location)
+		{
+			X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks() ?? openXMLworksheet.AppendChild(new X.Hyperlinks());
+			if (location != null)
+			{
+				hyperlinks.AppendChild(new X.Hyperlink()
+				{
+					Reference = relationshipId,
+					Tooltip = toolTip,
+					Location = location,
+				});
+			}
+			else
+			{
+				hyperlinks.AppendChild(new X.Hyperlink()
+				{
+					Reference = relationshipId,
+					Tooltip = toolTip,
+				});
+			}
+		}
+		internal WorksheetPart GetWorksheetPart()
+		{
+			return openXMLworksheet.WorksheetPart;
+		}
+		internal string GetNextSheetPartRelationId()
+		{
+			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
+			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
+		}
+		internal string GetNextDrawingPartRelationId()
+		{
+			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
+			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
+		}
+		/// <summary>
+		/// Gets the CellValues enumeration corresponding to the specified cell data type.
+		/// </summary>
+		private X.CellValues GetCellValueType(CellDataType cellDataType)
+		{
+			switch (cellDataType)
+			{
+				case CellDataType.DATE:
+					return X.CellValues.Date;
+				case CellDataType.NUMBER:
+					return X.CellValues.Number;
+				default:
+					return X.CellValues.String;
+			}
+		}
+		private DataType GetCellDataType(EnumValue<X.CellValues> cellValueType)
+		{
+			if (cellValueType == null)
+			{
+				return DataType.STRING;
+			}
+			else
+			{
+				string valueType = cellValueType.ToString();
+				switch (valueType)
+				{
+					case "d":
+						return DataType.DATE;
+					case "n":
+						return DataType.NUMBER;
+					default:
+						return DataType.STRING;
+				}
+			}
+		}
+		internal DrawingsPart GetDrawingsPart()
+		{
+			return GetDrawingsPart(this);
+		}
+		internal XDR.WorksheetDrawing GetDrawing()
+		{
+			return GetDrawing(this);
 		}
 		private static bool IsWithinRange(int x, int y, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
 		{

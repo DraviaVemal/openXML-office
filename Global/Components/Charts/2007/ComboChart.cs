@@ -99,26 +99,28 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				title = comboChartSetting.chartAxisOptions.categoryAxisTitle,
 				axisLabelPosition = comboChartSetting.chartAxisOptions.categoryAxisLabelPosition,
 				axisLabelRotationAngle = comboChartSetting.chartAxisOptions.categoryAxisLabelAngle,
 				axisPosition = comboChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = comboChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = comboChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = comboChartSetting.chartAxesOptions.isHorizontalItalic,
-				isVisible = comboChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+				isVisible = comboChartSetting.chartAxesOptions.isHorizontalAxesVisible,
 				invertOrder = comboChartSetting.chartAxisOptions.categoryInReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				title = comboChartSetting.chartAxisOptions.valueAxisTitle,
 				axisLabelPosition = comboChartSetting.chartAxisOptions.valueAxisLabelPosition,
 				axisLabelRotationAngle = comboChartSetting.chartAxisOptions.valueAxisLabelAngle,
 				axisPosition = comboChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = comboChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = comboChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = comboChartSetting.chartAxesOptions.isVerticalItalic,
-				isVisible = comboChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+				isVisible = comboChartSetting.chartAxesOptions.isVerticalAxesVisible,
 				invertOrder = comboChartSetting.chartAxisOptions.valuesInReverseOrder,
 			}));
 			if (isSecondaryAxisActive)

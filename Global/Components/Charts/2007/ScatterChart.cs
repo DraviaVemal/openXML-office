@@ -53,26 +53,28 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				title = scatterChartSetting.chartAxisOptions.categoryAxisTitle,
 				axisLabelPosition = scatterChartSetting.chartAxisOptions.categoryAxisLabelPosition,
 				axisLabelRotationAngle = scatterChartSetting.chartAxisOptions.categoryAxisLabelAngle,
 				axisPosition = scatterChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = scatterChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = scatterChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = scatterChartSetting.chartAxesOptions.isHorizontalItalic,
-				isVisible = scatterChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+				isVisible = scatterChartSetting.chartAxesOptions.isHorizontalAxesVisible,
 				invertOrder = scatterChartSetting.chartAxisOptions.categoryInReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				title = scatterChartSetting.chartAxisOptions.valueAxisTitle,
 				axisLabelPosition = scatterChartSetting.chartAxisOptions.valueAxisLabelPosition,
 				axisLabelRotationAngle = scatterChartSetting.chartAxisOptions.valueAxisLabelAngle,
 				axisPosition = scatterChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = scatterChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = scatterChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = scatterChartSetting.chartAxesOptions.isVerticalItalic,
-				isVisible = scatterChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+				isVisible = scatterChartSetting.chartAxesOptions.isVerticalAxesVisible,
 				invertOrder = scatterChartSetting.chartAxisOptions.valuesInReverseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());

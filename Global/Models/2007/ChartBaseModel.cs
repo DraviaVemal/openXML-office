@@ -116,6 +116,7 @@ namespace OpenXMLOffice.Global_2007
 		internal AxisLabelPosition axisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
 		internal int axisLabelRotationAngle = 0;
 		internal uint crossAxisId;
+		internal string title;
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
@@ -168,7 +169,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Horizontal Axes Enabled
 		/// </summary>
-		public bool isHorizontalAxesEnabled = true;
+		public bool isHorizontalAxesVisible = true;
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
@@ -220,7 +221,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Is Vertical Axes Enabled
 		/// </summary>
-		public bool isVerticalAxesEnabled = true;
+		public bool isVerticalAxesVisible = true;
 	}
 	/// <summary>
 	/// Represents the options for a chart axis.
@@ -278,6 +279,15 @@ namespace OpenXMLOffice.Global_2007
 			}
 		}
 		private int _valueAxisLabelAngle = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string valueAxisTitle;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string categoryAxisTitle;
+
 		/// <summary>
 		/// Set Text Angle between -90 to 90 degree
 		/// </summary>
@@ -759,6 +769,7 @@ namespace OpenXMLOffice.Global_2007
 		internal C.TickMarkValues majorTickMark = C.TickMarkValues.None;
 		internal C.TickMarkValues minorTickMark = C.TickMarkValues.None;
 		internal C.CrossesValues crosses = C.CrossesValues.AutoZero;
+		internal string title;
 
 		internal static C.TickLabelPositionValues GetLabelAxisPosition(AxisLabelPosition axisLabelPosition)
 		{

@@ -37,26 +37,28 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				title = lineChartSetting.chartAxisOptions.categoryAxisTitle,
 				axisLabelPosition = lineChartSetting.chartAxisOptions.categoryAxisLabelPosition,
 				axisLabelRotationAngle = lineChartSetting.chartAxisOptions.categoryAxisLabelAngle,
 				axisPosition = lineChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = lineChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = lineChartSetting.chartAxesOptions.isHorizontalItalic,
-				isVisible = lineChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
+				isVisible = lineChartSetting.chartAxesOptions.isHorizontalAxesVisible,
 				invertOrder = lineChartSetting.chartAxisOptions.categoryInReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				title = lineChartSetting.chartAxisOptions.valueAxisTitle,
 				axisLabelPosition = lineChartSetting.chartAxisOptions.valueAxisLabelPosition,
 				axisLabelRotationAngle = lineChartSetting.chartAxisOptions.valueAxisLabelAngle,
 				axisPosition = lineChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = lineChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = lineChartSetting.chartAxesOptions.isVerticalItalic,
-				isVisible = lineChartSetting.chartAxesOptions.isVerticalAxesEnabled,
+				isVisible = lineChartSetting.chartAxesOptions.isVerticalAxesVisible,
 				invertOrder = lineChartSetting.chartAxisOptions.valuesInReverseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
