@@ -635,7 +635,7 @@ namespace OpenXMLOffice.Tests
 			{
 				name = "New Table",
 				widthType = TableSetting.WidthOptionValues.PERCENTAGE,
-				tableColumnWidth = new() { 80, 20 },
+				tableColumnWidth = new() { 40, 30, 15, 10, 5 },
 				x = (uint)G.ConverterUtils.PixelsToEmu(10),
 				y = (uint)G.ConverterUtils.PixelsToEmu(10),
 			});
@@ -734,7 +734,7 @@ namespace OpenXMLOffice.Tests
 			{
 				name = "New Table",
 				widthType = TableSetting.WidthOptionValues.PERCENTAGE,
-				tableColumnWidth = new() { 80, 20 },
+				tableColumnWidth = new() { 40, 30, 15, 10, 5 },
 			}));
 			shapes2[0].ReplacePicture(slide.AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
 			{
@@ -937,62 +937,49 @@ namespace OpenXMLOffice.Tests
 			}
 			return data;
 		}
-		private static TableRow[] CreateTableRowPayload(int rowCount)
+		private static TableRow[] CreateTableRowPayload(int rowCount = 5, int columnCount = 5)
 		{
 			TableRow[] data = new TableRow[rowCount];
 			for (int i = 0; i < rowCount; i++)
 			{
-				TableRow row = new()
+				List<TableCell> tableCells = new();
+				for (int j = 0; j < columnCount; j++)
 				{
-					height = 370840,
-					tableCells = new List<TableCell>
-				{
-					new() {
-						value = $"Row {i + 1}, Cell 1",
+					tableCells.Add(new()
+					{
+						value = $"Row {i + 1}, Column {j + 1}",
 						textColor = "FF0000",
-						fontSize=22,
-						borderSettings = new(){
-							leftBorder = new(){
+						fontSize = 25 / (j + 1),
+						rowSpan = (uint)((i == 0 && j == 0) ? 3 : 0),
+						columnSpan = (uint)(i == 5 && j == 2 ? 3 : 0),
+						borderSettings = new()
+						{
+							leftBorder = new()
+							{
 								showBorder = false
 							},
-							topBorder = new(){
+							topBorder = new()
+							{
 								showBorder = true,
 								borderColor = "FF0000",
 								width = 2
 							},
-							rightBorder = new(){
+							rightBorder = new()
+							{
 								showBorder = false
 							},
-							bottomBorder = new(){
+							bottomBorder = new()
+							{
 								showBorder = true
 							}
 						},
-						horizontalAlignment = G.HorizontalAlignmentValues.LEFT+ (i % 4)
-					},
-					new() {
-						value = $"Row {i + 1}, Cell 2",
-						textColor = "00FF00",
-						isBold = true,
-						borderSettings = new(){
-							leftBorder = new(){
-								showBorder = true
-							},
-							topBorder = new(){
-								showBorder = false
-							},
-							rightBorder = new(){
-								showBorder = true,
-								borderColor= "0000FF",
-								width = 1
-							},
-							bottomBorder = new(){
-								showBorder = true
-							}
-						},
-						isItalic = true,
-						verticalAlignment = G.VerticalAlignmentValues.TOP +(i % 3)
-					},
+						horizontalAlignment = G.HorizontalAlignmentValues.LEFT + (i % 4)
+					});
 				}
+				TableRow row = new()
+				{
+					height = 370840,
+					tableCells = tableCells
 				};
 				data[i] = row;
 			}

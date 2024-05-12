@@ -66,6 +66,14 @@ namespace OpenXMLOffice.Presentation_2007
 	public class TableCell
 	{
 		/// <summary>
+		/// Merge rows below this cell
+		/// </summary>
+		public uint rowSpan = 0;
+		/// <summary>
+		/// Merge Columns to the right of this cell
+		/// </summary>
+		public uint columnSpan = 0;
+		/// <summary>
 		/// Cell Alignment Option
 		/// </summary>
 		public HorizontalAlignmentValues? horizontalAlignment;

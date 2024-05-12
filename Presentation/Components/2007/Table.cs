@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using G = OpenXMLOffice.Global_2007;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -57,8 +56,8 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public void UpdatePosition(uint X, uint Y)
 		{
-			tableSetting.x = (uint)ConverterUtils.PixelsToEmu((int)X);
-			tableSetting.y = (uint)ConverterUtils.PixelsToEmu((int)Y);
+			tableSetting.x = (uint)G.ConverterUtils.PixelsToEmu((int)X);
+			tableSetting.y = (uint)G.ConverterUtils.PixelsToEmu((int)Y);
 			if (graphicFrame != null)
 			{
 				graphicFrame.Transform = new P.Transform
@@ -74,8 +73,8 @@ namespace OpenXMLOffice.Presentation_2007
 		public void UpdateSize(uint Width, uint Height)
 		{
 			ReCalculateColumnWidth();
-			tableSetting.width = (uint)ConverterUtils.PixelsToEmu((int)Width);
-			tableSetting.height = (uint)ConverterUtils.PixelsToEmu((int)Height);
+			tableSetting.width = (uint)G.ConverterUtils.PixelsToEmu((int)Width);
+			tableSetting.height = (uint)G.ConverterUtils.PixelsToEmu((int)Height);
 			if (graphicFrame != null)
 			{
 				graphicFrame.Transform = new P.Transform
@@ -200,6 +199,14 @@ namespace OpenXMLOffice.Presentation_2007
 				new A.ListStyle(),
 				paragraph
 			));
+			if (cell.columnSpan > 0)
+			{
+				tableCellXML.GridSpan = (int)cell.columnSpan;
+			}
+			if (cell.rowSpan > 0)
+			{
+				tableCellXML.RowSpan = (int)cell.rowSpan;
+			}
 			A.TextAnchoringTypeValues anchor;
 			switch (cell.verticalAlignment)
 			{
