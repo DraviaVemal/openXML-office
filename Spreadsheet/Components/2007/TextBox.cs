@@ -6,7 +6,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 {
 
 	/// <summary>
-	/// Represents Textbox class to build on
+	/// Represents Text box class to build on
 	/// </summary>
 	public class TextBox : CommonProperties
 	{
@@ -14,14 +14,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		private readonly XDR.Shape openXMLShape;
 		private readonly Worksheet worksheet;
 		/// <summary>
-		/// Create Textbox with provided settings
+		/// Create Text box with provided settings
 		/// </summary>
 		internal TextBox(TextBoxSetting TextBoxSetting)
 		{
 			textBoxSetting = TextBoxSetting;
 		}
 		/// <summary>
-		/// Create Textbox with provided settings
+		/// Create Text box with provided settings
 		/// </summary>
 		public TextBox(Worksheet Worksheet, TextBoxSetting TextBoxSetting)
 		{
@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			textBoxSetting = TextBoxSetting;
 		}
 		/// <summary>
-		/// Get Textbox Shape
+		/// Get Text box Shape
 		/// </summary>
 		internal XDR.Shape GetTextBoxShape()
 		{

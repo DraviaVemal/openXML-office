@@ -20,75 +20,75 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
-			InitialiseChartParts();
+			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartDatas, dataRange, areaChartSetting);
 		}
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) : base(worksheet, barChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) : base(worksheet, barChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
-			InitialiseChartParts();
+			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
-			CreateChart(chartDatas, dataRange, barChartSetting);
+			CreateChart(chartData, dataRange, barChartSetting);
 		}
 		/// <summary>
 		/// Create Column Chart with provided settings
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) : base(worksheet, columnChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) : base(worksheet, columnChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
-			InitialiseChartParts();
+			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
-			CreateChart(chartDatas, dataRange, columnChartSetting);
+			CreateChart(chartData, dataRange, columnChartSetting);
 		}
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) : base(worksheet, lineChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) : base(worksheet, lineChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
-			InitialiseChartParts();
+			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
-			CreateChart(chartDatas, dataRange, lineChartSetting);
+			CreateChart(chartData, dataRange, lineChartSetting);
 		}
 		/// <summary>
 		/// Create Pie Chart with provided settings
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) : base(worksheet, pieChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) : base(worksheet, pieChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
-			InitialiseChartParts();
+			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
-			CreateChart(chartDatas, dataRange, pieChartSetting);
+			CreateChart(chartData, dataRange, pieChartSetting);
 		}
 		/// <summary>
 		/// Create Scatter Chart with provided settings
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) : base(worksheet, scatterChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) : base(worksheet, scatterChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
-			InitialiseChartParts();
+			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
-			CreateChart(chartDatas, dataRange, scatterChartSetting);
+			CreateChart(chartData, dataRange, scatterChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) : base(worksheet, comboChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) : base(worksheet, comboChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
-			InitialiseChartParts();
+			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
-			CreateChart(chartDatas, dataRange, comboChartSetting);
+			CreateChart(chartData, dataRange, comboChartSetting);
 		}
 		internal string GetNextChartRelationId()
 		{
@@ -96,7 +96,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private void ConnectDrawingToChart(Worksheet worksheet, string chartId)
 		{
-			// Add anchor to drawing for chart grapics
+			// Add anchor to drawing for chart graphics
 			XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
 			{
 				anchorEditType = AnchorEditType.NONE,
@@ -123,39 +123,39 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			});
 			worksheet.GetDrawing().AppendChild(twoCellAnchor);
 		}
-		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
 		{
-			AreaChart<ApplicationSpecificSetting> areaChart = new AreaChart<ApplicationSpecificSetting>(areaChartSetting, chartDatas, dataRange);
+			AreaChart<ApplicationSpecificSetting> areaChart = new AreaChart<ApplicationSpecificSetting>(areaChartSetting, chartData, dataRange);
 			SaveChanges(areaChart);
 		}
-		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting)
 		{
-			BarChart<ApplicationSpecificSetting> barChart = new BarChart<ApplicationSpecificSetting>(barChartSetting, chartDatas, dataRange);
+			BarChart<ApplicationSpecificSetting> barChart = new BarChart<ApplicationSpecificSetting>(barChartSetting, chartData, dataRange);
 			SaveChanges(barChart);
 		}
-		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
 		{
-			ColumnChart<ApplicationSpecificSetting> columnChart = new ColumnChart<ApplicationSpecificSetting>(columnChartSetting, chartDatas, dataRange);
+			ColumnChart<ApplicationSpecificSetting> columnChart = new ColumnChart<ApplicationSpecificSetting>(columnChartSetting, chartData, dataRange);
 			SaveChanges(columnChart);
 		}
-		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
 		{
-			LineChart<ApplicationSpecificSetting> lineChart = new LineChart<ApplicationSpecificSetting>(lineChartSetting, chartDatas, dataRange);
+			LineChart<ApplicationSpecificSetting> lineChart = new LineChart<ApplicationSpecificSetting>(lineChartSetting, chartData, dataRange);
 			SaveChanges(lineChart);
 		}
-		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
 		{
-			PieChart<ApplicationSpecificSetting> pieChart = new PieChart<ApplicationSpecificSetting>(pieChartSetting, chartDatas, dataRange);
+			PieChart<ApplicationSpecificSetting> pieChart = new PieChart<ApplicationSpecificSetting>(pieChartSetting, chartData, dataRange);
 			SaveChanges(pieChart);
 		}
-		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
 		{
-			ScatterChart<ApplicationSpecificSetting> scatterChart = new ScatterChart<ApplicationSpecificSetting>(scatterChartSetting, chartDatas, dataRange);
+			ScatterChart<ApplicationSpecificSetting> scatterChart = new ScatterChart<ApplicationSpecificSetting>(scatterChartSetting, chartData, dataRange);
 			SaveChanges(scatterChart);
 		}
-		private void CreateChart(ChartData[][] chartDatas, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting)
 		{
-			ComboChart<ApplicationSpecificSetting> comboChart = new ComboChart<ApplicationSpecificSetting>(comboChartSetting, chartDatas, dataRange);
+			ComboChart<ApplicationSpecificSetting> comboChart = new ComboChart<ApplicationSpecificSetting>(comboChartSetting, chartData, dataRange);
 			SaveChanges(comboChart);
 		}
 		private void SaveChanges(ChartBase<ApplicationSpecificSetting> chart)
@@ -180,7 +180,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return openXMLChartPart.ChartStyleParts.FirstOrDefault();
 		}
-		private void InitialiseChartParts()
+		private void InitializeChartParts()
 		{
 			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
 			GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
