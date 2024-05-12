@@ -49,6 +49,11 @@ namespace OpenXMLOffice.Tests
 				{
 					value = "https://openxml-office.draviavemal.com/"
 				},
+				chartAxisOptions = new()
+				{
+					categoryAxisLabelPosition = G.AxisLabelPosition.HIGH,
+					categoryAxisLabelAngle = 20
+				},
 				applicationSpecificSetting = new()
 			});
 			//2

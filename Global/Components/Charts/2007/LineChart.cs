@@ -37,6 +37,8 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				axisLabelPosition = lineChartSetting.chartAxisOptions.categoryAxisLabelPosition,
+				axisLabelRotationAngle = lineChartSetting.chartAxisOptions.categoryAxisLabelAngle,
 				axisPosition = lineChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = lineChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isHorizontalBold,
@@ -48,6 +50,8 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				axisLabelPosition = lineChartSetting.chartAxisOptions.valueAxisLabelPosition,
+				axisLabelRotationAngle = lineChartSetting.chartAxisOptions.valueAxisLabelAngle,
 				axisPosition = lineChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = lineChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isVerticalBold,

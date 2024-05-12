@@ -2,10 +2,34 @@
 
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OpenXMLOffice.Global_2013;
+using DocumentFormat.OpenXml;
+using System;
 
 
 namespace OpenXMLOffice.Global_2007
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	public enum AxisLabelPosition
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		NEXT_TO_AXIS,
+		/// <summary>
+		/// 
+		/// </summary>
+		LOW,
+		/// <summary>
+		/// 
+		/// </summary>
+		HIGH,
+		/// <summary>
+		/// 
+		/// </summary>
+		NONE
+	}
 	/// <summary>
 	/// Represents the position of an axis in a chart.
 	/// </summary>
@@ -89,6 +113,8 @@ namespace OpenXMLOffice.Global_2007
 	{
 		internal uint id;
 		internal AxisPosition axisPosition = AxisPosition.BOTTOM;
+		internal AxisLabelPosition axisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
+		internal int axisLabelRotationAngle = 0;
 		internal uint crossAxisId;
 		/// <summary>
 		/// Is Font Bold
@@ -119,6 +145,20 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		internal bool isVisible = true;
 		internal bool invertOrder;
+		internal static C.TickLabelPositionValues GetLabelAxisPosition(AxisLabelPosition axisLabelPosition)
+		{
+			switch (axisLabelPosition)
+			{
+				case AxisLabelPosition.LOW:
+					return C.TickLabelPositionValues.Low;
+				case AxisLabelPosition.HIGH:
+					return C.TickLabelPositionValues.High;
+				case AxisLabelPosition.NONE:
+					return C.TickLabelPositionValues.None;
+				default:
+					return C.TickLabelPositionValues.NextTo;
+			}
+		}
 	}
 	/// <summary>
 	/// Represents the options for the axes in a chart.
@@ -203,6 +243,66 @@ namespace OpenXMLOffice.Global_2007
 		/// Value Axis will get inverted with the flag 
 		/// </summary>
 		public bool valuesInReverseOrder = false;
+		/// <summary>
+		/// Axis Label Position.
+		/// </summary>
+		public AxisLabelPosition valueAxisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
+		/// <summary>
+		/// Axis Label Position.
+		/// </summary>
+		public AxisLabelPosition categoryAxisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
+		private int _categoryAxisLabelAngle = 0;
+		/// <summary>
+		/// Set Text Angle between -90 to 90 degree
+		/// </summary>
+		public int categoryAxisLabelAngle
+		{
+			get
+			{
+				return _categoryAxisLabelAngle;
+			}
+			set
+			{
+				if (value > 90)
+				{
+					_categoryAxisLabelAngle = 90;
+				}
+				else if (value < -90)
+				{
+					_categoryAxisLabelAngle = -90;
+				}
+				else
+				{
+					_categoryAxisLabelAngle = value;
+				}
+			}
+		}
+		private int _valueAxisLabelAngle = 0;
+		/// <summary>
+		/// Set Text Angle between -90 to 90 degree
+		/// </summary>
+		public int valueAxisLabelAngle
+		{
+			get
+			{
+				return _valueAxisLabelAngle;
+			}
+			set
+			{
+				if (value > 90)
+				{
+					_valueAxisLabelAngle = 90;
+				}
+				else if (value < -90)
+				{
+					_valueAxisLabelAngle = -90;
+				}
+				else
+				{
+					_valueAxisLabelAngle = value;
+				}
+			}
+		}
 	}
 	/// <summary>
 	/// Represents the grouping options for chart data.
@@ -621,6 +721,8 @@ namespace OpenXMLOffice.Global_2007
 	{
 		internal uint id;
 		internal AxisPosition axisPosition = AxisPosition.LEFT;
+		internal AxisLabelPosition axisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
+		internal int axisLabelRotationAngle = 0;
 		internal uint crossAxisId;
 		/// <summary>
 		/// Is Font Bold
@@ -657,6 +759,21 @@ namespace OpenXMLOffice.Global_2007
 		internal C.TickMarkValues majorTickMark = C.TickMarkValues.None;
 		internal C.TickMarkValues minorTickMark = C.TickMarkValues.None;
 		internal C.CrossesValues crosses = C.CrossesValues.AutoZero;
+
+		internal static C.TickLabelPositionValues GetLabelAxisPosition(AxisLabelPosition axisLabelPosition)
+		{
+			switch (axisLabelPosition)
+			{
+				case AxisLabelPosition.LOW:
+					return C.TickLabelPositionValues.Low;
+				case AxisLabelPosition.HIGH:
+					return C.TickLabelPositionValues.High;
+				case AxisLabelPosition.NONE:
+					return C.TickLabelPositionValues.None;
+				default:
+					return C.TickLabelPositionValues.NextTo;
+			}
+		}
 	}
 	/// <summary>
 	///

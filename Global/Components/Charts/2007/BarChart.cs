@@ -231,6 +231,8 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				axisLabelPosition = barChartSetting.chartAxisOptions.categoryAxisLabelPosition,
+				axisLabelRotationAngle = barChartSetting.chartAxisOptions.categoryAxisLabelAngle,
 				axisPosition = barChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = barChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = barChartSetting.chartAxesOptions.isVerticalBold,
@@ -242,6 +244,8 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				axisLabelPosition = barChartSetting.chartAxisOptions.valueAxisLabelPosition,
+				axisLabelRotationAngle = barChartSetting.chartAxisOptions.valueAxisLabelAngle,
 				axisPosition = barChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = barChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = barChartSetting.chartAxesOptions.isHorizontalBold,

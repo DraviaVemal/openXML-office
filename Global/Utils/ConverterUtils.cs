@@ -46,6 +46,13 @@ namespace OpenXMLOffice.Global_2007
 			return Tuple.Create(rowIndex, columnIndex);
 		}
 		/// <summary>
+		/// Rotation Geometry Angle to PPT rotation 
+		/// </summary>
+		public static int ConvertAngleDegreeToRotation(int angle)
+		{
+			return angle * 60000;
+		}
+		/// <summary>
 		/// Converts an integer representing an Excel column index to its corresponding column name.
 		/// </summary>
 		public static string ConvertIntToColumnName(int column)

@@ -747,7 +747,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			A.BodyProperties bodyProperties = new A.BodyProperties(new A.ShapeAutoFit())
 			{
-				Rotation = drawingBodyPropertiesModel.rotation
+				Rotation = ConverterUtils.ConvertAngleDegreeToRotation(drawingBodyPropertiesModel.rotation)
 			};
 			if (drawingBodyPropertiesModel.leftInset != null)
 			{

@@ -95,7 +95,7 @@ namespace OpenXMLOffice.Global_2007
 				new C.AxisPosition { Val = axisPositionValue },
 				new C.MajorTickMark { Val = C.TickMarkValues.None },
 				new C.MinorTickMark { Val = C.TickMarkValues.None },
-				new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo }
+				new C.TickLabelPosition { Val = CategoryAxisSetting.GetLabelAxisPosition(categoryAxisSetting.axisLabelPosition) }
 			);
 			if (categoryAxisSetting.isVisible)
 			{
@@ -124,7 +124,10 @@ namespace OpenXMLOffice.Global_2007
 				}
 				CategoryAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 				{
-					drawingBodyProperties = new DrawingBodyPropertiesModel(),
+					drawingBodyProperties = new DrawingBodyPropertiesModel()
+					{
+						rotation = categoryAxisSetting.axisLabelRotationAngle
+					},
 					drawingParagraph = new DrawingParagraphModel()
 					{
 						paragraphPropertiesModel = new ParagraphPropertiesModel()
@@ -362,7 +365,7 @@ namespace OpenXMLOffice.Global_2007
 				new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
 				new C.MajorTickMark { Val = valueAxisSetting.majorTickMark },
 				new C.MinorTickMark { Val = valueAxisSetting.minorTickMark },
-				new C.TickLabelPosition { Val = C.TickLabelPositionValues.NextTo });
+				new C.TickLabelPosition { Val = ValueAxisSetting.GetLabelAxisPosition(valueAxisSetting.axisLabelPosition) });
 			valueAxis.Append(CreateChartShapeProperties());
 			SolidFillModel solidFillModel = new SolidFillModel()
 			{
@@ -380,7 +383,10 @@ namespace OpenXMLOffice.Global_2007
 			}
 			valueAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 			{
-				drawingBodyProperties = new DrawingBodyPropertiesModel(),
+				drawingBodyProperties = new DrawingBodyPropertiesModel()
+				{
+					rotation = valueAxisSetting.axisLabelRotationAngle
+				},
 				drawingParagraph = new DrawingParagraphModel()
 				{
 					paragraphPropertiesModel = new ParagraphPropertiesModel()
