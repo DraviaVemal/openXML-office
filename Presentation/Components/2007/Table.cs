@@ -14,6 +14,14 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class Table : G.CommonProperties
 	{
+		private class MergeRange
+		{
+			public int topLeftX;
+			public int topLeftY;
+			public int bottomRightX;
+			public int bottomRightY;
+		}
+		private List<MergeRange> mergeRanges = new List<MergeRange>();
 		private readonly P.GraphicFrame graphicFrame = new P.GraphicFrame();
 		private readonly TableSetting tableSetting;
 		/// <summary>
@@ -104,6 +112,99 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			return calculatedWidth;
 		}
+		private void CreateTableGraphicFrame(TableRow[] TableRows)
+		{
+			A.GraphicData GraphicData = new A.GraphicData(CreateTable(TableRows))
+			{
+				Uri = "http://schemas.openxmlformats.org/drawingml/2006/table"
+			};
+			graphicFrame.NonVisualGraphicFrameProperties = new P.NonVisualGraphicFrameProperties(
+			   new P.NonVisualDrawingProperties()
+			   {
+				   Id = 1,
+				   Name = "Table 1"
+			   },
+			   new P.NonVisualGraphicFrameDrawingProperties(
+				new A.GraphicFrameLocks()
+				{
+					NoGrouping = true
+				}),
+			   new P.ApplicationNonVisualDrawingProperties());
+			graphicFrame.Graphic = new A.Graphic()
+			{
+				GraphicData = GraphicData
+			};
+			graphicFrame.Transform = new P.Transform()
+			{
+				Offset = new A.Offset()
+				{
+					X = tableSetting.x,
+					Y = tableSetting.y
+				},
+				Extents = new A.Extents()
+				{
+					Cx = tableSetting.width,
+					Cy = tableSetting.height
+				}
+			};
+		}
+		private A.TableGrid CreateTableGrid(int ColumnCount)
+		{
+			A.TableGrid TableGrid = new A.TableGrid();
+			if (tableSetting.widthType == TableSetting.WidthOptionValues.AUTO)
+			{
+				for (int i = 0; i < ColumnCount; i++)
+				{
+					TableGrid.Append(new A.GridColumn() { Width = tableSetting.width / ColumnCount });
+				}
+			}
+			else
+			{
+				for (int i = 0; i < ColumnCount; i++)
+				{
+					TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
+				}
+			}
+			return TableGrid;
+		}
+		private void AddMergeRange(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
+		{
+			if (mergeRanges.Any(
+				range =>
+					G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
+					G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY)))
+			{
+				throw new ArgumentException("Table Merge Range Conflict");
+			}
+			mergeRanges.Add(new MergeRange()
+			{
+				topLeftX = topLeftX,
+				topLeftY = topLeftY,
+				bottomRightX = bottomRightX,
+				bottomRightY = bottomRightY,
+			});
+		}
+		private bool CheckIsColumnMerged(int col, int row)
+		{
+			return mergeRanges.Any(range =>
+			{
+				return range.topLeftY == range.bottomRightY && G.Validation.IsWithinRange(col, row, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY);
+			});
+		}
+		private bool CheckIsRowMerged(int col, int row)
+		{
+			return mergeRanges.Any(range =>
+			{
+				return range.topLeftX == range.bottomRightX && G.Validation.IsWithinRange(col, row, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY);
+			});
+		}
+		private bool CheckIsRangeMerged(int col, int row)
+		{
+			return mergeRanges.Any(range =>
+			{
+				return G.Validation.IsWithinRange(col, row, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY);
+			});
+		}
 		private A.Table CreateTable(TableRow[] TableRows)
 		{
 			if (TableRows.Length < 1 || TableRows[0].tableCells.Count < 1)
@@ -123,15 +224,36 @@ namespace OpenXMLOffice.Presentation_2007
 				},
 				TableGrid = CreateTableGrid(TableRows[0].tableCells.Count)
 			};
+			int rowIndex = 0;
 			// Add Table Data Row
 			foreach (TableRow row in TableRows)
 			{
-				Table.Append(CreateTableRow(row));
+				Table.Append(CreateTableRow(row, rowIndex));
+				++rowIndex;
 			}
 			return Table;
 		}
-		private static A.TableCell CreateTableCell(TableCell cell, TableRow row)
+		private A.TableRow CreateTableRow(TableRow row, int rowIndex)
 		{
+			A.TableRow TableRow = new A.TableRow()
+			{
+				Height = row.height
+			};
+			int columnIndex = 0;
+			foreach (TableCell cell in row.tableCells)
+			{
+				TableRow.Append(CreateTableCell(cell, row, rowIndex, columnIndex));
+				++columnIndex;
+			}
+			return TableRow;
+		}
+
+		private A.TableCell CreateTableCell(TableCell cell, TableRow row, int rowIndex, int columnIndex)
+		{
+			if (cell.rowSpan > 1 || cell.columnSpan > 1)
+			{
+				AddMergeRange(rowIndex, columnIndex, (int)(cell.rowSpan > 1 ? (rowIndex + cell.rowSpan) : rowIndex), (int)(cell.columnSpan > 1 ? (columnIndex + cell.columnSpan) : columnIndex));
+			}
 			A.Paragraph paragraph = new A.Paragraph();
 			if (cell.horizontalAlignment != null)
 			{
@@ -199,13 +321,20 @@ namespace OpenXMLOffice.Presentation_2007
 				new A.ListStyle(),
 				paragraph
 			));
-			if (cell.columnSpan > 0)
+			if (cell.columnSpan > 1)
 			{
 				tableCellXML.GridSpan = (int)cell.columnSpan;
 			}
-			if (cell.rowSpan > 0)
+			if (cell.rowSpan > 1)
 			{
 				tableCellXML.RowSpan = (int)cell.rowSpan;
+			}
+			tableCellXML.HorizontalMerge = CheckIsColumnMerged(columnIndex, rowIndex);
+			tableCellXML.VerticalMerge = CheckIsRowMerged(columnIndex, rowIndex);
+			if (!(tableCellXML.HorizontalMerge || tableCellXML.VerticalMerge) && CheckIsRangeMerged(columnIndex, rowIndex))
+			{
+				tableCellXML.HorizontalMerge = true;
+				tableCellXML.VerticalMerge = true;
 			}
 			A.TextAnchoringTypeValues anchor;
 			switch (cell.verticalAlignment)
@@ -327,73 +456,6 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			tableCellXML.Append(tableCellProperties);
 			return tableCellXML;
-		}
-		private void CreateTableGraphicFrame(TableRow[] TableRows)
-		{
-			A.GraphicData GraphicData = new A.GraphicData(CreateTable(TableRows))
-			{
-				Uri = "http://schemas.openxmlformats.org/drawingml/2006/table"
-			};
-			graphicFrame.NonVisualGraphicFrameProperties = new P.NonVisualGraphicFrameProperties(
-			   new P.NonVisualDrawingProperties()
-			   {
-				   Id = 1,
-				   Name = "Table 1"
-			   },
-			   new P.NonVisualGraphicFrameDrawingProperties(
-				new A.GraphicFrameLocks()
-				{
-					NoGrouping = true
-				}),
-			   new P.ApplicationNonVisualDrawingProperties());
-			graphicFrame.Graphic = new A.Graphic()
-			{
-				GraphicData = GraphicData
-			};
-			graphicFrame.Transform = new P.Transform()
-			{
-				Offset = new A.Offset()
-				{
-					X = tableSetting.x,
-					Y = tableSetting.y
-				},
-				Extents = new A.Extents()
-				{
-					Cx = tableSetting.width,
-					Cy = tableSetting.height
-				}
-			};
-		}
-		private A.TableGrid CreateTableGrid(int ColumnCount)
-		{
-			A.TableGrid TableGrid = new A.TableGrid();
-			if (tableSetting.widthType == TableSetting.WidthOptionValues.AUTO)
-			{
-				for (int i = 0; i < ColumnCount; i++)
-				{
-					TableGrid.Append(new A.GridColumn() { Width = tableSetting.width / ColumnCount });
-				}
-			}
-			else
-			{
-				for (int i = 0; i < ColumnCount; i++)
-				{
-					TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
-				}
-			}
-			return TableGrid;
-		}
-		private A.TableRow CreateTableRow(TableRow Row)
-		{
-			A.TableRow TableRow = new A.TableRow()
-			{
-				Height = Row.height
-			};
-			foreach (TableCell cell in Row.tableCells)
-			{
-				TableRow.Append(CreateTableCell(cell, Row));
-			}
-			return TableRow;
 		}
 		private void ReCalculateColumnWidth()
 		{

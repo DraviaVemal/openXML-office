@@ -300,8 +300,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				Tuple<int, int> topLeft = ConverterUtils.ConvertFromExcelCellReference(range.topLeftCell);
 				Tuple<int, int> bottomRight = ConverterUtils.ConvertFromExcelCellReference(range.bottomRightCell);
-				return IsWithinRange(newTopLeft.Item1, newTopLeft.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2) ||
-				IsWithinRange(newBottomRight.Item1, newBottomRight.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2);
+				return Validation.IsWithinRange(newTopLeft.Item1, newTopLeft.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2) ||
+				Validation.IsWithinRange(newBottomRight.Item1, newBottomRight.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2);
 			}))
 			{
 				return false;
@@ -340,8 +340,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				{
 					Tuple<int, int> topLeft = ConverterUtils.ConvertFromExcelCellReference(mergeCell.Reference.ToString().Split(':')[0]);
 					Tuple<int, int> bottomRight = ConverterUtils.ConvertFromExcelCellReference(mergeCell.Reference.ToString().Split(':')[1]);
-					if (IsWithinRange(newTopLeft.Item1, newTopLeft.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2) ||
-				IsWithinRange(newBottomRight.Item1, newBottomRight.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2))
+					if (Validation.IsWithinRange(newTopLeft.Item1, newTopLeft.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2) ||
+				Validation.IsWithinRange(newBottomRight.Item1, newBottomRight.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2))
 					{
 						isAnyMergeRemoved = true;
 						mergeCell.Remove();
@@ -478,10 +478,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal XDR.WorksheetDrawing GetDrawing()
 		{
 			return GetDrawing(this);
-		}
-		private static bool IsWithinRange(int x, int y, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
-		{
-			return x >= topLeftX && x <= bottomRightX && y >= topLeftY && y <= bottomRightY;
 		}
 		private ChartData[][] PrepareCacheData(DataRange dataRange)
 		{
