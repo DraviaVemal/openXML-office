@@ -37,21 +37,23 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				axisPosition = lineChartSetting.chartAxisOptions.valuesInRevereseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = lineChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = lineChartSetting.chartAxesOptions.isHorizontalItalic,
 				isVisible = lineChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
-				invertOrder = lineChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
+				invertOrder = lineChartSetting.chartAxisOptions.categoryInRevereseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				axisPosition = lineChartSetting.chartAxisOptions.categoryInRevereseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = lineChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = lineChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = lineChartSetting.chartAxesOptions.isVerticalItalic,
 				isVisible = lineChartSetting.chartAxesOptions.isVerticalAxesEnabled,
-				invertOrder = lineChartSetting.chartAxesOptions.invertVerticalAxesOrder,
+				invertOrder = lineChartSetting.chartAxisOptions.valuesInRevereseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

@@ -52,23 +52,24 @@ namespace OpenXMLOffice.Global_2007
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = CategoryAxisId,
-				axisPosition = AxisPosition.BOTTOM,
 				crossAxisId = ValueAxisId,
+				axisPosition = scatterChartSetting.chartAxisOptions.valuesInRevereseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = scatterChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = scatterChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = scatterChartSetting.chartAxesOptions.isHorizontalItalic,
 				isVisible = scatterChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
-				invertOrder = scatterChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
+				invertOrder = scatterChartSetting.chartAxisOptions.categoryInRevereseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				axisPosition = scatterChartSetting.chartAxisOptions.categoryInRevereseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = scatterChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = scatterChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = scatterChartSetting.chartAxesOptions.isVerticalItalic,
 				isVisible = scatterChartSetting.chartAxesOptions.isVerticalAxesEnabled,
-				invertOrder = scatterChartSetting.chartAxesOptions.invertVerticalAxesOrder,
+				invertOrder = scatterChartSetting.chartAxisOptions.valuesInRevereseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

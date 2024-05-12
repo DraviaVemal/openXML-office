@@ -126,14 +126,6 @@ namespace OpenXMLOffice.Global_2007
 	public class ChartAxesOptions
 	{
 		/// <summary>
-		/// Invert the axes item order for the Vertical axis
-		/// </summary>
-		public bool invertVerticalAxesOrder;
-		/// <summary>
-		/// Invert the axes item order for the Horizontal axis
-		/// </summary>
-		public bool invertHorizontalAxesOrder;
-		/// <summary>
 		/// Is Horizontal Axes Enabled
 		/// </summary>
 		public bool isHorizontalAxesEnabled = true;
@@ -203,6 +195,14 @@ namespace OpenXMLOffice.Global_2007
 		/// Vertical Axis Title
 		/// </summary>
 		public string verticalAxisTitle;
+		/// <summary>
+		/// Category Axis will get inverted with the flag 
+		/// </summary>
+		public bool categoryInRevereseOrder = false;
+		/// <summary>
+		/// Value Axis will get inverted with the flag 
+		/// </summary>
+		public bool valuesInRevereseOrder = false;
 	}
 	/// <summary>
 	/// Represents the grouping options for chart data.

@@ -36,10 +36,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Add new slide to the presentation
 		/// </summary>
-		/// <param name="slideLayoutType">
-		/// </param>
-		/// <returns>
-		/// </returns>
 		public Slide AddSlide(PresentationConstants.SlideLayoutType slideLayoutType)
 		{
 			return presentation.AddSlide(slideLayoutType);
@@ -47,10 +43,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Get Slide by index
 		/// </summary>
-		/// <param name="SlideIndex">
-		/// </param>
-		/// <returns>
-		/// </returns>
 		public Slide GetSlideByIndex(int SlideIndex)
 		{
 			return presentation.GetSlideByIndex(SlideIndex);
@@ -58,8 +50,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Get Slide count
 		/// </summary>
-		/// <returns>
-		/// </returns>
 		public int GetSlideCount()
 		{
 			return presentation.GetSlideCount();
@@ -67,10 +57,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Move slide by index
 		/// </summary>
-		/// <param name="SourceIndex">
-		/// </param>
-		/// <param name="TargetIndex">
-		/// </param>
 		public void MoveSlideByIndex(int SourceIndex, int TargetIndex)
 		{
 			presentation.MoveSlideByIndex(SourceIndex, TargetIndex);
@@ -78,8 +64,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Remove slide by index
 		/// </summary>
-		/// <param name="SlideIndex">
-		/// </param>
 		public void RemoveSlideByIndex(int SlideIndex)
 		{
 			presentation.RemoveSlideByIndex(SlideIndex);

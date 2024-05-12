@@ -110,6 +110,11 @@ namespace OpenXMLOffice.Tests
 			//5
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
 			{
+				chartAxisOptions = new()
+				{
+					categoryInRevereseOrder = true,
+					valuesInRevereseOrder = true
+				},
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{

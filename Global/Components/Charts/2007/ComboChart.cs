@@ -99,21 +99,23 @@ namespace OpenXMLOffice.Global_2007
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
+				axisPosition = ComboChartSetting.chartAxisOptions.valuesInRevereseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 				fontSize = ComboChartSetting.chartAxesOptions.horizontalFontSize,
 				isBold = ComboChartSetting.chartAxesOptions.isHorizontalBold,
 				isItalic = ComboChartSetting.chartAxesOptions.isHorizontalItalic,
 				isVisible = ComboChartSetting.chartAxesOptions.isHorizontalAxesEnabled,
-				invertOrder = ComboChartSetting.chartAxesOptions.invertHorizontalAxesOrder,
+				invertOrder = ComboChartSetting.chartAxisOptions.categoryInRevereseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
+				axisPosition = ComboChartSetting.chartAxisOptions.categoryInRevereseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 				fontSize = ComboChartSetting.chartAxesOptions.verticalFontSize,
 				isBold = ComboChartSetting.chartAxesOptions.isVerticalBold,
 				isItalic = ComboChartSetting.chartAxesOptions.isVerticalItalic,
 				isVisible = ComboChartSetting.chartAxesOptions.isVerticalAxesEnabled,
-				invertOrder = ComboChartSetting.chartAxesOptions.invertVerticalAxesOrder,
+				invertOrder = ComboChartSetting.chartAxisOptions.valuesInRevereseOrder,
 			}));
 			if (isSecondaryAxisActive)
 			{
