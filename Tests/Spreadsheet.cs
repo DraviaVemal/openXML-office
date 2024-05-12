@@ -175,10 +175,25 @@ namespace OpenXMLOffice.Tests
 				topLeftCell = "D30",
 				bottomRightCell = "F33"
 			}));
+			Assert.IsTrue(worksheet.SetMergeCell(new MergeCellRange()
+			{
+				topLeftCell = "G30",
+				bottomRightCell = "J33"
+			}));
+			Assert.IsTrue(worksheet.RemoveMergeCell(new MergeCellRange()
+			{
+				topLeftCell = "G30",
+				bottomRightCell = "J33"
+			}));
 			Assert.IsFalse(worksheet.SetMergeCell(new MergeCellRange()
 			{
 				topLeftCell = "F26",
 				bottomRightCell = "J30",
+			}));
+			Assert.IsFalse(worksheet.RemoveMergeCell(new MergeCellRange()
+			{
+				topLeftCell = "A1",
+				bottomRightCell = "C5",
 			}));
 			excel1.SaveAs(string.Format("{1}/ReadEdit-MergeCell-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}

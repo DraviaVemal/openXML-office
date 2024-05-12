@@ -133,7 +133,7 @@ namespace OpenXMLOffice.Global_2007
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
 			{
 				chart.Append(new C.BubbleScale() { Val = 100 });
-				chart.Append(new C.ShowNegativeBubbles() { Val = true });
+				chart.Append(new C.ShowNegativeBubbles() { Val = false });
 			}
 			chart.Append(new C.AxisId { Val = CategoryAxisId });
 			chart.Append(new C.AxisId { Val = ValueAxisId });
@@ -154,7 +154,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
@@ -178,7 +178,7 @@ namespace OpenXMLOffice.Global_2007
 					{
 						schemeColorModel = new SchemeColorModel()
 						{
-							themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+							themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 						}
 					},
 					outline = new OutlineModel()
@@ -187,7 +187,7 @@ namespace OpenXMLOffice.Global_2007
 						{
 							schemeColorModel = new SchemeColorModel()
 							{
-								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 							}
 						}
 					}
@@ -210,7 +210,7 @@ namespace OpenXMLOffice.Global_2007
 				{
 					schemeColorModel = new SchemeColorModel()
 					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+						themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
 						tint = 75000,
 					}
 				};

@@ -404,7 +404,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			List<MergeCellRange> existingMergeCellRange = GetMergeCellList();
 			Tuple<int, int> newTopLeft = ConverterUtils.ConvertFromExcelCellReference(mergeCellRange.topLeftCell);
 			Tuple<int, int> newBottomRight = ConverterUtils.ConvertFromExcelCellReference(mergeCellRange.bottomRightCell);
-			if (existingMergeCellRange.Any(range =>
+			if (existingMergeCellRange.Count > 0 && existingMergeCellRange.Any(range =>
 			{
 				Tuple<int, int> topLeft = ConverterUtils.ConvertFromExcelCellReference(range.topLeftCell);
 				Tuple<int, int> bottomRight = ConverterUtils.ConvertFromExcelCellReference(range.bottomRightCell);
@@ -430,6 +430,36 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					});
 				}
 				return true;
+			}
+		}
+		/// <summary>
+		/// Clears any merge range that intersect with current range.
+		/// return true if it cleared any else false
+		/// </summary>
+		public bool RemoveMergeCell(MergeCellRange mergeCellRange)
+		{
+			X.MergeCells mergeCells = GetWorkSheetMergeCell();
+			Tuple<int, int> newTopLeft = ConverterUtils.ConvertFromExcelCellReference(mergeCellRange.topLeftCell);
+			Tuple<int, int> newBottomRight = ConverterUtils.ConvertFromExcelCellReference(mergeCellRange.bottomRightCell);
+			if (mergeCells != null && mergeCells.Count > 0)
+			{
+				bool isAnyMergeRemoved = false;
+				mergeCells.Descendants<X.MergeCell>().ToList().ForEach(mergeCell =>
+				{
+					Tuple<int, int> topLeft = ConverterUtils.ConvertFromExcelCellReference(mergeCell.Reference.ToString().Split(':')[0]);
+					Tuple<int, int> bottomRight = ConverterUtils.ConvertFromExcelCellReference(mergeCell.Reference.ToString().Split(':')[1]);
+					if (IsWithinRange(newTopLeft.Item1, newTopLeft.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2) ||
+				IsWithinRange(newBottomRight.Item1, newBottomRight.Item2, topLeft.Item1, topLeft.Item2, bottomRight.Item1, bottomRight.Item2))
+					{
+						isAnyMergeRemoved = true;
+						mergeCell.Remove();
+					}
+				});
+				return isAnyMergeRemoved;
+			}
+			else
+			{
+				return false;
 			}
 		}
 		/// <summary>

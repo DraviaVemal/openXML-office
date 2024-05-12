@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Global_2007
 			if (pieChartSetting.pieChartType == PieChartTypes.PIE_3D)
 			{
 				this.pieChartSetting.is3DChart = true;
-				Add3Dcontrol();
+				Add3dControl();
 			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
@@ -90,7 +90,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColorCount),
 				};
 			}
 			return solidFillModel;
@@ -110,7 +110,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColorCount),
 				};
 			}
 			return solidFillModel;

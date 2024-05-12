@@ -385,7 +385,7 @@ namespace OpenXMLOffice.Tests
 		/// </summary>
 		[TestMethod]
 		[TestCategory("Chart")]
-		public void AddDevChart()
+		public void AddChartTrendLine()
 		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, true), new G.LineChartSetting<G.PresentationSetting>()
 			{
@@ -399,27 +399,38 @@ namespace OpenXMLOffice.Tests
 						markerShapeType=G.MarkerShapeTypes.SQUARE,
 						trendLines = new(){
 							new(){
-								trendLineType = G.TrendLineTypes.POLYNOMIAL,
-								secondaryValue =2,
-								interceptValue = 5,
+								trendLineType = G.TrendLineTypes.LINEAR,
 								trendLineName = "Dravia",
-								forecastForward=1,
-								setIntercept=true,
-								showEquation=true,
-								showRSquareValue=true
-							},
+							}
+						}
+					},
+					new(){
+						markerShapeType=G.MarkerShapeTypes.TRIANGLE,
+						trendLines = new(){
 							new(){
 								trendLineType = G.TrendLineTypes.EXPONENTIAL,
-								secondaryValue =2,
-								interceptValue = 5,
 								trendLineName = "vemal",
-								forecastForward=1,
-								setIntercept=true,
-								showEquation=true,
-								showRSquareValue=true
 							}
 						}
 					}
+				}
+			});
+			Assert.IsTrue(true);
+		}
+		/// <summary>
+		/// Add Single Chart to the Slide
+		/// </summary>
+		[TestMethod]
+		[TestCategory("Chart")]
+		public void AddDevChart()
+		{
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			{
+				scatterChartType = G.ScatterChartTypes.BUBBLE,
+				applicationSpecificSetting = new(),
+				titleOptions = new()
+				{
+					title = "Dev Chart"
 				}
 			});
 			Assert.IsTrue(true);

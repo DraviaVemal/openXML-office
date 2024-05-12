@@ -106,7 +106,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
@@ -126,7 +126,7 @@ namespace OpenXMLOffice.Global_2007
 					{
 						schemeColorModel = new SchemeColorModel()
 						{
-							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
 						}
 					},
 					outline = new OutlineModel()
@@ -135,7 +135,7 @@ namespace OpenXMLOffice.Global_2007
 						{
 							schemeColorModel = new SchemeColorModel()
 							{
-								themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColurCount),
+								themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
 							}
 						}
 					}

@@ -31,7 +31,7 @@ namespace OpenXMLOffice.Global_2007
 			areaChartSetting.areaChartType == AreaChartTypes.PERCENT_STACKED_3D)
 			{
 				this.areaChartSetting.is3DChart = true;
-				Add3Dcontrol();
+				Add3dControl();
 			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
@@ -50,7 +50,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
@@ -70,7 +70,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;

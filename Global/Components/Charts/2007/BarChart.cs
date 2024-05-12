@@ -34,7 +34,7 @@ namespace OpenXMLOffice.Global_2007
 			barChartSetting.barChartType == BarChartTypes.PERCENT_STACKED_3D)
 			{
 				this.barChartSetting.is3DChart = true;
-				Add3Dcontrol();
+				Add3dControl();
 			}
 			SetChartPlotArea(CreateChartPlotArea(dataCols, dataRange));
 		}
@@ -53,7 +53,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
@@ -73,7 +73,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
@@ -93,7 +93,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
@@ -113,7 +113,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				solidFillModel.schemeColorModel = new SchemeColorModel()
 				{
-					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColurCount),
+					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;

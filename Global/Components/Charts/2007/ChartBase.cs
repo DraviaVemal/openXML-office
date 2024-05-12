@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public class ChartBase<ApplicationSpecificSetting> : CommonProperties where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
-		internal const int AccentColurCount = 6;
+		internal const int AccentColorCount = 6;
 		internal uint CategoryAxisId = 1362418656;
 		internal uint ValueAxisId = 1358349936;
 		internal const int SecondaryCategoryAxisId = 1615085760;
@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Global_2007
 		private readonly C.Chart chart;
 		private readonly C.ChartSpace openXMLChartSpace;
 		/// <summary>
-		/// Chartbase class constructor restricted only for inheritance use
+		/// Chart base class constructor restricted only for inheritance use
 		/// </summary>
 		/// <param name="chartSetting">
 		/// </param>
@@ -59,7 +59,7 @@ namespace OpenXMLOffice.Global_2007
 				Console.WriteLine(string.Format("Object Details Value : {0} is not numeric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
-				LogUtils.ShowWarning("Bubble Size Data Prefered in numaric.");
+				LogUtils.ShowWarning("Bubble Size Data Preferred in numeric.");
 			}
 			return new C.BubbleSize(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
@@ -303,7 +303,7 @@ namespace OpenXMLOffice.Global_2007
 					chartDataGrouping.zAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberZ);
 					chartDataGrouping.zAxisCells = zAxisCells.ToArray();
 				}
-				// TODO: Reorganise to Move to 2013 Namespace extension
+				// TODO: Reorganize to Move to 2013 Namespace extension
 				uint DataValueColumn;
 				if (chartDataSetting.advancedDataLabel.valueFromColumn.TryGetValue(column, out DataValueColumn))
 				{
@@ -411,7 +411,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
-				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
+				Console.WriteLine(string.Format("Object Details Value : {0} is not numeric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
 				LogUtils.ShowWarning("Not Every Values is numeric some assumptions are made in chart construction");
@@ -425,7 +425,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
-				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
+				Console.WriteLine(string.Format("Object Details Value : {0} is not numeric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
 				LogUtils.ShowWarning("Not Every Values is numeric some assumptions are made in chart construction");
@@ -439,7 +439,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
-				Console.WriteLine(string.Format("Object Details Value : {0} is not numaric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
+				Console.WriteLine(string.Format("Object Details Value : {0} is not numeric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
 				Console.WriteLine(string.Format("Object Details Number Format : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).numberFormat));
 				Console.WriteLine(string.Format("Object Details Data Type : {0}", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).dataType));
 				LogUtils.ShowWarning("Not Every Values is numeric some assumptions are made in chart construction");
@@ -560,7 +560,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		protected void Add3Dcontrol()
+		protected void Add3dControl()
 		{
 			chart.View3D = CreateView3D();
 			chart.Floor = CreateFloor();
@@ -744,7 +744,7 @@ namespace OpenXMLOffice.Global_2007
 					},
 					width = 9525,
 					outlineCapTypeValues = OutlineCapTypeValues.FLAT,
-					outlineLineTypeValues = OutlineLineTypeValues.SINGEL,
+					outlineLineTypeValues = OutlineLineTypeValues.SINGLE,
 					outlineAlignmentValues = OutlineAlignmentValues.CENTER
 				}
 			}));
@@ -766,7 +766,7 @@ namespace OpenXMLOffice.Global_2007
 					},
 					width = 9525,
 					outlineCapTypeValues = OutlineCapTypeValues.FLAT,
-					outlineLineTypeValues = OutlineLineTypeValues.SINGEL,
+					outlineLineTypeValues = OutlineLineTypeValues.SINGLE,
 					outlineAlignmentValues = OutlineAlignmentValues.CENTER
 				}
 			}));

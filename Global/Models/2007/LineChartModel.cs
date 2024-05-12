@@ -132,7 +132,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public OutlineLineTypeValues? outlineLineTypeValues = OutlineLineTypeValues.SINGEL;
+		public OutlineLineTypeValues? outlineLineTypeValues = OutlineLineTypeValues.SINGLE;
 		/// <summary>
 		///
 		/// </summary>
