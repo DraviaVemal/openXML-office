@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// 
 	/// </summary>
-	public enum AxisLabelPosition
+	public enum AxesLabelPosition
 	{
 		/// <summary>
 		/// 
@@ -107,121 +107,141 @@ namespace OpenXMLOffice.Global_2007
 		X
 	}
 	/// <summary>
-	/// Represents the settings for a category axis in a chart.
+	/// Represents the options for the axes in a chart.
 	/// </summary>
-	public class CategoryAxisSetting
+	public class ChartAxesLabel
 	{
-		internal uint id;
-		internal AxisPosition axisPosition = AxisPosition.BOTTOM;
-		internal AxisLabelPosition axisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
-		internal int axisLabelRotationAngle = 0;
-		internal uint crossAxisId;
-		internal string title;
 		/// <summary>
 		/// Is Font Bold
 		/// </summary>
-		internal bool isBold;
+		public bool isBold;
 		/// <summary>
 		/// Is Font Italic
 		/// </summary>
-		internal bool isItalic;
+		public bool isItalic;
 		/// <summary>
 		///  Font Size
 		/// </summary>
-		internal float fontSize = 11.97F;
+		public float fontSize = 11.97F;
 		/// <summary>
 		///
 		/// </summary>
-		internal string fontColor = null;
+		public string fontColor;
 		/// <summary>
 		///
 		/// </summary>
-		internal UnderLineValues underLineValues = UnderLineValues.NONE;
+		public UnderLineValues underLineValues = UnderLineValues.NONE;
 		/// <summary>
 		///
 		/// </summary>
-		internal StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+		public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
 		/// <summary>
-		///
+		/// Axis Label Position.
 		/// </summary>
-		internal bool isVisible = true;
-		internal bool invertOrder;
-		internal static C.TickLabelPositionValues GetLabelAxisPosition(AxisLabelPosition axisLabelPosition)
+		public AxesLabelPosition axesLabelPosition = AxesLabelPosition.NEXT_TO_AXIS;
+		/// <summary>
+		/// Invert the axis order
+		/// </summary>
+		public bool inReverseOrder = false; private int _axisLabelAngle = 0;
+		/// <summary>
+		/// Set Text Angle between -90 to 90 degree
+		/// </summary>
+		public int axesLabelAngle
 		{
-			switch (axisLabelPosition)
+			get
 			{
-				case AxisLabelPosition.LOW:
-					return C.TickLabelPositionValues.Low;
-				case AxisLabelPosition.HIGH:
-					return C.TickLabelPositionValues.High;
-				case AxisLabelPosition.NONE:
-					return C.TickLabelPositionValues.None;
-				default:
-					return C.TickLabelPositionValues.NextTo;
+				return _axisLabelAngle;
+			}
+			set
+			{
+				if (value > 90)
+				{
+					_axisLabelAngle = 90;
+				}
+				else if (value < -90)
+				{
+					_axisLabelAngle = -90;
+				}
+				else
+				{
+					_axisLabelAngle = value;
+				}
 			}
 		}
 	}
 	/// <summary>
-	/// Represents the options for the axes in a chart.
+	/// Represents the options for the axis title text
 	/// </summary>
-	public class ChartAxesOptions
+	public class ChartAxisTitle
+	{
+		/// <summary>
+		/// Title String
+		/// </summary>
+		public string title;
+		/// <summary>
+		/// Is Font Bold
+		/// </summary>
+		public bool isBold;
+		/// <summary>
+		/// Is Font Italic
+		/// </summary>
+		public bool isItalic;
+		/// <summary>
+		///  Font Size
+		/// </summary>
+		public float fontSize = 11.97F;
+		/// <summary>
+		///
+		/// </summary>
+		public string fontColor;
+		/// <summary>
+		///
+		/// </summary>
+		public UnderLineValues underLineValues = UnderLineValues.NONE;
+		/// <summary>
+		///
+		/// </summary>
+		public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+	}
+
+	/// <summary>
+	/// Common Chart Axis Options
+	/// </summary>
+	public class AxisOptions
 	{
 		/// <summary>
 		/// Is Horizontal Axes Enabled
 		/// </summary>
-		public bool isHorizontalAxesVisible = true;
+		public bool isAxesVisible = true;
 		/// <summary>
-		/// Is Font Bold
+		/// Option for Axis's Axes label options
 		/// </summary>
-		public bool isHorizontalBold;
+		public ChartAxesLabel chartAxesOptions = new ChartAxesLabel();
 		/// <summary>
-		/// Is Font Italic
+		/// Option for Axis title options
 		/// </summary>
-		public bool isHorizontalItalic;
-		/// <summary>
-		///  Font Size
-		/// </summary>
-		public float horizontalFontSize = 11.97F;
-		/// <summary>
-		///
-		/// </summary>
-		public string horizontalFontColor;
-		/// <summary>
-		///
-		/// </summary>
-		public UnderLineValues horizontalUnderLineValues = UnderLineValues.NONE;
-		/// <summary>
-		///
-		/// </summary>
-		public StrikeValues horizontalStrikeValues = StrikeValues.NO_STRIKE;
-		/// <summary>
-		/// Is Font Bold
-		/// </summary>
-		public bool isVerticalBold;
-		/// <summary>
-		/// Is Font Italic
-		/// </summary>
-		public bool isVerticalItalic;
-		/// <summary>
-		///  Font Size
-		/// </summary>
-		public float verticalFontSize = 11.97F;
-		/// <summary>
-		///
-		/// </summary>
-		public string verticalFontColor;
-		/// <summary>
-		///
-		/// </summary>
-		public UnderLineValues verticalUnderLineValues = UnderLineValues.NONE;
-		/// <summary>
-		///
-		/// </summary>
-		public StrikeValues verticalStrikeValues = StrikeValues.NO_STRIKE;
-		/// <summary>
-		/// Is Vertical Axes Enabled
-		/// </summary>
-		public bool isVerticalAxesVisible = true;
+		public ChartAxisTitle chartAxisTitle = new ChartAxisTitle();
+	}
+	/// <summary>
+	/// X Axis Specific Options
+	/// </summary>
+	public class XAxisOptions : AxisOptions
+	{
+
+	}
+	/// <summary>
+	/// Y Axis Specific Options
+	/// </summary>
+	public class YAxisOptions : AxisOptions
+	{
+
+	}
+	/// <summary>
+	/// Z Axis Specific Options
+	/// </summary>
+	public class ZAxisOptions : AxisOptions
+	{
+
 	}
 	/// <summary>
 	/// Represents the options for a chart axis.
@@ -229,90 +249,19 @@ namespace OpenXMLOffice.Global_2007
 	public class ChartAxisOptions
 	{
 		/// <summary>
-		/// Horizontal Axis Title
+		/// X-Axis and Axes options
 		/// </summary>
-		public string horizontalAxisTitle;
+		public XAxisOptions xAxisOptions = new XAxisOptions();
 		/// <summary>
-		/// Vertical Axis Title
+		/// Y-Axis and Axes options
 		/// </summary>
-		public string verticalAxisTitle;
+		public YAxisOptions yAxisOptions = new YAxisOptions();
 		/// <summary>
-		/// Category Axis will get inverted with the flag 
+		/// Z-Axis and Axes options
+		/// Totally optional for secondary action options
+		/// TODO : Implementation
 		/// </summary>
-		public bool categoryInReverseOrder = false;
-		/// <summary>
-		/// Value Axis will get inverted with the flag 
-		/// </summary>
-		public bool valuesInReverseOrder = false;
-		/// <summary>
-		/// Axis Label Position.
-		/// </summary>
-		public AxisLabelPosition valueAxisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
-		/// <summary>
-		/// Axis Label Position.
-		/// </summary>
-		public AxisLabelPosition categoryAxisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
-		private int _categoryAxisLabelAngle = 0;
-		/// <summary>
-		/// Set Text Angle between -90 to 90 degree
-		/// </summary>
-		public int categoryAxisLabelAngle
-		{
-			get
-			{
-				return _categoryAxisLabelAngle;
-			}
-			set
-			{
-				if (value > 90)
-				{
-					_categoryAxisLabelAngle = 90;
-				}
-				else if (value < -90)
-				{
-					_categoryAxisLabelAngle = -90;
-				}
-				else
-				{
-					_categoryAxisLabelAngle = value;
-				}
-			}
-		}
-		private int _valueAxisLabelAngle = 0;
-		/// <summary>
-		/// 
-		/// </summary>
-		public string valueAxisTitle;
-		/// <summary>
-		/// 
-		/// </summary>
-		public string categoryAxisTitle;
-
-		/// <summary>
-		/// Set Text Angle between -90 to 90 degree
-		/// </summary>
-		public int valueAxisLabelAngle
-		{
-			get
-			{
-				return _valueAxisLabelAngle;
-			}
-			set
-			{
-				if (value > 90)
-				{
-					_valueAxisLabelAngle = 90;
-				}
-				else if (value < -90)
-				{
-					_valueAxisLabelAngle = -90;
-				}
-				else
-				{
-					_valueAxisLabelAngle = value;
-				}
-			}
-		}
+		public ZAxisOptions zAxisOptions = new ZAxisOptions();
 	}
 	/// <summary>
 	/// Represents the grouping options for chart data.
@@ -724,6 +673,62 @@ namespace OpenXMLOffice.Global_2007
 		public ApplicationSpecificSetting applicationSpecificSetting = new ApplicationSpecificSetting();
 		internal ChartSetting() { }
 	}
+
+	/// <summary>
+	/// Represents the settings for a category axis in a chart.
+	/// </summary>
+	public class CategoryAxisSetting
+	{
+		internal uint id;
+		internal AxisPosition axisPosition = AxisPosition.BOTTOM;
+		internal AxesLabelPosition axesLabelPosition = AxesLabelPosition.NEXT_TO_AXIS;
+		internal int axesLabelRotationAngle = 0;
+		internal uint crossAxisId;
+		internal string title;
+		/// <summary>
+		/// Is Font Bold
+		/// </summary>
+		internal bool isBold;
+		/// <summary>
+		/// Is Font Italic
+		/// </summary>
+		internal bool isItalic;
+		/// <summary>
+		///  Font Size
+		/// </summary>
+		internal float fontSize = 11.97F;
+		/// <summary>
+		///
+		/// </summary>
+		internal string fontColor = null;
+		/// <summary>
+		///
+		/// </summary>
+		internal UnderLineValues underLineValues = UnderLineValues.NONE;
+		/// <summary>
+		///
+		/// </summary>
+		internal StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+		/// <summary>
+		///
+		/// </summary>
+		internal bool isVisible = true;
+		internal bool invertOrder;
+		internal static C.TickLabelPositionValues GetLabelAxisPosition(AxesLabelPosition axisLabelPosition)
+		{
+			switch (axisLabelPosition)
+			{
+				case AxesLabelPosition.LOW:
+					return C.TickLabelPositionValues.Low;
+				case AxesLabelPosition.HIGH:
+					return C.TickLabelPositionValues.High;
+				case AxesLabelPosition.NONE:
+					return C.TickLabelPositionValues.None;
+				default:
+					return C.TickLabelPositionValues.NextTo;
+			}
+		}
+	}
 	/// <summary>
 	/// Represents the settings for a value axis in a chart.
 	/// </summary>
@@ -731,8 +736,8 @@ namespace OpenXMLOffice.Global_2007
 	{
 		internal uint id;
 		internal AxisPosition axisPosition = AxisPosition.LEFT;
-		internal AxisLabelPosition axisLabelPosition = AxisLabelPosition.NEXT_TO_AXIS;
-		internal int axisLabelRotationAngle = 0;
+		internal AxesLabelPosition axesLabelPosition = AxesLabelPosition.NEXT_TO_AXIS;
+		internal int axesLabelRotationAngle = 0;
 		internal uint crossAxisId;
 		/// <summary>
 		/// Is Font Bold
@@ -771,15 +776,15 @@ namespace OpenXMLOffice.Global_2007
 		internal C.CrossesValues crosses = C.CrossesValues.AutoZero;
 		internal string title;
 
-		internal static C.TickLabelPositionValues GetLabelAxisPosition(AxisLabelPosition axisLabelPosition)
+		internal static C.TickLabelPositionValues GetLabelAxisPosition(AxesLabelPosition axisLabelPosition)
 		{
 			switch (axisLabelPosition)
 			{
-				case AxisLabelPosition.LOW:
+				case AxesLabelPosition.LOW:
 					return C.TickLabelPositionValues.Low;
-				case AxisLabelPosition.HIGH:
+				case AxesLabelPosition.HIGH:
 					return C.TickLabelPositionValues.High;
-				case AxisLabelPosition.NONE:
+				case AxesLabelPosition.NONE:
 					return C.TickLabelPositionValues.None;
 				default:
 					return C.TickLabelPositionValues.NextTo;

@@ -57,9 +57,18 @@ namespace OpenXMLOffice.Tests
 				},
 				chartAxisOptions = new()
 				{
-					categoryAxisLabelPosition = G.AxisLabelPosition.HIGH,
-					categoryAxisLabelAngle = 20,
-					categoryAxisTitle = "cat ax"
+					xAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							axesLabelPosition = G.AxesLabelPosition.HIGH,
+							axesLabelAngle = 20
+						},
+						chartAxisTitle = new()
+						{
+							title = "Cat Ax"
+						}
+					},
 				},
 				applicationSpecificSetting = new()
 			});
@@ -68,10 +77,22 @@ namespace OpenXMLOffice.Tests
 			{
 				applicationSpecificSetting = new(),
 				areaChartType = G.AreaChartTypes.STACKED,
-				chartAxesOptions = new()
+				chartAxisOptions = new()
 				{
-					horizontalFontSize = 20,
-					verticalFontSize = 25
+					xAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							fontSize = 20
+						}
+					},
+					yAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							fontSize = 20
+						}
+					}
 				}
 			});
 			Stream stream = chart.GetWorkBookStream();
@@ -93,13 +114,16 @@ namespace OpenXMLOffice.Tests
 				{
 					chartDataColumnEnd = 2
 				},
-				chartAxesOptions = new()
-				{
-					isVerticalAxesVisible = false,
-				},
 				chartAxisOptions = new()
 				{
-					valueAxisTitle = "Value"
+					yAxisOptions = new()
+					{
+						isAxesVisible = false,
+						chartAxisTitle = new()
+						{
+							title = "Value ax"
+						}
+					},
 				}
 			});
 			areaChart.UpdatePosition(100, 100);
@@ -108,9 +132,12 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
-				chartAxesOptions = new()
+				chartAxisOptions = new()
 				{
-					isHorizontalAxesVisible = false,
+					xAxisOptions = new()
+					{
+						isAxesVisible = false,
+					},
 				},
 				barChartDataLabel = new G.BarChartDataLabel()
 				{
@@ -132,8 +159,20 @@ namespace OpenXMLOffice.Tests
 			{
 				chartAxisOptions = new()
 				{
-					categoryInReverseOrder = true,
-					valuesInReverseOrder = true
+					xAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							inReverseOrder = true
+						}
+					},
+					yAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							inReverseOrder = true
+						}
+					}
 				},
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -885,9 +924,15 @@ namespace OpenXMLOffice.Tests
 			shape3[0].ReplaceChart(new Chart<G.PresentationSetting>(slide, CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
-				chartAxesOptions = new G.ChartAxesOptions()
+				chartAxisOptions = new()
 				{
-					isHorizontalAxesVisible = false
+					yAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							inReverseOrder = true
+						}
+					}
 				},
 				chartGridLinesOptions = new G.ChartGridLinesOptions()
 				{

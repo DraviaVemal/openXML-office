@@ -148,10 +148,6 @@ namespace OpenXMLOffice.Global_2007
 	public class ColumnChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
-		/// Chart Axes Options
-		/// </summary>
-		public ChartAxesOptions chartAxesOptions = new ChartAxesOptions();
-		/// <summary>
 		/// Chart Axis Options
 		/// </summary>
 		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();

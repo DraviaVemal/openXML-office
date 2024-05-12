@@ -73,21 +73,6 @@ namespace OpenXMLOffice.Global_2007
 			}
 			ComboChartsSettingList.Add(pieChartSetting);
 		}
-		// /// <summary>
-		// ///
-		// /// </summary>
-		// public void AddComboChartsSetting(ScatterChartSetting scatterChartSetting)
-		// {
-		// 	if (checkSecondaryAxisAlreadyUsed())
-		// 	{
-		// 		throw new ArgumentException("Secondary Axis is already used in another series");
-		// 	}
-		// 	ComboChartsSettingList.Add(scatterChartSetting);
-		// }
-		/// <summary>
-		/// The options for the axes of the chart.
-		/// </summary>
-		public ChartAxesOptions chartAxesOptions = new ChartAxesOptions();
 		/// <summary>
 		/// The options for the axis of the chart.
 		/// </summary>

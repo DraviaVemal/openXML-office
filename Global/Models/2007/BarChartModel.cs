@@ -160,10 +160,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public BarChartTypes barChartType = BarChartTypes.CLUSTERED;
 		/// <summary>
-		/// The options for the chart axes.
-		/// </summary>
-		public ChartAxesOptions chartAxesOptions = new ChartAxesOptions();
-		/// <summary>
 		/// The options for the chart axis.
 		/// </summary>
 		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();

@@ -49,33 +49,35 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
+			XAxisOptions xAxisOptions = scatterChartSetting.chartAxisOptions.xAxisOptions;
+			YAxisOptions yAxisOptions = scatterChartSetting.chartAxisOptions.yAxisOptions;
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				title = scatterChartSetting.chartAxisOptions.categoryAxisTitle,
-				axisLabelPosition = scatterChartSetting.chartAxisOptions.categoryAxisLabelPosition,
-				axisLabelRotationAngle = scatterChartSetting.chartAxisOptions.categoryAxisLabelAngle,
-				axisPosition = scatterChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
-				fontSize = scatterChartSetting.chartAxesOptions.horizontalFontSize,
-				isBold = scatterChartSetting.chartAxesOptions.isHorizontalBold,
-				isItalic = scatterChartSetting.chartAxesOptions.isHorizontalItalic,
-				isVisible = scatterChartSetting.chartAxesOptions.isHorizontalAxesVisible,
-				invertOrder = scatterChartSetting.chartAxisOptions.categoryInReverseOrder,
+				title = xAxisOptions.chartAxisTitle.title,
+				axesLabelPosition = xAxisOptions.chartAxesOptions.axesLabelPosition,
+				axesLabelRotationAngle = xAxisOptions.chartAxesOptions.axesLabelAngle,
+				axisPosition = xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
+				fontSize = xAxisOptions.chartAxesOptions.fontSize,
+				isBold = xAxisOptions.chartAxesOptions.isBold,
+				isItalic = xAxisOptions.chartAxesOptions.isItalic,
+				isVisible = xAxisOptions.isAxesVisible,
+				invertOrder = xAxisOptions.chartAxesOptions.inReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				title = scatterChartSetting.chartAxisOptions.valueAxisTitle,
-				axisLabelPosition = scatterChartSetting.chartAxisOptions.valueAxisLabelPosition,
-				axisLabelRotationAngle = scatterChartSetting.chartAxisOptions.valueAxisLabelAngle,
-				axisPosition = scatterChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
-				fontSize = scatterChartSetting.chartAxesOptions.verticalFontSize,
-				isBold = scatterChartSetting.chartAxesOptions.isVerticalBold,
-				isItalic = scatterChartSetting.chartAxesOptions.isVerticalItalic,
-				isVisible = scatterChartSetting.chartAxesOptions.isVerticalAxesVisible,
-				invertOrder = scatterChartSetting.chartAxisOptions.valuesInReverseOrder,
+				title = yAxisOptions.chartAxisTitle.title,
+				axesLabelPosition = yAxisOptions.chartAxesOptions.axesLabelPosition,
+				axesLabelRotationAngle = yAxisOptions.chartAxesOptions.axesLabelAngle,
+				axisPosition = yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
+				fontSize = yAxisOptions.chartAxesOptions.fontSize,
+				isBold = yAxisOptions.chartAxesOptions.isBold,
+				isItalic = yAxisOptions.chartAxesOptions.isItalic,
+				isVisible = yAxisOptions.isAxesVisible,
+				invertOrder = yAxisOptions.chartAxesOptions.inReverseOrder,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

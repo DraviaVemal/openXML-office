@@ -95,10 +95,6 @@ namespace OpenXMLOffice.Global_2007
 	public class ScatterChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
-		/// The options for the chart axes.
-		/// </summary>
-		public ChartAxesOptions chartAxesOptions = new ChartAxesOptions();
-		/// <summary>
 		/// The options for the chart axis.
 		/// </summary>
 		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();

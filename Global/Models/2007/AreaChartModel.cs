@@ -89,10 +89,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public AreaChartTypes areaChartType = AreaChartTypes.CLUSTERED;
 		/// <summary>
-		/// The options for the axes of the chart.
-		/// </summary>
-		public ChartAxesOptions chartAxesOptions = new ChartAxesOptions();
-		/// <summary>
 		/// The options for the axis of the chart.
 		/// </summary>
 		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();

@@ -95,33 +95,35 @@ namespace OpenXMLOffice.Global_2007
 				}
 				chartPosition++;
 			});
+			XAxisOptions xAxisOptions = comboChartSetting.chartAxisOptions.xAxisOptions;
+			YAxisOptions yAxisOptions = comboChartSetting.chartAxisOptions.yAxisOptions;
 			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				title = comboChartSetting.chartAxisOptions.categoryAxisTitle,
-				axisLabelPosition = comboChartSetting.chartAxisOptions.categoryAxisLabelPosition,
-				axisLabelRotationAngle = comboChartSetting.chartAxisOptions.categoryAxisLabelAngle,
-				axisPosition = comboChartSetting.chartAxisOptions.valuesInReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
-				fontSize = comboChartSetting.chartAxesOptions.horizontalFontSize,
-				isBold = comboChartSetting.chartAxesOptions.isHorizontalBold,
-				isItalic = comboChartSetting.chartAxesOptions.isHorizontalItalic,
-				isVisible = comboChartSetting.chartAxesOptions.isHorizontalAxesVisible,
-				invertOrder = comboChartSetting.chartAxisOptions.categoryInReverseOrder,
+				title = xAxisOptions.chartAxisTitle.title,
+				axesLabelPosition = xAxisOptions.chartAxesOptions.axesLabelPosition,
+				axesLabelRotationAngle = xAxisOptions.chartAxesOptions.axesLabelAngle,
+				axisPosition = xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
+				fontSize = xAxisOptions.chartAxesOptions.fontSize,
+				isBold = xAxisOptions.chartAxesOptions.isBold,
+				isItalic = xAxisOptions.chartAxesOptions.isItalic,
+				isVisible = xAxisOptions.isAxesVisible,
+				invertOrder = xAxisOptions.chartAxesOptions.inReverseOrder,
 			}));
 			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				title = comboChartSetting.chartAxisOptions.valueAxisTitle,
-				axisLabelPosition = comboChartSetting.chartAxisOptions.valueAxisLabelPosition,
-				axisLabelRotationAngle = comboChartSetting.chartAxisOptions.valueAxisLabelAngle,
-				axisPosition = comboChartSetting.chartAxisOptions.categoryInReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
-				fontSize = comboChartSetting.chartAxesOptions.verticalFontSize,
-				isBold = comboChartSetting.chartAxesOptions.isVerticalBold,
-				isItalic = comboChartSetting.chartAxesOptions.isVerticalItalic,
-				isVisible = comboChartSetting.chartAxesOptions.isVerticalAxesVisible,
-				invertOrder = comboChartSetting.chartAxisOptions.valuesInReverseOrder,
+				title = yAxisOptions.chartAxisTitle.title,
+				axesLabelPosition = yAxisOptions.chartAxesOptions.axesLabelPosition,
+				axesLabelRotationAngle = yAxisOptions.chartAxesOptions.axesLabelAngle,
+				axisPosition = yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
+				fontSize = yAxisOptions.chartAxesOptions.fontSize,
+				isBold = yAxisOptions.chartAxesOptions.isBold,
+				isItalic = yAxisOptions.chartAxesOptions.isItalic,
+				isVisible = yAxisOptions.isAxesVisible,
+				invertOrder = yAxisOptions.chartAxesOptions.inReverseOrder,
 			}));
 			if (isSecondaryAxisActive)
 			{
