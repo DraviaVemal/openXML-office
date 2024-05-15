@@ -53,36 +53,16 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class TextBlock
+	public class TextBlock : TextOptions
 	{
 		/// <summary>
 		///
 		/// </summary>
 		public HyperlinkProperties hyperlinkProperties;
 		/// <summary>
-		/// Gets or sets the font family of the text.
-		/// </summary>
-		public string fontFamily = "Calibri (Body)";
-		/// <summary>
-		/// Gets or sets the font size of the text.
-		/// </summary>
-		public int fontSize = 18;
-		/// <summary>
-		/// Gets or sets a value indicating whether the text is bold.
-		/// </summary>
-		public bool isBold;
-		/// <summary>
-		/// Gets or sets a value indicating whether the text is italic.
-		/// </summary>
-		public bool isItalic;
-		/// <summary>
 		/// Gets or sets a value indicating whether the text is underlined.
 		/// </summary>
 		public bool isUnderline;
-		/// <summary>
-		/// Gets or sets the text content of the text box.
-		/// </summary>
-		public string text = "Text Box";
 		/// <summary>
 		/// Gets or sets the background color of the text.
 		/// </summary>

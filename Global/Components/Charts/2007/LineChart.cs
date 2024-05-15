@@ -33,35 +33,19 @@ namespace OpenXMLOffice.Global_2007
 			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions != null ? lineChartSetting.plotAreaOptions.manualLayout : null));
 			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
-			XAxisOptions xAxisOptions = lineChartSetting.chartAxisOptions.xAxisOptions;
-			YAxisOptions yAxisOptions = lineChartSetting.chartAxisOptions.yAxisOptions;
-			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				title = xAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = xAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = xAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
-				fontSize = xAxisOptions.chartAxesOptions.fontSize,
-				isBold = xAxisOptions.chartAxesOptions.isBold,
-				isItalic = xAxisOptions.chartAxesOptions.isItalic,
-				isVisible = xAxisOptions.isAxesVisible,
-				invertOrder = xAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = lineChartSetting.chartAxisOptions.xAxisOptions,
+				axisPosition = lineChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				title = yAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = yAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = yAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
-				fontSize = yAxisOptions.chartAxesOptions.fontSize,
-				isBold = yAxisOptions.chartAxesOptions.isBold,
-				isItalic = yAxisOptions.chartAxesOptions.isItalic,
-				isVisible = yAxisOptions.isAxesVisible,
-				invertOrder = yAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = lineChartSetting.chartAxisOptions.yAxisOptions,
+				axisPosition = lineChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

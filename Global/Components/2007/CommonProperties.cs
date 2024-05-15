@@ -532,7 +532,14 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		protected static A.DefaultRunProperties CreateDefaultRunProperties(DefaultRunPropertiesModel defaultRunPropertiesModel)
 		{
-			A.DefaultRunProperties defaultRunProperties = new A.DefaultRunProperties();
+			A.DefaultRunProperties defaultRunProperties = new A.DefaultRunProperties
+			{
+				FontSize = (int)defaultRunPropertiesModel.fontSize,
+				Bold = defaultRunPropertiesModel.isBold,
+				Italic = defaultRunPropertiesModel.isItalic,
+				Underline = GetTextUnderlineValues(defaultRunPropertiesModel.underLineValues),
+				Strike = GetTextStrikeValues(defaultRunPropertiesModel.strikeValues)
+			};
 			if (defaultRunPropertiesModel.solidFill != null)
 			{
 				defaultRunProperties.Append(CreateSolidFill(defaultRunPropertiesModel.solidFill));
@@ -548,26 +555,6 @@ namespace OpenXMLOffice.Global_2007
 			if (defaultRunPropertiesModel.complexScriptFont != null)
 			{
 				defaultRunProperties.Append(new A.ComplexScriptFont { Typeface = defaultRunPropertiesModel.complexScriptFont });
-			}
-			if (defaultRunPropertiesModel.fontSize != null)
-			{
-				defaultRunProperties.FontSize = (int)defaultRunPropertiesModel.fontSize;
-			}
-			if (defaultRunPropertiesModel.isBold != null)
-			{
-				defaultRunProperties.Bold = defaultRunPropertiesModel.isBold;
-			}
-			if (defaultRunPropertiesModel.isItalic != null)
-			{
-				defaultRunProperties.Italic = defaultRunPropertiesModel.isItalic;
-			}
-			if (defaultRunPropertiesModel.underline != null)
-			{
-				defaultRunProperties.Underline = GetTextUnderlineValues((UnderLineValues)defaultRunPropertiesModel.underline);
-			}
-			if (defaultRunPropertiesModel.strike != null)
-			{
-				defaultRunProperties.Strike = GetTextStrikeValues((StrikeValues)defaultRunPropertiesModel.strike);
 			}
 			if (defaultRunPropertiesModel.kerning != null)
 			{
@@ -685,12 +672,13 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		protected static A.RunProperties CreateDrawingRunProperties(DrawingRunPropertiesModel drawingRunPropertiesModel)
 		{
-			A.RunProperties runProperties = new A.RunProperties()
+			A.RunProperties runProperties = new A.RunProperties
 			{
-				FontSize = (int)ConverterUtils.FontSizeToFontSize(drawingRunPropertiesModel.fontSize),
+				FontSize = ConverterUtils.FontSizeToFontSize(drawingRunPropertiesModel.fontSize),
 				Bold = drawingRunPropertiesModel.isBold,
 				Italic = drawingRunPropertiesModel.isItalic,
 				Dirty = false,
+				Underline = GetTextUnderlineValues(drawingRunPropertiesModel.underLineValues)
 			};
 			if (drawingRunPropertiesModel.hyperlinkProperties != null)
 			{
@@ -711,10 +699,6 @@ namespace OpenXMLOffice.Global_2007
 			if (drawingRunPropertiesModel.fontFamily != null)
 			{
 				runProperties.Append(new A.ComplexScriptFont { Typeface = drawingRunPropertiesModel.fontFamily });
-			}
-			if (drawingRunPropertiesModel.underline != null)
-			{
-				runProperties.Underline = GetTextUnderlineValues((UnderLineValues)drawingRunPropertiesModel.underline);
 			}
 			return runProperties;
 		}

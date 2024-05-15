@@ -62,11 +62,12 @@ namespace OpenXMLOffice.Tests
 						chartAxesOptions = new()
 						{
 							axesLabelPosition = G.AxesLabelPosition.HIGH,
-							axesLabelAngle = 20
+							textAngle = 20
 						},
 						chartAxisTitle = new()
 						{
-							title = "Cat Ax"
+							textValue = "Cat Ax",
+							textAngle = 20
 						}
 					},
 				},
@@ -107,7 +108,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "test"
+					textValue = "test"
 				},
 				areaChartType = G.AreaChartTypes.PERCENT_STACKED,
 				chartDataSetting = new()
@@ -121,7 +122,7 @@ namespace OpenXMLOffice.Tests
 						isAxesVisible = false,
 						chartAxisTitle = new()
 						{
-							title = "Value ax"
+							textValue = "Value ax"
 						}
 					},
 				}
@@ -178,7 +179,7 @@ namespace OpenXMLOffice.Tests
 				titleOptions = new()
 				{
 					isItalic = true,
-					title = "Bar Chart"
+					textValue = "Bar Chart"
 				},
 				barChartType = G.BarChartTypes.STACKED,
 				barChartDataLabel = new()
@@ -215,7 +216,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "Column Chart"
+					textValue = "Column Chart"
 				},
 				chartLegendOptions = new G.ChartLegendOptions()
 				{
@@ -451,7 +452,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "Dev Chart"
+					textValue = "Dev Chart"
 				},
 				lineChartSeriesSettings = new(){
 					new(){
@@ -489,7 +490,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "Dev Chart"
+					textValue = "Dev Chart"
 				}
 			});
 			Assert.IsTrue(true);
@@ -506,7 +507,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "Column Label Chart"
+					textValue = "Column Label Chart"
 				}
 			});
 			Assert.IsTrue(true);
@@ -523,7 +524,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "Combo Chart Before Picture"
+					textValue = "Combo Chart Before Picture"
 				},
 			};
 			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting<G.PresentationSetting>()
@@ -625,7 +626,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					title = "Scatter Plot"
+					textValue = "Scatter Plot"
 				}
 			});
 			//2
@@ -635,7 +636,7 @@ namespace OpenXMLOffice.Tests
 				scatterChartType = G.ScatterChartTypes.SCATTER_SMOOTH,
 				titleOptions = new()
 				{
-					title = "Scatter Smooth"
+					textValue = "Scatter Smooth"
 				}
 			});
 			//3
@@ -645,7 +646,7 @@ namespace OpenXMLOffice.Tests
 				scatterChartType = G.ScatterChartTypes.SCATTER_SMOOTH_MARKER,
 				titleOptions = new()
 				{
-					title = "Scatter Smooth Marker"
+					textValue = "Scatter Smooth Marker"
 				}
 			});
 			//4
@@ -655,7 +656,7 @@ namespace OpenXMLOffice.Tests
 				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT,
 				titleOptions = new()
 				{
-					title = "Scatter Straight",
+					textValue = "Scatter Straight",
 					fontSize = 20
 				}
 			});
@@ -667,7 +668,7 @@ namespace OpenXMLOffice.Tests
 				titleOptions = new()
 				{
 					fontColor = "FF0000",
-					title = "Scatter Straight Marker"
+					textValue = "Scatter Straight Marker"
 				}
 			});
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
@@ -677,7 +678,7 @@ namespace OpenXMLOffice.Tests
 				titleOptions = new()
 				{
 					isBold = true,
-					title = "Bubble Chart"
+					textValue = "Bubble Chart"
 				}
 			});
 			Assert.IsTrue(true);
@@ -723,11 +724,11 @@ namespace OpenXMLOffice.Tests
 			{
 				textBlocks = new List<G.TextBlock>(){
 					new(){
-						text = "This is text box Font Family",
+						textValue = "This is text box Font Family",
 						fontFamily = "Bernard MT Condensed"
 					},
 					new(){
-						text = "Prev",
+						textValue = "Prev",
 						fontSize = 25,
 						isBold = true,
 						textColor = "AAAAAA",
@@ -742,11 +743,11 @@ namespace OpenXMLOffice.Tests
 				horizontalAlignment = G.HorizontalAlignmentValues.CENTER,
 				textBlocks = new List<G.TextBlock>(){
 					new(){
-						text = "This is text box background",
+						textValue = "This is text box background",
 						textBackground = "777777"
 					},
 					new(){
-						text = "Hyperlink",
+						textValue = "Hyperlink",
 						fontSize = 25,
 						isBold = true,
 						textColor = "AAAAAA",
@@ -761,13 +762,13 @@ namespace OpenXMLOffice.Tests
 			{
 				textBlocks = new List<G.TextBlock>(){
 					new(){
-						text = "This is text box ",
+						textValue = "This is text box ",
 						fontSize = 22,
 						isBold = true,
 						textColor = "AAAAAA"
 					},
 					new(){
-						text = "Hyperlink",
+						textValue = "Hyperlink",
 						fontSize = 25,
 						isBold = true,
 						textColor = "AAAAAA",
@@ -810,7 +811,7 @@ namespace OpenXMLOffice.Tests
 			}));
 			shapes3[0].UpdateShape(new()
 			{
-				text = "Direct Shape Content Update"
+				textValue = "Direct Shape Content Update"
 			});
 			powerPoint1.MoveSlideByIndex(4, 0);
 			powerPoint1.SaveAs(string.Format("{1}/edit-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
@@ -860,25 +861,25 @@ namespace OpenXMLOffice.Tests
 			{
 				textBlocks = new List<G.TextBlock>(){
 					new(){
-						text = "First Slide ",
+						textValue = "First Slide ",
 						hyperlinkProperties = new(){
 							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.FIRST_SLIDE
 						}
 					},
 					new(){
-						text = "Prev Slide ",
+						textValue = "Prev Slide ",
 						hyperlinkProperties = new(){
 							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.PREVIOUS_SLIDE
 						}
 					},
 					new(){
-						text = "Next Slide ",
+						textValue = "Next Slide ",
 						hyperlinkProperties = new(){
 							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.NEXT_SLIDE
 						}
 					},
 					new(){
-						text = "Last Slide ",
+						textValue = "Last Slide ",
 						hyperlinkProperties = new(){
 							hyperlinkPropertyType =G.HyperlinkPropertyTypeValues.LAST_SLIDE
 						}
@@ -954,7 +955,7 @@ namespace OpenXMLOffice.Tests
 			{
 				textBlocks = new List<G.TextBlock>(){
 					new(){
-						text = "Test"
+						textValue = "Test"
 					}
 				}.ToArray()
 			}));
@@ -1018,7 +1019,7 @@ namespace OpenXMLOffice.Tests
 				{
 					tableCells.Add(new()
 					{
-						value = $"Row {i + 1}, Column {j + 1}",
+						textValue = $"Row {i + 1}, Column {j + 1}",
 						textColor = "FF0000",
 						fontSize = 25 / (j + 1),
 						rowSpan = (uint)((i == 0 && j == 0) ? 3 : 0),

@@ -64,105 +64,6 @@ namespace OpenXMLOffice.Global_2007
 			return new C.BubbleSize(new C.NumberReference(new C.Formula(formula), AddNumberCacheValue(cells)));
 		}
 		/// <summary>
-		/// Create Category Axis for the chart
-		/// </summary>
-		/// <param name="categoryAxisSetting">
-		/// </param>
-		/// <returns>
-		/// </returns>
-		internal C.CategoryAxis CreateCategoryAxis(CategoryAxisSetting categoryAxisSetting)
-		{
-			C.AxisPositionValues axisPositionValue;
-			switch (categoryAxisSetting.axisPosition)
-			{
-				case AxisPosition.LEFT:
-					axisPositionValue = C.AxisPositionValues.Left;
-					break;
-				case AxisPosition.RIGHT:
-					axisPositionValue = C.AxisPositionValues.Right;
-					break;
-				case AxisPosition.TOP:
-					axisPositionValue = C.AxisPositionValues.Top;
-					break;
-				default:
-					axisPositionValue = C.AxisPositionValues.Bottom;
-					break;
-			}
-			C.CategoryAxis categoryAxis = new C.CategoryAxis(
-				new C.AxisId { Val = categoryAxisSetting.id },
-				new C.Scaling(new C.Orientation { Val = categoryAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
-				new C.Delete { Val = !categoryAxisSetting.isVisible },
-				new C.AxisPosition { Val = axisPositionValue },
-				new C.MajorTickMark { Val = C.TickMarkValues.None },
-				new C.MinorTickMark { Val = C.TickMarkValues.None },
-				new C.TickLabelPosition { Val = CategoryAxisSetting.GetLabelAxisPosition(categoryAxisSetting.axesLabelPosition) }
-			);
-			if (categoryAxisSetting.title != null)
-			{
-				categoryAxis.Append(CreateTitle(new ChartTitleModel()
-				{
-					title = categoryAxisSetting.title,
-				}));
-			}
-			if (categoryAxisSetting.isVisible)
-			{
-				if (chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled)
-				{
-					categoryAxis.Append(CreateMajorGridLine());
-				}
-				if (chartSetting.chartGridLinesOptions.isMinorCategoryLinesEnabled)
-				{
-					categoryAxis.Append(CreateMinorGridLine());
-				}
-				categoryAxis.Append(CreateChartShapeProperties());
-				SolidFillModel solidFillModel = new SolidFillModel()
-				{
-					schemeColorModel = new SchemeColorModel()
-					{
-						themeColorValues = ThemeColorValues.TEXT_1,
-						luminanceModulation = 65000,
-						luminanceOffset = 35000
-					}
-				};
-				if (categoryAxisSetting.fontColor != null)
-				{
-					solidFillModel.hexColor = categoryAxisSetting.fontColor;
-					solidFillModel.schemeColorModel = null;
-				}
-				categoryAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
-				{
-					drawingBodyProperties = new DrawingBodyPropertiesModel()
-					{
-						rotation = categoryAxisSetting.axesLabelRotationAngle
-					},
-					drawingParagraph = new DrawingParagraphModel()
-					{
-						paragraphPropertiesModel = new ParagraphPropertiesModel()
-						{
-							defaultRunProperties = new DefaultRunPropertiesModel()
-							{
-								solidFill = solidFillModel,
-								fontSize = ConverterUtils.FontSizeToFontSize(categoryAxisSetting.fontSize),
-								isBold = categoryAxisSetting.isBold,
-								isItalic = categoryAxisSetting.isItalic,
-								underline = categoryAxisSetting.underLineValues,
-								strike = categoryAxisSetting.strikeValues,
-								baseline = 0,
-							}
-						}
-					}
-				}));
-			}
-			categoryAxis.Append(
-				new C.CrossingAxis { Val = categoryAxisSetting.crossAxisId },
-				new C.Crosses { Val = C.CrossesValues.AutoZero },
-				new C.AutoLabeled { Val = true },
-				new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
-				new C.LabelOffset { Val = 100 },
-				new C.NoMultiLevelLabels { Val = false });
-			return categoryAxis;
-		}
-		/// <summary>
 		/// 
 		/// </summary>
 		internal C.TrendlineLabel CreateTrendLineLabel()
@@ -193,8 +94,8 @@ namespace OpenXMLOffice.Global_2007
 							fontSize = 1197,
 							isBold = false,
 							isItalic = false,
-							underline = UnderLineValues.NONE,
-							strike = StrikeValues.NO_STRIKE,
+							underLineValues = UnderLineValues.NONE,
+							strikeValues = StrikeValues.NO_STRIKE,
 							kerning = 1200,
 							baseline = 0,
 							solidFill = new SolidFillModel()
@@ -335,12 +236,14 @@ namespace OpenXMLOffice.Global_2007
 			return new C.SeriesText(new C.StringReference(new C.Formula(formula), AddStringCacheValue(cells)));
 		}
 		/// <summary>
-		/// Create Value Axis for the chart
+		/// Create Category Axis for the chart
 		/// </summary>
-		internal C.ValueAxis CreateValueAxis(ValueAxisSetting valueAxisSetting)
+		internal AxisType CreateAxis<AxisType, AxisDirection>(AxisSetting<AxisDirection> axisSetting)
+		where AxisDirection : AxisOptions, new()
+		where AxisType : OpenXmlElement, new()
 		{
 			C.AxisPositionValues axisPositionValue;
-			switch (valueAxisSetting.axisPosition)
+			switch (axisSetting.axisPosition)
 			{
 				case AxisPosition.LEFT:
 					axisPositionValue = C.AxisPositionValues.Left;
@@ -355,34 +258,34 @@ namespace OpenXMLOffice.Global_2007
 					axisPositionValue = C.AxisPositionValues.Bottom;
 					break;
 			}
-			C.ValueAxis valueAxis = new C.ValueAxis(
-				new C.AxisId { Val = valueAxisSetting.id },
-				new C.Scaling(new C.Orientation { Val = valueAxisSetting.invertOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }),
-				new C.Delete { Val = !valueAxisSetting.isVisible },
-				new C.AxisPosition { Val = axisPositionValue });
-			if (valueAxisSetting.title != null)
+			AxisType axis = new AxisType();
+			axis.Append(new C.AxisId { Val = axisSetting.id });
+			axis.Append(new C.Scaling(new C.Orientation { Val = axisSetting.axisOptions.chartAxesOptions.inReverseOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }));
+			axis.Append(new C.Delete { Val = !axisSetting.axisOptions.isAxesVisible });
+			axis.Append(new C.AxisPosition { Val = axisPositionValue });
+			if (axisSetting.axisOptions.chartAxisTitle.textValue != null)
 			{
-				valueAxis.Append(CreateTitle(new ChartTitleModel()
+				axis.Append(CreateTitle(new ChartTitleModel()
 				{
-					title = valueAxisSetting.title,
+					textValue = axisSetting.axisOptions.chartAxisTitle.textValue,
 				}));
 			}
-			if (valueAxisSetting.isVisible)
+			if (axisSetting.axisOptions.isAxesVisible)
 			{
-				if (chartSetting.chartGridLinesOptions.isMajorValueLinesEnabled)
+				if (chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled)
 				{
-					valueAxis.Append(CreateMajorGridLine());
+					axis.Append(CreateMajorGridLine());
 				}
-				if (chartSetting.chartGridLinesOptions.isMinorValueLinesEnabled)
+				if (chartSetting.chartGridLinesOptions.isMinorCategoryLinesEnabled)
 				{
-					valueAxis.Append(CreateMinorGridLine());
+					axis.Append(CreateMinorGridLine());
 				}
-				valueAxis.Append(
+				axis.Append(
 					new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
-					new C.MajorTickMark { Val = valueAxisSetting.majorTickMark },
-					new C.MinorTickMark { Val = valueAxisSetting.minorTickMark },
-					new C.TickLabelPosition { Val = ValueAxisSetting.GetLabelAxisPosition(valueAxisSetting.axesLabelPosition) });
-				valueAxis.Append(CreateChartShapeProperties());
+					new C.MajorTickMark { Val = axisSetting.axisOptions.majorTickMark },
+					new C.MinorTickMark { Val = axisSetting.axisOptions.minorTickMark },
+					new C.TickLabelPosition { Val = AxisOptions.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
+				axis.Append(CreateChartShapeProperties());
 				SolidFillModel solidFillModel = new SolidFillModel()
 				{
 					schemeColorModel = new SchemeColorModel()
@@ -392,16 +295,16 @@ namespace OpenXMLOffice.Global_2007
 						luminanceOffset = 35000
 					}
 				};
-				if (valueAxisSetting.fontColor != null)
+				if (axisSetting.axisOptions.chartAxesOptions.fontColor != null)
 				{
-					solidFillModel.hexColor = valueAxisSetting.fontColor;
+					solidFillModel.hexColor = axisSetting.axisOptions.chartAxesOptions.fontColor;
 					solidFillModel.schemeColorModel = null;
 				}
-				valueAxis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+				axis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
 				{
 					drawingBodyProperties = new DrawingBodyPropertiesModel()
 					{
-						rotation = valueAxisSetting.axesLabelRotationAngle
+						rotation = axisSetting.axisOptions.chartAxesOptions.textAngle
 					},
 					drawingParagraph = new DrawingParagraphModel()
 					{
@@ -410,22 +313,26 @@ namespace OpenXMLOffice.Global_2007
 							defaultRunProperties = new DefaultRunPropertiesModel()
 							{
 								solidFill = solidFillModel,
-								fontSize = ConverterUtils.FontSizeToFontSize(valueAxisSetting.fontSize),
-								isBold = valueAxisSetting.isBold,
-								isItalic = valueAxisSetting.isItalic,
-								underline = valueAxisSetting.underLineValues,
-								strike = valueAxisSetting.strikeValues,
-								baseline = 0
+								fontSize = ConverterUtils.FontSizeToFontSize(axisSetting.axisOptions.chartAxesOptions.fontSize),
+								isBold = axisSetting.axisOptions.chartAxesOptions.isBold,
+								isItalic = axisSetting.axisOptions.chartAxesOptions.isItalic,
+								underLineValues = axisSetting.axisOptions.chartAxesOptions.underLineValues,
+								strikeValues = axisSetting.axisOptions.chartAxesOptions.strikeValues,
+								baseline = 0,
 							}
 						}
 					}
 				}));
 			}
-			valueAxis.Append(
-				new C.CrossingAxis { Val = valueAxisSetting.crossAxisId },
-				new C.Crosses { Val = valueAxisSetting.crosses },
-				new C.CrossBetween { Val = C.CrossBetweenValues.Between });
-			return valueAxis;
+			axis.Append(
+				new C.CrossingAxis { Val = axisSetting.crossAxisId },
+				new C.Crosses { Val = axisSetting.axisOptions.crosses },
+				new C.CrossBetween { Val = C.CrossBetweenValues.Between },
+				new C.AutoLabeled { Val = true },
+				new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
+				new C.LabelOffset { Val = 100 },
+				new C.NoMultiLevelLabels { Val = false });
+			return axis;
 		}
 		/// <summary>
 		/// Create Value Axis Data for the chart
@@ -704,8 +611,8 @@ namespace OpenXMLOffice.Global_2007
 							fontSize = ConverterUtils.FontSizeToFontSize(chartLegendOptions.fontSize),
 							isBold = chartLegendOptions.isBold,
 							isItalic = chartLegendOptions.isItalic,
-							underline = chartLegendOptions.underLineValues,
-							strike = chartLegendOptions.strikeValues,
+							underLineValues = chartLegendOptions.underLineValues,
+							strikeValues = chartLegendOptions.strikeValues,
 							kerning = 1200,
 							baseline = 0,
 						}
@@ -826,14 +733,14 @@ namespace OpenXMLOffice.Global_2007
 					drawingRuns = new List<DrawingRunModel>()
 					{
 						new DrawingRunModel(){
-						text = titleModel.title,
+						text = titleModel.textValue,
 						drawingRunProperties = new DrawingRunPropertiesModel()
 						{
 							solidFill = solidFillModel,
 							fontSize = titleModel.fontSize,
 							isBold = titleModel.isBold,
 							isItalic = titleModel.isItalic,
-							underline = titleModel.underLineValues,
+							underLineValues = titleModel.underLineValues,
 						}
 						}
 					}.ToArray()

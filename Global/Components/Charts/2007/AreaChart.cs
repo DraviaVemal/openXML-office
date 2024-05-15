@@ -143,35 +143,19 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateAreaChart<C.AreaChart>(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			XAxisOptions xAxisOptions = areaChartSetting.chartAxisOptions.xAxisOptions;
-			YAxisOptions yAxisOptions = areaChartSetting.chartAxisOptions.yAxisOptions;
-			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				title = xAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = xAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = xAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
-				fontSize = xAxisOptions.chartAxesOptions.fontSize,
-				isBold = xAxisOptions.chartAxesOptions.isBold,
-				isItalic = xAxisOptions.chartAxesOptions.isItalic,
-				isVisible = xAxisOptions.isAxesVisible,
-				invertOrder = xAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = areaChartSetting.chartAxisOptions.xAxisOptions,
+				axisPosition = areaChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 			}));
-			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				title = yAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = yAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = yAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
-				fontSize = yAxisOptions.chartAxesOptions.fontSize,
-				isBold = yAxisOptions.chartAxesOptions.isBold,
-				isItalic = yAxisOptions.chartAxesOptions.isItalic,
-				isVisible = yAxisOptions.isAxesVisible,
-				invertOrder = yAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = areaChartSetting.chartAxisOptions.yAxisOptions,
+				axisPosition = areaChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

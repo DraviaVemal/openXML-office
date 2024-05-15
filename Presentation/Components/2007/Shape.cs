@@ -181,7 +181,7 @@ namespace OpenXMLOffice.Presentation_2007
 					paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>()
 					{
 						new DrawingRunModel(){
-							text = shapeTextModel.text,
+							text = shapeTextModel.textValue,
 						drawingRunProperties = new DrawingRunPropertiesModel()
 						{
 							solidFill = solidFillModel,
@@ -189,7 +189,7 @@ namespace OpenXMLOffice.Presentation_2007
 							fontSize = shapeTextModel.fontSize,
 							isBold = shapeTextModel.isBold,
 							isItalic = shapeTextModel.isItalic,
-							underline = shapeTextModel.underline
+							underLineValues = shapeTextModel.underLineValues
 						}
 						}
 					}.ToArray()));

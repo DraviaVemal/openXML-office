@@ -63,7 +63,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Presentation Table Cell Class for setting the cell properties.
 	/// </summary>
-	public class TableCell
+	public class TableCell : TextOptions
 	{
 		/// <summary>
 		/// Merge rows below this cell
@@ -90,27 +90,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public string cellBackground;
 		/// <summary>
-		/// Cell Font Family
-		/// Default: Calibri (Body)
-		/// </summary>
-		public string fontFamily = "Calibri (Body)";
-		/// <summary>
-		/// Cell Font Size
-		/// </summary>
-		public int fontSize = 16;
-		/// <summary>
-		/// Is Bold text
-		/// </summary>
-		public bool isBold;
-		/// <summary>
-		/// Is Italic text
-		/// </summary>
-		public bool isItalic;
-		/// <summary>
-		/// Is Underline text
-		/// </summary>
-		public bool isUnderline;
-		/// <summary>
 		/// Text Background Color aka Highlight Color
 		/// </summary>
 		public string textBackground;
@@ -118,10 +97,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Text Color
 		/// </summary>
 		public string textColor = "000000";
-		/// <summary>
-		/// Cell Value
-		/// </summary>
-		public string value;
 	}
 	/// <summary>
 	/// Table Row Customization Properties

@@ -281,7 +281,7 @@ namespace OpenXMLOffice.Presentation_2007
 					Alignment = alignment
 				});
 			}
-			if (cell.value == null)
+			if (cell.textValue == null)
 			{
 				paragraph.Append(new A.EndParagraphRunProperties() { Language = "en-IN" });
 			}
@@ -302,7 +302,7 @@ namespace OpenXMLOffice.Presentation_2007
 				paragraph.Append(CreateDrawingRun(new List<G.DrawingRunModel>()
 				{
 					new G.DrawingRunModel(){
-						text = cell.value,
+						text = cell.textValue,
 						textHighlight = cell.textBackground,
 						drawingRunProperties = new G.DrawingRunPropertiesModel()
 						{
@@ -311,7 +311,7 @@ namespace OpenXMLOffice.Presentation_2007
 							fontSize = cell.fontSize,
 							isBold = cell.isBold,
 							isItalic = cell.isItalic,
-							underline = cell.isUnderline ? G.UnderLineValues.SINGLE : G.UnderLineValues.NONE,
+							underLineValues = cell.underLineValues,
 						}
 					}
 				}.ToArray()));

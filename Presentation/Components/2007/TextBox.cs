@@ -149,7 +149,7 @@ namespace OpenXMLOffice.Presentation_2007
 				}
 				DrawingRunModel drawingRunModel = new DrawingRunModel()
 				{
-					text = textBlock.text,
+					text = textBlock.textValue,
 					textHighlight = textBlock.textBackground,
 					drawingRunProperties = new DrawingRunPropertiesModel()
 					{
@@ -158,7 +158,7 @@ namespace OpenXMLOffice.Presentation_2007
 						fontSize = textBlock.fontSize,
 						isBold = textBlock.isBold,
 						isItalic = textBlock.isItalic,
-						underline = textBlock.isUnderline ? UnderLineValues.SINGLE : UnderLineValues.NONE,
+						underLineValues = textBlock.isUnderline ? UnderLineValues.SINGLE : UnderLineValues.NONE,
 						hyperlinkProperties = textBlock.hyperlinkProperties
 					}
 				};

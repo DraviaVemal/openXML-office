@@ -227,35 +227,19 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateBarChart<C.BarChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			XAxisOptions xAxisOptions = barChartSetting.chartAxisOptions.xAxisOptions;
-			YAxisOptions yAxisOptions = barChartSetting.chartAxisOptions.yAxisOptions;
-			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				title = xAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = xAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = xAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
-				fontSize = xAxisOptions.chartAxesOptions.fontSize,
-				isBold = xAxisOptions.chartAxesOptions.isBold,
-				isItalic = xAxisOptions.chartAxesOptions.isItalic,
-				isVisible = xAxisOptions.isAxesVisible,
-				invertOrder = xAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = barChartSetting.chartAxisOptions.xAxisOptions,
+				axisPosition = barChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
 			}));
-			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				title = yAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = yAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = yAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
-				fontSize = yAxisOptions.chartAxesOptions.fontSize,
-				isBold = yAxisOptions.chartAxesOptions.isBold,
-				isItalic = yAxisOptions.chartAxesOptions.isItalic,
-				isVisible = yAxisOptions.isAxesVisible,
-				invertOrder = yAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = barChartSetting.chartAxisOptions.yAxisOptions,
+				axisPosition = barChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

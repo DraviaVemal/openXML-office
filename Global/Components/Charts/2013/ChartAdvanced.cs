@@ -128,8 +128,8 @@ namespace OpenXMLOffice.Global_2013
 							fontSize = ConverterUtils.FontSizeToFontSize(chartDataLabel.fontSize),
 							isBold = chartDataLabel.isBold,
 							isItalic = chartDataLabel.isItalic,
-							underline = chartDataLabel.underLineValues,
-							strike = chartDataLabel.strikeValues,
+							underLineValues = chartDataLabel.underLineValues,
+							strikeValues = chartDataLabel.strikeValues,
 							kerning = 1200,
 							baseline = 0,
 						}

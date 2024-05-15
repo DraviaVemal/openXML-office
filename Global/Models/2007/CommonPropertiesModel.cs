@@ -372,6 +372,71 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		INSERT,
 	}
+
+	/// <summary>
+	/// Central Text Options
+	/// </summary>
+	public class TextOptions
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public string textValue;
+		/// <summary>
+		/// Is Font Bold
+		/// </summary>
+		public bool isBold;
+		/// <summary>
+		/// Is Font Italic
+		/// </summary>
+		public bool isItalic;
+		/// <summary>
+		///  Font Size
+		/// </summary>
+		public float fontSize = 11.97F;
+		/// <summary>
+		///
+		/// </summary>
+		public string fontColor;
+		/// <summary>
+		///
+		/// </summary>
+		public UnderLineValues underLineValues = UnderLineValues.NONE;
+		/// <summary>
+		///
+		/// </summary>
+		public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
+		private int _textAngle = 0;
+		/// <summary>
+		/// Set Text Angle between -90 to 90 degree
+		/// </summary>
+		public int textAngle
+		{
+			get
+			{
+				return _textAngle;
+			}
+			set
+			{
+				if (value > 90)
+				{
+					_textAngle = 90;
+				}
+				else if (value < -90)
+				{
+					_textAngle = -90;
+				}
+				else
+				{
+					_textAngle = value;
+				}
+			}
+		}
+		/// <summary>
+		///
+		/// </summary>
+		public string fontFamily = "(Calibri (Body))";
+	}
 	/// <summary>
 	///
 	/// </summary>
@@ -667,7 +732,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class DrawingRunPropertiesModel
+	public class DrawingRunPropertiesModel : TextOptions
 	{
 		/// <summary>
 		///
@@ -677,40 +742,16 @@ namespace OpenXMLOffice.Global_2007
 		///
 		/// </summary>
 		public SolidFillModel solidFill;
-		/// <summary>
-		///
-		/// </summary>
-		public string fontFamily = "(Calibri (Body))";
-		/// <summary>
-		///
-		/// </summary>
-		public int fontSize = 8;
-		/// <summary>
-		///
-		/// </summary>
-		public bool? isBold;
-		/// <summary>
-		///
-		/// </summary>
-		public bool? isItalic;
-		/// <summary>
-		///
-		/// </summary>
-		public UnderLineValues? underline;
 	}
 	/// <summary>
 	///
 	/// </summary>
-	public class DefaultRunPropertiesModel
+	public class DefaultRunPropertiesModel : TextOptions
 	{
 		/// <summary>
 		///
 		/// </summary>
 		public SolidFillModel solidFill;
-		/// <summary>
-		///
-		/// </summary>
-		public UnderLineValues? underline;
 		/// <summary>
 		///
 		/// </summary>
@@ -723,22 +764,6 @@ namespace OpenXMLOffice.Global_2007
 		///
 		/// </summary>
 		public string complexScriptFont;
-		/// <summary>
-		///
-		/// </summary>
-		public int? fontSize;
-		/// <summary>
-		///
-		/// </summary>
-		public bool? isBold;
-		/// <summary>
-		///
-		/// </summary>
-		public bool? isItalic;
-		/// <summary>
-		///
-		/// </summary>
-		public StrikeValues? strike;
 		/// <summary>
 		///
 		/// </summary>

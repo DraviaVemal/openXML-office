@@ -95,51 +95,33 @@ namespace OpenXMLOffice.Global_2007
 				}
 				chartPosition++;
 			});
-			XAxisOptions xAxisOptions = comboChartSetting.chartAxisOptions.xAxisOptions;
-			YAxisOptions yAxisOptions = comboChartSetting.chartAxisOptions.yAxisOptions;
-			plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
-				title = xAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = xAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = xAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
-				fontSize = xAxisOptions.chartAxesOptions.fontSize,
-				isBold = xAxisOptions.chartAxesOptions.isBold,
-				isItalic = xAxisOptions.chartAxesOptions.isItalic,
-				isVisible = xAxisOptions.isAxesVisible,
-				invertOrder = xAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = comboChartSetting.chartAxisOptions.xAxisOptions,
+				axisPosition = comboChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+			plotArea.Append(CreateAxis<C.CategoryAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
-				title = yAxisOptions.chartAxisTitle.title,
-				axesLabelPosition = yAxisOptions.chartAxesOptions.axesLabelPosition,
-				axesLabelRotationAngle = yAxisOptions.chartAxesOptions.axesLabelAngle,
-				axisPosition = yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT,
-				fontSize = yAxisOptions.chartAxesOptions.fontSize,
-				isBold = yAxisOptions.chartAxesOptions.isBold,
-				isItalic = yAxisOptions.chartAxesOptions.isItalic,
-				isVisible = yAxisOptions.isAxesVisible,
-				invertOrder = yAxisOptions.chartAxesOptions.inReverseOrder,
+				axisOptions = comboChartSetting.chartAxisOptions.yAxisOptions,
+				axisPosition = comboChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
 			}));
 			if (isSecondaryAxisActive)
 			{
-				plotArea.Append(CreateCategoryAxis(new CategoryAxisSetting()
+				plotArea.Append(CreateAxis<C.CategoryAxis, ZAxisOptions>(new AxisSetting<ZAxisOptions>()
 				{
 					id = SecondaryCategoryAxisId,
 					crossAxisId = SecondaryValueAxisId,
-					isVisible = false
+					axisOptions = comboChartSetting.chartAxisOptions.zAxisOptions
 				}));
-				plotArea.Append(CreateValueAxis(new ValueAxisSetting()
+				plotArea.Append(CreateAxis<C.CategoryAxis, ZAxisOptions>(new AxisSetting<ZAxisOptions>()
 				{
 					id = SecondaryValueAxisId,
 					crossAxisId = SecondaryCategoryAxisId,
-					axisPosition = comboChartSetting.secondaryAxisPosition,
-					crosses = C.CrossesValues.Maximum,
-					majorTickMark = C.TickMarkValues.Outside
+					axisOptions = comboChartSetting.chartAxisOptions.zAxisOptions
 				}));
 			}
 			plotArea.Append(CreateChartShapeProperties());

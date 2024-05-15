@@ -25,7 +25,7 @@ namespace OpenXMLOffice.Presentation_2016
 		{
 			errorMessage = new TextBox(new TextBoxSetting()
 			{
-				textBlocks = new List<TextBlock>() { new TextBlock() { text = "This chart is not supported in this version of PowerPoint. Requires PowerPoint 2016 or later.", } }.ToArray(),
+				textBlocks = new List<TextBlock>() { new TextBlock() { textValue = "This chart is not supported in this version of PowerPoint. Requires PowerPoint 2016 or later.", } }.ToArray(),
 				x = chartSetting.applicationSpecificSetting.x,
 				y = chartSetting.applicationSpecificSetting.y,
 				width = chartSetting.applicationSpecificSetting.width,
