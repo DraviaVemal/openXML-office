@@ -237,12 +237,13 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a line chart.
 	/// </summary>
-	public class LineChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class LineChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The options for the chart axis.
 		/// </summary>
-		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();
+		public ChartAxisOptions<CategoryAxis, ValueAxis, ValueAxis> chartAxisOptions = new ChartAxisOptions<CategoryAxis, ValueAxis, ValueAxis>();
 		/// <summary>
 		/// The data label settings for the line chart, which will get overridden by series level setting.
 		/// </summary>

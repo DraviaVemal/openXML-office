@@ -227,65 +227,75 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
+			where ApplicationSpecificSetting : ExcelSetting, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, areaChartSetting);
+			return new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, areaChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting)
+			where ApplicationSpecificSetting : ExcelSetting, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, barChartSetting);
+			return new Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis>(this, chartData, dataRange, barChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
+			where ApplicationSpecificSetting : ExcelSetting, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, columnChartSetting);
+			return new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, columnChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
+			where ApplicationSpecificSetting : ExcelSetting, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, lineChartSetting);
+			return new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, lineChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
+			where ApplicationSpecificSetting : ExcelSetting, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, pieChartSetting);
+			return new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, pieChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
+			where ApplicationSpecificSetting : ExcelSetting, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, scatterChartSetting);
+			return new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, scatterChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> AddChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
+			where ApplicationSpecificSetting : ExcelSetting, new()
+			where XAxisType : class, IAxisTypeOptions, new()
+			where YAxisType : class, IAxisTypeOptions, new()
+			where ZAxisType : class, IAxisTypeOptions, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting>(this, chartData, dataRange, comboChartSetting);
+			return new Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(this, chartData, dataRange, comboChartSetting);
 		}
 		/// <summary>
 		/// Add Merge cell range to the current sheet if it's not overlapping with existing range

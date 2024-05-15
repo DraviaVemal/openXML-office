@@ -11,7 +11,8 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a bar chart.
 	/// </summary>
-	public class BarChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class BarChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		private const int DefaultGapWidth = 150;
 		private const int DefaultOverlap = 100;
@@ -227,19 +228,19 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateBarChart<C.BarChart>(CreateDataSeries(barChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			plotArea.Append(CreateAxis<C.CategoryAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
+			plotArea.Append(CreateAxis<C.CategoryAxis, YAxisOptions<CategoryAxis>>(new AxisSetting<YAxisOptions<CategoryAxis>>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = barChartSetting.chartAxisOptions.yAxisOptions,
-				axisPosition = barChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
+				axisPosition = barChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
+			plotArea.Append(CreateAxis<C.ValueAxis, XAxisOptions<ValueAxis>>(new AxisSetting<XAxisOptions<ValueAxis>>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
 				axisOptions = barChartSetting.chartAxisOptions.xAxisOptions,
-				axisPosition = barChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
+				axisPosition = barChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
 			plotArea.Append(CreateChartShapeProperties());
 			return plotArea;

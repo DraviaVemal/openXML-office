@@ -74,7 +74,8 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for an area chart.
 	/// </summary>
-	public class AreaChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class AreaChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The data label settings for the entire chart. This will get overridden by series level setting.
@@ -91,6 +92,6 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// The options for the axis of the chart.
 		/// </summary>
-		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();
+		public ChartAxisOptions<CategoryAxis, ValueAxis, ValueAxis> chartAxisOptions = new ChartAxisOptions<CategoryAxis, ValueAxis, ValueAxis>();
 	}
 }

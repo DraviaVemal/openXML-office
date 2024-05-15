@@ -145,7 +145,8 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a bar chart.
 	/// </summary>
-	public class BarChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class BarChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The data label settings for the entire chart. This will get overridden by series level setting.
@@ -162,7 +163,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// The options for the chart axis.
 		/// </summary>
-		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();
+		public ChartAxisOptions<ValueAxis, CategoryAxis, ValueAxis> chartAxisOptions = new ChartAxisOptions<ValueAxis, CategoryAxis, ValueAxis>();
 		/// <summary>
 		/// The graphics settings for the bar chart.
 		/// </summary>

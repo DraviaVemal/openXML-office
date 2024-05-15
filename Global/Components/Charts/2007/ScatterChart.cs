@@ -11,7 +11,8 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the types of scatter charts.
 	/// </summary>
-	public class ScatterChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class ScatterChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// Scatter Chart Setting
@@ -49,14 +50,14 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			plotArea.Append(CreateAxis<C.ValueAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
+			plotArea.Append(CreateAxis<C.ValueAxis, XAxisOptions<ValueAxis>>(new AxisSetting<XAxisOptions<ValueAxis>>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = scatterChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = scatterChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>>(new AxisSetting<YAxisOptions<ValueAxis>>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,

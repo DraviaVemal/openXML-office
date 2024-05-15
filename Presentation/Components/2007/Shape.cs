@@ -33,7 +33,11 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Replace Chart for the source Shape
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> ReplaceChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> chart)
+			where ApplicationSpecificSetting : PresentationSetting, new()
+			where XAxisType : class, IAxisTypeOptions, new()
+			where YAxisType : class, IAxisTypeOptions, new()
+			where ZAxisType : class, IAxisTypeOptions, new()
 		{
 			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
 			if (parent == null)

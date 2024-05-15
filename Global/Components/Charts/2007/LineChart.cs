@@ -10,7 +10,8 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a line chart.
 	/// </summary>
-	public class LineChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class LineChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// The settings for the line chart.
@@ -33,14 +34,14 @@ namespace OpenXMLOffice.Global_2007
 			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions != null ? lineChartSetting.plotAreaOptions.manualLayout : null));
 			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
-			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions<CategoryAxis>>(new AxisSetting<XAxisOptions<CategoryAxis>>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = lineChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = lineChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>>(new AxisSetting<YAxisOptions<ValueAxis>>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,

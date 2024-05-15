@@ -3,6 +3,7 @@
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OpenXMLOffice.Global_2013;
 using System;
+using DocumentFormat.OpenXml.Linq;
 
 
 namespace OpenXMLOffice.Global_2007
@@ -313,36 +314,70 @@ namespace OpenXMLOffice.Global_2007
 		}
 	}
 	/// <summary>
+	/// 
+	/// </summary>
+	public interface IAxisTypeOptions { }
+	/// <summary>
+	/// 
+	/// </summary>
+	public class ValueAxis : IAxisTypeOptions
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public int boundsMinimum = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public int boundsMaximum = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public int unitsMajor = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public int unitsMinor = 0;
+
+	}
+	/// <summary>
+	/// 
+	/// </summary>
+	public class CategoryAxis : IAxisTypeOptions { }
+	/// <summary>
 	/// X Axis Specific Options
 	/// </summary>
-	public class XAxisOptions : AxisOptions { }
+	public class XAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new() { }
 	/// <summary>
 	/// Y Axis Specific Options
 	/// </summary>
-	public class YAxisOptions : AxisOptions { }
+	public class YAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new() { }
 	/// <summary>
 	/// Z Axis Specific Options
 	/// </summary>
-	public class ZAxisOptions : AxisOptions { }
+	public class ZAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new() { }
 	/// <summary>
 	/// Represents the options for a chart axis.
 	/// </summary>
-	public class ChartAxisOptions
+	public class ChartAxisOptions<XAxisType, YAxisType, ZAxisType>
+		where XAxisType : class, IAxisTypeOptions, new()
+	 	where YAxisType : class, IAxisTypeOptions, new()
+	  	where ZAxisType : class, IAxisTypeOptions, new()
 	{
 		/// <summary>
 		/// X-Axis and Axes options
 		/// </summary>
-		public XAxisOptions xAxisOptions = new XAxisOptions();
+		public XAxisOptions<XAxisType> xAxisOptions = new XAxisOptions<XAxisType>();
 		/// <summary>
 		/// Y-Axis and Axes options
 		/// </summary>
-		public YAxisOptions yAxisOptions = new YAxisOptions();
+		public YAxisOptions<YAxisType> yAxisOptions = new YAxisOptions<YAxisType>();
 		/// <summary>
 		/// Z-Axis and Axes options
 		/// Totally optional for secondary action options
 		/// TODO : Implementation
 		/// </summary>
-		public ZAxisOptions zAxisOptions = new ZAxisOptions();
+		public ZAxisOptions<ZAxisType> zAxisOptions = new ZAxisOptions<ZAxisType>();
 	}
 	/// <summary>
 	/// Represents the grouping options for chart data.

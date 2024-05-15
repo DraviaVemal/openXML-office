@@ -689,7 +689,7 @@ namespace OpenXMLOffice.Tests
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
-			ComboChartSetting<ExcelSetting> comboChartSetting = new()
+			ComboChartSetting<ExcelSetting, CategoryAxis, ValueAxis, ValueAxis> comboChartSetting = new()
 			{
 				secondaryAxisPosition = AxisPosition.TOP,
 				applicationSpecificSetting = new()

@@ -8,9 +8,10 @@ using C = DocumentFormat.OpenXml.Drawing.Charts;
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
-	/// Aread Chart Core data
+	/// Area Chart Core data
 	/// </summary>
-	public class AreaChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class AreaChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// Area Chart Setting
@@ -143,14 +144,14 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateAreaChart<C.AreaChart>(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions<CategoryAxis>>(new AxisSetting<XAxisOptions<CategoryAxis>>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = areaChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = areaChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>>(new AxisSetting<YAxisOptions<ValueAxis>>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,

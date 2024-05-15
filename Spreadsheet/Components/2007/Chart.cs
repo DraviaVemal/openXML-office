@@ -10,7 +10,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	/// Chart Class Exported out of Excel importing from Global
 	/// </summary>
-	public class Chart<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : ExcelSetting, new()
+	public class Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> : ChartProperties<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : ExcelSetting, new()
+		where XAxisType : class, IAxisTypeOptions, new()
+	 	where YAxisType : class, IAxisTypeOptions, new()
+	  	where ZAxisType : class, IAxisTypeOptions, new()
 	{
 		private readonly ChartPart openXMLChartPart;
 		/// <summary>
@@ -82,7 +86,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) : base(worksheet, comboChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting) : base(worksheet, comboChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
@@ -153,9 +157,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			ScatterChart<ApplicationSpecificSetting> scatterChart = new ScatterChart<ApplicationSpecificSetting>(scatterChartSetting, chartData, dataRange);
 			SaveChanges(scatterChart);
 		}
-		private void CreateChart(ChartData[][] chartData, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting)
+		private void CreateChart(ChartData[][] chartData, DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
 		{
-			ComboChart<ApplicationSpecificSetting> comboChart = new ComboChart<ApplicationSpecificSetting>(comboChartSetting, chartData, dataRange);
+			ComboChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> comboChart = new ComboChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(comboChartSetting, chartData, dataRange);
 			SaveChanges(comboChart);
 		}
 		private void SaveChanges(ChartBase<ApplicationSpecificSetting> chart)

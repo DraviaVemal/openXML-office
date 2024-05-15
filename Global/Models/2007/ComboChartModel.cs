@@ -8,7 +8,11 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ComboChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class ComboChartSetting<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> : ChartSetting<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		where XAxisType : class, IAxisTypeOptions, new()
+	 	where YAxisType : class, IAxisTypeOptions, new()
+	  	where ZAxisType : class, IAxisTypeOptions, new()
 	{
 		/// <summary>
 		/// Secondary Axis position
@@ -76,7 +80,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// The options for the axis of the chart.
 		/// </summary>
-		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();
+		public ChartAxisOptions<XAxisType, YAxisType, ZAxisType> chartAxisOptions = new ChartAxisOptions<XAxisType, YAxisType, ZAxisType>();
 		private bool CheckSecondaryAxisAlreadyUsed()
 		{
 			return ComboChartsSettingList.Select(val => ((ChartSetting<ApplicationSpecificSetting>)val).isSecondaryAxis).Count(v => v) > 1;

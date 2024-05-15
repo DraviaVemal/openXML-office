@@ -59,70 +59,81 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, AreaChartSetting<ApplicationSpecificSetting> AreaChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, AreaChartSetting<ApplicationSpecificSetting> AreaChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, AreaChartSetting);
+			Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, AreaChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Bar chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, BarChartSetting<ApplicationSpecificSetting> BarChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, BarChartSetting<ApplicationSpecificSetting> BarChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, BarChartSetting);
+			Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis>(this, DataCells, BarChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Column chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ColumnChartSetting<ApplicationSpecificSetting> ColumnChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ColumnChartSetting<ApplicationSpecificSetting> ColumnChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, ColumnChartSetting);
+			Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, ColumnChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Line chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, LineChartSetting<ApplicationSpecificSetting> LineChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, LineChartSetting<ApplicationSpecificSetting> LineChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, LineChartSetting);
+			Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, LineChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Pie chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, PieChartSetting<ApplicationSpecificSetting> PieChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, PieChartSetting<ApplicationSpecificSetting> PieChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, PieChartSetting);
+			Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, DataCells, PieChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Scatter chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ScatterChartSetting<ApplicationSpecificSetting> ScatterChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ScatterChartSetting<ApplicationSpecificSetting> ScatterChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, ScatterChartSetting);
+			Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, DataCells, ScatterChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ComboChartSetting<ApplicationSpecificSetting> comboChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> AddChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(DataCell[][] DataCells, ComboChartSetting<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
+			where XAxisType : class, IAxisTypeOptions, new()
+			where YAxisType : class, IAxisTypeOptions, new()
+			where ZAxisType : class, IAxisTypeOptions, new()
 		{
-			Chart<ApplicationSpecificSetting> Chart = new Chart<ApplicationSpecificSetting>(this, DataCells, comboChartSetting);
+			Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> Chart = new Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(this, DataCells, comboChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public P16.Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting) where ApplicationSpecificSetting : PresentationSetting, new()
+		public P16.Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
 			P16.Chart<ApplicationSpecificSetting> Chart = new P16.Chart<ApplicationSpecificSetting>(this, DataCells, waterfallChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetAlternateContent());

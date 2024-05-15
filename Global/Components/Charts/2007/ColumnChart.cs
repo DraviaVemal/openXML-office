@@ -10,14 +10,15 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a column chart.
 	/// </summary>
-	public class ColumnChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class ColumnChart<ApplicationSpecificSetting> : ChartAdvance<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		private const int DefaultGapWidth = 150;
 		private const int DefaultOverlap = 100;
 		/// <summary>
 		/// Column Chart Setting
 		/// </summary>
-		protected ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting;
+		protected readonly ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting;
 		internal ColumnChart(ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting) : base(columnChartSetting)
 		{
 			this.columnChartSetting = columnChartSetting;
@@ -49,14 +50,14 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateColumnChart<C.BarChart>(CreateDataSeries(columnChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions>(new AxisSetting<XAxisOptions>()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions<CategoryAxis>>(new AxisSetting<XAxisOptions<CategoryAxis>>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = columnChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = columnChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions>(new AxisSetting<YAxisOptions>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>>(new AxisSetting<YAxisOptions<ValueAxis>>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,

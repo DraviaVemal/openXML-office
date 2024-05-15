@@ -145,12 +145,13 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the settings for a column chart.
 	/// </summary>
-	public class ColumnChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting> where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+	public class ColumnChartSetting<ApplicationSpecificSetting> : ChartSetting<ApplicationSpecificSetting>
+		where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 	{
 		/// <summary>
 		/// Chart Axis Options
 		/// </summary>
-		public ChartAxisOptions chartAxisOptions = new ChartAxisOptions();
+		public ChartAxisOptions<CategoryAxis, ValueAxis, ValueAxis> chartAxisOptions = new ChartAxisOptions<CategoryAxis, ValueAxis, ValueAxis>();
 		/// <summary>
 		/// Will get overridden by series level setting.
 		/// </summary>
