@@ -62,12 +62,12 @@ namespace OpenXMLOffice.Tests
 						chartAxesOptions = new()
 						{
 							axesLabelPosition = G.AxesLabelPosition.HIGH,
-							textAngle = 20
+							TextAngle = 20
 						},
 						chartAxisTitle = new()
 						{
 							textValue = "Cat Ax",
-							textAngle = 20
+							TextAngle = 20
 						}
 					},
 				},
@@ -122,7 +122,8 @@ namespace OpenXMLOffice.Tests
 						isAxesVisible = false,
 						chartAxisTitle = new()
 						{
-							textValue = "Value ax"
+							textValue = "Value ax",
+							TextAngle = -90,
 						}
 					},
 				}

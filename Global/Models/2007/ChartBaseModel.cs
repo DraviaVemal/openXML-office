@@ -2,7 +2,7 @@
 
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OpenXMLOffice.Global_2013;
-using DocumentFormat.OpenXml;
+using System;
 
 
 namespace OpenXMLOffice.Global_2007
@@ -106,9 +106,161 @@ namespace OpenXMLOffice.Global_2007
 		X
 	}
 	/// <summary>
+	/// Text direction in charts
+	/// </summary>
+	public enum ChartTextDirectionValues
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		HORIZONTAL,
+		/// <summary>
+		/// 
+		/// </summary>
+		ROTATE_90,
+		/// <summary>
+		/// 
+		/// </summary>
+		ROTATE_270,
+		/// <summary>
+		/// 
+		/// </summary>
+		STACKED
+	}
+	/// <summary>
+	/// 
+	/// </summary>
+	public enum ChartVerticalTextAlignmentValues
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		RIGHT,
+		/// <summary>
+		/// 
+		/// </summary>
+		CENTER,
+		/// <summary>
+		/// 
+		/// </summary>
+		LEFT,
+		/// <summary>
+		/// 
+		/// </summary>
+		RIGHT_MIDDLE,
+		/// <summary>
+		/// 
+		/// </summary>
+		CENTER_MIDDLE,
+		/// <summary>
+		/// 
+		/// </summary>
+		LEFT_MIDDLE,
+		/// <summary>
+		/// 
+		/// </summary>
+		TOP,
+		/// <summary>
+		/// 
+		/// </summary>
+		MIDDLE,
+		/// <summary>
+		/// 
+		/// </summary>
+		BOTTOM,
+		/// <summary>
+		/// 
+		/// </summary>
+		TOP_CENTER,
+		/// <summary>
+		/// 
+		/// </summary>
+		MIDDLE_CENTER,
+		/// <summary>
+		/// 
+		/// </summary>
+		BOTTOM_CENTER,
+	}
+	/// <summary>
+	/// 
+	/// </summary>
+	public class ChartTextOptions : TextOptions
+	{
+		/// <summary>
+		/// TODO
+		/// </summary>
+		internal ChartTextDirectionValues textDirectionValue = ChartTextDirectionValues.HORIZONTAL;
+		internal ChartVerticalTextAlignmentValues chartVerticalTextAlignmentValue;
+		/// <summary>
+		/// TODO
+		/// </summary>
+		internal ChartVerticalTextAlignmentValues ChartVerticalTextAlignmentValue
+		{
+			get
+			{
+				return chartVerticalTextAlignmentValue;
+			}
+			set
+			{
+				switch (textDirectionValue)
+				{
+					case ChartTextDirectionValues.HORIZONTAL:
+						if (value == ChartVerticalTextAlignmentValues.LEFT ||
+							value == ChartVerticalTextAlignmentValues.CENTER ||
+							value == ChartVerticalTextAlignmentValues.RIGHT ||
+							value == ChartVerticalTextAlignmentValues.LEFT_MIDDLE ||
+							value == ChartVerticalTextAlignmentValues.CENTER_MIDDLE ||
+							value == ChartVerticalTextAlignmentValues.RIGHT_MIDDLE)
+						{
+							throw new Exception("Selected Text Configuration is not acceptable");
+						}
+						break;
+					default:
+						if (value == ChartVerticalTextAlignmentValues.TOP ||
+						value == ChartVerticalTextAlignmentValues.MIDDLE ||
+						value == ChartVerticalTextAlignmentValues.BOTTOM ||
+						value == ChartVerticalTextAlignmentValues.TOP_CENTER ||
+						value == ChartVerticalTextAlignmentValues.MIDDLE_CENTER ||
+						value == ChartVerticalTextAlignmentValues.BOTTOM_CENTER)
+						{
+							throw new Exception("Selected Text Configuration is not acceptable");
+						}
+						break;
+				}
+				chartVerticalTextAlignmentValue = value;
+			}
+		}
+		private int textAngle = 0;
+		/// <summary>
+		/// Set Text Angle between -90 to 90 degree
+		/// </summary>
+		public int TextAngle
+		{
+			get
+			{
+				return textAngle;
+			}
+			set
+			{
+				if (value > 90)
+				{
+					textAngle = 90;
+				}
+				else if (value < -90)
+				{
+					textAngle = -90;
+				}
+				else
+				{
+					textAngle = value;
+				}
+			}
+		}
+	}
+	/// <summary>
 	/// Represents the options for the axes in a chart.
 	/// </summary>
-	public class ChartAxesLabel : TextOptions
+	public class ChartAxesLabel : ChartTextOptions
 	{
 		/// <summary>
 		/// Axis Label Position.
@@ -122,7 +274,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the options for the axis title text
 	/// </summary>
-	public class ChartAxisTitle : TextOptions { }
+	public class ChartAxisTitle : ChartTextOptions { }
 
 	/// <summary>
 	/// Common Chart Axis Options
@@ -423,7 +575,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartTitleModel : TextOptions { }
+	public class ChartTitleModel : ChartTextOptions { }
 	/// <summary>
 	///
 	/// </summary>

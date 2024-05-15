@@ -406,32 +406,6 @@ namespace OpenXMLOffice.Global_2007
 		///
 		/// </summary>
 		public StrikeValues strikeValues = StrikeValues.NO_STRIKE;
-		private int _textAngle = 0;
-		/// <summary>
-		/// Set Text Angle between -90 to 90 degree
-		/// </summary>
-		public int textAngle
-		{
-			get
-			{
-				return _textAngle;
-			}
-			set
-			{
-				if (value > 90)
-				{
-					_textAngle = 90;
-				}
-				else if (value < -90)
-				{
-					_textAngle = -90;
-				}
-				else
-				{
-					_textAngle = value;
-				}
-			}
-		}
 		/// <summary>
 		///
 		/// </summary>

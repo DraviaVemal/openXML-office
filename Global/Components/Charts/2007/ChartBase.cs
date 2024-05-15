@@ -268,6 +268,7 @@ namespace OpenXMLOffice.Global_2007
 				axis.Append(CreateTitle(new ChartTitleModel()
 				{
 					textValue = axisSetting.axisOptions.chartAxisTitle.textValue,
+					TextAngle = axisSetting.axisOptions.chartAxisTitle.TextAngle
 				}));
 			}
 			if (axisSetting.axisOptions.isAxesVisible)
@@ -304,7 +305,7 @@ namespace OpenXMLOffice.Global_2007
 				{
 					drawingBodyProperties = new DrawingBodyPropertiesModel()
 					{
-						rotation = axisSetting.axisOptions.chartAxesOptions.textAngle
+						rotation = axisSetting.axisOptions.chartAxesOptions.TextAngle
 					},
 					drawingParagraph = new DrawingParagraphModel()
 					{
@@ -725,7 +726,7 @@ namespace OpenXMLOffice.Global_2007
 					vertical = TextVerticalAlignmentValues.HORIZONTAL,
 					verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
 					wrap = TextWrappingValues.SQUARE,
-					rotation = 0,
+					rotation = titleModel.TextAngle,
 				},
 				drawingParagraph = new DrawingParagraphModel()
 				{
