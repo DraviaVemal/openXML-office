@@ -165,14 +165,26 @@ namespace OpenXMLOffice.Tests
 					{
 						chartAxesOptions = new()
 						{
-							inReverseOrder = true
+							inReverseOrder = true,
+							TextAngle = 20
+						},
+						chartAxisTitle = new()
+						{
+							textValue = "cat axis",
+							TextAngle = -20
 						}
 					},
 					yAxisOptions = new()
 					{
 						chartAxesOptions = new()
 						{
-							inReverseOrder = true
+							inReverseOrder = true,
+							TextAngle = 20
+						},
+						chartAxisTitle = new()
+						{
+							textValue = "val axis",
+							TextAngle = -20
 						}
 					}
 				},
