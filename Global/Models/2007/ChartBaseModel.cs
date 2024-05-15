@@ -130,8 +130,8 @@ namespace OpenXMLOffice.Global_2007
 	public class AxisOptions
 	{
 		internal C.CrossesValues crosses = C.CrossesValues.AutoZero;
-		internal EnumValue<C.TickMarkValues> majorTickMark;
-		internal EnumValue<C.TickMarkValues> minorTickMark;
+		internal C.TickMarkValues majorTickMark = C.TickMarkValues.None;
+		internal C.TickMarkValues minorTickMark = C.TickMarkValues.None;
 		/// <summary>
 		/// Is Horizontal Axes Enabled
 		/// </summary>

@@ -224,8 +224,11 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				presentationPart.AddNewPart<ThemePart>(GetNextPresentationRelationId());
 			}
-			Theme theme = new Theme(powerPointProperties.theme);
-			presentationPart.ThemePart.Theme = theme.GetTheme();
+			if (presentationPart.ThemePart.Theme == null)
+			{
+				Theme theme = new Theme(powerPointProperties.theme);
+				presentationPart.ThemePart.Theme = theme.GetTheme();
+			}
 			slideMaster.UpdateRelationship(presentationPart.ThemePart, presentationPart.GetIdOfPart(presentationPart.ThemePart));
 			presentationPart.Presentation.Save();
 		}

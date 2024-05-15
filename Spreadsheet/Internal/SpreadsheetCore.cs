@@ -225,8 +225,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
 			}
-			G.Theme theme = new G.Theme(excelProperties.theme);
-			GetWorkbookPart().ThemePart.Theme = theme.GetTheme();
+			if (GetWorkbookPart().ThemePart.Theme == null)
+			{
+				G.Theme theme = new G.Theme(excelProperties.theme);
+				GetWorkbookPart().ThemePart.Theme = theme.GetTheme();
+			}
 			InitializeStyle();
 			GetWorkbookPart().Workbook.Save();
 		}
