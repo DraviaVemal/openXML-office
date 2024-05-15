@@ -272,7 +272,7 @@ namespace OpenXMLOffice.Global_2007
 			C.BarChartSeries series = new C.BarChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
-				new C.InvertIfNegative { Val = true },
+				new C.InvertIfNegative { Val = false },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			int dataPointCount = 0;
