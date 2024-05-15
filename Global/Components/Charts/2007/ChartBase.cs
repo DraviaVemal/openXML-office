@@ -265,12 +265,20 @@ namespace OpenXMLOffice.Global_2007
 				{
 					Val = axisSetting.axisOptions.chartAxesOptions.inReverseOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax
 				});
-			if (axisSetting.axisOptions.GetType() == typeof(XAxisOptions<ValueAxis>) ||
-				axisSetting.axisOptions.GetType() == typeof(YAxisOptions<ValueAxis>) ||
-				axisSetting.axisOptions.GetType() == typeof(ZAxisOptions<ValueAxis>))
+			if (axisSetting.axisOptions.GetType() == typeof(XAxisOptions<ValueAxis>))
 			{
 				scaling.MaxAxisValue = new C.MaxAxisValue() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.boundsMaximum };
 				scaling.MinAxisValue = new C.MinAxisValue() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.boundsMinimum };
+			}
+			else if (axisSetting.axisOptions.GetType() == typeof(YAxisOptions<ValueAxis>))
+			{
+				scaling.MaxAxisValue = new C.MaxAxisValue() { Val = (axisSetting.axisOptions as YAxisOptions<ValueAxis>).axisTypeOption.boundsMaximum };
+				scaling.MinAxisValue = new C.MinAxisValue() { Val = (axisSetting.axisOptions as YAxisOptions<ValueAxis>).axisTypeOption.boundsMinimum };
+			}
+			else if (axisSetting.axisOptions.GetType() == typeof(ZAxisOptions<ValueAxis>))
+			{
+				scaling.MaxAxisValue = new C.MaxAxisValue() { Val = (axisSetting.axisOptions as ZAxisOptions<ValueAxis>).axisTypeOption.boundsMaximum };
+				scaling.MinAxisValue = new C.MinAxisValue() { Val = (axisSetting.axisOptions as ZAxisOptions<ValueAxis>).axisTypeOption.boundsMinimum };
 			}
 			axis.Append(scaling);
 			axis.Append(new C.Delete { Val = !axisSetting.axisOptions.isAxesVisible });
@@ -349,6 +357,16 @@ namespace OpenXMLOffice.Global_2007
 			{
 				axis.Append(new C.MajorUnit() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.unitsMajor });
 				axis.Append(new C.MinorUnit() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.unitsMinor });
+			}
+			else if (axisSetting.axisOptions.GetType() == typeof(YAxisOptions<ValueAxis>))
+			{
+				axis.Append(new C.MajorUnit() { Val = (axisSetting.axisOptions as YAxisOptions<ValueAxis>).axisTypeOption.unitsMajor });
+				axis.Append(new C.MinorUnit() { Val = (axisSetting.axisOptions as YAxisOptions<ValueAxis>).axisTypeOption.unitsMinor });
+			}
+			else if (axisSetting.axisOptions.GetType() == typeof(ZAxisOptions<ValueAxis>))
+			{
+				axis.Append(new C.MajorUnit() { Val = (axisSetting.axisOptions as ZAxisOptions<ValueAxis>).axisTypeOption.unitsMajor });
+				axis.Append(new C.MinorUnit() { Val = (axisSetting.axisOptions as ZAxisOptions<ValueAxis>).axisTypeOption.unitsMinor });
 			}
 			return axis;
 		}
