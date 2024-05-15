@@ -325,19 +325,19 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// 
 		/// </summary>
-		public int boundsMinimum = 0;
+		public float boundsMinimum = 0F;
 		/// <summary>
 		/// 
 		/// </summary>
-		public int boundsMaximum = 0;
+		public float boundsMaximum = 0F;
 		/// <summary>
 		/// 
 		/// </summary>
-		public int unitsMajor = 0;
+		public float unitsMajor = 0F;
 		/// <summary>
 		/// 
 		/// </summary>
-		public int unitsMinor = 0;
+		public float unitsMinor = 0F;
 
 	}
 	/// <summary>
@@ -347,15 +347,33 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// X Axis Specific Options
 	/// </summary>
-	public class XAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new() { }
+	public class XAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new()
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public AxisType axisTypeOption = new AxisType();
+	}
 	/// <summary>
 	/// Y Axis Specific Options
 	/// </summary>
-	public class YAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new() { }
+	public class YAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new()
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public AxisType axisTypeOption = new AxisType();
+	}
 	/// <summary>
 	/// Z Axis Specific Options
 	/// </summary>
-	public class ZAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new() { }
+	public class ZAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new()
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public AxisType axisTypeOption = new AxisType();
+	}
 	/// <summary>
 	/// Represents the options for a chart axis.
 	/// </summary>
@@ -724,7 +742,7 @@ namespace OpenXMLOffice.Global_2007
 		internal uint id;
 		internal uint crossAxisId;
 		internal AxisPosition axisPosition;
-		internal AxisTypeOption axisOptions;
+		internal AxisTypeOption axisOptions = new AxisTypeOption();
 	}
 	/// <summary>
 	///

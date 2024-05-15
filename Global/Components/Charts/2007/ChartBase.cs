@@ -260,7 +260,19 @@ namespace OpenXMLOffice.Global_2007
 			}
 			AxisType axis = new AxisType();
 			axis.Append(new C.AxisId { Val = axisSetting.id });
-			axis.Append(new C.Scaling(new C.Orientation { Val = axisSetting.axisOptions.chartAxesOptions.inReverseOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax }));
+			C.Scaling scaling = new C.Scaling(
+				new C.Orientation
+				{
+					Val = axisSetting.axisOptions.chartAxesOptions.inReverseOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax
+				});
+			if (axisSetting.axisOptions.GetType() == typeof(XAxisOptions<ValueAxis>) ||
+				axisSetting.axisOptions.GetType() == typeof(YAxisOptions<ValueAxis>) ||
+				axisSetting.axisOptions.GetType() == typeof(ZAxisOptions<ValueAxis>))
+			{
+				scaling.MaxAxisValue = new C.MaxAxisValue() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.boundsMaximum };
+				scaling.MinAxisValue = new C.MinAxisValue() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.boundsMinimum };
+			}
+			axis.Append(scaling);
 			axis.Append(new C.Delete { Val = !axisSetting.axisOptions.isAxesVisible });
 			axis.Append(new C.AxisPosition { Val = axisPositionValue });
 			if (axisSetting.axisOptions.chartAxisTitle.textValue != null)
@@ -333,6 +345,11 @@ namespace OpenXMLOffice.Global_2007
 				new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
 				new C.LabelOffset { Val = 100 },
 				new C.NoMultiLevelLabels { Val = false });
+			if (axisSetting.axisOptions.GetType() == typeof(XAxisOptions<ValueAxis>))
+			{
+				axis.Append(new C.MajorUnit() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.unitsMajor });
+				axis.Append(new C.MinorUnit() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.unitsMinor });
+			}
 			return axis;
 		}
 		/// <summary>

@@ -467,6 +467,19 @@ namespace OpenXMLOffice.Tests
 				{
 					textValue = "Dev Chart"
 				},
+				chartAxisOptions = new()
+				{
+					yAxisOptions = new()
+					{
+						axisTypeOption = new()
+						{
+							unitsMajor = 1,
+							unitsMinor = 0.1F,
+							boundsMinimum = 1.0F,
+							boundsMaximum = 5.0F,
+						}
+					}
+				},
 				lineChartSeriesSettings = new(){
 					new(){
 						markerShapeType=G.MarkerShapeTypes.SQUARE,
