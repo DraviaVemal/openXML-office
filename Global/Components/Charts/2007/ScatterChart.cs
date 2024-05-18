@@ -50,14 +50,14 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			plotArea.Append(CreateAxis<C.ValueAxis, XAxisOptions<ValueAxis>>(new AxisSetting<XAxisOptions<ValueAxis>>()
+			plotArea.Append(CreateAxis<C.ValueAxis, XAxisOptions<ValueAxis>, ValueAxis>(new AxisSetting<XAxisOptions<ValueAxis>, ValueAxis>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = scatterChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = scatterChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>>(new AxisSetting<YAxisOptions<ValueAxis>>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>, ValueAxis>(new AxisSetting<YAxisOptions<ValueAxis>, ValueAxis>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,

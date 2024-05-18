@@ -34,14 +34,14 @@ namespace OpenXMLOffice.Global_2007
 			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(lineChartSetting.plotAreaOptions != null ? lineChartSetting.plotAreaOptions.manualLayout : null));
 			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
-			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions<CategoryAxis>>(new AxisSetting<XAxisOptions<CategoryAxis>>()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions<CategoryAxis>, CategoryAxis>(new AxisSetting<XAxisOptions<CategoryAxis>, CategoryAxis>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = lineChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = lineChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>>(new AxisSetting<YAxisOptions<ValueAxis>>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>, ValueAxis>(new AxisSetting<YAxisOptions<ValueAxis>, ValueAxis>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,

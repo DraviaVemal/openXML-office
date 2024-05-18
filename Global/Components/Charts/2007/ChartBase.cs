@@ -238,9 +238,10 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Create Category Axis for the chart
 		/// </summary>
-		internal AxisType CreateAxis<AxisType, AxisDirection>(AxisSetting<AxisDirection> axisSetting)
-		where AxisDirection : AxisOptions, new()
-		where AxisType : OpenXmlElement, new()
+		internal OpenXmlAxisType CreateAxis<OpenXmlAxisType, AxisDirection, AxisType>(AxisSetting<AxisDirection, AxisType> axisSetting)
+		where AxisType : class, IAxisTypeOptions, new()
+		where AxisDirection : AxisOptions<AxisType>, new()
+		where OpenXmlAxisType : OpenXmlElement, new()
 		{
 			C.AxisPositionValues axisPositionValue;
 			switch (axisSetting.axisPosition)
@@ -258,27 +259,26 @@ namespace OpenXMLOffice.Global_2007
 					axisPositionValue = C.AxisPositionValues.Bottom;
 					break;
 			}
-			AxisType axis = new AxisType();
+			OpenXmlAxisType axis = new OpenXmlAxisType();
 			axis.Append(new C.AxisId { Val = axisSetting.id });
 			C.Scaling scaling = new C.Scaling(
 				new C.Orientation
 				{
 					Val = axisSetting.axisOptions.chartAxesOptions.inReverseOrder ? C.OrientationValues.MaxMin : C.OrientationValues.MinMax
 				});
-			if (axisSetting.axisOptions.GetType() == typeof(XAxisOptions<ValueAxis>))
+			AxisOptions<ValueAxis> valueAxis = axisSetting.axisOptions as AxisOptions<ValueAxis>;
+			if (valueAxis != null && valueAxis.axisTypeOption != null)
 			{
-				scaling.MaxAxisValue = new C.MaxAxisValue() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.boundsMaximum };
-				scaling.MinAxisValue = new C.MinAxisValue() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.boundsMinimum };
-			}
-			else if (axisSetting.axisOptions.GetType() == typeof(YAxisOptions<ValueAxis>))
-			{
-				scaling.MaxAxisValue = new C.MaxAxisValue() { Val = (axisSetting.axisOptions as YAxisOptions<ValueAxis>).axisTypeOption.boundsMaximum };
-				scaling.MinAxisValue = new C.MinAxisValue() { Val = (axisSetting.axisOptions as YAxisOptions<ValueAxis>).axisTypeOption.boundsMinimum };
-			}
-			else if (axisSetting.axisOptions.GetType() == typeof(ZAxisOptions<ValueAxis>))
-			{
-				scaling.MaxAxisValue = new C.MaxAxisValue() { Val = (axisSetting.axisOptions as ZAxisOptions<ValueAxis>).axisTypeOption.boundsMaximum };
-				scaling.MinAxisValue = new C.MinAxisValue() { Val = (axisSetting.axisOptions as ZAxisOptions<ValueAxis>).axisTypeOption.boundsMinimum };
+				float? boundsMaximum = valueAxis.axisTypeOption.boundsMaximum;
+				float? boundsMinimum = valueAxis.axisTypeOption.boundsMinimum;
+				if (boundsMaximum != null)
+				{
+					scaling.MaxAxisValue = new C.MaxAxisValue() { Val = boundsMaximum };
+				}
+				if (boundsMinimum != null)
+				{
+					scaling.MinAxisValue = new C.MinAxisValue() { Val = boundsMinimum };
+				}
 			}
 			axis.Append(scaling);
 			axis.Append(new C.Delete { Val = !axisSetting.axisOptions.isAxesVisible });
@@ -305,7 +305,7 @@ namespace OpenXMLOffice.Global_2007
 					new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
 					new C.MajorTickMark { Val = axisSetting.axisOptions.majorTickMark },
 					new C.MinorTickMark { Val = axisSetting.axisOptions.minorTickMark },
-					new C.TickLabelPosition { Val = AxisOptions.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
+					new C.TickLabelPosition { Val = AxisOptions<ValueAxis>.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
 				axis.Append(CreateChartShapeProperties());
 				SolidFillModel solidFillModel = new SolidFillModel()
 				{

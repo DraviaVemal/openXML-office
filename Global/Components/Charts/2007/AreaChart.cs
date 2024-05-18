@@ -144,14 +144,14 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateAreaChart<C.AreaChart>(CreateDataSeries(areaChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions<CategoryAxis>>(new AxisSetting<XAxisOptions<CategoryAxis>>()
+			plotArea.Append(CreateAxis<C.CategoryAxis, XAxisOptions<CategoryAxis>, CategoryAxis>(new AxisSetting<XAxisOptions<CategoryAxis>, CategoryAxis>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = areaChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = areaChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>>(new AxisSetting<YAxisOptions<ValueAxis>>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>, ValueAxis>(new AxisSetting<YAxisOptions<ValueAxis>, ValueAxis>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,

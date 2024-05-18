@@ -3,7 +3,6 @@
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OpenXMLOffice.Global_2013;
 using System;
-using DocumentFormat.OpenXml.Linq;
 
 
 namespace OpenXMLOffice.Global_2007
@@ -280,11 +279,15 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Common Chart Axis Options
 	/// </summary>
-	public class AxisOptions
+	public class AxisOptions<AxisType> where AxisType : class, IAxisTypeOptions, new()
 	{
 		internal C.CrossesValues crosses = C.CrossesValues.AutoZero;
 		internal C.TickMarkValues majorTickMark = C.TickMarkValues.None;
 		internal C.TickMarkValues minorTickMark = C.TickMarkValues.None;
+		/// <summary>
+		/// This Are options Related to Type of axis. CategoryAxis or Value Axis
+		/// </summary>
+		public AxisType axisTypeOption = new AxisType();
 		/// <summary>
 		/// Is Horizontal Axes Enabled
 		/// </summary>
@@ -325,19 +328,19 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// 
 		/// </summary>
-		public float boundsMinimum = 0F;
+		public float? boundsMinimum;
 		/// <summary>
 		/// 
 		/// </summary>
-		public float boundsMaximum = 0F;
+		public float? boundsMaximum;
 		/// <summary>
 		/// 
 		/// </summary>
-		public float unitsMajor = 0F;
+		public float? unitsMajor;
 		/// <summary>
 		/// 
 		/// </summary>
-		public float unitsMinor = 0F;
+		public float? unitsMinor;
 
 	}
 	/// <summary>
@@ -347,35 +350,18 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// X Axis Specific Options
 	/// </summary>
-	public class XAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new()
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public AxisType axisTypeOption = new AxisType();
-	}
+	public class XAxisOptions<AxisType> : AxisOptions<AxisType> where AxisType : class, IAxisTypeOptions, new() { }
 	/// <summary>
 	/// Y Axis Specific Options
 	/// </summary>
-	public class YAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new()
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public AxisType axisTypeOption = new AxisType();
-	}
+	public class YAxisOptions<AxisType> : AxisOptions<AxisType> where AxisType : class, IAxisTypeOptions, new() { }
 	/// <summary>
 	/// Z Axis Specific Options
 	/// </summary>
-	public class ZAxisOptions<AxisType> : AxisOptions where AxisType : class, IAxisTypeOptions, new()
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public AxisType axisTypeOption = new AxisType();
-	}
+	public class ZAxisOptions<AxisType> : AxisOptions<AxisType> where AxisType : class, IAxisTypeOptions, new() { }
 	/// <summary>
 	/// Represents the options for a chart axis.
+	/// Pass Each Axis Dimension Type for more accurate options
 	/// </summary>
 	public class ChartAxisOptions<XAxisType, YAxisType, ZAxisType>
 		where XAxisType : class, IAxisTypeOptions, new()
@@ -737,7 +723,9 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// Represents the Axis settings for chart.
 	/// </summary>
-	public class AxisSetting<AxisTypeOption> where AxisTypeOption : AxisOptions, new()
+	public class AxisSetting<AxisTypeOption, AxisType>
+		where AxisTypeOption : AxisOptions<AxisType>, new()
+		where AxisType : class, IAxisTypeOptions, new()
 	{
 		internal uint id;
 		internal uint crossAxisId;
