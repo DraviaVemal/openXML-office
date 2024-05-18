@@ -50,14 +50,14 @@ namespace OpenXMLOffice.Global_2007
 			{
 				plotArea.Append(CreateChart<C.ScatterChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
-			plotArea.Append(CreateAxis<C.ValueAxis, XAxisOptions<ValueAxis>, ValueAxis>(new AxisSetting<XAxisOptions<ValueAxis>, ValueAxis>()
+			plotArea.Append(CreateAxis(new AxisSetting<XAxisOptions<ValueAxis>, ValueAxis>()
 			{
 				id = CategoryAxisId,
 				crossAxisId = ValueAxisId,
 				axisOptions = scatterChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = scatterChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<ValueAxis>, ValueAxis>(new AxisSetting<YAxisOptions<ValueAxis>, ValueAxis>()
+			plotArea.Append(CreateAxis(new AxisSetting<YAxisOptions<ValueAxis>, ValueAxis>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
@@ -212,7 +212,7 @@ namespace OpenXMLOffice.Global_2007
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE)
 			{
-				series.Append(ChartBase<ApplicationSpecificSetting>.CreateMarker(markerModel));
+				series.Append(CreateMarker(markerModel));
 			}
 			if (dataLabels != null)
 			{

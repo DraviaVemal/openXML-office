@@ -366,42 +366,42 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//18
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			});
 			//19
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_SMOOTH
 			});
 			//20
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_SMOOTH_MARKER
 			});
 			//21
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT
 			});
 			//22
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT_MARKER
 			});
 			//23
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.BUBBLE
 			});
 			//24
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.BUBBLE
@@ -460,7 +460,7 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void AddChartTrendLine()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, true), new G.LineChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(5, 5, true), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -510,7 +510,7 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void AddDevChart()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, 4, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				scatterChartType = G.ScatterChartTypes.BUBBLE,
 				applicationSpecificSetting = new(),
@@ -647,7 +647,7 @@ namespace OpenXMLOffice.Tests
 		public void AddScatterPlot()
 		{
 			//1
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -656,7 +656,7 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//2
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_SMOOTH,
@@ -666,7 +666,7 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//3
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_SMOOTH_MARKER,
@@ -676,7 +676,7 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//4
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT,
@@ -687,7 +687,7 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			//5
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(6, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.SCATTER_STRAIGHT_MARKER,
@@ -697,7 +697,7 @@ namespace OpenXMLOffice.Tests
 					textValue = "Scatter Straight Marker"
 				}
 			});
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, 3, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.BUBBLE,
@@ -998,12 +998,12 @@ namespace OpenXMLOffice.Tests
 			powerPoint1.SaveAs(string.Format("{1}/copy-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
-		private static X.DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
+		private static X.DataCell[][] CreateDataCellPayload(int colSize = 5, int rowSize = 5, bool IsValueAxis = false)
 		{
 			Random random = new();
-			X.DataCell[][] data = new X.DataCell[payloadSize][];
-			data[0] = new X.DataCell[payloadSize];
-			for (int col = 1; col < payloadSize; col++)
+			X.DataCell[][] data = new X.DataCell[rowSize][];
+			data[0] = new X.DataCell[colSize];
+			for (int col = 1; col < colSize; col++)
 			{
 				data[0][col] = new X.DataCell
 				{
@@ -1011,15 +1011,15 @@ namespace OpenXMLOffice.Tests
 					dataType = X.CellDataType.STRING
 				};
 			}
-			for (int row = 1; row < payloadSize; row++)
+			for (int row = 1; row < rowSize; row++)
 			{
-				data[row] = new X.DataCell[payloadSize];
+				data[row] = new X.DataCell[colSize];
 				data[row][0] = new X.DataCell
 				{
 					cellValue = $"Category {row}",
 					dataType = X.CellDataType.STRING
 				};
-				for (int col = IsValueAxis ? 0 : 1; col < payloadSize; col++)
+				for (int col = IsValueAxis ? 0 : 1; col < colSize; col++)
 				{
 					data[row][col] = new X.DataCell
 					{

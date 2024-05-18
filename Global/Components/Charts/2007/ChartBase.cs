@@ -209,6 +209,7 @@ namespace OpenXMLOffice.Global_2007
 				{
 					i++;
 					column = seriesColumns[i];
+					columnName = ConverterUtils.ConvertIntToColumnName((int)column + 1);
 					List<ChartData> zAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 					long endRowNumberZ = chartDataSetting.chartDataRowStart + zAxisCells.Count + 1;
 					chartDataGrouping.zAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberZ);
@@ -238,10 +239,9 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Create Category Axis for the chart
 		/// </summary>
-		internal OpenXmlAxisType CreateAxis<OpenXmlAxisType, AxisDirection, AxisType>(AxisSetting<AxisDirection, AxisType> axisSetting)
+		internal OpenXmlElement CreateAxis<AxisDirection, AxisType>(AxisSetting<AxisDirection, AxisType> axisSetting)
 		where AxisType : class, IAxisTypeOptions, new()
 		where AxisDirection : AxisOptions<AxisType>, new()
-		where OpenXmlAxisType : OpenXmlElement, new()
 		{
 			C.AxisPositionValues axisPositionValue;
 			switch (axisSetting.axisPosition)
@@ -259,7 +259,15 @@ namespace OpenXMLOffice.Global_2007
 					axisPositionValue = C.AxisPositionValues.Bottom;
 					break;
 			}
-			OpenXmlAxisType axis = new OpenXmlAxisType();
+			OpenXmlElement axis;
+			if (typeof(AxisType) == typeof(CategoryAxis))
+			{
+				axis = new C.CategoryAxis();
+			}
+			else
+			{
+				axis = new C.ValueAxis();
+			}
 			axis.Append(new C.AxisId { Val = axisSetting.id });
 			C.Scaling scaling = new C.Scaling(
 				new C.Orientation
