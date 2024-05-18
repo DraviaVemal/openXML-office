@@ -52,9 +52,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		/// <summary>
 		/// Sets the properties for a column at the specified column index in a worksheet.
+		/// Start with 1
 		/// </summary>
 		public void SetColumn(int col, ColumnProperties columnProperties)
 		{
+			if (col < 1)
+			{
+				throw new ArgumentOutOfRangeException("Column Property starts from 1");
+			}
 			X.Columns columns = openXMLworksheet.GetFirstChild<X.Columns>();
 			if (columns == null)
 			{
@@ -81,13 +86,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				};
 				if (columnProperties != null)
 				{
+					if (columnProperties.bestFit)
+					{
+						newColumn.BestFit = columnProperties.bestFit;
+						newColumn.Width = 10;
+						newColumn.CustomWidth = false;
+					}
 					if (columnProperties.width != null && !columnProperties.bestFit)
 					{
 						newColumn.Width = columnProperties.width;
 						newColumn.CustomWidth = true;
 					}
 					newColumn.Hidden = columnProperties.hidden;
-					newColumn.BestFit = columnProperties.bestFit;
 				}
 				columns.Append(newColumn);
 			}

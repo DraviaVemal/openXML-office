@@ -21,7 +21,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				throw new ArgumentException("Sheet with name already exist.");
 			}
 			// Check If Sheet Already exist
-			WorksheetPart worksheetPart = GetWorkbookPart().AddNewPart<WorksheetPart>();
+			WorksheetPart worksheetPart = GetWorkbookPart().AddNewPart<WorksheetPart>(GetNextSpreadSheetRelationId());
 			Sheet sheet = new Sheet()
 			{
 				Id = GetWorkbookPart().GetIdOfPart(worksheetPart),

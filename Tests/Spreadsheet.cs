@@ -274,9 +274,8 @@ namespace OpenXMLOffice.Tests
 		public void AddAllCharts()
 		{
 			Worksheet worksheet = excel.AddSheet("Area Chart");
-			excel.RemoveSheet("Sheet1");
 			int row = 0;
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -344,7 +343,7 @@ namespace OpenXMLOffice.Tests
 			});
 			row = 0;
 			worksheet = excel.AddSheet("Bar Chart");
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -412,7 +411,7 @@ namespace OpenXMLOffice.Tests
 			});
 			row = 0;
 			worksheet = excel.AddSheet("Column Chart");
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -480,7 +479,7 @@ namespace OpenXMLOffice.Tests
 			});
 			row = 0;
 			worksheet = excel.AddSheet("Line Chart");
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -611,7 +610,7 @@ namespace OpenXMLOffice.Tests
 			});
 			row = 0;
 			worksheet = excel.AddSheet("Pie Chart");
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -658,34 +657,34 @@ namespace OpenXMLOffice.Tests
 			});
 			row = 0;
 			worksheet = excel.AddSheet("Scatter Chart");
-			CreateDataCellPayload(6, true).ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload(6, 6, true).ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
-			// worksheet.AddChart(new()
-			// {
-			// 	cellIdStart = "A1",
-			// 	cellIdEnd = "F4"
-			// }, new ScatterChartSetting<ExcelSetting>()
-			// {
-			// 	scatterChartType = ScatterChartTypes.SCATTER,
-			// 	applicationSpecificSetting = new()
-			// 	{
-			// 		from = new()
-			// 		{
-			// 			row = 5,
-			// 			column = 5
-			// 		},
-			// 		to = new()
-			// 		{
-			// 			row = 5,
-			// 			column = 20
-			// 		}
-			// 	}
-			// });
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.SCATTER,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 5,
+						column = 20
+					}
+				}
+			});
 			row = 0;
 			worksheet = excel.AddSheet("Combo Chart");
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -736,31 +735,31 @@ namespace OpenXMLOffice.Tests
 			Worksheet worksheet = excel.AddSheet("Only Scatter Chart");
 			excel.RemoveSheet("Sheet1");
 			int row = 0;
-			CreateDataCellPayload(6, true).ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload(6, 6, true).ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
-			// worksheet.AddChart(new()
-			// {
-			// 	cellIdStart = "A1",
-			// 	cellIdEnd = "F4"
-			// }, new ScatterChartSetting<ExcelSetting>()
-			// {
-			// 	scatterChartType = ScatterChartTypes.SCATTER,
-			// 	applicationSpecificSetting = new()
-			// 	{
-			// 		from = new()
-			// 		{
-			// 			row = 5,
-			// 			column = 5
-			// 		},
-			// 		to = new()
-			// 		{
-			// 			row = 5,
-			// 			column = 20
-			// 		}
-			// 	}
-			// });
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.SCATTER,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 5
+					},
+					to = new()
+					{
+						row = 5,
+						column = 20
+					}
+				}
+			});
 			Assert.IsTrue(true);
 		}
 		/// <summary>
@@ -782,7 +781,7 @@ namespace OpenXMLOffice.Tests
 			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
 			Worksheet worksheet = excel1.AddSheet("AreaChart");
 			int row = 0;
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -808,7 +807,7 @@ namespace OpenXMLOffice.Tests
 			});
 			worksheet = excel1.AddSheet("LineChart");
 			row = 0;
-			CreateDataCellPayload().ToList().ForEach(rowData =>
+			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
 			{
 				worksheet.SetRow(ConverterUtils.ConvertToExcelCellReference(++row, 1), rowData, new());
 			});
@@ -845,50 +844,6 @@ namespace OpenXMLOffice.Tests
 			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
 			excel1.SaveAs(string.Format("{1}/EditStyle-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
-		}
-		private static DataCell[][] CreateDataCellPayload(int payloadSize = 5, bool IsValueAxis = false)
-		{
-			Random random = new();
-			DataCell[][] data = new DataCell[payloadSize][];
-			data[0] = new DataCell[payloadSize];
-			for (int col = 1; col < payloadSize; col++)
-			{
-				data[0][col] = new DataCell
-				{
-					cellValue = $"Series {col}",
-					dataType = CellDataType.STRING
-				};
-			}
-			for (int row = 1; row < payloadSize; row++)
-			{
-				data[row] = new DataCell[payloadSize];
-				data[row][0] = new DataCell
-				{
-					cellValue = $"Category {row}",
-					dataType = CellDataType.STRING
-				};
-				for (int col = IsValueAxis ? 0 : 1; col < payloadSize; col++)
-				{
-					data[row][col] = new DataCell
-					{
-						cellValue = random.Next(1, 100).ToString(),
-						dataType = CellDataType.NUMBER,
-						styleSetting = new()
-						{
-							numberFormat = "0.00",
-						}
-					};
-					if ((col + 1) == payloadSize)
-					{
-						data[row][col].hyperlinkProperties = new()
-						{
-							hyperlinkPropertyType = HyperlinkPropertyTypeValues.WEB_URL,
-							value = "https://openxml-office.draviavemal.com/",
-						};
-					}
-				}
-			}
-			return data;
 		}
 	}
 }
