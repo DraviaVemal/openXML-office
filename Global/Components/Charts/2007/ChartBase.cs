@@ -54,6 +54,16 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		internal static C.BubbleSize CreateBubbleSizeAxisData(string formula, ChartData[] cells)
 		{
+			if (formula == null)
+			{
+				C.NumberLiteral numberLiteral = new C.NumberLiteral(new C.FormatCode("General"));
+				numberLiteral.Append(new C.PointCount() { Val = (uint)cells.Length });
+				for (int i = 0; i < cells.Length; i++)
+				{
+					numberLiteral.Append(new C.StringPoint(new C.NumericValue("1")) { Index = (uint)i });
+				}
+				return new C.BubbleSize(numberLiteral);
+			}
 			if (cells.All(v => v.dataType != DataType.NUMBER))
 			{
 				Console.WriteLine(string.Format("Object Details Value : {0} is not numeric", cells.FirstOrDefault(v => v.dataType != DataType.NUMBER).value));
@@ -205,15 +215,22 @@ namespace OpenXMLOffice.Global_2007
 					yAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberY),
 					yAxisCells = yAxisCells.ToArray(),
 				};
-				if (chartDataSetting.is3dData && seriesColumns.Count > i + 1)
+				if (chartDataSetting.is3dData)
 				{
-					i++;
-					column = seriesColumns[i];
-					columnName = ConverterUtils.ConvertIntToColumnName((int)column + 1);
-					List<ChartData> zAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
-					long endRowNumberZ = chartDataSetting.chartDataRowStart + zAxisCells.Count + 1;
-					chartDataGrouping.zAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberZ);
-					chartDataGrouping.zAxisCells = zAxisCells.ToArray();
+					if (seriesColumns.Count > i + 1)
+					{
+						i++;
+						column = seriesColumns[i];
+						columnName = ConverterUtils.ConvertIntToColumnName((int)column + 1);
+						List<ChartData> zAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
+						long endRowNumberZ = chartDataSetting.chartDataRowStart + zAxisCells.Count + 1;
+						chartDataGrouping.zAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberZ);
+						chartDataGrouping.zAxisCells = zAxisCells.ToArray();
+					}
+					else
+					{
+						chartDataGrouping.zAxisCells = new ChartData[yAxisCells.Count];
+					}
 				}
 				// TODO: Reorganize to Move to 2013 Namespace extension
 				uint DataValueColumn;

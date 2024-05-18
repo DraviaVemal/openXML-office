@@ -510,7 +510,7 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void AddDevChart()
 		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(3, 4, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CreateDataCellPayload(4, 4, true), new G.ScatterChartSetting<G.PresentationSetting>()
 			{
 				scatterChartType = G.ScatterChartTypes.BUBBLE,
 				applicationSpecificSetting = new(),
