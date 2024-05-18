@@ -121,7 +121,7 @@ namespace OpenXMLOffice.Global_2007
 				axisOptions = comboChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = comboChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
-			plotArea.Append(CreateAxis<C.CategoryAxis, YAxisOptions<YAxisType>, YAxisType>(new AxisSetting<YAxisOptions<YAxisType>, YAxisType>()
+			plotArea.Append(CreateAxis<C.ValueAxis, YAxisOptions<YAxisType>, YAxisType>(new AxisSetting<YAxisOptions<YAxisType>, YAxisType>()
 			{
 				id = ValueAxisId,
 				crossAxisId = CategoryAxisId,
@@ -134,13 +134,17 @@ namespace OpenXMLOffice.Global_2007
 				{
 					id = SecondaryCategoryAxisId,
 					crossAxisId = SecondaryValueAxisId,
-					axisOptions = comboChartSetting.chartAxisOptions.zAxisOptions
+					axisOptions = new ZAxisOptions<ZAxisType>()
+					{
+						isAxesVisible = false
+					},
 				}));
-				plotArea.Append(CreateAxis<C.CategoryAxis, ZAxisOptions<ZAxisType>, ZAxisType>(new AxisSetting<ZAxisOptions<ZAxisType>, ZAxisType>()
+				plotArea.Append(CreateAxis<C.ValueAxis, ZAxisOptions<ZAxisType>, ZAxisType>(new AxisSetting<ZAxisOptions<ZAxisType>, ZAxisType>()
 				{
 					id = SecondaryValueAxisId,
 					crossAxisId = SecondaryCategoryAxisId,
-					axisOptions = comboChartSetting.chartAxisOptions.zAxisOptions
+					axisOptions = comboChartSetting.chartAxisOptions.zAxisOptions,
+					axisPosition = comboChartSetting.secondaryAxisPosition
 				}));
 			}
 			plotArea.Append(CreateChartShapeProperties());
