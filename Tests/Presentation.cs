@@ -557,11 +557,11 @@ namespace OpenXMLOffice.Tests
 			{
 				applicationSpecificSetting = new(),
 			});
-			comboChartSetting.AddComboChartsSetting(new G.BarChartSetting<G.PresentationSetting>()
+			comboChartSetting.AddComboChartsSetting(new G.ColumnChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			});
-			comboChartSetting.AddComboChartsSetting(new G.ColumnChartSetting<G.PresentationSetting>()
+			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			});
