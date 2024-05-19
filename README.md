@@ -10,9 +10,9 @@ It's important to note that OpenXML-Office supports the creation of documents th
 ## Scope Details
 
 - **Easy Creation of Office Documents**: Create and manipulate Excel, Word, and PowerPoint files with ease.
-- **OpenXML SDK 3.0**: Built on the robust foundation of the OpenXML SDK.
+- **[OpenXML SDK 3.0](https://github.com/dotnet/Open-XML-SDK)**: Built on the robust foundation of the OpenXML SDK.
 - **Modular Architecture**: Dedicated modules for each Office application for better manageability.
-- **.Net Support Version** : This package support application package starting from .Net 4.5
+- **[.Net Support Version](https://www.nuget.org/packages/OpenXMLOffice.Presentation/2.7.0-Alpha.28#supportedframeworks-body-tab)** : This package support application package starting from .Net 4.5
 - **Office Support Version** : Our package ensures compatibility with Office 2007 and later versions for document creation. New features introduced post 2007 will be segregated into respective namespace years.
 
 ## Documentation [Link](https://openxml-office.draviavemal.com/)
