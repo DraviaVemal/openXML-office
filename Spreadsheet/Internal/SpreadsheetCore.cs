@@ -96,7 +96,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			SharedStringTablePart sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
 			if (sharedStringPart == null)
 			{
-				sharedStringPart = GetWorkbookPart().AddNewPart<SharedStringTablePart>();
+				sharedStringPart = GetWorkbookPart().AddNewPart<SharedStringTablePart>(GetNextSpreadSheetRelationId());
 				sharedStringPart.SharedStringTable = new SharedStringTable();
 			}
 			return sharedStringPart.SharedStringTable;
@@ -180,7 +180,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			if (GetWorkbookPart().WorkbookStylesPart == null)
 			{
-				GetWorkbookPart().AddNewPart<WorkbookStylesPart>();
+				GetWorkbookPart().AddNewPart<WorkbookStylesPart>(GetNextSpreadSheetRelationId());
 				GetWorkbookPart().WorkbookStylesPart.Stylesheet = new Stylesheet();
 			}
 			else

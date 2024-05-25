@@ -32,17 +32,13 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
-			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE || scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE_3D)
 			{
 				scatterChartSetting.chartDataSetting.is3dData = true;
-				if ((dataCols.Length - 1) % 2 != 0)
-				{
-					LogUtils.ShowWarning("Not All Required Data Standards met for 3D chart type.");
-				}
 			}
 			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(scatterChartSetting.plotAreaOptions != null ? scatterChartSetting.plotAreaOptions.manualLayout : null));
-			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE || scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE_3D)
 			{
 				plotArea.Append(CreateChart<C.BubbleChart>(CreateDataSeries(scatterChartSetting.chartDataSetting, dataCols, dataRange)));
 			}
@@ -123,7 +119,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				chart.Append(dataLabels);
 			}
-			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE || scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE_3D)
 			{
 				chart.Append(new C.BubbleScale() { Val = 100 });
 				chart.Append(new C.ShowNegativeBubbles() { Val = false });
@@ -197,7 +193,7 @@ namespace OpenXMLOffice.Global_2007
 					solidFill = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(seriesIndex, chartDataGrouping),
 				}
 			};
-			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE || scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE_3D)
 			{
 				shapePropertiesModel.solidFill = new SolidFillModel()
 				{
@@ -210,7 +206,7 @@ namespace OpenXMLOffice.Global_2007
 				series.Append(new C.InvertIfNegative() { Val = false });
 			}
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
-			if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE && scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE_3D)
 			{
 				series.Append(CreateMarker(markerModel));
 			}
@@ -220,10 +216,10 @@ namespace OpenXMLOffice.Global_2007
 			}
 			series.Append(CreateXValueAxisData(chartDataGrouping.xAxisFormula, chartDataGrouping.xAxisCells));
 			series.Append(CreateYValueAxisData(chartDataGrouping.yAxisFormula, chartDataGrouping.yAxisCells));
-			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE)
+			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE || scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE_3D)
 			{
 				series.Append(CreateBubbleSizeAxisData(chartDataGrouping.zAxisFormula, chartDataGrouping.zAxisCells));
-				series.Append(new C.Bubble3D() { Val = false });
+				series.Append(new C.Bubble3D() { Val = scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE_3D });
 			}
 			else
 			{

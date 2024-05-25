@@ -156,6 +156,21 @@ namespace OpenXMLOffice.Tests
 					}
 				}
 			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
+			{
+				barChartType = G.BarChartTypes.CLUSTERED_3D,
+				applicationSpecificSetting = new(),
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
+			{
+				barChartType = G.BarChartTypes.PERCENT_STACKED_3D,
+				applicationSpecificSetting = new(),
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
+			{
+				barChartType = G.BarChartTypes.STACKED_3D,
+				applicationSpecificSetting = new(),
+			});
 			//5
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
 			{
@@ -261,6 +276,21 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				columnChartType = G.ColumnChartTypes.STACKED
 			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				columnChartType = G.ColumnChartTypes.STACKED_3D
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				columnChartType = G.ColumnChartTypes.PERCENT_STACKED_3D
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				columnChartType = G.ColumnChartTypes.CLUSTERED_3D
+			});
 			//9
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
 			{
@@ -352,6 +382,16 @@ namespace OpenXMLOffice.Tests
 				},
 				applicationSpecificSetting = new(),
 			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
+			{
+				pieChartType = G.PieChartTypes.PIE_3D,
+				pieChartDataLabel = new()
+				{
+					dataLabelPosition = G.PieChartDataLabel.DataLabelPositionValues.SHOW,
+					showValue = true,
+				},
+				applicationSpecificSetting = new(),
+			});
 			//17
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
 			{
@@ -405,6 +445,18 @@ namespace OpenXMLOffice.Tests
 			{
 				applicationSpecificSetting = new(),
 				scatterChartType = G.ScatterChartTypes.BUBBLE
+			});
+			//25
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(3, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				scatterChartType = G.ScatterChartTypes.BUBBLE_3D
+			});
+			//26
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(5, 6, true), new G.ScatterChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				scatterChartType = G.ScatterChartTypes.BUBBLE_3D
 			});
 			Assert.IsTrue(powerPoint.GetSlideCount() > 0);
 		}

@@ -32,7 +32,10 @@ namespace OpenXMLOffice.Global_2007
 		/// Bubble Chart
 		/// </summary>
 		BUBBLE,
-		// BUBBLE_3D
+		/// <summary>
+		/// 3D Bubble Chart
+		/// </summary>
+		BUBBLE_3D
 	}
 	/// <summary>
 	/// Represents the data label settings for a scatter chart.
