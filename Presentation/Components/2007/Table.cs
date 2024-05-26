@@ -174,7 +174,11 @@ namespace OpenXMLOffice.Presentation_2007
 					G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
 					G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY)))
 			{
-				throw new ArgumentException("Table Merge Range Conflict");
+				MergeRange errorRange = mergeRanges.Find(
+				range =>
+					G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
+					G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY));
+				throw new ArgumentException(string.Format("Table Merge Range Conflict: Found Overlap Range X:{0} Y:{1} cX:{2} cY:{3}", errorRange.topLeftX, errorRange.topLeftY, errorRange.bottomRightX, errorRange.bottomRightY));
 			}
 			mergeRanges.Add(new MergeRange()
 			{
@@ -253,7 +257,7 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			if (cell.rowSpan > 1 || cell.columnSpan > 1)
 			{
-				AddMergeRange(rowIndex, columnIndex, (int)(cell.rowSpan > 1 ? (rowIndex + cell.rowSpan) : rowIndex), (int)(cell.columnSpan > 1 ? (columnIndex + cell.columnSpan) : columnIndex));
+				AddMergeRange(columnIndex, rowIndex, (int)(cell.columnSpan > 1 ? (columnIndex + cell.columnSpan) : columnIndex), (int)(cell.rowSpan > 1 ? (rowIndex + cell.rowSpan) : rowIndex));
 			}
 			A.Paragraph paragraph = new A.Paragraph();
 			if (cell.horizontalAlignment != null)
@@ -317,25 +321,25 @@ namespace OpenXMLOffice.Presentation_2007
 					}
 				}.ToArray()));
 			}
-			A.TableCell tableCellXML = new A.TableCell(new A.TextBody(
+			A.TableCell tableCellXml = new A.TableCell(new A.TextBody(
 				new A.BodyProperties(),
 				new A.ListStyle(),
 				paragraph
 			));
 			if (cell.columnSpan > 1)
 			{
-				tableCellXML.GridSpan = (int)cell.columnSpan;
+				tableCellXml.GridSpan = (int)cell.columnSpan;
 			}
 			if (cell.rowSpan > 1)
 			{
-				tableCellXML.RowSpan = (int)cell.rowSpan;
+				tableCellXml.RowSpan = (int)cell.rowSpan;
 			}
-			tableCellXML.HorizontalMerge = CheckIsColumnMerged(columnIndex, rowIndex);
-			tableCellXML.VerticalMerge = CheckIsRowMerged(columnIndex, rowIndex);
-			if (!(tableCellXML.HorizontalMerge || tableCellXML.VerticalMerge) && CheckIsRangeMerged(columnIndex, rowIndex))
+			tableCellXml.HorizontalMerge = CheckIsColumnMerged(columnIndex, rowIndex);
+			tableCellXml.VerticalMerge = CheckIsRowMerged(columnIndex, rowIndex);
+			if (!(tableCellXml.HorizontalMerge || tableCellXml.VerticalMerge) && CheckIsRangeMerged(columnIndex, rowIndex))
 			{
-				tableCellXML.HorizontalMerge = true;
-				tableCellXML.VerticalMerge = true;
+				tableCellXml.HorizontalMerge = true;
+				tableCellXml.VerticalMerge = true;
 			}
 			A.TextAnchoringTypeValues anchor;
 			switch (cell.verticalAlignment)
@@ -455,8 +459,8 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				tableCellProperties.Append(new A.NoFill());
 			}
-			tableCellXML.Append(tableCellProperties);
-			return tableCellXML;
+			tableCellXml.Append(tableCellProperties);
+			return tableCellXml;
 		}
 		private void ReCalculateColumnWidth()
 		{

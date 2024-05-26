@@ -105,9 +105,5 @@ namespace OpenXMLOffice.Presentation_2016
 		{
 			return alternateContent;
 		}
-		new internal void GetChartGraphicFrame()
-		{
-			throw new AmbiguousMatchException("Use GetAlternateContent() instead.");
-		}
 	}
 }
