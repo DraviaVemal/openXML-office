@@ -20,7 +20,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.4.1" />
-		<PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.4.1" />
 		<ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj" />
 		<ProjectReference Include="..\Presentation\Presentation.csproj" />
 		<ProjectReference Include="..\Document/Document.csproj" />
