@@ -448,13 +448,27 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal string GetNextSheetPartRelationId()
 		{
-			return string.Format("rId{0}", GetWorksheetPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
-			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
+			int nextId = GetWorksheetPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() + GetWorksheetPart().DataPartReferenceRelationships.Count();
+			do
+			{
+				++nextId;
+			} while (GetWorksheetPart().Parts.Any(item => item.RelationshipId == string.Format("rId{0}", nextId)) ||
+			GetWorksheetPart().ExternalRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetWorksheetPart().HyperlinkRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetWorksheetPart().DataPartReferenceRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)));
+			return string.Format("rId{0}", nextId);
 		}
 		internal string GetNextDrawingPartRelationId()
 		{
-			return string.Format("rId{0}", GetDrawingsPart().Parts.Count() + GetWorksheetPart().ExternalRelationships.Count() + GetWorksheetPart().HyperlinkRelationships.Count() +
-			GetWorksheetPart().DataPartReferenceRelationships.Count() + GetWorksheetPart().Model3DReferenceRelationshipParts.Count() + 1);
+			int nextId = GetDrawingsPart().Parts.Count() + GetDrawingsPart().ExternalRelationships.Count() + GetDrawingsPart().HyperlinkRelationships.Count() + GetDrawingsPart().DataPartReferenceRelationships.Count();
+			do
+			{
+				++nextId;
+			} while (GetDrawingsPart().Parts.Any(item => item.RelationshipId == string.Format("rId{0}", nextId)) ||
+			GetDrawingsPart().ExternalRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetDrawingsPart().HyperlinkRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetDrawingsPart().DataPartReferenceRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)));
+			return string.Format("rId{0}", nextId);
 		}
 		/// <summary>
 		/// Gets the CellValues enumeration corresponding to the specified cell data type.

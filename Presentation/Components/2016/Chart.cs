@@ -40,7 +40,15 @@ namespace OpenXMLOffice.Presentation_2016
 		}
 		internal string GetNextChartRelationId()
 		{
-			return string.Format("rId{0}", GetChartPart().Parts.Count() + GetChartPart().ExternalRelationships.Count() + GetChartPart().HyperlinkRelationships.Count() + GetChartPart().DataPartReferenceRelationships.Count() + 1);
+			int nextId = GetChartPart().Parts.Count() + GetChartPart().ExternalRelationships.Count() + GetChartPart().HyperlinkRelationships.Count() + GetChartPart().DataPartReferenceRelationships.Count();
+			do
+			{
+				++nextId;
+			} while (GetChartPart().Parts.Any(item => item.RelationshipId == string.Format("rId{0}", nextId)) ||
+			GetChartPart().ExternalRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetChartPart().HyperlinkRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetChartPart().DataPartReferenceRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)));
+			return string.Format("rId{0}", nextId);
 		}
 		private ExtendedChartPart GetChartPart()
 		{

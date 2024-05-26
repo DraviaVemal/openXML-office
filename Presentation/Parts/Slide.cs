@@ -189,7 +189,15 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal string GetNextSlideRelationId()
 		{
-			return string.Format("rId{0}", GetSlidePart().Parts.Count() + GetSlidePart().ExternalRelationships.Count() + GetSlidePart().HyperlinkRelationships.Count() + GetSlidePart().DataPartReferenceRelationships.Count() + GetSlidePart().Model3DReferenceRelationshipParts.Count() + 1);
+			int nextId = GetSlidePart().Parts.Count() + GetSlidePart().ExternalRelationships.Count() + GetSlidePart().HyperlinkRelationships.Count() + GetSlidePart().DataPartReferenceRelationships.Count();
+			do
+			{
+				++nextId;
+			} while (GetSlidePart().Parts.Any(item => item.RelationshipId == string.Format("rId{0}", nextId)) ||
+			GetSlidePart().ExternalRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetSlidePart().HyperlinkRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)) ||
+			GetSlidePart().DataPartReferenceRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)));
+			return string.Format("rId{0}", nextId);
 		}
 		internal P.Slide GetSlide()
 		{
