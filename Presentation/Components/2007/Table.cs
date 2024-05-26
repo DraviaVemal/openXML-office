@@ -207,13 +207,10 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private A.Table CreateTable(TableRow[] TableRows)
 		{
-			if (TableRows.Length < 1 || TableRows[0].tableCells.Count < 1)
+			int columnSize = TableRows.Max(item => item.tableCells.Count);
+			if (columnSize < 1)
 			{
 				throw new DataException("No Table Data Provided");
-			}
-			if (tableSetting.widthType != TableSetting.WidthOptionValues.AUTO && tableSetting.tableColumnWidth.Count != TableRows[0].tableCells.Count)
-			{
-				throw new ArgumentException("Column With Setting Does Not Match Data");
 			}
 			A.Table Table = new A.Table()
 			{
@@ -222,18 +219,18 @@ namespace OpenXMLOffice.Presentation_2007
 					FirstRow = true,
 					BandRow = true
 				},
-				TableGrid = CreateTableGrid(TableRows[0].tableCells.Count)
+				TableGrid = CreateTableGrid(columnSize)
 			};
 			int rowIndex = 0;
 			// Add Table Data Row
 			foreach (TableRow row in TableRows)
 			{
-				Table.Append(CreateTableRow(row, rowIndex));
+				Table.Append(CreateTableRow(row, rowIndex, columnSize));
 				++rowIndex;
 			}
 			return Table;
 		}
-		private A.TableRow CreateTableRow(TableRow row, int rowIndex)
+		private A.TableRow CreateTableRow(TableRow row, int rowIndex, int columnSize)
 		{
 			A.TableRow TableRow = new A.TableRow()
 			{
@@ -244,6 +241,10 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				TableRow.Append(CreateTableCell(cell, row, rowIndex, columnIndex));
 				++columnIndex;
+			}
+			for (int i = columnIndex; i < columnSize; i++)
+			{
+				TableRow.Append(CreateTableCell(new TableCell(), row, rowIndex, columnIndex));
 			}
 			return TableRow;
 		}
