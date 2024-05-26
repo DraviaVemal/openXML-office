@@ -566,6 +566,7 @@ namespace OpenXMLOffice.Tests
 					}
 				}
 			});
+			excel.RemoveSheet("Sheet1");
 			worksheet.AddChart(new()
 			{
 				cellIdStart = "A1",
@@ -667,7 +668,6 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "F4"
 			}, new ScatterChartSetting<ExcelSetting>()
 			{
-				scatterChartType = ScatterChartTypes.SCATTER,
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -677,8 +677,134 @@ namespace OpenXMLOffice.Tests
 					},
 					to = new()
 					{
-						row = 5,
+						row = 20,
 						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.SCATTER_SMOOTH,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 5
+					},
+					to = new()
+					{
+						row = 35,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.SCATTER_SMOOTH_MARKER,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 36,
+						column = 5
+					},
+					to = new()
+					{
+						row = 50,
+						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.SCATTER_STRAIGHT,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 22
+					},
+					to = new()
+					{
+						row = 20,
+						column = 37
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.SCATTER_STRAIGHT_MARKER,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 22
+					},
+					to = new()
+					{
+						row = 35,
+						column = 37
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.BUBBLE,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 36,
+						column = 22
+					},
+					to = new()
+					{
+						row = 50,
+						column = 37
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "F4"
+			}, new ScatterChartSetting<ExcelSetting>()
+			{
+				scatterChartType = ScatterChartTypes.BUBBLE_3D,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 40
+					},
+					to = new()
+					{
+						row = 20,
+						column = 55
 					}
 				}
 			});
@@ -750,12 +876,12 @@ namespace OpenXMLOffice.Tests
 				{
 					from = new()
 					{
-						row = 5,
+						row = 6,
 						column = 5
 					},
 					to = new()
 					{
-						row = 5,
+						row = 20,
 						column = 20
 					}
 				}
