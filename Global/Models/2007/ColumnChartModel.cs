@@ -130,6 +130,10 @@ namespace OpenXMLOffice.Global_2007
 	public class ColumnChartSeriesSetting : ChartSeriesSetting
 	{
 		/// <summary>
+		/// Treadline setting for particular series
+		/// </summary>
+		public List<TrendLineSettings> trendLines = new List<TrendLineSettings>();
+		/// <summary>
 		///
 		/// </summary>
 		public List<ColumnChartDataPointSetting> columnChartDataPointSettings = new List<ColumnChartDataPointSetting>();

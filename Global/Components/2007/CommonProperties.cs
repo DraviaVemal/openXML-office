@@ -2,13 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
-	/// Common Properties organised in one place to get inherited by child classes
+	/// Common Properties organized in one place to get inherited by child classes
 	/// </summary>
 	public class CommonProperties
 	{
@@ -225,7 +224,7 @@ namespace OpenXMLOffice.Global_2007
 					return A.TextVerticalOverflowValues.Overflow;
 			}
 		}
-		internal static A.TextWrappingValues GetWrapingValues(TextWrappingValues textWrapping)
+		internal static A.TextWrappingValues GetWarpingValues(TextWrappingValues textWrapping)
 		{
 			switch (textWrapping)
 			{
@@ -372,7 +371,7 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		protected CommonProperties() { }
 		/// <summary>
-		/// Create Soild Fill XML Property
+		/// Create Solid Fill XML Property
 		/// </summary>
 		protected static A.SolidFill CreateSolidFill(SolidFillModel solidFillModel)
 		{
@@ -763,7 +762,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			if (drawingBodyPropertiesModel.wrap != null)
 			{
-				bodyProperties.Wrap = GetWrapingValues((TextWrappingValues)drawingBodyPropertiesModel.wrap);
+				bodyProperties.Wrap = GetWarpingValues((TextWrappingValues)drawingBodyPropertiesModel.wrap);
 			}
 			if (drawingBodyPropertiesModel.anchor != null)
 			{

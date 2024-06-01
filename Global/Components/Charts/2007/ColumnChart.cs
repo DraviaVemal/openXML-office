@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DocumentFormat.OpenXml;
@@ -264,9 +265,10 @@ namespace OpenXMLOffice.Global_2007
 				}
 			};
 			C.DataLabels dataLabels = null;
+			ColumnChartSeriesSetting columnChartSeriesSetting = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex);
 			if (seriesIndex < columnChartSetting.columnChartSeriesSettings.Count)
 			{
-				ColumnChartDataLabel columnChartDataLabel = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataLabel : null;
+				ColumnChartDataLabel columnChartDataLabel = columnChartSeriesSetting != null ? columnChartSeriesSetting.columnChartDataLabel : null;
 				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateColumnDataLabels(columnChartDataLabel ?? new ColumnChartDataLabel(), dataLabelCellsLength);
 			}
@@ -277,16 +279,15 @@ namespace OpenXMLOffice.Global_2007
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			int dataPointCount = 0;
-			ColumnChartSeriesSetting columnChartSeriesSetting = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex);
 			if (columnChartSeriesSetting != null && columnChartSeriesSetting.columnChartDataPointSettings != null)
 			{
 				dataPointCount = columnChartSeriesSetting.columnChartDataPointSettings.Count;
 			}
 			for (uint index = 0; index < dataPointCount; index++)
 			{
-				if (columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings != null &&
-				index < columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings.Count &&
-				columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings[(int)index] != null)
+				if (columnChartSeriesSetting.columnChartDataPointSettings != null &&
+				index < columnChartSeriesSetting.columnChartDataPointSettings.Count &&
+				columnChartSeriesSetting.columnChartDataPointSettings[(int)index] != null)
 				{
 					C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()
@@ -299,6 +300,43 @@ namespace OpenXMLOffice.Global_2007
 					}));
 					series.Append(dataPoint);
 				}
+			}
+			if (columnChartSeriesSetting != null)
+			{
+				columnChartSeriesSetting.trendLines.ForEach(trendLine =>
+				{
+					if (!(columnChartSetting.columnChartType == ColumnChartTypes.CLUSTERED || columnChartSetting.columnChartType == ColumnChartTypes.CLUSTERED_3D))
+					{
+						throw new ArgumentException("Treadline is not supported in the given chart type");
+					}
+					SolidFillModel solidFillModel = new SolidFillModel();
+					if (trendLine.hexColor != null)
+					{
+						solidFillModel.hexColor = trendLine.hexColor;
+					}
+					else
+					{
+						solidFillModel.schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
+						};
+					}
+					TrendLineModel trendLineModel = new TrendLineModel
+					{
+						secondaryValue = trendLine.secondaryValue,
+						trendLineType = trendLine.trendLineType,
+						trendLineName = trendLine.trendLineName,
+						forecastBackward = trendLine.forecastBackward,
+						forecastForward = trendLine.forecastForward,
+						setIntercept = trendLine.setIntercept,
+						showEquation = trendLine.showEquation,
+						showRSquareValue = trendLine.showRSquareValue,
+						interceptValue = trendLine.interceptValue,
+						solidFill = solidFillModel,
+						drawingPresetLineDashValues = trendLine.lineStye
+					};
+					series.Append(CreateTrendLine(trendLineModel));
+				});
 			}
 			if (dataLabels != null)
 			{

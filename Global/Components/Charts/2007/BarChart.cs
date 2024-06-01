@@ -122,9 +122,10 @@ namespace OpenXMLOffice.Global_2007
 		private C.BarChartSeries CreateBarChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			C.DataLabels dataLabels = null;
+			BarChartSeriesSetting barChartSeriesSetting = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex);
 			if (seriesIndex < barChartSetting.barChartSeriesSettings.Count)
 			{
-				BarChartDataLabel barChartDataLabel = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex).barChartDataLabel : null;
+				BarChartDataLabel barChartDataLabel = barChartSeriesSetting != null ? barChartSeriesSetting.barChartDataLabel : null;
 				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateBarDataLabels(barChartDataLabel ?? new BarChartDataLabel(), dataLabelCellsLength);
 			}
@@ -143,10 +144,9 @@ namespace OpenXMLOffice.Global_2007
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			int dataPointCount = 0;
-			BarChartSeriesSetting seriesSettings = barChartSetting.barChartSeriesSettings.ElementAtOrDefault(seriesIndex);
-			if (seriesSettings != null)
+			if (barChartSeriesSetting != null)
 			{
-				List<BarChartDataPointSetting> dataPointSettings = seriesSettings.barChartDataPointSettings;
+				List<BarChartDataPointSetting> dataPointSettings = barChartSeriesSetting.barChartDataPointSettings;
 				if (dataPointSettings != null)
 				{
 					dataPointCount = dataPointSettings.Count;
@@ -169,6 +169,43 @@ namespace OpenXMLOffice.Global_2007
 					}));
 					series.Append(dataPoint);
 				}
+			}
+			if (barChartSeriesSetting != null)
+			{
+				barChartSeriesSetting.trendLines.ForEach(trendLine =>
+				{
+					if (!(barChartSetting.barChartType == BarChartTypes.CLUSTERED || barChartSetting.barChartType == BarChartTypes.CLUSTERED_3D))
+					{
+						throw new ArgumentException("Treadline is not supported in the given chart type");
+					}
+					SolidFillModel solidFillModel = new SolidFillModel();
+					if (trendLine.hexColor != null)
+					{
+						solidFillModel.hexColor = trendLine.hexColor;
+					}
+					else
+					{
+						solidFillModel.schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
+						};
+					}
+					TrendLineModel trendLineModel = new TrendLineModel
+					{
+						secondaryValue = trendLine.secondaryValue,
+						trendLineType = trendLine.trendLineType,
+						trendLineName = trendLine.trendLineName,
+						forecastBackward = trendLine.forecastBackward,
+						forecastForward = trendLine.forecastForward,
+						setIntercept = trendLine.setIntercept,
+						showEquation = trendLine.showEquation,
+						showRSquareValue = trendLine.showRSquareValue,
+						interceptValue = trendLine.interceptValue,
+						solidFill = solidFillModel,
+						drawingPresetLineDashValues = trendLine.lineStye
+					};
+					series.Append(CreateTrendLine(trendLineModel));
+				});
 			}
 			if (dataLabels != null)
 			{

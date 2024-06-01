@@ -797,7 +797,15 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// 
 		/// </summary>
+		public DrawingPresetLineDashValues drawingPresetLineDashValues = DrawingPresetLineDashValues.SYSTEM_DOT;
+		/// <summary>
+		/// 
+		/// </summary>
 		public TrendLineTypes trendLineType = TrendLineTypes.NONE;
+		/// <summary>
+		/// 
+		/// </summary>
+		public SolidFillModel solidFill = new SolidFillModel();
 		internal static C.TrendlineValues GetTrendlineValues(TrendLineTypes trendLineType)
 		{
 			switch (trendLineType)

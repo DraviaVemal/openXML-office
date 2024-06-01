@@ -517,7 +517,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				titleOptions = new()
 				{
-					textValue = "Dev Chart"
+					textValue = "Axis Scale Chart"
 				},
 				chartAxisOptions = new()
 				{
@@ -531,6 +531,14 @@ namespace OpenXMLOffice.Tests
 							boundsMaximum = 5.0F,
 						}
 					}
+				}
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(5, 5, true), new G.LineChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				titleOptions = new()
+				{
+					textValue = "Line Tread Chart"
 				},
 				lineChartSeriesSettings = new(){
 					new(){
@@ -539,6 +547,8 @@ namespace OpenXMLOffice.Tests
 							new(){
 								trendLineType = G.TrendLineTypes.LINEAR,
 								trendLineName = "Dravia",
+								hexColor = "FF0000",
+								lineStye = G.DrawingPresetLineDashValues.LARGE_DASH
 							}
 						}
 					},
@@ -548,6 +558,68 @@ namespace OpenXMLOffice.Tests
 							new(){
 								trendLineType = G.TrendLineTypes.EXPONENTIAL,
 								trendLineName = "vemal",
+								hexColor = "FFFF00",
+								lineStye = G.DrawingPresetLineDashValues.DASH_DOT
+							}
+						}
+					}
+				}
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(5, 5, true), new G.BarChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				titleOptions = new()
+				{
+					textValue = "Bar Tread Chart"
+				},
+				barChartSeriesSettings = new(){
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = G.TrendLineTypes.LINEAR,
+								trendLineName = "Dravia",
+								hexColor = "FF0000",
+								lineStye = G.DrawingPresetLineDashValues.LARGE_DASH
+							}
+						}
+					},
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = G.TrendLineTypes.EXPONENTIAL,
+								trendLineName = "vemal",
+								hexColor = "FFFF00",
+								lineStye = G.DrawingPresetLineDashValues.DASH_DOT
+							}
+						}
+					}
+				}
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(5, 5, true), new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				titleOptions = new()
+				{
+					textValue = "Column Tread Chart"
+				},
+				columnChartSeriesSettings = new(){
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = G.TrendLineTypes.LINEAR,
+								trendLineName = "Dravia",
+								hexColor = "FF0000",
+								lineStye = G.DrawingPresetLineDashValues.LARGE_DASH
+							}
+						}
+					},
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = G.TrendLineTypes.EXPONENTIAL,
+								trendLineName = "vemal",
+								hexColor = "FFFF00",
+								lineStye = G.DrawingPresetLineDashValues.DASH_DOT
 							}
 						}
 					}

@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DocumentFormat.OpenXml;
@@ -194,6 +195,22 @@ namespace OpenXMLOffice.Global_2007
 			{
 				lineChartSeriesSetting.trendLines.ForEach(trendLine =>
 				{
+					if (lineChartSetting.lineChartType != LineChartTypes.CLUSTERED)
+					{
+						throw new ArgumentException("Treadline is not supported in the given chart type");
+					}
+					SolidFillModel solidFillModel = new SolidFillModel();
+					if (trendLine.hexColor != null)
+					{
+						solidFillModel.hexColor = trendLine.hexColor;
+					}
+					else
+					{
+						solidFillModel.schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
+						};
+					}
 					TrendLineModel trendLineModel = new TrendLineModel
 					{
 						secondaryValue = trendLine.secondaryValue,
@@ -204,7 +221,9 @@ namespace OpenXMLOffice.Global_2007
 						setIntercept = trendLine.setIntercept,
 						showEquation = trendLine.showEquation,
 						showRSquareValue = trendLine.showRSquareValue,
-						interceptValue = trendLine.interceptValue
+						interceptValue = trendLine.interceptValue,
+						solidFill = solidFillModel,
+						drawingPresetLineDashValues = trendLine.lineStye
 					};
 					series.Append(CreateTrendLine(trendLineModel));
 				});

@@ -831,11 +831,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			C.Trendline trendLine = new C.Trendline()
 			{
-				TrendlineName = new C.TrendlineName(trendLineModel.trendLineName),
-				TrendlineType = new C.TrendlineType() { Val = TrendLineModel.GetTrendlineValues(trendLineModel.trendLineType) },
-				Forward = new C.Forward() { Val = trendLineModel.forecastForward },
-				DisplayEquation = new C.DisplayEquation() { Val = trendLineModel.showEquation },
-				DisplayRSquaredValue = new C.DisplayRSquaredValue() { Val = trendLineModel.showRSquareValue }
+				TrendlineName = new C.TrendlineName(trendLineModel.trendLineName)
 			};
 			trendLine.Append(CreateChartShapeProperties(new ShapePropertiesModel()
 			{
@@ -843,17 +839,17 @@ namespace OpenXMLOffice.Global_2007
 				{
 					width = 19050,
 					outlineCapTypeValues = OutlineCapTypeValues.ROUND,
-					solidFill = new SolidFillModel()
-					{
-						schemeColorModel = new SchemeColorModel()
-						{
-							themeColorValues = ThemeColorValues.ACCENT_1
-						}
-					},
-					dashType = DrawingPresetLineDashValues.SYSTEM_DOT,
+					solidFill = trendLineModel.solidFill,
+					dashType = trendLineModel.drawingPresetLineDashValues,
 				},
 				effectList = new EffectListModel()
 			}));
+			trendLine.Append(
+				new C.TrendlineType() { Val = TrendLineModel.GetTrendlineValues(trendLineModel.trendLineType) },
+				new C.Forward() { Val = trendLineModel.forecastForward },
+				new C.DisplayEquation() { Val = trendLineModel.showEquation },
+				new C.DisplayRSquaredValue() { Val = trendLineModel.showRSquareValue }
+			);
 			if (trendLineModel.trendLineType == TrendLineTypes.POLYNOMIAL)
 			{
 				trendLine.PolynomialOrder = new C.PolynomialOrder() { Val = (ByteValue)trendLineModel.secondaryValue };

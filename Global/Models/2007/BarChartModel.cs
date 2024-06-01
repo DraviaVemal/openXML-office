@@ -87,9 +87,10 @@ namespace OpenXMLOffice.Global_2007
 	/// Represents the data label settings for a bar chart.
 	/// </summary>
 	public class BarChartDataLabel : ChartDataLabel
-	{        /// <summary>
-			 /// The position of the data labels.
-			 /// </summary>
+	{
+		/// <summary>
+		/// The position of the data labels.
+		/// </summary>
 		public DataLabelPositionValues dataLabelPosition = DataLabelPositionValues.CENTER;
 		/// <summary>
 		/// The possible positions for the data labels.
@@ -129,6 +130,10 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public class BarChartSeriesSetting : ChartSeriesSetting
 	{
+		/// <summary>
+		/// Treadline setting for particular series
+		/// </summary>
+		public List<TrendLineSettings> trendLines = new List<TrendLineSettings>();
 		/// <summary>
 		///
 		/// </summary>

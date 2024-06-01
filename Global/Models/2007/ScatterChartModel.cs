@@ -87,6 +87,10 @@ namespace OpenXMLOffice.Global_2007
 	public class ScatterChartSeriesSetting : ChartSeriesSetting
 	{
 		/// <summary>
+		/// Treadline setting for particular series
+		/// </summary>
+		public List<TrendLineSettings> trendLines = new List<TrendLineSettings>();
+		/// <summary>
 		/// Custom data label settings for the specific data series. This will override the chart
 		/// level setting.
 		/// </summary>

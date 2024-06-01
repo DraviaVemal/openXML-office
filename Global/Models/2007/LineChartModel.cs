@@ -207,6 +207,14 @@ namespace OpenXMLOffice.Global_2007
 		/// 
 		/// </summary>
 		public float interceptValue = 0.0F;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string hexColor = null;
+		/// <summary>
+		/// 
+		/// </summary>
+		public DrawingPresetLineDashValues lineStye = DrawingPresetLineDashValues.SYSTEM_DOT;
 	}
 	/// <summary>
 	/// Represents the series settings for a line chart.

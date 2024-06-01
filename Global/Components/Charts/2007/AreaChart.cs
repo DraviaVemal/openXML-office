@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DocumentFormat.OpenXml;
@@ -87,9 +88,10 @@ namespace OpenXMLOffice.Global_2007
 				}
 			};
 			C.DataLabels dataLabels = null;
+			AreaChartSeriesSetting areaChartSeriesSetting = areaChartSetting.areaChartSeriesSettings.ElementAtOrDefault(seriesIndex);
 			if (seriesIndex < areaChartSetting.areaChartSeriesSettings.Count)
 			{
-				AreaChartDataLabel areaChartDataLabel = areaChartSetting.areaChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? areaChartSetting.areaChartSeriesSettings.ElementAtOrDefault(seriesIndex).areaChartDataLabel : null;
+				AreaChartDataLabel areaChartDataLabel = areaChartSeriesSetting != null ? areaChartSeriesSetting.areaChartDataLabel : null;
 				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateAreaDataLabels(areaChartDataLabel ?? new AreaChartDataLabel(), dataLabelCellsLength);
 			}
@@ -98,6 +100,43 @@ namespace OpenXMLOffice.Global_2007
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
+			if (areaChartSeriesSetting != null)
+			{
+				areaChartSeriesSetting.trendLines.ForEach(trendLine =>
+				{
+					if (areaChartSetting.areaChartType != AreaChartTypes.CLUSTERED)
+					{
+						throw new ArgumentException("Treadline is not supported in the given chart type");
+					}
+					SolidFillModel solidFillModel = new SolidFillModel();
+					if (trendLine.hexColor != null)
+					{
+						solidFillModel.hexColor = trendLine.hexColor;
+					}
+					else
+					{
+						solidFillModel.schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
+						};
+					}
+					TrendLineModel trendLineModel = new TrendLineModel
+					{
+						secondaryValue = trendLine.secondaryValue,
+						trendLineType = trendLine.trendLineType,
+						trendLineName = trendLine.trendLineName,
+						forecastBackward = trendLine.forecastBackward,
+						forecastForward = trendLine.forecastForward,
+						setIntercept = trendLine.setIntercept,
+						showEquation = trendLine.showEquation,
+						showRSquareValue = trendLine.showRSquareValue,
+						interceptValue = trendLine.interceptValue,
+						solidFill = solidFillModel,
+						drawingPresetLineDashValues = trendLine.lineStye,
+					};
+					series.Append(CreateTrendLine(trendLineModel));
+				});
+			}
 			if (dataLabels != null)
 			{
 				series.Append(dataLabels);

@@ -151,9 +151,10 @@ namespace OpenXMLOffice.Global_2007
 		private C.ScatterChartSeries CreateScatterChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
 			C.DataLabels dataLabels = null;
+			ScatterChartSeriesSetting scatterChartSeriesSetting = scatterChartSetting.scatterChartSeriesSettings.ElementAtOrDefault(seriesIndex);
 			if (seriesIndex < scatterChartSetting.scatterChartSeriesSettings.Count)
 			{
-				ScatterChartDataLabel scatterChartDataLabel = scatterChartSetting.scatterChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? scatterChartSetting.scatterChartSeriesSettings.ElementAtOrDefault(seriesIndex).scatterChartDataLabel : null;
+				ScatterChartDataLabel scatterChartDataLabel = scatterChartSeriesSetting != null ? scatterChartSeriesSetting.scatterChartDataLabel : null;
 				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateScatterDataLabels(scatterChartDataLabel ?? new ScatterChartDataLabel(), dataLabelCellsLength);
 			}
@@ -209,6 +210,39 @@ namespace OpenXMLOffice.Global_2007
 			if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE && scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE_3D)
 			{
 				series.Append(CreateMarker(markerModel));
+			}
+			if (scatterChartSeriesSetting != null)
+			{
+				scatterChartSeriesSetting.trendLines.ForEach(trendLine =>
+				{
+					SolidFillModel solidFillModel = new SolidFillModel();
+					if (trendLine.hexColor != null)
+					{
+						solidFillModel.hexColor = trendLine.hexColor;
+					}
+					else
+					{
+						solidFillModel.schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
+						};
+					}
+					TrendLineModel trendLineModel = new TrendLineModel
+					{
+						secondaryValue = trendLine.secondaryValue,
+						trendLineType = trendLine.trendLineType,
+						trendLineName = trendLine.trendLineName,
+						forecastBackward = trendLine.forecastBackward,
+						forecastForward = trendLine.forecastForward,
+						setIntercept = trendLine.setIntercept,
+						showEquation = trendLine.showEquation,
+						showRSquareValue = trendLine.showRSquareValue,
+						interceptValue = trendLine.interceptValue,
+						solidFill = solidFillModel,
+						drawingPresetLineDashValues = trendLine.lineStye
+					};
+					series.Append(CreateTrendLine(trendLineModel));
+				});
 			}
 			if (dataLabels != null)
 			{
