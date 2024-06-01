@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Global_2007
 			int seriesIndex = 0;
 			comboChartSetting.ComboChartsSettingList.ForEach(chartSetting =>
 			{
-				string chartType = chartSetting.GetType().Name;
+				string chartType = string.Format("{0}{1}", chartSetting.GetType().Name, ((ChartSetting<ApplicationSpecificSetting>)chartSetting).isSecondaryAxis);
 				if (!groupedCharts.ContainsKey(chartType))
 				{
 					groupedCharts.Add(chartType, new Dictionary<int, object>());
@@ -130,21 +130,22 @@ namespace OpenXMLOffice.Global_2007
 			}));
 			if (isSecondaryAxisActive)
 			{
-				plotArea.Append(CreateAxis(new AxisSetting<ZAxisOptions<CategoryAxis>, CategoryAxis>()
-				{
-					id = SecondaryCategoryAxisId,
-					crossAxisId = SecondaryValueAxisId,
-					axisOptions = new ZAxisOptions<CategoryAxis>()
-					{
-						isAxesVisible = false
-					},
-				}));
 				plotArea.Append(CreateAxis(new AxisSetting<ZAxisOptions<ZAxisType>, ZAxisType>()
 				{
 					id = SecondaryValueAxisId,
 					crossAxisId = SecondaryCategoryAxisId,
 					axisOptions = comboChartSetting.chartAxisOptions.zAxisOptions,
 					axisPosition = comboChartSetting.secondaryAxisPosition
+				}));
+				plotArea.Append(CreateAxis(new AxisSetting<ZAxisOptions<CategoryAxis>, CategoryAxis>()
+				{
+					id = SecondaryCategoryAxisId,
+					crossAxisId = SecondaryValueAxisId,
+					axisPosition = comboChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.BOTTOM : AxisPosition.TOP,
+					axisOptions = new ZAxisOptions<CategoryAxis>()
+					{
+						isAxesVisible = false
+					},
 				}));
 			}
 			plotArea.Append(CreateChartShapeProperties());

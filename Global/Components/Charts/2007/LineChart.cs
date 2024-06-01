@@ -37,15 +37,15 @@ namespace OpenXMLOffice.Global_2007
 			plotArea.Append(CreateLineChart(CreateDataSeries(lineChartSetting.chartDataSetting, dataCols, dataRange)));
 			plotArea.Append(CreateAxis(new AxisSetting<XAxisOptions<CategoryAxis>, CategoryAxis>()
 			{
-				id = CategoryAxisId,
-				crossAxisId = ValueAxisId,
+				id = lineChartSetting.isSecondaryAxis ? SecondaryCategoryAxisId : CategoryAxisId,
+				crossAxisId = lineChartSetting.isSecondaryAxis ? SecondaryValueAxisId : ValueAxisId,
 				axisOptions = lineChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = lineChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
 			plotArea.Append(CreateAxis(new AxisSetting<YAxisOptions<ValueAxis>, ValueAxis>()
 			{
-				id = ValueAxisId,
-				crossAxisId = CategoryAxisId,
+				id = lineChartSetting.isSecondaryAxis ? SecondaryValueAxisId : ValueAxisId,
+				crossAxisId = lineChartSetting.isSecondaryAxis ? SecondaryCategoryAxisId : CategoryAxisId,
 				axisOptions = lineChartSetting.chartAxisOptions.yAxisOptions,
 				axisPosition = lineChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
 			}));

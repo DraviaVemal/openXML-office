@@ -267,15 +267,15 @@ namespace OpenXMLOffice.Global_2007
 			}
 			plotArea.Append(CreateAxis(new AxisSetting<YAxisOptions<CategoryAxis>, CategoryAxis>()
 			{
-				id = CategoryAxisId,
-				crossAxisId = ValueAxisId,
+				id = barChartSetting.isSecondaryAxis ? SecondaryCategoryAxisId : CategoryAxisId,
+				crossAxisId = barChartSetting.isSecondaryAxis ? SecondaryValueAxisId : ValueAxisId,
 				axisOptions = barChartSetting.chartAxisOptions.yAxisOptions,
 				axisPosition = barChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
 			}));
 			plotArea.Append(CreateAxis(new AxisSetting<XAxisOptions<ValueAxis>, ValueAxis>()
 			{
-				id = ValueAxisId,
-				crossAxisId = CategoryAxisId,
+				id = barChartSetting.isSecondaryAxis ? SecondaryValueAxisId : ValueAxisId,
+				crossAxisId = barChartSetting.isSecondaryAxis ? SecondaryCategoryAxisId : CategoryAxisId,
 				axisOptions = barChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = barChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));

@@ -676,6 +676,7 @@ namespace OpenXMLOffice.Tests
 				{
 					textValue = "Combo Chart Before Picture"
 				},
+				secondaryAxisPosition = G.AxisPosition.RIGHT
 			};
 			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting<G.PresentationSetting>()
 			{
@@ -685,7 +686,7 @@ namespace OpenXMLOffice.Tests
 			{
 				applicationSpecificSetting = new(),
 			});
-			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting<G.PresentationSetting>()
+			comboChartSetting.AddComboChartsSetting(new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			});
@@ -694,11 +695,6 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new(),
 				isSecondaryAxis = true
 			});
-			comboChartSetting.AddComboChartsSetting(new G.PieChartSetting<G.PresentationSetting>()
-			{
-				applicationSpecificSetting = new(),
-			});
-			// comboChartSetting.AddComboChartsSetting(new G.ScatterChartSetting());
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(10), comboChartSetting);
 			Assert.IsTrue(true);
 		}

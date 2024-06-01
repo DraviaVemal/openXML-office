@@ -48,15 +48,15 @@ namespace OpenXMLOffice.Global_2007
 			}
 			plotArea.Append(CreateAxis(new AxisSetting<XAxisOptions<ValueAxis>, ValueAxis>()
 			{
-				id = CategoryAxisId,
-				crossAxisId = ValueAxisId,
+				id = scatterChartSetting.isSecondaryAxis ? SecondaryCategoryAxisId : CategoryAxisId,
+				crossAxisId = scatterChartSetting.isSecondaryAxis ? SecondaryValueAxisId : ValueAxisId,
 				axisOptions = scatterChartSetting.chartAxisOptions.xAxisOptions,
 				axisPosition = scatterChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM
 			}));
 			plotArea.Append(CreateAxis(new AxisSetting<YAxisOptions<ValueAxis>, ValueAxis>()
 			{
-				id = ValueAxisId,
-				crossAxisId = CategoryAxisId,
+				id = scatterChartSetting.isSecondaryAxis ? SecondaryValueAxisId : ValueAxisId,
+				crossAxisId = scatterChartSetting.isSecondaryAxis ? SecondaryCategoryAxisId : CategoryAxisId,
 				axisOptions = scatterChartSetting.chartAxisOptions.yAxisOptions,
 				axisPosition = scatterChartSetting.chartAxisOptions.yAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.RIGHT : AxisPosition.LEFT
 			}));

@@ -316,6 +316,10 @@ namespace OpenXMLOffice.Global_2007
 					TextAngle = axisSetting.axisOptions.chartAxisTitle.TextAngle
 				}));
 			}
+			axis.Append(
+				new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
+				new C.MajorTickMark { Val = axisSetting.axisOptions.majorTickMark },
+				new C.MinorTickMark { Val = axisSetting.axisOptions.minorTickMark });
 			if (axisSetting.axisOptions.isAxesVisible)
 			{
 				if (chartSetting.chartGridLinesOptions.isMajorCategoryLinesEnabled)
@@ -326,11 +330,7 @@ namespace OpenXMLOffice.Global_2007
 				{
 					axis.Append(CreateMinorGridLine());
 				}
-				axis.Append(
-					new C.NumberingFormat { FormatCode = "General", SourceLinked = true },
-					new C.MajorTickMark { Val = axisSetting.axisOptions.majorTickMark },
-					new C.MinorTickMark { Val = axisSetting.axisOptions.minorTickMark },
-					new C.TickLabelPosition { Val = AxisOptions<ValueAxis>.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
+				axis.Append(new C.TickLabelPosition { Val = AxisOptions<ValueAxis>.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
 				axis.Append(CreateChartShapeProperties());
 				SolidFillModel solidFillModel = new SolidFillModel()
 				{
