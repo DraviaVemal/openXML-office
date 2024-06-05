@@ -89,13 +89,19 @@ namespace OpenXMLOffice.Presentation_2007
 
 			if (textBoxSetting.shapeBackground != null)
 			{
-				ShapeProperties.Append(CreateSolidFill(new SolidFillModel() { hexColor = textBoxSetting.shapeBackground }));
+				ShapeProperties.Append(CreateColorComponent(new ColorOptionModel<SolidOptions>()
+				{
+					colorOption = new SolidOptions()
+					{
+						hexColor = textBoxSetting.shapeBackground
+					}
+				}));
 			}
 			else
 			{
-				ShapeProperties.Append(new A.NoFill());
+				ShapeProperties.Append(CreateColorComponent(new ColorOptionModel<NoOptions>()));
 			}
-			List<DrawingRunModel> drawingRunModels = new List<DrawingRunModel>();
+			List<DrawingRunModel<SolidOptions>> drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
 			foreach (TextBlock textBlock in textBoxSetting.textBlocks)
 			{
 				// Add Hyperlink Relationships to slide
@@ -135,25 +141,28 @@ namespace OpenXMLOffice.Presentation_2007
 							break;
 					}
 				}
-				SolidFillModel solidFillModel = new SolidFillModel()
+				ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 				{
-					schemeColorModel = new SchemeColorModel()
+					colorOption = new SolidOptions()
 					{
-						themeColorValues = ThemeColorValues.TEXT_1
+						schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.TEXT_1
+						}
 					}
 				};
 				if (textBlock.textColor != null)
 				{
-					solidFillModel.hexColor = textBlock.textColor;
-					solidFillModel.schemeColorModel = null;
+					textColorOption.colorOption.hexColor = textBlock.textColor;
+					textColorOption.colorOption.schemeColorModel = null;
 				}
-				DrawingRunModel drawingRunModel = new DrawingRunModel()
+				DrawingRunModel<SolidOptions> drawingRunModel = new DrawingRunModel<SolidOptions>()
 				{
 					text = textBlock.textValue,
 					textHighlight = textBlock.textBackground,
-					drawingRunProperties = new DrawingRunPropertiesModel()
+					drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
 					{
-						solidFill = solidFillModel,
+						textColorOption = textColorOption,
 						fontFamily = textBlock.fontFamily,
 						fontSize = textBlock.fontSize,
 						isBold = textBlock.isBold,
@@ -178,9 +187,9 @@ namespace OpenXMLOffice.Presentation_2007
 				TextBody = new P.TextBody(
 						new A.BodyProperties(),
 						new A.ListStyle(),
-						CreateDrawingParagraph(new DrawingParagraphModel()
+						CreateDrawingParagraph(new DrawingParagraphModel<SolidOptions>()
 						{
-							paragraphPropertiesModel = new ParagraphPropertiesModel()
+							paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
 							{
 								horizontalAlignment = textBoxSetting.horizontalAlignment
 							},

@@ -41,17 +41,17 @@ namespace OpenXMLOffice.Global_2013
 					A.Paragraph Paragraph = new A.Paragraph(CreateField("CELLRANGE", "[CELLRANGE]"));
 					if (chartDataLabel.showSeriesName)
 					{
-						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>() { new DrawingRunModel() { text = chartDataLabel.separator } }.ToArray()));
+						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel<SolidOptions>>() { new DrawingRunModel<SolidOptions>() { text = chartDataLabel.separator } }.ToArray()));
 						Paragraph.Append(CreateField("SERIESNAME", "[SERIES NAME]"));
 					}
 					if (chartDataLabel.showCategoryName)
 					{
-						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>() { new DrawingRunModel() { text = chartDataLabel.separator } }.ToArray()));
+						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel<SolidOptions>>() { new DrawingRunModel<SolidOptions>() { text = chartDataLabel.separator } }.ToArray()));
 						Paragraph.Append(CreateField("CATEGORYNAME", "[CATEGORY NAME]"));
 					}
 					if (chartDataLabel.showValue)
 					{
-						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>() { new DrawingRunModel() { text = chartDataLabel.separator } }.ToArray()));
+						Paragraph.Append(CreateDrawingRun(new List<DrawingRunModel<SolidOptions>>() { new DrawingRunModel<SolidOptions>() { text = chartDataLabel.separator } }.ToArray()));
 						Paragraph.Append(CreateField("VALUE", "[VALUE]"));
 					}
 					Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });
@@ -85,21 +85,24 @@ namespace OpenXMLOffice.Global_2013
 				new C.ShowLeaderLines() { Val = false },
 				(OpenXmlElement)extensionList.Clone());
 			dataLabels.Append(CreateChartShapeProperties());
-			SolidFillModel solidFillModel = new SolidFillModel()
+			ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 			{
-				schemeColorModel = new SchemeColorModel()
+				colorOption = new SolidOptions()
 				{
-					themeColorValues = ThemeColorValues.TEXT_1,
-					luminanceModulation = 65000,
-					luminanceOffset = 35000
+					schemeColorModel = new SchemeColorModel()
+					{
+						themeColorValues = ThemeColorValues.TEXT_1,
+						luminanceModulation = 65000,
+						luminanceOffset = 35000
+					}
 				}
 			};
 			if (chartDataLabel.fontColor != null)
 			{
-				solidFillModel.hexColor = chartDataLabel.fontColor;
-				solidFillModel.schemeColorModel = null;
+				textColorOption.colorOption.hexColor = chartDataLabel.fontColor;
+				textColorOption.colorOption.schemeColorModel = null;
 			}
-			dataLabels.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+			dataLabels.Append(CreateChartTextProperties(new ChartTextPropertiesModel<SolidOptions>()
 			{
 				drawingBodyProperties = new DrawingBodyPropertiesModel()
 				{
@@ -115,13 +118,13 @@ namespace OpenXMLOffice.Global_2013
 					verticalOverflow = TextVerticalOverflowValues.ELLIPSIS,
 					wrap = TextWrappingValues.SQUARE,
 				},
-				drawingParagraph = new DrawingParagraphModel()
+				drawingParagraph = new DrawingParagraphModel<SolidOptions>()
 				{
-					paragraphPropertiesModel = new ParagraphPropertiesModel()
+					paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
 					{
-						defaultRunProperties = new DefaultRunPropertiesModel()
+						defaultRunProperties = new DefaultRunPropertiesModel<SolidOptions>()
 						{
-							solidFill = solidFillModel,
+							textColorOption = textColorOption,
 							complexScriptFont = "+mn-cs",
 							eastAsianFont = "+mn-ea",
 							latinFont = "+mn-lt",

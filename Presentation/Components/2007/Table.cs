@@ -292,26 +292,29 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				G.SolidFillModel solidFillModel = new G.SolidFillModel()
+				G.ColorOptionModel<G.SolidOptions> textColorOption = new G.ColorOptionModel<G.SolidOptions>()
 				{
-					schemeColorModel = new G.SchemeColorModel()
+					colorOption = new G.SolidOptions()
 					{
-						themeColorValues = G.ThemeColorValues.TEXT_1
+						schemeColorModel = new G.SchemeColorModel()
+						{
+							themeColorValues = G.ThemeColorValues.TEXT_1
+						}
 					}
 				};
 				if (cell.textColor != null)
 				{
-					solidFillModel.hexColor = cell.textColor;
-					solidFillModel.schemeColorModel = null;
+					textColorOption.colorOption.hexColor = cell.textColor;
+					textColorOption.colorOption.schemeColorModel = null;
 				}
-				paragraph.Append(CreateDrawingRun(new List<G.DrawingRunModel>()
+				paragraph.Append(CreateDrawingRun(new List<G.DrawingRunModel<G.SolidOptions>>()
 				{
-					new G.DrawingRunModel(){
+					new G.DrawingRunModel<G.SolidOptions>(){
 						text = cell.textValue,
 						textHighlight = cell.textBackground,
-						drawingRunProperties = new G.DrawingRunPropertiesModel()
+						drawingRunProperties = new G.DrawingRunPropertiesModel<G.SolidOptions>()
 						{
-							solidFill = solidFillModel,
+							textColorOption = textColorOption,
 							fontFamily = cell.fontFamily,
 							fontSize = cell.fontSize,
 							isBold = cell.isBold,
@@ -364,7 +367,13 @@ namespace OpenXMLOffice.Presentation_2007
 			if (cell.borderSettings.leftBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.LeftBorderLineProperties(
-					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.leftBorder.borderColor }),
+					CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+					{
+						colorOption = new G.SolidOptions()
+						{
+							hexColor = cell.borderSettings.leftBorder.borderColor
+						}
+					}),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.leftBorder.dashStyle) }
 				)
 				{
@@ -374,12 +383,18 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.LeftBorderLineProperties(new A.NoFill()));
+				tableCellProperties.Append(new A.LeftBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.rightBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.RightBorderLineProperties(
-					  CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.rightBorder.borderColor }),
+					  CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+					  {
+						  colorOption = new G.SolidOptions()
+						  {
+							  hexColor = cell.borderSettings.rightBorder.borderColor
+						  }
+					  }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.rightBorder.dashStyle) }
 				)
 				{
@@ -389,12 +404,18 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.RightBorderLineProperties(new A.NoFill()));
+				tableCellProperties.Append(new A.RightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.topBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.TopBorderLineProperties(
-					 CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.topBorder.borderColor }),
+					 CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+					 {
+						 colorOption = new G.SolidOptions()
+						 {
+							 hexColor = cell.borderSettings.topBorder.borderColor
+						 }
+					 }),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topBorder.dashStyle) }
 				)
 				{
@@ -404,12 +425,18 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.TopBorderLineProperties(new A.NoFill()));
+				tableCellProperties.Append(new A.TopBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.bottomBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.BottomBorderLineProperties(
-					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.bottomBorder.borderColor }),
+					CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+					{
+						colorOption = new G.SolidOptions()
+						{
+							hexColor = cell.borderSettings.bottomBorder.borderColor
+						}
+					}),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomBorder.dashStyle) }
 				)
 				{
@@ -419,12 +446,18 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.BottomBorderLineProperties(new A.NoFill()));
+				tableCellProperties.Append(new A.BottomBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.topLeftToBottomRightBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(
-					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor }),
+					CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+					{
+						colorOption = new G.SolidOptions()
+						{
+							hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor
+						}
+					}),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topLeftToBottomRightBorder.dashStyle) }
 				)
 				{
@@ -434,12 +467,18 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(new A.NoFill()));
+				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.bottomLeftToTopRightBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(
-					CreateSolidFill(new G.SolidFillModel() { hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor }),
+					CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+					{
+						colorOption = new G.SolidOptions()
+						{
+							hexColor = cell.borderSettings.bottomLeftToTopRightBorder.borderColor
+						}
+					}),
 					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.dashStyle) }
 				)
 				{
@@ -449,15 +488,21 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(new A.NoFill()));
+				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.cellBackground != null || row.rowBackground != null)
 			{
-				tableCellProperties.Append(CreateSolidFill(new G.SolidFillModel() { hexColor = cell.cellBackground ?? row.rowBackground }));
+				tableCellProperties.Append(CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+				{
+					colorOption = new G.SolidOptions()
+					{
+						hexColor = cell.cellBackground ?? row.rowBackground
+					}
+				}));
 			}
 			else
 			{
-				tableCellProperties.Append(new A.NoFill());
+				tableCellProperties.Append(CreateColorComponent<G.NoOptions>());
 			}
 			tableCellXml.Append(tableCellProperties);
 			return tableCellXml;

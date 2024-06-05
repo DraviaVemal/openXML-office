@@ -414,7 +414,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class OutlineModel
+	public class OutlineModel<LineColorOption> where LineColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
@@ -423,7 +423,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill;
+		public ColorOptionModel<LineColorOption> lineColor;
 		/// <summary>
 		///
 		/// </summary>
@@ -497,10 +497,19 @@ namespace OpenXMLOffice.Global_2007
 	public class EffectListModel
 	{
 	}
+
+	/// <summary>
+	///	Base interface for color options used with FillColorModel
+	/// </summary>
+	public interface IColorOptions { }
 	/// <summary>
 	///
 	/// </summary>
-	public class SolidFillModel
+	public class NoOptions : IColorOptions { }
+	/// <summary>
+	///
+	/// </summary>
+	public class SolidOptions : IColorOptions
 	{
 		/// <summary>
 		///
@@ -518,16 +527,44 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ShapePropertiesModel
+	public class GradientOptions : IColorOptions { }
+	/// <summary>
+	///
+	/// </summary>
+	public class PictureOrTextureOptions : IColorOptions { }
+	/// <summary>
+	///
+	/// </summary>
+	public class PatternOptions : IColorOptions { }
+	/// <summary>
+	///
+	/// </summary>
+	public class AutomaticOptions : IColorOptions { }
+	/// <summary>
+	/// Fill Color Type Options Use Generic to choose the apply style and update the respective options
+	/// </summary>
+	public class ColorOptionModel<ColorOption> where ColorOption : class, IColorOptions, new()
+	{
+		/// <summary>
+		/// Give you the corresponding color option
+		/// </summary>
+		public ColorOption colorOption = new ColorOption();
+	}
+	/// <summary>
+	///
+	/// </summary>
+	public class ShapePropertiesModel<LineColorOption, FillColorOption>
+		where LineColorOption : class, IColorOptions, new()
+		where FillColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill;
+		public ColorOptionModel<FillColorOption> fillColor = new ColorOptionModel<FillColorOption>();
 		/// <summary>
 		///
 		/// </summary>
-		public OutlineModel outline = new OutlineModel();
+		public OutlineModel<LineColorOption> lineColor = new OutlineModel<LineColorOption>();
 		/// <summary>
 		///
 		/// </summary>
@@ -540,9 +577,7 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ShapeProperty3D
-	{
-	}
+	public class ShapeProperty3D { }
 	/// <summary>
 	///
 	/// </summary>
@@ -706,7 +741,8 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class DrawingRunPropertiesModel : TextOptions
+	public class DrawingRunPropertiesModel<TextColorOption> : TextOptions
+	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
@@ -715,17 +751,18 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill;
+		public ColorOptionModel<TextColorOption> textColorOption;
 	}
 	/// <summary>
 	///
 	/// </summary>
-	public class DefaultRunPropertiesModel : TextOptions
+	public class DefaultRunPropertiesModel<TextColorOption> : TextOptions
+	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public SolidFillModel solidFill;
+		public ColorOptionModel<TextColorOption> textColorOption;
 		/// <summary>
 		///
 		/// </summary>
@@ -750,12 +787,13 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class DrawingRunModel
+	public class DrawingRunModel<TextColorOption>
+	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingRunPropertiesModel drawingRunProperties = new DrawingRunPropertiesModel();
+		public DrawingRunPropertiesModel<TextColorOption> drawingRunProperties = new DrawingRunPropertiesModel<TextColorOption>();
 		/// <summary>
 		///
 		/// </summary>
@@ -768,26 +806,28 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class DrawingParagraphModel
+	public class DrawingParagraphModel<TextColorOption>
+	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public ParagraphPropertiesModel paragraphPropertiesModel;
+		public ParagraphPropertiesModel<TextColorOption> paragraphPropertiesModel;
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingRunModel[] drawingRuns;
+		public DrawingRunModel<TextColorOption>[] drawingRuns;
 	}
 	/// <summary>
 	/// /
 	/// </summary>
-	public class ParagraphPropertiesModel
+	public class ParagraphPropertiesModel<TextColorOption>
+	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
 		/// </summary>
-		public DefaultRunPropertiesModel defaultRunProperties;
+		public DefaultRunPropertiesModel<TextColorOption> defaultRunProperties;
 		/// <summary>
 		/// Cell Alignment Option
 		/// </summary>
@@ -846,7 +886,8 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartTextPropertiesModel
+	public class ChartTextPropertiesModel<TextColorOption>
+	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
@@ -855,6 +896,6 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public DrawingParagraphModel drawingParagraph;
+		public DrawingParagraphModel<TextColorOption> drawingParagraph;
 	}
 }

@@ -75,40 +75,40 @@ namespace OpenXMLOffice.Global_2007
 			chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
 			return chart;
 		}
-		private SolidFillModel GetDataPointFill(uint index, int seriesIndex)
+		private ColorOptionModel<SolidOptions> GetDataPointFill(uint index, int seriesIndex)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
 						.Select(item => item != null ? item.fillColor : null)
 						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
-				solidFillModel.hexColor = hexColor;
+				solidFillModel.colorOption.hexColor = hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColorCount),
 				};
 			}
 			return solidFillModel;
 		}
-		private SolidFillModel GetDataPointBorder(uint index, int seriesIndex)
+		private ColorOptionModel<SolidOptions> GetDataPointBorder(uint index, int seriesIndex)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
 						.Select(item => item.borderColor)
 						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
-				solidFillModel.hexColor = hexColor;
+				solidFillModel.colorOption.hexColor = hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + ((int)index % AccentColorCount),
 				};
@@ -131,15 +131,15 @@ namespace OpenXMLOffice.Global_2007
 					dataLabels = CreatePieDataLabels(pieChartDataLabel1 ?? new PieChartDataLabel(), dataLabelCellsLength);
 				}
 				C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
-				ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
+				ShapePropertiesModel<SolidOptions, SolidOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, SolidOptions>()
 				{
-					solidFill = GetDataPointFill(index, seriesIndex)
+					fillColor = GetDataPointFill(index, seriesIndex)
 				};
 				if (pieChartSetting.pieChartType != PieChartTypes.DOUGHNUT)
 				{
-					shapePropertiesModel.outline = new OutlineModel()
+					shapePropertiesModel.lineColor = new OutlineModel<SolidOptions>()
 					{
-						solidFill = GetDataPointBorder(index, seriesIndex)
+						lineColor = GetDataPointBorder(index, seriesIndex)
 					};
 				}
 				dataPoint.Append(CreateChartShapeProperties(shapePropertiesModel));

@@ -85,20 +85,20 @@ namespace OpenXMLOffice.Global_2007
 			lineChart.Append(new C.AxisId { Val = ValueAxisId });
 			return lineChart;
 		}
-		private SolidFillModel GetBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping, LineChartLineFormat lineChartLineFormat)
+		private ColorOptionModel<SolidOptions> GetBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping, LineChartLineFormat lineChartLineFormat)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = lineChartSetting.lineChartSeriesSettings
 						.Select(item => item.borderColor)
 						.ToList().ElementAtOrDefault(seriesIndex);
 			if ((lineChartLineFormat != null && lineChartLineFormat.lineColor != null) || hexColor != null)
 			{
-				solidFillModel.hexColor = lineChartLineFormat.lineColor ?? hexColor;
+				solidFillModel.colorOption.hexColor = lineChartLineFormat.lineColor ?? hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
@@ -107,39 +107,8 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.LineChartSeries CreateLineChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			MarkerModel marketModel = new MarkerModel()
-			{
-				markerShapeType = MarkerShapeTypes.NONE,
-			};
-			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartType))
-			{
-				marketModel.markerShapeType = MarkerShapeTypes.CIRCLE;
-				marketModel.shapeProperties = new ShapePropertiesModel()
-				{
-					solidFill = new SolidFillModel()
-					{
-						schemeColorModel = new SchemeColorModel()
-						{
-							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
-						}
-					},
-					outline = new OutlineModel()
-					{
-						solidFill = new SolidFillModel()
-						{
-							schemeColorModel = new SchemeColorModel()
-							{
-								themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
-							}
-						}
-					}
-				};
-			}
+
 			LineChartSeriesSetting lineChartSeriesSetting = lineChartSetting.lineChartSeriesSettings.ElementAtOrDefault(seriesIndex);
-			if (lineChartSeriesSetting != null)
-			{
-				marketModel.markerShapeType = lineChartSeriesSetting.markerShapeType != MarkerShapeTypes.NONE ? lineChartSeriesSetting.markerShapeType : marketModel.markerShapeType;
-			}
 			C.DataLabels dataLabels = null;
 			if (seriesIndex < lineChartSetting.lineChartSeriesSettings.Count)
 			{
@@ -148,9 +117,9 @@ namespace OpenXMLOffice.Global_2007
 				dataLabels = CreateLineDataLabels(lineChartDataLabel ?? new LineChartDataLabel(), dataLabelCellsLength);
 			}
 			LineChartLineFormat lineChartLineFormat = lineChartSeriesSetting != null ? lineChartSeriesSetting.lineChartLineFormat : null;
-			OutlineModel outlineModel = new OutlineModel()
+			OutlineModel<SolidOptions> outlineModel = new OutlineModel<SolidOptions>()
 			{
-				solidFill = GetBorderColor(seriesIndex, chartDataGrouping, lineChartLineFormat),
+				lineColor = GetBorderColor(seriesIndex, chartDataGrouping, lineChartLineFormat),
 			};
 			if (lineChartLineFormat != null)
 			{
@@ -181,16 +150,66 @@ namespace OpenXMLOffice.Global_2007
 					outlineModel.lineEndWidth = lineChartLineFormat.lineEndWidth;
 				}
 			}
-			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
+			ShapePropertiesModel<SolidOptions, NoOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, NoOptions>()
 			{
-				outline = outlineModel,
+				lineColor = outlineModel,
 			};
 			C.LineChartSeries series = new C.LineChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
-			series.Append(CreateMarker(marketModel));
+			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartType))
+			{
+				MarkerModel<SolidOptions, SolidOptions> marketModel = new MarkerModel<SolidOptions, SolidOptions>()
+				{
+					markerShapeType = MarkerShapeTypes.NONE,
+				};
+				marketModel.markerShapeType = MarkerShapeTypes.CIRCLE;
+				marketModel.shapeProperties = new ShapePropertiesModel<SolidOptions, SolidOptions>()
+				{
+					fillColor = new ColorOptionModel<SolidOptions>()
+					{
+						colorOption = new SolidOptions()
+						{
+							schemeColorModel = new SchemeColorModel()
+							{
+								themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
+							}
+						}
+					},
+					lineColor = new OutlineModel<SolidOptions>()
+					{
+						lineColor = new ColorOptionModel<SolidOptions>()
+						{
+							colorOption = new SolidOptions()
+							{
+								schemeColorModel = new SchemeColorModel()
+								{
+									themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
+								}
+							}
+						}
+					}
+				};
+				if (lineChartSeriesSetting != null)
+				{
+					marketModel.markerShapeType = lineChartSeriesSetting.markerShapeType != MarkerShapeTypes.NONE ? lineChartSeriesSetting.markerShapeType : marketModel.markerShapeType;
+				}
+				series.Append(CreateMarker(marketModel));
+			}
+			else
+			{
+				MarkerModel<NoOptions, NoOptions> marketModel = new MarkerModel<NoOptions, NoOptions>()
+				{
+					markerShapeType = MarkerShapeTypes.NONE,
+				};
+				if (lineChartSeriesSetting != null)
+				{
+					marketModel.markerShapeType = lineChartSeriesSetting.markerShapeType != MarkerShapeTypes.NONE ? lineChartSeriesSetting.markerShapeType : marketModel.markerShapeType;
+				}
+				series.Append(CreateMarker(marketModel));
+			}
 			if (lineChartSeriesSetting != null)
 			{
 				lineChartSeriesSetting.trendLines.ForEach(trendLine =>
@@ -199,14 +218,14 @@ namespace OpenXMLOffice.Global_2007
 					{
 						throw new ArgumentException("Treadline is not supported in the given chart type");
 					}
-					SolidFillModel solidFillModel = new SolidFillModel();
+					ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 					if (trendLine.hexColor != null)
 					{
-						solidFillModel.hexColor = trendLine.hexColor;
+						solidFillModel.colorOption.hexColor = trendLine.hexColor;
 					}
 					else
 					{
-						solidFillModel.schemeColorModel = new SchemeColorModel()
+						solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 						{
 							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
 						};

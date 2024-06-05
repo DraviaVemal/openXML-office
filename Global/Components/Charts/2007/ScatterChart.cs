@@ -128,20 +128,20 @@ namespace OpenXMLOffice.Global_2007
 			chart.Append(new C.AxisId { Val = ValueAxisId });
 			return chart;
 		}
-		private SolidFillModel GetSeriesBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		private ColorOptionModel<SolidOptions> GetSeriesBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = scatterChartSetting.scatterChartSeriesSettings
 						.Select(item => item.borderColor)
 						.ToList().ElementAtOrDefault(seriesIndex);
 			if (hexColor != null)
 			{
-				solidFillModel.hexColor = hexColor;
+				solidFillModel.colorOption.hexColor = hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
@@ -158,71 +158,91 @@ namespace OpenXMLOffice.Global_2007
 				int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
 				dataLabels = CreateScatterDataLabels(scatterChartDataLabel ?? new ScatterChartDataLabel(), dataLabelCellsLength);
 			}
-			MarkerModel markerModel = new MarkerModel();
-			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRAIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
-			{
-				markerModel.markerShapeType = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? MarkerShapeTypes.AUTO : MarkerShapeTypes.CIRCLE;
-				markerModel.shapeProperties = new ShapePropertiesModel()
-				{
-					solidFill = new SolidFillModel()
-					{
-						schemeColorModel = new SchemeColorModel()
-						{
-							themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
-						}
-					},
-					outline = new OutlineModel()
-					{
-						solidFill = new SolidFillModel()
-						{
-							schemeColorModel = new SchemeColorModel()
-							{
-								themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
-							}
-						}
-					}
-				};
-			}
 			C.ScatterChartSeries series = new C.ScatterChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
-			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
-			{
-				outline = new OutlineModel()
-				{
-					solidFill = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(seriesIndex, chartDataGrouping),
-				}
-			};
 			if (scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE || scatterChartSetting.scatterChartType == ScatterChartTypes.BUBBLE_3D)
 			{
-				shapePropertiesModel.solidFill = new SolidFillModel()
+				ShapePropertiesModel<SolidOptions, SolidOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, SolidOptions>
 				{
-					schemeColorModel = new SchemeColorModel()
+					lineColor = new OutlineModel<SolidOptions>()
 					{
-						themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
-						tint = 75000,
+						lineColor = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? null : GetSeriesBorderColor(seriesIndex, chartDataGrouping),
+					},
+					fillColor = new ColorOptionModel<SolidOptions>()
+					{
+						colorOption = new SolidOptions()
+						{
+							schemeColorModel = new SchemeColorModel()
+							{
+								themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount),
+								tint = 75000,
+							}
+						}
 					}
 				};
 				series.Append(new C.InvertIfNegative() { Val = false });
+				series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			}
-			series.Append(CreateChartShapeProperties(shapePropertiesModel));
-			if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE && scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE_3D)
+			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRAIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))
 			{
-				series.Append(CreateMarker(markerModel));
+				MarkerModel<SolidOptions, SolidOptions> markerModel = new MarkerModel<SolidOptions, SolidOptions>
+				{
+					markerShapeType = scatterChartSetting.scatterChartType == ScatterChartTypes.SCATTER ? MarkerShapeTypes.AUTO : MarkerShapeTypes.CIRCLE,
+					shapeProperties = new ShapePropertiesModel<SolidOptions, SolidOptions>()
+					{
+						fillColor = new ColorOptionModel<SolidOptions>()
+						{
+							colorOption = new SolidOptions()
+							{
+								schemeColorModel = new SchemeColorModel()
+								{
+									themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
+								}
+							}
+						},
+						lineColor = new OutlineModel<SolidOptions>()
+						{
+							lineColor = new ColorOptionModel<SolidOptions>()
+							{
+								colorOption = new SolidOptions()
+								{
+									schemeColorModel = new SchemeColorModel()
+									{
+										themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
+									}
+								}
+							}
+						}
+					}
+				};
+				if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE && scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE_3D)
+				{
+					series.Append(CreateMarker(markerModel));
+				}
 			}
+			else
+			{
+				MarkerModel<NoOptions, NoOptions> markerModel = new MarkerModel<NoOptions, NoOptions>();
+				if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE && scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE_3D)
+				{
+					series.Append(CreateMarker(markerModel));
+				}
+			}
+
 			if (scatterChartSeriesSetting != null)
 			{
 				scatterChartSeriesSetting.trendLines.ForEach(trendLine =>
 				{
-					SolidFillModel solidFillModel = new SolidFillModel();
+					ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 					if (trendLine.hexColor != null)
 					{
-						solidFillModel.hexColor = trendLine.hexColor;
+						solidFillModel.colorOption.hexColor = trendLine.hexColor;
 					}
 					else
 					{
-						solidFillModel.schemeColorModel = new SchemeColorModel()
+						solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 						{
 							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
 						};

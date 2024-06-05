@@ -174,80 +174,80 @@ namespace OpenXMLOffice.Global_2007
 			columnChart.Append(new C.AxisId { Val = ValueAxisId });
 			return columnChart;
 		}
-		private SolidFillModel GetSeriesFillColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		private ColorOptionModel<SolidOptions> GetSeriesFillColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = columnChartSetting.columnChartSeriesSettings
 						.Select(item => item != null ? item.fillColor : null)
 						.ToList().ElementAtOrDefault(seriesIndex);
 			if (hexColor != null)
 			{
-				solidFillModel.hexColor = hexColor;
+				solidFillModel.colorOption.hexColor = hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
 		}
-		private SolidFillModel GetSeriesBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
+		private ColorOptionModel<SolidOptions> GetSeriesBorderColor(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = columnChartSetting.columnChartSeriesSettings
 						.Select(item => item != null ? item.borderColor : null)
 						.ToList().ElementAtOrDefault(seriesIndex);
 			if (hexColor != null)
 			{
-				solidFillModel.hexColor = hexColor;
+				solidFillModel.colorOption.hexColor = hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
 		}
-		private SolidFillModel GetDataPointFill(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
+		private ColorOptionModel<SolidOptions> GetDataPointFill(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings
 						.Select(item => item != null ? item.fillColor : null)
 						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
-				solidFillModel.hexColor = hexColor;
+				solidFillModel.colorOption.hexColor = hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
 			}
 			return solidFillModel;
 		}
-		private SolidFillModel GetDataPointBorder(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
+		private ColorOptionModel<SolidOptions> GetDataPointBorder(uint index, int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel();
+			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? columnChartSetting.columnChartSeriesSettings.ElementAtOrDefault(seriesIndex).columnChartDataPointSettings
 						.Select(item => item != null ? item.borderColor : null)
 						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
-				solidFillModel.hexColor = hexColor;
+				solidFillModel.colorOption.hexColor = hexColor;
 				return solidFillModel;
 			}
 			else
 			{
-				solidFillModel.schemeColorModel = new SchemeColorModel()
+				solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 				{
 					themeColorValues = ThemeColorValues.ACCENT_1 + (chartDataGrouping.id % AccentColorCount),
 				};
@@ -256,12 +256,12 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.BarChartSeries CreateColumnChartSeries(int seriesIndex, ChartDataGrouping chartDataGrouping)
 		{
-			ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel()
+			ShapePropertiesModel<SolidOptions, SolidOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, SolidOptions>()
 			{
-				solidFill = GetSeriesFillColor(seriesIndex, chartDataGrouping),
-				outline = new OutlineModel()
+				fillColor = GetSeriesFillColor(seriesIndex, chartDataGrouping),
+				lineColor = new OutlineModel<SolidOptions>()
 				{
-					solidFill = GetSeriesBorderColor(seriesIndex, chartDataGrouping),
+					lineColor = GetSeriesBorderColor(seriesIndex, chartDataGrouping),
 				}
 			};
 			C.DataLabels dataLabels = null;
@@ -290,12 +290,12 @@ namespace OpenXMLOffice.Global_2007
 				columnChartSeriesSetting.columnChartDataPointSettings[(int)index] != null)
 				{
 					C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
-					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel()
+					dataPoint.Append(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, SolidOptions>()
 					{
-						solidFill = GetDataPointFill(index, seriesIndex, chartDataGrouping),
-						outline = new OutlineModel()
+						fillColor = GetDataPointFill(index, seriesIndex, chartDataGrouping),
+						lineColor = new OutlineModel<SolidOptions>()
 						{
-							solidFill = GetDataPointBorder(index, seriesIndex, chartDataGrouping)
+							lineColor = GetDataPointBorder(index, seriesIndex, chartDataGrouping)
 						}
 					}));
 					series.Append(dataPoint);
@@ -309,14 +309,14 @@ namespace OpenXMLOffice.Global_2007
 					{
 						throw new ArgumentException("Treadline is not supported in the given chart type");
 					}
-					SolidFillModel solidFillModel = new SolidFillModel();
+					ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 					if (trendLine.hexColor != null)
 					{
-						solidFillModel.hexColor = trendLine.hexColor;
+						solidFillModel.colorOption.hexColor = trendLine.hexColor;
 					}
 					else
 					{
-						solidFillModel.schemeColorModel = new SchemeColorModel()
+						solidFillModel.colorOption.schemeColorModel = new SchemeColorModel()
 						{
 							themeColorValues = ThemeColorValues.ACCENT_1 + (seriesIndex % AccentColorCount)
 						};

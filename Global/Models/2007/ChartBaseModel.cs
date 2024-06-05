@@ -805,7 +805,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// 
 		/// </summary>
-		public SolidFillModel solidFill = new SolidFillModel();
+		public ColorOptionModel<SolidOptions> solidFill = new ColorOptionModel<SolidOptions>();
 		internal static C.TrendlineValues GetTrendlineValues(TrendLineTypes trendLineType)
 		{
 			switch (trendLineType)
@@ -830,7 +830,9 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class MarkerModel
+	public class MarkerModel<LineColorOption, FillColorOption>
+	where LineColorOption : class, IColorOptions, new()
+	where FillColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		/// Market Size
@@ -843,7 +845,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		public ShapePropertiesModel shapeProperties = new ShapePropertiesModel();
+		public ShapePropertiesModel<LineColorOption, FillColorOption> shapeProperties = new ShapePropertiesModel<LineColorOption, FillColorOption>();
 		internal static C.MarkerStyleValues GetMarkerStyleValues(MarkerShapeTypes markerShapeType)
 		{
 			switch (markerShapeType)

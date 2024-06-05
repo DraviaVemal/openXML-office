@@ -82,8 +82,8 @@ namespace OpenXMLOffice.Global_2007
 			{
 				NumberingFormat = new C.NumberingFormat() { FormatCode = "General", SourceLinked = false },
 			};
-			trendlineLabel.Append(CreateChartShapeProperties(new ShapePropertiesModel()));
-			trendlineLabel.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+			trendlineLabel.Append(CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()));
+			trendlineLabel.Append(CreateChartTextProperties(new ChartTextPropertiesModel<SolidOptions>()
 			{
 				drawingBodyProperties = new DrawingBodyPropertiesModel()
 				{
@@ -95,11 +95,11 @@ namespace OpenXMLOffice.Global_2007
 					anchor = TextAnchoringValues.CENTER,
 					anchorCenter = true,
 				},
-				drawingParagraph = new DrawingParagraphModel()
+				drawingParagraph = new DrawingParagraphModel<SolidOptions>()
 				{
-					paragraphPropertiesModel = new ParagraphPropertiesModel()
+					paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
 					{
-						defaultRunProperties = new DefaultRunPropertiesModel()
+						defaultRunProperties = new DefaultRunPropertiesModel<SolidOptions>()
 						{
 							fontSize = 1197,
 							isBold = false,
@@ -108,14 +108,17 @@ namespace OpenXMLOffice.Global_2007
 							strikeValues = StrikeValues.NO_STRIKE,
 							kerning = 1200,
 							baseline = 0,
-							solidFill = new SolidFillModel()
+							textColorOption = new ColorOptionModel<SolidOptions>()
 							{
-								schemeColorModel = new SchemeColorModel()
+								colorOption = new SolidOptions()
 								{
-									themeColorValues = ThemeColorValues.TEXT_1,
-									luminanceModulation = 65000,
-									luminanceOffset = 35000,
-								},
+									schemeColorModel = new SchemeColorModel()
+									{
+										themeColorValues = ThemeColorValues.TEXT_1,
+										luminanceModulation = 65000,
+										luminanceOffset = 35000,
+									}
+								}
 							},
 							complexScriptFont = "+mn-cs",
 							eastAsianFont = "+mn-ea",
@@ -332,33 +335,36 @@ namespace OpenXMLOffice.Global_2007
 				}
 				axis.Append(new C.TickLabelPosition { Val = AxisOptions<ValueAxis>.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
 				axis.Append(CreateChartShapeProperties());
-				SolidFillModel solidFillModel = new SolidFillModel()
+				ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 				{
-					schemeColorModel = new SchemeColorModel()
+					colorOption = new SolidOptions()
 					{
-						themeColorValues = ThemeColorValues.TEXT_1,
-						luminanceModulation = 65000,
-						luminanceOffset = 35000
+						schemeColorModel = new SchemeColorModel()
+						{
+							themeColorValues = ThemeColorValues.TEXT_1,
+							luminanceModulation = 65000,
+							luminanceOffset = 35000
+						}
 					}
 				};
 				if (axisSetting.axisOptions.chartAxesOptions.fontColor != null)
 				{
-					solidFillModel.hexColor = axisSetting.axisOptions.chartAxesOptions.fontColor;
-					solidFillModel.schemeColorModel = null;
+					textColorOption.colorOption.hexColor = axisSetting.axisOptions.chartAxesOptions.fontColor;
+					textColorOption.colorOption.schemeColorModel = null;
 				}
-				axis.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+				axis.Append(CreateChartTextProperties(new ChartTextPropertiesModel<SolidOptions>()
 				{
 					drawingBodyProperties = new DrawingBodyPropertiesModel()
 					{
 						rotation = axisSetting.axisOptions.chartAxesOptions.TextAngle
 					},
-					drawingParagraph = new DrawingParagraphModel()
+					drawingParagraph = new DrawingParagraphModel<SolidOptions>()
 					{
-						paragraphPropertiesModel = new ParagraphPropertiesModel()
+						paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
 						{
-							defaultRunProperties = new DefaultRunPropertiesModel()
+							defaultRunProperties = new DefaultRunPropertiesModel<SolidOptions>()
 							{
-								solidFill = solidFillModel,
+								textColorOption = textColorOption,
 								fontSize = ConverterUtils.FontSizeToFontSize(axisSetting.axisOptions.chartAxesOptions.fontSize),
 								isBold = axisSetting.axisOptions.chartAxesOptions.isBold,
 								isItalic = axisSetting.axisOptions.chartAxesOptions.isItalic,
@@ -563,7 +569,7 @@ namespace OpenXMLOffice.Global_2007
 			return new C.BackWall()
 			{
 				Thickness = new C.Thickness() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel()
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()
 				{
 					shapeProperty3D = new ShapeProperty3D()
 				}),
@@ -574,7 +580,7 @@ namespace OpenXMLOffice.Global_2007
 			return new C.SideWall()
 			{
 				Thickness = new C.Thickness() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel()
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()
 				{
 					shapeProperty3D = new ShapeProperty3D()
 				}),
@@ -585,7 +591,7 @@ namespace OpenXMLOffice.Global_2007
 			return new C.Floor()
 			{
 				Thickness = new C.Thickness() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel()
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()
 				{
 					shapeProperty3D = new ShapeProperty3D()
 				}),
@@ -633,21 +639,24 @@ namespace OpenXMLOffice.Global_2007
 			legend.Append(new C.LegendPosition() { Val = legendPositionValue });
 			legend.Append(new C.Overlay { Val = chartLegendOptions.isLegendChartOverLap });
 			legend.Append(CreateChartShapeProperties());
-			SolidFillModel solidFillModel = new SolidFillModel()
+			ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 			{
-				schemeColorModel = new SchemeColorModel()
+				colorOption = new SolidOptions()
 				{
-					themeColorValues = ThemeColorValues.TEXT_1,
-					luminanceModulation = 65000,
-					luminanceOffset = 35000
+					schemeColorModel = new SchemeColorModel()
+					{
+						themeColorValues = ThemeColorValues.TEXT_1,
+						luminanceModulation = 65000,
+						luminanceOffset = 35000
+					}
 				}
 			};
 			if (chartLegendOptions.fontColor != null)
 			{
-				solidFillModel.hexColor = chartLegendOptions.fontColor;
-				solidFillModel.schemeColorModel = null;
+				textColorOption.colorOption.hexColor = chartLegendOptions.fontColor;
+				textColorOption.colorOption.schemeColorModel = null;
 			}
-			legend.Append(CreateChartTextProperties(new ChartTextPropertiesModel()
+			legend.Append(CreateChartTextProperties(new ChartTextPropertiesModel<SolidOptions>()
 			{
 				drawingBodyProperties = new DrawingBodyPropertiesModel()
 				{
@@ -659,13 +668,13 @@ namespace OpenXMLOffice.Global_2007
 					anchor = TextAnchoringValues.CENTER,
 					anchorCenter = true,
 				},
-				drawingParagraph = new DrawingParagraphModel()
+				drawingParagraph = new DrawingParagraphModel<SolidOptions>()
 				{
-					paragraphPropertiesModel = new ParagraphPropertiesModel()
+					paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
 					{
-						defaultRunProperties = new DefaultRunPropertiesModel()
+						defaultRunProperties = new DefaultRunPropertiesModel<SolidOptions>()
 						{
-							solidFill = solidFillModel,
+							textColorOption = textColorOption,
 							complexScriptFont = "+mn-cs",
 							eastAsianFont = "+mn-ea",
 							latinFont = "+mn-lt",
@@ -720,17 +729,20 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.MajorGridlines CreateMajorGridLine()
 		{
-			return new C.MajorGridlines(CreateChartShapeProperties(new ShapePropertiesModel()
+			return new C.MajorGridlines(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
 			{
-				outline = new OutlineModel()
+				lineColor = new OutlineModel<SolidOptions>()
 				{
-					solidFill = new SolidFillModel()
+					lineColor = new ColorOptionModel<SolidOptions>()
 					{
-						schemeColorModel = new SchemeColorModel()
+						colorOption = new SolidOptions()
 						{
-							themeColorValues = ThemeColorValues.TEXT_1,
-							luminanceModulation = 15000,
-							luminanceOffset = 85000
+							schemeColorModel = new SchemeColorModel()
+							{
+								themeColorValues = ThemeColorValues.TEXT_1,
+								luminanceModulation = 15000,
+								luminanceOffset = 85000
+							}
 						}
 					},
 					width = 9525,
@@ -742,17 +754,20 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.MinorGridlines CreateMinorGridLine()
 		{
-			return new C.MinorGridlines(CreateChartShapeProperties(new ShapePropertiesModel()
+			return new C.MinorGridlines(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
 			{
-				outline = new OutlineModel()
+				lineColor = new OutlineModel<SolidOptions>()
 				{
-					solidFill = new SolidFillModel()
+					lineColor = new ColorOptionModel<SolidOptions>()
 					{
-						schemeColorModel = new SchemeColorModel()
+						colorOption = new SolidOptions()
 						{
-							themeColorValues = ThemeColorValues.TEXT_1,
-							luminanceModulation = 5000,
-							luminanceOffset = 95000
+							schemeColorModel = new SchemeColorModel()
+							{
+								themeColorValues = ThemeColorValues.TEXT_1,
+								luminanceModulation = 5000,
+								luminanceOffset = 95000
+							}
 						}
 					},
 					width = 9525,
@@ -764,19 +779,22 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.Title CreateTitle(ChartTitleModel titleModel)
 		{
-			SolidFillModel solidFillModel = new SolidFillModel()
+			ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 			{
-				schemeColorModel = new SchemeColorModel()
+				colorOption = new SolidOptions()
 				{
-					themeColorValues = ThemeColorValues.TEXT_1
+					schemeColorModel = new SchemeColorModel()
+					{
+						themeColorValues = ThemeColorValues.TEXT_1
+					}
 				}
 			};
 			if (titleModel.fontColor != null)
 			{
-				solidFillModel.hexColor = titleModel.fontColor;
-				solidFillModel.schemeColorModel = null;
+				textColorOption.colorOption.hexColor = titleModel.fontColor;
+				textColorOption.colorOption.schemeColorModel = null;
 			}
-			C.Title title = new C.Title(new C.ChartText(CreateChartRichText(new ChartTextPropertiesModel()
+			C.Title title = new C.Title(new C.ChartText(CreateChartRichText(new ChartTextPropertiesModel<SolidOptions>()
 			{
 				drawingBodyProperties = new DrawingBodyPropertiesModel()
 				{
@@ -788,16 +806,16 @@ namespace OpenXMLOffice.Global_2007
 					wrap = TextWrappingValues.SQUARE,
 					rotation = titleModel.TextAngle,
 				},
-				drawingParagraph = new DrawingParagraphModel()
+				drawingParagraph = new DrawingParagraphModel<SolidOptions>()
 				{
-					paragraphPropertiesModel = new ParagraphPropertiesModel(),
-					drawingRuns = new List<DrawingRunModel>()
+					paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>(),
+					drawingRuns = new List<DrawingRunModel<SolidOptions>>()
 					{
-						new DrawingRunModel(){
+						new DrawingRunModel<SolidOptions>(){
 						text = titleModel.textValue,
-						drawingRunProperties = new DrawingRunPropertiesModel()
+						drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
 						{
-							solidFill = solidFillModel,
+							textColorOption = textColorOption,
 							fontSize = titleModel.fontSize,
 							isBold = titleModel.isBold,
 							isItalic = titleModel.isItalic,
@@ -814,11 +832,13 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal static C.Marker CreateMarker(MarkerModel marketModel)
+		internal static C.Marker CreateMarker<LineColorOption, FillColorOption>(MarkerModel<LineColorOption, FillColorOption> marketModel)
+		where LineColorOption : class, IColorOptions, new()
+		where FillColorOption : class, IColorOptions, new()
 		{
 			C.Marker marker = new C.Marker()
 			{
-				Symbol = new C.Symbol() { Val = MarkerModel.GetMarkerStyleValues(marketModel.markerShapeType) },
+				Symbol = new C.Symbol() { Val = MarkerModel<LineColorOption, FillColorOption>.GetMarkerStyleValues(marketModel.markerShapeType) },
 			};
 			if (marketModel.markerShapeType != MarkerShapeTypes.NONE)
 			{
@@ -833,13 +853,13 @@ namespace OpenXMLOffice.Global_2007
 			{
 				TrendlineName = new C.TrendlineName(trendLineModel.trendLineName)
 			};
-			trendLine.Append(CreateChartShapeProperties(new ShapePropertiesModel()
+			trendLine.Append(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
 			{
-				outline = new OutlineModel()
+				lineColor = new OutlineModel<SolidOptions>()
 				{
 					width = 19050,
 					outlineCapTypeValues = OutlineCapTypeValues.ROUND,
-					solidFill = trendLineModel.solidFill,
+					lineColor = trendLineModel.solidFill,
 					dashType = trendLineModel.drawingPresetLineDashValues,
 				},
 				effectList = new EffectListModel()

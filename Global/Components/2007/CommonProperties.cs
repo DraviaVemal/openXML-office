@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 namespace OpenXMLOffice.Global_2007
@@ -373,55 +374,61 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Create Solid Fill XML Property
 		/// </summary>
-		protected static A.SolidFill CreateSolidFill(SolidFillModel solidFillModel)
+		protected static OpenXmlElement CreateColorComponent<ColorOption>(ColorOptionModel<ColorOption> colorOptionModel = null)
+		where ColorOption : class, IColorOptions, new()
 		{
-			if (solidFillModel.hexColor == null && solidFillModel.schemeColorModel == null)
+			if (colorOptionModel != null && typeof(ColorOption) == typeof(SolidOptions))
 			{
-				throw new ArgumentException("Solid Fill Color Error");
+				SolidOptions solidOptions = (colorOptionModel as ColorOptionModel<SolidOptions>).colorOption;
+				if (solidOptions.hexColor == null && solidOptions.schemeColorModel == null)
+				{
+					throw new ArgumentException("Solid Fill Color Error");
+				}
+				if (solidOptions.hexColor != null)
+				{
+					A.RgbColorModelHex rgbColorModelHex = new A.RgbColorModelHex() { Val = solidOptions.hexColor };
+					if (solidOptions.transparency != null)
+					{
+						rgbColorModelHex.Append(new A.Alpha() { Val = 100000 - (solidOptions.transparency * 1000) });
+					}
+					return new A.SolidFill() { RgbColorModelHex = rgbColorModelHex };
+				}
+				else
+				{
+					A.SchemeColor schemeColor = new A.SchemeColor()
+					{ Val = new A.SchemeColorValues(GetSchemeColorValuesText(solidOptions.schemeColorModel.themeColorValues)) };
+					if (solidOptions.transparency != null)
+					{
+						schemeColor.Append(new A.Alpha() { Val = 100000 - (solidOptions.transparency * 1000) });
+					}
+					if (solidOptions.schemeColorModel.tint != null)
+					{
+						schemeColor.Append(new A.Tint() { Val = solidOptions.schemeColorModel.tint });
+					}
+					if (solidOptions.schemeColorModel.shade != null)
+					{
+						schemeColor.Append(new A.Shade() { Val = solidOptions.schemeColorModel.shade });
+					}
+					if (solidOptions.schemeColorModel.saturationModulation != null)
+					{
+						schemeColor.Append(new A.SaturationModulation() { Val = solidOptions.schemeColorModel.saturationModulation });
+					}
+					if (solidOptions.schemeColorModel.saturationOffset != null)
+					{
+						schemeColor.Append(new A.SaturationOffset() { Val = solidOptions.schemeColorModel.saturationOffset });
+					}
+					if (solidOptions.schemeColorModel.luminanceModulation != null)
+					{
+						schemeColor.Append(new A.LuminanceModulation() { Val = solidOptions.schemeColorModel.luminanceModulation });
+					}
+					if (solidOptions.schemeColorModel.luminanceOffset != null)
+					{
+						schemeColor.Append(new A.LuminanceOffset() { Val = solidOptions.schemeColorModel.luminanceOffset });
+					}
+					return new A.SolidFill(schemeColor);
+				}
 			}
-			if (solidFillModel.hexColor != null)
-			{
-				A.RgbColorModelHex rgbColorModelHex = new A.RgbColorModelHex() { Val = solidFillModel.hexColor };
-				if (solidFillModel.transparency != null)
-				{
-					rgbColorModelHex.Append(new A.Alpha() { Val = 100000 - (solidFillModel.transparency * 1000) });
-				}
-				return new A.SolidFill() { RgbColorModelHex = rgbColorModelHex };
-			}
-			else
-			{
-				A.SchemeColor schemeColor = new A.SchemeColor()
-				{ Val = new A.SchemeColorValues(GetSchemeColorValuesText(solidFillModel.schemeColorModel.themeColorValues)) };
-				if (solidFillModel.transparency != null)
-				{
-					schemeColor.Append(new A.Alpha() { Val = 100000 - (solidFillModel.transparency * 1000) });
-				}
-				if (solidFillModel.schemeColorModel.tint != null)
-				{
-					schemeColor.Append(new A.Tint() { Val = solidFillModel.schemeColorModel.tint });
-				}
-				if (solidFillModel.schemeColorModel.shade != null)
-				{
-					schemeColor.Append(new A.Shade() { Val = solidFillModel.schemeColorModel.shade });
-				}
-				if (solidFillModel.schemeColorModel.saturationModulation != null)
-				{
-					schemeColor.Append(new A.SaturationModulation() { Val = solidFillModel.schemeColorModel.saturationModulation });
-				}
-				if (solidFillModel.schemeColorModel.saturationOffset != null)
-				{
-					schemeColor.Append(new A.SaturationOffset() { Val = solidFillModel.schemeColorModel.saturationOffset });
-				}
-				if (solidFillModel.schemeColorModel.luminanceModulation != null)
-				{
-					schemeColor.Append(new A.LuminanceModulation() { Val = solidFillModel.schemeColorModel.luminanceModulation });
-				}
-				if (solidFillModel.schemeColorModel.luminanceOffset != null)
-				{
-					schemeColor.Append(new A.LuminanceOffset() { Val = solidFillModel.schemeColorModel.luminanceOffset });
-				}
-				return new A.SolidFill(schemeColor);
-			}
+			return new A.NoFill();
 		}
 		/// <summary>
 		/// Create Shape Properties With Default Settings
@@ -429,24 +436,19 @@ namespace OpenXMLOffice.Global_2007
 		/// <returns></returns>
 		protected C.ShapeProperties CreateChartShapeProperties()
 		{
-			return CreateChartShapeProperties(new ShapePropertiesModel());
+			return CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>());
 		}
 		/// <summary>
 		/// Create Shape Properties
 		/// </summary>
 		/// <returns></returns>
-		protected static C.ShapeProperties CreateChartShapeProperties(ShapePropertiesModel shapePropertiesModel)
+		protected static C.ShapeProperties CreateChartShapeProperties<LineColorOption, FillColorOption>(ShapePropertiesModel<LineColorOption, FillColorOption> shapePropertiesModel)
+		where LineColorOption : class, IColorOptions, new()
+		where FillColorOption : class, IColorOptions, new()
 		{
 			C.ShapeProperties shapeProperties = new C.ShapeProperties();
-			if (shapePropertiesModel.solidFill != null)
-			{
-				shapeProperties.Append(CreateSolidFill(shapePropertiesModel.solidFill));
-			}
-			else
-			{
-				shapeProperties.Append(new A.NoFill());
-			}
-			shapeProperties.Append(CreateOutline(shapePropertiesModel.outline));
+			shapeProperties.Append(CreateColorComponent(shapePropertiesModel.fillColor));
+			shapeProperties.Append(CreateOutline(shapePropertiesModel.lineColor));
 			if (shapePropertiesModel.effectList != null)
 			{
 				shapeProperties.Append(CreateEffectList(shapePropertiesModel.effectList));
@@ -471,7 +473,8 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Create Outline
 		/// </summary>
-		protected static A.Outline CreateOutline(OutlineModel outlineModel)
+		protected static A.Outline CreateOutline<LineColorOption>(OutlineModel<LineColorOption> outlineModel)
+		where LineColorOption : class, IColorOptions, new()
 		{
 			A.Outline outline = new A.Outline();
 			if (outlineModel.width != null)
@@ -490,14 +493,10 @@ namespace OpenXMLOffice.Global_2007
 			{
 				outline.Alignment = GetLineAlignmentValues((OutlineAlignmentValues)outlineModel.outlineAlignmentValues);
 			}
-			if (outlineModel.solidFill != null)
+			outline.Append(CreateColorComponent(outlineModel.lineColor));
+			if (outlineModel.lineColor != null)
 			{
-				outline.Append(CreateSolidFill(outlineModel.solidFill));
 				outline.Append(new A.Round());
-			}
-			else
-			{
-				outline.Append(new A.NoFill());
 			}
 			if (outlineModel.dashType != null)
 			{
@@ -522,14 +521,16 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Create Default Run Properties
 		/// </summary>
-		protected static A.DefaultRunProperties CreateDefaultRunProperties()
+		protected static A.DefaultRunProperties CreateDefaultRunProperties<TextColorOption>()
+		where TextColorOption : class, IColorOptions, new()
 		{
-			return CreateDefaultRunProperties(new DefaultRunPropertiesModel());
+			return CreateDefaultRunProperties(new DefaultRunPropertiesModel<TextColorOption>());
 		}
 		/// <summary>
 		///     Create Default Run Properties
 		/// </summary>
-		protected static A.DefaultRunProperties CreateDefaultRunProperties(DefaultRunPropertiesModel defaultRunPropertiesModel)
+		protected static A.DefaultRunProperties CreateDefaultRunProperties<TextColorOption>(DefaultRunPropertiesModel<TextColorOption> defaultRunPropertiesModel)
+		where TextColorOption : class, IColorOptions, new()
 		{
 			A.DefaultRunProperties defaultRunProperties = new A.DefaultRunProperties
 			{
@@ -539,9 +540,9 @@ namespace OpenXMLOffice.Global_2007
 				Underline = GetTextUnderlineValues(defaultRunPropertiesModel.underLineValues),
 				Strike = GetTextStrikeValues(defaultRunPropertiesModel.strikeValues)
 			};
-			if (defaultRunPropertiesModel.solidFill != null)
+			if (defaultRunPropertiesModel.textColorOption != null)
 			{
-				defaultRunProperties.Append(CreateSolidFill(defaultRunPropertiesModel.solidFill));
+				defaultRunProperties.Append(CreateColorComponent(defaultRunPropertiesModel.textColorOption));
 			}
 			if (defaultRunPropertiesModel.latinFont != null)
 			{
@@ -568,7 +569,8 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		protected A.Paragraph CreateDrawingParagraph(DrawingParagraphModel drawingParagraphModel)
+		protected A.Paragraph CreateDrawingParagraph<TextColorOption>(DrawingParagraphModel<TextColorOption> drawingParagraphModel)
+		where TextColorOption : class, IColorOptions, new()
 		{
 			A.Paragraph paragraph = new A.Paragraph();
 			if (drawingParagraphModel.paragraphPropertiesModel != null)
@@ -591,7 +593,8 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		private static A.ParagraphProperties CreateDrawingParagraphProperties(ParagraphPropertiesModel paragraphPropertiesModel)
+		private static A.ParagraphProperties CreateDrawingParagraphProperties<TextColorOption>(ParagraphPropertiesModel<TextColorOption> paragraphPropertiesModel)
+		where TextColorOption : class, IColorOptions, new()
 		{
 			A.ParagraphProperties paragraphProperties = new A.ParagraphProperties();
 			if (paragraphPropertiesModel.defaultRunProperties != null)
@@ -614,7 +617,8 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///     Create Chart Text Properties
 		/// </summary>
-		protected C.TextProperties CreateChartTextProperties(ChartTextPropertiesModel chartTextPropertiesModel)
+		protected C.TextProperties CreateChartTextProperties<TextColorOption>(ChartTextPropertiesModel<TextColorOption> chartTextPropertiesModel)
+		where TextColorOption : class, IColorOptions, new()
 		{
 			C.TextProperties textProperties = new C.TextProperties();
 			if (chartTextPropertiesModel.drawingBodyProperties != null)
@@ -631,7 +635,8 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		protected C.RichText CreateChartRichText(ChartTextPropertiesModel chartTextPropertiesModel)
+		protected C.RichText CreateChartRichText<TextColorOption>(ChartTextPropertiesModel<TextColorOption> chartTextPropertiesModel)
+		where TextColorOption : class, IColorOptions, new()
 		{
 			C.RichText richText = new C.RichText();
 			if (chartTextPropertiesModel.drawingBodyProperties != null)
@@ -648,10 +653,11 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		protected static A.Run[] CreateDrawingRun(DrawingRunModel[] drawingRunModels)
+		protected static A.Run[] CreateDrawingRun<TextColorOption>(DrawingRunModel<TextColorOption>[] drawingRunModels)
+		where TextColorOption : class, IColorOptions, new()
 		{
 			List<A.Run> runs = new List<A.Run>();
-			foreach (DrawingRunModel drawingRunModel in drawingRunModels)
+			foreach (DrawingRunModel<TextColorOption> drawingRunModel in drawingRunModels)
 			{
 				A.Run run = new A.Run(CreateDrawingRunProperties(drawingRunModel.drawingRunProperties));
 				if (drawingRunModel.text != null)
@@ -669,7 +675,8 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		///
 		/// </summary>
-		protected static A.RunProperties CreateDrawingRunProperties(DrawingRunPropertiesModel drawingRunPropertiesModel)
+		protected static A.RunProperties CreateDrawingRunProperties<TextColorOption>(DrawingRunPropertiesModel<TextColorOption> drawingRunPropertiesModel)
+		where TextColorOption : class, IColorOptions, new()
 		{
 			A.RunProperties runProperties = new A.RunProperties
 			{
@@ -683,9 +690,9 @@ namespace OpenXMLOffice.Global_2007
 			{
 				runProperties.Append(CreateHyperLink(drawingRunPropertiesModel.hyperlinkProperties));
 			}
-			if (drawingRunPropertiesModel.solidFill != null)
+			if (drawingRunPropertiesModel.textColorOption != null)
 			{
-				runProperties.Append(CreateSolidFill(drawingRunPropertiesModel.solidFill));
+				runProperties.Append(CreateColorComponent(drawingRunPropertiesModel.textColorOption));
 			}
 			if (drawingRunPropertiesModel.fontFamily != null)
 			{

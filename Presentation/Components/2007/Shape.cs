@@ -170,25 +170,28 @@ namespace OpenXMLOffice.Presentation_2007
 				if (paragraph != null)
 				{
 					paragraph.RemoveAllChildren<A.Run>();
-					SolidFillModel solidFillModel = new SolidFillModel()
+					ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 					{
-						schemeColorModel = new SchemeColorModel()
+						colorOption = new SolidOptions()
 						{
-							themeColorValues = ThemeColorValues.TEXT_1
+							schemeColorModel = new SchemeColorModel()
+							{
+								themeColorValues = ThemeColorValues.TEXT_1
+							}
 						}
 					};
 					if (shapeTextModel.fontColor != null)
 					{
-						solidFillModel.hexColor = shapeTextModel.fontColor;
-						solidFillModel.schemeColorModel = null;
+						textColorOption.colorOption.hexColor = shapeTextModel.fontColor;
+						textColorOption.colorOption.schemeColorModel = null;
 					}
-					paragraph.Append(CreateDrawingRun(new List<DrawingRunModel>()
+					paragraph.Append(CreateDrawingRun(new List<DrawingRunModel<SolidOptions>>()
 					{
-						new DrawingRunModel(){
+						new DrawingRunModel<SolidOptions>(){
 							text = shapeTextModel.textValue,
-						drawingRunProperties = new DrawingRunPropertiesModel()
+						drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
 						{
-							solidFill = solidFillModel,
+							textColorOption = textColorOption,
 							fontFamily = shapeTextModel.fontFamily,
 							fontSize = shapeTextModel.fontSize,
 							isBold = shapeTextModel.isBold,
