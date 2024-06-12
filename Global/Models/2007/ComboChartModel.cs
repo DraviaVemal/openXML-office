@@ -27,10 +27,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public void AddComboChartsSetting(AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
 		{
-			if (CheckSecondaryAxisAlreadyUsed())
-			{
-				throw new ArgumentException("Secondary Axis is already used in another series");
-			}
 			ComboChartsSettingList.Add(areaChartSetting);
 		}
 		/// <summary>
@@ -38,10 +34,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public void AddComboChartsSetting(BarChartSetting<ApplicationSpecificSetting> barChartSetting)
 		{
-			if (CheckSecondaryAxisAlreadyUsed())
-			{
-				throw new ArgumentException("Secondary Axis is already used in another series");
-			}
 			ComboChartsSettingList.Add(barChartSetting);
 		}
 		/// <summary>
@@ -49,10 +41,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public void AddComboChartsSetting(ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
 		{
-			if (CheckSecondaryAxisAlreadyUsed())
-			{
-				throw new ArgumentException("Secondary Axis is already used in another series");
-			}
 			ComboChartsSettingList.Add(columnChartSetting);
 		}
 		/// <summary>
@@ -60,10 +48,6 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public void AddComboChartsSetting(LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
 		{
-			if (CheckSecondaryAxisAlreadyUsed())
-			{
-				throw new ArgumentException("Secondary Axis is already used in another series");
-			}
 			ComboChartsSettingList.Add(lineChartSetting);
 		}
 		/// <summary>
@@ -71,19 +55,11 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public void AddComboChartsSetting(PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
 		{
-			if (CheckSecondaryAxisAlreadyUsed())
-			{
-				throw new ArgumentException("Secondary Axis is already used in another series");
-			}
 			ComboChartsSettingList.Add(pieChartSetting);
 		}
 		/// <summary>
 		/// The options for the axis of the chart.
 		/// </summary>
 		public ChartAxisOptions<XAxisType, YAxisType, ZAxisType> chartAxisOptions = new ChartAxisOptions<XAxisType, YAxisType, ZAxisType>();
-		private bool CheckSecondaryAxisAlreadyUsed()
-		{
-			return ComboChartsSettingList.Select(val => ((ChartSetting<ApplicationSpecificSetting>)val).isSecondaryAxis).Count(v => v) > 1;
-		}
 	}
 }

@@ -187,6 +187,23 @@ namespace OpenXMLOffice.Presentation_2007
 				return new Shape(shape);
 			});
 		}
+		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape InsertShape(ShapeModel shapeModel)
+		{
+			P.Shape openXmlShape = new P.Shape();
+			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
+			Shape shape = new Shape(openXmlShape);
+			return shape.AddShape(shapeModel);
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool ExtractSlideIntoExcel()
+		{
+			return false;
+		}
 		internal string GetNextSlideRelationId()
 		{
 			int nextId = GetSlidePart().Parts.Count() + GetSlidePart().ExternalRelationships.Count() + GetSlidePart().HyperlinkRelationships.Count() + GetSlidePart().DataPartReferenceRelationships.Count();

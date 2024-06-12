@@ -30,6 +30,11 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 		}
 
+		internal Shape AddShape(ShapeModel shapeModel)
+		{
+			return this;
+		}
+
 		/// <summary>
 		/// Replace Chart for the source Shape
 		/// </summary>
