@@ -25,13 +25,18 @@
 		<ProjectReference Include="..\Presentation\Presentation.csproj" />
 		<ProjectReference Include="..\Document/Document.csproj" />
 	</ItemGroup>
+	<ItemGroup> 
+		<Content Include="assets\**"> 
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+		</Content> 
+	  </ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-			<CopyCommand>xcopy /E /I /Y</CopyCommand>
+			<CopyCommand>xcopy /E /I /Y /S</CopyCommand>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
 			<CopyCommand>cp -r </CopyCommand>
 		</PropertyGroup>
-		<Exec Command="$(CopyCommand) $(ProjectDir)TestFiles $(TargetDir)TestFiles" />
+		<Exec Command="$(CopyCommand) &quot;$(ProjectDir)TestFiles&quot; &quot;$(TargetDir)TestFiles&quot;" />
 	</Target>
 </Project>

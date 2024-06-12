@@ -401,7 +401,8 @@ namespace OpenXMLOffice.Tests
 				{
 					dataLabelPosition = G.PieChartDataLabel.DataLabelPositionValues.SHOW,
 					showCategoryName = true,
-					showValue = true,
+					showValue = false,
+					showPercentage = true,
 					separator = ". "
 				}
 			});

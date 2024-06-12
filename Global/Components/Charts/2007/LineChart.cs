@@ -149,6 +149,10 @@ namespace OpenXMLOffice.Global_2007
 				{
 					outlineModel.lineEndWidth = lineChartLineFormat.lineEndWidth;
 				}
+				if (lineChartLineFormat.transparency != null)
+				{
+					outlineModel.lineColor.colorOption.transparency = (int)lineChartLineFormat.transparency;
+				}
 			}
 			ShapePropertiesModel<SolidOptions, NoOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, NoOptions>()
 			{

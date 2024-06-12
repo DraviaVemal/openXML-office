@@ -162,7 +162,7 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.DataLabels CreatePieDataLabels(PieChartDataLabel pieChartDataLabel, int? dataLabelCounter = 0)
 		{
-			if (pieChartDataLabel.showValue || pieChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || pieChartDataLabel.showCategoryName || pieChartDataLabel.showLegendKey || pieChartDataLabel.showSeriesName)
+			if (pieChartDataLabel.showValue || pieChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || pieChartDataLabel.showCategoryName || pieChartDataLabel.showLegendKey || pieChartDataLabel.showSeriesName || pieChartDataLabel.showPercentage)
 			{
 				C.DataLabels dataLabels = CreateDataLabels(pieChartDataLabel, dataLabelCounter);
 				if (pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT &&

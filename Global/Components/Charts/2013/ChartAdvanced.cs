@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Global_2013
 						new C.ShowValue { Val = chartDataLabel.showValue },
 						new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
 						new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
-						new C.ShowPercent() { Val = true },
+						new C.ShowPercent() { Val = chartDataLabel.showPercentage },
 						new C.ShowBubbleSize() { Val = true },
 						new C.Separator(chartDataLabel.separator),
 						(OpenXmlElement)extensionList.Clone()
@@ -79,7 +79,7 @@ namespace OpenXMLOffice.Global_2013
 				new C.ShowValue { Val = chartDataLabel.showValue },
 				new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
 				new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
-				new C.ShowPercent { Val = false },
+				new C.ShowPercent { Val = chartDataLabel.showPercentage },
 				new C.ShowBubbleSize() { Val = true },
 				new C.Separator(chartDataLabel.separator),
 				new C.ShowLeaderLines() { Val = false },
