@@ -21,7 +21,7 @@
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="LiteDB" Version="5.0.17" />
+		<PackageReference Include="LiteDB" Version="5.0.20" />
 		<PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
 		<PackageReference Include="DocumentFormat.OpenXml.Linq" Version="3.0.2" />
 	</ItemGroup>
