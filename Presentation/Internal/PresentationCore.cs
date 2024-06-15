@@ -137,7 +137,7 @@ namespace OpenXMLOffice.Presentation_2007
 			SlideLayout slideLayout = new SlideLayout();
 			if (presentationDocument.CoreFilePropertiesPart == null)
 			{
-				presentationDocument.AddCoreFilePropertiesPart();
+				var unused8 = presentationDocument.AddCoreFilePropertiesPart();
 				using (Stream stream = presentationDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
 				{
 					CoreProperties.AddCoreProperties(stream, powerPointProperties.coreProperties);
@@ -160,23 +160,23 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (presentationPart.Presentation.GetFirstChild<P.SlideMasterIdList>() == null)
 			{
-				presentationPart.Presentation.AppendChild(new P.SlideMasterIdList());
+				var unused7 = presentationPart.Presentation.AppendChild(new P.SlideMasterIdList());
 			}
 			if (presentationPart.Presentation.SlideIdList == null)
 			{
-				presentationPart.Presentation.AppendChild(new P.SlideIdList());
+				var unused6 = presentationPart.Presentation.AppendChild(new P.SlideIdList());
 			}
 			if (presentationPart.Presentation.GetFirstChild<P.SlideSize>() == null)
 			{
-				presentationPart.Presentation.AppendChild(new P.SlideSize { Cx = 12192000, Cy = 6858000 });
+				var unused5 = presentationPart.Presentation.AppendChild(new P.SlideSize { Cx = 12192000, Cy = 6858000 });
 			}
 			if (presentationPart.Presentation.GetFirstChild<P.NotesSize>() == null)
 			{
-				presentationPart.Presentation.AppendChild(new P.NotesSize { Cx = 6858000, Cy = 6858000 });
+				var unused4 = presentationPart.Presentation.AppendChild(new P.NotesSize { Cx = 6858000, Cy = 6858000 });
 			}
 			if (presentationPart.Presentation.GetFirstChild<P.DefaultTextStyle>() == null)
 			{
-				presentationPart.Presentation.AppendChild(CreateDefaultTextStyle());
+				var unused3 = presentationPart.Presentation.AppendChild(CreateDefaultTextStyle());
 			}
 			if (presentationPart.ViewPropertiesPart == null)
 			{
@@ -203,7 +203,7 @@ namespace OpenXMLOffice.Presentation_2007
 				SlideLayoutPart slideLayoutPart = slideMasterPart.AddNewPart<SlideLayoutPart>(GetNextPresentationRelationId());
 				slideMaster.AddSlideLayoutIdToList(slideMasterPart.GetIdOfPart(slideLayoutPart));
 				slideLayoutPart.SlideLayout = slideLayout.GetSlideLayout();
-				slideLayout.UpdateRelationship(slideMasterPart, presentationPart.GetIdOfPart(slideMasterPart));
+				var unused2 = slideLayout.UpdateRelationship(slideMasterPart, presentationPart.GetIdOfPart(slideMasterPart));
 				slideLayoutPart.SlideLayout.Save();
 				slideMasterPart.SlideMaster.Save();
 			}
@@ -230,14 +230,14 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (presentationPart.ThemePart == null)
 			{
-				presentationPart.AddNewPart<ThemePart>(GetNextPresentationRelationId());
+				var unused1 = presentationPart.AddNewPart<ThemePart>(GetNextPresentationRelationId());
 			}
 			if (presentationPart.ThemePart.Theme == null)
 			{
 				Theme theme = new Theme(powerPointProperties.theme);
 				presentationPart.ThemePart.Theme = theme.GetTheme();
 			}
-			slideMaster.UpdateRelationship(presentationPart.ThemePart, presentationPart.GetIdOfPart(presentationPart.ThemePart));
+			var unused = slideMaster.UpdateRelationship(presentationPart.ThemePart, presentationPart.GetIdOfPart(presentationPart.ThemePart));
 			presentationPart.Presentation.Save();
 		}
 	}

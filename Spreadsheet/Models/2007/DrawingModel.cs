@@ -72,7 +72,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class TwoCellAnchorModel
+	public class TwoCellAnchorModel<TextColorOption>
+	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
 		///
@@ -97,7 +98,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public ShapeModel shapeModel;
+		public ShapeModel<TextColorOption> shapeModel;
 		/// <summary>
 		///
 		/// </summary>

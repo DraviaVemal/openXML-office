@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties : CommonProperties
+	public class ChartProperties : PresentationCommonProperties
 	{
 		/// <summary>
 		///
@@ -150,7 +150,7 @@ namespace OpenXMLOffice.Presentation_2007
 			};
 			if (hyperlinkProperties != null)
 			{
-				nonVisualProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
+				var unused = nonVisualProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
 			}
 			graphicFrame = new P.GraphicFrame()
 			{

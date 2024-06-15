@@ -18,10 +18,10 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLViewProperties.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 			openXMLViewProperties.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			openXMLViewProperties.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
-			openXMLViewProperties.AppendChild(CreateNormalViewProperties());
-			openXMLViewProperties.AppendChild(CreateSlideViewProperties());
-			openXMLViewProperties.AppendChild(CreateNotesTextViewProperties());
-			openXMLViewProperties.AppendChild(new P.GridSpacing()
+			var unused3 = openXMLViewProperties.AppendChild(CreateNormalViewProperties());
+			var unused2 = openXMLViewProperties.AppendChild(CreateSlideViewProperties());
+			var unused1 = openXMLViewProperties.AppendChild(CreateNotesTextViewProperties());
+			var unused = openXMLViewProperties.AppendChild(new P.GridSpacing()
 			{
 				Cx = 72008,
 				Cy = 72008

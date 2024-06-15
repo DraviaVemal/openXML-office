@@ -207,9 +207,9 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private void InitializeChartParts()
 		{
-			GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
-			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
-			GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
+			var unused2 = GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
+			var unused1 = GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
+			var unused = GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
 		}
 	}
 }

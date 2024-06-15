@@ -16,7 +16,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		public void AddSlideLayoutIdToList(string relationshipId)
 		{
-			slideLayoutIdList.AppendChild(new P.SlideLayoutId()
+			var unused = slideLayoutIdList.AppendChild(new P.SlideLayoutId()
 			{
 				Id = (uint)(2147483649 + slideLayoutIdList.Count() + 1),
 				RelationshipId = relationshipId
@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLSlideMaster.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 			openXMLSlideMaster.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			openXMLSlideMaster.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
-			openXMLSlideMaster.AppendChild(new P.ColorMap()
+			var unused2 = openXMLSlideMaster.AppendChild(new P.ColorMap()
 			{
 				Accent1 = A.ColorSchemeIndexValues.Accent1,
 				Accent2 = A.ColorSchemeIndexValues.Accent2,
@@ -56,8 +56,8 @@ namespace OpenXMLOffice.Presentation_2007
 				Hyperlink = A.ColorSchemeIndexValues.Hyperlink,
 				FollowedHyperlink = A.ColorSchemeIndexValues.FollowedHyperlink
 			});
-			openXMLSlideMaster.AppendChild(slideLayoutIdList);
-			openXMLSlideMaster.AppendChild(CreateTextStyles());
+			var unused1 = openXMLSlideMaster.AppendChild(slideLayoutIdList);
+			var unused = openXMLSlideMaster.AppendChild(CreateTextStyles());
 		}
 		private static P.TextStyles CreateTextStyles()
 		{

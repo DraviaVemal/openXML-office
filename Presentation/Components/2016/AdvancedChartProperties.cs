@@ -44,7 +44,7 @@ namespace OpenXMLOffice.Presentation_2016
 			};
 			if (hyperlinkProperties != null)
 			{
-				nonVisualProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
+				var unused = nonVisualProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
 			}
 			graphicFrame = new P.GraphicFrame()
 			{

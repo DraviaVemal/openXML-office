@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Picture Import Class
 	/// </summary>
-	public class Picture : CommonProperties
+	public class Picture : PresentationCommonProperties
 	{
 		private readonly Slide currentSlide;
 		private readonly P.Picture openXMLPicture;
@@ -71,13 +71,13 @@ namespace OpenXMLOffice.Presentation_2007
 					case HyperlinkPropertyTypeValues.EXISTING_FILE:
 						pictureSetting.hyperlinkProperties.relationId = relationId;
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinkfile";
-						slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
+						var unused2 = slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
 					case HyperlinkPropertyTypeValues.TARGET_SLIDE:
 						pictureSetting.hyperlinkProperties.relationId = relationId;
 						pictureSetting.hyperlinkProperties.action = "ppaction://hlinksldjump";
 						//TODO: Update Target Slide Prop
-						slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
+						var unused1 = slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
 					case HyperlinkPropertyTypeValues.TARGET_SHEET:
 						throw new ArgumentException("This Option is valid only for Excel Files");
@@ -95,7 +95,7 @@ namespace OpenXMLOffice.Presentation_2007
 						break;
 					default:// Web URL
 						pictureSetting.hyperlinkProperties.relationId = relationId;
-						slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
+						var unused = slide.GetSlidePart().AddHyperlinkRelationship(new Uri(pictureSetting.hyperlinkProperties.value), true, relationId);
 						break;
 				}
 			}
@@ -172,7 +172,7 @@ namespace OpenXMLOffice.Presentation_2007
 			);
 			if (hyperlinkProperties != null)
 			{
-				GetPicture().NonVisualPictureProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
+				var unused = GetPicture().NonVisualPictureProperties.NonVisualDrawingProperties.InsertAt(CreateHyperLink(hyperlinkProperties), 0);
 			}
 			GetPicture().ShapeProperties = new P.ShapeProperties(
 				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }

@@ -8,40 +8,40 @@ using P = DocumentFormat.OpenXml.Presentation;
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
-	/// Represents Textbox class to build on
+	/// Represents TextBox class to build on
 	/// </summary>
-	public class TextBox : CommonProperties
+	public class TextBox : PresentationCommonProperties
 	{
 		private readonly TextBoxSetting textBoxSetting;
 		private P.Shape openXMLShape;
 		private readonly Slide slide;
 		/// <summary>
-		/// Create Textbox with provided settings
+		/// Create TextBox with provided settings
 		/// </summary>
 		internal TextBox(TextBoxSetting TextBoxSetting)
 		{
 			textBoxSetting = TextBoxSetting;
-			CreateTextBox();
+			var unused = CreateTextBox();
 		}
 		/// <summary>
-		/// Create Textbox with provided settings
+		/// Create TextBox with provided settings
 		/// </summary>
 		public TextBox(Slide Slide, TextBoxSetting TextBoxSetting)
 		{
 			slide = Slide;
 			textBoxSetting = TextBoxSetting;
-			CreateTextBox();
+			var unused = CreateTextBox();
 			slide.GetSlide().CommonSlideData.ShapeTree.Append(GetTextBoxShape());
 		}
 		/// <summary>
-		/// Get Textbox Shape
+		/// Get TextBox Shape
 		/// </summary>
 		internal P.Shape GetTextBoxShape()
 		{
 			return openXMLShape;
 		}
 		/// <summary>
-		/// Update Textbox Position
+		/// Update TextBox Position
 		/// </summary>
 		public void UpdatePosition(uint X, uint Y)
 		{
@@ -57,7 +57,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 		}
 		/// <summary>
-		/// Update Textbox Size
+		/// Update TextBox Size
 		/// </summary>
 		public void UpdateSize(uint Width, uint Height)
 		{
@@ -113,13 +113,13 @@ namespace OpenXMLOffice.Presentation_2007
 						case HyperlinkPropertyTypeValues.EXISTING_FILE:
 							textBlock.hyperlinkProperties.relationId = relationId;
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkfile";
-							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
+							var unused2 = slide.GetSlidePart().AddHyperlinkRelationship(new Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
 						case HyperlinkPropertyTypeValues.TARGET_SLIDE:
 							textBlock.hyperlinkProperties.relationId = relationId;
 							textBlock.hyperlinkProperties.action = "ppaction://hlinksldjump";
 							//TODO: Update Target Slide Prop
-							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
+							var unused1 = slide.GetSlidePart().AddHyperlinkRelationship(new Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
 						case HyperlinkPropertyTypeValues.TARGET_SHEET:
 							throw new ArgumentException("This Option is valid only for Excel Files");
@@ -137,7 +137,7 @@ namespace OpenXMLOffice.Presentation_2007
 							break;
 						default:// Web URL
 							textBlock.hyperlinkProperties.relationId = relationId;
-							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
+							var unused = slide.GetSlidePart().AddHyperlinkRelationship(new Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
 					}
 				}

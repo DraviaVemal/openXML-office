@@ -1,14 +1,15 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
-	/// Common Slide Data Class used to create the base components of a slide, slidemaster.
+	/// Common Slide Data Class used to create the base components of a slide, slideMaster.
 	/// </summary>
-	public class CommonSlideData
+	public class CommonSlideData : PresentationCommonProperties
 	{
 		private readonly P.CommonSlideData openXMLCommonSlideData;
 		internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
@@ -77,16 +78,16 @@ namespace OpenXMLOffice.Presentation_2007
 			switch (commonSlideDataType)
 			{
 				case PresentationConstants.CommonSlideDataType.SLIDE_MASTER:
-					openXMLCommonSlideData.AppendChild(background);
-					openXMLCommonSlideData.AppendChild(shapeTree);
+					var unused5 = openXMLCommonSlideData.AppendChild(background);
+					var unused4 = openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 				case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
-					shapeTree.AppendChild(CreateShape1());
-					shapeTree.AppendChild(CreateShape2());
-					openXMLCommonSlideData.AppendChild(shapeTree);
+					var unused3 = shapeTree.AppendChild(CreateShape1());
+					var unused2 = shapeTree.AppendChild(CreateShape2());
+					var unused1 = openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 				default: // slide
-					openXMLCommonSlideData.AppendChild(shapeTree);
+					var unused = openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 			}
 		}

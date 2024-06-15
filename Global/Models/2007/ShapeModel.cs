@@ -1,5 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using DocumentFormat.OpenXml;
+
 namespace OpenXMLOffice.Global_2007
 {
     /// <summary>
@@ -188,8 +190,42 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeModel
+    public class ShapePropertiesModel
     {
-
+        /// <summary>
+        ///
+        /// </summary>
+        public int X = 1562100;
+        /// <summary>
+        ///
+        /// </summary>
+        public int Y = 1524000;
+        /// <summary>
+        ///
+        /// </summary>
+        public int Cx = 4743450;
+        /// <summary>
+        ///
+        /// </summary>
+        public int Cy = 1419225;
+    }
+    /// <summary>
+    ///
+    /// </summary>
+    public class ShapeModel<TextColorOption>
+    where TextColorOption : class, IColorOptions, new()
+    {
+        /// <summary>
+        ///
+        /// </summary>
+        public string Name = "";
+        /// <summary>
+        ///
+        /// </summary>
+        public ShapePropertiesModel shapePropertiesModel = new ShapePropertiesModel();
+        /// <summary>
+        ///
+        /// </summary>
+        public DrawingParagraphModel<TextColorOption> drawingParagraph;
     }
 }

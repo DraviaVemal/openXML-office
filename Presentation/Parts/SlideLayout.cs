@@ -25,11 +25,11 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private void CreateSlideLayout()
 		{
-			openXMLSlideLayout.AppendChild(commonSlideData.GetCommonSlideData());
+			var unused1 = openXMLSlideLayout.AppendChild(commonSlideData.GetCommonSlideData());
 			openXMLSlideLayout.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 			openXMLSlideLayout.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			openXMLSlideLayout.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
-			openXMLSlideLayout.AppendChild(new P.ColorMapOverride()
+			var unused = openXMLSlideLayout.AppendChild(new P.ColorMapOverride()
 			{
 				MasterColorMapping = new A.MasterColorMapping()
 			});

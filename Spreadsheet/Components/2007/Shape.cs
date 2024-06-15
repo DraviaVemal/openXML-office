@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
     /// <summary>
     /// Shape Class For Presentation shape manipulation
     /// </summary>
-    public class Shape : CommonProperties
+    public class Shape : SpreadSheetCommonProperties
     {
         private readonly XDR.Shape openXMLShape = new XDR.Shape();
         private readonly Worksheet worksheet;
@@ -28,7 +28,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
         internal Shape MakeLine<LineColorOption>(ShapeLineModel<ExcelSetting, LineColorOption> lineModel)
         where LineColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoOptions>()
             {
                 from = new AnchorPosition()
                 {
@@ -49,11 +49,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
             return this;
         }
 
-        internal Shape MakeRectangle<LineColorOption, FillColorOption>(ShapeRectangleModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
+        internal Shape MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(ShapeRectangleModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
+        where TextColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption>()
             {
                 from = new AnchorPosition()
                 {
@@ -74,11 +75,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
             return this;
         }
 
-        internal Shape MakeArrow<LineColorOption, FillColorOption>(ShapeArrowModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
+        internal Shape MakeArrow<LineColorOption, FillColorOption, TextColorOption>(ShapeArrowModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
+        where TextColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption>()
             {
                 from = new AnchorPosition()
                 {

@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Shape Class For Presentation shape manipulation
 	/// </summary>
-	public class Shape : CommonProperties
+	public class Shape : PresentationCommonProperties
 	{
 		private readonly P.Shape openXMLShape = new P.Shape();
 		internal Shape(P.Shape shape = null)
@@ -71,7 +71,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (chart.GetChartGraphicFrame().Parent == null)
 			{
-				parent.InsertBefore(chart.GetChartGraphicFrame(), openXMLShape);
+				var unused = parent.InsertBefore(chart.GetChartGraphicFrame(), openXMLShape);
 			}
 			openXMLShape.Remove();
 			return chart;
@@ -95,7 +95,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (chart.GetAlternateContent().Parent == null)
 			{
-				parent.InsertBefore(chart.GetAlternateContent(), openXMLShape);
+				var unused = parent.InsertBefore(chart.GetAlternateContent(), openXMLShape);
 			}
 			openXMLShape.Remove();
 			return chart;
@@ -119,7 +119,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (picture.GetPicture().Parent == null)
 			{
-				parent.InsertBefore(picture.GetPicture(), openXMLShape);
+				var unused = parent.InsertBefore(picture.GetPicture(), openXMLShape);
 			}
 			openXMLShape.Remove();
 			return picture;
@@ -143,7 +143,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (table.GetTableGraphicFrame().Parent == null)
 			{
-				parent.InsertBefore(table.GetTableGraphicFrame(), openXMLShape);
+				var unused = parent.InsertBefore(table.GetTableGraphicFrame(), openXMLShape);
 			}
 			openXMLShape.Remove();
 			return table;
@@ -172,7 +172,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (textBox.GetTextBoxShape().Parent == null)
 			{
-				parent.InsertBefore(textBox.GetTextBoxShape(), openXMLShape);
+				var unused = parent.InsertBefore(textBox.GetTextBoxShape(), openXMLShape);
 			}
 			openXMLShape.Remove();
 			return textBox;

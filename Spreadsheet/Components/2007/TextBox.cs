@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	/// Represents Text box class to build on
 	/// </summary>
-	public class TextBox : CommonProperties
+	public class TextBox : SpreadSheetCommonProperties
 	{
 		private readonly TextBoxSetting textBoxSetting;
 		private readonly XDR.Shape openXMLShape;

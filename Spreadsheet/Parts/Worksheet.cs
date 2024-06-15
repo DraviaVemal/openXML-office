@@ -55,22 +55,24 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption>(ShapeRectangleModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
+		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(ShapeRectangleModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
+			where TextColorOption : class, IColorOptions, new()
 		{
 			Shape shape = new Shape(this);
-			return shape.MakeRectangle(rectangleModel);
+			return shape.MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(rectangleModel);
 		}
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption>(ShapeArrowModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
+		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(ShapeArrowModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
+			where TextColorOption : class, IColorOptions, new()
 		{
 			Shape shape = new Shape(this);
-			return shape.MakeArrow(arrowModel);
+			return shape.MakeArrow<LineColorOption, FillColorOption, TextColorOption>(arrowModel);
 		}
 		/// <summary>
 		/// Sets the properties for a column based on a starting cell ID in a worksheet.
