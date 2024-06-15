@@ -46,7 +46,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption>(ShapeLineModel<ExcelSetting, LineColorOption> lineModel)
+		public Shape AddShape<LineColorOption>(LineShapeModel<ExcelSetting, LineColorOption> lineModel)
 			where LineColorOption : class, IColorOptions, new()
 		{
 			Shape shape = new Shape(this);
@@ -55,7 +55,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(ShapeRectangleModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
+		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(RectangleShapeModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 			where TextColorOption : class, IColorOptions, new()
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(ShapeArrowModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
+		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(ArrowShapeModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 			where TextColorOption : class, IColorOptions, new()

@@ -120,7 +120,7 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeLineModel<ApplicationSpecificSetting, LineColorOption> : IShapeTypeDetailsModel
+    public class LineShapeModel<ApplicationSpecificSetting, LineColorOption> : IShapeTypeDetailsModel
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
     {
@@ -140,7 +140,7 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> : IShapeTypeDetailsModel
+    public class RectangleShapeModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> : IShapeTypeDetailsModel
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
@@ -169,7 +169,7 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> : IShapeTypeDetailsModel
+    public class ArrowShapeModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> : IShapeTypeDetailsModel
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()

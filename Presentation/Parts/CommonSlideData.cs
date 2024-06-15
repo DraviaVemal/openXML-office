@@ -83,11 +83,11 @@ namespace OpenXMLOffice.Presentation_2007
 					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 				case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
-					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>>()
+					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>>()
 					{
 						id = (uint)shapeTree.ChildElements.Count + 1,
 						name = "Title 1",
-						shapeTypeOptions = new ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>()
+						shapeTypeOptions = new RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>()
 						{
 							rectangleType = ShapeRectangleTypes.RECTANGLE,
 							lineColorOption = new SolidOptions()
@@ -113,11 +113,11 @@ namespace OpenXMLOffice.Presentation_2007
 							}.ToArray()
 						}
 					}));
-					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>>()
+					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>>()
 					{
 						id = (uint)shapeTree.ChildElements.Count + 1,
 						name = "Text Placeholder 1",
-						shapeTypeOptions = new ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>()
+						shapeTypeOptions = new RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>()
 						{
 							rectangleType = ShapeRectangleTypes.RECTANGLE,
 							lineColorOption = new SolidOptions()

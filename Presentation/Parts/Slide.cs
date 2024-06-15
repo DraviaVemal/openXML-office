@@ -182,7 +182,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption>(ShapeLineModel<PresentationSetting, LineColorOption> lineModel)
+		public Shape AddShape<LineColorOption>(LineShapeModel<PresentationSetting, LineColorOption> lineModel)
 			where LineColorOption : class, IColorOptions, new()
 		{
 			P.Shape openXmlShape = new P.Shape();
@@ -193,7 +193,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption>(ShapeRectangleModel<PresentationSetting, LineColorOption, FillColorOption> rectangleModel)
+		public Shape AddShape<LineColorOption, FillColorOption>(RectangleShapeModel<PresentationSetting, LineColorOption, FillColorOption> rectangleModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
@@ -205,7 +205,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption>(ShapeArrowModel<PresentationSetting, LineColorOption, FillColorOption> arrowModel)
+		public Shape AddShape<LineColorOption, FillColorOption>(ArrowShapeModel<PresentationSetting, LineColorOption, FillColorOption> arrowModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{

@@ -10,11 +10,15 @@ namespace OpenXMLOffice.Spreadsheet_2007
     /// </summary>
     public class Shape : SpreadSheetCommonProperties
     {
-        private readonly XDR.Shape openXMLShape = new XDR.Shape();
+        private XDR.TwoCellAnchor twoCellAnchor = new XDR.TwoCellAnchor();
         private readonly Worksheet worksheet;
-        internal Shape(Worksheet _worksheet)
+        internal Shape(Worksheet _worksheet, XDR.TwoCellAnchor _twoCellAnchor = null)
         {
             worksheet = _worksheet;
+            if (twoCellAnchor != null)
+            {
+                twoCellAnchor = _twoCellAnchor;
+            }
         }
 
         /// <summary>
@@ -22,13 +26,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
         /// </summary>
         public void RemoveShape()
         {
-            openXMLShape.Remove();
+            twoCellAnchor.Remove();
         }
 
-        internal Shape MakeLine<LineColorOption>(ShapeLineModel<ExcelSetting, LineColorOption> lineModel)
+        internal Shape MakeLine<LineColorOption>(LineShapeModel<ExcelSetting, LineColorOption> lineModel)
         where LineColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, NoShape>()
+            twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, LineShapeModel<PresentationSetting, LineColorOption>>()
             {
                 from = new AnchorPosition()
                 {
@@ -44,17 +48,24 @@ namespace OpenXMLOffice.Spreadsheet_2007
                     column = lineModel.applicationSpecificSetting.to.column,
                     columnOffset = lineModel.applicationSpecificSetting.to.columnOffset,
                 },
+                shapeModel = new ShapeModel<NoFillOptions, LineShapeModel<PresentationSetting, LineColorOption>>()
+                {
+
+                }
             });
-            worksheet.GetDrawing().AppendChild(twoCellAnchor);
+            if (twoCellAnchor.Parent == null)
+            {
+                worksheet.GetDrawing().AppendChild(twoCellAnchor);
+            }
             return this;
         }
 
-        internal Shape MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(ShapeRectangleModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
+        internal Shape MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(RectangleShapeModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         where TextColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption, NoShape>()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption, RectangleShapeModel<PresentationSetting, LineColorOption, FillColorOption>>()
             {
                 from = new AnchorPosition()
                 {
@@ -70,17 +81,24 @@ namespace OpenXMLOffice.Spreadsheet_2007
                     column = rectangleModel.applicationSpecificSetting.to.column,
                     columnOffset = rectangleModel.applicationSpecificSetting.to.columnOffset,
                 },
+                shapeModel = new ShapeModel<TextColorOption, RectangleShapeModel<PresentationSetting, LineColorOption, FillColorOption>>()
+                {
+
+                }
             });
-            worksheet.GetDrawing().AppendChild(twoCellAnchor);
+            if (twoCellAnchor.Parent == null)
+            {
+                worksheet.GetDrawing().AppendChild(twoCellAnchor);
+            }
             return this;
         }
 
-        internal Shape MakeArrow<LineColorOption, FillColorOption, TextColorOption>(ShapeArrowModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
+        internal Shape MakeArrow<LineColorOption, FillColorOption, TextColorOption>(ArrowShapeModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         where TextColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption, NoShape>()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption, ArrowShapeModel<PresentationSetting, LineColorOption, FillColorOption>>()
             {
                 from = new AnchorPosition()
                 {
@@ -96,8 +114,15 @@ namespace OpenXMLOffice.Spreadsheet_2007
                     column = arrowModel.applicationSpecificSetting.to.column,
                     columnOffset = arrowModel.applicationSpecificSetting.to.columnOffset,
                 },
+                shapeModel = new ShapeModel<TextColorOption, ArrowShapeModel<PresentationSetting, LineColorOption, FillColorOption>>()
+                {
+
+                }
             });
-            worksheet.GetDrawing().AppendChild(twoCellAnchor);
+            if (twoCellAnchor.Parent == null)
+            {
+                worksheet.GetDrawing().AppendChild(twoCellAnchor);
+            }
             return this;
         }
     }
