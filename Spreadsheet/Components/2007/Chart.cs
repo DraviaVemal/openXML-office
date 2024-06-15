@@ -19,13 +19,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// </summary>
-		internal Chart(Worksheet worksheet, ChartData[][] chartDatas, DataRange dataRange, AreaChartSetting<ExcelSetting> areaChartSetting) : base(worksheet, areaChartSetting)
+		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, AreaChartSetting<ExcelSetting> areaChartSetting) : base(worksheet, areaChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
 			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
-			CreateChart(chartDatas, dataRange, areaChartSetting);
+			CreateChart(chartData, dataRange, areaChartSetting);
 		}
 		/// <summary>
 		/// Create Bar Chart with provided settings

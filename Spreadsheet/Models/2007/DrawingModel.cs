@@ -97,6 +97,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
+		public ShapeModel shapeModel;
+		/// <summary>
+		///
+		/// </summary>
 		public uint x = 0;
 		/// <summary>
 		///

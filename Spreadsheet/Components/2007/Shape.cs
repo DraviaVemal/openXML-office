@@ -55,7 +55,20 @@ namespace OpenXMLOffice.Spreadsheet_2007
         {
             XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
             {
-
+                from = new AnchorPosition()
+                {
+                    row = rectangleModel.applicationSpecificSetting.from.row,
+                    rowOffset = rectangleModel.applicationSpecificSetting.from.rowOffset,
+                    column = rectangleModel.applicationSpecificSetting.from.column,
+                    columnOffset = rectangleModel.applicationSpecificSetting.from.columnOffset,
+                },
+                to = new AnchorPosition()
+                {
+                    row = rectangleModel.applicationSpecificSetting.to.row,
+                    rowOffset = rectangleModel.applicationSpecificSetting.to.rowOffset,
+                    column = rectangleModel.applicationSpecificSetting.to.column,
+                    columnOffset = rectangleModel.applicationSpecificSetting.to.columnOffset,
+                },
             });
             worksheet.GetDrawing().AppendChild(twoCellAnchor);
             return this;
@@ -67,7 +80,20 @@ namespace OpenXMLOffice.Spreadsheet_2007
         {
             XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
             {
-
+                from = new AnchorPosition()
+                {
+                    row = arrowModel.applicationSpecificSetting.from.row,
+                    rowOffset = arrowModel.applicationSpecificSetting.from.rowOffset,
+                    column = arrowModel.applicationSpecificSetting.from.column,
+                    columnOffset = arrowModel.applicationSpecificSetting.from.columnOffset,
+                },
+                to = new AnchorPosition()
+                {
+                    row = arrowModel.applicationSpecificSetting.to.row,
+                    rowOffset = arrowModel.applicationSpecificSetting.to.rowOffset,
+                    column = arrowModel.applicationSpecificSetting.to.column,
+                    columnOffset = arrowModel.applicationSpecificSetting.to.columnOffset,
+                },
             });
             worksheet.GetDrawing().AppendChild(twoCellAnchor);
             return this;

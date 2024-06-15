@@ -6,6 +6,9 @@ using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 using OpenXMLOffice.Global_2007;
+using DocumentFormat.OpenXml;
+using System;
+
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -82,8 +85,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				twoCellAnchor.AddChild(CreatePicture(twoCellAnchorModel.drawingPictureModel));
 			}
+			if (twoCellAnchorModel.shapeModel != null)
+			{
+				twoCellAnchor.AddChild(CreateModel(twoCellAnchorModel.shapeModel));
+			}
 			return twoCellAnchor;
 		}
+
+		private XDR.Shape CreateModel(ShapeModel shapeModel)
+		{
+			return new XDR.Shape();
+		}
+
 		private static XDR.GraphicFrame CreateGraphicFrame(DrawingGraphicFrame drawingGraphicFrame)
 		{
 			return new XDR.GraphicFrame()

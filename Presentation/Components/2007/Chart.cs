@@ -22,9 +22,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// Not Required Generic
-		/// XAxisType
-		/// YAxisType
-		/// ZAxisType
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, AreaChartSetting<PresentationSetting> areaChartSetting) : base(slide, areaChartSetting)
 		{
@@ -35,9 +32,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create Bar Chart with provided settings
 		/// Not Required Generic
-		/// XAxisType
-		/// YAxisType
-		/// ZAxisType
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, BarChartSetting<PresentationSetting> barChartSetting) : base(slide, barChartSetting)
 		{
@@ -48,9 +42,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create Column Chart with provided settings
 		/// Not Required Generic
-		/// XAxisType
-		/// YAxisType
-		/// ZAxisType
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, ColumnChartSetting<PresentationSetting> columnChartSetting) : base(slide, columnChartSetting)
 		{
@@ -61,9 +52,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create Line Chart with provided settings
 		/// Not Required Generic
-		/// XAxisType
-		/// YAxisType
-		/// ZAxisType
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, LineChartSetting<PresentationSetting> lineChartSetting) : base(slide, lineChartSetting)
 		{
@@ -74,9 +62,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create Pie Chart with provided settings
 		/// Not Required Generic
-		/// XAxisType
-		/// YAxisType
-		/// ZAxisType
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, PieChartSetting<PresentationSetting> pieChartSetting) : base(slide, pieChartSetting)
 		{
@@ -87,9 +72,6 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Create Scatter Chart with provided settings
 		/// Not Required Generic
-		/// XAxisType
-		/// YAxisType
-		/// ZAxisType
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, ScatterChartSetting<PresentationSetting> scatterChartSetting) : base(slide, scatterChartSetting)
 		{

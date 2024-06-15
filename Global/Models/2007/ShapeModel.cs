@@ -185,4 +185,11 @@ namespace OpenXMLOffice.Global_2007
         /// </summary>
         public FillColorOption fillColorOption = new FillColorOption();
     }
+    /// <summary>
+    ///
+    /// </summary>
+    public class ShapeModel
+    {
+
+    }
 }
