@@ -74,7 +74,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new()
 			});
 			//2
-			Chart<G.PresentationSetting, G.CategoryAxis, G.ValueAxis, G.ValueAxis> chart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			Chart<G.CategoryAxis, G.ValueAxis, G.ValueAxis> chart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				areaChartType = G.AreaChartTypes.STACKED,
@@ -1051,7 +1051,7 @@ namespace OpenXMLOffice.Tests
 			List<Shape> shape4 = slide.FindShapeByText("Slide_1_Shape_4").ToList();
 			List<Shape> shape5 = slide.FindShapeByText("Slide_1_Shape_5").ToList();
 			List<Shape> shape6 = slide.FindShapeByText("Slide_1_Shape_6").ToList();
-			shape1[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
+			shape1[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
 			new G.ColumnChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
@@ -1060,7 +1060,7 @@ namespace OpenXMLOffice.Tests
 					isEnableLegend = false
 				},
 			}));
-			shape2[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
+			shape2[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
 			new G.BarChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
@@ -1069,7 +1069,7 @@ namespace OpenXMLOffice.Tests
 					legendPosition = G.ChartLegendOptions.LegendPositionValues.RIGHT
 				}
 			}));
-			shape3[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
+			shape3[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				chartAxisOptions = new()
@@ -1090,11 +1090,11 @@ namespace OpenXMLOffice.Tests
 					isMinorValueLinesEnabled = true,
 				}
 			}));
-			shape4[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
+			shape4[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new()
 			}));
-			shape5[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			shape5[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new()
 			}));

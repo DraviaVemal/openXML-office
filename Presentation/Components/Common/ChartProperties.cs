@@ -13,12 +13,12 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties<ApplicationSpecificSetting> : CommonProperties where ApplicationSpecificSetting : PresentationSetting, new()
+	public class ChartProperties : CommonProperties
 	{
 		/// <summary>
 		///
 		/// </summary>
-		internal readonly ChartSetting<ApplicationSpecificSetting> chartSetting;
+		internal readonly ChartSetting<PresentationSetting> chartSetting;
 		/// <summary>
 		///
 		/// </summary>
@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal ChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting)
+		internal ChartProperties(Slide slide, ChartSetting<PresentationSetting> chartSetting)
 		{
 			this.chartSetting = chartSetting;
 			currentSlide = slide;

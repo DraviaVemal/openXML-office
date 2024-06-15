@@ -1,27 +1,25 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using System.Runtime;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Presentation_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 using CX = DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using System.Reflection;
 using System.Collections.Generic;
 namespace OpenXMLOffice.Presentation_2016
 {
 	/// <summary>
 	///
 	/// </summary>
-	public class AdvancedChartProperties<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting, new()
+	public class AdvancedChartProperties : ChartProperties
 	{
 		private AlternateContent alternateContent;
 		private readonly TextBox errorMessage;
 		/// <summary>
 		///
 		/// </summary>
-		public AdvancedChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting) : base(slide, chartSetting)
+		public AdvancedChartProperties(Slide slide, ChartSetting<PresentationSetting> chartSetting) : base(slide, chartSetting)
 		{
 			errorMessage = new TextBox(new TextBoxSetting()
 			{

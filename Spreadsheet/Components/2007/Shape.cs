@@ -25,8 +25,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
             openXMLShape.Remove();
         }
 
-        internal Shape MakeLine<ApplicationSpecificSetting, LineColorOption>(ShapeLineModel<ApplicationSpecificSetting, LineColorOption> lineModel)
-        where ApplicationSpecificSetting : ExcelSetting, new()
+        internal Shape MakeLine<LineColorOption>(ShapeLineModel<ExcelSetting, LineColorOption> lineModel)
         where LineColorOption : class, IColorOptions, new()
         {
             XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
@@ -50,8 +49,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
             return this;
         }
 
-        internal Shape MakeRectangle<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> rectangleModel)
-        where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+        internal Shape MakeRectangle<LineColorOption, FillColorOption>(ShapeRectangleModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         {
@@ -63,8 +61,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
             return this;
         }
 
-        internal Shape MakeArrow<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> arrowModel)
-        where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+        internal Shape MakeArrow<LineColorOption, FillColorOption>(ShapeArrowModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         {

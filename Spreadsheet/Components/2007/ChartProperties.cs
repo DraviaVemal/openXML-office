@@ -6,17 +6,17 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : ExcelSetting, new()
+	public class ChartProperties
 	{
 		/// <summary>
 		///
 		/// </summary>
-		internal readonly ChartSetting<ApplicationSpecificSetting> chartSetting;
+		internal readonly ChartSetting<ExcelSetting> chartSetting;
 		/// <summary>
 		///
 		/// </summary>
 		internal readonly Worksheet currentWorksheet;
-		internal ChartProperties(Worksheet worksheet, ChartSetting<ApplicationSpecificSetting> chartSetting)
+		internal ChartProperties(Worksheet worksheet, ChartSetting<ExcelSetting> chartSetting)
 		{
 			this.chartSetting = chartSetting;
 			currentWorksheet = worksheet;

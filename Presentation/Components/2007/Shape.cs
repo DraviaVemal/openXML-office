@@ -30,23 +30,20 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 		}
 
-		internal Shape AddLine<ApplicationSpecificSetting, LineColorOption>(ShapeLineModel<ApplicationSpecificSetting, LineColorOption> lineModel)
-			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		internal Shape AddLine<LineColorOption>(ShapeLineModel<PresentationSetting, LineColorOption> lineModel)
 			where LineColorOption : class, IColorOptions, new()
 		{
 			return this;
 		}
 
-		internal Shape AddRectangle<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> rectangleModel)
-			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		internal Shape AddRectangle<LineColorOption, FillColorOption>(ShapeRectangleModel<PresentationSetting, LineColorOption, FillColorOption> rectangleModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
 			return this;
 		}
 
-		internal Shape AddArrow<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> arrowModel)
-			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		internal Shape AddArrow<LineColorOption, FillColorOption>(ShapeArrowModel<PresentationSetting, LineColorOption, FillColorOption> arrowModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
@@ -56,8 +53,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Replace Chart for the source Shape
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> ReplaceChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> chart)
-			where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<XAxisType, YAxisType, ZAxisType> ReplaceChart<XAxisType, YAxisType, ZAxisType>(Chart<XAxisType, YAxisType, ZAxisType> chart)
 			where XAxisType : class, IAxisTypeOptions, new()
 			where YAxisType : class, IAxisTypeOptions, new()
 			where ZAxisType : class, IAxisTypeOptions, new()
@@ -84,7 +80,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Replace 2016 Support Chart for the source Shape
 		/// </summary>
-		public P16.Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(P16.Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting, new()
+		public P16.Chart ReplaceChart(P16.Chart chart)
 		{
 			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
 			if (parent == null)
