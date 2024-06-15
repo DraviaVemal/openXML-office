@@ -46,13 +46,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Insert Shape into slide
 		/// </summary>
 		public Shape AddShape<ApplicationSpecificSetting, LineColorOption>(ShapeLineModel<ApplicationSpecificSetting, LineColorOption> lineModel)
-			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+			where ApplicationSpecificSetting : ExcelSetting, new()
 			where LineColorOption : class, IColorOptions, new()
 		{
-			XDR.Shape openXmlShape = new XDR.Shape();
-			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
-			Shape shape = new Shape(openXmlShape);
-			return shape.AddLine(lineModel);
+			Shape shape = new Shape(this);
+			return shape.MakeLine(lineModel);
 		}
 		/// <summary>
 		/// Insert Shape into slide
@@ -62,10 +60,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
-			XDR.Shape openXmlShape = new XDR.Shape();
-			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
-			Shape shape = new Shape(openXmlShape);
-			return shape.AddRectangle(rectangleModel);
+			Shape shape = new Shape(this);
+			return shape.MakeRectangle(rectangleModel);
 		}
 		/// <summary>
 		/// Insert Shape into slide
@@ -75,10 +71,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
-			XDR.Shape openXmlShape = new XDR.Shape();
-			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
-			Shape shape = new Shape(openXmlShape);
-			return shape.AddArrow(arrowModel);
+			Shape shape = new Shape(this);
+			return shape.MakeArrow(arrowModel);
 		}
 		/// <summary>
 		/// Sets the properties for a column based on a starting cell ID in a worksheet.

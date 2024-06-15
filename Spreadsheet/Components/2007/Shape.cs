@@ -11,12 +11,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
     public class Shape : CommonProperties
     {
         private readonly XDR.Shape openXMLShape = new XDR.Shape();
-        internal Shape(XDR.Shape shape = null)
+        private readonly Worksheet worksheet;
+        internal Shape(Worksheet _worksheet)
         {
-            if (shape != null)
-            {
-                openXMLShape = shape;
-            }
+            worksheet = _worksheet;
         }
 
         /// <summary>
@@ -27,26 +25,54 @@ namespace OpenXMLOffice.Spreadsheet_2007
             openXMLShape.Remove();
         }
 
-        internal Shape AddLine<ApplicationSpecificSetting, LineColorOption>(ShapeLineModel<ApplicationSpecificSetting, LineColorOption> lineModel)
-        where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+        internal Shape MakeLine<ApplicationSpecificSetting, LineColorOption>(ShapeLineModel<ApplicationSpecificSetting, LineColorOption> lineModel)
+        where ApplicationSpecificSetting : ExcelSetting, new()
         where LineColorOption : class, IColorOptions, new()
         {
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
+            {
+                from = new AnchorPosition()
+                {
+                    row = lineModel.applicationSpecificSetting.from.row,
+                    rowOffset = lineModel.applicationSpecificSetting.from.rowOffset,
+                    column = lineModel.applicationSpecificSetting.from.column,
+                    columnOffset = lineModel.applicationSpecificSetting.from.columnOffset,
+                },
+                to = new AnchorPosition()
+                {
+                    row = lineModel.applicationSpecificSetting.to.row,
+                    rowOffset = lineModel.applicationSpecificSetting.to.rowOffset,
+                    column = lineModel.applicationSpecificSetting.to.column,
+                    columnOffset = lineModel.applicationSpecificSetting.to.columnOffset,
+                },
+            });
+            worksheet.GetDrawing().AppendChild(twoCellAnchor);
             return this;
         }
 
-        internal Shape AddRectangle<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> rectangleModel)
+        internal Shape MakeRectangle<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> rectangleModel)
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         {
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
+            {
+
+            });
+            worksheet.GetDrawing().AppendChild(twoCellAnchor);
             return this;
         }
 
-        internal Shape AddArrow<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> arrowModel)
+        internal Shape MakeArrow<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> arrowModel)
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         {
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
+            {
+
+            });
+            worksheet.GetDrawing().AppendChild(twoCellAnchor);
             return this;
         }
     }
