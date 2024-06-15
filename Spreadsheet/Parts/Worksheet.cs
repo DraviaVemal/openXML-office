@@ -43,6 +43,39 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return sheet.Name;
 		}
 		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape InsertShape<ApplicationSpecificSetting>(ShapeLineModel<ApplicationSpecificSetting> lineModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		{
+			XDR.Shape openXmlShape = new XDR.Shape();
+			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
+			Shape shape = new Shape(openXmlShape);
+			return shape.AddLine(lineModel);
+		}
+		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape InsertShape<ApplicationSpecificSetting>(ShapeRectangleModel<ApplicationSpecificSetting> rectangleModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		{
+			XDR.Shape openXmlShape = new XDR.Shape();
+			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
+			Shape shape = new Shape(openXmlShape);
+			return shape.AddRectangle(rectangleModel);
+		}
+		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape InsertShape<ApplicationSpecificSetting>(ShapeArrowModel<ApplicationSpecificSetting> arrowModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		{
+			XDR.Shape openXmlShape = new XDR.Shape();
+			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
+			Shape shape = new Shape(openXmlShape);
+			return shape.AddArrow(arrowModel);
+		}
+		/// <summary>
 		/// Sets the properties for a column based on a starting cell ID in a worksheet.
 		/// </summary>
 		public void SetColumn(string cellId, ColumnProperties columnProperties)

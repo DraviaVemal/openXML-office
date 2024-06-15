@@ -30,7 +30,20 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 		}
 
-		internal Shape AddShape(ShapeModel shapeModel)
+		internal Shape AddLine<ApplicationSpecificSetting>(ShapeLineModel<ApplicationSpecificSetting> lineModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		{
+			return this;
+		}
+
+		internal Shape AddRectangle<ApplicationSpecificSetting>(ShapeRectangleModel<ApplicationSpecificSetting> rectangleModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		{
+			return this;
+		}
+
+		internal Shape AddArrow<ApplicationSpecificSetting>(ShapeArrowModel<ApplicationSpecificSetting> arrowModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 		{
 			return this;
 		}

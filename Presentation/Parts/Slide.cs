@@ -190,12 +190,35 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape InsertShape(ShapeModel shapeModel)
+		public Shape InsertShape<ApplicationSpecificSetting>(ShapeLineModel<ApplicationSpecificSetting> lineModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
 		{
 			P.Shape openXmlShape = new P.Shape();
 			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
 			Shape shape = new Shape(openXmlShape);
-			return shape.AddShape(shapeModel);
+			return shape.AddLine(lineModel);
+		}
+		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape InsertShape<ApplicationSpecificSetting>(ShapeRectangleModel<ApplicationSpecificSetting> rectangleModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		{
+			P.Shape openXmlShape = new P.Shape();
+			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
+			Shape shape = new Shape(openXmlShape);
+			return shape.AddRectangle(rectangleModel);
+		}
+		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape InsertShape<ApplicationSpecificSetting>(ShapeArrowModel<ApplicationSpecificSetting> arrowModel)
+			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+		{
+			P.Shape openXmlShape = new P.Shape();
+			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
+			Shape shape = new Shape(openXmlShape);
+			return shape.AddArrow(arrowModel);
 		}
 		/// <summary>
 		/// 
