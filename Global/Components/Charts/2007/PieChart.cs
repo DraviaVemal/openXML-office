@@ -190,6 +190,10 @@ namespace OpenXMLOffice.Global_2007
 					}
 					dataLabels.InsertAt(new C.DataLabelPosition() { Val = dataLabelPositionValues }, 0);
 				}
+				if(pieChartDataLabel.formatCode != null)
+				{
+					dataLabels.InsertAt(new C.NumberingFormat { FormatCode = pieChartDataLabel.formatCode, SourceLinked = false }, 0);
+				}
 				return dataLabels;
 			}
 			return null;

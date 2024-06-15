@@ -478,6 +478,10 @@ namespace OpenXMLOffice.Global_2007
 		/// Determines whether to show the value in percentage the chart.
 		/// </summary>
 		public bool showPercentage;
+		/// <summary>
+		/// Determines whether to format the label values in the chart
+		/// </summary>
+		public string formatCode;
 	}
 	/// <summary>
 	/// Represents the settings for chart data.
