@@ -30,20 +30,25 @@ namespace OpenXMLOffice.Presentation_2007
 			openXMLShape.Remove();
 		}
 
-		internal Shape AddLine<ApplicationSpecificSetting>(ShapeLineModel<ApplicationSpecificSetting> lineModel)
+		internal Shape AddLine<ApplicationSpecificSetting, LineColorOption>(ShapeLineModel<ApplicationSpecificSetting, LineColorOption> lineModel)
 			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+			where LineColorOption : class, IColorOptions, new()
 		{
 			return this;
 		}
 
-		internal Shape AddRectangle<ApplicationSpecificSetting>(ShapeRectangleModel<ApplicationSpecificSetting> rectangleModel)
+		internal Shape AddRectangle<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> rectangleModel)
 			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
 		{
 			return this;
 		}
 
-		internal Shape AddArrow<ApplicationSpecificSetting>(ShapeArrowModel<ApplicationSpecificSetting> arrowModel)
+		internal Shape AddArrow<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> arrowModel)
 			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
 		{
 			return this;
 		}

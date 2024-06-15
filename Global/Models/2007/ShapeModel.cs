@@ -110,8 +110,9 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeLineModel<ApplicationSpecificSetting>
+    public class ShapeLineModel<ApplicationSpecificSetting, LineColorOption>
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+        where LineColorOption : class, IColorOptions, new()
     {
         /// <summary>
         ///
@@ -121,12 +122,18 @@ namespace OpenXMLOffice.Global_2007
         ///
         /// </summary>
         public ApplicationSpecificSetting applicationSpecificSetting = new ApplicationSpecificSetting();
+        /// <summary>
+        ///
+        /// </summary>
+        public LineColorOption lineColorOption = new LineColorOption();
     }
     /// <summary>
     ///
     /// </summary>
-    public class ShapeRectangleModel<ApplicationSpecificSetting>
+    public class ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption>
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+        where LineColorOption : class, IColorOptions, new()
+        where FillColorOption : class, IColorOptions, new()
     {
         /// <summary>
         ///
@@ -140,12 +147,22 @@ namespace OpenXMLOffice.Global_2007
         ///
         /// </summary>
         public ApplicationSpecificSetting applicationSpecificSetting = new ApplicationSpecificSetting();
+        /// <summary>
+        ///
+        /// </summary>
+        public LineColorOption lineColorOption = new LineColorOption();
+        /// <summary>
+        ///
+        /// </summary>
+        public FillColorOption fillColorOption = new FillColorOption();
     }
     /// <summary>
     ///
     /// </summary>
-    public class ShapeArrowModel<ApplicationSpecificSetting>
+    public class ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption>
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+        where LineColorOption : class, IColorOptions, new()
+        where FillColorOption : class, IColorOptions, new()
     {
         /// <summary>
         ///
@@ -159,5 +176,13 @@ namespace OpenXMLOffice.Global_2007
         ///
         /// </summary>
         public ApplicationSpecificSetting applicationSpecificSetting = new ApplicationSpecificSetting();
+        /// <summary>
+        ///
+        /// </summary>
+        public LineColorOption lineColorOption = new LineColorOption();
+        /// <summary>
+        ///
+        /// </summary>
+        public FillColorOption fillColorOption = new FillColorOption();
     }
 }

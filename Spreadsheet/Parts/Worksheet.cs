@@ -45,8 +45,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape InsertShape<ApplicationSpecificSetting>(ShapeLineModel<ApplicationSpecificSetting> lineModel)
+		public Shape AddShape<ApplicationSpecificSetting, LineColorOption>(ShapeLineModel<ApplicationSpecificSetting, LineColorOption> lineModel)
 			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+			where LineColorOption : class, IColorOptions, new()
 		{
 			XDR.Shape openXmlShape = new XDR.Shape();
 			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
@@ -56,8 +57,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape InsertShape<ApplicationSpecificSetting>(ShapeRectangleModel<ApplicationSpecificSetting> rectangleModel)
+		public Shape AddShape<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> rectangleModel)
 			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
 		{
 			XDR.Shape openXmlShape = new XDR.Shape();
 			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
@@ -67,8 +70,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape InsertShape<ApplicationSpecificSetting>(ShapeArrowModel<ApplicationSpecificSetting> arrowModel)
+		public Shape AddShape<ApplicationSpecificSetting, LineColorOption, FillColorOption>(ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> arrowModel)
 			where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
 		{
 			XDR.Shape openXmlShape = new XDR.Shape();
 			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
