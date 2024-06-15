@@ -112,7 +112,15 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeLineModel<ApplicationSpecificSetting, LineColorOption>
+    public interface IShapeTypeDetailsModel { }
+    /// <summary>
+    ///
+    /// </summary>
+    public class NoShape : IShapeTypeDetailsModel { }
+    /// <summary>
+    ///
+    /// </summary>
+    public class ShapeLineModel<ApplicationSpecificSetting, LineColorOption> : IShapeTypeDetailsModel
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
     {
@@ -132,7 +140,7 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption>
+    public class ShapeRectangleModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> : IShapeTypeDetailsModel
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
@@ -161,7 +169,7 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption>
+    public class ShapeArrowModel<ApplicationSpecificSetting, LineColorOption, FillColorOption> : IShapeTypeDetailsModel
         where ApplicationSpecificSetting : class, ISizeAndPosition, new()
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
@@ -195,30 +203,39 @@ namespace OpenXMLOffice.Global_2007
         /// <summary>
         ///
         /// </summary>
-        public int X = 1562100;
+        public double x = 1562100L;
         /// <summary>
         ///
         /// </summary>
-        public int Y = 1524000;
+        public double y = 1524000L;
         /// <summary>
         ///
         /// </summary>
-        public int Cx = 4743450;
+        public double cx = 4743450L;
         /// <summary>
         ///
         /// </summary>
-        public int Cy = 1419225;
+        public double cy = 1419225L;
     }
     /// <summary>
     ///
     /// </summary>
-    public class ShapeModel<TextColorOption>
+    public class ShapeModel<TextColorOption, ShapeTypeOptions>
     where TextColorOption : class, IColorOptions, new()
+    where ShapeTypeOptions : class, IShapeTypeDetailsModel, new()
     {
         /// <summary>
         ///
         /// </summary>
-        public string Name = "";
+        public uint id = 1;
+        /// <summary>
+        ///
+        /// </summary>
+        public string name = "";
+        /// <summary>
+        ///
+        /// </summary>
+        public ShapeTypeOptions shapeTypeOptions = new ShapeTypeOptions();
         /// <summary>
         ///
         /// </summary>

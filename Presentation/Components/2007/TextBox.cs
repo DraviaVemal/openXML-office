@@ -99,7 +99,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				ShapeProperties.Append(CreateColorComponent(new ColorOptionModel<NoOptions>()));
+				ShapeProperties.Append(CreateColorComponent(new ColorOptionModel<NoFillOptions>()));
 			}
 			List<DrawingRunModel<SolidOptions>> drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
 			foreach (TextBlock textBlock in textBoxSetting.textBlocks)

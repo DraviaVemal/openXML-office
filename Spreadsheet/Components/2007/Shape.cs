@@ -28,7 +28,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
         internal Shape MakeLine<LineColorOption>(ShapeLineModel<ExcelSetting, LineColorOption> lineModel)
         where LineColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoOptions>()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, NoShape>()
             {
                 from = new AnchorPosition()
                 {
@@ -54,7 +54,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
         where FillColorOption : class, IColorOptions, new()
         where TextColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption>()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption, NoShape>()
             {
                 from = new AnchorPosition()
                 {
@@ -80,7 +80,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
         where FillColorOption : class, IColorOptions, new()
         where TextColorOption : class, IColorOptions, new()
         {
-            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption>()
+            XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<TextColorOption, NoShape>()
             {
                 from = new AnchorPosition()
                 {

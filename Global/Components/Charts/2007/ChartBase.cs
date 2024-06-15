@@ -82,7 +82,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				NumberingFormat = new C.NumberingFormat() { FormatCode = "General", SourceLinked = false },
 			};
-			trendlineLabel.Append(CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()));
+			trendlineLabel.Append(CreateChartShapeProperties(new ShapePropertiesModel<NoFillOptions, NoFillOptions>()));
 			trendlineLabel.Append(CreateChartTextProperties(new ChartTextPropertiesModel<SolidOptions>()
 			{
 				drawingBodyProperties = new DrawingBodyPropertiesModel()
@@ -569,7 +569,7 @@ namespace OpenXMLOffice.Global_2007
 			return new C.BackWall()
 			{
 				Thickness = new C.Thickness() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoFillOptions, NoFillOptions>()
 				{
 					shapeProperty3D = new ShapeProperty3D()
 				}),
@@ -580,7 +580,7 @@ namespace OpenXMLOffice.Global_2007
 			return new C.SideWall()
 			{
 				Thickness = new C.Thickness() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoFillOptions, NoFillOptions>()
 				{
 					shapeProperty3D = new ShapeProperty3D()
 				}),
@@ -591,7 +591,7 @@ namespace OpenXMLOffice.Global_2007
 			return new C.Floor()
 			{
 				Thickness = new C.Thickness() { Val = 0 },
-				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>()
+				ShapeProperties = CreateChartShapeProperties(new ShapePropertiesModel<NoFillOptions, NoFillOptions>()
 				{
 					shapeProperty3D = new ShapeProperty3D()
 				}),
@@ -729,7 +729,7 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.MajorGridlines CreateMajorGridLine()
 		{
-			return new C.MajorGridlines(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
+			return new C.MajorGridlines(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoFillOptions>()
 			{
 				lineColor = new OutlineModel<SolidOptions>()
 				{
@@ -754,7 +754,7 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.MinorGridlines CreateMinorGridLine()
 		{
-			return new C.MinorGridlines(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
+			return new C.MinorGridlines(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoFillOptions>()
 			{
 				lineColor = new OutlineModel<SolidOptions>()
 				{
@@ -853,7 +853,7 @@ namespace OpenXMLOffice.Global_2007
 			{
 				TrendlineName = new C.TrendlineName(trendLineModel.trendLineName)
 			};
-			trendLine.Append(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
+			trendLine.Append(CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoFillOptions>()
 			{
 				lineColor = new OutlineModel<SolidOptions>()
 				{

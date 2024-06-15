@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using System.Collections.Generic;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -78,113 +79,92 @@ namespace OpenXMLOffice.Presentation_2007
 			switch (commonSlideDataType)
 			{
 				case PresentationConstants.CommonSlideDataType.SLIDE_MASTER:
-					var unused5 = openXMLCommonSlideData.AppendChild(background);
-					var unused4 = openXMLCommonSlideData.AppendChild(shapeTree);
+					openXMLCommonSlideData.AppendChild(background);
+					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 				case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
-					var unused3 = shapeTree.AppendChild(CreateShape1());
-					var unused2 = shapeTree.AppendChild(CreateShape2());
-					var unused1 = openXMLCommonSlideData.AppendChild(shapeTree);
+					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>>()
+					{
+						id = (uint)shapeTree.ChildElements.Count + 1,
+						name = "Title 1",
+						shapeTypeOptions = new ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>()
+						{
+							rectangleType = ShapeRectangleTypes.RECTANGLE,
+							lineColorOption = new SolidOptions()
+							{
+								hexColor = "FFFFFF",
+							}
+						},
+						shapePropertiesModel = new ShapePropertiesModel()
+						{
+							x = 838200L,
+							y = 365125L,
+							cx = 10515600L,
+							cy = 1325563L
+						},
+						drawingParagraph = new DrawingParagraphModel<SolidOptions>()
+						{
+							drawingRuns = new List<DrawingRunModel<SolidOptions>>()
+							{
+								new DrawingRunModel<SolidOptions>(){
+									text = "Click to edit Master title style",
+									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
+								}
+							}.ToArray()
+						}
+					}));
+					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>>()
+					{
+						id = (uint)shapeTree.ChildElements.Count + 1,
+						name = "Text Placeholder 1",
+						shapeTypeOptions = new ShapeRectangleModel<PresentationSetting, SolidOptions, NoFillOptions>()
+						{
+							rectangleType = ShapeRectangleTypes.RECTANGLE,
+							lineColorOption = new SolidOptions()
+							{
+								hexColor = "FFFFFF",
+							}
+						},
+						shapePropertiesModel = new ShapePropertiesModel()
+						{
+							x = 838200L,
+							y = 1825625L,
+							cx = 10515600L,
+							cy = 4351338L
+						},
+						drawingParagraph = new DrawingParagraphModel<SolidOptions>()
+						{
+							drawingRuns = new List<DrawingRunModel<SolidOptions>>()
+							{
+								new DrawingRunModel<SolidOptions>(){
+									text = "Click to edit Master title style",
+									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
+								},
+								new DrawingRunModel<SolidOptions>(){
+									text = "Second Level",
+									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
+								},
+								new DrawingRunModel<SolidOptions>(){
+									text = "Third Level",
+									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
+								},
+								new DrawingRunModel<SolidOptions>(){
+									text = "Fourth Level",
+									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
+								},
+								new DrawingRunModel<SolidOptions>(){
+									text = "Fifth Level",
+									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
+								}
+							}.ToArray()
+						}
+					}));
+					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 				default: // slide
-					var unused = openXMLCommonSlideData.AppendChild(shapeTree);
+					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 			}
-		}
-		private static P.Shape CreateShape1()
-		{
-			P.Shape shape = new P.Shape();
-			P.NonVisualShapeProperties nonVisualShapeProperties = new P.NonVisualShapeProperties(
-				new P.NonVisualDrawingProperties { Id = 2, Name = "Title 1" },
-				new P.NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
-				new P.ApplicationNonVisualDrawingProperties(new P.PlaceholderShape { Type = P.PlaceholderValues.Title })
-			);
-			P.ShapeProperties shapeProperties = new P.ShapeProperties(
-				new A.Transform2D(
-					new A.Offset { X = 838200L, Y = 365125L },
-					new A.Extents { Cx = 10515600L, Cy = 1325563L }
-				),
-				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
-			);
-			P.TextBody textBody = new P.TextBody(
-				new A.BodyProperties(),
-				new A.ListStyle(),
-				new A.Paragraph(
-					new A.Run(
-						new A.RunProperties { Language = "en-IN" },
-						new A.Text { Text = "Click to edit Master title style" }
-					),
-					new A.EndParagraphRunProperties { Language = "en-IN" }
-				)
-			);
-			shape.Append(nonVisualShapeProperties);
-			shape.Append(shapeProperties);
-			shape.Append(textBody);
-			return shape;
-		}
-		private static P.Shape CreateShape2()
-		{
-			P.Shape shape = new P.Shape();
-			P.NonVisualShapeProperties nonVisualShapeProperties = new P.NonVisualShapeProperties(
-				new P.NonVisualDrawingProperties { Id = 3U, Name = "Text Placeholder 2" },
-				new P.NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
-				new P.ApplicationNonVisualDrawingProperties(
-					new P.PlaceholderShape { Index = 1U, Type = P.PlaceholderValues.Body })
-			);
-			P.ShapeProperties shapeProperties = new P.ShapeProperties(
-				new A.Transform2D(
-					new A.Offset { X = 838200L, Y = 1825625L },
-					new A.Extents { Cx = 10515600L, Cy = 4351338L }
-				),
-				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
-			);
-			P.TextBody textBody = new P.TextBody(
-				new A.BodyProperties(),
-				new A.ListStyle(),
-				new A.Paragraph(
-					new A.ParagraphProperties { Level = 0 },
-					new A.Run(
-						new A.RunProperties { Language = "en-IN" },
-						new A.Text("Click to edit Master text styles")
-					)
-				),
-				new A.Paragraph(
-					new A.ParagraphProperties { Level = 1 },
-					new A.Run(
-						new A.RunProperties { Language = "en-IN" },
-						new A.Text("Second Level")
-					)
-				),
-				new A.Paragraph(
-					new A.ParagraphProperties { Level = 2 },
-					new A.Run(
-						new A.RunProperties { Language = "en-IN" },
-						new A.Text("Third Level")
-					)
-				),
-				new A.Paragraph(
-					new A.ParagraphProperties { Level = 3 },
-					new A.Run(
-						new A.RunProperties { Language = "en-IN" },
-						new A.Text("Fourth Level")
-					)
-				),
-				new A.Paragraph(
-					new A.ParagraphProperties { Level = 4 },
-					new A.Run(
-						new A.RunProperties { Language = "en-IN" },
-						new A.Text("Fifth Level")
-					),
-					new A.EndParagraphRunProperties()
-					{
-						Language = "en-IN"
-					}
-				)
-			);
-			shape.Append(nonVisualShapeProperties);
-			shape.Append(shapeProperties);
-			shape.Append(textBody);
-			return shape;
 		}
 	}
 }

@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal XDR.TwoCellAnchor CreateTwoCellAnchor<TextColorOption>(TwoCellAnchorModel<TextColorOption> twoCellAnchorModel)
+		internal XDR.TwoCellAnchor CreateTwoCellAnchor<TextColorOption>(TwoCellAnchorModel<TextColorOption, NoShape> twoCellAnchorModel)
 		where TextColorOption : class, IColorOptions, new()
 		{
 			XDR.TwoCellAnchor twoCellAnchor = new XDR.TwoCellAnchor(new XDR.ClientData())

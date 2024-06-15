@@ -383,7 +383,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.LeftBorderLineProperties(CreateColorComponent<G.NoOptions>()));
+				tableCellProperties.Append(new A.LeftBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
 			}
 			if (cell.borderSettings.rightBorder.showBorder)
 			{
@@ -404,7 +404,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.RightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
+				tableCellProperties.Append(new A.RightBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
 			}
 			if (cell.borderSettings.topBorder.showBorder)
 			{
@@ -425,7 +425,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.TopBorderLineProperties(CreateColorComponent<G.NoOptions>()));
+				tableCellProperties.Append(new A.TopBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
 			}
 			if (cell.borderSettings.bottomBorder.showBorder)
 			{
@@ -446,7 +446,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.BottomBorderLineProperties(CreateColorComponent<G.NoOptions>()));
+				tableCellProperties.Append(new A.BottomBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
 			}
 			if (cell.borderSettings.topLeftToBottomRightBorder.showBorder)
 			{
@@ -467,7 +467,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
+				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
 			}
 			if (cell.borderSettings.bottomLeftToTopRightBorder.showBorder)
 			{
@@ -488,7 +488,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
+				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
 			}
 			if (cell.cellBackground != null || row.rowBackground != null)
 			{
@@ -502,7 +502,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(CreateColorComponent<G.NoOptions>());
+				tableCellProperties.Append(CreateColorComponent<G.NoFillOptions>());
 			}
 			tableCellXml.Append(tableCellProperties);
 			return tableCellXml;
