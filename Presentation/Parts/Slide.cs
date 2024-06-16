@@ -17,7 +17,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class Slide
 	{
-		private readonly P.Slide openXMLSlide = new P.Slide();
+		private readonly P.Slide documentSlide = new P.Slide();
 		/// <summary>
 		///
 		/// </summary>
@@ -25,11 +25,11 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			get
 			{
-				return openXMLSlide.Show;
+				return documentSlide.Show;
 			}
 			set
 			{
-				openXMLSlide.Show = value;
+				documentSlide.Show = value;
 			}
 		}
 		internal Slide(P.Slide OpenXMLSlide = null, SlideModel slideModel = null)
@@ -40,20 +40,20 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (OpenXMLSlide != null)
 			{
-				openXMLSlide = OpenXMLSlide;
+				documentSlide = OpenXMLSlide;
 			}
 			else
 			{
 				CommonSlideData commonSlideData = new CommonSlideData(PresentationConstants.CommonSlideDataType.SLIDE, PresentationConstants.SlideLayoutType.BLANK);
-				openXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
-				openXMLSlide.ColorMapOverride = new P.ColorMapOverride()
+				documentSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
+				documentSlide.ColorMapOverride = new P.ColorMapOverride()
 				{
 					MasterColorMapping = new A.MasterColorMapping()
 				};
-				openXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-				openXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+				documentSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+				documentSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			}
-			openXMLSlide.Show = !slideModel.hideSlide;
+			documentSlide.Show = !slideModel.hideSlide;
 		}
 
 		/// <summary>
@@ -197,10 +197,10 @@ namespace OpenXMLOffice.Presentation_2007
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
-			P.Shape openXmlShape = new P.Shape();
-			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
-			Shape shape = new Shape(openXmlShape);
-			return shape.AddRectangle(rectangleModel);
+			Shape shape = new Shape();
+			shape.AddRectangle(rectangleModel);
+			GetSlide().CommonSlideData.ShapeTree.Append(shape.GetDocumentShape());
+			return shape;
 		}
 		/// <summary>
 		/// Insert Shape into slide
@@ -235,15 +235,15 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal P.Slide GetSlide()
 		{
-			return openXMLSlide;
+			return documentSlide;
 		}
 		internal SlidePart GetSlidePart()
 		{
-			return openXMLSlide.SlidePart;
+			return documentSlide.SlidePart;
 		}
 		private P.CommonSlideData GetCommonSlideData()
 		{
-			return openXMLSlide.CommonSlideData;
+			return documentSlide.CommonSlideData;
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace OpenXMLOffice.Presentation_2007
 			SlidePart slidePart = GetPresentationPart().AddNewPart<SlidePart>(GetNextPresentationRelationId());
 			Slide slide = new Slide();
 			slidePart.Slide = slide.GetSlide();
-			var unused = slidePart.AddPart(GetSlideLayoutPart(slideLayoutType));
+			slidePart.AddPart(GetSlideLayoutPart(slideLayoutType));
 			P.SlideIdList slideIdList = GetSlideIdList();
 			P.SlideId slideId = new P.SlideId() { Id = GetNextSlideId(), RelationshipId = GetPresentationPart().GetIdOfPart(slidePart) };
 			slideIdList.Append(slideId);
@@ -51,8 +51,8 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				P.SlideId SourceSlideId = (P.SlideId)GetSlideIdList().ElementAt(SourceIndex);
 				P.SlideId TargetSlideId = (P.SlideId)GetSlideIdList().ElementAt(TargetIndex);
-				var unused1 = GetSlideIdList().RemoveChild(SourceSlideId);
-				var unused = GetSlideIdList().InsertBefore(SourceSlideId, TargetSlideId);
+				GetSlideIdList().RemoveChild(SourceSlideId);
+				GetSlideIdList().InsertBefore(SourceSlideId, TargetSlideId);
 				presentationDocument.Save();
 			}
 			else
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				P.SlideId SlideId = (P.SlideId)GetSlideIdList().ElementAt(SlideIndex);
 				SlidePart SlidePart = (SlidePart)GetPresentationPart().GetPartById(SlideId.RelationshipId.Value);
-				var unused1 = GetSlideIdList().RemoveChild(SlideId);
+				GetSlideIdList().RemoveChild(SlideId);
 				try
 				{
 					GetPresentationPart().DeleteReferenceRelationship(SlideId.RelationshipId.Value);
@@ -76,7 +76,7 @@ namespace OpenXMLOffice.Presentation_2007
 				{
 					throw;
 				}
-				var unused = GetPresentationPart().DeletePart(SlidePart);
+				GetPresentationPart().DeletePart(SlidePart);
 			}
 			else
 			{

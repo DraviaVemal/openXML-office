@@ -12,10 +12,10 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class CommonSlideData : PresentationCommonProperties
 	{
-		private readonly P.CommonSlideData openXMLCommonSlideData;
+		private readonly P.CommonSlideData documentCommonSlideData;
 		internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
 		{
-			openXMLCommonSlideData = new P.CommonSlideData()
+			documentCommonSlideData = new P.CommonSlideData()
 			{
 				Name = PresentationConstants.GetSlideLayoutType(layoutType)
 			};
@@ -23,12 +23,12 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal CommonSlideData(P.CommonSlideData commonSlideData)
 		{
-			openXMLCommonSlideData = commonSlideData;
+			documentCommonSlideData = commonSlideData;
 		}
 		// Return OpenXML CommonSlideData Object
 		internal P.CommonSlideData GetCommonSlideData()
 		{
-			return openXMLCommonSlideData;
+			return documentCommonSlideData;
 		}
 		private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
 		{
@@ -79,8 +79,8 @@ namespace OpenXMLOffice.Presentation_2007
 			switch (commonSlideDataType)
 			{
 				case PresentationConstants.CommonSlideDataType.SLIDE_MASTER:
-					openXMLCommonSlideData.AppendChild(background);
-					openXMLCommonSlideData.AppendChild(shapeTree);
+					documentCommonSlideData.AppendChild(background);
+					documentCommonSlideData.AppendChild(shapeTree);
 					break;
 				case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
 					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>>()
@@ -159,10 +159,10 @@ namespace OpenXMLOffice.Presentation_2007
 							}.ToArray()
 						}
 					}));
-					openXMLCommonSlideData.AppendChild(shapeTree);
+					documentCommonSlideData.AppendChild(shapeTree);
 					break;
 				default: // slide
-					openXMLCommonSlideData.AppendChild(shapeTree);
+					documentCommonSlideData.AppendChild(shapeTree);
 					break;
 			}
 		}

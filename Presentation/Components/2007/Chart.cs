@@ -18,14 +18,14 @@ namespace OpenXMLOffice.Presentation_2007
 	 	where YAxisType : class, IAxisTypeOptions, new()
 	  	where ZAxisType : class, IAxisTypeOptions, new()
 	{
-		private readonly ChartPart openXMLChartPart;
+		private readonly ChartPart documentChartPart;
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// Not Required Generic
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, AreaChartSetting<PresentationSetting> areaChartSetting) : base(slide, areaChartSetting)
 		{
-			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
+			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
 			CreateChart(dataRows, areaChartSetting);
 		}
@@ -35,7 +35,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, BarChartSetting<PresentationSetting> barChartSetting) : base(slide, barChartSetting)
 		{
-			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
+			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
 			CreateChart(dataRows, barChartSetting);
 		}
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, ColumnChartSetting<PresentationSetting> columnChartSetting) : base(slide, columnChartSetting)
 		{
-			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
+			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
 			CreateChart(dataRows, columnChartSetting);
 		}
@@ -55,7 +55,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, LineChartSetting<PresentationSetting> lineChartSetting) : base(slide, lineChartSetting)
 		{
-			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
+			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
 			CreateChart(dataRows, lineChartSetting);
 		}
@@ -65,7 +65,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, PieChartSetting<PresentationSetting> pieChartSetting) : base(slide, pieChartSetting)
 		{
-			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
+			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
 			CreateChart(dataRows, pieChartSetting);
 		}
@@ -75,7 +75,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, ScatterChartSetting<PresentationSetting> scatterChartSetting) : base(slide, scatterChartSetting)
 		{
-			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
+			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
 			CreateChart(dataRows, scatterChartSetting);
 		}
@@ -84,7 +84,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Chart(Slide slide, DataCell[][] dataRows, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting) : base(slide, comboChartSetting)
 		{
-			openXMLChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
+			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
 			CreateChart(dataRows, comboChartSetting);
 		}
@@ -195,21 +195,21 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private ChartColorStylePart GetChartColorStylePart()
 		{
-			return openXMLChartPart.ChartColorStyleParts.FirstOrDefault();
+			return documentChartPart.ChartColorStyleParts.FirstOrDefault();
 		}
 		private ChartPart GetChartPart()
 		{
-			return openXMLChartPart;
+			return documentChartPart;
 		}
 		private ChartStylePart GetChartStylePart()
 		{
-			return openXMLChartPart.ChartStyleParts.FirstOrDefault();
+			return documentChartPart.ChartStyleParts.FirstOrDefault();
 		}
 		private void InitializeChartParts()
 		{
-			var unused2 = GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
-			var unused1 = GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
-			var unused = GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
+			GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
+			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
+			GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
 		}
 	}
 }

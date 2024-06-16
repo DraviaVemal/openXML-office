@@ -27,7 +27,7 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		internal ChartSetting<ApplicationSpecificSetting> chartSetting;
 		private readonly C.Chart chart;
-		private readonly C.ChartSpace openXMLChartSpace;
+		private readonly C.ChartSpace documentChartSpace;
 		/// <summary>
 		/// Chart base class constructor restricted only for inheritance use
 		/// </summary>
@@ -38,7 +38,7 @@ namespace OpenXMLOffice.Global_2007
 			CategoryAxisId = chartSetting.categoryAxisId ?? CategoryAxisId;
 			ValueAxisId = chartSetting.valueAxisId ?? ValueAxisId;
 			this.chartSetting = chartSetting;
-			openXMLChartSpace = CreateChartSpace();
+			documentChartSpace = CreateChartSpace();
 			chart = CreateChart();
 			GetChartSpace().Append(chart);
 		}
@@ -47,7 +47,7 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public virtual C.ChartSpace GetChartSpace()
 		{
-			return openXMLChartSpace;
+			return documentChartSpace;
 		}
 		/// <summary>
 		/// Create Bubble Size Axis for the chart

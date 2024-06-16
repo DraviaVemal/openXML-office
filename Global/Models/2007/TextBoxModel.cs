@@ -93,18 +93,18 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Gets or sets the height of the text box.
 		/// </summary>
-		public uint height = 100;
+		public int height = 100;
 		/// <summary>
 		/// Gets or sets the width of the text box.
 		/// </summary>
-		public uint width = 100;
+		public int width = 100;
 		/// <summary>
 		/// Gets or sets the X-coordinate of the text box in EMUs (English Metric Units).
 		/// </summary>
-		public uint x = 0;
+		public int x = 0;
 		/// <summary>
 		/// Gets or sets the Y-coordinate of the text box in EMUs (English Metric Units).
 		/// </summary>
-		public uint y = 0;
+		public int y = 0;
 	}
 }

@@ -24,7 +24,7 @@ namespace OpenXMLOffice.Global_2007
 			new int?[]{50000, 130000 ,103000,90000,98000},
 			new int?[]{100000, 120000 ,null,63000,null}
 		};
-		private readonly A.Theme openXMLTheme = new A.Theme();
+		private readonly A.Theme documentTheme = new A.Theme();
 		/// <summary>
 		/// Creates a new theme with the given pallet.
 		/// </summary>
@@ -41,7 +41,7 @@ namespace OpenXMLOffice.Global_2007
 		/// </returns>
 		public A.Theme GetTheme()
 		{
-			return openXMLTheme;
+			return documentTheme;
 		}
 		private static A.Outline AppendNodes(int width)
 		{
@@ -66,9 +66,9 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private void CreateTheme(ThemePallet ThemePallet)
 		{
-			openXMLTheme.Name = "Office Theme";
-			openXMLTheme.ObjectDefaults = new A.ObjectDefaults();
-			openXMLTheme.ThemeElements = new A.ThemeElements()
+			documentTheme.Name = "Office Theme";
+			documentTheme.ObjectDefaults = new A.ObjectDefaults();
+			documentTheme.ThemeElements = new A.ThemeElements()
 			{
 				FontScheme = GenerateFontScheme(),
 				FormatScheme = GenerateFormatScheme(),

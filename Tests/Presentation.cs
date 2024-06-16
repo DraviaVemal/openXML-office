@@ -4,6 +4,7 @@ using X = OpenXMLOffice.Spreadsheet_2007;
 using G = OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Presentation_2007;
 using OpenXMLOffice.Global_2016;
+using OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Tests
 {
 	/// <summary>
@@ -103,7 +104,7 @@ namespace OpenXMLOffice.Tests
 			sheet.SetRow(11, 1, CommonMethod.CreateDataCellPayload()[2], null);
 			excel.SaveAs(chart.GetWorkBookStream());
 			//3
-			var areaChart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			Chart<CategoryAxis, ValueAxis, ValueAxis> areaChart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -504,6 +505,26 @@ namespace OpenXMLOffice.Tests
 		public void AddBlankSlide()
 		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			Assert.IsTrue(true);
+		}
+		/// <summary>
+		/// Add Shape to Slide
+		/// </summary>
+		[TestMethod]
+		public void AddRectangleShape()
+		{
+			Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			RectangleShapeModel<PresentationSetting, SolidOptions, SolidOptions> rectangleShapeModel = new()
+			{
+				applicationSpecificSetting = new()
+				{
+					X = 0,
+					Y = 0,
+					Height = (int)ConverterUtils.PixelsToEmu(100),
+					Width = (int)ConverterUtils.PixelsToEmu(100)
+				}
+			};
+			slide.AddShape(rectangleShapeModel);
 			Assert.IsTrue(true);
 		}
 		/// <summary>

@@ -9,19 +9,19 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class ViewProperties
 	{
-		private readonly P.ViewProperties openXMLViewProperties = new P.ViewProperties();
+		private readonly P.ViewProperties documentViewProperties = new P.ViewProperties();
 		/// <summary>
 		/// Create New View Properties
 		/// </summary>
 		public ViewProperties()
 		{
-			openXMLViewProperties.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-			openXMLViewProperties.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-			openXMLViewProperties.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
-			var unused3 = openXMLViewProperties.AppendChild(CreateNormalViewProperties());
-			var unused2 = openXMLViewProperties.AppendChild(CreateSlideViewProperties());
-			var unused1 = openXMLViewProperties.AppendChild(CreateNotesTextViewProperties());
-			var unused = openXMLViewProperties.AppendChild(new P.GridSpacing()
+			documentViewProperties.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+			documentViewProperties.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+			documentViewProperties.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
+			documentViewProperties.AppendChild(CreateNormalViewProperties());
+			documentViewProperties.AppendChild(CreateSlideViewProperties());
+			documentViewProperties.AppendChild(CreateNotesTextViewProperties());
+			documentViewProperties.AppendChild(new P.GridSpacing()
 			{
 				Cx = 72008,
 				Cy = 72008
@@ -34,7 +34,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </returns>
 		public P.ViewProperties GetViewProperties()
 		{
-			return openXMLViewProperties;
+			return documentViewProperties;
 		}
 		private static P.NotesTextViewProperties CreateNotesTextViewProperties()
 		{

@@ -84,9 +84,9 @@ namespace OpenXMLOffice.Presentation_2016
 		}
 		private void InitializeChartParts()
 		{
-			var unused2 = GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
-			var unused1 = GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
-			var unused = GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
+			GetChartPart().AddNewPart<EmbeddedPackagePart>(EmbeddedPackagePartType.Xlsx.ContentType, GetNextChartRelationId());
+			GetChartPart().AddNewPart<ChartColorStylePart>(GetNextChartRelationId());
+			GetChartPart().AddNewPart<ChartStylePart>(GetNextChartRelationId());
 		}
 	}
 }

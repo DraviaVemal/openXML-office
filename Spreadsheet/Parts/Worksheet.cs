@@ -18,7 +18,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	public class Worksheet : Drawing
 	{
 		private readonly Excel excel;
-		private readonly X.Worksheet openXMLworksheet;
+		private readonly X.Worksheet documentWorksheet;
 		private readonly X.Sheet sheet;
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Worksheet"/> class.
@@ -26,7 +26,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Worksheet(Excel excel, X.Worksheet worksheet, X.Sheet _sheet)
 		{
 			this.excel = excel;
-			openXMLworksheet = worksheet;
+			documentWorksheet = worksheet;
 			sheet = _sheet;
 		}
 		/// <summary>
@@ -92,11 +92,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				throw new ArgumentOutOfRangeException("Column Property starts from 1");
 			}
-			X.Columns columns = openXMLworksheet.GetFirstChild<X.Columns>();
+			X.Columns columns = documentWorksheet.GetFirstChild<X.Columns>();
 			if (columns == null)
 			{
 				columns = new X.Columns();
-				openXMLworksheet.InsertBefore(columns, openXMLworksheet.GetFirstChild<X.SheetData>());
+				documentWorksheet.InsertBefore(columns, documentWorksheet.GetFirstChild<X.SheetData>());
 			}
 			X.Column existingColumn = columns.Elements<X.Column>().FirstOrDefault(c => c.Max.Value == col && c.Min.Value == col);
 			if (existingColumn != null)
@@ -246,7 +246,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					}
 				}
 			}
-			openXMLworksheet.Save();
+			documentWorksheet.Save();
 		}
 		/// <summary>
 		///
@@ -357,7 +357,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				if (mergeCells == null)
 				{
 					mergeCells = new X.MergeCells();
-					openXMLworksheet.Append(mergeCells);
+					documentWorksheet.Append(mergeCells);
 				}
 				if (mergeCells != null && mergeCells.Count > 0)
 				{
@@ -421,25 +421,25 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal X.Worksheet GetWorksheet()
 		{
-			return openXMLworksheet;
+			return documentWorksheet;
 		}
 		internal X.SheetData GetWorkSheetData()
 		{
-			X.SheetData SheetData = openXMLworksheet.Elements<X.SheetData>().FirstOrDefault();
+			X.SheetData SheetData = documentWorksheet.Elements<X.SheetData>().FirstOrDefault();
 			if (SheetData == null)
 			{
-				return openXMLworksheet.AppendChild(new X.SheetData());
+				return documentWorksheet.AppendChild(new X.SheetData());
 			}
 			return SheetData;
 		}
 		internal X.Hyperlinks GetWorkSheetHyperlinks()
 		{
-			X.Hyperlinks hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
+			X.Hyperlinks hyperlinks = documentWorksheet.Elements<X.Hyperlinks>().FirstOrDefault();
 			return hyperlinks;
 		}
 		internal X.MergeCells GetWorkSheetMergeCell()
 		{
-			X.MergeCells mergeCells = openXMLworksheet.Elements<X.MergeCells>().FirstOrDefault();
+			X.MergeCells mergeCells = documentWorksheet.Elements<X.MergeCells>().FirstOrDefault();
 			return mergeCells;
 		}
 		internal void AddHyperlink(string relationshipId, string toolTip)
@@ -448,7 +448,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal void AddHyperlink(string relationshipId, string toolTip, string location)
 		{
-			X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks() ?? openXMLworksheet.AppendChild(new X.Hyperlinks());
+			X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks() ?? documentWorksheet.AppendChild(new X.Hyperlinks());
 			if (location != null)
 			{
 				hyperlinks.AppendChild(new X.Hyperlink()
@@ -469,7 +469,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal WorksheetPart GetWorksheetPart()
 		{
-			return openXMLworksheet.WorksheetPart;
+			return documentWorksheet.WorksheetPart;
 		}
 		internal string GetNextSheetPartRelationId()
 		{

@@ -15,14 +15,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	 	where YAxisType : class, IAxisTypeOptions, new()
 	  	where ZAxisType : class, IAxisTypeOptions, new()
 	{
-		private readonly ChartPart openXMLChartPart;
+		private readonly ChartPart documentChartPart;
 		/// <summary>
 		/// Create Area Chart with provided settings
 		/// </summary>
 		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, AreaChartSetting<ExcelSetting> areaChartSetting) : base(worksheet, areaChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
-			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
+			documentChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartData, dataRange, areaChartSetting);
@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, BarChartSetting<ExcelSetting> barChartSetting) : base(worksheet, barChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
-			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
+			documentChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartData, dataRange, barChartSetting);
@@ -44,7 +44,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ColumnChartSetting<ExcelSetting> columnChartSetting) : base(worksheet, columnChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
-			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
+			documentChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartData, dataRange, columnChartSetting);
@@ -55,7 +55,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, LineChartSetting<ExcelSetting> lineChartSetting) : base(worksheet, lineChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
-			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
+			documentChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartData, dataRange, lineChartSetting);
@@ -66,7 +66,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, PieChartSetting<ExcelSetting> pieChartSetting) : base(worksheet, pieChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
-			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
+			documentChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartData, dataRange, pieChartSetting);
@@ -77,7 +77,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ScatterChartSetting<ExcelSetting> scatterChartSetting) : base(worksheet, scatterChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
-			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
+			documentChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartData, dataRange, scatterChartSetting);
@@ -88,7 +88,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Chart(Worksheet worksheet, ChartData[][] chartData, DataRange dataRange, ComboChartSetting<ExcelSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting) : base(worksheet, comboChartSetting)
 		{
 			string chartId = worksheet.GetNextDrawingPartRelationId();
-			openXMLChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
+			documentChartPart = worksheet.GetDrawingsPart().AddNewPart<ChartPart>(chartId);
 			InitializeChartParts();
 			ConnectDrawingToChart(worksheet, chartId);
 			CreateChart(chartData, dataRange, comboChartSetting);
@@ -181,15 +181,15 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private ChartColorStylePart GetChartColorStylePart()
 		{
-			return openXMLChartPart.ChartColorStyleParts.FirstOrDefault();
+			return documentChartPart.ChartColorStyleParts.FirstOrDefault();
 		}
 		private ChartPart GetChartPart()
 		{
-			return openXMLChartPart;
+			return documentChartPart;
 		}
 		private ChartStylePart GetChartStylePart()
 		{
-			return openXMLChartPart.ChartStyleParts.FirstOrDefault();
+			return documentChartPart.ChartStyleParts.FirstOrDefault();
 		}
 		private void InitializeChartParts()
 		{

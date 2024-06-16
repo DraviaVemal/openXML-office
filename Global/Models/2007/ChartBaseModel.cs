@@ -655,21 +655,78 @@ namespace OpenXMLOffice.Global_2007
 	public class PresentationSetting : ISizeAndPosition
 	{
 		/// <summary>
-		/// Chart Height in EMU
+		/// Value in EMU
 		/// </summary>
-		public uint height = 6858000;
+		private int _height = 6858000;
+		private int _width = 12192000;
 		/// <summary>
-		/// Chart Width in EMU
+		/// Value in EMU
 		/// </summary>
-		public uint width = 12192000;
+		private int _y = 0;
 		/// <summary>
-		/// Chart X Position in EMU
+		/// Value in EMU
 		/// </summary>
-		public uint x = 0;
+		private int _x = 0;
 		/// <summary>
-		/// Chart Y Position in EMU
+		/// Chart Height in Px
 		/// </summary>
-		public uint y = 0;
+		public int Height
+		{
+			get
+			{
+				return _height;
+			}
+			set
+			{
+				// _height = (int)ConverterUtils.PixelsToEmu(value);
+				_height = value;
+			}
+		}
+		/// <summary>
+		/// Chart Width in Px
+		/// </summary>
+		public int Width
+		{
+			get
+			{
+				return _width;
+			}
+			set
+			{
+				// _width = (int)ConverterUtils.PixelsToEmu(value);
+				_width = value;
+			}
+		}
+		/// <summary>
+		/// Chart X Position in Px
+		/// </summary>
+		public int X
+		{
+			get
+			{
+				return _x;
+			}
+			set
+			{
+				// _x = (int)ConverterUtils.PixelsToEmu(value);
+				_x = value;
+			}
+		}
+		/// <summary>
+		/// Chart Y Position in Px
+		/// </summary>
+		public int Y
+		{
+			get
+			{
+				return _y;
+			}
+			set
+			{
+				// _y = (int)ConverterUtils.PixelsToEmu(value);
+				_y = value;
+			}
+		}
 	}
 	/// <summary>
 	///
