@@ -116,7 +116,14 @@ namespace OpenXMLOffice.Global_2007
     /// <summary>
     ///
     /// </summary>
-    public class NoShape : IShapeTypeDetailsModel { }
+    public class NoShape<ApplicationSpecificSetting> : IShapeTypeDetailsModel
+        where ApplicationSpecificSetting : class, ISizeAndPosition, new()
+    {
+        /// <summary>
+        ///
+        /// </summary>
+        public ApplicationSpecificSetting applicationSpecificSetting = new ApplicationSpecificSetting();
+    }
     /// <summary>
     ///
     /// </summary>
@@ -148,11 +155,11 @@ namespace OpenXMLOffice.Global_2007
         /// <summary>
         ///
         /// </summary>
-        public ShapeRectangleTypes rectangleType = ShapeRectangleTypes.RECTANGLE;
+        public TextOptions text = null;
         /// <summary>
         ///
         /// </summary>
-        public TextOptions text = null;
+        public ShapeRectangleTypes rectangleType = ShapeRectangleTypes.RECTANGLE;
         /// <summary>
         ///
         /// </summary>
@@ -165,7 +172,7 @@ namespace OpenXMLOffice.Global_2007
         ///
         /// </summary>
         public FillColorOption fillColorOption = new FillColorOption();
-    }
+    } 
     /// <summary>
     ///
     /// </summary>

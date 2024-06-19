@@ -108,7 +108,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		private void ConnectDrawingToChart(Worksheet worksheet, string chartId)
 		{
 			// Add anchor to drawing for chart graphics
-			XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, NoShape>()
+			XDR.TwoCellAnchor twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, NoShape<ExcelSetting>>()
 			{
 				anchorEditType = AnchorEditType.NONE,
 				from = new AnchorPosition()

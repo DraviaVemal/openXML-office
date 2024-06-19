@@ -2,9 +2,8 @@
 
 using X = OpenXMLOffice.Spreadsheet_2007;
 using G = OpenXMLOffice.Global_2007;
+using G16 = OpenXMLOffice.Global_2016;
 using OpenXMLOffice.Presentation_2007;
-using OpenXMLOffice.Global_2016;
-using OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Tests
 {
 	/// <summary>
@@ -104,7 +103,7 @@ namespace OpenXMLOffice.Tests
 			sheet.SetRow(11, 1, CommonMethod.CreateDataCellPayload()[2], null);
 			excel.SaveAs(chart.GetWorkBookStream());
 			//3
-			Chart<CategoryAxis, ValueAxis, ValueAxis> areaChart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			Chart<G.CategoryAxis, G.ValueAxis, G.ValueAxis> areaChart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -491,7 +490,7 @@ namespace OpenXMLOffice.Tests
 					dataType = X.CellDataType.NUMBER
 				};
 			}
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new WaterfallChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new G16.WaterfallChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			});
@@ -514,14 +513,14 @@ namespace OpenXMLOffice.Tests
 		public void AddRectangleShape()
 		{
 			Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-			RectangleShapeModel<PresentationSetting, SolidOptions, SolidOptions> rectangleShapeModel = new()
+			G.RectangleShapeModel<G.PresentationSetting, G.SolidOptions, G.SolidOptions> rectangleShapeModel = new()
 			{
 				applicationSpecificSetting = new()
 				{
 					X = 0,
 					Y = 0,
-					Height = (int)ConverterUtils.PixelsToEmu(100),
-					Width = (int)ConverterUtils.PixelsToEmu(100)
+					Height = (int)G.ConverterUtils.PixelsToEmu(100),
+					Width = (int)G.ConverterUtils.PixelsToEmu(100)
 				}
 			};
 			slide.AddShape(rectangleShapeModel);
@@ -1020,7 +1019,7 @@ namespace OpenXMLOffice.Tests
 			List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
 			List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
 			List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
-			shapes1[0].ReplaceChart(slide.AddChart(data, new WaterfallChartSetting<G.PresentationSetting>()
+			shapes1[0].ReplaceChart(slide.AddChart(data, new G16.WaterfallChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			}));

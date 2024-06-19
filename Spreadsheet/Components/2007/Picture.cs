@@ -71,7 +71,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 						break;
 				}
 			}
-			XDR.TwoCellAnchor twoCellAnchor = currentWorksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, NoShape>()
+			XDR.TwoCellAnchor twoCellAnchor = currentWorksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, NoShape<ExcelSetting>>()
 			{
 				anchorEditType = AnchorEditType.ONE_CELL,
 				from = excelPictureSetting.from,
