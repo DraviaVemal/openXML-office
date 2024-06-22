@@ -58,7 +58,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
                 worksheet.GetDrawing().AppendChild(twoCellAnchor);
             }
         }
-
+        
         internal void MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(RectangleShapeModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()

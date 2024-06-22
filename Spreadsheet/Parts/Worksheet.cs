@@ -54,8 +54,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return shape;
 		}
 		/// <summary>
-		/// Insert Shape into slide
+		/// Add Rectangle Shape To the Worksheet
 		/// </summary>
+		/// <typeparam name="LineColorOption">Shape border line Color option</typeparam>
+		/// <typeparam name="FillColorOption">Shape Fill Color option</typeparam>
+		/// <typeparam name="TextColorOption">Shape Text Color Option</typeparam>
+		/// <param name="rectangleModel">Shape model data</param>
+		/// <returns>OpenXML-Office Shape Object that can manipulate additional properties</returns>
 		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(RectangleShapeModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
