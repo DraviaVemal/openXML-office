@@ -50,7 +50,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			where LineColorOption : class, IColorOptions, new()
 		{
 			Shape shape = new Shape(this);
-			return shape.MakeLine(lineModel);
+			shape.MakeLine(lineModel);
+			return shape;
 		}
 		/// <summary>
 		/// Insert Shape into slide
@@ -61,7 +62,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			where TextColorOption : class, IColorOptions, new()
 		{
 			Shape shape = new Shape(this);
-			return shape.MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(rectangleModel);
+			shape.MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(rectangleModel);
+			return shape;
 		}
 		/// <summary>
 		/// Insert Shape into slide
@@ -72,7 +74,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			where TextColorOption : class, IColorOptions, new()
 		{
 			Shape shape = new Shape(this);
-			return shape.MakeArrow<LineColorOption, FillColorOption, TextColorOption>(arrowModel);
+			shape.MakeArrow<LineColorOption, FillColorOption, TextColorOption>(arrowModel);
+			return shape;
 		}
 		/// <summary>
 		/// Sets the properties for a column based on a starting cell ID in a worksheet.

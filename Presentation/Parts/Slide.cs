@@ -188,7 +188,8 @@ namespace OpenXMLOffice.Presentation_2007
 			P.Shape openXmlShape = new P.Shape();
 			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
 			Shape shape = new Shape(openXmlShape);
-			return shape.AddLine(lineModel);
+			shape.MakeLine(lineModel);
+			return shape;
 		}
 		/// <summary>
 		/// Insert Shape into slide
@@ -198,7 +199,7 @@ namespace OpenXMLOffice.Presentation_2007
 			where FillColorOption : class, IColorOptions, new()
 		{
 			Shape shape = new Shape();
-			shape.AddRectangle(rectangleModel);
+			shape.MakeRectangle(rectangleModel);
 			GetSlide().CommonSlideData.ShapeTree.Append(shape.GetDocumentShape());
 			return shape;
 		}
@@ -212,7 +213,8 @@ namespace OpenXMLOffice.Presentation_2007
 			P.Shape openXmlShape = new P.Shape();
 			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
 			Shape shape = new Shape(openXmlShape);
-			return shape.AddArrow(arrowModel);
+			shape.MakeArrow(arrowModel);
+			return shape;
 		}
 		/// <summary>
 		/// 

@@ -29,7 +29,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
             twoCellAnchor.Remove();
         }
 
-        internal Shape MakeLine<LineColorOption>(LineShapeModel<ExcelSetting, LineColorOption> lineModel)
+        internal void MakeLine<LineColorOption>(LineShapeModel<ExcelSetting, LineColorOption> lineModel)
         where LineColorOption : class, IColorOptions, new()
         {
             twoCellAnchor = worksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, LineShapeModel<PresentationSetting, LineColorOption>>()
@@ -57,10 +57,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
             {
                 worksheet.GetDrawing().AppendChild(twoCellAnchor);
             }
-            return this;
         }
 
-        internal Shape MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(RectangleShapeModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
+        internal void MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(RectangleShapeModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         where TextColorOption : class, IColorOptions, new()
@@ -90,10 +89,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
             {
                 worksheet.GetDrawing().AppendChild(twoCellAnchor);
             }
-            return this;
         }
 
-        internal Shape MakeArrow<LineColorOption, FillColorOption, TextColorOption>(ArrowShapeModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
+        internal void MakeArrow<LineColorOption, FillColorOption, TextColorOption>(ArrowShapeModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
         where LineColorOption : class, IColorOptions, new()
         where FillColorOption : class, IColorOptions, new()
         where TextColorOption : class, IColorOptions, new()
@@ -123,7 +121,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
             {
                 worksheet.GetDrawing().AppendChild(twoCellAnchor);
             }
-            return this;
         }
     }
 }
