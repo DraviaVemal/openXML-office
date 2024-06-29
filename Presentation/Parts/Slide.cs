@@ -17,7 +17,7 @@ namespace OpenXMLOffice.Presentation_2007
 	/// </summary>
 	public class Slide
 	{
-		private readonly P.Slide documentSlide = new P.Slide();
+		private readonly P.Slide openXMLSlide = new P.Slide();
 		/// <summary>
 		///
 		/// </summary>
@@ -25,11 +25,11 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			get
 			{
-				return documentSlide.Show;
+				return openXMLSlide.Show;
 			}
 			set
 			{
-				documentSlide.Show = value;
+				openXMLSlide.Show = value;
 			}
 		}
 		internal Slide(P.Slide OpenXMLSlide = null, SlideModel slideModel = null)
@@ -40,94 +40,102 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (OpenXMLSlide != null)
 			{
-				documentSlide = OpenXMLSlide;
+				openXMLSlide = OpenXMLSlide;
 			}
 			else
 			{
 				CommonSlideData commonSlideData = new CommonSlideData(PresentationConstants.CommonSlideDataType.SLIDE, PresentationConstants.SlideLayoutType.BLANK);
-				documentSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
-				documentSlide.ColorMapOverride = new P.ColorMapOverride()
+				openXMLSlide.CommonSlideData = commonSlideData.GetCommonSlideData();
+				openXMLSlide.ColorMapOverride = new P.ColorMapOverride()
 				{
 					MasterColorMapping = new A.MasterColorMapping()
 				};
-				documentSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-				documentSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+				openXMLSlide.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+				openXMLSlide.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 			}
-			documentSlide.Show = !slideModel.hideSlide;
+			openXMLSlide.Show = !slideModel.hideSlide;
 		}
 
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
-		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, AreaChartSetting<PresentationSetting> AreaChartSetting)
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, AreaChartSetting<ApplicationSpecificSetting> AreaChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, AreaChartSetting);
+			Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, AreaChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Bar chart to the slide.
 		/// </summary>
-		public Chart<ValueAxis, CategoryAxis, ValueAxis> AddChart(DataCell[][] DataCells, BarChartSetting<PresentationSetting> BarChartSetting)
+		public Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, BarChartSetting<ApplicationSpecificSetting> BarChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ValueAxis, CategoryAxis, ValueAxis> Chart = new Chart<ValueAxis, CategoryAxis, ValueAxis>(this, DataCells, BarChartSetting);
+			Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis>(this, DataCells, BarChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Column chart to the slide.
 		/// </summary>
-		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, ColumnChartSetting<PresentationSetting> ColumnChartSetting)
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ColumnChartSetting<ApplicationSpecificSetting> ColumnChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, ColumnChartSetting);
+			Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, ColumnChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Line chart to the slide.
 		/// </summary>
-		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, LineChartSetting<PresentationSetting> LineChartSetting)
+		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, LineChartSetting<ApplicationSpecificSetting> LineChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, LineChartSetting);
+			Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, LineChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Pie chart to the slide.
 		/// </summary>
-		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, PieChartSetting<PresentationSetting> PieChartSetting)
+		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, PieChartSetting<ApplicationSpecificSetting> PieChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ValueAxis, ValueAxis, ValueAxis>(this, DataCells, PieChartSetting);
+			Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, DataCells, PieChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Scatter chart to the slide.
 		/// </summary>
-		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, ScatterChartSetting<PresentationSetting> ScatterChartSetting)
+		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, ScatterChartSetting<ApplicationSpecificSetting> ScatterChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			Chart<ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ValueAxis, ValueAxis, ValueAxis>(this, DataCells, ScatterChartSetting);
+			Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, DataCells, ScatterChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public Chart<XAxisType, YAxisType, ZAxisType> AddChart<XAxisType, YAxisType, ZAxisType>(DataCell[][] DataCells, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
+		public Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> AddChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(DataCell[][] DataCells, ComboChartSetting<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 			where XAxisType : class, IAxisTypeOptions, new()
 			where YAxisType : class, IAxisTypeOptions, new()
 			where ZAxisType : class, IAxisTypeOptions, new()
 		{
-			Chart<XAxisType, YAxisType, ZAxisType> Chart = new Chart<XAxisType, YAxisType, ZAxisType>(this, DataCells, comboChartSetting);
+			Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> Chart = new Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(this, DataCells, comboChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
 			return Chart;
 		}
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public P16.Chart AddChart(DataCell[][] DataCells, WaterfallChartSetting<PresentationSetting> waterfallChartSetting)
+		public P16.Chart<ApplicationSpecificSetting> AddChart<ApplicationSpecificSetting>(DataCell[][] DataCells, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting)
+			where ApplicationSpecificSetting : PresentationSetting, new()
 		{
-			P16.Chart Chart = new P16.Chart(this, DataCells, waterfallChartSetting);
+			P16.Chart<ApplicationSpecificSetting> Chart = new P16.Chart<ApplicationSpecificSetting>(this, DataCells, waterfallChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetAlternateContent());
 			return Chart;
 		}
@@ -182,39 +190,12 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Insert Shape into slide
 		/// </summary>
-		public Shape AddShape<LineColorOption>(LineShapeModel<PresentationSetting, LineColorOption> lineModel)
-			where LineColorOption : class, IColorOptions, new()
+		public Shape InsertShape(ShapeModel shapeModel)
 		{
 			P.Shape openXmlShape = new P.Shape();
 			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
 			Shape shape = new Shape(openXmlShape);
-			shape.MakeLine(lineModel);
-			return shape;
-		}
-		/// <summary>
-		/// Insert Shape into slide
-		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption>(RectangleShapeModel<PresentationSetting, LineColorOption, FillColorOption> rectangleModel)
-			where LineColorOption : class, IColorOptions, new()
-			where FillColorOption : class, IColorOptions, new()
-		{
-			Shape shape = new Shape();
-			shape.MakeRectangle(rectangleModel);
-			GetSlide().CommonSlideData.ShapeTree.Append(shape.GetDocumentShape());
-			return shape;
-		}
-		/// <summary>
-		/// Insert Shape into slide
-		/// </summary>
-		public Shape AddShape<LineColorOption, FillColorOption>(ArrowShapeModel<PresentationSetting, LineColorOption, FillColorOption> arrowModel)
-			where LineColorOption : class, IColorOptions, new()
-			where FillColorOption : class, IColorOptions, new()
-		{
-			P.Shape openXmlShape = new P.Shape();
-			GetSlide().CommonSlideData.ShapeTree.Append(openXmlShape);
-			Shape shape = new Shape(openXmlShape);
-			shape.MakeArrow(arrowModel);
-			return shape;
+			return shape.AddShape(shapeModel);
 		}
 		/// <summary>
 		/// 
@@ -237,15 +218,15 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal P.Slide GetSlide()
 		{
-			return documentSlide;
+			return openXMLSlide;
 		}
 		internal SlidePart GetSlidePart()
 		{
-			return documentSlide.SlidePart;
+			return openXMLSlide.SlidePart;
 		}
 		private P.CommonSlideData GetCommonSlideData()
 		{
-			return documentSlide.CommonSlideData;
+			return openXMLSlide.CommonSlideData;
 		}
 	}
 }

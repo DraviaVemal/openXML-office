@@ -8,10 +8,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	/// Represents Text box class to build on
 	/// </summary>
-	public class TextBox : SpreadSheetCommonProperties
+	public class TextBox : CommonProperties
 	{
 		private readonly TextBoxSetting textBoxSetting;
-		private readonly XDR.Shape documentShape;
+		private readonly XDR.Shape openXMLShape;
 		private readonly Worksheet worksheet;
 		/// <summary>
 		/// Create Text box with provided settings
@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal XDR.Shape GetTextBoxShape()
 		{
-			return documentShape;
+			return openXMLShape;
 		}
 	}
 }

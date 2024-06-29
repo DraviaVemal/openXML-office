@@ -8,6 +8,7 @@ using A = DocumentFormat.OpenXml.Drawing;
 using G = OpenXMLOffice.Global_2007;
 using P = DocumentFormat.OpenXml.Presentation;
 using A16 = DocumentFormat.OpenXml.Office2016.Drawing;
+using OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -156,38 +157,61 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				for (int i = 0; i < ColumnCount; i++)
 				{
-					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension( new A16.ColIdIdentifier() { Val = (UInt32) (20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = tableSetting.width / ColumnCount });
+					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension(new A16.ColIdIdentifier() { Val = (UInt32)(20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = tableSetting.width / ColumnCount });
 				}
 			}
 			else
 			{
-				for (int i = 0; i <= ColumnCount; i++)
+				for (int i = 0; i < ColumnCount; i++)
 				{
-					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension( new A16.ColIdIdentifier() { Val = (UInt32) (20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
+					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension(new A16.ColIdIdentifier() { Val = (UInt32)(20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
 				}
 			}
 			return TableGrid;
 		}
 		private void AddMergeRange(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
 		{
-			// if (mergeRanges.Any(
-			// 	range =>
-			// 		G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
-			// 		G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY)))
-			// {
-			// 	MergeRange errorRange = mergeRanges.Find(
-			// 	range =>
-			// 		G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
-			// 		G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY));
-			// 	throw new ArgumentException(string.Format("Table Merge Range Conflict: Found Overlap Range X:{0} Y:{1} cX:{2} cY:{3}", errorRange.topLeftX, errorRange.topLeftY, errorRange.bottomRightX, errorRange.bottomRightY));
-			// }
-			mergeRanges.Add(new MergeRange()
+			var overlappingRanges = mergeRanges.Where(range =>
+				G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
+				G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY)).ToList();
+
+			if (overlappingRanges.Any())
 			{
-				topLeftX = topLeftX,
-				topLeftY = topLeftY,
-				bottomRightX = bottomRightX,
-				bottomRightY = bottomRightY,
-			});
+				LogUtils.ShowWarning(string.Format("Warning: Table Merge Range Conflict: Found Overlap Range X:{0} Y:{1} cX:{2} cY:{3}", topLeftX, topLeftY, bottomRightX, bottomRightY));
+				LogUtils.ShowWarning("Rewriting the merge range");
+				// Merge the new range with the overlapping ranges
+				int newTopLeftX = Math.Min(topLeftX, overlappingRanges.Min(range => range.topLeftX));
+				int newTopLeftY = Math.Min(topLeftY, overlappingRanges.Min(range => range.topLeftY));
+				int newBottomRightX = Math.Max(bottomRightX, overlappingRanges.Max(range => range.bottomRightX));
+				int newBottomRightY = Math.Max(bottomRightY, overlappingRanges.Max(range => range.bottomRightY));
+
+				LogUtils.ShowWarning(string.Format("Warning: Table Merge Range Conflict: Updating New Range X:{0} Y:{1} cX:{2} cY:{3}", newTopLeftX, newTopLeftY, newBottomRightX, newBottomRightY));
+				// Remove the overlapping ranges from the list
+				foreach (var range in overlappingRanges)
+				{
+					mergeRanges.Remove(range);
+				}
+
+				// Adding the merged range to the list
+				mergeRanges.Add(new MergeRange()
+				{
+					topLeftX = newTopLeftX,
+					topLeftY = newTopLeftY,
+					bottomRightX = newBottomRightX,
+					bottomRightY = newBottomRightY
+				});
+			}
+			else
+			{
+				// If there's no overlap, add the new range as is
+				mergeRanges.Add(new MergeRange()
+				{
+					topLeftX = topLeftX,
+					topLeftY = topLeftY,
+					bottomRightX = bottomRightX,
+					bottomRightY = bottomRightY
+				});
+			}
 		}
 		private bool CheckIsColumnMerged(int col, int row)
 		{
@@ -251,7 +275,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				TableRow.Append(CreateTableCell(new TableCell(), row, rowIndex, columnIndex));
 			}
-			TableRow.Append(new A.ExtensionList(new A.Extension( new A16.RowIdIdentifier() { Val = (UInt32) (10000 + rowIndex) }) {Uri = "{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}" }));
+			TableRow.Append(new A.ExtensionList(new A.Extension(new A16.RowIdIdentifier() { Val = (UInt32)(10000 + rowIndex) }) { Uri = "{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}" }));
 			return TableRow;
 		}
 
@@ -390,7 +414,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.LeftBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
+				tableCellProperties.Append(new A.LeftBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.rightBorder.showBorder)
 			{
@@ -416,7 +440,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.RightBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
+				tableCellProperties.Append(new A.RightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.topBorder.showBorder)
 			{
@@ -442,7 +466,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.TopBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
+				tableCellProperties.Append(new A.TopBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.bottomBorder.showBorder)
 			{
@@ -468,7 +492,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.BottomBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
+				tableCellProperties.Append(new A.BottomBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.topLeftToBottomRightBorder.showBorder)
 			{
@@ -494,7 +518,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
+				tableCellProperties.Append(new A.TopLeftToBottomRightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.borderSettings.bottomLeftToTopRightBorder.showBorder)
 			{
@@ -517,7 +541,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(CreateColorComponent<G.NoFillOptions>()));
+				tableCellProperties.Append(new A.BottomLeftToTopRightBorderLineProperties(CreateColorComponent<G.NoOptions>()));
 			}
 			if (cell.cellBackground != null || row.rowBackground != null)
 			{
@@ -531,7 +555,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				tableCellProperties.Append(CreateColorComponent<G.NoFillOptions>());
+				tableCellProperties.Append(CreateColorComponent<G.NoOptions>());
 			}
 			tableCellXml.Append(tableCellProperties);
 			return tableCellXml;

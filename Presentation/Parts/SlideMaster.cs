@@ -8,7 +8,7 @@ namespace OpenXMLOffice.Presentation_2007
 {
 	internal class SlideMaster
 	{
-		internal P.SlideMaster documentSlideMaster = new P.SlideMaster();
+		internal P.SlideMaster openXMLSlideMaster = new P.SlideMaster();
 		internal P.SlideLayoutIdList slideLayoutIdList;
 		private readonly CommonSlideData commonSlideData = new CommonSlideData(PresentationConstants.CommonSlideDataType.SLIDE_MASTER, PresentationConstants.SlideLayoutType.BLANK); public SlideMaster()
 		{
@@ -24,24 +24,24 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		public P.SlideMaster GetSlideMaster()
 		{
-			return documentSlideMaster;
+			return openXMLSlideMaster;
 		}
 		public string UpdateRelationship(OpenXmlPart openXmlPart, string RelationshipId)
 		{
-			if (documentSlideMaster.SlideMasterPart != null)
+			if (openXMLSlideMaster.SlideMasterPart != null)
 			{
-				return documentSlideMaster.SlideMasterPart.CreateRelationshipToPart(openXmlPart, RelationshipId);
+				return openXMLSlideMaster.SlideMasterPart.CreateRelationshipToPart(openXmlPart, RelationshipId);
 			}
 			return null;
 		}
 		private void CreateSlideMaster()
 		{
 			slideLayoutIdList = new P.SlideLayoutIdList();
-			documentSlideMaster = new P.SlideMaster(commonSlideData.GetCommonSlideData());
-			documentSlideMaster.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-			documentSlideMaster.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-			documentSlideMaster.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
-			documentSlideMaster.AppendChild(new P.ColorMap()
+			openXMLSlideMaster = new P.SlideMaster(commonSlideData.GetCommonSlideData());
+			openXMLSlideMaster.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+			openXMLSlideMaster.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+			openXMLSlideMaster.AddNamespaceDeclaration("p", "http://schemas.openxmlformats.org/presentationml/2006/main");
+			openXMLSlideMaster.AppendChild(new P.ColorMap()
 			{
 				Accent1 = A.ColorSchemeIndexValues.Accent1,
 				Accent2 = A.ColorSchemeIndexValues.Accent2,
@@ -56,8 +56,8 @@ namespace OpenXMLOffice.Presentation_2007
 				Hyperlink = A.ColorSchemeIndexValues.Hyperlink,
 				FollowedHyperlink = A.ColorSchemeIndexValues.FollowedHyperlink
 			});
-			documentSlideMaster.AppendChild(slideLayoutIdList);
-			documentSlideMaster.AppendChild(CreateTextStyles());
+			openXMLSlideMaster.AppendChild(slideLayoutIdList);
+			openXMLSlideMaster.AppendChild(CreateTextStyles());
 		}
 		private static P.TextStyles CreateTextStyles()
 		{

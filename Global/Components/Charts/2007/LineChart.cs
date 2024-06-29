@@ -154,7 +154,7 @@ namespace OpenXMLOffice.Global_2007
 					outlineModel.lineColor.colorOption.transparency = (int)lineChartLineFormat.transparency;
 				}
 			}
-			ShapePropertiesModel<SolidOptions, NoFillOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, NoFillOptions>()
+			ShapePropertiesModel<SolidOptions, NoOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, NoOptions>()
 			{
 				lineColor = outlineModel,
 			};
@@ -205,7 +205,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			else
 			{
-				MarkerModel<NoFillOptions, NoFillOptions> marketModel = new MarkerModel<NoFillOptions, NoFillOptions>()
+				MarkerModel<NoOptions, NoOptions> marketModel = new MarkerModel<NoOptions, NoOptions>()
 				{
 					markerShapeType = MarkerShapeTypes.NONE,
 				};
