@@ -2,8 +2,8 @@
 
 using X = OpenXMLOffice.Spreadsheet_2007;
 using G = OpenXMLOffice.Global_2007;
+using G16 = OpenXMLOffice.Global_2016;
 using OpenXMLOffice.Presentation_2007;
-using OpenXMLOffice.Global_2016;
 namespace OpenXMLOffice.Tests
 {
 	/// <summary>
@@ -74,7 +74,7 @@ namespace OpenXMLOffice.Tests
 				applicationSpecificSetting = new()
 			});
 			//2
-			Chart<G.PresentationSetting, G.CategoryAxis, G.ValueAxis, G.ValueAxis> chart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			Chart<G.CategoryAxis, G.ValueAxis, G.ValueAxis> chart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				areaChartType = G.AreaChartTypes.STACKED,
@@ -103,7 +103,7 @@ namespace OpenXMLOffice.Tests
 			sheet.SetRow(11, 1, CommonMethod.CreateDataCellPayload()[2], null);
 			excel.SaveAs(chart.GetWorkBookStream());
 			//3
-			var areaChart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			Chart<G.CategoryAxis, G.ValueAxis, G.ValueAxis> areaChart = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				titleOptions = new()
@@ -491,7 +491,7 @@ namespace OpenXMLOffice.Tests
 					dataType = X.CellDataType.NUMBER
 				};
 			}
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new WaterfallChartSetting<G.PresentationSetting>()
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(data, new G16.WaterfallChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			});
@@ -523,6 +523,26 @@ namespace OpenXMLOffice.Tests
 					}
 				}
 			});
+			Assert.IsTrue(true);
+		}
+    /// <summary>
+		/// Add Shape to Slide
+		/// </summary>
+		[TestMethod]
+		public void AddRectangleShape()
+		{
+			Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			G.RectangleShapeModel<G.PresentationSetting, G.SolidOptions, G.SolidOptions> rectangleShapeModel = new()
+			{
+				applicationSpecificSetting = new()
+				{
+					X = 0,
+					Y = 0,
+					Height = (int)G.ConverterUtils.PixelsToEmu(100),
+					Width = (int)G.ConverterUtils.PixelsToEmu(100)
+				}
+			};
+			slide.AddShape(rectangleShapeModel);
 			Assert.IsTrue(true);
 		}
 		/// <summary>
@@ -1079,7 +1099,7 @@ namespace OpenXMLOffice.Tests
 			List<Shape> shapes1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
 			List<Shape> shapes2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
 			List<Shape> shapes3 = slide.FindShapeByText("Test Update").ToList();
-			shapes1[0].ReplaceChart(slide.AddChart(data, new WaterfallChartSetting<G.PresentationSetting>()
+			shapes1[0].ReplaceChart(slide.AddChart(data, new G16.WaterfallChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 			}));
@@ -1131,7 +1151,7 @@ namespace OpenXMLOffice.Tests
 			List<Shape> shape4 = slide.FindShapeByText("Slide_1_Shape_4").ToList();
 			List<Shape> shape5 = slide.FindShapeByText("Slide_1_Shape_5").ToList();
 			List<Shape> shape6 = slide.FindShapeByText("Slide_1_Shape_6").ToList();
-			shape1[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
+			shape1[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
 			new G.ColumnChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
@@ -1140,7 +1160,7 @@ namespace OpenXMLOffice.Tests
 					isEnableLegend = false
 				},
 			}));
-			shape2[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
+			shape2[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(),
 			new G.BarChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
@@ -1149,7 +1169,7 @@ namespace OpenXMLOffice.Tests
 					legendPosition = G.ChartLegendOptions.LegendPositionValues.RIGHT
 				}
 			}));
-			shape3[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
+			shape3[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				chartAxisOptions = new()
@@ -1170,11 +1190,11 @@ namespace OpenXMLOffice.Tests
 					isMinorValueLinesEnabled = true,
 				}
 			}));
-			shape4[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
+			shape4[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.LineChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new()
 			}));
-			shape5[0].ReplaceChart(new Chart<G.PresentationSetting, G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
+			shape5[0].ReplaceChart(new Chart<G.ValueAxis, G.ValueAxis, G.ValueAxis>(slide, CommonMethod.CreateDataCellPayload(), new G.AreaChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new()
 			}));
@@ -1210,74 +1230,60 @@ namespace OpenXMLOffice.Tests
 				for (int j = 0; j < columnCount; j++)
 				{
 					uint colSpanVal = 0;
+					if(i == 5 && j == 0){
+						colSpanVal = 2;
+					} else if (i == 5 && j == 2){
+						colSpanVal = 3;
+					} else if (i == 5 && j == 5){
+						colSpanVal = 3;
+					}
 					uint rowSpanVal = 0;
-					TableBorderSettings borderColorSetting = new();
-
-					if (i == 5)
-					{
-						if (j == 0)
-						{
-							colSpanVal = 2;
-						}
-						else if (j == 2)
-						{
-							colSpanVal = 3;
-						}
-						else if (j == 5)
-						{
-							colSpanVal = 3;
-						}
-					}
-
-					if (i == 0 && j == 0)
-					{
+					if(i == 6 && j == 0){
+						rowSpanVal = 2;
+					} else if (i == 6 && j == 2){
 						rowSpanVal = 2;
 					}
-					else if (i == 6 && j == 2)
-					{
-						rowSpanVal = 2;
-					}
-
-					if (i == 3 && j == 3)
-					{
-						borderColorSetting = new TableBorderSettings
+					TableBorderSettings borderColorSetting = new(){};
+					if (i == 3 && j == 3) {
+						borderColorSetting = new()
 						{
-							leftBorder = new ()
+							leftBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 							},
-							topBorder = new ()
+							topBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 								width = 2
 							},
-							rightBorder = new ()
+							rightBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 							},
-							bottomBorder = new ()
+							bottomBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000"
 							}
 						};
 					}
+						
 
-					tableCells.Add(new TableCell
+					tableCells.Add(new()
 					{
 						textValue = $"Row {i + 1}, Column {j + 1}",
 						textColor = "FF0000",
 						fontSize = 12,
-						rowSpan = rowSpanVal,
+						rowSpan = (uint)((i == 0 && j == 0) ? 3 : 0),
 						columnSpan = colSpanVal,
 						borderSettings = borderColorSetting,
 						horizontalAlignment = G.HorizontalAlignmentValues.LEFT + (i % 4)
 					});
 				}
-				TableRow row = new TableRow
+				TableRow row = new()
 				{
 					height = 370840,
 					tableCells = tableCells

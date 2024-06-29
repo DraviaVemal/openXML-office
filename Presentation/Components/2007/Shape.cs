@@ -11,14 +11,14 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Shape Class For Presentation shape manipulation
 	/// </summary>
-	public class Shape : CommonProperties
+	public class Shape : PresentationCommonProperties
 	{
-		private readonly P.Shape openXMLShape = new P.Shape();
+		private readonly P.Shape documentShape = new P.Shape();
 		internal Shape(P.Shape shape = null)
 		{
 			if (shape != null)
 			{
-				openXMLShape = shape;
+				documentShape = shape;
 			}
 		}
 
@@ -27,63 +27,82 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public void RemoveShape()
 		{
-			openXMLShape.Remove();
+			documentShape.Remove();
 		}
 
-		internal Shape AddShape(ShapeModel shapeModel)
+		internal P.Shape GetDocumentShape()
 		{
-			return this;
+			return documentShape;
+		}
+
+		internal void MakeLine<LineColorOption>(LineShapeModel<PresentationSetting, LineColorOption> lineModel)
+			where LineColorOption : class, IColorOptions, new()
+		{
+			
+		}
+
+		internal void MakeRectangle<LineColorOption, FillColorOption>(RectangleShapeModel<PresentationSetting, LineColorOption, FillColorOption> rectangleModel)
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
+		{
+			
+		}
+
+		internal void MakeArrow<LineColorOption, FillColorOption>(ArrowShapeModel<PresentationSetting, LineColorOption, FillColorOption> arrowModel)
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
+		{
+			
 		}
 
 		/// <summary>
 		/// Replace Chart for the source Shape
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> ReplaceChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> chart)
-			where ApplicationSpecificSetting : PresentationSetting, new()
+		public Chart<XAxisType, YAxisType, ZAxisType> ReplaceChart<XAxisType, YAxisType, ZAxisType>(Chart<XAxisType, YAxisType, ZAxisType> chart)
 			where XAxisType : class, IAxisTypeOptions, new()
 			where YAxisType : class, IAxisTypeOptions, new()
 			where ZAxisType : class, IAxisTypeOptions, new()
 		{
-			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
+			DocumentFormat.OpenXml.OpenXmlElement parent = documentShape.Parent;
 			if (parent == null)
 			{
 				throw new InvalidOperationException("Old shape must have a parent.");
 			}
-			if (openXMLShape.ShapeProperties.Transform2D != null)
+			if (documentShape.ShapeProperties.Transform2D != null)
 			{
-				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
+				A.Transform2D oldTransform = documentShape.ShapeProperties.Transform2D;
 				chart.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
 				chart.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (chart.GetChartGraphicFrame().Parent == null)
 			{
-				parent.InsertBefore(chart.GetChartGraphicFrame(), openXMLShape);
+				parent.InsertBefore(chart.GetChartGraphicFrame(), documentShape);
 			}
-			openXMLShape.Remove();
+			documentShape.Remove();
 			return chart;
 		}
 
 		/// <summary>
 		/// Replace 2016 Support Chart for the source Shape
 		/// </summary>
-		public P16.Chart<ApplicationSpecificSetting> ReplaceChart<ApplicationSpecificSetting>(P16.Chart<ApplicationSpecificSetting> chart) where ApplicationSpecificSetting : PresentationSetting, new()
+		public P16.Chart ReplaceChart(P16.Chart chart)
 		{
-			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
+			DocumentFormat.OpenXml.OpenXmlElement parent = documentShape.Parent;
 			if (parent == null)
 			{
 				throw new InvalidOperationException("Old shape must have a parent.");
 			}
-			if (openXMLShape.ShapeProperties.Transform2D != null)
+			if (documentShape.ShapeProperties.Transform2D != null)
 			{
-				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
+				A.Transform2D oldTransform = documentShape.ShapeProperties.Transform2D;
 				chart.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
 				chart.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (chart.GetAlternateContent().Parent == null)
 			{
-				parent.InsertBefore(chart.GetAlternateContent(), openXMLShape);
+				parent.InsertBefore(chart.GetAlternateContent(), documentShape);
 			}
-			openXMLShape.Remove();
+			documentShape.Remove();
 			return chart;
 		}
 
@@ -92,22 +111,22 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Picture ReplacePicture(Picture picture)
 		{
-			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
+			DocumentFormat.OpenXml.OpenXmlElement parent = documentShape.Parent;
 			if (parent == null)
 			{
 				throw new InvalidOperationException("Old shape must have a parent.");
 			}
-			if (openXMLShape.ShapeProperties.Transform2D != null)
+			if (documentShape.ShapeProperties.Transform2D != null)
 			{
-				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
+				A.Transform2D oldTransform = documentShape.ShapeProperties.Transform2D;
 				picture.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
 				picture.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (picture.GetPicture().Parent == null)
 			{
-				parent.InsertBefore(picture.GetPicture(), openXMLShape);
+				parent.InsertBefore(picture.GetPicture(), documentShape);
 			}
-			openXMLShape.Remove();
+			documentShape.Remove();
 			return picture;
 		}
 
@@ -116,22 +135,22 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public Table ReplaceTable(Table table)
 		{
-			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
+			DocumentFormat.OpenXml.OpenXmlElement parent = documentShape.Parent;
 			if (parent == null)
 			{
 				throw new InvalidOperationException("Old shape must have a parent.");
 			}
-			if (openXMLShape.ShapeProperties.Transform2D != null)
+			if (documentShape.ShapeProperties.Transform2D != null)
 			{
-				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
+				A.Transform2D oldTransform = documentShape.ShapeProperties.Transform2D;
 				table.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
 				table.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
 			}
 			if (table.GetTableGraphicFrame().Parent == null)
 			{
-				parent.InsertBefore(table.GetTableGraphicFrame(), openXMLShape);
+				parent.InsertBefore(table.GetTableGraphicFrame(), documentShape);
 			}
-			openXMLShape.Remove();
+			documentShape.Remove();
 			return table;
 		}
 
@@ -140,27 +159,27 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public TextBox ReplaceTextBox(TextBox textBox)
 		{
-			DocumentFormat.OpenXml.OpenXmlElement parent = openXMLShape.Parent;
+			DocumentFormat.OpenXml.OpenXmlElement parent = documentShape.Parent;
 			if (parent == null)
 			{
 				throw new InvalidOperationException("Old shape must have a parent.");
 			}
-			if (openXMLShape.ShapeProperties.Transform2D != null)
+			if (documentShape.ShapeProperties.Transform2D != null)
 			{
-				A.Transform2D oldTransform = openXMLShape.ShapeProperties.Transform2D;
+				A.Transform2D oldTransform = documentShape.ShapeProperties.Transform2D;
 				textBox.UpdateSize((uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cx), (uint)ConverterUtils.EmuToPixels(oldTransform.Extents.Cy));
 				textBox.UpdatePosition((uint)ConverterUtils.EmuToPixels(oldTransform.Offset.X), (uint)ConverterUtils.EmuToPixels(oldTransform.Offset.Y));
-				if (openXMLShape.ShapeStyle != null)
+				if (documentShape.ShapeStyle != null)
 				{
-					P.ShapeStyle ShapeStyle = (P.ShapeStyle)openXMLShape.ShapeStyle.Clone();
+					P.ShapeStyle ShapeStyle = (P.ShapeStyle)documentShape.ShapeStyle.Clone();
 					textBox.UpdateShapeStyle(ShapeStyle);
 				}
 			}
 			if (textBox.GetTextBoxShape().Parent == null)
 			{
-				parent.InsertBefore(textBox.GetTextBoxShape(), openXMLShape);
+				parent.InsertBefore(textBox.GetTextBoxShape(), documentShape);
 			}
-			openXMLShape.Remove();
+			documentShape.Remove();
 			return textBox;
 		}
 
@@ -169,9 +188,9 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		public void UpdateShape(ShapeTextModel shapeTextModel)
 		{
-			if (openXMLShape.TextBody != null)
+			if (documentShape.TextBody != null)
 			{
-				A.Paragraph paragraph = openXMLShape.TextBody.GetFirstChild<A.Paragraph>();
+				A.Paragraph paragraph = documentShape.TextBody.GetFirstChild<A.Paragraph>();
 				if (paragraph != null)
 				{
 					paragraph.RemoveAllChildren<A.Run>();

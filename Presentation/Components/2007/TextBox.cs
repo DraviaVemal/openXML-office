@@ -8,15 +8,15 @@ using P = DocumentFormat.OpenXml.Presentation;
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
-	/// Represents Textbox class to build on
+	/// Represents TextBox class to build on
 	/// </summary>
-	public class TextBox : CommonProperties
+	public class TextBox : PresentationCommonProperties
 	{
 		private readonly TextBoxSetting textBoxSetting;
-		private P.Shape openXMLShape;
+		private P.Shape documentShape;
 		private readonly Slide slide;
 		/// <summary>
-		/// Create Textbox with provided settings
+		/// Create TextBox with provided settings
 		/// </summary>
 		internal TextBox(TextBoxSetting TextBoxSetting)
 		{
@@ -24,7 +24,7 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateTextBox();
 		}
 		/// <summary>
-		/// Create Textbox with provided settings
+		/// Create TextBox with provided settings
 		/// </summary>
 		public TextBox(Slide Slide, TextBoxSetting TextBoxSetting)
 		{
@@ -34,22 +34,22 @@ namespace OpenXMLOffice.Presentation_2007
 			slide.GetSlide().CommonSlideData.ShapeTree.Append(GetTextBoxShape());
 		}
 		/// <summary>
-		/// Get Textbox Shape
+		/// Get TextBox Shape
 		/// </summary>
 		internal P.Shape GetTextBoxShape()
 		{
-			return openXMLShape;
+			return documentShape;
 		}
 		/// <summary>
-		/// Update Textbox Position
+		/// Update TextBox Position
 		/// </summary>
 		public void UpdatePosition(uint X, uint Y)
 		{
-			textBoxSetting.x = (uint)ConverterUtils.PixelsToEmu((int)X);
-			textBoxSetting.y = (uint)ConverterUtils.PixelsToEmu((int)Y);
-			if (openXMLShape != null)
+			textBoxSetting.x = (int)ConverterUtils.PixelsToEmu((int)X);
+			textBoxSetting.y = (int)ConverterUtils.PixelsToEmu((int)Y);
+			if (documentShape != null)
 			{
-				openXMLShape.ShapeProperties.Transform2D = new A.Transform2D
+				documentShape.ShapeProperties.Transform2D = new A.Transform2D
 				{
 					Offset = new A.Offset { X = textBoxSetting.x, Y = textBoxSetting.y },
 					Extents = new A.Extents { Cx = textBoxSetting.width, Cy = textBoxSetting.height }
@@ -57,15 +57,15 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 		}
 		/// <summary>
-		/// Update Textbox Size
+		/// Update TextBox Size
 		/// </summary>
 		public void UpdateSize(uint Width, uint Height)
 		{
-			textBoxSetting.width = (uint)ConverterUtils.PixelsToEmu((int)Width);
-			textBoxSetting.height = (uint)ConverterUtils.PixelsToEmu((int)Height);
-			if (openXMLShape != null)
+			textBoxSetting.width = (int)ConverterUtils.PixelsToEmu((int)Width);
+			textBoxSetting.height = (int)ConverterUtils.PixelsToEmu((int)Height);
+			if (documentShape != null)
 			{
-				openXMLShape.ShapeProperties.Transform2D = new A.Transform2D
+				documentShape.ShapeProperties.Transform2D = new A.Transform2D
 				{
 					Offset = new A.Offset { X = textBoxSetting.x, Y = textBoxSetting.y },
 					Extents = new A.Extents { Cx = textBoxSetting.width, Cy = textBoxSetting.height }
@@ -99,7 +99,7 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			else
 			{
-				ShapeProperties.Append(CreateColorComponent(new ColorOptionModel<NoOptions>()));
+				ShapeProperties.Append(CreateColorComponent(new ColorOptionModel<NoFillOptions>()));
 			}
 			List<DrawingRunModel<SolidOptions>> drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
 			foreach (TextBlock textBlock in textBoxSetting.textBlocks)
@@ -113,13 +113,13 @@ namespace OpenXMLOffice.Presentation_2007
 						case HyperlinkPropertyTypeValues.EXISTING_FILE:
 							textBlock.hyperlinkProperties.relationId = relationId;
 							textBlock.hyperlinkProperties.action = "ppaction://hlinkfile";
-							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
+							slide.GetSlidePart().AddHyperlinkRelationship(new Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
 						case HyperlinkPropertyTypeValues.TARGET_SLIDE:
 							textBlock.hyperlinkProperties.relationId = relationId;
 							textBlock.hyperlinkProperties.action = "ppaction://hlinksldjump";
 							//TODO: Update Target Slide Prop
-							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
+							slide.GetSlidePart().AddHyperlinkRelationship(new Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
 						case HyperlinkPropertyTypeValues.TARGET_SHEET:
 							throw new ArgumentException("This Option is valid only for Excel Files");
@@ -137,7 +137,7 @@ namespace OpenXMLOffice.Presentation_2007
 							break;
 						default:// Web URL
 							textBlock.hyperlinkProperties.relationId = relationId;
-							slide.GetSlidePart().AddHyperlinkRelationship(new System.Uri(textBlock.hyperlinkProperties.value), true, relationId);
+							slide.GetSlidePart().AddHyperlinkRelationship(new Uri(textBlock.hyperlinkProperties.value), true, relationId);
 							break;
 					}
 				}
@@ -173,7 +173,7 @@ namespace OpenXMLOffice.Presentation_2007
 				};
 				drawingRunModels.Add(drawingRunModel);
 			}
-			openXMLShape = new P.Shape()
+			documentShape = new P.Shape()
 			{
 				NonVisualShapeProperties = new P.NonVisualShapeProperties(
 				new P.NonVisualDrawingProperties()
@@ -196,7 +196,7 @@ namespace OpenXMLOffice.Presentation_2007
 							drawingRuns = drawingRunModels.ToArray()
 						})),
 			};
-			return openXMLShape;
+			return documentShape;
 		}
 	}
 }

@@ -503,11 +503,11 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public interface IColorOptions { }
 	/// <summary>
-	///
+	///	This will update NoFill Color as result
 	/// </summary>
-	public class NoOptions : IColorOptions { }
+	public class NoFillOptions : IColorOptions { }
 	/// <summary>
-	///
+	///	Solid Fill options
 	/// </summary>
 	public class SolidOptions : IColorOptions
 	{

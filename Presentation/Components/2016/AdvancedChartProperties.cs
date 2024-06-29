@@ -1,35 +1,33 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using System.Runtime;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
 using OpenXMLOffice.Presentation_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 using CX = DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using System.Reflection;
 using System.Collections.Generic;
 namespace OpenXMLOffice.Presentation_2016
 {
 	/// <summary>
 	///
 	/// </summary>
-	public class AdvancedChartProperties<ApplicationSpecificSetting> : ChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting, new()
+	public class AdvancedChartProperties : ChartProperties
 	{
 		private AlternateContent alternateContent;
 		private readonly TextBox errorMessage;
 		/// <summary>
 		///
 		/// </summary>
-		public AdvancedChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting) : base(slide, chartSetting)
+		public AdvancedChartProperties(Slide slide, ChartSetting<PresentationSetting> chartSetting) : base(slide, chartSetting)
 		{
 			errorMessage = new TextBox(new TextBoxSetting()
 			{
 				textBlocks = new List<TextBlock>() { new TextBlock() { textValue = "This chart is not supported in this version of PowerPoint. Requires PowerPoint 2016 or later.", } }.ToArray(),
-				x = chartSetting.applicationSpecificSetting.x,
-				y = chartSetting.applicationSpecificSetting.y,
-				width = chartSetting.applicationSpecificSetting.width,
-				height = chartSetting.applicationSpecificSetting.height,
+				x = chartSetting.applicationSpecificSetting.X,
+				y = chartSetting.applicationSpecificSetting.Y,
+				width = chartSetting.applicationSpecificSetting.Width,
+				height = chartSetting.applicationSpecificSetting.Height,
 			});
 		}
 		/// <summary>
@@ -54,13 +52,13 @@ namespace OpenXMLOffice.Presentation_2016
 				Transform = new P.Transform(
 				   new A.Offset
 				   {
-					   X = chartSetting.applicationSpecificSetting.x,
-					   Y = chartSetting.applicationSpecificSetting.y
+					   X = chartSetting.applicationSpecificSetting.X,
+					   Y = chartSetting.applicationSpecificSetting.Y
 				   },
 				   new A.Extents
 				   {
-					   Cx = chartSetting.applicationSpecificSetting.width,
-					   Cy = chartSetting.applicationSpecificSetting.height
+					   Cx = chartSetting.applicationSpecificSetting.Width,
+					   Cy = chartSetting.applicationSpecificSetting.Height
 				   }),
 				Graphic = new A.Graphic(
 				   new A.GraphicData(

@@ -6,12 +6,13 @@ using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 using OpenXMLOffice.Global_2007;
+
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
 	///
 	/// </summary>
-	public class Drawing : CommonProperties
+	public class Drawing : SpreadSheetCommonProperties
 	{
 		/// <summary>
 		///
@@ -40,7 +41,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal XDR.TwoCellAnchor CreateTwoCellAnchor(TwoCellAnchorModel twoCellAnchorModel)
+		internal XDR.TwoCellAnchor CreateTwoCellAnchor<TextColorOption, ShapeTypeOptions>(TwoCellAnchorModel<TextColorOption, ShapeTypeOptions> twoCellAnchorModel)
+		where TextColorOption : class, IColorOptions, new()
+		where ShapeTypeOptions : class, IShapeTypeDetailsModel, new()
 		{
 			XDR.TwoCellAnchor twoCellAnchor = new XDR.TwoCellAnchor(new XDR.ClientData())
 			{
@@ -82,8 +85,13 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				twoCellAnchor.AddChild(CreatePicture(twoCellAnchorModel.drawingPictureModel));
 			}
+			if (twoCellAnchorModel.shapeModel != null)
+			{
+				twoCellAnchor.AddChild(CreateShape(twoCellAnchorModel.shapeModel));
+			}
 			return twoCellAnchor;
 		}
+
 		private static XDR.GraphicFrame CreateGraphicFrame(DrawingGraphicFrame drawingGraphicFrame)
 		{
 			return new XDR.GraphicFrame()

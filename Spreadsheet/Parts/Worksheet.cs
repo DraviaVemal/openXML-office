@@ -9,6 +9,7 @@ using DocumentFormat.OpenXml.Packaging;
 using OpenXMLOffice.Global_2007;
 using X = DocumentFormat.OpenXml.Spreadsheet;
 using XDR = DocumentFormat.OpenXml.Drawing.Spreadsheet;
+
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -17,7 +18,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	public class Worksheet : Drawing
 	{
 		private readonly Excel excel;
-		private readonly X.Worksheet openXMLworksheet;
+		private readonly X.Worksheet documentWorksheet;
 		private readonly X.Sheet sheet;
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Worksheet"/> class.
@@ -25,7 +26,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal Worksheet(Excel excel, X.Worksheet worksheet, X.Sheet _sheet)
 		{
 			this.excel = excel;
-			openXMLworksheet = worksheet;
+			documentWorksheet = worksheet;
 			sheet = _sheet;
 		}
 		/// <summary>
@@ -41,6 +42,45 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public string GetSheetName()
 		{
 			return sheet.Name;
+		}
+		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape AddShape<LineColorOption>(LineShapeModel<ExcelSetting, LineColorOption> lineModel)
+			where LineColorOption : class, IColorOptions, new()
+		{
+			Shape shape = new Shape(this);
+			shape.MakeLine(lineModel);
+			return shape;
+		}
+		/// <summary>
+		/// Add Rectangle Shape To the Worksheet
+		/// </summary>
+		/// <typeparam name="LineColorOption">Shape border line Color option</typeparam>
+		/// <typeparam name="FillColorOption">Shape Fill Color option</typeparam>
+		/// <typeparam name="TextColorOption">Shape Text Color Option</typeparam>
+		/// <param name="rectangleModel">Shape model data</param>
+		/// <returns>OpenXML-Office Shape Object that can manipulate additional properties</returns>
+		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(RectangleShapeModel<ExcelSetting, LineColorOption, FillColorOption> rectangleModel)
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
+			where TextColorOption : class, IColorOptions, new()
+		{
+			Shape shape = new Shape(this);
+			shape.MakeRectangle<LineColorOption, FillColorOption, TextColorOption>(rectangleModel);
+			return shape;
+		}
+		/// <summary>
+		/// Insert Shape into slide
+		/// </summary>
+		public Shape AddShape<LineColorOption, FillColorOption, TextColorOption>(ArrowShapeModel<ExcelSetting, LineColorOption, FillColorOption> arrowModel)
+			where LineColorOption : class, IColorOptions, new()
+			where FillColorOption : class, IColorOptions, new()
+			where TextColorOption : class, IColorOptions, new()
+		{
+			Shape shape = new Shape(this);
+			shape.MakeArrow<LineColorOption, FillColorOption, TextColorOption>(arrowModel);
+			return shape;
 		}
 		/// <summary>
 		/// Sets the properties for a column based on a starting cell ID in a worksheet.
@@ -60,11 +100,11 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				throw new ArgumentOutOfRangeException("Column Property starts from 1");
 			}
-			X.Columns columns = openXMLworksheet.GetFirstChild<X.Columns>();
+			X.Columns columns = documentWorksheet.GetFirstChild<X.Columns>();
 			if (columns == null)
 			{
 				columns = new X.Columns();
-				openXMLworksheet.InsertBefore(columns, openXMLworksheet.GetFirstChild<X.SheetData>());
+				documentWorksheet.InsertBefore(columns, documentWorksheet.GetFirstChild<X.SheetData>());
 			}
 			X.Column existingColumn = columns.Elements<X.Column>().FirstOrDefault(c => c.Max.Value == col && c.Min.Value == col);
 			if (existingColumn != null)
@@ -214,7 +254,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					}
 				}
 			}
-			openXMLworksheet.Save();
+			documentWorksheet.Save();
 		}
 		/// <summary>
 		///
@@ -237,75 +277,68 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, AreaChartSetting<ApplicationSpecificSetting> areaChartSetting)
-			where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataRange dataRange, AreaChartSetting<ExcelSetting> areaChartSetting)
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, areaChartSetting);
+			return new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, areaChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, BarChartSetting<ApplicationSpecificSetting> barChartSetting)
-			where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ValueAxis, CategoryAxis, ValueAxis> AddChart(DataRange dataRange, BarChartSetting<ExcelSetting> barChartSetting)
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting, ValueAxis, CategoryAxis, ValueAxis>(this, chartData, dataRange, barChartSetting);
+			return new Chart<ValueAxis, CategoryAxis, ValueAxis>(this, chartData, dataRange, barChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ColumnChartSetting<ApplicationSpecificSetting> columnChartSetting)
-			where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataRange dataRange, ColumnChartSetting<ExcelSetting> columnChartSetting)
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, columnChartSetting);
+			return new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, columnChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, LineChartSetting<ApplicationSpecificSetting> lineChartSetting)
-			where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataRange dataRange, LineChartSetting<ExcelSetting> lineChartSetting)
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting, CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, lineChartSetting);
+			return new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, lineChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, PieChartSetting<ApplicationSpecificSetting> pieChartSetting)
-			where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(DataRange dataRange, PieChartSetting<ExcelSetting> pieChartSetting)
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, pieChartSetting);
+			return new Chart<ValueAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, pieChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis> AddChart<ApplicationSpecificSetting>(DataRange dataRange, ScatterChartSetting<ApplicationSpecificSetting> scatterChartSetting)
-			where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(DataRange dataRange, ScatterChartSetting<ExcelSetting> scatterChartSetting)
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting, ValueAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, scatterChartSetting);
+			return new Chart<ValueAxis, ValueAxis, ValueAxis>(this, chartData, dataRange, scatterChartSetting);
 		}
 		/// <summary>
 		///
 		/// </summary>
-		public Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> AddChart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(DataRange dataRange, ComboChartSetting<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
-			where ApplicationSpecificSetting : ExcelSetting, new()
+		public Chart<XAxisType, YAxisType, ZAxisType> AddChart<XAxisType, YAxisType, ZAxisType>(DataRange dataRange, ComboChartSetting<ExcelSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
 			where XAxisType : class, IAxisTypeOptions, new()
 			where YAxisType : class, IAxisTypeOptions, new()
 			where ZAxisType : class, IAxisTypeOptions, new()
 		{
 			ChartData[][] chartData = PrepareCacheData(dataRange);
 			dataRange.sheetName = dataRange.sheetName ?? GetSheetName();
-			return new Chart<ApplicationSpecificSetting, XAxisType, YAxisType, ZAxisType>(this, chartData, dataRange, comboChartSetting);
+			return new Chart<XAxisType, YAxisType, ZAxisType>(this, chartData, dataRange, comboChartSetting);
 		}
 		/// <summary>
 		/// Add Merge cell range to the current sheet if it's not overlapping with existing range
@@ -332,7 +365,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				if (mergeCells == null)
 				{
 					mergeCells = new X.MergeCells();
-					openXMLworksheet.Append(mergeCells);
+					documentWorksheet.Append(mergeCells);
 				}
 				if (mergeCells != null && mergeCells.Count > 0)
 				{
@@ -396,25 +429,25 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal X.Worksheet GetWorksheet()
 		{
-			return openXMLworksheet;
+			return documentWorksheet;
 		}
 		internal X.SheetData GetWorkSheetData()
 		{
-			X.SheetData SheetData = openXMLworksheet.Elements<X.SheetData>().FirstOrDefault();
+			X.SheetData SheetData = documentWorksheet.Elements<X.SheetData>().FirstOrDefault();
 			if (SheetData == null)
 			{
-				return openXMLworksheet.AppendChild(new X.SheetData());
+				return documentWorksheet.AppendChild(new X.SheetData());
 			}
 			return SheetData;
 		}
 		internal X.Hyperlinks GetWorkSheetHyperlinks()
 		{
-			X.Hyperlinks hyperlinks = openXMLworksheet.Elements<X.Hyperlinks>().FirstOrDefault();
+			X.Hyperlinks hyperlinks = documentWorksheet.Elements<X.Hyperlinks>().FirstOrDefault();
 			return hyperlinks;
 		}
 		internal X.MergeCells GetWorkSheetMergeCell()
 		{
-			X.MergeCells mergeCells = openXMLworksheet.Elements<X.MergeCells>().FirstOrDefault();
+			X.MergeCells mergeCells = documentWorksheet.Elements<X.MergeCells>().FirstOrDefault();
 			return mergeCells;
 		}
 		internal void AddHyperlink(string relationshipId, string toolTip)
@@ -423,7 +456,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal void AddHyperlink(string relationshipId, string toolTip, string location)
 		{
-			X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks() ?? openXMLworksheet.AppendChild(new X.Hyperlinks());
+			X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks() ?? documentWorksheet.AppendChild(new X.Hyperlinks());
 			if (location != null)
 			{
 				hyperlinks.AppendChild(new X.Hyperlink()
@@ -444,7 +477,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		internal WorksheetPart GetWorksheetPart()
 		{
-			return openXMLworksheet.WorksheetPart;
+			return documentWorksheet.WorksheetPart;
 		}
 		internal string GetNextSheetPartRelationId()
 		{

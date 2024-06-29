@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Presentation_2016
 	/// <summary>
 	///
 	/// </summary>
-	public class Chart<ApplicationSpecificSetting> : AdvancedChartProperties<ApplicationSpecificSetting> where ApplicationSpecificSetting : PresentationSetting, new()
+	public class Chart : AdvancedChartProperties
 	{
 		/// <summary>
 		///
@@ -22,7 +22,7 @@ namespace OpenXMLOffice.Presentation_2016
 		/// <summary>
 		///
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting) : base(slide, waterfallChartSetting)
+		public Chart(Slide slide, DataCell[][] dataRows, WaterfallChartSetting<PresentationSetting> waterfallChartSetting) : base(slide, waterfallChartSetting)
 		{
 			OpenXMLChartPart = slide.GetSlidePart().AddNewPart<ExtendedChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -54,17 +54,17 @@ namespace OpenXMLOffice.Presentation_2016
 		{
 			return OpenXMLChartPart;
 		}
-		private void CreateChart(DataCell[][] dataRows, WaterfallChartSetting<ApplicationSpecificSetting> waterfallChartSetting)
+		private void CreateChart(DataCell[][] dataRows, WaterfallChartSetting<PresentationSetting> waterfallChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			WaterfallChart<ApplicationSpecificSetting> waterfallChart = new WaterfallChart<ApplicationSpecificSetting>(waterfallChartSetting, ExcelToPPTdata(dataRows));
+			WaterfallChart<PresentationSetting> waterfallChart = new WaterfallChart<PresentationSetting>(waterfallChartSetting, ExcelToPPTdata(dataRows));
 			CreateExtendedChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), waterfallChartSetting.hyperlinkProperties);
 			SaveChanges(waterfallChart);
 		}
-		private void SaveChanges(AdvanceCharts<ApplicationSpecificSetting> chart)
+		private void SaveChanges(AdvanceCharts<PresentationSetting> chart)
 		{
 			GetChartPart().ChartSpace = chart.GetExtendedChartSpace();
 			GetChartStylePart().ChartStyle = ChartStyle.CreateChartStyles();

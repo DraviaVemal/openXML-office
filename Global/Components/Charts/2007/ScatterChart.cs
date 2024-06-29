@@ -224,7 +224,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			else
 			{
-				MarkerModel<NoOptions, NoOptions> markerModel = new MarkerModel<NoOptions, NoOptions>();
+				MarkerModel<NoFillOptions, NoFillOptions> markerModel = new MarkerModel<NoFillOptions, NoFillOptions>();
 				if (scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE && scatterChartSetting.scatterChartType != ScatterChartTypes.BUBBLE_3D)
 				{
 					series.Append(CreateMarker(markerModel));
