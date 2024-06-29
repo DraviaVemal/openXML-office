@@ -153,6 +153,10 @@ namespace OpenXMLOffice.Global_2007
 		///
 		/// </summary>
 		public LineWidthValues? lineEndWidth;
+		/// <summary>
+		/// Smooth Line for the Line Chart
+		/// </summary>
+		public bool? smoothLine = false;
 	}
 	/// <summary>
 	///
