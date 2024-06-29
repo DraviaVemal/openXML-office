@@ -336,7 +336,7 @@ namespace OpenXMLOffice.Global_2007
 				axis.Append(new C.TickLabelPosition { Val = AxisOptions<ValueAxis>.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
 				if(axisSetting.axisOptions.axisLineColor != null)
 				{
-					axis.Append(new List<OpenXmlElement> { CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
+					axis.Append(new List<OpenXmlElement> { CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoFillOptions>()
 					{
 						lineColor = new OutlineModel<SolidOptions>()
 						{
