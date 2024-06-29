@@ -1230,60 +1230,74 @@ namespace OpenXMLOffice.Tests
 				for (int j = 0; j < columnCount; j++)
 				{
 					uint colSpanVal = 0;
-					if(i == 5 && j == 0){
-						colSpanVal = 2;
-					} else if (i == 5 && j == 2){
-						colSpanVal = 3;
-					} else if (i == 5 && j == 5){
-						colSpanVal = 3;
-					}
 					uint rowSpanVal = 0;
-					if(i == 6 && j == 0){
-						rowSpanVal = 2;
-					} else if (i == 6 && j == 2){
+					TableBorderSettings borderColorSetting = new();
+
+					if (i == 5)
+					{
+						if (j == 0)
+						{
+							colSpanVal = 2;
+						}
+						else if (j == 2)
+						{
+							colSpanVal = 3;
+						}
+						else if (j == 5)
+						{
+							colSpanVal = 3;
+						}
+					}
+
+					if (i == 0 && j == 0)
+					{
 						rowSpanVal = 2;
 					}
-					TableBorderSettings borderColorSetting = new(){};
-					if (i == 3 && j == 3) {
-						borderColorSetting = new()
+					else if (i == 6 && j == 2)
+					{
+						rowSpanVal = 2;
+					}
+
+					if (i == 3 && j == 3)
+					{
+						borderColorSetting = new TableBorderSettings
 						{
-							leftBorder = new()
+							leftBorder = new ()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 							},
-							topBorder = new()
+							topBorder = new ()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 								width = 2
 							},
-							rightBorder = new()
+							rightBorder = new ()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 							},
-							bottomBorder = new()
+							bottomBorder = new ()
 							{
 								showBorder = true,
 								borderColor = "FF0000"
 							}
 						};
 					}
-						
 
-					tableCells.Add(new()
+					tableCells.Add(new TableCell
 					{
 						textValue = $"Row {i + 1}, Column {j + 1}",
 						textColor = "FF0000",
 						fontSize = 12,
-						rowSpan = (uint)((i == 0 && j == 0) ? 3 : 0),
+						rowSpan = rowSpanVal,
 						columnSpan = colSpanVal,
 						borderSettings = borderColorSetting,
 						horizontalAlignment = G.HorizontalAlignmentValues.LEFT + (i % 4)
 					});
 				}
-				TableRow row = new()
+				TableRow row = new TableRow
 				{
 					height = 370840,
 					tableCells = tableCells
