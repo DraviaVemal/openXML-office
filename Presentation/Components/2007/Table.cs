@@ -170,17 +170,17 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		private void AddMergeRange(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
 		{
-			if (mergeRanges.Any(
-				range =>
-					G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
-					G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY)))
-			{
-				MergeRange errorRange = mergeRanges.Find(
-				range =>
-					G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
-					G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY));
-				throw new ArgumentException(string.Format("Table Merge Range Conflict: Found Overlap Range X:{0} Y:{1} cX:{2} cY:{3}", errorRange.topLeftX, errorRange.topLeftY, errorRange.bottomRightX, errorRange.bottomRightY));
-			}
+			// if (mergeRanges.Any(
+			// 	range =>
+			// 		G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
+			// 		G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY)))
+			// {
+			// 	MergeRange errorRange = mergeRanges.Find(
+			// 	range =>
+			// 		G.Validation.IsWithinRange(topLeftX, topLeftY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY) ||
+			// 		G.Validation.IsWithinRange(bottomRightX, bottomRightY, range.topLeftX, range.topLeftY, range.bottomRightX, range.bottomRightY));
+			// 	throw new ArgumentException(string.Format("Table Merge Range Conflict: Found Overlap Range X:{0} Y:{1} cX:{2} cY:{3}", errorRange.topLeftX, errorRange.topLeftY, errorRange.bottomRightX, errorRange.bottomRightY));
+			// }
 			mergeRanges.Add(new MergeRange()
 			{
 				topLeftX = topLeftX,
