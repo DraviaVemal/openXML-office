@@ -525,7 +525,7 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-		/// <summary>
+    /// <summary>
 		/// Add Shape to Slide
 		/// </summary>
 		[TestMethod]
