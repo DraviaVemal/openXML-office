@@ -34,6 +34,10 @@ namespace OpenXMLOffice.Global_2013
 			}
 			C.ExtensionList extensionList = new C.ExtensionList(extension);
 			C.DataLabels dataLabels = new C.DataLabels();
+			if (chartDataLabel.formatCode != null)
+			{
+				dataLabels.InsertAt(new C.NumberingFormat { FormatCode = chartDataLabel.formatCode, SourceLinked = true }, 0);
+			}
 			if (chartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn)
 			{
 				for (int i = 0; i < dataLabelCount; i++)

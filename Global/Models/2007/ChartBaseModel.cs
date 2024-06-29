@@ -293,6 +293,10 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public bool isAxesVisible = true;
 		/// <summary>
+		/// axis line color for the chart
+		/// </summary>
+		public string axisLineColor;
+		/// <summary>
 		/// Option for Axis's Axes label options
 		/// </summary>
 		public ChartAxesLabel chartAxesOptions = new ChartAxesLabel();

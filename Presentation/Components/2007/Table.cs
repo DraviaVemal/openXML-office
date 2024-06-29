@@ -7,6 +7,7 @@ using System.Linq;
 using A = DocumentFormat.OpenXml.Drawing;
 using G = OpenXMLOffice.Global_2007;
 using P = DocumentFormat.OpenXml.Presentation;
+using A16 = DocumentFormat.OpenXml.Office2016.Drawing;
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -155,14 +156,14 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				for (int i = 0; i < ColumnCount; i++)
 				{
-					TableGrid.Append(new A.GridColumn() { Width = tableSetting.width / ColumnCount });
+					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension( new A16.ColIdIdentifier() { Val = (UInt32) (20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = tableSetting.width / ColumnCount });
 				}
 			}
 			else
 			{
-				for (int i = 0; i < ColumnCount; i++)
+				for (int i = 0; i <= ColumnCount; i++)
 				{
-					TableGrid.Append(new A.GridColumn() { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
+					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension( new A16.ColIdIdentifier() { Val = (UInt32) (20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
 				}
 			}
 			return TableGrid;
@@ -250,6 +251,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				TableRow.Append(CreateTableCell(new TableCell(), row, rowIndex, columnIndex));
 			}
+			TableRow.Append(new A.ExtensionList(new A.Extension( new A16.RowIdIdentifier() { Val = (UInt32) (10000 + rowIndex) }) {Uri = "{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}" }));
 			return TableRow;
 		}
 
@@ -374,11 +376,16 @@ namespace OpenXMLOffice.Presentation_2007
 							hexColor = cell.borderSettings.leftBorder.borderColor
 						}
 					}),
-					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.leftBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.leftBorder.dashStyle) },
+					new A.Round() { },
+					new A.HeadEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium },
+					new A.TailEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.leftBorder.width),
-					CompoundLineType = GetBorderStyleValue(cell.borderSettings.leftBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.leftBorder.borderStyle),
+					CapType = A.LineCapValues.Flat,
+					Alignment = A.PenAlignmentValues.Center
 				});
 			}
 			else
@@ -388,19 +395,24 @@ namespace OpenXMLOffice.Presentation_2007
 			if (cell.borderSettings.rightBorder.showBorder)
 			{
 				tableCellProperties.Append(new A.RightBorderLineProperties(
-					  CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
-					  {
-						  colorOption = new G.SolidOptions()
-						  {
-							  hexColor = cell.borderSettings.rightBorder.borderColor
-						  }
-					  }),
-					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.rightBorder.dashStyle) }
+					CreateColorComponent(new G.ColorOptionModel<G.SolidOptions>()
+					{
+						colorOption = new G.SolidOptions()
+						{
+							hexColor = cell.borderSettings.rightBorder.borderColor
+						}
+					}),
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.rightBorder.dashStyle) },
+					new A.Round() { },
+					new A.HeadEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium },
+					new A.TailEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.rightBorder.width),
-					CompoundLineType = GetBorderStyleValue(cell.borderSettings.rightBorder.borderStyle)
-				});
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.rightBorder.borderStyle),
+					CapType = A.LineCapValues.Flat,
+					Alignment = A.PenAlignmentValues.Center
+				}); // Convert to array before calling Append
 			}
 			else
 			{
@@ -416,11 +428,16 @@ namespace OpenXMLOffice.Presentation_2007
 							 hexColor = cell.borderSettings.topBorder.borderColor
 						 }
 					 }),
-					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topBorder.dashStyle) },
+					new A.Round() { },
+					new A.HeadEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium },
+					new A.TailEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.topBorder.width),
-					CompoundLineType = GetBorderStyleValue(cell.borderSettings.topBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.topBorder.borderStyle),
+					CapType = A.LineCapValues.Flat,
+					Alignment = A.PenAlignmentValues.Center
 				});
 			}
 			else
@@ -437,11 +454,16 @@ namespace OpenXMLOffice.Presentation_2007
 							hexColor = cell.borderSettings.bottomBorder.borderColor
 						}
 					}),
-					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.bottomBorder.dashStyle) },
+					new A.Round() { },
+					new A.HeadEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium },
+					new A.TailEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.bottomBorder.width),
-					CompoundLineType = GetBorderStyleValue(cell.borderSettings.bottomBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.bottomBorder.borderStyle),
+					CapType = A.LineCapValues.Flat,
+					Alignment = A.PenAlignmentValues.Center
 				});
 			}
 			else
@@ -458,11 +480,16 @@ namespace OpenXMLOffice.Presentation_2007
 							hexColor = cell.borderSettings.topLeftToBottomRightBorder.borderColor
 						}
 					}),
-					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topLeftToBottomRightBorder.dashStyle) }
+					new A.PresetDash() { Val = GetDashStyleValue(cell.borderSettings.topLeftToBottomRightBorder.dashStyle) },
+					new A.Round() { },
+					new A.HeadEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium },
+					new A.TailEnd() { Type = A.LineEndValues.None, Width = A.LineEndWidthValues.Medium, Length = A.LineEndLengthValues.Medium }
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.topLeftToBottomRightBorder.width),
-					CompoundLineType = GetBorderStyleValue(cell.borderSettings.topLeftToBottomRightBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.topLeftToBottomRightBorder.borderStyle),
+					CapType = A.LineCapValues.Flat,
+					Alignment = A.PenAlignmentValues.Center
 				});
 			}
 			else
@@ -483,7 +510,9 @@ namespace OpenXMLOffice.Presentation_2007
 				)
 				{
 					Width = (DocumentFormat.OpenXml.Int32Value)G.ConverterUtils.PixelsToEmu((int)cell.borderSettings.bottomLeftToTopRightBorder.width),
-					CompoundLineType = GetBorderStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.borderStyle)
+					CompoundLineType = GetBorderStyleValue(cell.borderSettings.bottomLeftToTopRightBorder.borderStyle),
+					CapType = A.LineCapValues.Flat,
+					Alignment = A.PenAlignmentValues.Center
 				});
 			}
 			else

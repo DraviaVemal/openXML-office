@@ -334,7 +334,24 @@ namespace OpenXMLOffice.Global_2007
 					axis.Append(CreateMinorGridLine());
 				}
 				axis.Append(new C.TickLabelPosition { Val = AxisOptions<ValueAxis>.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
-				axis.Append(CreateChartShapeProperties());
+				if(axisSetting.axisOptions.axisLineColor != null)
+				{
+					axis.Append(new List<OpenXmlElement> { CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoOptions>()
+					{
+						lineColor = new OutlineModel<SolidOptions>()
+						{
+							lineColor = new ColorOptionModel<SolidOptions>()
+							{
+								colorOption = new SolidOptions()
+								{
+									hexColor = axisSetting.axisOptions.axisLineColor
+								}
+							}
+						}
+					}) });
+				} else {
+					axis.Append(new List<OpenXmlElement> { CreateChartShapeProperties() });
+				}
 				ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 				{
 					colorOption = new SolidOptions()

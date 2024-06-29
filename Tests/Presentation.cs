@@ -124,7 +124,8 @@ namespace OpenXMLOffice.Tests
 						{
 							textValue = "Value ax",
 							TextAngle = -90,
-						}
+						},
+						axisLineColor = "FF0000"
 					},
 				}
 			});
@@ -506,6 +507,24 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Assert.IsTrue(true);
 		}
+		[TestMethod]
+		[TestCategory("Chart")]
+		public void AddColumChartAxesLine(){
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				columnChartType = G.ColumnChartTypes.CLUSTERED,
+				chartAxisOptions = new() {
+					xAxisOptions = new() {
+						axisLineColor = "FF0000",
+					},
+					yAxisOptions = new() {
+						axisLineColor = "00FF00",
+					}
+				}
+			});
+			Assert.IsTrue(true);
+		}
 		/// <summary>
 		/// Add Shape to Slide
 		/// </summary>
@@ -777,6 +796,67 @@ namespace OpenXMLOffice.Tests
 		public void RemoveSlideByIndex()
 		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.BarChartSetting<G.PresentationSetting>()
+			{
+				chartAxisOptions = new()
+				{
+					xAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							inReverseOrder = true,
+							TextAngle = 20
+						},
+						chartAxisTitle = new()
+						{
+							textValue = "cat axis",
+							TextAngle = -20
+						}
+					},
+					yAxisOptions = new()
+					{
+						chartAxesOptions = new()
+						{
+							inReverseOrder = true,
+							TextAngle = 20
+						},
+						chartAxisTitle = new()
+						{
+							textValue = "val axis",
+							TextAngle = -20
+						}
+					}
+				},
+				applicationSpecificSetting = new(),
+				titleOptions = new()
+				{
+					isItalic = true,
+					textValue = "Bar Chart"
+				},
+				barChartType = G.BarChartTypes.STACKED,
+				barChartDataLabel = new()
+				{
+					dataLabelPosition = G.BarChartDataLabel.DataLabelPositionValues.INSIDE_END,
+					showValue = true
+				},
+				chartDataSetting = new()
+				{
+					advancedDataLabel = new Global_2013.AdvancedDataLabel()
+					{
+						showValueFromColumn = true,
+						valueFromColumn = new()
+						{
+							[3] = 1
+						}
+					}
+				}
+			});
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
+			{
+				applicationSpecificSetting = new(),
+				columnChartType = G.ColumnChartTypes.CLUSTERED
+			});
 			int totalCount = powerPoint.GetSlideCount();
 			powerPoint.RemoveSlideByIndex(totalCount - 1);
 		}
@@ -1140,6 +1220,7 @@ namespace OpenXMLOffice.Tests
 			Assert.IsTrue(true);
 		}
 
+		// Create a table row payload with multiple rows and columns for testing with each row contains three rowspan and column contains three colspan
 		private static TableRow[] CreateTableRowPayload(int rowCount = 5, int columnCount = 5)
 		{
 			TableRow[] data = new TableRow[rowCount];
@@ -1148,18 +1229,20 @@ namespace OpenXMLOffice.Tests
 				List<TableCell> tableCells = new();
 				for (int j = 0; j < columnCount; j++)
 				{
-					tableCells.Add(new()
-					{
-						textValue = $"Row {i + 1}, Column {j + 1}",
-						textColor = "FF0000",
-						fontSize = 25 / (j + 1),
-						rowSpan = (uint)((i == 0 && j == 0) ? 3 : 0),
-						columnSpan = (uint)(i == 5 && j == 2 ? 3 : 0),
-						borderSettings = new()
+					uint colSpanVal = 0;
+					if(i == 5 && j == 0){
+						colSpanVal = 2;
+					} else if (i == 5 && j == 2){
+						colSpanVal = 3;
+					}
+					TableBorderSettings borderColorSetting = new(){};
+					if (i == 3 && j == 3) {
+						borderColorSetting = new()
 						{
 							leftBorder = new()
 							{
-								showBorder = false
+								showBorder = true,
+								borderColor = "FF0000",
 							},
 							topBorder = new()
 							{
@@ -1169,13 +1252,26 @@ namespace OpenXMLOffice.Tests
 							},
 							rightBorder = new()
 							{
-								showBorder = false
+								showBorder = true,
+								borderColor = "FF0000",
 							},
 							bottomBorder = new()
 							{
-								showBorder = true
+								showBorder = true,
+								borderColor = "FF0000"
 							}
-						},
+						};
+					}
+						
+
+					tableCells.Add(new()
+					{
+						textValue = $"Row {i + 1}, Column {j + 1}",
+						textColor = "FF0000",
+						fontSize = 25 / (j + 1),
+						rowSpan = (uint)((i == 0 && j == 0) ? 3 : 0),
+						columnSpan = colSpanVal,
+						borderSettings = borderColorSetting,
 						horizontalAlignment = G.HorizontalAlignmentValues.LEFT + (i % 4)
 					});
 				}
