@@ -72,9 +72,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class TwoCellAnchorModel<TextColorOption, ShapeTypeOptions>
-		where TextColorOption : class, IColorOptions, new()
-		where ShapeTypeOptions : class, IShapeTypeDetailsModel, new()
+	public class TwoCellAnchorModel
 	{
 		/// <summary>
 		///
@@ -96,10 +94,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		///
 		/// </summary>
 		public DrawingGraphicFrame drawingGraphicFrame;
-		/// <summary>
-		///
-		/// </summary>
-		public ShapeModel<TextColorOption, ShapeTypeOptions> shapeModel;
 		/// <summary>
 		///
 		/// </summary>

@@ -13,12 +13,12 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	///
 	/// </summary>
-	public class ChartProperties : PresentationCommonProperties
+	public class ChartProperties<ApplicationSpecificSetting> : CommonProperties where ApplicationSpecificSetting : PresentationSetting, new()
 	{
 		/// <summary>
 		///
 		/// </summary>
-		internal readonly ChartSetting<PresentationSetting> chartSetting;
+		internal readonly ChartSetting<ApplicationSpecificSetting> chartSetting;
 		/// <summary>
 		///
 		/// </summary>
@@ -30,7 +30,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal ChartProperties(Slide slide, ChartSetting<PresentationSetting> chartSetting)
+		internal ChartProperties(Slide slide, ChartSetting<ApplicationSpecificSetting> chartSetting)
 		{
 			this.chartSetting = chartSetting;
 			currentSlide = slide;
@@ -56,18 +56,18 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <returns>
 		/// X,Y
 		/// </returns>
-		internal Tuple<int, int> GetPosition()
+		internal Tuple<uint, uint> GetPosition()
 		{
-			return Tuple.Create(chartSetting.applicationSpecificSetting.X, chartSetting.applicationSpecificSetting.Y);
+			return Tuple.Create(chartSetting.applicationSpecificSetting.x, chartSetting.applicationSpecificSetting.y);
 		}
 		/// <summary>
 		/// </summary>
 		/// <returns>
 		/// Width,Height
 		/// </returns>
-		internal Tuple<int, int> GetSize()
+		internal Tuple<uint, uint> GetSize()
 		{
-			return Tuple.Create(chartSetting.applicationSpecificSetting.Width, chartSetting.applicationSpecificSetting.Height);
+			return Tuple.Create(chartSetting.applicationSpecificSetting.width, chartSetting.applicationSpecificSetting.height);
 		}
 		/// <summary>
 		/// Update Chart Position
@@ -78,14 +78,14 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </param>
 		public virtual void UpdatePosition(uint X, uint Y)
 		{
-			chartSetting.applicationSpecificSetting.X = (int)ConverterUtils.PixelsToEmu((int)X);
-			chartSetting.applicationSpecificSetting.Y = (int)ConverterUtils.PixelsToEmu((int)Y);
+			chartSetting.applicationSpecificSetting.x = (uint)ConverterUtils.PixelsToEmu((int)X);
+			chartSetting.applicationSpecificSetting.y = (uint)ConverterUtils.PixelsToEmu((int)Y);
 			if (graphicFrame != null)
 			{
 				graphicFrame.Transform = new P.Transform
 				{
-					Offset = new A.Offset { X = chartSetting.applicationSpecificSetting.X, Y = chartSetting.applicationSpecificSetting.Y },
-					Extents = new A.Extents { Cx = chartSetting.applicationSpecificSetting.Width, Cy = chartSetting.applicationSpecificSetting.Height }
+					Offset = new A.Offset { X = chartSetting.applicationSpecificSetting.x, Y = chartSetting.applicationSpecificSetting.y },
+					Extents = new A.Extents { Cx = chartSetting.applicationSpecificSetting.width, Cy = chartSetting.applicationSpecificSetting.height }
 				};
 			}
 		}
@@ -98,14 +98,14 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </param>
 		public virtual void UpdateSize(uint Width, uint Height)
 		{
-			chartSetting.applicationSpecificSetting.Width = (int)ConverterUtils.PixelsToEmu((int)Width);
-			chartSetting.applicationSpecificSetting.Height = (int)ConverterUtils.PixelsToEmu((int)Height);
+			chartSetting.applicationSpecificSetting.width = (uint)ConverterUtils.PixelsToEmu((int)Width);
+			chartSetting.applicationSpecificSetting.height = (uint)ConverterUtils.PixelsToEmu((int)Height);
 			if (graphicFrame != null)
 			{
 				graphicFrame.Transform = new P.Transform
 				{
-					Offset = new A.Offset { X = chartSetting.applicationSpecificSetting.X, Y = chartSetting.applicationSpecificSetting.Y },
-					Extents = new A.Extents { Cx = chartSetting.applicationSpecificSetting.Width, Cy = chartSetting.applicationSpecificSetting.Height }
+					Offset = new A.Offset { X = chartSetting.applicationSpecificSetting.x, Y = chartSetting.applicationSpecificSetting.y },
+					Extents = new A.Extents { Cx = chartSetting.applicationSpecificSetting.width, Cy = chartSetting.applicationSpecificSetting.height }
 				};
 			}
 		}
@@ -158,13 +158,13 @@ namespace OpenXMLOffice.Presentation_2007
 				Transform = new P.Transform(
 				   new A.Offset
 				   {
-					   X = chartSetting.applicationSpecificSetting.X,
-					   Y = chartSetting.applicationSpecificSetting.Y
+					   X = chartSetting.applicationSpecificSetting.x,
+					   Y = chartSetting.applicationSpecificSetting.y
 				   },
 				   new A.Extents
 				   {
-					   Cx = chartSetting.applicationSpecificSetting.Width,
-					   Cy = chartSetting.applicationSpecificSetting.Height
+					   Cx = chartSetting.applicationSpecificSetting.width,
+					   Cy = chartSetting.applicationSpecificSetting.height
 				   }),
 				Graphic = new A.Graphic(
 				   new A.GraphicData(

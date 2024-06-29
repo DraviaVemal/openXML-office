@@ -10,7 +10,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	/// Excel Picture
 	/// </summary>
-	public class Picture : SpreadSheetCommonProperties
+	public class Picture : CommonProperties
 	{
 		private readonly ExcelPictureSetting excelPictureSetting;
 		private readonly Worksheet currentWorksheet;
@@ -71,7 +71,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 						break;
 				}
 			}
-			XDR.TwoCellAnchor twoCellAnchor = currentWorksheet.CreateTwoCellAnchor(new TwoCellAnchorModel<NoFillOptions, NoShape<ExcelSetting>>()
+			XDR.TwoCellAnchor twoCellAnchor = currentWorksheet.CreateTwoCellAnchor(new TwoCellAnchorModel()
 			{
 				anchorEditType = AnchorEditType.ONE_CELL,
 				from = excelPictureSetting.from,

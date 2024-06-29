@@ -13,7 +13,7 @@ namespace OpenXMLOffice.Global_2007
         /// </summary>
         public static bool IsWithinRange(int x, int y, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
         {
-            return x >= topLeftX && x <= bottomRightX && y >= topLeftY && y <= bottomRightY;
+            return x > topLeftX && x < bottomRightX && y > topLeftY && y < bottomRightY;
         }
     }
 }

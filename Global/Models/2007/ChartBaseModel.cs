@@ -293,6 +293,10 @@ namespace OpenXMLOffice.Global_2007
 		/// </summary>
 		public bool isAxesVisible = true;
 		/// <summary>
+		/// axis line color for the chart
+		/// </summary>
+		public string axisLineColor;
+		/// <summary>
 		/// Option for Axis's Axes label options
 		/// </summary>
 		public ChartAxesLabel chartAxesOptions = new ChartAxesLabel();
@@ -655,78 +659,21 @@ namespace OpenXMLOffice.Global_2007
 	public class PresentationSetting : ISizeAndPosition
 	{
 		/// <summary>
-		/// Value in EMU
+		/// Chart Height in EMU
 		/// </summary>
-		private int _height = 6858000;
-		private int _width = 12192000;
+		public uint height = 6858000;
 		/// <summary>
-		/// Value in EMU
+		/// Chart Width in EMU
 		/// </summary>
-		private int _y = 0;
+		public uint width = 12192000;
 		/// <summary>
-		/// Value in EMU
+		/// Chart X Position in EMU
 		/// </summary>
-		private int _x = 0;
+		public uint x = 0;
 		/// <summary>
-		/// Chart Height in Px
+		/// Chart Y Position in EMU
 		/// </summary>
-		public int Height
-		{
-			get
-			{
-				return _height;
-			}
-			set
-			{
-				// _height = (int)ConverterUtils.PixelsToEmu(value);
-				_height = value;
-			}
-		}
-		/// <summary>
-		/// Chart Width in Px
-		/// </summary>
-		public int Width
-		{
-			get
-			{
-				return _width;
-			}
-			set
-			{
-				// _width = (int)ConverterUtils.PixelsToEmu(value);
-				_width = value;
-			}
-		}
-		/// <summary>
-		/// Chart X Position in Px
-		/// </summary>
-		public int X
-		{
-			get
-			{
-				return _x;
-			}
-			set
-			{
-				// _x = (int)ConverterUtils.PixelsToEmu(value);
-				_x = value;
-			}
-		}
-		/// <summary>
-		/// Chart Y Position in Px
-		/// </summary>
-		public int Y
-		{
-			get
-			{
-				return _y;
-			}
-			set
-			{
-				// _y = (int)ConverterUtils.PixelsToEmu(value);
-				_y = value;
-			}
-		}
+		public uint y = 0;
 	}
 	/// <summary>
 	///

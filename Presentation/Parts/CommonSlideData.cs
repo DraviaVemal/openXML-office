@@ -1,21 +1,19 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
-using System.Collections.Generic;
-using OpenXMLOffice.Global_2007;
+using DocumentFormat.OpenXml.Presentation;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
-
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
-	/// Common Slide Data Class used to create the base components of a slide, slideMaster.
+	/// Common Slide Data Class used to create the base components of a slide, slidemaster.
 	/// </summary>
-	public class CommonSlideData : PresentationCommonProperties
+	public class CommonSlideData
 	{
-		private readonly P.CommonSlideData documentCommonSlideData;
+		private readonly P.CommonSlideData openXMLCommonSlideData;
 		internal CommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType, PresentationConstants.SlideLayoutType layoutType)
 		{
-			documentCommonSlideData = new P.CommonSlideData()
+			openXMLCommonSlideData = new P.CommonSlideData()
 			{
 				Name = PresentationConstants.GetSlideLayoutType(layoutType)
 			};
@@ -23,18 +21,18 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal CommonSlideData(P.CommonSlideData commonSlideData)
 		{
-			documentCommonSlideData = commonSlideData;
+			openXMLCommonSlideData = commonSlideData;
 		}
 		// Return OpenXML CommonSlideData Object
 		internal P.CommonSlideData GetCommonSlideData()
 		{
-			return documentCommonSlideData;
+			return openXMLCommonSlideData;
 		}
 		private void CreateCommonSlideData(PresentationConstants.CommonSlideDataType commonSlideDataType)
 		{
-			P.Background background = new P.Background()
+			Background background = new Background()
 			{
-				BackgroundStyleReference = new P.BackgroundStyleReference(new A.SchemeColor()
+				BackgroundStyleReference = new BackgroundStyleReference(new A.SchemeColor()
 				{
 					Val = A.SchemeColorValues.Background1
 				})
@@ -42,9 +40,9 @@ namespace OpenXMLOffice.Presentation_2007
 					Index = 1001
 				}
 			};
-			P.ShapeTree shapeTree = new P.ShapeTree()
+			ShapeTree shapeTree = new ShapeTree()
 			{
-				GroupShapeProperties = new P.GroupShapeProperties()
+				GroupShapeProperties = new GroupShapeProperties()
 				{
 					TransformGroup = new A.TransformGroup()
 					{
@@ -70,101 +68,122 @@ namespace OpenXMLOffice.Presentation_2007
 						}
 					}
 				},
-				NonVisualGroupShapeProperties = new P.NonVisualGroupShapeProperties(
-								new P.NonVisualDrawingProperties { Id = 1, Name = "" },
-								new P.NonVisualGroupShapeDrawingProperties(),
-								new P.ApplicationNonVisualDrawingProperties()
+				NonVisualGroupShapeProperties = new NonVisualGroupShapeProperties(
+								new NonVisualDrawingProperties { Id = 1, Name = "" },
+								new NonVisualGroupShapeDrawingProperties(),
+								new ApplicationNonVisualDrawingProperties()
 							)
 			};
 			switch (commonSlideDataType)
 			{
 				case PresentationConstants.CommonSlideDataType.SLIDE_MASTER:
-					documentCommonSlideData.AppendChild(background);
-					documentCommonSlideData.AppendChild(shapeTree);
+					openXMLCommonSlideData.AppendChild(background);
+					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 				case PresentationConstants.CommonSlideDataType.SLIDE_LAYOUT:
-					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>>()
-					{
-						id = (uint)shapeTree.ChildElements.Count + 1,
-						name = "Title 1",
-						shapeTypeOptions = new RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>()
-						{
-							rectangleType = ShapeRectangleTypes.RECTANGLE,
-							lineColorOption = new SolidOptions()
-							{
-								hexColor = "FFFFFF",
-							}
-						},
-						shapePropertiesModel = new ShapePropertiesModel()
-						{
-							x = 838200L,
-							y = 365125L,
-							cx = 10515600L,
-							cy = 1325563L
-						},
-						drawingParagraph = new DrawingParagraphModel<SolidOptions>()
-						{
-							drawingRuns = new List<DrawingRunModel<SolidOptions>>()
-							{
-								new DrawingRunModel<SolidOptions>(){
-									text = "Click to edit Master title style",
-									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
-								}
-							}.ToArray()
-						}
-					}));
-					shapeTree.AppendChild(CreateShape(new ShapeModel<SolidOptions, RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>>()
-					{
-						id = (uint)shapeTree.ChildElements.Count + 1,
-						name = "Text Placeholder 1",
-						shapeTypeOptions = new RectangleShapeModel<PresentationSetting, SolidOptions, NoFillOptions>()
-						{
-							rectangleType = ShapeRectangleTypes.RECTANGLE,
-							lineColorOption = new SolidOptions()
-							{
-								hexColor = "FFFFFF",
-							}
-						},
-						shapePropertiesModel = new ShapePropertiesModel()
-						{
-							x = 838200L,
-							y = 1825625L,
-							cx = 10515600L,
-							cy = 4351338L
-						},
-						drawingParagraph = new DrawingParagraphModel<SolidOptions>()
-						{
-							drawingRuns = new List<DrawingRunModel<SolidOptions>>()
-							{
-								new DrawingRunModel<SolidOptions>(){
-									text = "Click to edit Master title style",
-									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
-								},
-								new DrawingRunModel<SolidOptions>(){
-									text = "Second Level",
-									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
-								},
-								new DrawingRunModel<SolidOptions>(){
-									text = "Third Level",
-									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
-								},
-								new DrawingRunModel<SolidOptions>(){
-									text = "Fourth Level",
-									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
-								},
-								new DrawingRunModel<SolidOptions>(){
-									text = "Fifth Level",
-									drawingRunProperties = new DrawingRunPropertiesModel<SolidOptions>()
-								}
-							}.ToArray()
-						}
-					}));
-					documentCommonSlideData.AppendChild(shapeTree);
+					shapeTree.AppendChild(CreateShape1());
+					shapeTree.AppendChild(CreateShape2());
+					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 				default: // slide
-					documentCommonSlideData.AppendChild(shapeTree);
+					openXMLCommonSlideData.AppendChild(shapeTree);
 					break;
 			}
+		}
+		private static P.Shape CreateShape1()
+		{
+			P.Shape shape = new P.Shape();
+			NonVisualShapeProperties nonVisualShapeProperties = new NonVisualShapeProperties(
+				new NonVisualDrawingProperties { Id = 2, Name = "Title 1" },
+				new NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
+				new ApplicationNonVisualDrawingProperties(new PlaceholderShape { Type = PlaceholderValues.Title })
+			);
+			ShapeProperties shapeProperties = new ShapeProperties(
+				new A.Transform2D(
+					new A.Offset { X = 838200L, Y = 365125L },
+					new A.Extents { Cx = 10515600L, Cy = 1325563L }
+				),
+				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
+			);
+			TextBody textBody = new TextBody(
+				new A.BodyProperties(),
+				new A.ListStyle(),
+				new A.Paragraph(
+					new A.Run(
+						new A.RunProperties { Language = "en-IN" },
+						new A.Text { Text = "Click to edit Master title style" }
+					),
+					new A.EndParagraphRunProperties { Language = "en-IN" }
+				)
+			);
+			shape.Append(nonVisualShapeProperties);
+			shape.Append(shapeProperties);
+			shape.Append(textBody);
+			return shape;
+		}
+		private static P.Shape CreateShape2()
+		{
+			P.Shape shape = new P.Shape();
+			NonVisualShapeProperties nonVisualShapeProperties = new NonVisualShapeProperties(
+				new NonVisualDrawingProperties { Id = 3U, Name = "Text Placeholder 2" },
+				new NonVisualShapeDrawingProperties(new A.ShapeLocks { NoGrouping = true }),
+				new ApplicationNonVisualDrawingProperties(
+					new PlaceholderShape { Index = 1U, Type = PlaceholderValues.Body })
+			);
+			ShapeProperties shapeProperties = new ShapeProperties(
+				new A.Transform2D(
+					new A.Offset { X = 838200L, Y = 1825625L },
+					new A.Extents { Cx = 10515600L, Cy = 4351338L }
+				),
+				new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle }
+			);
+			TextBody textBody = new TextBody(
+				new A.BodyProperties(),
+				new A.ListStyle(),
+				new A.Paragraph(
+					new A.ParagraphProperties { Level = 0 },
+					new A.Run(
+						new A.RunProperties { Language = "en-IN" },
+						new A.Text("Click to edit Master text styles")
+					)
+				),
+				new A.Paragraph(
+					new A.ParagraphProperties { Level = 1 },
+					new A.Run(
+						new A.RunProperties { Language = "en-IN" },
+						new A.Text("Second Level")
+					)
+				),
+				new A.Paragraph(
+					new A.ParagraphProperties { Level = 2 },
+					new A.Run(
+						new A.RunProperties { Language = "en-IN" },
+						new A.Text("Third Level")
+					)
+				),
+				new A.Paragraph(
+					new A.ParagraphProperties { Level = 3 },
+					new A.Run(
+						new A.RunProperties { Language = "en-IN" },
+						new A.Text("Fourth Level")
+					)
+				),
+				new A.Paragraph(
+					new A.ParagraphProperties { Level = 4 },
+					new A.Run(
+						new A.RunProperties { Language = "en-IN" },
+						new A.Text("Fifth Level")
+					),
+					new A.EndParagraphRunProperties()
+					{
+						Language = "en-IN"
+					}
+				)
+			);
+			shape.Append(nonVisualShapeProperties);
+			shape.Append(shapeProperties);
+			shape.Append(textBody);
+			return shape;
 		}
 	}
 }
