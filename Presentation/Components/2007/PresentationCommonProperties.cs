@@ -11,7 +11,7 @@ namespace OpenXMLOffice.Global_2007
 	public class PresentationCommonProperties : CommonProperties
 	{
 		/// <summary>
-		///
+		/// Create Shape
 		/// </summary>
 		protected P.Shape CreateShape<TextColorOption, ShapeTypeOptions>(ShapeModel<TextColorOption, ShapeTypeOptions> shapeModel)
 		where TextColorOption : class, IColorOptions, new()
