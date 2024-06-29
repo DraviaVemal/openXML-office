@@ -161,7 +161,7 @@ namespace OpenXMLOffice.Global_2007
 			C.LineChartSeries series = new C.LineChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
-				new C.Smooth { Val = lineChartLineFormat.smoothLine ?? false },
+				new C.Smooth { Val = lineChartLineFormat != null && lineChartLineFormat.smoothLine != null ? lineChartLineFormat.smoothLine : false },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartType))
