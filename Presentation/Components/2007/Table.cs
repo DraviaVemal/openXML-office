@@ -8,7 +8,6 @@ using A = DocumentFormat.OpenXml.Drawing;
 using G = OpenXMLOffice.Global_2007;
 using P = DocumentFormat.OpenXml.Presentation;
 using A16 = DocumentFormat.OpenXml.Office2016.Drawing;
-using OpenXMLOffice.Global_2007;
 namespace OpenXMLOffice.Presentation_2007
 {
 	/// <summary>
@@ -157,14 +156,14 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				for (int i = 0; i < ColumnCount; i++)
 				{
-					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension(new A16.ColIdIdentifier() { Val = (UInt32)(20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = tableSetting.width / ColumnCount });
+					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension( new A16.ColIdIdentifier() { Val = (UInt32) (20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = tableSetting.width / ColumnCount });
 				}
 			}
 			else
 			{
 				for (int i = 0; i <= ColumnCount; i++)
 				{
-					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension(new A16.ColIdIdentifier() { Val = (UInt32)(20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
+					TableGrid.Append(new A.GridColumn(new A.ExtensionList(new A.Extension( new A16.ColIdIdentifier() { Val = (UInt32) (20000 + i) }) { Uri = "{9D8B030D-6E8A-4147-A177-3AD203B41FA5}" })) { Width = CalculateColumnWidth(tableSetting.widthType, tableSetting.tableColumnWidth[i]) });
 				}
 			}
 			return TableGrid;
@@ -177,15 +176,15 @@ namespace OpenXMLOffice.Presentation_2007
 
 			if (overlappingRanges.Any())
 			{
-				LogUtils.ShowWarning(string.Format("Warning: Table Merge Range Conflict: Found Overlap Range X:{0} Y:{1} cX:{2} cY:{3}", topLeftX, topLeftY, bottomRightX, bottomRightY));
-				LogUtils.ShowWarning("Rewriting the merge range");
+				G.LogUtils.ShowWarning(string.Format("Warning: Table Merge Range Conflict: Found Overlap Range X:{0} Y:{1} cX:{2} cY:{3}", topLeftX, topLeftY, bottomRightX, bottomRightY));
+				G.LogUtils.ShowWarning("Rewriting the merge range");
 				// Merge the new range with the overlapping ranges
 				int newTopLeftX = Math.Min(topLeftX, overlappingRanges.Min(range => range.topLeftX));
 				int newTopLeftY = Math.Min(topLeftY, overlappingRanges.Min(range => range.topLeftY));
 				int newBottomRightX = Math.Max(bottomRightX, overlappingRanges.Max(range => range.bottomRightX));
 				int newBottomRightY = Math.Max(bottomRightY, overlappingRanges.Max(range => range.bottomRightY));
 
-				LogUtils.ShowWarning(string.Format("Warning: Table Merge Range Conflict: Updating New Range X:{0} Y:{1} cX:{2} cY:{3}", newTopLeftX, newTopLeftY, newBottomRightX, newBottomRightY));
+				G.LogUtils.ShowWarning(string.Format("Warning: Table Merge Range Conflict: Updating New Range X:{0} Y:{1} cX:{2} cY:{3}", newTopLeftX, newTopLeftY, newBottomRightX, newBottomRightY));
 				// Remove the overlapping ranges from the list
 				foreach (var range in overlappingRanges)
 				{
@@ -275,7 +274,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				TableRow.Append(CreateTableCell(new TableCell(), row, rowIndex, columnIndex));
 			}
-			TableRow.Append(new A.ExtensionList(new A.Extension(new A16.RowIdIdentifier() { Val = (UInt32)(10000 + rowIndex) }) { Uri = "{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}" }));
+			TableRow.Append(new A.ExtensionList(new A.Extension( new A16.RowIdIdentifier() { Val = (UInt32) (10000 + rowIndex) }) {Uri = "{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}" }));
 			return TableRow;
 		}
 
