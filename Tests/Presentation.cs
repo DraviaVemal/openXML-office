@@ -1285,14 +1285,13 @@ namespace OpenXMLOffice.Tests
 							}
 						};
 					}
-						
 
-					tableCells.Add(new()
+					tableCells.Add(new TableCell
 					{
 						textValue = $"Row {i + 1}, Column {j + 1}",
 						textColor = "FF0000",
-						fontSize = 25 / (j + 1),
-						rowSpan = (uint)((i == 0 && j == 0) ? 3 : 0),
+						fontSize = 12,
+						rowSpan = rowSpanVal,
 						columnSpan = colSpanVal,
 						borderSettings = borderColorSetting,
 						horizontalAlignment = G.HorizontalAlignmentValues.LEFT + (i % 4)
