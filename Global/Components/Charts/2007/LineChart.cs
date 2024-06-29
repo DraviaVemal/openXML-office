@@ -154,14 +154,13 @@ namespace OpenXMLOffice.Global_2007
 					outlineModel.lineColor.colorOption.transparency = (int)lineChartLineFormat.transparency;
 				}
 			}
-			ShapePropertiesModel<SolidOptions, NoOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, NoOptions>()
+			ShapePropertiesModel<SolidOptions, NoFillOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, NoFillOptions>()
 			{
 				lineColor = outlineModel,
 			};
 			C.LineChartSeries series = new C.LineChartSeries(
 				new C.Index { Val = new UInt32Value((uint)chartDataGrouping.id) },
 				new C.Order { Val = new UInt32Value((uint)chartDataGrouping.id) },
-				new C.Smooth { Val = lineChartLineFormat != null && lineChartLineFormat.smoothLine != null ? lineChartLineFormat.smoothLine : false },
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			if (new[] { LineChartTypes.CLUSTERED_MARKER, LineChartTypes.STACKED_MARKER, LineChartTypes.PERCENT_STACKED_MARKER }.Contains(lineChartSetting.lineChartType))
@@ -205,7 +204,7 @@ namespace OpenXMLOffice.Global_2007
 			}
 			else
 			{
-				MarkerModel<NoOptions, NoOptions> marketModel = new MarkerModel<NoOptions, NoOptions>()
+				MarkerModel<NoFillOptions, NoFillOptions> marketModel = new MarkerModel<NoFillOptions, NoFillOptions>()
 				{
 					markerShapeType = MarkerShapeTypes.NONE,
 				};

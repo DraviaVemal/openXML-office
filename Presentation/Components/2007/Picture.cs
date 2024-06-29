@@ -11,10 +11,10 @@ namespace OpenXMLOffice.Presentation_2007
 	/// <summary>
 	/// Picture Import Class
 	/// </summary>
-	public class Picture : CommonProperties
+	public class Picture : PresentationCommonProperties
 	{
 		private readonly Slide currentSlide;
-		private readonly P.Picture openXMLPicture;
+		private readonly P.Picture documentPicture;
 		private readonly PictureSetting pictureSetting;
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			currentSlide = slide;
 			this.pictureSetting = pictureSetting;
-			openXMLPicture = new P.Picture();
+			documentPicture = new P.Picture();
 			using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
 			{
 				Initialize(fileStream, slide, pictureSetting);
@@ -38,7 +38,7 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			currentSlide = slide;
 			this.pictureSetting = pictureSetting;
-			openXMLPicture = new P.Picture();
+			documentPicture = new P.Picture();
 			Initialize(stream, slide, pictureSetting);
 		}
 
@@ -125,9 +125,9 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			pictureSetting.x = (uint)ConverterUtils.PixelsToEmu((int)X);
 			pictureSetting.y = (uint)ConverterUtils.PixelsToEmu((int)Y);
-			if (openXMLPicture != null)
+			if (documentPicture != null)
 			{
-				openXMLPicture.ShapeProperties.Transform2D = new A.Transform2D
+				documentPicture.ShapeProperties.Transform2D = new A.Transform2D
 				{
 					Offset = new A.Offset { X = pictureSetting.x, Y = pictureSetting.y },
 					Extents = new A.Extents { Cx = pictureSetting.width, Cy = pictureSetting.height }
@@ -141,9 +141,9 @@ namespace OpenXMLOffice.Presentation_2007
 		{
 			pictureSetting.width = (uint)ConverterUtils.PixelsToEmu((int)Width);
 			pictureSetting.height = (uint)ConverterUtils.PixelsToEmu((int)Height);
-			if (openXMLPicture != null)
+			if (documentPicture != null)
 			{
-				openXMLPicture.ShapeProperties.Transform2D = new A.Transform2D
+				documentPicture.ShapeProperties.Transform2D = new A.Transform2D
 				{
 					Offset = new A.Offset { X = pictureSetting.x, Y = pictureSetting.y },
 					Extents = new A.Extents { Cx = pictureSetting.width, Cy = pictureSetting.height }
@@ -152,7 +152,7 @@ namespace OpenXMLOffice.Presentation_2007
 		}
 		internal P.Picture GetPicture()
 		{
-			return openXMLPicture;
+			return documentPicture;
 		}
 		private void CreatePicture(string EmbedId, HyperlinkProperties hyperlinkProperties)
 		{

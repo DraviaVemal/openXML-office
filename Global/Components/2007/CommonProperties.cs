@@ -436,7 +436,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <returns></returns>
 		protected C.ShapeProperties CreateChartShapeProperties()
 		{
-			return CreateChartShapeProperties(new ShapePropertiesModel<NoOptions, NoOptions>());
+			return CreateChartShapeProperties(new ShapePropertiesModel<NoFillOptions, NoFillOptions>());
 		}
 		/// <summary>
 		/// Create Shape Properties
