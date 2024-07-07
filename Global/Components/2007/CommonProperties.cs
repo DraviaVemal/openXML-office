@@ -656,7 +656,7 @@ namespace OpenXMLOffice.Global_2007
 						});
 						paragraphProperties.Append(new A.CharacterBullet()
 						{
-							Char = "o"
+							Char = "q"
 						});
 						break;
 					case BulletsAndNumberingValues.STAR_BULLET:
@@ -682,7 +682,7 @@ namespace OpenXMLOffice.Global_2007
 						});
 						paragraphProperties.Append(new A.CharacterBullet()
 						{
-							Char = "o"
+							Char = "Ø"
 						});
 						break;
 					case BulletsAndNumberingValues.CHECK_BULLET:
