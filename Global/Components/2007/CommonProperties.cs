@@ -601,6 +601,177 @@ namespace OpenXMLOffice.Global_2007
 			{
 				paragraphProperties.Append(CreateDefaultRunProperties(paragraphPropertiesModel.defaultRunProperties));
 			}
+			if (paragraphPropertiesModel.bulletsAndNumbering != null)
+			{
+				paragraphProperties.LeftMargin = 342900;
+				paragraphProperties.Indent = -342900;
+				switch (paragraphPropertiesModel.bulletsAndNumbering)
+				{
+					case BulletsAndNumberingValues.FILLED_ROUND:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "Wingdings",
+							Panose = "05000000000000000000",
+							PitchFamily = 2,
+							CharacterSet = 2
+						});
+						paragraphProperties.Append(new A.CharacterBullet()
+						{
+							Char = "*"
+						});
+						break;
+					case BulletsAndNumberingValues.HOLLOW_ROUND:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "Wingdings",
+							Panose = "05000000000000000000",
+							PitchFamily = 2,
+							CharacterSet = 2
+						});
+						paragraphProperties.Append(new A.CharacterBullet()
+						{
+							Char = "o"
+						});
+						break;
+					case BulletsAndNumberingValues.FILLED_SQUARE:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "Wingdings",
+							Panose = "05000000000000000000",
+							PitchFamily = 2,
+							CharacterSet = 2
+						});
+						paragraphProperties.Append(new A.CharacterBullet()
+						{
+							Char = "§"
+						});
+						break;
+					case BulletsAndNumberingValues.HOLLOW_SQUARE:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "Wingdings",
+							Panose = "05000000000000000000",
+							PitchFamily = 2,
+							CharacterSet = 2
+						});
+						paragraphProperties.Append(new A.CharacterBullet()
+						{
+							Char = "o"
+						});
+						break;
+					case BulletsAndNumberingValues.STAR_BULLET:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "Wingdings",
+							Panose = "05000000000000000000",
+							PitchFamily = 2,
+							CharacterSet = 2
+						});
+						paragraphProperties.Append(new A.CharacterBullet()
+						{
+							Char = "v"
+						});
+						break;
+					case BulletsAndNumberingValues.ARROW_BULLET:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "Wingdings",
+							Panose = "05000000000000000000",
+							PitchFamily = 2,
+							CharacterSet = 2
+						});
+						paragraphProperties.Append(new A.CharacterBullet()
+						{
+							Char = "o"
+						});
+						break;
+					case BulletsAndNumberingValues.CHECK_BULLET:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "Wingdings",
+							Panose = "05000000000000000000",
+							PitchFamily = 2,
+							CharacterSet = 2
+						});
+						paragraphProperties.Append(new A.CharacterBullet()
+						{
+							Char = "ü"
+						});
+						break;
+					case BulletsAndNumberingValues.NUMERIC_DOT:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "+mj-lt"
+						});
+						paragraphProperties.Append(new A.AutoNumberedBullet()
+						{
+							Type = A.TextAutoNumberSchemeValues.ArabicPeriod
+						});
+						break;
+					case BulletsAndNumberingValues.NUMERIC_BRACKET:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "+mj-lt"
+						});
+						paragraphProperties.Append(new A.AutoNumberedBullet()
+						{
+							Type = A.TextAutoNumberSchemeValues.ArabicParenR
+						});
+						break;
+					case BulletsAndNumberingValues.ROMAN_CAPS:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "+mj-lt"
+						});
+						paragraphProperties.Append(new A.AutoNumberedBullet()
+						{
+							Type = A.TextAutoNumberSchemeValues.RomanUpperCharacterPeriod
+						});
+						break;
+					case BulletsAndNumberingValues.ROMAN_SMALL:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "+mj-lt"
+						});
+						paragraphProperties.Append(new A.AutoNumberedBullet()
+						{
+							Type = A.TextAutoNumberSchemeValues.RomanLowerCharacterPeriod
+						});
+						break;
+					case BulletsAndNumberingValues.ALPHABET_CAPS:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "+mj-lt"
+						});
+						paragraphProperties.Append(new A.AutoNumberedBullet()
+						{
+							Type = A.TextAutoNumberSchemeValues.AlphaUpperCharacterPeriod
+						});
+						break;
+					case BulletsAndNumberingValues.ALPHABET_SMALL:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "+mj-lt"
+						});
+						paragraphProperties.Append(new A.AutoNumberedBullet()
+						{
+							Type = A.TextAutoNumberSchemeValues.AlphaLowerCharacterPeriod
+						});
+						break;
+					case BulletsAndNumberingValues.ALPHABET_SMALL_BRACKET:
+						paragraphProperties.Append(new A.BulletFont()
+						{
+							Typeface = "+mj-lt"
+						});
+						paragraphProperties.Append(new A.AutoNumberedBullet()
+						{
+							Type = A.TextAutoNumberSchemeValues.AlphaLowerCharacterParenR
+						});
+						break;
+					default: // NONE
+						break;
+				}
+			}
 			if (paragraphPropertiesModel.horizontalAlignment != null)
 			{
 				paragraphProperties.Alignment = GetTextAlignmentValue((HorizontalAlignmentValues)paragraphPropertiesModel.horizontalAlignment);

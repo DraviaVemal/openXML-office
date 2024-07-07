@@ -3,6 +3,72 @@
 namespace OpenXMLOffice.Global_2007
 {
 	/// <summary>
+	/// 
+	/// </summary>
+	public enum BulletsAndNumberingValues
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		NONE,
+		/// <summary>
+		/// 
+		/// </summary>
+		FILLED_ROUND,
+		/// <summary>
+		/// 
+		/// </summary>
+		HOLLOW_ROUND,
+		/// <summary>
+		/// 
+		/// </summary>
+		FILLED_SQUARE,
+		/// <summary>
+		/// 
+		/// </summary>
+		HOLLOW_SQUARE,
+		/// <summary>
+		/// 
+		/// </summary>
+		STAR_BULLET,
+		/// <summary>
+		/// 
+		/// </summary>
+		ARROW_BULLET,
+		/// <summary>
+		/// 
+		/// </summary>
+		CHECK_BULLET,
+		/// <summary>
+		/// 
+		/// </summary>
+		NUMERIC_DOT,
+		/// <summary>
+		/// 
+		/// </summary>
+		NUMERIC_BRACKET,
+		/// <summary>
+		/// 
+		/// </summary>
+		ROMAN_CAPS,
+		/// <summary>
+		/// 
+		/// </summary>
+		ROMAN_SMALL,
+		/// <summary>
+		/// 
+		/// </summary>
+		ALPHABET_CAPS,
+		/// <summary>
+		/// 
+		/// </summary>
+		ALPHABET_SMALL,
+		/// <summary>
+		/// 
+		/// </summary>
+		ALPHABET_SMALL_BRACKET
+	}
+	/// <summary>
 	/// Text Horizontal Alignment
 	/// </summary>
 	public enum HorizontalAlignmentValues
@@ -56,6 +122,14 @@ namespace OpenXMLOffice.Global_2007
 	public class TextBlock : TextOptions
 	{
 		/// <summary>
+		/// Used to end a paragraph in text block list group. Useful in mentioning when using numbering and bullets sequence
+		/// </summary>
+		public bool isEndParagraph = false;
+		/// <summary>
+		/// 
+		/// </summary>
+		public BulletsAndNumberingValues? bulletsAndNumbering = BulletsAndNumberingValues.NONE;
+		/// <summary>
 		///
 		/// </summary>
 		public HyperlinkProperties hyperlinkProperties;
@@ -79,7 +153,7 @@ namespace OpenXMLOffice.Global_2007
 	public class TextBoxSetting
 	{
 		/// <summary>
-		/// Define Each section of string and its property that goes in same Text box
+		/// Define Each section of string and its property that goes in same paragraph
 		/// </summary>
 		public TextBlock[] textBlocks;
 		/// <summary>

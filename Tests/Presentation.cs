@@ -507,25 +507,32 @@ namespace OpenXMLOffice.Tests
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Assert.IsTrue(true);
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		[TestMethod]
 		[TestCategory("Chart")]
-		public void AddColumChartAxesLine(){
+		public void AddColumChartAxesLine()
+		{
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.ColumnChartSetting<G.PresentationSetting>()
 			{
 				applicationSpecificSetting = new(),
 				columnChartType = G.ColumnChartTypes.CLUSTERED,
-				chartAxisOptions = new() {
-					xAxisOptions = new() {
+				chartAxisOptions = new()
+				{
+					xAxisOptions = new()
+					{
 						axisLineColor = "FF0000",
 					},
-					yAxisOptions = new() {
+					yAxisOptions = new()
+					{
 						axisLineColor = "00FF00",
 					}
 				}
 			});
 			Assert.IsTrue(true);
 		}
-    /// <summary>
+		/// <summary>
 		/// Add Shape to Slide
 		/// </summary>
 		[TestMethod]
@@ -1023,6 +1030,114 @@ namespace OpenXMLOffice.Tests
 							hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.WEB_URL,
 							value="https://openxml-office.draviavemal.com/"
 						}
+					},
+					new(){
+						textValue="ALPHABET_CAPS1",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ALPHABET_CAPS
+					},
+					new(){
+						textValue="ALPHABET_CAPS2",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ALPHABET_CAPS
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="ALPHABET_SMALL1",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ALPHABET_SMALL
+					},
+					new(){
+						textValue="ALPHABET_SMALL2",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ALPHABET_SMALL
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="ALPHABET_SMALL_BRACKET1",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ALPHABET_SMALL_BRACKET
+					},
+					new(){
+						textValue="ALPHABET_SMALL_BRACKET2",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ALPHABET_SMALL_BRACKET
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="ARROW_BULLET",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ARROW_BULLET
+					},
+					new(){
+						textValue="CHECK_BULLET",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.CHECK_BULLET
+					},
+					new(){
+						textValue="FILLED_ROUND",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.FILLED_ROUND
+					},
+					new(){
+						textValue="FILLED_SQUARE",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.FILLED_SQUARE
+					},
+					new(){
+						textValue="HOLLOW_ROUND",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.HOLLOW_ROUND
+					},
+					new(){
+						textValue="HOLLOW_SQUARE",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.HOLLOW_SQUARE
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="NUMERIC_BRACKET1",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.NUMERIC_BRACKET
+					},
+					new(){
+						textValue="NUMERIC_BRACKET2",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.NUMERIC_BRACKET
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="NUMERIC_DOT1",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.NUMERIC_DOT
+					},
+					new(){
+						textValue="NUMERIC_DOT2",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.NUMERIC_DOT
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="ROMAN_CAPS1",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ROMAN_CAPS
+					},
+					new(){
+						textValue="ROMAN_CAPS2",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ROMAN_CAPS
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="ROMAN_SMALL1",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ROMAN_SMALL
+					},
+					new(){
+						textValue="ROMAN_SMALL2",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.ROMAN_SMALL
+					},
+					new(){
+						isEndParagraph=true
+					},
+					new(){
+						textValue="STAR_BULLET",
+						bulletsAndNumbering = G.BulletsAndNumberingValues.STAR_BULLET
 					}
 				}.ToArray()
 			}));
@@ -1262,23 +1377,23 @@ namespace OpenXMLOffice.Tests
 					{
 						borderColorSetting = new TableBorderSettings
 						{
-							leftBorder = new ()
+							leftBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 							},
-							topBorder = new ()
+							topBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 								width = 2
 							},
-							rightBorder = new ()
+							rightBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000",
 							},
-							bottomBorder = new ()
+							bottomBorder = new()
 							{
 								showBorder = true,
 								borderColor = "FF0000"

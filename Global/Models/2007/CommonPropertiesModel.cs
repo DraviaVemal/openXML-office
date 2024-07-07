@@ -825,6 +825,10 @@ namespace OpenXMLOffice.Global_2007
 	where TextColorOption : class, IColorOptions, new()
 	{
 		/// <summary>
+		/// 
+		/// </summary>
+		public BulletsAndNumberingValues? bulletsAndNumbering;
+		/// <summary>
 		///
 		/// </summary>
 		public DefaultRunPropertiesModel<TextColorOption> defaultRunProperties;

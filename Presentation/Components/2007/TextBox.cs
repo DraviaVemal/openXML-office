@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
@@ -102,6 +104,8 @@ namespace OpenXMLOffice.Presentation_2007
 				ShapeProperties.Append(CreateColorComponent(new ColorOptionModel<NoFillOptions>()));
 			}
 			List<DrawingRunModel<SolidOptions>> drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
+			List<DrawingParagraphModel<SolidOptions>> paragraphsModels = new List<DrawingParagraphModel<SolidOptions>>();
+			DrawingParagraphModel<SolidOptions> drawingParagraphModel = new DrawingParagraphModel<SolidOptions>();
 			foreach (TextBlock textBlock in textBoxSetting.textBlocks)
 			{
 				// Add Hyperlink Relationships to slide
@@ -171,8 +175,61 @@ namespace OpenXMLOffice.Presentation_2007
 						hyperlinkProperties = textBlock.hyperlinkProperties
 					}
 				};
-				drawingRunModels.Add(drawingRunModel);
+				if (textBlock.bulletsAndNumbering != null && textBlock.bulletsAndNumbering != BulletsAndNumberingValues.NONE)
+				{
+					drawingParagraphModel.drawingRuns = drawingRunModels.ToArray();
+					paragraphsModels.Add(drawingParagraphModel);
+					drawingParagraphModel = new DrawingParagraphModel<SolidOptions>()
+					{
+						paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
+						{
+							horizontalAlignment = textBoxSetting.horizontalAlignment,
+							bulletsAndNumbering = textBlock.bulletsAndNumbering
+						}
+					};
+					drawingRunModels = new List<DrawingRunModel<SolidOptions>>()
+					{
+						drawingRunModel
+					};
+				}
+				else if (textBlock.isEndParagraph)
+				{
+					drawingParagraphModel.drawingRuns = drawingRunModels.ToArray();
+					paragraphsModels.Add(drawingParagraphModel);
+					drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
+					drawingParagraphModel = new DrawingParagraphModel<SolidOptions>()
+					{
+						paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
+						{
+							horizontalAlignment = textBoxSetting.horizontalAlignment,
+							bulletsAndNumbering = textBlock.bulletsAndNumbering
+						}
+					};
+				}
+				else
+				{
+					drawingRunModels.Add(drawingRunModel);
+				}
 			}
+			if (drawingRunModels.Count > 0)
+			{
+				drawingParagraphModel.drawingRuns = drawingRunModels.ToArray();
+				paragraphsModels.Add(drawingParagraphModel);
+				drawingParagraphModel = new DrawingParagraphModel<SolidOptions>()
+				{
+					paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
+					{
+						horizontalAlignment = textBoxSetting.horizontalAlignment
+					}
+				};
+			}
+			IEnumerable<OpenXmlElement> drawingParagraphs = Enumerable
+				.Repeat((OpenXmlElement)new A.BodyProperties(), 1)
+				.Concat(Enumerable.Repeat((OpenXmlElement)new A.ListStyle(), 1))
+				.Concat(paragraphsModels.Select(item =>
+					{
+						return CreateDrawingParagraph(item);
+					}));
 			documentShape = new P.Shape()
 			{
 				NonVisualShapeProperties = new P.NonVisualShapeProperties(
@@ -184,17 +241,7 @@ namespace OpenXMLOffice.Presentation_2007
 				new P.NonVisualShapeDrawingProperties(),
 				new P.ApplicationNonVisualDrawingProperties()),
 				ShapeProperties = ShapeProperties,
-				TextBody = new P.TextBody(
-						new A.BodyProperties(),
-						new A.ListStyle(),
-						CreateDrawingParagraph(new DrawingParagraphModel<SolidOptions>()
-						{
-							paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
-							{
-								horizontalAlignment = textBoxSetting.horizontalAlignment
-							},
-							drawingRuns = drawingRunModels.ToArray()
-						})),
+				TextBody = new P.TextBody(drawingParagraphs),
 			};
 			return documentShape;
 		}
