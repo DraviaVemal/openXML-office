@@ -130,18 +130,19 @@ namespace OpenXMLOffice.Global_2007
 			}));
 			if (isSecondaryAxisActive)
 			{
+				comboChartSetting.chartAxisOptions.zAxisOptions.crosses = C.CrossesValues.Maximum;
 				plotArea.Append(CreateAxis(new AxisSetting<ZAxisOptions<ZAxisType>, ZAxisType>()
 				{
 					id = SecondaryValueAxisId,
 					crossAxisId = SecondaryCategoryAxisId,
 					axisOptions = comboChartSetting.chartAxisOptions.zAxisOptions,
-					axisPosition = comboChartSetting.secondaryAxisPosition
+					axisPosition = comboChartSetting.secondaryAxisPosition,
 				}));
 				plotArea.Append(CreateAxis(new AxisSetting<ZAxisOptions<CategoryAxis>, CategoryAxis>()
 				{
 					id = SecondaryCategoryAxisId,
 					crossAxisId = SecondaryValueAxisId,
-					axisPosition = comboChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.BOTTOM : AxisPosition.TOP,
+					axisPosition = comboChartSetting.chartAxisOptions.xAxisOptions.chartAxesOptions.inReverseOrder ? AxisPosition.TOP : AxisPosition.BOTTOM,
 					axisOptions = new ZAxisOptions<CategoryAxis>()
 					{
 						isAxesVisible = false

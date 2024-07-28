@@ -723,7 +723,33 @@ namespace OpenXMLOffice.Tests
 				{
 					textValue = "Combo Chart Before Picture"
 				},
-				secondaryAxisPosition = G.AxisPosition.RIGHT
+				secondaryAxisPosition = G.AxisPosition.RIGHT,
+				chartAxisOptions = new()
+				{
+					xAxisOptions = new()
+					{
+						chartAxisTitle = new()
+						{
+							textValue = "x-test"
+						}
+					},
+					yAxisOptions = new()
+					{
+						chartAxisTitle = new()
+						{
+							textValue = "y-test",
+							TextAngle = -90
+						}
+					},
+					zAxisOptions = new()
+					{
+						chartAxisTitle = new()
+						{
+							textValue = "z-test",
+							TextAngle = 90
+						}
+					}
+				}
 			};
 			comboChartSetting.AddComboChartsSetting(new G.AreaChartSetting<G.PresentationSetting>()
 			{

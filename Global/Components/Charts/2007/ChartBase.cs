@@ -334,7 +334,7 @@ namespace OpenXMLOffice.Global_2007
 					axis.Append(CreateMinorGridLine());
 				}
 				axis.Append(new C.TickLabelPosition { Val = AxisOptions<ValueAxis>.GetLabelAxesPosition(axisSetting.axisOptions.chartAxesOptions.axesLabelPosition) });
-				if(axisSetting.axisOptions.axisLineColor != null)
+				if (axisSetting.axisOptions.axisLineColor != null)
 				{
 					axis.Append(new List<OpenXmlElement> { CreateChartShapeProperties(new ShapePropertiesModel<SolidOptions, NoFillOptions>()
 					{
@@ -349,7 +349,9 @@ namespace OpenXMLOffice.Global_2007
 							}
 						}
 					}) });
-				} else {
+				}
+				else
+				{
 					axis.Append(new List<OpenXmlElement> { CreateChartShapeProperties() });
 				}
 				ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
@@ -392,11 +394,13 @@ namespace OpenXMLOffice.Global_2007
 						}
 					}
 				}));
+				axis.Append(
+					new C.Crosses { Val = axisSetting.axisOptions.crosses },
+					new C.CrossBetween { Val = C.CrossBetweenValues.Between }
+				);
 			}
 			axis.Append(
 				new C.CrossingAxis { Val = axisSetting.crossAxisId },
-				new C.Crosses { Val = axisSetting.axisOptions.crosses },
-				new C.CrossBetween { Val = C.CrossBetweenValues.Between },
 				new C.AutoLabeled { Val = true },
 				new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
 				new C.LabelOffset { Val = 100 },
