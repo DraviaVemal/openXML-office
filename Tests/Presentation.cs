@@ -59,6 +59,10 @@ namespace OpenXMLOffice.Tests
 				{
 					xAxisOptions = new()
 					{
+						axisTypeOption = new()
+						{
+							specificIntervalUnit = 2
+						},
 						chartAxesOptions = new()
 						{
 							axesLabelPosition = G.AxesLabelPosition.HIGH,

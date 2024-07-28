@@ -405,6 +405,18 @@ namespace OpenXMLOffice.Global_2007
 				new C.LabelAlignment { Val = C.LabelAlignmentValues.Center },
 				new C.LabelOffset { Val = 100 },
 				new C.NoMultiLevelLabels { Val = false });
+			if (axisSetting.axisOptions.GetType() == typeof(XAxisOptions<CategoryAxis>) && (axisSetting.axisOptions as XAxisOptions<CategoryAxis>).axisTypeOption.specificIntervalUnit != null)
+			{
+				axis.Append(new C.TickLabelSkip() { Val = (int)(axisSetting.axisOptions as XAxisOptions<CategoryAxis>).axisTypeOption.specificIntervalUnit });
+			}
+			else if (axisSetting.axisOptions.GetType() == typeof(YAxisOptions<CategoryAxis>) && (axisSetting.axisOptions as YAxisOptions<CategoryAxis>).axisTypeOption.specificIntervalUnit != null)
+			{
+				axis.Append(new C.TickLabelSkip() { Val = (int)(axisSetting.axisOptions as YAxisOptions<CategoryAxis>).axisTypeOption.specificIntervalUnit });
+			}
+			else if (axisSetting.axisOptions.GetType() == typeof(ZAxisOptions<CategoryAxis>) && (axisSetting.axisOptions as ZAxisOptions<CategoryAxis>).axisTypeOption.specificIntervalUnit != null)
+			{
+				axis.Append(new C.TickLabelSkip() { Val = (int)(axisSetting.axisOptions as ZAxisOptions<CategoryAxis>).axisTypeOption.specificIntervalUnit });
+			}
 			if (axisSetting.axisOptions.GetType() == typeof(XAxisOptions<ValueAxis>))
 			{
 				axis.Append(new C.MajorUnit() { Val = (axisSetting.axisOptions as XAxisOptions<ValueAxis>).axisTypeOption.unitsMajor });

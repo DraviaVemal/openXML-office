@@ -350,7 +350,13 @@ namespace OpenXMLOffice.Global_2007
 	/// <summary>
 	/// 
 	/// </summary>
-	public class CategoryAxis : IAxisTypeOptions { }
+	public class CategoryAxis : IAxisTypeOptions
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint? specificIntervalUnit;
+	}
 	/// <summary>
 	/// X Axis Specific Options
 	/// </summary>
