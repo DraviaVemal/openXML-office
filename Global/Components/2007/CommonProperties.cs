@@ -610,28 +610,22 @@ namespace OpenXMLOffice.Global_2007
 					case BulletsAndNumberingValues.FILLED_ROUND:
 						paragraphProperties.Append(new A.BulletFont()
 						{
-							Typeface = "Wingdings",
-							Panose = "05000000000000000000",
-							PitchFamily = 2,
-							CharacterSet = 2
+							Typeface = "Arial",
+							Panose = "020B0604020202020204",
+							PitchFamily = 34,
+							CharacterSet = 0
 						});
-						paragraphProperties.Append(new A.CharacterBullet()
-						{
-							Char = "*"
-						});
+						paragraphProperties.Append(new A.CharacterBullet() { Char = "•" });
 						break;
 					case BulletsAndNumberingValues.HOLLOW_ROUND:
 						paragraphProperties.Append(new A.BulletFont()
 						{
-							Typeface = "Wingdings",
-							Panose = "05000000000000000000",
-							PitchFamily = 2,
-							CharacterSet = 2
+							Typeface = "Arial",
+							Panose = "020B0604020202020204",
+							PitchFamily = 34,
+							CharacterSet = 0
 						});
-						paragraphProperties.Append(new A.CharacterBullet()
-						{
-							Char = "o"
-						});
+						paragraphProperties.Append(new A.CharacterBullet() { Char = "o" });
 						break;
 					case BulletsAndNumberingValues.FILLED_SQUARE:
 						paragraphProperties.Append(new A.BulletFont()
