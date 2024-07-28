@@ -172,15 +172,14 @@ namespace OpenXMLOffice.Presentation_2007
 						isBold = textBlock.isBold,
 						isItalic = textBlock.isItalic,
 						underLineValues = textBlock.isUnderline ? UnderLineValues.SINGLE : UnderLineValues.NONE,
-						hyperlinkProperties = textBlock.hyperlinkProperties
+						hyperlinkProperties = textBlock.hyperlinkProperties,
 					}
 				};
 				if (textBlock.bulletsAndNumbering != null && textBlock.bulletsAndNumbering != BulletsAndNumberingValues.NONE)
 				{
-					drawingParagraphModel.drawingRuns = drawingRunModels.ToArray();
-					paragraphsModels.Add(drawingParagraphModel);
 					drawingParagraphModel = new DrawingParagraphModel<SolidOptions>()
 					{
+						drawingRuns = drawingRunModels.ToArray(),
 						paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
 						{
 							horizontalAlignment = textBoxSetting.horizontalAlignment,
@@ -191,12 +190,10 @@ namespace OpenXMLOffice.Presentation_2007
 					{
 						drawingRunModel
 					};
+					paragraphsModels.Add(drawingParagraphModel);
 				}
 				else if (textBlock.isEndParagraph)
 				{
-					drawingParagraphModel.drawingRuns = drawingRunModels.ToArray();
-					paragraphsModels.Add(drawingParagraphModel);
-					drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
 					drawingParagraphModel = new DrawingParagraphModel<SolidOptions>()
 					{
 						paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
@@ -205,6 +202,8 @@ namespace OpenXMLOffice.Presentation_2007
 							bulletsAndNumbering = textBlock.bulletsAndNumbering
 						}
 					};
+					drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
+					paragraphsModels.Add(drawingParagraphModel);
 				}
 				else
 				{
@@ -213,15 +212,15 @@ namespace OpenXMLOffice.Presentation_2007
 			}
 			if (drawingRunModels.Count > 0)
 			{
-				drawingParagraphModel.drawingRuns = drawingRunModels.ToArray();
-				paragraphsModels.Add(drawingParagraphModel);
 				drawingParagraphModel = new DrawingParagraphModel<SolidOptions>()
 				{
+					drawingRuns = drawingRunModels.ToArray(),
 					paragraphPropertiesModel = new ParagraphPropertiesModel<SolidOptions>()
 					{
 						horizontalAlignment = textBoxSetting.horizontalAlignment
 					}
 				};
+				paragraphsModels.Add(drawingParagraphModel);
 			}
 			IEnumerable<OpenXmlElement> drawingParagraphs = Enumerable
 				.Repeat((OpenXmlElement)new A.BodyProperties(), 1)

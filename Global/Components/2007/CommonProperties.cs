@@ -825,6 +825,7 @@ namespace OpenXMLOffice.Global_2007
 			foreach (DrawingRunModel<TextColorOption> drawingRunModel in drawingRunModels)
 			{
 				A.Run run = new A.Run(CreateDrawingRunProperties(drawingRunModel.drawingRunProperties));
+				// TODO: Check if really needed
 				if (drawingRunModel.text != null)
 				{
 					run.Append(new A.Text(drawingRunModel.text));
