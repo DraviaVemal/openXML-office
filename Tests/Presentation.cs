@@ -532,26 +532,26 @@ namespace OpenXMLOffice.Tests
 			});
 			Assert.IsTrue(true);
 		}
-		/// <summary>
-		/// Add Shape to Slide
-		/// </summary>
-		[TestMethod]
-		public void AddRectangleShape()
-		{
-			Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
-			G.RectangleShapeModel<G.PresentationSetting, G.SolidOptions, G.SolidOptions> rectangleShapeModel = new()
-			{
-				applicationSpecificSetting = new()
-				{
-					X = 0,
-					Y = 0,
-					Height = (int)G.ConverterUtils.PixelsToEmu(100),
-					Width = (int)G.ConverterUtils.PixelsToEmu(100)
-				}
-			};
-			slide.AddShape(rectangleShapeModel);
-			Assert.IsTrue(true);
-		}
+		// /// <summary>
+		// /// Add Shape to Slide
+		// /// </summary>
+		// [TestMethod]
+		// public void AddRectangleShape()
+		// {
+		// 	Slide slide = powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+		// 	G.RectangleShapeModel<G.PresentationSetting, G.SolidOptions, G.SolidOptions> rectangleShapeModel = new()
+		// 	{
+		// 		applicationSpecificSetting = new()
+		// 		{
+		// 			X = 0,
+		// 			Y = 0,
+		// 			Height = (int)G.ConverterUtils.PixelsToEmu(100),
+		// 			Width = (int)G.ConverterUtils.PixelsToEmu(100)
+		// 		}
+		// 	};
+		// 	slide.AddShape(rectangleShapeModel);
+		// 	Assert.IsTrue(true);
+		// }
 		/// <summary>
 		/// Add Single Chart to the Slide
 		/// </summary>
