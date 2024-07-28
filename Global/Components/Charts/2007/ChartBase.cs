@@ -316,7 +316,15 @@ namespace OpenXMLOffice.Global_2007
 				axis.Append(CreateTitle(new ChartTitleModel()
 				{
 					textValue = axisSetting.axisOptions.chartAxisTitle.textValue,
-					TextAngle = axisSetting.axisOptions.chartAxisTitle.TextAngle
+					TextAngle = axisSetting.axisOptions.chartAxisTitle.TextAngle,
+					fontColor = axisSetting.axisOptions.chartAxisTitle.fontColor,
+					isBold = axisSetting.axisOptions.chartAxisTitle.isBold,
+					isItalic = axisSetting.axisOptions.chartAxisTitle.isItalic,
+					fontFamily = axisSetting.axisOptions.chartAxisTitle.fontFamily,
+					fontSize = axisSetting.axisOptions.chartAxisTitle.fontSize,
+					textDirectionValue = axisSetting.axisOptions.chartAxisTitle.textDirectionValue,
+					strikeValues = axisSetting.axisOptions.chartAxisTitle.strikeValues,
+					underLineValues = axisSetting.axisOptions.chartAxisTitle.underLineValues
 				}));
 			}
 			axis.Append(

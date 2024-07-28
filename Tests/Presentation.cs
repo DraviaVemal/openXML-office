@@ -734,7 +734,9 @@ namespace OpenXMLOffice.Tests
 					{
 						chartAxisTitle = new()
 						{
-							textValue = "x-test"
+							textValue = "x-test",
+							isBold = true,
+							isItalic = true
 						}
 					},
 					yAxisOptions = new()
@@ -742,7 +744,8 @@ namespace OpenXMLOffice.Tests
 						chartAxisTitle = new()
 						{
 							textValue = "y-test",
-							TextAngle = -90
+							TextAngle = -90,
+							strikeValues = G.StrikeValues.SINGLE_STRIKE
 						}
 					},
 					zAxisOptions = new()
@@ -750,7 +753,8 @@ namespace OpenXMLOffice.Tests
 						chartAxisTitle = new()
 						{
 							textValue = "z-test",
-							TextAngle = 90
+							TextAngle = 90,
+							underLineValues = G.UnderLineValues.DOUBLE
 						}
 					}
 				}
