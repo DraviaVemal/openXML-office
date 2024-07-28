@@ -145,6 +145,10 @@ namespace OpenXMLOffice.Global_2007
 		/// Chart Stick Fill Color
 		/// </summary>
 		public string fillColor;
+		/// <summary>
+		/// Invert chart color if the passed value is negative
+		/// </summary>
+		public bool invertIfNegative = false;
 	}
 	/// <summary>
 	/// Represents the settings for a column chart.
@@ -172,5 +176,9 @@ namespace OpenXMLOffice.Global_2007
 		/// The graphics settings for the column chart.
 		/// </summary>
 		public ColumnGraphicsSetting columnGraphicsSetting = new ColumnGraphicsSetting();
+		/// <summary>
+		/// Invert chart color if the passed value is negative
+		/// </summary>
+		public bool invertIfNegative = false;
 	}
 }

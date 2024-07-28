@@ -182,7 +182,7 @@ namespace OpenXMLOffice.Global_2007
 						}
 					}
 				};
-				series.Append(new C.InvertIfNegative() { Val = false });
+				series.Append(new C.InvertIfNegative() { Val = scatterChartSeriesSetting != null ? scatterChartSeriesSetting.invertIfNegative : scatterChartSetting.invertIfNegative });
 				series.Append(CreateChartShapeProperties(shapePropertiesModel));
 			}
 			if (new[] { ScatterChartTypes.SCATTER, ScatterChartTypes.SCATTER_SMOOTH_MARKER, ScatterChartTypes.SCATTER_STRAIGHT_MARKER }.Contains(scatterChartSetting.scatterChartType))

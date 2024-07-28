@@ -131,7 +131,7 @@ namespace OpenXMLOffice.Global_2007
 	public class BarChartSeriesSetting : ChartSeriesSetting
 	{
 		/// <summary>
-		/// Treadline setting for particular series
+		/// Tread line setting for particular series
 		/// </summary>
 		public List<TrendLineSettings> trendLines = new List<TrendLineSettings>();
 		/// <summary>
@@ -146,6 +146,10 @@ namespace OpenXMLOffice.Global_2007
 		/// The color of the fill.
 		/// </summary>
 		public string fillColor;
+		/// <summary>
+		/// Invert chart color if the passed value is negative
+		/// </summary>
+		public bool invertIfNegative = false;
 	}
 	/// <summary>
 	/// Represents the settings for a bar chart.
@@ -173,5 +177,9 @@ namespace OpenXMLOffice.Global_2007
 		/// The graphics settings for the bar chart.
 		/// </summary>
 		public BarGraphicsSetting barGraphicsSetting = new BarGraphicsSetting();
+		/// <summary>
+		/// Invert chart color if the passed value is negative
+		/// </summary>
+		public bool invertIfNegative = false;
 	}
 }

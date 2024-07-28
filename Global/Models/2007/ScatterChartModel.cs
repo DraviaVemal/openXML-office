@@ -95,6 +95,10 @@ namespace OpenXMLOffice.Global_2007
 		/// level setting.
 		/// </summary>
 		public ScatterChartDataLabel scatterChartDataLabel = new ScatterChartDataLabel();
+		/// <summary>
+		/// Invert chart color if the passed value is negative
+		/// </summary>
+		public bool invertIfNegative = false;
 	}
 	/// <summary>
 	/// Represents the settings for a scatter chart.
@@ -119,5 +123,9 @@ namespace OpenXMLOffice.Global_2007
 		/// The type of scatter chart.
 		/// </summary>
 		public ScatterChartTypes scatterChartType = ScatterChartTypes.SCATTER;
+		/// <summary>
+		/// Invert chart color if the passed value is negative
+		/// </summary>
+		public bool invertIfNegative = false;
 	}
 }
