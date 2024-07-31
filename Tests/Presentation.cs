@@ -18,7 +18,14 @@ namespace OpenXMLOffice.Tests
 			{
 				accent1 = "ABCDEF"
 			}
-		});
+		})
+		{
+			ShareComponentRelatedDetails = false,
+			ShareOsHardwareDetails = false,
+			ShareIpGeoLocation = false,
+			SharePackageRelatedDetails = false,
+			ShareUsageCounterDetails = false
+		};
 		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
 		/// Save Presentation on text completion cleanup
@@ -1001,7 +1008,14 @@ namespace OpenXMLOffice.Tests
 				{
 					accent2 = "FEDCBA"
 				}
-			});
+			})
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
@@ -1185,7 +1199,14 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationShapeEdit()
 		{
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
@@ -1241,7 +1262,14 @@ namespace OpenXMLOffice.Tests
 					dataType = X.CellDataType.NUMBER
 				};
 			}
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
@@ -1292,7 +1320,14 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationEditBarChart()
 		{
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			Slide slide = powerPoint1.GetSlideByIndex(0);
 			List<Shape> shape1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
 			List<Shape> shape2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
@@ -1364,7 +1399,14 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationNonEdit()
 		{
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false);
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			powerPoint1.SaveAs(string.Format("{1}/copy-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}

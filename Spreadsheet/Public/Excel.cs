@@ -1,6 +1,9 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using System.Reflection;
 using System.IO;
+using OpenXMLOffice.Global_2007;
+
 namespace OpenXMLOffice.Spreadsheet_2007
 {
 	/// <summary>
@@ -9,12 +12,14 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// handling Excel-related objects and operation It is designed to simplify tasks related to
 	/// Excel file manipulation, including the creation of new Excel files, reading and updating
 	/// existing files, and processing Excel data from stream
+	/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 	/// </summary>
-	public class Excel
+	public class Excel : PrivacyProperties
 	{
 		private readonly Spreadsheet spreadsheet;
 		/// <summary>
 		/// Create New file in the system
+		/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 		/// </summary>
 		public Excel(ExcelProperties spreadsheetProperties = null)
 		{
@@ -23,18 +28,22 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point.
 		/// Source file will be cloned and released. hence can be replace by saveAs method if you want to update the same file.
+		/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 		/// </summary>
-		public Excel(string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
+		public Excel(string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null, PrivacyProperties privacyProperties = null)
 		{
+			isFileEdited = true;
 			spreadsheet = new Spreadsheet(this, filePath, isEditable, spreadsheetProperties);
 		}
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point.
 		/// Source stream is copied and closed.
 		/// Note : Make Clone in your source application if you want to retain the stream handle
+		/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 		/// </summary>
-		public Excel(Stream Stream, bool IsEditable, ExcelProperties spreadsheetProperties = null)
+		public Excel(Stream Stream, bool IsEditable, ExcelProperties spreadsheetProperties = null, PrivacyProperties privacyProperties = null)
 		{
+			isFileEdited = true;
 			spreadsheet = new Spreadsheet(this, Stream, IsEditable, spreadsheetProperties);
 		}
 		/// <summary>
@@ -118,6 +127,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public void SaveAs(string filePath)
 		{
+			SendAnonymousSaveStates(Assembly.GetExecutingAssembly().GetName());
 			spreadsheet.SaveAs(filePath);
 		}
 		/// <summary>
@@ -127,6 +137,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		public void SaveAs(Stream stream)
 		{
+			SendAnonymousSaveStates(Assembly.GetExecutingAssembly().GetName());
 			spreadsheet.SaveAs(stream);
 		}
 	}

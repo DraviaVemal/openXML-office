@@ -10,7 +10,14 @@ namespace OpenXMLOffice.Tests
 	[TestClass]
 	public class Spreadsheet
 	{
-		private static readonly Excel excel = new();
+		private static readonly Excel excel = new()
+		{
+			ShareComponentRelatedDetails = false,
+			ShareOsHardwareDetails = false,
+			ShareIpGeoLocation = false,
+			SharePackageRelatedDetails = false,
+			ShareUsageCounterDetails = false
+		};
 		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
 		/// Initialize excel Test
@@ -114,8 +121,8 @@ namespace OpenXMLOffice.Tests
 				numberFormat = "00.000",
 			});
 			Assert.IsNotNull(worksheet);
-			
-			
+
+
 			worksheet.SetRow("A1", new DataCell[6]{
 				new(){
 					cellValue = "test1",
@@ -168,7 +175,14 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void AddMergeCell()
 		{
-			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", true)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			Worksheet worksheet = excel1.GetWorksheet("Sheet1");
 			List<MergeCellRange> mergedCellRange = worksheet.GetMergeCellList();
 			Assert.AreEqual(1, mergedCellRange.Count);
@@ -896,7 +910,14 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingExcelNonEdit()
 		{
-			Excel excel1 = new("./TestFiles/basic_test.xlsx", false);
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", false)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			excel1.SaveAs(string.Format("{1}/ReadEdit-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
@@ -906,7 +927,14 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingExcel()
 		{
-			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", true)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			Worksheet worksheet = excel1.AddSheet("AreaChart");
 			int row = 0;
 			CommonMethod.CreateDataCellPayload().ToList().ForEach(rowData =>
@@ -969,7 +997,14 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingExcelStyleString()
 		{
-			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", true)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			excel1.SaveAs(string.Format("{1}/EditStyle-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
