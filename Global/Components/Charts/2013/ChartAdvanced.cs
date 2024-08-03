@@ -18,6 +18,25 @@ namespace OpenXMLOffice.Global_2013
 		///
 		/// </summary>
 		public ChartAdvance(ChartSetting<ApplicationSpecificSetting> chartSetting) : base(chartSetting) { }
+		internal C.DataLabel CreateDataLabel(ChartDataLabel chartDataLabel, uint index)
+		{
+			return new C.DataLabel(
+						new C.Index() { Val = index },
+						new C.SeriesText(
+							new C.RichText(
+								new A.BodyProperties(),
+								new A.ListStyle()
+							)
+						),
+						new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
+						new C.ShowValue { Val = chartDataLabel.showValue },
+						new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
+						new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
+						new C.ShowPercent() { Val = chartDataLabel.showPercentage },
+						new C.ShowBubbleSize() { Val = true },
+						new C.Separator(chartDataLabel.separator)
+					);
+		}
 		/// <summary>
 		/// Create Data Labels for the chart
 		/// </summary>
@@ -40,7 +59,7 @@ namespace OpenXMLOffice.Global_2013
 			}
 			if (chartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn)
 			{
-				for (int i = 0; i < dataLabelCount; i++)
+				for (uint i = 0; i < dataLabelCount; i++)
 				{
 					A.Paragraph Paragraph = new A.Paragraph(CreateField("CELLRANGE", "[CELLRANGE]"));
 					if (chartDataLabel.showSeriesName)
@@ -59,24 +78,7 @@ namespace OpenXMLOffice.Global_2013
 						Paragraph.Append(CreateField("VALUE", "[VALUE]"));
 					}
 					Paragraph.Append(new A.EndParagraphRunProperties { Language = "en-IN" });
-					dataLabels.Append(new C.DataLabel(
-						new C.Index() { Val = (uint)i },
-						new C.SeriesText(
-							new C.RichText(
-								new A.BodyProperties(),
-								new A.ListStyle(),
-								Paragraph
-							)
-						),
-						new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
-						new C.ShowValue { Val = chartDataLabel.showValue },
-						new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
-						new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
-						new C.ShowPercent() { Val = chartDataLabel.showPercentage },
-						new C.ShowBubbleSize() { Val = true },
-						new C.Separator(chartDataLabel.separator),
-						(OpenXmlElement)extensionList.Clone()
-					));
+					dataLabels.Append(CreateDataLabel(chartDataLabel, i));
 				}
 			}
 			dataLabels.Append(new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },

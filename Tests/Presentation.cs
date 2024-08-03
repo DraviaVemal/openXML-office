@@ -48,6 +48,32 @@ namespace OpenXMLOffice.Tests
 				Directory.CreateDirectory(resultPath);
 			}
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[TestMethod]
+		public void AddPieChart()
+		{
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddChart(CommonMethod.CreateDataCellPayload(), new G.PieChartSetting<G.PresentationSetting>()
+			{
+				pieChartType = G.PieChartTypes.PIE,
+				pieChartDataLabel = new()
+				{
+					dataLabelPosition = G.PieChartDataLabel.DataLabelPositionValues.SHOW,
+					showValue = true,
+				},
+				pieChartSeriesSettings = new() { new(){
+					pieChartDataPointSettings = new(){null,new(){
+						pieChartDataLabel = new(){
+							showValue=true,
+							showPercentage=true
+						}
+					}}
+				} },
+				applicationSpecificSetting = new(),
+			});
+		}
 		/// <summary>
 		/// Add All Chart Types to Slide
 		/// </summary>
@@ -402,6 +428,13 @@ namespace OpenXMLOffice.Tests
 					dataLabelPosition = G.PieChartDataLabel.DataLabelPositionValues.SHOW,
 					showValue = true,
 				},
+				pieChartSeriesSettings = new() { new(){
+					pieChartDataPointSettings = new(){null,new(){
+						pieChartDataLabel = new(){
+							showValue=true
+						}
+					}}
+				} },
 				applicationSpecificSetting = new(),
 			});
 			//17

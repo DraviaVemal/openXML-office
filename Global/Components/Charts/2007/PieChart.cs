@@ -75,6 +75,17 @@ namespace OpenXMLOffice.Global_2007
 			chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
 			return chart;
 		}
+		private PieChartDataLabel GetDataPointLabel(uint index, int seriesIndex)
+		{
+			PieChartDataLabel pieChartDataLabel = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
+						.Select(item => item != null ? item.pieChartDataLabel : null)
+						.ToList().ElementAtOrDefault((int)index) : null;
+			if (pieChartDataLabel != null)
+			{
+				return pieChartDataLabel;
+			}
+			return null;
+		}
 		private ColorOptionModel<SolidOptions> GetDataPointFill(uint index, int seriesIndex)
 		{
 			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
@@ -99,7 +110,7 @@ namespace OpenXMLOffice.Global_2007
 		{
 			ColorOptionModel<SolidOptions> solidFillModel = new ColorOptionModel<SolidOptions>();
 			string hexColor = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataPointSettings
-						.Select(item => item.borderColor)
+						.Select(item => item != null ? item.borderColor : null)
 						.ToList().ElementAtOrDefault((int)index) : null;
 			if (hexColor != null)
 			{
@@ -126,9 +137,9 @@ namespace OpenXMLOffice.Global_2007
 				C.DataLabels dataLabels = null;
 				if (seriesIndex < pieChartSetting.pieChartSeriesSettings.Count)
 				{
-					PieChartDataLabel pieChartDataLabel1 = pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex) != null ? pieChartSetting.pieChartSeriesSettings.ElementAtOrDefault(seriesIndex).pieChartDataLabel : null;
+					PieChartDataLabel pieChartDataLabel = GetDataPointLabel(index, seriesIndex);
 					int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
-					dataLabels = CreatePieDataLabels(pieChartDataLabel1 ?? new PieChartDataLabel(), dataLabelCellsLength);
+					dataLabels = CreatePieDataLabels(pieChartDataLabel ?? pieChartSetting.pieChartDataLabel, dataLabelCellsLength);
 				}
 				C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 				ShapePropertiesModel<SolidOptions, SolidOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, SolidOptions>()
@@ -190,7 +201,7 @@ namespace OpenXMLOffice.Global_2007
 					}
 					dataLabels.InsertAt(new C.DataLabelPosition() { Val = dataLabelPositionValues }, 0);
 				}
-				if(pieChartDataLabel.formatCode != null)
+				if (pieChartDataLabel.formatCode != null)
 				{
 					dataLabels.InsertAt(new C.NumberingFormat { FormatCode = pieChartDataLabel.formatCode, SourceLinked = false }, 0);
 				}

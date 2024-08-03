@@ -67,6 +67,10 @@ namespace OpenXMLOffice.Global_2007
 	/// </summary>
 	public class PieChartDataPointSetting : ChartDataPointSettings
 	{
+		/// <summary>
+		/// Option to customize specific data point, will override chart level and series level setting.
+		/// </summary>
+		public PieChartDataLabel pieChartDataLabel = new PieChartDataLabel();
 	}
 	/// <summary>
 	/// Represents the series setting for a pie chart.
@@ -92,10 +96,6 @@ namespace OpenXMLOffice.Global_2007
 		///
 		/// </summary>
 		public List<PieChartDataPointSetting> pieChartDataPointSettings = new List<PieChartDataPointSetting>();
-		/// <summary>
-		/// Option to customize specific data series, will override chart level setting.
-		/// </summary>
-		public PieChartDataLabel pieChartDataLabel = new PieChartDataLabel();
 	}
 	/// <summary>
 	/// Represents the setting for a pie chart.

@@ -186,11 +186,11 @@ namespace OpenXMLOffice.Presentation_2007
 							bulletsAndNumbering = textBlock.bulletsAndNumbering
 						}
 					};
+					paragraphsModels.Add(drawingParagraphModel);
 					drawingRunModels = new List<DrawingRunModel<SolidOptions>>()
 					{
 						drawingRunModel
 					};
-					paragraphsModels.Add(drawingParagraphModel);
 				}
 				else if (textBlock.isEndParagraph)
 				{
@@ -202,8 +202,8 @@ namespace OpenXMLOffice.Presentation_2007
 							bulletsAndNumbering = textBlock.bulletsAndNumbering
 						}
 					};
-					drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
 					paragraphsModels.Add(drawingParagraphModel);
+					drawingRunModels = new List<DrawingRunModel<SolidOptions>>();
 				}
 				else
 				{
