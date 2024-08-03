@@ -134,7 +134,14 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			Stream stream = chart.GetWorkBookStream();
-			X.Excel excel = new(stream, true);
+			X.Excel excel = new(stream, true)
+			{
+				ShareComponentRelatedDetails = false,
+				ShareOsHardwareDetails = false,
+				ShareIpGeoLocation = false,
+				SharePackageRelatedDetails = false,
+				ShareUsageCounterDetails = false
+			};
 			X.Worksheet sheet = excel.GetWorksheet("Sheet1");
 			sheet.SetRow(10, 1, CommonMethod.CreateDataCellPayload()[1], null);
 			sheet.SetRow(11, 1, CommonMethod.CreateDataCellPayload()[2], null);
