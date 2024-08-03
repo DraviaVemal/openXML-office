@@ -1,8 +1,8 @@
 using System;
 using System.Net.Http;
 using System.Text;
-using Newtonsoft.Json;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace OpenXMLOffice.Global_2007
 {
@@ -17,16 +17,18 @@ namespace OpenXMLOffice.Global_2007
     {
         private class StatsPayload
         {
-            public bool UsageCounter { get; set; }
-            public bool HostProcess64Bit { get; set; }
-            public bool Os64Bit { get; set; }
-            public string DotnetVersion { get; set; }
-            public bool IsInteractiveApp { get; set; }
-            public string OsVersion { get; set; }
-            public bool EnableGeoTagging { get; set; }
-            public object PackageName { get; set; }
-            public string PackageVersion { get; set; }
-            public string GlobalVersion { get; set; }
+            public bool UsageCounter { get; internal set; }
+            public bool HostProcess64Bit { get; internal set; }
+            public bool Os64Bit { get; internal set; }
+            public string DotnetVersion { get; internal set; }
+            public bool IsInteractiveApp { get; internal set; }
+            public string OsVersion { get; internal set; }
+            public bool EnableGeoTagging { get; internal set; }
+            public object PackageName { get; internal set; }
+            public string PackageVersion { get; internal set; }
+            public string GlobalVersion { get; internal set; }
+            public bool PackageDetails { get; internal set; }
+            public bool HardwareDetails { get; internal set; }
         }
         /// <summary>
         /// 
@@ -143,9 +145,11 @@ namespace OpenXMLOffice.Global_2007
             if (ShareUsageCounterDetails)
             {
                 statsPayload.UsageCounter = true;
+                statsPayload.PackageName = assemblyName.FullName;
             }
             if (ShareOsHardwareDetails)
             {
+                statsPayload.HardwareDetails = true;
                 statsPayload.OsVersion = Environment.OSVersion.ToString();
                 statsPayload.Os64Bit = Environment.Is64BitOperatingSystem;
                 statsPayload.HostProcess64Bit = Environment.Is64BitProcess;
@@ -158,6 +162,7 @@ namespace OpenXMLOffice.Global_2007
             }
             if (SharePackageRelatedDetails)
             {
+                statsPayload.PackageDetails = true;
                 statsPayload.GlobalVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 statsPayload.PackageName = assemblyName.FullName;
                 statsPayload.PackageVersion = assemblyName.Version.ToString();
