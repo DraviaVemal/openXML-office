@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Reflection;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace OpenXMLOffice.Global_2007
 {
@@ -167,10 +168,10 @@ namespace OpenXMLOffice.Global_2007
             {
                 // TODO : Collect used components details but without invading into too much details
             }
-            SendPostData(JsonConvert.SerializeObject(statsPayload));
+            SendPostData(JsonConvert.SerializeObject(statsPayload)).GetAwaiter().GetResult();
         }
 
-        private async void SendPostData(string jsonDataToSend)
+        private async Task SendPostData(string jsonDataToSend)
         {
             // Return If All Status sharing are blocked
             if (!ShareComponentRelatedDetails && !ShareOsHardwareDetails &&
