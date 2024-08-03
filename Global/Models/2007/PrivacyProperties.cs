@@ -128,7 +128,6 @@ namespace OpenXMLOffice.Global_2007
         /// </summary>
         protected PrivacyProperties()
         {
-            var test4 = Assembly.GetExecutingAssembly();
         }
 
         /// <summary>
