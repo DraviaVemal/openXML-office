@@ -36,6 +36,8 @@ namespace OpenXMLOffice.Global_2007
 		}
 		private C.PlotArea CreateChartPlotArea(ChartData[][] dataCols, DataRange dataRange)
 		{
+			// Set default data column end for pie and doughnut
+			pieChartSetting.chartDataSetting.chartDataColumnEnd = pieChartSetting.chartDataSetting.chartDataColumnEnd == 0 ? pieChartSetting.chartDataSetting.chartDataColumnStart : pieChartSetting.chartDataSetting.chartDataColumnEnd;
 			C.PlotArea plotArea = new C.PlotArea();
 			plotArea.Append(CreateLayout(pieChartSetting.plotAreaOptions != null ? pieChartSetting.plotAreaOptions.manualLayout : null));
 			if (pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT)
@@ -72,7 +74,10 @@ namespace OpenXMLOffice.Global_2007
 				chart.Append(dataLabels);
 			}
 			chart.Append(new C.FirstSliceAngle { Val = (UInt16Value)pieChartSetting.angleOfFirstSlice });
-			chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
+			if (pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT)
+			{
+				chart.Append(new C.HoleSize { Val = (ByteValue)pieChartSetting.doughnutHoleSize });
+			}
 			return chart;
 		}
 		private PieChartDataLabel GetDataPointLabel(uint index, int seriesIndex)
@@ -134,13 +139,6 @@ namespace OpenXMLOffice.Global_2007
 				CreateSeriesText(chartDataGrouping.seriesHeaderFormula, new[] { chartDataGrouping.seriesHeaderCells }));
 			for (uint index = 0; index < chartDataGrouping.xAxisCells.Length; index++)
 			{
-				C.DataLabels dataLabels = null;
-				if (seriesIndex < pieChartSetting.pieChartSeriesSettings.Count)
-				{
-					PieChartDataLabel pieChartDataLabel = GetDataPointLabel(index, seriesIndex);
-					int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
-					dataLabels = CreatePieDataLabels(pieChartDataLabel ?? pieChartSetting.pieChartDataLabel, dataLabelCellsLength);
-				}
 				C.DataPoint dataPoint = new C.DataPoint(new C.Index { Val = index }, new C.Bubble3D { Val = false });
 				ShapePropertiesModel<SolidOptions, SolidOptions> shapePropertiesModel = new ShapePropertiesModel<SolidOptions, SolidOptions>()
 				{
@@ -154,12 +152,44 @@ namespace OpenXMLOffice.Global_2007
 					};
 				}
 				dataPoint.Append(CreateChartShapeProperties(shapePropertiesModel));
-				if (dataLabels != null)
-				{
-					series.Append(dataLabels);
-				}
 				series.Append(dataPoint);
 			}
+			int dataLabelCellsLength = chartDataGrouping.dataLabelCells != null ? chartDataGrouping.dataLabelCells.Length : 0;
+			List<C.DataLabel> dataLabelList = new List<C.DataLabel>();
+			for (uint index = 0; index < chartDataGrouping.xAxisCells.Length; index++)
+			{
+				if (seriesIndex < pieChartSetting.pieChartSeriesSettings.Count)
+				{
+					PieChartDataLabel pieChartDataLabel = GetDataPointLabel(index, seriesIndex);
+					if (pieChartDataLabel != null)
+					{
+						C.DataLabel dataLabel = CreateDataLabel(pieChartDataLabel, index);
+						if (pieChartSetting.pieChartType != PieChartTypes.DOUGHNUT)
+						{
+							C.DataLabelPositionValues dataLabelPositionValues;
+							switch (pieChartDataLabel.dataLabelPosition)
+							{
+								case PieChartDataLabel.DataLabelPositionValues.INSIDE_END:
+									dataLabelPositionValues = C.DataLabelPositionValues.InsideEnd;
+									break;
+								case PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END:
+									dataLabelPositionValues = C.DataLabelPositionValues.OutsideEnd;
+									break;
+								case PieChartDataLabel.DataLabelPositionValues.BEST_FIT:
+									dataLabelPositionValues = C.DataLabelPositionValues.BestFit;
+									break;
+								default:
+									dataLabelPositionValues = C.DataLabelPositionValues.Center;
+									break;
+							}
+							dataLabel.InsertBefore(new C.DataLabelPosition() { Val = dataLabelPositionValues }, dataLabel.Descendants<C.ShowLegendKey>().LastOrDefault());
+						}
+						dataLabelList.Add(dataLabel);
+					}
+				}
+			}
+			C.DataLabels dataLabels = CreatePieDataLabels(pieChartSetting.pieChartDataLabel, dataLabelCellsLength, dataLabelList.ToArray());
+			series.Append(dataLabels);
 			series.Append(CreateCategoryAxisData(chartDataGrouping.xAxisFormula, chartDataGrouping.xAxisCells));
 			series.Append(CreateValueAxisData(chartDataGrouping.yAxisFormula, chartDataGrouping.yAxisCells));
 			if (chartDataGrouping.dataLabelCells != null && chartDataGrouping.dataLabelFormula != null)
@@ -171,11 +201,11 @@ namespace OpenXMLOffice.Global_2007
 			}
 			return series;
 		}
-		private C.DataLabels CreatePieDataLabels(PieChartDataLabel pieChartDataLabel, int? dataLabelCounter = 0)
+		private C.DataLabels CreatePieDataLabels(PieChartDataLabel pieChartDataLabel, int? dataLabelCounter = 0, C.DataLabel[] dataLabelArray = null)
 		{
 			if (pieChartDataLabel.showValue || pieChartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn || pieChartDataLabel.showCategoryName || pieChartDataLabel.showLegendKey || pieChartDataLabel.showSeriesName || pieChartDataLabel.showPercentage)
 			{
-				C.DataLabels dataLabels = CreateDataLabels(pieChartDataLabel, dataLabelCounter);
+				C.DataLabels dataLabels = CreateDataLabels(pieChartDataLabel, dataLabelCounter, dataLabelArray);
 				if (pieChartSetting.pieChartType == PieChartTypes.DOUGHNUT &&
 					new[] { PieChartDataLabel.DataLabelPositionValues.CENTER, PieChartDataLabel.DataLabelPositionValues.INSIDE_END, PieChartDataLabel.DataLabelPositionValues.OUTSIDE_END, PieChartDataLabel.DataLabelPositionValues.BEST_FIT }.Contains(pieChartDataLabel.dataLabelPosition))
 				{
@@ -199,7 +229,7 @@ namespace OpenXMLOffice.Global_2007
 							dataLabelPositionValues = C.DataLabelPositionValues.Center;
 							break;
 					}
-					dataLabels.InsertAt(new C.DataLabelPosition() { Val = dataLabelPositionValues }, 0);
+					dataLabels.InsertBefore(new C.DataLabelPosition() { Val = dataLabelPositionValues }, dataLabels.Descendants<C.ShowLegendKey>().LastOrDefault());
 				}
 				if (pieChartDataLabel.formatCode != null)
 				{

@@ -114,7 +114,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		/// <param name="dataRows"></param>
 		/// <returns></returns>
-		internal static ChartData[][] ExcelToPPTdata(DataCell[][] dataRows)
+		internal static ChartData[][] ExcelToPresentationData(DataCell[][] dataRows)
 		{
 			return CommonTools.TransposeArray(dataRows).Select(col => col.Select(cell =>
 			{

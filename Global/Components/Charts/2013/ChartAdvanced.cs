@@ -1,6 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using System.Collections.Generic;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -22,12 +23,13 @@ namespace OpenXMLOffice.Global_2013
 		{
 			return new C.DataLabel(
 						new C.Index() { Val = index },
-						new C.SeriesText(
-							new C.RichText(
-								new A.BodyProperties(),
-								new A.ListStyle()
-							)
-						),
+						// TODO: Check the common use and refactor the method
+						// new C.SeriesText(
+						// 	new C.RichText(
+						// 		new A.BodyProperties(),
+						// 		new A.ListStyle()
+						// 	)
+						// ),
 						new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
 						new C.ShowValue { Val = chartDataLabel.showValue },
 						new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
@@ -40,7 +42,7 @@ namespace OpenXMLOffice.Global_2013
 		/// <summary>
 		/// Create Data Labels for the chart
 		/// </summary>
-		internal C.DataLabels CreateDataLabels(ChartDataLabel chartDataLabel, int? dataLabelCount = 0)
+		internal C.DataLabels CreateDataLabels(ChartDataLabel chartDataLabel, int? dataLabelCount = 0, C.DataLabel[] dataLabelArray = null)
 		{
 			C.Extension extension = new C.Extension(
 					new C15.ShowDataLabelsRange() { Val = chartSetting.chartDataSetting.advancedDataLabel.showValueFromColumn },
@@ -81,15 +83,10 @@ namespace OpenXMLOffice.Global_2013
 					dataLabels.Append(CreateDataLabel(chartDataLabel, i));
 				}
 			}
-			dataLabels.Append(new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
-				new C.ShowValue { Val = chartDataLabel.showValue },
-				new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
-				new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
-				new C.ShowPercent { Val = chartDataLabel.showPercentage },
-				new C.ShowBubbleSize() { Val = true },
-				new C.Separator(chartDataLabel.separator),
-				new C.ShowLeaderLines() { Val = false },
-				(OpenXmlElement)extensionList.Clone());
+			if (dataLabelArray != null && dataLabelArray.Count() > 0)
+			{
+				dataLabels.Append(dataLabelArray);
+			}
 			dataLabels.Append(CreateChartShapeProperties());
 			ColorOptionModel<SolidOptions> textColorOption = new ColorOptionModel<SolidOptions>()
 			{
@@ -145,6 +142,15 @@ namespace OpenXMLOffice.Global_2013
 					}
 				}
 			}));
+			dataLabels.Append(new C.ShowLegendKey { Val = chartDataLabel.showLegendKey },
+				new C.ShowValue { Val = chartDataLabel.showValue },
+				new C.ShowCategoryName { Val = chartDataLabel.showCategoryName },
+				new C.ShowSeriesName { Val = chartDataLabel.showSeriesName },
+				new C.ShowPercent { Val = chartDataLabel.showPercentage },
+				new C.ShowBubbleSize() { Val = true },
+				new C.Separator(chartDataLabel.separator),
+				new C.ShowLeaderLines() { Val = false },
+				(OpenXmlElement)extensionList.Clone());
 			return dataLabels;
 		}
 		/// <summary>

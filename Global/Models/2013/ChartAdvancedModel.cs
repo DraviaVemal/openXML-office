@@ -14,7 +14,7 @@ namespace OpenXMLOffice.Global_2013
 		public bool showValueFromColumn;
 		/// <summary>
 		/// Key For Data Column Value For Data Label Column If Data Label Column Are Present
-		/// Inbetween and Used in the list it will be auto skipped By Data Column
+		/// In between and Used in the list it will be auto skipped By Data Column
 		/// </summary>
 		public Dictionary<uint, uint> valueFromColumn = new Dictionary<uint, uint>();
 	}

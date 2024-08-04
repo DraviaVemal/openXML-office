@@ -187,11 +187,13 @@ namespace OpenXMLOffice.Global_2007
 		internal List<ChartDataGrouping> CreateDataSeries(ChartDataSetting chartDataSetting, ChartData[][] dataCols, DataRange dataRange)
 		{
 			List<uint> seriesColumns = new List<uint>();
-			for (uint col = chartDataSetting.chartDataColumnStart + 1; col <= (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length - 1 : (int)chartDataSetting.chartDataColumnEnd); col++)
+			for (uint col = chartDataSetting.chartDataColumnStart; col <= (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length - 1 : (int)chartDataSetting.chartDataColumnEnd); col++)
 			{
 				seriesColumns.Add(col);
 			}
-			if ((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - chartDataSetting.chartDataRowStart < 1 || (chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length : (int)chartDataSetting.chartDataColumnEnd) - chartDataSetting.chartDataColumnStart < 1)
+			if (((chartDataSetting.chartDataRowEnd == 0 ?
+				dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - chartDataSetting.chartDataRowStart) < 1 ||
+				((chartDataSetting.chartDataColumnEnd == 0 ? dataCols.Length : (int)chartDataSetting.chartDataColumnEnd) - chartDataSetting.chartDataColumnStart) < 0)
 			{
 				throw new ArgumentException("Data Series Invalid Range");
 			}
@@ -200,11 +202,10 @@ namespace OpenXMLOffice.Global_2007
 				uint column = seriesColumns[i];
 				string sheetName = dataRange != null ? dataRange.sheetName : "Sheet1";
 				string columnName = ConverterUtils.ConvertIntToColumnName((int)column + 1);
-				string startColumnName = ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1);
-				string endColumnName = ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart + 1);
+				string dataColumnName = ConverterUtils.ConvertIntToColumnName((int)chartDataSetting.chartDataColumnStart);
 				uint rowNumber = chartDataSetting.chartDataRowStart + 1;
 				uint startRowNumber = chartDataSetting.chartDataRowStart + 2;
-				List<ChartData> xAxisCells = ((ChartData[])dataCols[chartDataSetting.chartDataColumnStart].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
+				List<ChartData> xAxisCells = ((ChartData[])dataCols[chartDataSetting.chartCategoryColumn].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 				List<ChartData> yAxisCells = ((ChartData[])dataCols[column].Clone()).Skip((int)chartDataSetting.chartDataRowStart + 1).Take((chartDataSetting.chartDataRowEnd == 0 ? dataCols[0].Length : (int)chartDataSetting.chartDataRowEnd) - (int)chartDataSetting.chartDataRowStart).ToList();
 				long endRowNumberX = chartDataSetting.chartDataRowStart + xAxisCells.Count + 1;
 				long endRowNumberY = chartDataSetting.chartDataRowStart + yAxisCells.Count + 1;
@@ -213,7 +214,7 @@ namespace OpenXMLOffice.Global_2007
 					id = i,
 					seriesHeaderFormula = string.Format("'{0}'!${1}${2}", sheetName, columnName, rowNumber),
 					seriesHeaderCells = ((ChartData[])dataCols[column].Clone())[chartDataSetting.chartDataRowStart],
-					xAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, startColumnName, startRowNumber, endColumnName, endRowNumberX),
+					xAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, dataColumnName, startRowNumber, dataColumnName, endRowNumberX),
 					xAxisCells = xAxisCells.ToArray(),
 					yAxisFormula = string.Format("'{0}'!${1}${2}:${3}${4}", sheetName, columnName, startRowNumber, columnName, endRowNumberY),
 					yAxisCells = yAxisCells.ToArray(),

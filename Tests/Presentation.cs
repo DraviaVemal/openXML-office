@@ -69,6 +69,10 @@ namespace OpenXMLOffice.Tests
 							showValue=true,
 							showPercentage=true
 						}
+					},new(){
+						pieChartDataLabel = new(){
+							showPercentage=true
+						}
 					}}
 				} },
 				applicationSpecificSetting = new(),

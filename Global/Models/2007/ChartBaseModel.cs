@@ -494,10 +494,14 @@ namespace OpenXMLOffice.Global_2007
 		public string formatCode;
 	}
 	/// <summary>
-	/// Represents the settings for chart data.
+	/// Options to select data range and custom row column data placements
 	/// </summary>
 	public class ChartDataSetting
 	{
+		/// <summary>
+		/// Chart Chart Category column
+		/// </summary>
+		public uint chartCategoryColumn = 0;
 		/// <summary>
 		/// Set 0 To Use Till End
 		/// </summary>
@@ -505,7 +509,7 @@ namespace OpenXMLOffice.Global_2007
 		/// <summary>
 		/// Chart data Start column 0 based
 		/// </summary>
-		public uint chartDataColumnStart = 0;
+		public uint chartDataColumnStart = 1;
 		/// <summary>
 		/// Set 0 To Use Till End
 		/// </summary>

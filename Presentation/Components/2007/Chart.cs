@@ -116,7 +116,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			AreaChart<PresentationSetting> areaChart = new AreaChart<PresentationSetting>(areaChartSetting, ExcelToPPTdata(dataRows));
+			AreaChart<PresentationSetting> areaChart = new AreaChart<PresentationSetting>(areaChartSetting, ExcelToPresentationData(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), areaChartSetting.hyperlinkProperties);
 			SaveChanges(areaChart);
 		}
@@ -126,7 +126,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			BarChart<PresentationSetting> barChart = new BarChart<PresentationSetting>(barChartSetting, ExcelToPPTdata(dataRows));
+			BarChart<PresentationSetting> barChart = new BarChart<PresentationSetting>(barChartSetting, ExcelToPresentationData(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), barChartSetting.hyperlinkProperties);
 			SaveChanges(barChart);
 		}
@@ -136,7 +136,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			ColumnChart<PresentationSetting> columnChart = new ColumnChart<PresentationSetting>(columnChartSetting, ExcelToPPTdata(dataRows));
+			ColumnChart<PresentationSetting> columnChart = new ColumnChart<PresentationSetting>(columnChartSetting, ExcelToPresentationData(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), columnChartSetting.hyperlinkProperties);
 			SaveChanges(columnChart);
 		}
@@ -146,7 +146,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			LineChart<PresentationSetting> lineChart = new LineChart<PresentationSetting>(lineChartSetting, ExcelToPPTdata(dataRows));
+			LineChart<PresentationSetting> lineChart = new LineChart<PresentationSetting>(lineChartSetting, ExcelToPresentationData(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), lineChartSetting.hyperlinkProperties);
 			SaveChanges(lineChart);
 		}
@@ -156,7 +156,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			PieChart<PresentationSetting> pieChart = new PieChart<PresentationSetting>(pieChartSetting, ExcelToPPTdata(dataRows));
+			PieChart<PresentationSetting> pieChart = new PieChart<PresentationSetting>(pieChartSetting, ExcelToPresentationData(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), pieChartSetting.hyperlinkProperties);
 			SaveChanges(pieChart);
 		}
@@ -166,7 +166,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			ScatterChart<PresentationSetting> scatterChart = new ScatterChart<PresentationSetting>(scatterChartSetting, ExcelToPPTdata(dataRows));
+			ScatterChart<PresentationSetting> scatterChart = new ScatterChart<PresentationSetting>(scatterChartSetting, ExcelToPresentationData(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), scatterChartSetting.hyperlinkProperties);
 			SaveChanges(scatterChart);
 		}
@@ -176,7 +176,7 @@ namespace OpenXMLOffice.Presentation_2007
 			{
 				WriteDataToExcel(dataRows, stream);
 			};
-			ComboChart<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChart = new ComboChart<PresentationSetting, XAxisType, YAxisType, ZAxisType>(comboChartSetting, ExcelToPPTdata(dataRows));
+			ComboChart<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChart = new ComboChart<PresentationSetting, XAxisType, YAxisType, ZAxisType>(comboChartSetting, ExcelToPresentationData(dataRows));
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), comboChartSetting.hyperlinkProperties);
 			SaveChanges(comboChart);
 		}

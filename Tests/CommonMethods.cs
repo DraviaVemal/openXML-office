@@ -37,7 +37,7 @@ namespace OpenXMLOffice.Tests
                 {
                     data[row][col] = new X.DataCell
                     {
-                        cellValue = random.Next(1, 100).ToString(),
+                        cellValue = (row % 2 == 0) ? random.Next(1, 10).ToString() : random.Next(11, 100).ToString(),
                         dataType = X.CellDataType.NUMBER,
                         styleSetting = new()
                         {
