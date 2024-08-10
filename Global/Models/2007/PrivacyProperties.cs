@@ -35,34 +35,32 @@ namespace OpenXMLOffice.Global_2007
         /// 
         /// </summary>
         protected bool isFileEdited = false;
-        private bool shareHardwareDetails = true;
+        private static bool shareOperatingSystemDetails = true;
         /// <summary>
-        /// Turn off hardware details collection.
-        /// Data collection related to type of Operating System, hardware resource details along with language and timezone setting
-        /// This helps us in optimizing code logic to run of minimal general available hardware pattern. 
-        /// Language and timezone helps us in understanding the language support that we have to support in our documents and office components.
-        /// This details also influenced by geoLocation setting to decide on document efforts in different languages
+        /// Turn off Operating system details collection.
+        /// Data collection related to type of Operating System, .net framework, process type.
+        /// This helps us decide minimum version and backward compatibility decision.
         /// </summary>
-        public bool ShareOsHardwareDetails
+        public static bool ShareOsDetails
         {
             get
             {
-                return shareHardwareDetails;
+                return shareOperatingSystemDetails;
             }
             set
             {
-                shareHardwareDetails = value;
+                shareOperatingSystemDetails = value;
             }
         }
-        private bool shareIpGeoLocation = true;
+        private static bool shareIpGeoLocation = true;
         /// <summary>
-        /// Turn off IP geo location details collection
-        /// On request first reach the IP is converted to geo location and discarded
+        /// Turn off IP geo location details collection.
+        /// On request first reach the IP is converted to geo location and discarded.
         /// Geo location data is aggregated and stored in the system and no IP will be ever stored at any point of time.
-        /// This is Data is collected and stored as country and city level. As Aggregated counter providing no other valuable information about any personal detail. 
+        /// This Data is collected and stored at country and city level. As Aggregated counter providing no other valuable information about any personal detail. 
         /// This data helps us in enabling language support and font,char code consideration that has to be focused on.
         /// </summary>
-        public bool ShareIpGeoLocation
+        public static bool ShareIpGeoLocation
         {
             get
             {
@@ -73,13 +71,13 @@ namespace OpenXMLOffice.Global_2007
                 shareIpGeoLocation = value;
             }
         }
-        private bool sharePackageRelatedDetails = true;
+        private static bool sharePackageRelatedDetails = true;
         /// <summary>
         /// Share the current type of package and its version you are using.
         /// This enables us to understand the package usage "spreadsheet"/"presentation"/"word" and the version that's widely used
         /// This helps us in making effort towards maintaining the backwards compatibility of new improvements
         /// </summary>
-        public bool SharePackageRelatedDetails
+        public static bool SharePackageRelatedDetails
         {
             get
             {
@@ -90,14 +88,16 @@ namespace OpenXMLOffice.Global_2007
                 sharePackageRelatedDetails = value;
             }
         }
-        private bool shareComponentRelatedDetails = true;
+        private static bool shareComponentRelatedDetails = true;
         /// <summary>
-        /// Share the internal components used from a package
-        /// We never share any details/data supplied when using the package
+        /// Nothing is shared as of now
+        /// Share the internal components used from a package.
+        /// We never share any details/data supplied when using the package.
         /// This are information related to use of OpenXML components like table, picture etc.
-        /// This enables us to understand the component most used and divert more efforts in working and improving the components that are most used
+        /// This enables us to understand the component most used and divert more efforts in working and improving the components that are most used.
+        /// I'm still working on figuring out right composition of data that's useful for me to develop most used component and give the maximum extend of privacy on what is shared.
         /// </summary>
-        public bool ShareComponentRelatedDetails
+        public static bool ShareComponentRelatedDetails
         {
             get
             {
@@ -108,12 +108,12 @@ namespace OpenXMLOffice.Global_2007
                 shareComponentRelatedDetails = value;
             }
         }
-        private bool shareUsageCounterDetails = true;
+        private static bool shareUsageCounterDetails = true;
         /// <summary>
         /// This increment counter call that is made without any other data. Just giving data another file is generated thought our package.
-        /// This will help us motivated community contribution and my sponsors informed about the impact and use of package that is getting the support
+        /// This will help us motivated community contribution and my sponsors, informed about the impact and use of package that is getting the support
         /// </summary>
-        public bool ShareUsageCounterDetails
+        public static bool ShareUsageCounterDetails
         {
             get
             {
@@ -142,7 +142,7 @@ namespace OpenXMLOffice.Global_2007
                 statsPayload.UsageCounter = true;
                 statsPayload.PackageName = assemblyName.Name;
             }
-            if (ShareOsHardwareDetails)
+            if (ShareOsDetails)
             {
                 statsPayload.HardwareDetails = true;
                 statsPayload.PackageName = assemblyName.Name;
@@ -174,7 +174,7 @@ namespace OpenXMLOffice.Global_2007
         private async Task SendPostData(string jsonDataToSend)
         {
             // Return If All Status sharing are blocked
-            if (!ShareComponentRelatedDetails && !ShareOsHardwareDetails &&
+            if (!ShareComponentRelatedDetails && !ShareOsDetails &&
             !ShareIpGeoLocation && !SharePackageRelatedDetails &&
             !ShareUsageCounterDetails)
             {

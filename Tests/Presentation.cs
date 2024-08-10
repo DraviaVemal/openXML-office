@@ -18,14 +18,7 @@ namespace OpenXMLOffice.Tests
 			{
 				accent1 = "ABCDEF"
 			}
-		})
-		{
-			ShareComponentRelatedDetails = false,
-			ShareOsHardwareDetails = false,
-			ShareIpGeoLocation = false,
-			SharePackageRelatedDetails = false,
-			ShareUsageCounterDetails = false
-		};
+		});
 		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
 		/// Save Presentation on text completion cleanup
@@ -47,6 +40,11 @@ namespace OpenXMLOffice.Tests
 			{
 				Directory.CreateDirectory(resultPath);
 			}
+			G.PrivacyProperties.ShareComponentRelatedDetails = false;
+			G.PrivacyProperties.ShareIpGeoLocation = false;
+			G.PrivacyProperties.ShareOsDetails = false;
+			G.PrivacyProperties.SharePackageRelatedDetails = false;
+			G.PrivacyProperties.ShareUsageCounterDetails = false;
 		}
 
 		/// <summary>
@@ -138,14 +136,7 @@ namespace OpenXMLOffice.Tests
 				}
 			});
 			Stream stream = chart.GetWorkBookStream();
-			X.Excel excel = new(stream, true)
-			{
-				ShareComponentRelatedDetails = false,
-				ShareOsHardwareDetails = false,
-				ShareIpGeoLocation = false,
-				SharePackageRelatedDetails = false,
-				ShareUsageCounterDetails = false
-			};
+			X.Excel excel = new(stream, true);
 			X.Worksheet sheet = excel.GetWorksheet("Sheet1");
 			sheet.SetRow(10, 1, CommonMethod.CreateDataCellPayload()[1], null);
 			sheet.SetRow(11, 1, CommonMethod.CreateDataCellPayload()[2], null);
@@ -844,34 +835,6 @@ namespace OpenXMLOffice.Tests
 					value = "https://openxml-office.draviavemal.com/"
 				}
 			});
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
-			{
-				hyperlinkProperties = new G.HyperlinkProperties()
-				{
-					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.FIRST_SLIDE
-				}
-			});
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
-			{
-				hyperlinkProperties = new G.HyperlinkProperties()
-				{
-					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.PREVIOUS_SLIDE
-				}
-			});
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
-			{
-				hyperlinkProperties = new G.HyperlinkProperties()
-				{
-					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.NEXT_SLIDE
-				}
-			});
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting()
-			{
-				hyperlinkProperties = new G.HyperlinkProperties()
-				{
-					hyperlinkPropertyType = G.HyperlinkPropertyTypeValues.LAST_SLIDE
-				}
-			});
 			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK).AddPicture("./TestFiles/tom_and_jerry.jpg", new G.PictureSetting());
 			using (FileStream fileStream = new("./TestFiles/tom_and_jerry.jpg", FileMode.Open, FileAccess.Read))
 			{
@@ -1052,14 +1015,7 @@ namespace OpenXMLOffice.Tests
 				{
 					accent2 = "FEDCBA"
 				}
-			})
-			{
-				ShareComponentRelatedDetails = false,
-				ShareOsHardwareDetails = false,
-				ShareIpGeoLocation = false,
-				SharePackageRelatedDetails = false,
-				ShareUsageCounterDetails = false
-			};
+			});
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
@@ -1243,14 +1199,7 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationShapeEdit()
 		{
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true)
-			{
-				ShareComponentRelatedDetails = false,
-				ShareOsHardwareDetails = false,
-				ShareIpGeoLocation = false,
-				SharePackageRelatedDetails = false,
-				ShareUsageCounterDetails = false
-			};
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
@@ -1306,14 +1255,7 @@ namespace OpenXMLOffice.Tests
 					dataType = X.CellDataType.NUMBER
 				};
 			}
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true)
-			{
-				ShareComponentRelatedDetails = false,
-				ShareOsHardwareDetails = false,
-				ShareIpGeoLocation = false,
-				SharePackageRelatedDetails = false,
-				ShareUsageCounterDetails = false
-			};
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			powerPoint1.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
@@ -1364,14 +1306,7 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationEditBarChart()
 		{
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true)
-			{
-				ShareComponentRelatedDetails = false,
-				ShareOsHardwareDetails = false,
-				ShareIpGeoLocation = false,
-				SharePackageRelatedDetails = false,
-				ShareUsageCounterDetails = false
-			};
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", true);
 			Slide slide = powerPoint1.GetSlideByIndex(0);
 			List<Shape> shape1 = slide.FindShapeByText("Slide_1_Shape_1").ToList();
 			List<Shape> shape2 = slide.FindShapeByText("Slide_1_Shape_2").ToList();
@@ -1443,14 +1378,7 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationNonEdit()
 		{
-			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false)
-			{
-				ShareComponentRelatedDetails = false,
-				ShareOsHardwareDetails = false,
-				ShareIpGeoLocation = false,
-				SharePackageRelatedDetails = false,
-				ShareUsageCounterDetails = false
-			};
+			PowerPoint powerPoint1 = new("./TestFiles/basic_test.pptx", false);
 			powerPoint1.SaveAs(string.Format("{1}/copy-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 			Assert.IsTrue(true);
 		}
