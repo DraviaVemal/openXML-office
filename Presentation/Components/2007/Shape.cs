@@ -38,21 +38,21 @@ namespace OpenXMLOffice.Presentation_2007
 		internal void MakeLine<LineColorOption>(LineShapeModel<PresentationSetting, LineColorOption> lineModel)
 			where LineColorOption : class, IColorOptions, new()
 		{
-			
+
 		}
 
 		internal void MakeRectangle<LineColorOption, FillColorOption>(RectangleShapeModel<PresentationSetting, LineColorOption, FillColorOption> rectangleModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
-			
+
 		}
 
 		internal void MakeArrow<LineColorOption, FillColorOption>(ArrowShapeModel<PresentationSetting, LineColorOption, FillColorOption> arrowModel)
 			where LineColorOption : class, IColorOptions, new()
 			where FillColorOption : class, IColorOptions, new()
 		{
-			
+
 		}
 
 		/// <summary>
@@ -226,6 +226,24 @@ namespace OpenXMLOffice.Presentation_2007
 					}.ToArray()));
 				}
 			}
+		}
+		/// <summary>
+		/// Return the shape Size and position
+		/// </summary>
+		public PresentationSetting GetShapeSizeAndPosition()
+		{
+			if (documentShape.ShapeProperties.Transform2D != null)
+			{
+				A.Transform2D oldTransform = documentShape.ShapeProperties.Transform2D;
+				return new PresentationSetting()
+				{
+					Height = ConverterUtils.EmuToPixels(oldTransform.Extents.Cy),
+					Width = ConverterUtils.EmuToPixels(oldTransform.Extents.Cx),
+					X = ConverterUtils.EmuToPixels(oldTransform.Offset.X),
+					Y = ConverterUtils.EmuToPixels(oldTransform.Offset.Y),
+				};
+			}
+			return null;
 		}
 	}
 }
