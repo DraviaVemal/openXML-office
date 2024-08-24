@@ -515,8 +515,8 @@ namespace OpenXMLOffice.Tests
 		[TestCategory("Chart")]
 		public void Add2016Charts()
 		{
-			X.DataCell[][] data = new X.DataCell[9][];
-			data[0] = new X.DataCell[2];
+			X.ColumnCell[][] data = new X.ColumnCell[9][];
+			data[0] = new X.ColumnCell[2];
 			data[0][1] = new()
 			{
 				cellValue = "Series 1",
@@ -524,14 +524,14 @@ namespace OpenXMLOffice.Tests
 			};
 			for (int i = 1; i < 9; i++)
 			{
-				data[i] = new X.DataCell[2];
-				data[i][0] = new X.DataCell()
+				data[i] = new X.ColumnCell[2];
+				data[i][0] = new X.ColumnCell()
 				{
 					cellValue = $"Category {i}",
 					dataType = X.CellDataType.STRING
 				};
 				int val = (i % 2) == 0 ? -i : i;
-				data[i][1] = new X.DataCell()
+				data[i][1] = new X.ColumnCell()
 				{
 					cellValue = $"{val}",
 					dataType = X.CellDataType.NUMBER
@@ -1233,8 +1233,8 @@ namespace OpenXMLOffice.Tests
 		[TestMethod]
 		public void OpenExistingPresentationShape()
 		{
-			X.DataCell[][] data = new X.DataCell[9][];
-			data[0] = new X.DataCell[2];
+			X.ColumnCell[][] data = new X.ColumnCell[9][];
+			data[0] = new X.ColumnCell[2];
 			data[0][1] = new()
 			{
 				cellValue = "Series 1",
@@ -1242,14 +1242,14 @@ namespace OpenXMLOffice.Tests
 			};
 			for (int i = 1; i < 9; i++)
 			{
-				data[i] = new X.DataCell[2];
-				data[i][0] = new X.DataCell()
+				data[i] = new X.ColumnCell[2];
+				data[i][0] = new X.ColumnCell()
 				{
 					cellValue = $"Category {i}",
 					dataType = X.CellDataType.STRING
 				};
 				int val = (i % 2) == 0 ? -i : i;
-				data[i][1] = new X.DataCell()
+				data[i][1] = new X.ColumnCell()
 				{
 					cellValue = $"{val}",
 					dataType = X.CellDataType.NUMBER

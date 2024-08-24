@@ -121,7 +121,7 @@ namespace OpenXMLOffice.Tests
 			Assert.IsNotNull(worksheet);
 
 
-			worksheet.SetRow("A1", new DataCell[6]{
+			worksheet.SetRow("A1", new ColumnCell[6]{
 				new(){
 					cellValue = "test1",
 					dataType = CellDataType.STRING
@@ -156,7 +156,7 @@ namespace OpenXMLOffice.Tests
 			{
 				height = 20
 			});
-			worksheet.SetRow("C1", new DataCell[1]{
+			worksheet.SetRow("C1", new ColumnCell[1]{
 				new(){
 					cellValue = "Re Update",
 					dataType = CellDataType.STRING
@@ -174,7 +174,7 @@ namespace OpenXMLOffice.Tests
 		public void AddMergeCell()
 		{
 			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
-			Worksheet worksheet = excel1.GetWorksheet("Sheet1");
+			Worksheet worksheet = excel1.GetWorksheet("Style");
 			List<MergeCellRange> mergedCellRange = worksheet.GetMergeCellList();
 			Assert.AreEqual(1, mergedCellRange.Count);
 			Assert.IsTrue(worksheet.SetMergeCell(new MergeCellRange()
@@ -204,6 +204,27 @@ namespace OpenXMLOffice.Tests
 			}));
 			excel1.SaveAs(string.Format("{1}/ReadEdit-MergeCell-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[TestMethod]
+		public void FormulaCell()
+		{
+			Excel excel1 = new("./TestFiles/basic_test.xlsx", true);
+			Worksheet worksheet = excel1.GetWorksheet("formula");
+			worksheet.SetRow("G1", new ColumnCell[2]{
+				new(){
+					dataType= CellDataType.FORMULA,
+					cellValue="=B2+A2"
+				},
+				new(){
+				dataType= CellDataType.FORMULA,
+				cellValue="=SUM(B2,A2)"
+				}
+			});
+			excel1.SaveAs(string.Format("{1}/ReadEdit-Formula-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+		}
 		/// <summary>
 		///
 		/// </summary>
@@ -212,7 +233,7 @@ namespace OpenXMLOffice.Tests
 		{
 			Worksheet worksheet = excel.AddSheet("Add Picture");
 			Assert.IsNotNull(worksheet);
-			worksheet.SetRow("D3", new DataCell[1]{
+			worksheet.SetRow("D3", new ColumnCell[1]{
 				new(){
 					cellValue = "Re Update",
 					dataType = CellDataType.STRING
@@ -245,7 +266,7 @@ namespace OpenXMLOffice.Tests
 		{
 			Worksheet worksheet = excel.AddSheet("hyperLink pic");
 			Assert.IsNotNull(worksheet);
-			worksheet.SetRow("D3", new DataCell[1]{
+			worksheet.SetRow("D3", new ColumnCell[1]{
 				new(){
 					cellValue = "Re Update",
 					dataType = CellDataType.STRING

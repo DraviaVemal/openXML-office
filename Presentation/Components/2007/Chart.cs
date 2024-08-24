@@ -23,7 +23,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Create Area Chart with provided settings
 		/// Not Required Generic
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, AreaChartSetting<PresentationSetting> areaChartSetting) : base(slide, areaChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, AreaChartSetting<PresentationSetting> areaChartSetting) : base(slide, areaChartSetting)
 		{
 			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -33,7 +33,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Create Bar Chart with provided settings
 		/// Not Required Generic
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, BarChartSetting<PresentationSetting> barChartSetting) : base(slide, barChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, BarChartSetting<PresentationSetting> barChartSetting) : base(slide, barChartSetting)
 		{
 			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -43,7 +43,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Create Column Chart with provided settings
 		/// Not Required Generic
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, ColumnChartSetting<PresentationSetting> columnChartSetting) : base(slide, columnChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, ColumnChartSetting<PresentationSetting> columnChartSetting) : base(slide, columnChartSetting)
 		{
 			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -53,7 +53,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Create Line Chart with provided settings
 		/// Not Required Generic
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, LineChartSetting<PresentationSetting> lineChartSetting) : base(slide, lineChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, LineChartSetting<PresentationSetting> lineChartSetting) : base(slide, lineChartSetting)
 		{
 			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -63,7 +63,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Create Pie Chart with provided settings
 		/// Not Required Generic
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, PieChartSetting<PresentationSetting> pieChartSetting) : base(slide, pieChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, PieChartSetting<PresentationSetting> pieChartSetting) : base(slide, pieChartSetting)
 		{
 			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -73,7 +73,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// Create Scatter Chart with provided settings
 		/// Not Required Generic
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, ScatterChartSetting<PresentationSetting> scatterChartSetting) : base(slide, scatterChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, ScatterChartSetting<PresentationSetting> scatterChartSetting) : base(slide, scatterChartSetting)
 		{
 			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -82,7 +82,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting) : base(slide, comboChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting) : base(slide, comboChartSetting)
 		{
 			documentChartPart = slide.GetSlidePart().AddNewPart<ChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -110,7 +110,7 @@ namespace OpenXMLOffice.Presentation_2007
 			GetChartPart().DataPartReferenceRelationships.Any(item => item.Id == string.Format("rId{0}", nextId)));
 			return string.Format("rId{0}", nextId);
 		}
-		private void CreateChart(DataCell[][] dataRows, AreaChartSetting<PresentationSetting> areaChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, AreaChartSetting<PresentationSetting> areaChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{
@@ -120,7 +120,7 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), areaChartSetting.hyperlinkProperties);
 			SaveChanges(areaChart);
 		}
-		private void CreateChart(DataCell[][] dataRows, BarChartSetting<PresentationSetting> barChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, BarChartSetting<PresentationSetting> barChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{
@@ -130,7 +130,7 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), barChartSetting.hyperlinkProperties);
 			SaveChanges(barChart);
 		}
-		private void CreateChart(DataCell[][] dataRows, ColumnChartSetting<PresentationSetting> columnChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, ColumnChartSetting<PresentationSetting> columnChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{
@@ -140,7 +140,7 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), columnChartSetting.hyperlinkProperties);
 			SaveChanges(columnChart);
 		}
-		private void CreateChart(DataCell[][] dataRows, LineChartSetting<PresentationSetting> lineChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, LineChartSetting<PresentationSetting> lineChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{
@@ -150,7 +150,7 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), lineChartSetting.hyperlinkProperties);
 			SaveChanges(lineChart);
 		}
-		private void CreateChart(DataCell[][] dataRows, PieChartSetting<PresentationSetting> pieChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, PieChartSetting<PresentationSetting> pieChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{
@@ -160,7 +160,7 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), pieChartSetting.hyperlinkProperties);
 			SaveChanges(pieChart);
 		}
-		private void CreateChart(DataCell[][] dataRows, ScatterChartSetting<PresentationSetting> scatterChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, ScatterChartSetting<PresentationSetting> scatterChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{
@@ -170,7 +170,7 @@ namespace OpenXMLOffice.Presentation_2007
 			CreateChartGraphicFrame(currentSlide.GetSlidePart().GetIdOfPart(GetChartPart()), (uint)currentSlide.GetSlidePart().GetPartsOfType<ChartPart>().Count(), scatterChartSetting.hyperlinkProperties);
 			SaveChanges(scatterChart);
 		}
-		private void CreateChart(DataCell[][] dataRows, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{

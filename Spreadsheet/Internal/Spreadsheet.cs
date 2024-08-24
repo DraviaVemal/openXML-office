@@ -122,18 +122,21 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			sheet.Name = newSheetName;
 			return true;
 		}
-		internal void SaveAs(string filePath)
+		private void SaveAs()
 		{
 			UpdateStyle();
 			WriteSharedStringToFile();
+			WriteCalculationChainToFile();
 			spreadsheetDocument.Save();
+		}
+		internal void SaveAs(string filePath)
+		{
+			SaveAs();
 			spreadsheetDocument.Clone(filePath).Dispose();
 		}
 		internal void SaveAs(Stream stream)
 		{
-			UpdateStyle();
-			WriteSharedStringToFile();
-			spreadsheetDocument.Save();
+			SaveAs();
 			spreadsheetDocument.Clone(stream).Dispose();
 		}
 		private bool CheckIfSheetNameExist(string sheetName)

@@ -38,13 +38,13 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		///
 		/// </summary>
-		internal void WriteDataToExcel(DataCell[][] dataRows, Stream stream)
+		internal void WriteDataToExcel(ColumnCell[][] dataRows, Stream stream)
 		{
 			// Load Data To Embedded Sheet
 			Excel excel = new Excel();
 			Worksheet worksheet = excel.AddSheet();
 			int rowIndex = 1;
-			foreach (DataCell[] dataCells in dataRows)
+			foreach (ColumnCell[] dataCells in dataRows)
 			{
 				worksheet.SetRow(rowIndex, 1, dataCells, new RowProperties());
 				++rowIndex;
@@ -114,7 +114,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// </summary>
 		/// <param name="dataRows"></param>
 		/// <returns></returns>
-		internal static ChartData[][] ExcelToPresentationData(DataCell[][] dataRows)
+		internal static ChartData[][] ExcelToPresentationData(ColumnCell[][] dataRows)
 		{
 			return CommonTools.TransposeArray(dataRows).Select(col => col.Select(cell =>
 			{

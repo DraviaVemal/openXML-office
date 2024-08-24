@@ -20,6 +20,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal readonly ExcelProperties spreadsheetProperties;
 		private readonly StylesService stylesService = new StylesService();
 		private readonly ShareStringService shareStringService = new ShareStringService();
+		private readonly CalculationChainService calculationChainService = new CalculationChainService();
 		internal SpreadsheetCore(Excel excel, ExcelProperties spreadsheetProperties = null)
 		{
 			this.excel = excel;
@@ -78,6 +79,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// </summary>
 		internal void ReadDataFromFile()
 		{
+			LoadCalculationChainFromFileToCache();
 			LoadShareStringFromFileToCache();
 			LoadStyleFromFileToCache();
 		}
@@ -110,6 +112,19 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return sharedStringPart.SharedStringTable;
 		}
 		/// <summary>
+		/// Return the Calculation Chain for the Spreadsheet
+		/// </summary>
+		internal CalculationChain GetExcelCalculationChain()
+		{
+			CalculationChainPart calculationChainPart = GetWorkbookPart().GetPartsOfType<CalculationChainPart>().FirstOrDefault();
+			if (calculationChainPart == null)
+			{
+				calculationChainPart = GetWorkbookPart().AddNewPart<CalculationChainPart>(GetNextSpreadSheetRelationId());
+				calculationChainPart.CalculationChain = new CalculationChain();
+			}
+			return calculationChainPart.CalculationChain;
+		}
+		/// <summary>
 		/// Return the Sheets for the Spreadsheet
 		/// </summary>
 		internal Sheets GetSheets()
@@ -132,6 +147,18 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				return spreadsheetDocument.AddWorkbookPart();
 			}
 			return spreadsheetDocument.WorkbookPart;
+		}
+		/// <summary>
+		/// Load the Shared String to the Cache (aka in memory database lightdb)
+		/// </summary>
+		internal void LoadCalculationChainFromFileToCache()
+		{
+			List<CalculationRecord> Records = new List<CalculationRecord>();
+			GetExcelCalculationChain().Elements<CalculationCell>().ToList().ForEach(rec =>
+			{
+				Records.Add(new CalculationRecord(rec.CellReference, rec.SheetId));
+			});
+			GetCalculationChainService().InsertBulk(Records);
 		}
 		/// <summary>
 		/// Load the Shared String to the Cache (aka in memory database lightdb)
@@ -170,6 +197,21 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			GetExcelShareString().UniqueCount = (uint)GetExcelShareString().ChildElements.Count;
 		}
 		/// <summary>
+		/// Update the calculation chain into spreadsheet
+		/// </summary>
+		internal void WriteCalculationChainToFile()
+		{
+			GetExcelCalculationChain().RemoveAllChildren<CalculationCell>();
+			GetCalculationChainService().GetRecords().ForEach(Value =>
+			{
+				GetExcelCalculationChain().Append(new CalculationCell()
+				{
+					CellReference = Value.CellId,
+					SheetId = Value.SheetIndex
+				});
+			});
+		}
+		/// <summary>
 		/// Load The DB Style Cache to Style Sheet
 		/// </summary>
 		internal void UpdateStyle()
@@ -183,6 +225,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal ShareStringService GetShareStringService()
 		{
 			return shareStringService;
+		}
+		internal CalculationChainService GetCalculationChainService()
+		{
+			return calculationChainService;
 		}
 		private void InitializeStyle()
 		{

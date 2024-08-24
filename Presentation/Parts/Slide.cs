@@ -59,7 +59,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Area chart to the slide.
 		/// </summary>
-		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, AreaChartSetting<PresentationSetting> AreaChartSetting)
+		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(ColumnCell[][] DataCells, AreaChartSetting<PresentationSetting> AreaChartSetting)
 		{
 			Chart<CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, AreaChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -68,7 +68,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Bar chart to the slide.
 		/// </summary>
-		public Chart<ValueAxis, CategoryAxis, ValueAxis> AddChart(DataCell[][] DataCells, BarChartSetting<PresentationSetting> BarChartSetting)
+		public Chart<ValueAxis, CategoryAxis, ValueAxis> AddChart(ColumnCell[][] DataCells, BarChartSetting<PresentationSetting> BarChartSetting)
 		{
 			Chart<ValueAxis, CategoryAxis, ValueAxis> Chart = new Chart<ValueAxis, CategoryAxis, ValueAxis>(this, DataCells, BarChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -77,7 +77,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Column chart to the slide.
 		/// </summary>
-		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, ColumnChartSetting<PresentationSetting> ColumnChartSetting)
+		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(ColumnCell[][] DataCells, ColumnChartSetting<PresentationSetting> ColumnChartSetting)
 		{
 			Chart<CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, ColumnChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -86,7 +86,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Line chart to the slide.
 		/// </summary>
-		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, LineChartSetting<PresentationSetting> LineChartSetting)
+		public Chart<CategoryAxis, ValueAxis, ValueAxis> AddChart(ColumnCell[][] DataCells, LineChartSetting<PresentationSetting> LineChartSetting)
 		{
 			Chart<CategoryAxis, ValueAxis, ValueAxis> Chart = new Chart<CategoryAxis, ValueAxis, ValueAxis>(this, DataCells, LineChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -95,7 +95,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Pie chart to the slide.
 		/// </summary>
-		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, PieChartSetting<PresentationSetting> PieChartSetting)
+		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(ColumnCell[][] DataCells, PieChartSetting<PresentationSetting> PieChartSetting)
 		{
 			Chart<ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ValueAxis, ValueAxis, ValueAxis>(this, DataCells, PieChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -104,7 +104,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Scatter chart to the slide.
 		/// </summary>
-		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(DataCell[][] DataCells, ScatterChartSetting<PresentationSetting> ScatterChartSetting)
+		public Chart<ValueAxis, ValueAxis, ValueAxis> AddChart(ColumnCell[][] DataCells, ScatterChartSetting<PresentationSetting> ScatterChartSetting)
 		{
 			Chart<ValueAxis, ValueAxis, ValueAxis> Chart = new Chart<ValueAxis, ValueAxis, ValueAxis>(this, DataCells, ScatterChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetChartGraphicFrame());
@@ -113,7 +113,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public Chart<XAxisType, YAxisType, ZAxisType> AddChart<XAxisType, YAxisType, ZAxisType>(DataCell[][] DataCells, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
+		public Chart<XAxisType, YAxisType, ZAxisType> AddChart<XAxisType, YAxisType, ZAxisType>(ColumnCell[][] DataCells, ComboChartSetting<PresentationSetting, XAxisType, YAxisType, ZAxisType> comboChartSetting)
 			where XAxisType : class, IAxisTypeOptions, new()
 			where YAxisType : class, IAxisTypeOptions, new()
 			where ZAxisType : class, IAxisTypeOptions, new()
@@ -125,7 +125,7 @@ namespace OpenXMLOffice.Presentation_2007
 		/// <summary>
 		/// Adds a Combo chart to the slide.
 		/// </summary>
-		public P16.Chart AddChart(DataCell[][] DataCells, WaterfallChartSetting<PresentationSetting> waterfallChartSetting)
+		public P16.Chart AddChart(ColumnCell[][] DataCells, WaterfallChartSetting<PresentationSetting> waterfallChartSetting)
 		{
 			P16.Chart Chart = new P16.Chart(this, DataCells, waterfallChartSetting);
 			GetSlide().CommonSlideData.ShapeTree.Append(Chart.GetAlternateContent());

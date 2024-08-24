@@ -22,7 +22,7 @@ namespace OpenXMLOffice.Presentation_2016
 		/// <summary>
 		///
 		/// </summary>
-		public Chart(Slide slide, DataCell[][] dataRows, WaterfallChartSetting<PresentationSetting> waterfallChartSetting) : base(slide, waterfallChartSetting)
+		public Chart(Slide slide, ColumnCell[][] dataRows, WaterfallChartSetting<PresentationSetting> waterfallChartSetting) : base(slide, waterfallChartSetting)
 		{
 			OpenXMLChartPart = slide.GetSlidePart().AddNewPart<ExtendedChartPart>(slide.GetNextSlideRelationId());
 			InitializeChartParts();
@@ -54,7 +54,7 @@ namespace OpenXMLOffice.Presentation_2016
 		{
 			return OpenXMLChartPart;
 		}
-		private void CreateChart(DataCell[][] dataRows, WaterfallChartSetting<PresentationSetting> waterfallChartSetting)
+		private void CreateChart(ColumnCell[][] dataRows, WaterfallChartSetting<PresentationSetting> waterfallChartSetting)
 		{
 			using (Stream stream = GetWorkBookStream())
 			{

@@ -73,6 +73,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return spreadsheet.GetShareStringService();
 		}
+		internal CalculationChainService GetCalculationChainService()
+		{
+			return spreadsheet.GetCalculationChainService();
+		}
 		internal StylesService GetStyleService()
 		{
 			return spreadsheet.GetStyleService();

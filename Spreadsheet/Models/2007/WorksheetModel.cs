@@ -46,9 +46,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public double? width;
 	}
 	/// <summary>
-	/// Represents a data cell in a worksheet.
+	/// Represents a each column cell in a row.
 	/// </summary>
-	public class DataCell
+	public class ColumnCell
 	{
 		/// <summary>
 		/// Gets or sets the value of the cell.
@@ -74,7 +74,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public uint? styleId;
 	}
 	/// <summary>
-	/// Represents a record in a worksheet.
+	/// Represents a string record in a worksheet.
 	/// </summary>
 	public class StringRecord
 	{
@@ -96,6 +96,32 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Gets or sets the value of the record.
 		/// </summary>
 		public string Value { get; set; }
+	}
+	/// <summary>
+	/// Represents a formula record in a worksheet.
+	/// </summary>
+	public class CalculationRecord
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public CalculationRecord(string CellId, int SheetIndex)
+		{
+			this.CellId = CellId;
+			this.SheetIndex = SheetIndex;
+		}
+		/// <summary>
+		/// Gets or sets the ID of the record.
+		/// </summary>
+		public int Id { get; set; }
+		/// <summary>
+		/// Gets or sets the CellId of the record.
+		/// </summary>
+		public string CellId { get; set; }
+		/// <summary>
+		/// Gets or sets sheet index for the formula.
+		/// </summary>
+		public int SheetIndex { get; set; }
 	}
 	/// <summary>
 	/// Represents the properties of a row in a worksheet.

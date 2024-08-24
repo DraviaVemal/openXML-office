@@ -145,15 +145,29 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Sets the data and properties for a specific row and its cells in a worksheet.
 		/// </summary>
-		public void SetRow(int row, int col, DataCell[] dataCells, RowProperties rowProperties)
+		public void SetRow(int row, int col, ColumnCell[] columnCells, RowProperties rowProperties)
 		{
-			SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), dataCells, rowProperties);
+			SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), columnCells, rowProperties);
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public void SetRow(int row, int col, ColumnCell[] columnCells)
+		{
+			SetRow(ConverterUtils.ConvertToExcelCellReference(row, col), columnCells, new RowProperties());
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public void SetRow(string cellId, ColumnCell[] columnCells)
+		{
+			SetRow(cellId, columnCells, new RowProperties());
 		}
 		/// <summary>
 		/// Sets the data and properties for a row based on a starting cell ID and its data cells in
 		/// a worksheet.
 		/// </summary>
-		public void SetRow(string cellId, DataCell[] dataCells, RowProperties rowProperties)
+		public void SetRow(string cellId, ColumnCell[] columnCells, RowProperties rowProperties)
 		{
 			Tuple<int, int> result = ConverterUtils.ConvertFromExcelCellReference(cellId);
 			int rowIndex = result.Item1;
@@ -176,7 +190,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				}
 				row.Hidden = rowProperties.hidden;
 			}
-			foreach (DataCell dataCell in dataCells)
+			foreach (ColumnCell dataCell in columnCells)
 			{
 				string currentCellId = ConverterUtils.ConvertToExcelCellReference(rowIndex, columnIndex);
 				columnIndex++;
@@ -185,6 +199,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					X.Cell cell = row.Elements<X.Cell>().FirstOrDefault(c => c.CellReference.Value == currentCellId);
 					if (cell != null && string.IsNullOrEmpty(dataCell.cellValue))
 					{
+						if (cell.CellFormula != null) // Remove Calculation Chain Link
+						{
+							excel.GetCalculationChainService().RemoveRecord(currentCellId, sheet.SheetId.Value);
+						}
 						cell.Remove();
 						X.Hyperlinks hyperlinks = GetWorkSheetHyperlinks();
 						if (hyperlinks != null)
@@ -207,17 +225,24 @@ namespace OpenXMLOffice.Spreadsheet_2007
 							};
 							row.AppendChild(cell);
 						}
-						X.CellValues dataType = GetCellValueType(dataCell.dataType);
+						X.CellValues? dataType = GetCellValueType(dataCell.dataType);
 						cell.StyleIndex = dataCell.styleId ?? excel.GetStyleService().GetCellStyleId(dataCell.styleSetting ?? new CellStyleSetting());
 						if (dataType == X.CellValues.String)
 						{
 							cell.DataType = X.CellValues.SharedString;
 							cell.CellValue = new X.CellValue(excel.GetShareStringService().InsertUnique(dataCell.cellValue));
 						}
-						else
+						else if (dataType != null)
 						{
 							cell.DataType = dataType;
 							cell.CellValue = new X.CellValue(dataCell.cellValue);
+						}
+						else
+						{
+							// Set Formula content remove '=' if passed as prefix
+							cell.CellFormula = new X.CellFormula(dataCell.cellValue.TrimStart('='));
+							excel.GetCalculationChainService().AddRecord(currentCellId, sheet.SheetId.Value);
+							// Add the cell to calculation chain
 						}
 						if (dataCell.hyperlinkProperties != null)
 						{
@@ -506,7 +531,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Gets the CellValues enumeration corresponding to the specified cell data type.
 		/// </summary>
-		private X.CellValues GetCellValueType(CellDataType cellDataType)
+		private X.CellValues? GetCellValueType(CellDataType cellDataType)
 		{
 			switch (cellDataType)
 			{
@@ -514,6 +539,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 					return X.CellValues.Date;
 				case CellDataType.NUMBER:
 					return X.CellValues.Number;
+				case CellDataType.FORMULA:
+					return null;
 				default:
 					return X.CellValues.String;
 			}
@@ -570,8 +597,8 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				{
 					cellIds.Add(ConverterUtils.ConvertToExcelCellReference((int)row.RowIndex.Value, col));
 				}
-				List<X.Cell> dataCells = row.Elements<X.Cell>().Where(c => cellIds.Contains(c.CellReference.Value)).ToList();
-				dataCells.ForEach(cell =>
+				List<X.Cell> columnCells = row.Elements<X.Cell>().Where(c => cellIds.Contains(c.CellReference.Value)).ToList();
+				columnCells.ForEach(cell =>
 				{
 					result = ConverterUtils.ConvertFromExcelCellReference(cell.CellReference.Value);
 					int colIndex = result.Item2;
