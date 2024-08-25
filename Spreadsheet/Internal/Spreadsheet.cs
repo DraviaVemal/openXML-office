@@ -45,6 +45,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return GetStyleService().GetCellStyleId(CellStyleSetting);
 		}
+		internal void SetActiveSheet()
+		{
+
+		}
 		internal string GetSheetName(string sheetId)
 		{
 			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Id.Value == sheetId) as Sheet;
