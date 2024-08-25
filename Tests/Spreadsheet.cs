@@ -251,11 +251,22 @@ namespace OpenXMLOffice.Tests
 		/// 
 		/// </summary>
 		[TestMethod]
-		public void TestActiveCellSheet()
+		public void TestSheetView()
 		{
 			Worksheet sheet = excel.AddSheet("Activated Cell");
 			sheet.SetActiveCell("Z99");
 			excel.SetActiveSheet("Activated Cell");
+			Worksheet sheet2 = excel.AddSheet("View Applied");
+			sheet2.SetSheetViewOptions(new WorkSheetViewOption()
+			{
+				showFormula = false,
+				showGridLine = false,
+				showGridLines = false,
+				showRowColHeaders = false,
+				showRuler = false,
+				workSheetViewsValues = WorkSheetViewsValues.PAGE_LAYOUT,
+				ZoomScale = 110
+			});
 		}
 
 		/// <summary>

@@ -50,6 +50,19 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return sheetView;
 		}
 
+		internal X.SheetViewValues GetSheetViewValue(WorkSheetViewsValues workSheetViewsValues)
+		{
+			switch (workSheetViewsValues)
+			{
+				case WorkSheetViewsValues.PAGE_BREAK_PREVIEW:
+					return X.SheetViewValues.PageBreakPreview;
+				case WorkSheetViewsValues.PAGE_LAYOUT:
+					return X.SheetViewValues.PageLayout;
+				default:
+					return X.SheetViewValues.Normal;
+			}
+		}
+
 		/// <summary>
 		/// Returns the sheet ID of the current worksheet.
 		/// </summary>
@@ -86,6 +99,19 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				ActiveCellId = 0,
 				SequenceOfReferences = new ListValue<StringValue> { InnerText = CellId }
 			});
+		}
+		/// <summary>
+		/// Set Sheet View Related options
+		/// </summary>
+		public void SetSheetViewOptions(WorkSheetViewOption workSheetViewOption)
+		{
+			GetSheetView().ShowFormulas = workSheetViewOption.showFormula;
+			GetSheetView().ShowGridLines = workSheetViewOption.showGridLines;
+			GetSheetView().ShowRowColHeaders = workSheetViewOption.showRowColHeaders;
+			GetSheetView().ShowRuler = workSheetViewOption.showRuler;
+			GetSheetView().View = GetSheetViewValue(workSheetViewOption.workSheetViewsValues);
+			GetSheetView().ZoomScaleNormal = workSheetViewOption.ZoomScale;
+			GetSheetView().ZoomScale = workSheetViewOption.ZoomScale;
 		}
 		/// <summary>
 		/// Insert Shape into slide

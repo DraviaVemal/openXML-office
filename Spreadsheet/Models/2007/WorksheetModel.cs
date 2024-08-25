@@ -1,5 +1,6 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
+using DocumentFormat.OpenXml;
 using OpenXMLOffice.Global_2007;
 
 namespace OpenXMLOffice.Spreadsheet_2007
@@ -25,6 +26,38 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// 
 		/// </summary>
 		FORMULA
+	}
+	/// <summary>
+	/// View setting for each worksheet
+	/// </summary>
+	public enum WorkSheetViewsValues
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		NORMAL,
+		/// <summary>
+		/// 
+		/// </summary>
+		PAGE_BREAK_PREVIEW,
+		/// <summary>
+		/// 
+		/// </summary>
+		PAGE_LAYOUT,
+	}
+	/// <summary>
+	/// 
+	/// </summary>
+	public enum WorkSheetViewFreezeDirection
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		TOP,
+		/// <summary>
+		/// 
+		/// </summary>
+		LEFT
 	}
 	/// <summary>
 	/// Represents the properties of a column in a worksheet.
@@ -150,5 +183,70 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// 
 		/// </summary>
 		public string bottomRightCell;
+	}
+	/// <summary>
+	/// 
+	/// </summary>
+	public class WorkSheetViewOption
+	{
+		private uint zoomScale = 100;
+		/// <summary>
+		/// Set screen Zoom level.
+		/// Range between 10 to 400
+		/// </summary>
+		public uint ZoomScale
+		{
+			get
+			{
+				return zoomScale;
+			}
+			set
+			{
+				if (value < 10)
+				{
+					zoomScale = 10;
+				}
+				else if (value > 400)
+				{
+					zoomScale = 400;
+				}
+				else
+				{
+					zoomScale = value;
+				}
+			}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public WorkSheetViewsValues workSheetViewsValues = WorkSheetViewsValues.NORMAL;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showGridLine = true;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showFormula = true;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showGridLines = true;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showRowColHeaders = true;
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool showRuler = false;
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public uint freezeCount = 0;
+		// /// <summary>
+		// /// 
+		// /// </summary>
+		// public WorkSheetViewFreezeDirection workSheetViewFreezeDirection = WorkSheetViewFreezeDirection.TOP;
 	}
 }
