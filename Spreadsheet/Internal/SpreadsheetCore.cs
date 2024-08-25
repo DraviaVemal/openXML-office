@@ -168,6 +168,16 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return Sheets;
 		}
+		internal BookViews GetBookViews()
+		{
+			BookViews bookViews = GetWorkbookPart().Workbook.GetFirstChild<BookViews>();
+			if (bookViews == null)
+			{
+				bookViews = new BookViews();
+				GetWorkbookPart().Workbook.InsertAt(new BookViews(), 0);
+			}
+			return bookViews;
+		}
 		/// <summary>
 		/// Return Workbook Part for the Spreadsheet
 		/// </summary>
@@ -314,12 +324,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			{
 				GetWorkbookPart().Workbook = new Workbook();
 			}
-			Sheets sheets = GetWorkbookPart().Workbook.GetFirstChild<Sheets>();
-			if (sheets == null)
-			{
-				sheets = new Sheets();
-				GetWorkbookPart().Workbook.AppendChild(sheets);
-			}
 			if (GetWorkbookPart().ThemePart == null)
 			{
 				GetWorkbookPart().AddNewPart<ThemePart>(GetNextSpreadSheetRelationId());
@@ -329,6 +333,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				G.Theme theme = new G.Theme(excelProperties.theme);
 				GetWorkbookPart().ThemePart.Theme = theme.GetTheme();
 			}
+			GetSheets();
 			InitializeStyle();
 			GetWorkbookPart().Workbook.Save();
 		}

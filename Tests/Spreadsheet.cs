@@ -57,11 +57,6 @@ namespace OpenXMLOffice.Tests
 		{
 			Worksheet worksheet = excel.AddSheet("TestSheet2");
 			Assert.IsNotNull(worksheet);
-			string sheetId = excel.GetSheetId("TestSheet2");
-			Assert.IsNotNull(sheetId);
-			Assert.AreEqual(sheetId, worksheet.GetSheetId());
-			Assert.AreEqual(excel.GetSheetName(sheetId), worksheet.GetSheetName());
-			Assert.IsTrue(excel.RemoveSheetById(sheetId));
 		}
 		/// <summary>
 		/// Rename Sheet Based on Index Test
@@ -71,8 +66,7 @@ namespace OpenXMLOffice.Tests
 		{
 			Worksheet worksheet = excel.AddSheet("TestSheet3");
 			Assert.IsNotNull(worksheet);
-			string sheetId = excel.GetSheetId("TestSheet3");
-			Assert.IsTrue(excel.RenameSheetById(sheetId, "RenameTestSheet3"));
+			Assert.IsTrue(excel.RenameSheet("TestSheet3", "RenameTestSheet3"));
 		}
 		/// <summary>
 		/// Rename Sheet Based on Index Test
@@ -119,8 +113,6 @@ namespace OpenXMLOffice.Tests
 				numberFormat = "00.000",
 			});
 			Assert.IsNotNull(worksheet);
-
-
 			worksheet.SetRow("A1", new ColumnCell[6]{
 				new(){
 					cellValue = "test1",
@@ -223,8 +215,49 @@ namespace OpenXMLOffice.Tests
 				cellValue="=SUM(B2,A2)"
 				}
 			});
+			Worksheet worksheet1 = excel.AddSheet("formula");
+			worksheet1.SetRow("A1", new ColumnCell[3]{
+				new(){
+					dataType= CellDataType.NUMBER,
+					cellValue="2.524"
+				},
+				new(){
+				dataType= CellDataType.NUMBER,
+				cellValue="10"
+				},
+				new(){
+				dataType= CellDataType.NUMBER,
+				cellValue="29.75894855"
+				}
+			});
+			worksheet1.SetRow("A3", new ColumnCell[3]{
+				new(){
+					dataType= CellDataType.FORMULA,
+					cellValue="=A1+B1"
+				},
+				new(){
+					dataType= CellDataType.FORMULA,
+					cellValue="=SUM(A1:C1)"
+				},
+				new(){
+				dataType= CellDataType.FORMULA,
+				cellValue="=SUM(A1,C1)"
+				}
+			});
 			excel1.SaveAs(string.Format("{1}/ReadEdit-Formula-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[TestMethod]
+		public void TestActiveCellSheet()
+		{
+			Worksheet sheet = excel.AddSheet("Activated Cell");
+			sheet.SetActiveCell("Z99");
+			excel.SetActiveSheet("Activated Cell");
+		}
+
 		/// <summary>
 		///
 		/// </summary>

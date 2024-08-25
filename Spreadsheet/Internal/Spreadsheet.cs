@@ -83,21 +83,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return false;
 		}
-		internal bool RemoveSheetById(string sheetId)
-		{
-			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Id.Value == sheetId.ToString()) as Sheet;
-			if (sheet != null)
-			{
-				OpenXmlPart sheetPart = GetWorkbookPart().GetPartById(sheet.Id);
-				if (sheetPart != null && sheetPart is WorksheetPart)
-				{
-					GetWorkbookPart().DeletePart(sheetPart);
-				}
-				sheet.Remove();
-				return true;
-			}
-			return false;
-		}
 		internal bool RenameSheet(string oldSheetName, string newSheetName)
 		{
 			if (CheckIfSheetNameExist(newSheetName))

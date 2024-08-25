@@ -29,6 +29,27 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			documentWorksheet = worksheet;
 			sheet = _sheet;
 		}
+
+		internal void SetActiveSheet(bool state)
+		{
+			GetSheetView().TabSelected = state;
+		}
+
+		internal X.SheetView GetSheetView()
+		{
+			X.SheetView sheetView = GetWorkSheetViews().GetFirstChild<X.SheetView>();
+			if (sheetView == null)
+			{
+				sheetView = new X.SheetView()
+				{
+					TabSelected = false,
+					WorkbookViewId = 0
+				};
+				GetWorkSheetViews().Append(sheetView);
+			}
+			return sheetView;
+		}
+
 		/// <summary>
 		/// Returns the sheet ID of the current worksheet.
 		/// </summary>
@@ -45,11 +66,26 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public void SetActiveCell(int row, int col)
+		{
+			SetActiveCell(ConverterUtils.ConvertToExcelCellReference(row, col));
+		}
+
+		/// <summary>
 		/// Set the current active cell in a sheet
 		/// </summary>
-		public void SetActiveCell()
+		public void SetActiveCell(string CellId)
 		{
-			
+
+			GetSheetView().RemoveAllChildren<X.Selection>();
+			GetSheetView().Append(new X.Selection()
+			{
+				ActiveCell = CellId,
+				ActiveCellId = 0,
+				SequenceOfReferences = new ListValue<StringValue> { InnerText = CellId }
+			});
 		}
 		/// <summary>
 		/// Insert Shape into slide
@@ -473,12 +509,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			return SheetData;
 		}
-		internal X.SheetViews GetWorkSheetView()
+		internal X.SheetViews GetWorkSheetViews()
 		{
 			X.SheetViews sheetViews = documentWorksheet.Elements<X.SheetViews>().FirstOrDefault();
 			if (sheetViews == null)
 			{
-				return documentWorksheet.AppendChild(new X.SheetViews());
+				return documentWorksheet.InsertAt(new X.SheetViews(), 0);
 			}
 			return sheetViews;
 		}

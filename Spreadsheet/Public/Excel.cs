@@ -3,6 +3,8 @@
 using System.Reflection;
 using System.IO;
 using OpenXMLOffice.Global_2007;
+using X = DocumentFormat.OpenXml.Spreadsheet;
+using System.Linq;
 
 namespace OpenXMLOffice.Spreadsheet_2007
 {
@@ -55,11 +57,32 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			return spreadsheet.AddSheet(sheetName);
 		}
 		/// <summary>
-		/// Returns the Sheet ID for the give Sheet Name
+		/// 
 		/// </summary>
-		public string GetSheetId(string sheetName)
+		/// <param name="sheetName">Name of the sheet that needs to be activated</param>
+		public void SetActiveSheet(string sheetName)
 		{
-			return spreadsheet.GetSheetId(sheetName);
+			uint sheetIndex = 0;
+			foreach (X.Sheet workSheet in spreadsheet.GetSheets().Elements<X.Sheet>())
+			{
+				Worksheet sheet = GetWorksheet(workSheet.Name);
+				if (workSheet.Name == sheetName)
+				{
+					sheet.SetActiveSheet(true);
+					X.WorkbookView workBookView = spreadsheet.GetBookViews().Elements<X.WorkbookView>().FirstOrDefault();
+					if (workBookView == null)
+					{
+						workBookView = new X.WorkbookView();
+						spreadsheet.GetBookViews().Append(workBookView);
+					}
+					workBookView.ActiveTab = sheetIndex;
+				}
+				else
+				{
+					sheet.SetActiveSheet(false);
+				}
+				++sheetIndex;
+			}
 		}
 		/// <summary>
 		/// Use this method to create a new style and get the style id
@@ -101,13 +124,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		public bool RemoveSheet(string sheetName)
 		{
 			return spreadsheet.RemoveSheet(sheetName);
-		}
-		/// <summary>
-		/// Removes a sheet with the specified ID from the OpenXMLOffice
-		/// </summary>
-		public bool RemoveSheetById(string sheetId)
-		{
-			return spreadsheet.RemoveSheetById(sheetId);
 		}
 		/// <summary>
 		/// Creates a new sheet with the specified name and adds its relevant components to the
