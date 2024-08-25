@@ -13,6 +13,7 @@ jobs:
   build-CsProj:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v3
       - name: Setup .NET 7
         uses: actions/setup-dotnet@v1
@@ -33,6 +34,7 @@ jobs:
     needs: build-CsProj
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v3
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -41,3 +43,24 @@ jobs:
           path: nupkgs
       - name: Publish to NuGet
         run: dotnet nuget push "nupkgs/*" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+  tag-version:
+    needs: publish-nuget
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v3
+      - name: Install xmlstarlet
+        run: sudo apt-get install -y xmlstarlet
+      - name: Extract version from Directory.Build.props
+        id: extract_version
+        run: |
+        VERSION=$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" Directory.Build.props)
+      - name: Create and push tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Create a tag with the version
+        git tag "${VERSION}"
+        git push origin "${VERSION}"
+
+

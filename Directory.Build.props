@@ -12,7 +12,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <OutputPath>..\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>2.9.0-Alpha.1</Version>
+        <Version>2.9.0-Alpha.2</Version>
         <Company>DraviaVemal</Company>
         <Copyright>Copyright (c) 2023 DraviaVemal
             Permission is hereby granted, free of charge, to any person obtaining a copy of this

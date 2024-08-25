@@ -28,6 +28,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			MemoryStream memoryStream = new MemoryStream();
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
 			InitializeSpreadsheet(this.spreadsheetProperties);
+			ReadDataFromFile();
 		}
 		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
 		{
@@ -101,7 +102,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Return the Shared String Table for the Spreadsheet
 		/// </summary>
-		internal SharedStringTable GetExcelShareString()
+		internal SharedStringTablePart GetExcelShareStringPart()
 		{
 			SharedStringTablePart sharedStringPart = GetWorkbookPart().GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
 			if (sharedStringPart == null)
@@ -109,12 +110,12 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				sharedStringPart = GetWorkbookPart().AddNewPart<SharedStringTablePart>(GetNextSpreadSheetRelationId());
 				sharedStringPart.SharedStringTable = new SharedStringTable();
 			}
-			return sharedStringPart.SharedStringTable;
+			return sharedStringPart;
 		}
 		/// <summary>
 		/// Return the Calculation Chain for the Spreadsheet
 		/// </summary>
-		internal CalculationChain GetExcelCalculationChain()
+		internal CalculationChainPart GetExcelCalculationChainPart()
 		{
 			CalculationChainPart calculationChainPart = GetWorkbookPart().GetPartsOfType<CalculationChainPart>().FirstOrDefault();
 			if (calculationChainPart == null)
@@ -122,7 +123,37 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				calculationChainPart = GetWorkbookPart().AddNewPart<CalculationChainPart>(GetNextSpreadSheetRelationId());
 				calculationChainPart.CalculationChain = new CalculationChain();
 			}
-			return calculationChainPart.CalculationChain;
+			return calculationChainPart;
+		}
+		/// <summary>
+		/// Return the Shared String Table for the Spreadsheet
+		/// </summary>
+		internal SharedStringTable GetExcelShareString()
+		{
+			return GetExcelShareStringPart().SharedStringTable;
+		}
+		/// <summary>
+		/// Return the Calculation Chain for the Spreadsheet
+		/// </summary>
+		internal CalculationChain GetExcelCalculationChain()
+		{
+			return GetExcelCalculationChainPart().CalculationChain;
+		}
+
+		/// <summary>
+		/// Remove Share string part if not required
+		/// </summary>
+		internal void DeleteShareStringPart()
+		{
+			GetWorkbookPart().DeletePart(GetExcelShareStringPart());
+		}
+
+		/// <summary>
+		/// Remove calculation part if not required
+		/// </summary>
+		internal void DeleteCalculationPart()
+		{
+			GetWorkbookPart().DeletePart(GetExcelCalculationChainPart());
 		}
 		/// <summary>
 		/// Return the Sheets for the Spreadsheet
@@ -189,12 +220,19 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal void WriteSharedStringToFile()
 		{
 			GetExcelShareString().RemoveAllChildren<SharedStringItem>();
-			GetShareStringService().GetRecords().ForEach(Value =>
+			if (GetShareStringService().GetRecords().Count > 0)
 			{
-				GetExcelShareString().Append(new SharedStringItem(new Text(Value)));
-			});
-			GetExcelShareString().Count = (uint)GetExcelShareString().ChildElements.Count;
-			GetExcelShareString().UniqueCount = (uint)GetExcelShareString().ChildElements.Count;
+				GetShareStringService().GetRecords().ForEach(Value =>
+				{
+					GetExcelShareString().Append(new SharedStringItem(new Text(Value)));
+				});
+				GetExcelShareString().Count = (uint)GetExcelShareString().ChildElements.Count;
+				GetExcelShareString().UniqueCount = (uint)GetExcelShareString().ChildElements.Count;
+			}
+			else
+			{
+				DeleteShareStringPart();
+			}
 		}
 		/// <summary>
 		/// Update the calculation chain into spreadsheet
@@ -202,14 +240,21 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal void WriteCalculationChainToFile()
 		{
 			GetExcelCalculationChain().RemoveAllChildren<CalculationCell>();
-			GetCalculationChainService().GetRecords().ForEach(Value =>
+			if (GetCalculationChainService().GetRecords().Count > 0)
 			{
-				GetExcelCalculationChain().Append(new CalculationCell()
+				GetCalculationChainService().GetRecords().ForEach(Value =>
 				{
-					CellReference = Value.CellId,
-					SheetId = Value.SheetIndex
+					GetExcelCalculationChain().Append(new CalculationCell()
+					{
+						CellReference = Value.CellId,
+						SheetId = Value.SheetIndex
+					});
 				});
-			});
+			}
+			else
+			{
+				DeleteCalculationPart();
+			}
 		}
 		/// <summary>
 		/// Load The DB Style Cache to Style Sheet

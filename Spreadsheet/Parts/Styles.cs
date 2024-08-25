@@ -155,41 +155,41 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// Load the style from the Existing Sheet
 		/// </summary>
-		internal void LoadStyleFromSheet(X.Stylesheet Stylesheet)
+		internal void LoadStyleFromSheet(X.Stylesheet StyleSheet)
 		{
-			SetFonts(Stylesheet.Fonts);
-			SetFills(Stylesheet.Fills);
-			SetBorders(Stylesheet.Borders);
-			SetCellFormats(Stylesheet.CellFormats);
-			SetNumberFormats(Stylesheet.NumberingFormats);
+			SetFonts(StyleSheet.Fonts);
+			SetFills(StyleSheet.Fills);
+			SetBorders(StyleSheet.Borders);
+			SetCellFormats(StyleSheet.CellFormats);
+			SetNumberFormats(StyleSheet.NumberingFormats);
 			InitializeDefault();
 		}
 		/// <summary>
 		/// Save the style properties to the xlsx file
 		/// </summary>
-		internal void SaveStyleProps(X.Stylesheet Stylesheet)
+		internal void SaveStyleProps(X.Stylesheet StyleSheet)
 		{
-			Stylesheet.Fonts = GetFonts();
-			Stylesheet.Fills = GetFills();
-			Stylesheet.Borders = GetBorders();
-			if (Stylesheet.CellStyleFormats == null)
+			StyleSheet.Fonts = GetFonts();
+			StyleSheet.Fills = GetFills();
+			StyleSheet.Borders = GetBorders();
+			if (StyleSheet.CellStyleFormats == null)
 			{
-				Stylesheet.CellStyleFormats = new X.CellStyleFormats(
+				StyleSheet.CellStyleFormats = new X.CellStyleFormats(
 				new X.CellFormat() { NumberFormatId = 0, FontId = 0, FillId = 0, BorderId = 0 })
 				{ Count = 1 };//cellStyleXfs
 			}
-			Stylesheet.CellFormats = GetCellFormats();//cellXfs
-			if (Stylesheet.CellStyles == null)
+			StyleSheet.CellFormats = GetCellFormats();//cellXfs
+			if (StyleSheet.CellStyles == null)
 			{
-				Stylesheet.CellStyles = new X.CellStyles(
+				StyleSheet.CellStyles = new X.CellStyles(
 					new X.CellStyle() { Name = "Normal", FormatId = 0, BuiltinId = 0 })
 				{ Count = 1 };//cellStyles
 			}
-			if (Stylesheet.DifferentialFormats == null)
+			if (StyleSheet.DifferentialFormats == null)
 			{
-				Stylesheet.DifferentialFormats = new X.DifferentialFormats() { Count = 0 };//dxfs
+				StyleSheet.DifferentialFormats = new X.DifferentialFormats() { Count = 0 };//dxfs
 			}
-			Stylesheet.NumberingFormats = GetNumberFormats();//numFmts
+			StyleSheet.NumberingFormats = GetNumberFormats();//numFmts
 		}
 		private uint GetBorderId(CellStyleSetting CellStyleSetting)
 		{
@@ -630,6 +630,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private void SetNumberFormats(X.NumberingFormats numberingFormats)
 		{
+			if (numberingFormats == null) return;
 			numberingFormats.Descendants<X.NumberingFormat>().ToList()
 			.ForEach(numberingFormat =>
 			{
@@ -646,6 +647,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private void SetCellFormats(X.CellFormats cellFormats)
 		{
+			if (cellFormats == null) return;
 			cellFormats.Descendants<X.CellFormat>().ToList()
 			.ForEach(cellFormat =>
 			{
@@ -748,6 +750,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private void SetBorders(X.Borders borders)
 		{
+			if (borders == null) return;
 			borders.Descendants<X.Border>().ToList()
 			.ForEach(border =>
 			{
@@ -822,6 +825,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 
 		private void SetFills(X.Fills fills)
 		{
+			if (fills == null) return;
 			fills.Descendants<X.Fill>().ToList()
 			.ForEach(fill =>
 			{
@@ -900,6 +904,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		}
 		private void SetFonts(X.Fonts fonts)
 		{
+			if (fonts == null) return;
 			fonts.Descendants<X.Font>().ToList()
 			.ForEach(font =>
 			{
