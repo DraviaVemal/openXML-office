@@ -219,7 +219,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// <summary>
 		/// 
 		/// </summary>
-		public WorkSheetViewsValues workSheetViewsValues = WorkSheetViewsValues.NORMAL;
+		public WorkSheetViewsValues workSheetViewsValue = WorkSheetViewsValues.NORMAL;
 		/// <summary>
 		/// 
 		/// </summary>

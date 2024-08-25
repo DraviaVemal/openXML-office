@@ -10,7 +10,18 @@ namespace OpenXMLOffice.Tests
 	[TestClass]
 	public class Spreadsheet
 	{
-		private static readonly Excel excel = new();
+		private static readonly Excel excel = new(new ExcelProperties
+		{
+			coreProperties = new()
+			{
+				title = "Test File",
+				creator = "OpenXML-Office",
+				subject = "Test Subject",
+				tags = "Test",
+				category = "Test Category",
+				description = "Describe the test file"
+			}
+		});
 		private static readonly string resultPath = "../../TestOutputFiles";
 		/// <summary>
 		/// Initialize excel Test
@@ -38,6 +49,15 @@ namespace OpenXMLOffice.Tests
 		public static void ClassCleanup()
 		{
 			excel.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		[TestMethod]
+		public void BlankFile()
+		{
+			Excel excel2 = new();
+			excel2.SaveAs(string.Format("{1}/Blank-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
 		}
 		/// <summary>
 		/// Add Sheet Test
@@ -264,8 +284,20 @@ namespace OpenXMLOffice.Tests
 				showGridLines = false,
 				showRowColHeaders = false,
 				showRuler = false,
-				workSheetViewsValues = WorkSheetViewsValues.PAGE_LAYOUT,
+				workSheetViewsValue = WorkSheetViewsValues.PAGE_LAYOUT,
 				ZoomScale = 110
+			});
+			excel.AddSheet("Zoom 400").SetSheetViewOptions(new()
+			{
+				ZoomScale = 500 // Should auto correct to 400
+			});
+			excel.AddSheet("Zoom 10").SetSheetViewOptions(new()
+			{
+				ZoomScale = 0 // Should auto correct to 10
+			});
+			excel.AddSheet("Page Break").SetSheetViewOptions(new()
+			{
+				workSheetViewsValue = WorkSheetViewsValues.PAGE_BREAK_PREVIEW,
 			});
 		}
 
@@ -357,6 +389,28 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new AreaChartSetting<ExcelSetting>()
 			{
+				areaChartSeriesSettings = new(){
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = TrendLineTypes.LINEAR,
+								trendLineName = "Dravia",
+								hexColor = "FF0000",
+								lineStye = DrawingPresetLineDashValues.LARGE_DASH
+							}
+						}
+					},
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = TrendLineTypes.EXPONENTIAL,
+								trendLineName = "vemal",
+								hexColor = "FFFF00",
+								lineStye = DrawingPresetLineDashValues.DASH_DOT
+							}
+						}
+					}
+				},
 				applicationSpecificSetting = new()
 				{
 					from = new()
@@ -377,6 +431,11 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "D4"
 			}, new AreaChartSetting<ExcelSetting>()
 			{
+				areaChartDataLabel = new()
+				{
+					dataLabelPosition = AreaChartDataLabel.DataLabelPositionValues.SHOW,
+					isBold = true
+				},
 				areaChartType = AreaChartTypes.STACKED,
 				applicationSpecificSetting = new()
 				{
@@ -410,6 +469,69 @@ namespace OpenXMLOffice.Tests
 					{
 						row = 62,
 						column = 20
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new AreaChartSetting<ExcelSetting>()
+			{
+				areaChartType = AreaChartTypes.CLUSTERED_3D,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 5,
+						column = 25
+					},
+					to = new()
+					{
+						row = 20,
+						column = 40
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new AreaChartSetting<ExcelSetting>()
+			{
+				areaChartType = AreaChartTypes.STACKED_3D,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 21,
+						column = 25
+					},
+					to = new()
+					{
+						row = 41,
+						column = 40
+					}
+				}
+			});
+			worksheet.AddChart(new()
+			{
+				cellIdStart = "A1",
+				cellIdEnd = "D4"
+			}, new AreaChartSetting<ExcelSetting>()
+			{
+				areaChartType = AreaChartTypes.PERCENT_STACKED_3D,
+				applicationSpecificSetting = new()
+				{
+					from = new()
+					{
+						row = 42,
+						column = 25
+					},
+					to = new()
+					{
+						row = 62,
+						column = 40
 					}
 				}
 			});
@@ -844,6 +966,28 @@ namespace OpenXMLOffice.Tests
 				cellIdEnd = "F4"
 			}, new ScatterChartSetting<ExcelSetting>()
 			{
+				scatterChartSeriesSettings = new(){
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = TrendLineTypes.LINEAR,
+								trendLineName = "Dravia",
+								hexColor = "FF0000",
+								lineStye = DrawingPresetLineDashValues.LARGE_DASH
+							}
+						}
+					},
+					new(){
+						trendLines = new(){
+							new(){
+								trendLineType = TrendLineTypes.EXPONENTIAL,
+								trendLineName = "vemal",
+								hexColor = "FFFF00",
+								lineStye = DrawingPresetLineDashValues.DASH_DOT
+							}
+						}
+					}
+				},
 				scatterChartType = ScatterChartTypes.BUBBLE,
 				applicationSpecificSetting = new()
 				{

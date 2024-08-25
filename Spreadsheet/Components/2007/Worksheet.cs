@@ -109,7 +109,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			GetSheetView().ShowGridLines = workSheetViewOption.showGridLines;
 			GetSheetView().ShowRowColHeaders = workSheetViewOption.showRowColHeaders;
 			GetSheetView().ShowRuler = workSheetViewOption.showRuler;
-			GetSheetView().View = GetSheetViewValue(workSheetViewOption.workSheetViewsValues);
+			GetSheetView().View = GetSheetViewValue(workSheetViewOption.workSheetViewsValue);
 			GetSheetView().ZoomScaleNormal = workSheetViewOption.ZoomScale;
 			GetSheetView().ZoomScale = workSheetViewOption.ZoomScale;
 		}
