@@ -32,15 +32,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			worksheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(new SheetData());
 			return new Worksheet(excel, worksheetPart.Worksheet, sheet);
 		}
-		internal string GetSheetId(string sheetName)
-		{
-			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Name == sheetName) as Sheet;
-			if (sheet != null)
-			{
-				return sheet.Id.Value;
-			}
-			return null;
-		}
 		internal uint GetStyleId(CellStyleSetting CellStyleSetting)
 		{
 			return GetStyleService().GetCellStyleId(CellStyleSetting);
@@ -86,20 +77,6 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				throw new ArgumentException("New Sheet with name already exist.");
 			}
 			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Name == oldSheetName) as Sheet;
-			if (sheet == null)
-			{
-				return false;
-			}
-			sheet.Name = newSheetName;
-			return true;
-		}
-		internal bool RenameSheetById(string sheetId, string newSheetName)
-		{
-			if (CheckIfSheetNameExist(newSheetName))
-			{
-				throw new ArgumentException(string.Format("New Sheet with name '{0}' already exist.", newSheetName));
-			}
-			Sheet sheet = GetSheets().FirstOrDefault(tempSheet => (tempSheet as Sheet).Id.Value == sheetId.ToString()) as Sheet;
 			if (sheet == null)
 			{
 				return false;

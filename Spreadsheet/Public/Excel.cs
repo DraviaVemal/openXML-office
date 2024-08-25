@@ -27,6 +27,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			spreadsheet = new Spreadsheet(this, spreadsheetProperties);
 		}
+
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point.
 		/// Source file will be cloned and released. hence can be replace by saveAs method if you want to update the same file.
@@ -37,6 +38,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			isFileEdited = true;
 			spreadsheet = new Spreadsheet(this, filePath, isEditable, spreadsheetProperties);
 		}
+
 		/// <summary>
 		/// Works with in memory object can be saved to file at later point.
 		/// Source stream is copied and closed.
@@ -48,6 +50,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			isFileEdited = true;
 			spreadsheet = new Spreadsheet(this, Stream, IsEditable, spreadsheetProperties);
 		}
+
 		/// <summary>
 		/// Adds a new sheet to the OpenXMLOffice with the specified name. Throws an exception if
 		/// SheetName already exist.
@@ -56,6 +59,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return spreadsheet.AddSheet(sheetName);
 		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -84,6 +88,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 				++sheetIndex;
 			}
 		}
+
 		/// <summary>
 		/// Use this method to create a new style and get the style id
 		/// Use of Style Id instead of Style Setting directly in Worksheet Cell is highly recommended for performance
@@ -104,13 +109,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return spreadsheet.GetStyleService();
 		}
-		/// <summary>
-		/// Return the Sheet Name for the given Sheet ID
-		/// </summary>
-		public string GetSheetName(string sheetId)
-		{
-			return spreadsheet.GetSheetName(sheetId);
-		}
+
 		/// <summary>
 		/// Retrieves a Worksheet object from an OpenXMLOffice, allowing manipulation of the worksheet.
 		/// </summary>
@@ -118,6 +117,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return spreadsheet.GetWorksheet(sheetName);
 		}
+
 		/// <summary>
 		/// Removes a sheet with the specified name from the OpenXMLOffice
 		/// </summary>
@@ -125,6 +125,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return spreadsheet.RemoveSheet(sheetName);
 		}
+
 		/// <summary>
 		/// Creates a new sheet with the specified name and adds its relevant components to the
 		/// workbook. Throws an exception if the sheet name is already in use.
@@ -133,13 +134,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		{
 			return spreadsheet.RenameSheet(oldSheetName, newSheetName);
 		}
-		/// <summary>
-		/// Renames an existing sheet in the OpenXMLOffice.
-		/// </summary>
-		public bool RenameSheetById(string sheetId, string newSheetName)
-		{
-			return spreadsheet.RenameSheetById(sheetId, newSheetName);
-		}
+
 		/// <summary>
 		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
 		/// You can save the document at the end of lifecycle targeting the edit file to update or new file.
@@ -150,6 +145,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			SendAnonymousSaveStates(Assembly.GetExecutingAssembly().GetName());
 			spreadsheet.SaveAs(filePath);
 		}
+
 		/// <summary>
 		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.
 		/// You can save the document at the end of lifecycle targeting the edit file to update or new file.

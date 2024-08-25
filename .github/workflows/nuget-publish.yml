@@ -57,4 +57,4 @@ jobs:
         run: |
           VERSION=$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" Directory.Build.props)
           git tag "v${VERSION}"
-          git push origin "${VERSION}"
+          git push --tags
