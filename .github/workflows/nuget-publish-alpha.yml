@@ -3,8 +3,6 @@ permissions:
   contents: write
   pages: write
   id-token: write
-env:
-  PACKAGE_VERSION: 3.0.0
 on:
   push:
     branches:
@@ -37,7 +35,6 @@ jobs:
               PACKAGE_VERSION="${BASE_VERSION}-Alpha.${NEXT_ALPHA}"
           fi
           dotnet pack -c Release -o nupkgs -p:Version=${PACKAGE_VERSION}
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -69,13 +66,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BASE_VERSION=$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" Directory.Build.props)
+          echo $BASE_VERSION
           LATEST_TAG=$(git tag -l "${BASE_VERSION}-Alpha.*" | sort -V | tail -n 1)
+          echo $LATEST_TAG
           if [ -z "$LATEST_TAG" ]; then
               PACKAGE_VERSION="${BASE_VERSION}-Alpha.1"
+              echo "vemal"
           else
               CURRENT_ALPHA=$(echo "$LATEST_TAG" | sed -E 's/.*Alpha\.([0-9]+)$/\1/')
               NEXT_ALPHA=$((CURRENT_ALPHA + 1))
-              PACKAGE_VERSION=v"${BASE_VERSION}-Alpha.${NEXT_ALPHA}"
+              PACKAGE_VERSION="${BASE_VERSION}-Alpha.${NEXT_ALPHA}"
+              echo "Dravia"
+              echo $PACKAGE_VERSION
           fi
           git tag "v${PACKAGE_VERSION}"
           git push --tags
