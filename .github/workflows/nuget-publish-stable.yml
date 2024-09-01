@@ -1,4 +1,4 @@
-name: Package Build and Publish Stable Release to NuGet
+name: Stable Package Build and Publish to NuGet
 
 on:
   push:

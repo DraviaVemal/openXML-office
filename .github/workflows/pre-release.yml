@@ -1,0 +1,15 @@
+name: Create Pre Release in Github
+
+on:
+  push:
+    tags:
+        - 'v*-Alpha.*'
+
+jobs:
+  pre-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          prerelease: true
