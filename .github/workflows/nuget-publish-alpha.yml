@@ -34,7 +34,7 @@ jobs:
           else
               CURRENT_ALPHA=$(echo "$LATEST_TAG" | sed -E 's/.*Alpha\.([0-9]+)$/\1/')
               NEXT_ALPHA=$((CURRENT_ALPHA + 1))
-              PACKAGE_VERSION=v"${BASE_VERSION}-Alpha.${NEXT_ALPHA}"
+              PACKAGE_VERSION="${BASE_VERSION}-Alpha.${NEXT_ALPHA}"
           fi
           dotnet pack -c Release -o nupkgs -p:Version=${PACKAGE_VERSION}
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
@@ -77,5 +77,5 @@ jobs:
               NEXT_ALPHA=$((CURRENT_ALPHA + 1))
               PACKAGE_VERSION=v"${BASE_VERSION}-Alpha.${NEXT_ALPHA}"
           fi
-          git tag $PACKAGE_VERSION
+          git tag "v${PACKAGE_VERSION}"
           git push --tags
