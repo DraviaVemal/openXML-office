@@ -3,7 +3,7 @@ name: Create Pre Release in Github
 on:
   push:
     tags:
-        - 'v*'
+      - 'v*'
 
 jobs:
   pre-release:
