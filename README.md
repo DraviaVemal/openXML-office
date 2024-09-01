@@ -7,7 +7,6 @@
 ![GitHub Release](https://img.shields.io/github/v/release/DraviaVemal/OpenXML-Office?include_prereleases&sort=semver&label=Alpha%20Release)
 [![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-stable.yml/badge.svg?branch=stable)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-stable.yml)
 [![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-alpha.yml/badge.svg?branch=alpha)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-alpha.yml)
-[![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/pre-release.yml/badge.svg?branch=alpha)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/pre-release.yml)
 [![Generated](https://draviavemal.com/openxml-office/powerpoint-count.svg)](https://openxml-office.draviavemal.com/)
 [![Generated](https://draviavemal.com/openxml-office/excel-count.svg)](https://openxml-office.draviavemal.com/)
 [![Generated](https://draviavemal.com/openxml-office/word-count.svg)](https://openxml-office.draviavemal.com/)
