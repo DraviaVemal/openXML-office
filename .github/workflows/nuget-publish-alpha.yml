@@ -62,9 +62,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Install xmlstarlet
+        run: sudo apt-get install -y xmlstarlet
       - name: Create and push tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git tag ${{ env.PACKAGE_VERSION }}
+          BASE_VERSION=$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" Directory.Build.props)
+          LATEST_TAG=$(git tag -l "${BASE_VERSION}-Alpha.*" | sort -V | tail -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+              PACKAGE_VERSION="${BASE_VERSION}-Alpha.1"
+          else
+              CURRENT_ALPHA=$(echo "$LATEST_TAG" | sed -E 's/.*Alpha\.([0-9]+)$/\1/')
+              NEXT_ALPHA=$((CURRENT_ALPHA + 1))
+              PACKAGE_VERSION=v"${BASE_VERSION}-Alpha.${NEXT_ALPHA}"
+          fi
+          git tag $PACKAGE_VERSION
           git push --tags

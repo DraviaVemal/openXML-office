@@ -2,10 +2,17 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage) [![Downloads](https://img.shields.io/nuget/dt/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation) [![NuGet](https://img.shields.io/nuget/v/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation) [![NuGet](https://img.shields.io/nuget/vpre/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation) [![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish.yml/badge.svg?branch=main)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish.yml) [![Generated](https://draviavemal.com/openxml-office/powerpoint-count)](https://openxml-office.draviavemal.com/) [![Generated](https://draviavemal.com/openxml-office/excel-count)](https://openxml-office.draviavemal.com/)
 
+# Effortless Creation of Excel, PowerPoint, and Word Documents
+
 # OpenXML-Office
 
 OpenXML-Office is an advanced .NET library that leverages the power of OpenXML SDK 3.0 to streamline the creation and manipulation of Office documents, with a primary focus on Excel, Word, and PowerPoint files. My mission is to enhance the document creation experience for developers by providing intuitive namespaces, classes, and utilities. The library is designed to offer maximum efficiency and ease of use, ensuring a seamless workflow.
 It's important to note that OpenXML-Office supports the creation of documents that can be opened from Office 2007 onwards. However, not every feature is available from the 2007 version. For instance if new features are added as part of the 2016 version, they are kept in a namespace that explicitly mentions '2016.' Developers should be aware that if they use 2016 components in their document creation, the generated file can only be opened in 2016 and above versions without any issues.
+
+
+## Documentation [Link](https://openxml-office.draviavemal.com/)
+
+All project documentation is in progress and regularly updated in Gitbooks. The maintained branch for documentation is the "Documents" branch within the project repository. Welcome to any contributions or updates through pull requests. Your assistance is highly appreciated.
 
 ## Scope Details
 
@@ -14,10 +21,6 @@ It's important to note that OpenXML-Office supports the creation of documents th
 - **Modular Architecture**: Dedicated modules for each Office application for better manageability.
 - **[.Net Support Version](https://www.nuget.org/packages/OpenXMLOffice.Presentation/#supportedframeworks-body-tab)** : This package support application package starting from .Net 4.5
 - **Office Support Version** : Our package ensures compatibility with Office 2007 and later versions for document creation. New features introduced post 2007 will be segregated into respective namespace years.
-
-## Documentation [Link](https://openxml-office.draviavemal.com/)
-
-All project documentation is in progress and regularly updated in Gitbooks. The maintained branch for documentation is the "Documents" branch within the project repository. Welcome to any contributions or updates through pull requests. Your assistance is highly appreciated.
 
 ## License
 
