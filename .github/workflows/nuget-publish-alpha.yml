@@ -55,7 +55,7 @@ jobs:
           name: nupkgs
           path: nupkgs
       - name: Publish to NuGet
-        run: dotnet nuget push "nupkgs/*" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "nupkgs/*" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
   tag-version:
     needs: publish-nuget
     runs-on: ubuntu-latest
