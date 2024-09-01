@@ -1,17 +1,17 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using OpenXMLOffice.Global_2007;
-namespace OpenXMLOffice.Spreadsheet_2007
+namespace OpenXMLOffice.Document_2007
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class ExcelProperties
+	public class WordProperties
 	{
 		/// <summary>
 		/// Spreadsheet settings
 		/// </summary>
-		public ExcelSettings settings = new ExcelSettings();
+		public WordSettings settings = new WordSettings();
 		/// <summary>
 		/// Spreadsheet theme settings
 		/// </summary>
@@ -24,10 +24,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 	/// <summary>
 	/// 
 	/// </summary>
-	public class ExcelSettings
+	public class WordSettings
 	{
 	}
-	internal class ExcelInfo
+	internal class WordInfo
 	{
 		public bool isEditable = true;
 		public bool isExistingFile;

@@ -48,6 +48,17 @@ namespace OpenXMLOffice.Tests
 		}
 
 		/// <summary>
+		/// Add Blank Slide to the PPT
+		/// </summary>
+		[TestMethod]
+		[TestCategory("Slide")]
+		public void AddBlankSlide()
+		{
+			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
+			Assert.IsTrue(true);
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		[TestMethod]
@@ -541,16 +552,6 @@ namespace OpenXMLOffice.Tests
 			{
 				applicationSpecificSetting = new(),
 			});
-			Assert.IsTrue(true);
-		}
-		/// <summary>
-		/// Add Blank Slide to the PPT
-		/// </summary>
-		[TestMethod]
-		[TestCategory("Slide")]
-		public void AddBlankSlide()
-		{
-			powerPoint.AddSlide(PresentationConstants.SlideLayoutType.BLANK);
 			Assert.IsTrue(true);
 		}
 		/// <summary>

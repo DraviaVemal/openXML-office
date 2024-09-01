@@ -17,23 +17,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		internal readonly Excel excel;
 		internal readonly SpreadsheetDocument spreadsheetDocument;
 		internal readonly ExcelInfo spreadsheetInfo = new ExcelInfo();
-		internal readonly ExcelProperties spreadsheetProperties;
+		internal readonly ExcelProperties excelProperties;
 		private readonly StylesService stylesService = new StylesService();
 		private readonly ShareStringService shareStringService = new ShareStringService();
 		private readonly CalculationChainService calculationChainService = new CalculationChainService();
-		internal SpreadsheetCore(Excel excel, ExcelProperties spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, ExcelProperties excelProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
+			this.excelProperties = excelProperties ?? new ExcelProperties();
 			MemoryStream memoryStream = new MemoryStream();
 			spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook, true);
-			InitializeSpreadsheet(this.spreadsheetProperties);
+			InitializeSpreadsheet(this.excelProperties);
 			ReadDataFromFile();
 		}
-		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, string filePath, bool isEditable, ExcelProperties excelProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
+			this.excelProperties = excelProperties ?? new ExcelProperties();
 			FileStream reader = new FileStream(filePath, FileMode.Open);
 			MemoryStream memoryStream = new MemoryStream();
 			reader.CopyTo(memoryStream);
@@ -45,7 +45,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (isEditable)
 			{
 				spreadsheetInfo.isExistingFile = true;
-				InitializeSpreadsheet(this.spreadsheetProperties);
+				InitializeSpreadsheet(this.excelProperties);
 			}
 			else
 			{
@@ -53,10 +53,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			}
 			ReadDataFromFile();
 		}
-		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, ExcelProperties spreadsheetProperties = null)
+		internal SpreadsheetCore(Excel excel, Stream stream, bool isEditable, ExcelProperties excelProperties = null)
 		{
 			this.excel = excel;
-			this.spreadsheetProperties = spreadsheetProperties ?? new ExcelProperties();
+			this.excelProperties = excelProperties ?? new ExcelProperties();
 			MemoryStream memoryStream = new MemoryStream();
 			stream.CopyTo(memoryStream);
 			stream.Dispose();
@@ -67,7 +67,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
 			if (isEditable)
 			{
 				spreadsheetInfo.isExistingFile = true;
-				InitializeSpreadsheet(this.spreadsheetProperties);
+				InitializeSpreadsheet(this.excelProperties);
 			}
 			else
 			{

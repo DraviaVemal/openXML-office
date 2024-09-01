@@ -23,9 +23,9 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Create New file in the system
 		/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 		/// </summary>
-		public Excel(ExcelProperties spreadsheetProperties = null)
+		public Excel(ExcelProperties excelProperties = null)
 		{
-			spreadsheet = new Spreadsheet(this, spreadsheetProperties);
+			spreadsheet = new Spreadsheet(this, excelProperties);
 		}
 
 		/// <summary>
@@ -33,10 +33,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Source file will be cloned and released. hence can be replace by saveAs method if you want to update the same file.
 		/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 		/// </summary>
-		public Excel(string filePath, bool isEditable, ExcelProperties spreadsheetProperties = null, PrivacyProperties privacyProperties = null)
+		public Excel(string filePath, bool isEditable, ExcelProperties excelProperties = null, PrivacyProperties privacyProperties = null)
 		{
 			isFileEdited = true;
-			spreadsheet = new Spreadsheet(this, filePath, isEditable, spreadsheetProperties);
+			spreadsheet = new Spreadsheet(this, filePath, isEditable, excelProperties);
 		}
 
 		/// <summary>
@@ -45,10 +45,10 @@ namespace OpenXMLOffice.Spreadsheet_2007
 		/// Note : Make Clone in your source application if you want to retain the stream handle
 		/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 		/// </summary>
-		public Excel(Stream Stream, bool IsEditable, ExcelProperties spreadsheetProperties = null, PrivacyProperties privacyProperties = null)
+		public Excel(Stream Stream, bool IsEditable, ExcelProperties excelProperties = null, PrivacyProperties privacyProperties = null)
 		{
 			isFileEdited = true;
-			spreadsheet = new Spreadsheet(this, Stream, IsEditable, spreadsheetProperties);
+			spreadsheet = new Spreadsheet(this, Stream, IsEditable, excelProperties);
 		}
 
 		/// <summary>

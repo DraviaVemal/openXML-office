@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\Global\Global.csproj" />
+		<ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 	<PropertyGroup>
 		<PackageId>OpenXMLOffice.Document</PackageId>
 		<RootNamespace>OpenXMLOffice.Document_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
-        <TargetFrameworks>net4.5;netstandard2.0;net7.0</TargetFrameworks>
-        <LangVersion>5.0</LangVersion>
-		<IsPackable>false</IsPackable>
+		<TargetFrameworks>net4.5;netstandard2.0;net7.0</TargetFrameworks>
+		<LangVersion>5.0</LangVersion>
 		<PackageDescription>OpenXML Word Processor is a versatile .NET library that streamlines the
 			creation and manipulation of Word documents using the OpenXML SDK. Designed for ease of
 			use,
