@@ -4,7 +4,8 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Downloads](https://img.shields.io/nuget/dt/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation)
 ![GitHub Release](https://img.shields.io/github/v/release/DraviaVemal/OpenXML-Office?sort=semver&label=Stable%20Release) 
-![GitHub Release](https://img.shields.io/github/v/release/DraviaVemal/OpenXML-Office?include_prereleases&sort=semver&label=Alpha%20Release)
+<!-- ![GitHub Release](https://img.shields.io/github/v/release/DraviaVemal/OpenXML-Office?include_prereleases&sort=semver&label=Alpha%20Release) -->
+[![NuGet](https://img.shields.io/nuget/vpre/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation)
 [![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-stable.yml/badge.svg?branch=stable)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-stable.yml)
 [![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-alpha.yml/badge.svg?branch=alpha)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-alpha.yml)
 [![Generated](https://draviavemal.com/openxml-office/powerpoint-count.svg)](https://openxml-office.draviavemal.com/)
