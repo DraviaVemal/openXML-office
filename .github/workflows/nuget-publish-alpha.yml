@@ -1,4 +1,4 @@
-name: Package Build and Publish to NuGet
+name: Alpha Package Build and Publish to NuGet
 permissions:
   contents: write
   pages: write
@@ -23,6 +23,8 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore -c Release
+      - name: Install xmlstarlet
+        run: sudo apt-get install -y xmlstarlet
       - name: Pack Project DLL
         run: |
           BASE_VERSION=$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" Directory.Build.props)
@@ -60,8 +62,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install xmlstarlet
-        run: sudo apt-get install -y xmlstarlet
       - name: Create and push tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
