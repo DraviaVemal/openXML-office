@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
+using W = DocumentFormat.OpenXml.Wordprocessing;
 using G = OpenXMLOffice.Global_2007;
 
 namespace OpenXMLOffice.Document_2007
@@ -63,6 +64,10 @@ namespace OpenXMLOffice.Document_2007
                 wordInfo.isEditable = false;
             }
         }
+        protected W.Document GetDocument()
+        {
+            return GetMainDocumentPart().Document;
+        }
         internal MainDocumentPart GetMainDocumentPart()
         {
             return wordprocessingDocument.MainDocumentPart;
@@ -99,9 +104,14 @@ namespace OpenXMLOffice.Document_2007
                     G.CoreProperties.UpdateModifiedDetails(stream, wordProperties.coreProperties);
                 }
             }
-            if (wordprocessingDocument.MainDocumentPart == null)
+            if (GetMainDocumentPart() == null)
             {
                 wordprocessingDocument.AddMainDocumentPart();
+            }
+            if (GetMainDocumentPart().Document == null)
+            {
+                GetMainDocumentPart().Document = new W.Document();
+                GetMainDocumentPart().Document.Save();
             }
             if (GetMainDocumentPart().ThemePart == null)
             {
