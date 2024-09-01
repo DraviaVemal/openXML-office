@@ -78,3 +78,9 @@ jobs:
           fi
           git tag "v${PACKAGE_VERSION}"
           git push --tags
+      - name: Create Pre Release Run
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          tag: $(git tag -l "v${BASE_VERSION}-Alpha.*" | sort -V | tail -n 1)
+          prerelease: true
+          skipIfReleaseExists: true
