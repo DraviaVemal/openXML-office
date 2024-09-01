@@ -3,13 +3,15 @@ name: Create Pre Release in Github
 on:
   push:
     tags:
-        - 'v*-Alpha.*'
+        - 'v*'
 
 jobs:
   pre-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Release
+      - name: Create Pre Release Run
+        if: contains(github.ref,'-Alpha.')
         uses: ncipollo/release-action@v1.14.0
         with:
           prerelease: true
+          skipIfReleaseExists: true
