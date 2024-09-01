@@ -1,15 +1,12 @@
-name: .NET 7 Build on PR
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+name: Build Validation and Coverage Test
+
 on:
   pull_request:
     branches:
-      - main
+      - stable
       - alpha
 jobs:
-  build:
+  pr-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,8 +20,8 @@ jobs:
         run: dotnet build --no-restore -c Release
       - name: Pack Project DLL
         run: dotnet pack -c Release -o nupkgs
-  coverage:
-    needs: build
+  pr-coverage:
+    needs: pr-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

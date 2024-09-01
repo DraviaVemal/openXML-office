@@ -1,12 +1,9 @@
 name: Coverage Build and Publish to Codecy
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+
 on:
   push:
     branches:
-      - main
+      - stable
       - alpha
 jobs:
   coverage:
