@@ -1,4 +1,4 @@
-name: Alpha Package Build and Publish to NuGet
+name: Alpha Release Pipeline
 
 on:
   push:

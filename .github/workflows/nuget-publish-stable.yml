@@ -1,4 +1,4 @@
-name: Stable Package Build and Publish to NuGet
+name: Stable Release Pipeline
 
 on:
   push:
