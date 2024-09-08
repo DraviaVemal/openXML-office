@@ -78,7 +78,3 @@ jobs:
           fi
           git tag "v${PACKAGE_VERSION}"
           git push --tags
-      - name: Create Pre Release
-        uses: ncipollo/release-action@v1
-        with:
-          prerelease: true
