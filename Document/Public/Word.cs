@@ -43,6 +43,14 @@ namespace OpenXMLOffice.Document_2007
 			isFileEdited = true;
 			document = new Document(this, Stream, IsEditable, wordProperties);
 		}
+		/// <summary>
+		/// Get Page Content Controller component.
+		/// </summary>
+		/// <returns></returns>
+		public Pages GetDocumentPages()
+		{
+			return new Pages(document.wordDocument.MainDocumentPart);
+		}
 
 		/// <summary>
 		/// Even on edit file OpenXML-Office Will clone the source and work on top of it to protect the integrity of source file.

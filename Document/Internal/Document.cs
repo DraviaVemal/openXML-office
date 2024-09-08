@@ -1,3 +1,5 @@
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+
 using System.IO;
 
 namespace OpenXMLOffice.Document_2007
@@ -9,7 +11,7 @@ namespace OpenXMLOffice.Document_2007
         internal Document(Word word, Stream stream, bool isEditable, WordProperties wordProperties) : base(word, stream, isEditable, wordProperties) { }
         private void SaveAs()
         {
-            wordprocessingDocument.Save();
+            wordDocument.Save();
         }
         internal void SaveAs(string filePath)
         {

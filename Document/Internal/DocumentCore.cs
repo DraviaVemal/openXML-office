@@ -1,3 +1,5 @@
+// Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
+
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
@@ -12,7 +14,7 @@ namespace OpenXMLOffice.Document_2007
     internal class DocumentCore
     {
         internal readonly Word word;
-        internal readonly WordprocessingDocument wordprocessingDocument;
+        internal readonly WordprocessingDocument wordDocument;
         internal readonly WordInfo wordInfo = new WordInfo();
         internal readonly WordProperties wordProperties;
         internal MemoryStream documentStream = new MemoryStream();
@@ -20,7 +22,7 @@ namespace OpenXMLOffice.Document_2007
         {
             this.word = word;
             this.wordProperties = wordProperties ?? new WordProperties();
-            wordprocessingDocument = WordprocessingDocument.Create(documentStream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true);
+            wordDocument = WordprocessingDocument.Create(documentStream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true);
             InitializeDocument(this.wordProperties);
         }
         internal DocumentCore(Word word, string filePath, bool isEditable, WordProperties wordProperties = null)
@@ -30,7 +32,7 @@ namespace OpenXMLOffice.Document_2007
             FileStream reader = new FileStream(filePath, FileMode.Open);
             reader.CopyTo(documentStream);
             reader.Close();
-            wordprocessingDocument = WordprocessingDocument.Open(documentStream, isEditable, new OpenSettings()
+            wordDocument = WordprocessingDocument.Open(documentStream, isEditable, new OpenSettings()
             {
                 AutoSave = true
             });
@@ -50,7 +52,7 @@ namespace OpenXMLOffice.Document_2007
             this.wordProperties = wordProperties ?? new WordProperties();
             stream.CopyTo(documentStream);
             stream.Dispose();
-            wordprocessingDocument = WordprocessingDocument.Open(documentStream, isEditable, new OpenSettings()
+            wordDocument = WordprocessingDocument.Open(documentStream, isEditable, new OpenSettings()
             {
                 AutoSave = true
             });
@@ -64,13 +66,98 @@ namespace OpenXMLOffice.Document_2007
                 wordInfo.isEditable = false;
             }
         }
+
+        internal FontTablePart GetFontTablePart()
+        {
+            if (wordDocument.MainDocumentPart.FontTablePart == null)
+            {
+                wordDocument.MainDocumentPart.AddNewPart<FontTablePart>(GetNextSpreadSheetRelationId());
+                wordDocument.MainDocumentPart.FontTablePart.Fonts = new W.Fonts();
+            }
+            return wordDocument.MainDocumentPart.FontTablePart;
+        }
+
+        internal DocumentSettingsPart GetDocumentSettingPart()
+        {
+            if (wordDocument.MainDocumentPart.DocumentSettingsPart == null)
+            {
+                wordDocument.MainDocumentPart.AddNewPart<DocumentSettingsPart>(GetNextSpreadSheetRelationId());
+                wordDocument.MainDocumentPart.DocumentSettingsPart.Settings = new W.Settings();
+            }
+            return wordDocument.MainDocumentPart.DocumentSettingsPart;
+        }
+
+        internal StyleDefinitionsPart GetStylesPart()
+        {
+            if (wordDocument.MainDocumentPart.StyleDefinitionsPart == null)
+            {
+                wordDocument.MainDocumentPart.AddNewPart<StyleDefinitionsPart>(GetNextSpreadSheetRelationId());
+                wordDocument.MainDocumentPart.StyleDefinitionsPart.Styles = new W.Styles();
+            }
+            return wordDocument.MainDocumentPart.StyleDefinitionsPart;
+        }
+
+        internal WebSettingsPart GetWebSettingsPart()
+        {
+            if (wordDocument.MainDocumentPart.WebSettingsPart == null)
+            {
+                wordDocument.MainDocumentPart.AddNewPart<WebSettingsPart>(GetNextSpreadSheetRelationId());
+                wordDocument.MainDocumentPart.WebSettingsPart.WebSettings = new W.WebSettings();
+            }
+            return wordDocument.MainDocumentPart.WebSettingsPart;
+        }
+
+        /// <summary>
+        /// Read file setting data into local file DB 
+        /// </summary>
+        internal void ReadDataFromFile()
+        {
+            LoadFontTable();
+            LoadSettings();
+            LoadStyles();
+            LoadWebSetting();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        internal void LoadFontTable()
+        {
+            GetFontTablePart();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        internal void LoadSettings()
+        {
+            GetDocumentSettingPart();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        internal void LoadStyles()
+        {
+            GetStylesPart();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        internal void LoadWebSetting()
+        {
+            GetWebSettingsPart();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected W.Document GetDocument()
         {
             return GetMainDocumentPart().Document;
         }
+
         internal MainDocumentPart GetMainDocumentPart()
         {
-            return wordprocessingDocument.MainDocumentPart;
+            return wordDocument.MainDocumentPart;
         }
         /// <summary>
         /// Return the next relation id for the Spreadsheet
@@ -89,24 +176,24 @@ namespace OpenXMLOffice.Document_2007
         }
         private void InitializeDocument(WordProperties wordProperties)
         {
-            if (wordprocessingDocument.CoreFilePropertiesPart == null)
+            if (wordDocument.CoreFilePropertiesPart == null)
             {
-                wordprocessingDocument.AddCoreFilePropertiesPart();
-                using (Stream stream = wordprocessingDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                wordDocument.AddCoreFilePropertiesPart();
+                using (Stream stream = wordDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     G.CoreProperties.AddCoreProperties(stream, wordProperties.coreProperties);
                 }
             }
             else
             {
-                using (Stream stream = wordprocessingDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (Stream stream = wordDocument.CoreFilePropertiesPart.GetStream(FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     G.CoreProperties.UpdateModifiedDetails(stream, wordProperties.coreProperties);
                 }
             }
             if (GetMainDocumentPart() == null)
             {
-                wordprocessingDocument.AddMainDocumentPart();
+                wordDocument.AddMainDocumentPart();
             }
             if (GetMainDocumentPart().Document == null)
             {
@@ -122,6 +209,7 @@ namespace OpenXMLOffice.Document_2007
                 G.Theme theme = new G.Theme(wordProperties.theme);
                 GetMainDocumentPart().ThemePart.Theme = theme.GetTheme();
             }
+            ReadDataFromFile();
         }
     }
 }
