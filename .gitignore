@@ -70,3 +70,6 @@ desktop.ini
 
 # Rust list
 target
+
+# Go build result
+openxmloffice.*
