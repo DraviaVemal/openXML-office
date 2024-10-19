@@ -2,13 +2,26 @@
 
 This project aims to provide a streamlined, efficient way to create and manipulate Excel, PowerPoint, and Word documents using the OpenXML format. By leveraging the power of modern programming languages, this library simplifies the process of document creation, enabling developers to focus on functionality rather than the intricacies of the OpenXML standard.
 
+## V2/Stable Version
+
+Please refer [stable branch](https://github.com/DraviaVemal/OpenXML-Office/tree/stable) for V2/Stable Package related details. This is active development Branch
+
+## Stable Status
+| Detail            | Status                                                                                                                                                                                                                                       | Detail                | Status                                                                                                                                                                                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stable Release    | [![GitHub Release](https://img.shields.io/github/v/release/DraviaVemal/OpenXML-Office?sort=semver&label=Stable%20Release)](https://openxml-office.draviavemal.com/)                                                                          | Stable Build Status   | [![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-stable.yml/badge.svg?branch=stable)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-stable.yml) |
+| Alpha Release     | [![NuGet](https://img.shields.io/nuget/vpre/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation)                                                                                                      | Alpha Build Status    | [![Package Build and Publish to NuGet](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-alpha.yml/badge.svg?branch=alpha)](https://github.com/DraviaVemal/OpenXMLOffice/actions/workflows/nuget-publish-alpha.yml)    |
+| Code Quality      | [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)       | PPT Files Generated   | [![Generated](https://draviavemal.com/openxml-office/powerpoint-count.svg)](https://openxml-office.draviavemal.com/)                                                                                                                              |
+| Code Coverage     | [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage) | Excel Files Generated | [![Generated](https://draviavemal.com/openxml-office/excel-count.svg)](https://openxml-office.draviavemal.com/)                                                                                                                                   |
+| Package Downloads | [![Downloads](https://img.shields.io/nuget/dt/OpenXMLOffice.Presentation.svg)](https://www.nuget.org/packages/OpenXMLOffice.Presentation)                                                                                                    | Word Files Generated  | [![Generated](https://draviavemal.com/openxml-office/word-count.svg)](https://openxml-office.draviavemal.com/)                                                                                                                                    |
+
 ## Important Note about V3
 
 After thorough analysis, I have concluded that the full OpenXML format relations and connections are adequately addressed. Therefore, to eliminate duplicate work, V3 is no longer under development. Please follow V4 updates for final results.
 
 # Version 4 Goals and Objectives
 
-| Supported Languages | Document link | Packages   | package link                                             | Description                                          |
+| Supported Languages | Readme link | Packages   | package link                                             | Description                                          |
 | ------------------- | ------------- | ---------- | -------------------------------------------------------- | ---------------------------------------------------- |
 | Rust                | TODO          | Rust       | [Crates](https://crates.io/)                             | Rust crate directly connecting to core lib           |
 | C#                  | TODO          | C#         | [Nuget](https://www.nuget.org/)                          | C# wrapper package wrote around FFI layer of rust    |
@@ -19,7 +32,7 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 
 
 
-## Status
+## V4 Status
 
 : TODO
 
