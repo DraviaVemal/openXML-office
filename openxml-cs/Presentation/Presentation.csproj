@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<ProjectReference Include="..\Global\Global.csproj" />
+		<ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Internal/" />
+		<Folder Include="Public/" />
+		<Folder Include="Models/" />
+	</ItemGroup>
+	<PropertyGroup>
+		<PackageId>OpenXMLOffice.Presentation</PackageId>
+		<RootNamespace>OpenXMLOffice.Presentation_2007</RootNamespace>
+		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
+        <TargetFrameworks>net4.5;netstandard2.0;net7.0</TargetFrameworks>
+        <LangVersion>5.0</LangVersion>
+		<PackageDescription>OpenXML PowerPoint Builder is a comprehensive .NET library designed to
+			simplify the creation of PowerPoint presentations using the OpenXML SDK. This library
+			provides
+			an intuitive and powerful set of helper methods and classes, enabling developers to
+			construct
+			slides, manipulate shapes, insert text, images, charts, and more, with minimal effort.
+			Whether
+			you're generating reports, automating presentation creation, or building dynamic
+			slideshows,
+			OpenXML PowerPoint Builder streamlines the process, making it more efficient and less
+			error-prone. Perfect for applications requiring on-the-fly PowerPoint document
+			generation or
+			manipulation. Get started with ease and enhance your application's document handling
+			capabilities.</PackageDescription>
+		<PackageTags>OpenXML;Power Point;Presentation;Office;ppt;pptx</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+</Project>

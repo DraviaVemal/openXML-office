@@ -67,3 +67,6 @@ desktop.ini
 *.sqlite-wal
 # skip dir
 !**/TestFiles/**
+
+# Rust list
+target
