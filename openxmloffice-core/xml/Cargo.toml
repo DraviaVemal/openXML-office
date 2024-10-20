@@ -1,5 +1,5 @@
 [package]
-name = "openxmloffice-core-xml"
+name = "openxmloffice_core_xml"
 version = "0.1.0"
 edition = "2021"
 

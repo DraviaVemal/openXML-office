@@ -1,6 +1,9 @@
 [package]
-name = "openxmloffice-core-efi"
+name = "openxmloffice_core_efi"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+openxmloffice_core_spreadsheet = { path = "../spreadsheet", version = ">= 0.1.0" }
+openxmloffice_core_document = { path = "../document", version = ">= 0.1.0" }
+openxmloffice_core_presentation = { path = "../presentation", version = ">= 0.1.0" }

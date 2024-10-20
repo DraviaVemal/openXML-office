@@ -6,6 +6,8 @@ pub mod utils;
 
 pub fn create_excel() {}
 
-pub fn open_excel(file_path: String) {}
+pub fn open_excel(file_path: String) {
+    
+}
 
 pub fn save_as(file_name: String) {}

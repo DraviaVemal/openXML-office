@@ -1,6 +1,7 @@
 [package]
-name = "openxmloffice-core-global"
+name = "openxmloffice_core_global"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+openxmloffice_core_xml = { path = "../xml", version = ">= 0.1.0" }

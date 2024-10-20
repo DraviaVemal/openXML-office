@@ -1,6 +1,9 @@
 [package]
-name = "openxmloffice-core-document"
+name = "openxmloffice_core_document"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+openxmloffice_core_xml = { path = "../xml", version = ">= 0.1.0" }
+openxmloffice_core_global = { path = "../global", version = ">= 0.1.0" }
+openxmloffice_core_spreadsheet = { path = "../spreadsheet", version = ">= 0.1.0" }
