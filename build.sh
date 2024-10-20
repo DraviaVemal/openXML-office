@@ -26,3 +26,6 @@ cd openxmloffice-go/presentation && go build && cd ../..
 cd openxmloffice-go/document && go build && cd ../..
 
 # Build TS Wrapper
+cd openxmloffice-ts/document && napi build && cd ../..
+cd openxmloffice-ts/presentation && napi build && cd ../..
+cd openxmloffice-ts/spreadsheet && napi build && cd ../..

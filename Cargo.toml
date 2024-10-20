@@ -8,5 +8,5 @@ members = [
     "openxmloffice-core/document",
     "openxmloffice-core/efi",
     "openxmloffice-rs",
-    "openxmloffice-rs-api",
+    "openxmloffice-rs-api", "openxmloffice-ts/document", "openxmloffice-ts/presentation", "openxmloffice-ts/spreadsheet",
 ]

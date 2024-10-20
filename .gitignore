@@ -73,3 +73,7 @@ target
 
 # Go build result
 openxmloffice.*
+
+# Node addon build result
+index.node
+index.d.ts
