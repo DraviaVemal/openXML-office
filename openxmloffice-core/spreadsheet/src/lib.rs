@@ -4,10 +4,14 @@ pub mod structs;
 pub mod tests;
 pub mod utils;
 
-pub fn create_excel() {}
+use structs::excel::Excel;
 
-pub fn open_excel(file_path: String) {
-    
+pub fn create_excel() -> Excel {
+    return Excel::new(None);
+}
+
+pub fn open_excel(file_path: String) -> Excel {
+    return Excel::new(Some(file_path));
 }
 
 pub fn save_as(file_name: String) {}

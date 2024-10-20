@@ -4,7 +4,7 @@ use tempfile::{tempdir, NamedTempFile};
 use zip::ZipArchive;
 
 impl OpenXmlFile {
-    // Create Current file helper object from exiting source
+    /// Create Current file helper object from exiting source
     pub fn open(file_path: String, is_editable: bool) -> Self {
         // Create a temp directory to work with
         let temp_dir = tempdir().expect("Failed to create temporary directory");
@@ -19,7 +19,7 @@ impl OpenXmlFile {
             temp_file_path,
         }
     }
-    // Create Current file helper object a new file to work with
+    /// Create Current file helper object a new file to work with
     pub fn create() -> Self {
         // Create a temp directory to work with
         let temp_dir = tempdir().expect("Failed to create temporary directory");
@@ -41,18 +41,18 @@ impl OpenXmlFile {
         }
         return vec![];
     }
-    // Read target file from archive
+    /// Read target file from archive
     fn read_zip_archive() {}
-    // This creates initial archive for openXML file
+    /// This creates initial archive for openXML file
     fn create_initial_archive(temp_file_path: &str) {
         let physical_file =
             File::create(temp_file_path).expect("Creating Archive Physical File Failed");
         let mut archive = ZipArchive::new(physical_file).expect("Archive file creation Failed");
     }
-    // Write the content to archive file
+    /// Write the content to archive file
     fn write_zip_archive() {}
-    // Read file content and parse it to XML object
+    /// Read file content and parse it to XML object
     fn read_xml(&self, file_path: String) {}
-    // Use the XML object to write it to file format
+    /// Use the XML object to write it to file format
     fn write_xml(&self, file_path: String) {}
 }
