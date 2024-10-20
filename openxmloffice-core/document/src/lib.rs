@@ -1,3 +1,11 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod enums;
+pub mod implements;
+pub mod structs;
+pub mod tests;
+pub mod utils;
+
+pub fn create_word() {}
+
+pub fn open_word(file_path: String) {}
+
+pub fn save_as(file_name: String) {}

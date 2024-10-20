@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0.90"
+chrono = "0.4.38"
 tempfile = "3.13.0"
 xml = "0.8.20"
 zip = "2.2.0"

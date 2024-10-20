@@ -9,7 +9,7 @@ pub(crate) struct CurrentNode {
 /**
  * This contains the root document to work with
  */
-pub(crate) struct OpenXmlFile {
+pub struct OpenXmlFile {
     pub(crate) file_path: Option<String>,
     pub(crate) temp_file_path: String,
     pub(crate) is_readonly: bool,

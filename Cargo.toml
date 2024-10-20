@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+    "openxmloffice-core/xml",
+    "openxmloffice-core/global",
+    "openxmloffice-core/spreadsheet",
+    "openxmloffice-core/presentation",
+    "openxmloffice-core/document",
+    "openxmloffice-core/efi",
+    "openxmloffice-rs",
+    "openxmloffice-rs-api",
+]
