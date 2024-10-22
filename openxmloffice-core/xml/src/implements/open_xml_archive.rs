@@ -1,38 +1,63 @@
 use crate::{CurrentNode, OpenXmlFile};
-use std::fs::{copy, File};
-use tempfile::{tempdir, NamedTempFile};
-use zip::ZipArchive;
+use std::fs::{copy, metadata, remove_file, File};
+use tempfile::NamedTempFile;
+use zip::{ZipArchive, ZipWriter};
 
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source
-    pub fn open(file_path: String, is_editable: bool) -> Self {
-        // Create a temp directory to work with
-        let temp_dir = tempdir().expect("Failed to create temporary directory");
-        let temp_file = NamedTempFile::new_in(&temp_dir).expect("Failed to create temporary file");
-        let temp_file_path = temp_file.path().to_str().unwrap().to_string();
+    pub fn open(file_path: &str, is_editable: bool) -> Self {
+        // Create a temp file to work with
+        let temp_file = NamedTempFile::new().expect("Failed to create temporary file");
+        let temp_file_path = temp_file
+            .path()
+            .to_str()
+            .expect("str to String conversion fail");
         copy(&file_path, &temp_file_path).expect("Failed to copy file");
         // Create a clone copy of master file to work with code
         Self {
-            file_path: Some(file_path),
+            file_path: Some(file_path.to_string()),
             is_readonly: is_editable,
             archive_files: Self::read_initial_meta_data(&temp_file_path),
-            temp_file_path,
+            temp_file,
         }
     }
     /// Create Current file helper object a new file to work with
     pub fn create() -> Self {
-        // Create a temp directory to work with
-        let temp_dir = tempdir().expect("Failed to create temporary directory");
-        let temp_file = NamedTempFile::new_in(&temp_dir).expect("Failed to create temporary file");
-        let temp_file_path = temp_file.path().to_str().unwrap().to_string();
-        Self::create_initial_archive(&temp_file_path);
+        // Create a temp file to work with
+        let temp_file = NamedTempFile::new().expect("Failed to create temporary file");
+        let temp_file_path = temp_file
+            .path()
+            .to_str()
+            .expect("str to String conversion fail");
+        Self::create_initial_archive(temp_file_path);
+        // Default List of files common for all types
+        Self::add_file("[Content_Types].xml");
+        Self::add_file("_rels/.rels");
+        Self::add_file("docProps/app.xml");
+        Self::add_file("docProps/core.xml");
         Self {
             file_path: None,
             is_readonly: true,
             archive_files: Self::read_initial_meta_data(&temp_file_path),
-            temp_file_path,
+            temp_file,
         }
     }
+    /// Save the current temp directory state file into final result
+    pub fn save(&self, save_file: &str) {
+        if metadata(save_file).is_ok() {
+            remove_file(save_file).expect("Failed to Remove existing file");
+        }
+        copy(
+            &self
+                .temp_file
+                .path()
+                .to_str()
+                .expect("str to String conversion fail"),
+            &save_file,
+        )
+        .expect("Failed to place the result file");
+    }
+
     fn read_initial_meta_data(working_file: &str) -> Vec<CurrentNode> {
         let file_buffer = File::open(working_file).expect("File Buffer for archive read failed");
         let archive = ZipArchive::new(file_buffer).expect("Actual archive file read failed");
@@ -41,18 +66,23 @@ impl OpenXmlFile {
         }
         return vec![];
     }
-    /// Read target file from archive
-    fn read_zip_archive() {}
     /// This creates initial archive for openXML file
     fn create_initial_archive(temp_file_path: &str) {
         let physical_file =
             File::create(temp_file_path).expect("Creating Archive Physical File Failed");
-        let mut archive = ZipArchive::new(physical_file).expect("Archive file creation Failed");
+        let archive = ZipWriter::new(physical_file);
+        archive.finish().expect("Archive File Failed");
     }
+    /// Add file with directory structure into the archive
+    fn add_file(file_path: &str) {
+        
+    }
+    /// Read target file from archive
+    fn read_zip_archive() {}
     /// Write the content to archive file
     fn write_zip_archive() {}
     /// Read file content and parse it to XML object
-    fn read_xml(&self, file_path: String) {}
+    fn read_xml(&self, file_path: &str) {}
     /// Use the XML object to write it to file format
-    fn write_xml(&self, file_path: String) {}
+    fn write_xml(&self, file_path: &str) {}
 }
