@@ -4,7 +4,7 @@ mod structs;
 mod tests;
 mod utils;
 
-pub use crate::structs::common::*;
+pub use structs::open_xml_archive::OpenXmlFile;
 
 /// Create new file to work with
 pub fn create_file() -> OpenXmlFile {
