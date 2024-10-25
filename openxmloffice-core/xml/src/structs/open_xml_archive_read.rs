@@ -1,5 +1,5 @@
-use crate::OpenXmlFile;
+use std::{cell::RefCell, rc::Rc};
 
-pub struct OpenXmlNonEditable<'file_handle> {
-    pub open_xml_file: &'file_handle OpenXmlFile,
+pub struct OpenXmlNonEditable<'buffer> {
+    pub(crate) working_buffer: &'buffer Rc<RefCell<Vec<u8>>>,
 }
