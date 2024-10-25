@@ -1,44 +1,38 @@
-use crate::structs::{common::CurrentNode, open_xml_archive::OpenXmlFile};
-use std::{
-    fs::{copy, metadata, remove_file, File},
-    io::Write,
+use crate::structs::{
+    common::CurrentNode, open_xml_archive::OpenXmlFile, open_xml_archive_write::OpenXmlEditable,
 };
-use tempfile::NamedTempFile;
-use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
+use std::{
+    cell::RefCell,
+    fs::{metadata, remove_file, File},
+    io::{Cursor, Read, Write},
+    rc::Rc,
+};
+use zip::ZipArchive;
 
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source
     pub fn open(file_path: &str, is_editable: bool) -> Self {
-        // Create a temp file to work with
-        let temp_file = NamedTempFile::new().expect("Failed to create temporary file");
-        let temp_file_path = temp_file
-            .path()
-            .to_str()
-            .expect("str to String conversion fail");
-        copy(&file_path, &temp_file_path).expect("Failed to copy file");
+        let mut file = File::open(file_path).expect("Failed to read open file"); // Replace with your ZIP file path
+        let mut buffer = Vec::new();
+        file.read_to_end(&mut buffer);
+        let working_buffer = Rc::new(RefCell::new(buffer));
         // Create a clone copy of master file to work with code
         Self {
             file_path: Some(file_path.to_string()),
             is_readonly: is_editable,
-            archive_files: Self::read_initial_meta_data(&temp_file_path),
-            temp_file,
+            archive_files: Self::read_initial_meta_data(&working_buffer),
+            working_buffer,
         }
     }
     /// Create Current file helper object a new file to work with
     pub fn create() -> Self {
-        // Create a temp file to work with
-        let temp_file = NamedTempFile::new().expect("Failed to create temporary file");
-        let temp_file_path = temp_file
-            .path()
-            .to_str()
-            .expect("str to String conversion fail");
-        Self::create_initial_archive(&temp_file_path);
+        let working_buffer = Rc::new(RefCell::new(Vec::new()));
         // Default List of files common for all types
         Self {
             file_path: None,
             is_readonly: true,
-            archive_files: Self::read_initial_meta_data(&temp_file_path),
-            temp_file,
+            archive_files: Self::read_initial_meta_data(&working_buffer),
+            working_buffer,
         }
     }
     /// Save the current temp directory state file into final result
@@ -46,41 +40,36 @@ impl OpenXmlFile {
         if metadata(save_file).is_ok() {
             remove_file(save_file).expect("Failed to Remove existing file");
         }
-        copy(
-            &self
-                .temp_file
-                .path()
-                .to_str()
-                .expect("str to String conversion fail"),
-            &save_file,
-        )
-        .expect("Failed to place the result file");
+        let mut file = File::create(save_file).expect("Save file target failed");
+        file.write_all(&self.working_buffer.borrow())
+            .expect("File write failed");
     }
 
-    fn read_initial_meta_data(working_file: &str) -> Vec<CurrentNode> {
-        let file_buffer = File::open(working_file).expect("File Buffer for archive read failed");
-        let archive = ZipArchive::new(file_buffer).expect("Actual archive file read failed");
+    fn read_initial_meta_data(working_file: &Rc<RefCell<Vec<u8>>>) -> Vec<CurrentNode> {
+        let non_editable = OpenXmlEditable::new(working_file);
+        // non_editable.read_archive_files();
+        let content_buffer = working_file.borrow().clone();
+        let archive =
+            ZipArchive::new(Cursor::new(content_buffer)).expect("Actual archive file read failed");
         for file_name in archive.file_names() {
             println!("File Name : {}", file_name)
         }
         return vec![];
     }
     /// This creates initial archive for openXML file
-    fn create_initial_archive(temp_file_path: &str) {
-        let physical_file =
-            File::create(temp_file_path).expect("Creating Archive Physical File Failed");
-        let mut archive = ZipWriter::new(physical_file);
-        let zip_option = SimpleFileOptions::default();
-        archive
-            .add_directory("_rels", zip_option)
-            .expect("_rels Directory creation failed");
-        archive
-            .add_directory("docProps", zip_option)
-            .expect("docProps Directory creation failed");
-        archive
-            .start_file("_rels/.rels", zip_option)
-            .expect("File write fail");
-        archive.write_all(b"<xml />").expect("Write content failed");
-        archive.finish().expect("Archive File Failed");
+    fn create_initial_archive(&self) {
+        let editable = OpenXmlEditable::new(&self.working_buffer);
+        editable
+            .add_file("[Content_Types].xml", "<xml />")
+            .expect("Adding File Failed");
+        editable
+            .add_file("_rels/.rels", "<xml />")
+            .expect("Adding File Failed");
+        editable
+            .add_file("docProps/app.xml", "<xml />")
+            .expect("Adding File Failed");
+        editable
+            .add_file("docProps/core.xml", "<xml />")
+            .expect("Adding File Failed");
     }
 }
