@@ -1,3 +1,5 @@
+use tempfile::NamedTempFile;
+
 use crate::enums::common::NodeContentType;
 
 pub(crate) struct CurrentNode {
@@ -11,7 +13,7 @@ pub(crate) struct CurrentNode {
  */
 pub struct OpenXmlFile {
     pub(crate) file_path: Option<String>,
-    pub(crate) temp_file_path: String,
+    pub(crate) temp_file: NamedTempFile,
     pub(crate) is_readonly: bool,
     pub(crate) archive_files: Vec<CurrentNode>,
 }
