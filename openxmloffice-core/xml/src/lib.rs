@@ -1,10 +1,13 @@
 mod enums;
 mod implements;
+mod macros;
 mod structs;
 mod tests;
 mod utils;
 
-pub use structs::open_xml_archive::OpenXmlFile;
+pub use macros::*;
+pub use structs::open_xml_archive::*;
+pub use utils::*;
 
 /// Create new file to work with
 pub fn create_file() -> OpenXmlFile {

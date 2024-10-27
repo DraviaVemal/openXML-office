@@ -1,6 +1,8 @@
 use openxmloffice_core_xml::OpenXmlFile;
 
+use super::workbook::Workbook;
+
 pub struct Excel {
     pub(crate) xml_fs: OpenXmlFile,
-    pub(crate) worksheet_names:Vec<String>
+    pub(crate) workbook: Workbook,
 }

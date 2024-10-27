@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.90"
 chrono = "0.4.38"
+flate2 = "1.0.34"
+rusqlite = { version = "0.32.0", features = ["bundled"] }
 tempfile = "3.13.0"
 xml = "0.8.20"
 zip = "2.2.0"
