@@ -1,9 +1,13 @@
 use crate::structs::open_xml_archive_read::OpenXmlNonEditable;
-use std::{cell::RefCell, rc::Rc};
 
-impl<'buffer> OpenXmlNonEditable<'buffer> {
-    pub fn new(working_buffer: &'buffer Rc<RefCell<Vec<u8>>>) -> Self {
-        return Self { working_buffer };
+impl OpenXmlNonEditable {
+    ///
+    pub fn new() -> Self {
+        return Self {};
+    }
+    /// List all files in archive
+    pub fn get_file_list(&self) -> Vec<String> {
+        return vec![];
     }
     /// Read target file from archive
     pub fn read_zip_archive() {}
