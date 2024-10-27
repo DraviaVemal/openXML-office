@@ -1,9 +1,10 @@
-use crate::structs::{
-    common::CurrentNode, open_xml_archive::OpenXmlFile, open_xml_archive_write::OpenXmlWrite,
+use crate::structs::{common::CurrentNode, open_xml_archive::OpenXmlFile};
+use std::{
+    fs::{copy, metadata, remove_file, File},
+    io::Write,
 };
-use std::fs::{copy, metadata, remove_file, File};
 use tempfile::NamedTempFile;
-use zip::{ZipArchive, ZipWriter};
+use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source
@@ -31,12 +32,8 @@ impl OpenXmlFile {
             .path()
             .to_str()
             .expect("str to String conversion fail");
-        Self::create_initial_archive(temp_file_path);
+        Self::create_initial_archive(&temp_file_path);
         // Default List of files common for all types
-        OpenXmlWrite::add_file("[Content_Types].xml");
-        OpenXmlWrite::add_file("_rels/.rels");
-        OpenXmlWrite::add_file("docProps/app.xml");
-        OpenXmlWrite::add_file("docProps/core.xml");
         Self {
             file_path: None,
             is_readonly: true,
@@ -69,10 +66,21 @@ impl OpenXmlFile {
         return vec![];
     }
     /// This creates initial archive for openXML file
-    pub fn create_initial_archive(temp_file_path: &str) {
+    fn create_initial_archive(temp_file_path: &str) {
         let physical_file =
             File::create(temp_file_path).expect("Creating Archive Physical File Failed");
-        let archive = ZipWriter::new(physical_file);
+        let mut archive = ZipWriter::new(physical_file);
+        let zip_option = SimpleFileOptions::default();
+        archive
+            .add_directory("_rels", zip_option)
+            .expect("_rels Directory creation failed");
+        archive
+            .add_directory("docProps", zip_option)
+            .expect("docProps Directory creation failed");
+        archive
+            .start_file("_rels/.rels", zip_option)
+            .expect("File write fail");
+        archive.write_all(b"<xml />").expect("Write content failed");
         archive.finish().expect("Archive File Failed");
     }
 }
