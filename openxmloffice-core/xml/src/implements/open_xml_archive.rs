@@ -1,4 +1,6 @@
-use crate::{CurrentNode, OpenXmlFile};
+use crate::structs::{
+    common::CurrentNode, open_xml_archive::OpenXmlFile, open_xml_archive_write::OpenXmlWrite,
+};
 use std::fs::{copy, metadata, remove_file, File};
 use tempfile::NamedTempFile;
 use zip::{ZipArchive, ZipWriter};
@@ -31,10 +33,10 @@ impl OpenXmlFile {
             .expect("str to String conversion fail");
         Self::create_initial_archive(temp_file_path);
         // Default List of files common for all types
-        Self::add_file("[Content_Types].xml");
-        Self::add_file("_rels/.rels");
-        Self::add_file("docProps/app.xml");
-        Self::add_file("docProps/core.xml");
+        OpenXmlWrite::add_file("[Content_Types].xml");
+        OpenXmlWrite::add_file("_rels/.rels");
+        OpenXmlWrite::add_file("docProps/app.xml");
+        OpenXmlWrite::add_file("docProps/core.xml");
         Self {
             file_path: None,
             is_readonly: true,
@@ -67,22 +69,10 @@ impl OpenXmlFile {
         return vec![];
     }
     /// This creates initial archive for openXML file
-    fn create_initial_archive(temp_file_path: &str) {
+    pub fn create_initial_archive(temp_file_path: &str) {
         let physical_file =
             File::create(temp_file_path).expect("Creating Archive Physical File Failed");
         let archive = ZipWriter::new(physical_file);
         archive.finish().expect("Archive File Failed");
     }
-    /// Add file with directory structure into the archive
-    fn add_file(file_path: &str) {
-        
-    }
-    /// Read target file from archive
-    fn read_zip_archive() {}
-    /// Write the content to archive file
-    fn write_zip_archive() {}
-    /// Read file content and parse it to XML object
-    fn read_xml(&self, file_path: &str) {}
-    /// Use the XML object to write it to file format
-    fn write_xml(&self, file_path: &str) {}
 }
