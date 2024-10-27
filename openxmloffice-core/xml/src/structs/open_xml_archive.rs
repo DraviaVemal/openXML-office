@@ -1,12 +1,9 @@
-use super::common::CurrentNode;
-use std::{cell::RefCell, rc::Rc};
+use rusqlite::Connection;
 
 /**
  * This contains the root document to work with
  */
 pub struct OpenXmlFile {
-    pub(crate) file_path: Option<String>,
-    pub(crate) is_readonly: bool,
-    pub(crate) archive_files: Vec<CurrentNode>,
-    pub(crate) working_buffer: Rc<RefCell<Vec<u8>>>,
+    pub(crate) is_editable: bool,
+    pub(crate) archive_db: Connection,
 }

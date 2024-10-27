@@ -1,75 +1,72 @@
-use crate::structs::{
-    common::CurrentNode, open_xml_archive::OpenXmlFile, open_xml_archive_write::OpenXmlEditable,
+use crate::{
+    get_all_queries, structs::open_xml_archive::OpenXmlFile, utils::file_handling::compress_content,
 };
+use rusqlite::Connection;
 use std::{
-    cell::RefCell,
     fs::{metadata, remove_file, File},
-    io::{Cursor, Read, Write},
-    rc::Rc,
+    io::Read,
 };
 use zip::ZipArchive;
 
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source
     pub fn open(file_path: &str, is_editable: bool) -> Self {
-        let mut file = File::open(file_path).expect("Failed to read open file"); // Replace with your ZIP file path
-        let mut buffer = Vec::new();
-        file.read_to_end(&mut buffer);
-        let working_buffer = Rc::new(RefCell::new(buffer));
+        let archive_db = Connection::open_in_memory().expect("Local Lite DB Failed");
+        Self::initialize_database(&archive_db);
+        Self::load_archive_into_database(&archive_db, file_path);
         // Create a clone copy of master file to work with code
         Self {
-            file_path: Some(file_path.to_string()),
-            is_readonly: is_editable,
-            archive_files: Self::read_initial_meta_data(&working_buffer),
-            working_buffer,
+            is_editable,
+            archive_db,
         }
     }
+
     /// Create Current file helper object a new file to work with
     pub fn create() -> Self {
-        let working_buffer = Rc::new(RefCell::new(Vec::new()));
+        let archive_db = Connection::open_in_memory().expect("Local Lite DB Failed");
         // Default List of files common for all types
+        Self::initialize_database(&archive_db);
         Self {
-            file_path: None,
-            is_readonly: true,
-            archive_files: Self::read_initial_meta_data(&working_buffer),
-            working_buffer,
+            is_editable: true,
+            archive_db,
         }
     }
+
+    pub fn get_database_connection(&self) -> &Connection {
+        return &self.archive_db;
+    }
+
+    /// Initialize Local archive Database
+    fn initialize_database(archive_db: &Connection) {
+        let queries = get_all_queries!("open_xml_archive.sql");
+        for query in queries {
+            archive_db
+                .execute(&query, ())
+                .expect("Base Database Struct Setup Failed");
+        }
+    }
+
+    fn load_archive_into_database(archive_db: &Connection, file_path: &str) {
+        let file = File::open(file_path).expect("Read edit file failed.");
+        let mut zip_read = ZipArchive::new(file).expect("Archive read Failed");
+        let file_count = zip_read.len();
+        for i in 0..file_count {
+            let mut file_content = zip_read.by_index(i).expect("Zip file extract failed");
+            let mut uncompressed_data = Vec::new();
+            file_content
+                .read_to_end(&mut uncompressed_data)
+                .expect("File Uncompressed failed");
+            let gzip = compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
+            archive_db
+                .execute("INSERT INTO archive (filename, compression_level, compression_type, content) VALUES (?1, ?2, ?3, ?4)", (file_content.name(),1,1,gzip))
+                .expect("Archive content load failed.");
+        }
+    }
+
     /// Save the current temp directory state file into final result
     pub fn save(&self, save_file: &str) {
         if metadata(save_file).is_ok() {
             remove_file(save_file).expect("Failed to Remove existing file");
         }
-        let mut file = File::create(save_file).expect("Save file target failed");
-        file.write_all(&self.working_buffer.borrow())
-            .expect("File write failed");
-    }
-
-    fn read_initial_meta_data(working_file: &Rc<RefCell<Vec<u8>>>) -> Vec<CurrentNode> {
-        let non_editable = OpenXmlEditable::new(working_file);
-        // non_editable.read_archive_files();
-        let content_buffer = working_file.borrow().clone();
-        let archive =
-            ZipArchive::new(Cursor::new(content_buffer)).expect("Actual archive file read failed");
-        for file_name in archive.file_names() {
-            println!("File Name : {}", file_name)
-        }
-        return vec![];
-    }
-    /// This creates initial archive for openXML file
-    fn create_initial_archive(&self) {
-        let editable = OpenXmlEditable::new(&self.working_buffer);
-        editable
-            .add_file("[Content_Types].xml", "<xml />")
-            .expect("Adding File Failed");
-        editable
-            .add_file("_rels/.rels", "<xml />")
-            .expect("Adding File Failed");
-        editable
-            .add_file("docProps/app.xml", "<xml />")
-            .expect("Adding File Failed");
-        editable
-            .add_file("docProps/core.xml", "<xml />")
-            .expect("Adding File Failed");
     }
 }
