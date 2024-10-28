@@ -1,4 +1,4 @@
--- query : #create_archive_table# Create initial blob archive table
+-- query : create_archive_table# Create initial blob archive table
 CREATE TABLE
     archive (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file

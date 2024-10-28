@@ -2,13 +2,11 @@
 macro_rules! get_specific_queries {
     ($file:expr, $query_name:expr) => {{
         use std::collections::HashMap;
-
         // Helper function to load queries
         fn load_queries(sql_content: &str) -> HashMap<String, String> {
             let mut queries = HashMap::new();
             let mut current_name = String::new();
             let mut current_query = String::new();
-
             for line in sql_content.lines() {
                 if let Some(query_line) = line.strip_prefix("-- query : ") {
                     if let Some((name, _)) = query_line.split_once('#') {
@@ -24,17 +22,13 @@ macro_rules! get_specific_queries {
                     current_query.push('\n');
                 }
             }
-
             if !current_name.is_empty() {
                 queries.insert(current_name, current_query.trim().to_string());
             }
-
             queries
         }
-
-        let sql_content = include_str!($file);
+        let sql_content = include_str!($file); 
         let queries = load_queries(sql_content);
-
         queries
             .get($query_name)
             .cloned()

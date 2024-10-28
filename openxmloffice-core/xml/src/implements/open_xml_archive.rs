@@ -1,7 +1,5 @@
-use crate::{
-    get_all_queries, structs::open_xml_archive::OpenXmlFile, utils::file_handling::compress_content,
-};
-use rusqlite::Connection;
+use crate::{file_handling::compress_content, get_all_queries, OpenXmlFile};
+use rusqlite::{Connection, Error, ToSql};
 use std::{
     fs::{metadata, remove_file, File},
     io::Read,
@@ -32,7 +30,34 @@ impl OpenXmlFile {
         }
     }
 
-    pub fn get_database_connection(&self) -> &Connection {
+    pub fn get_query_result(
+        &self,
+        query: &str,
+        params: &[&(dyn ToSql)],
+    ) -> Result<Option<Vec<u8>>, Error> {
+        match self
+            .get_database_connection()
+            .query_row(&query, params, |row| row.get(0))
+        {
+            Ok(content) => Ok(Some(content)),
+            Err(Error::QueryReturnedNoRows) => Ok(None), // Handle the "no rows" case.
+            Err(e) => Err(e),
+        }
+    }
+
+    pub fn execute_query(&self, query: &str, params: &[&(dyn ToSql)]) -> Result<usize, Error> {
+        return self.get_database_connection().execute(&query, params);
+    }
+
+    /// Save the current temp directory state file into final result
+    pub fn save(&self, save_file: &str) {
+        if metadata(save_file).is_ok() {
+            remove_file(save_file).expect("Failed to Remove existing file");
+        }
+    }
+
+    /// Get Database connection
+    fn get_database_connection(&self) -> &Connection {
         return &self.archive_db;
     }
 
@@ -60,13 +85,6 @@ impl OpenXmlFile {
             archive_db
                 .execute("INSERT INTO archive (filename, compression_level, compression_type, content) VALUES (?1, ?2, ?3, ?4)", (file_content.name(),1,1,gzip))
                 .expect("Archive content load failed.");
-        }
-    }
-
-    /// Save the current temp directory state file into final result
-    pub fn save(&self, save_file: &str) {
-        if metadata(save_file).is_ok() {
-            remove_file(save_file).expect("Failed to Remove existing file");
         }
     }
 }
