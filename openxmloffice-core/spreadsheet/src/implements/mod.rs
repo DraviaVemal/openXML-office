@@ -1,3 +1,7 @@
 pub mod excel;
+pub mod parts;
+pub mod services;
 pub mod workbook;
-pub mod worksheet;
+
+pub use parts::*;
+pub use services::*;

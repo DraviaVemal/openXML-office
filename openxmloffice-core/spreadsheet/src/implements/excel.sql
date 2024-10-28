@@ -1,18 +1,18 @@
--- query : #create_share_string_table# Create initial blob archive table
+-- query : create_share_string_table# Create initial blob archive table
 CREATE TABLE
     share_string (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
         string TEXT NOT NULL -- Common String
     );
 
--- query : #create_number_format_table# Create initial blob archive table
+-- query : create_number_format_table# Create initial blob archive table
 CREATE TABLE
     number_formats (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
         format_code TEXT NOT NULL -- Number Format code
     );
 
--- query : #create_font_style_table# Create initial blob archive table
+-- query : create_font_style_table# Create initial blob archive table
 CREATE TABLE
     font_style (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
@@ -27,7 +27,7 @@ CREATE TABLE
         is_double_underline INTEGER -- Is Double Underline BOOL
     );
 
--- query : #create_fill_style_table# Create initial blob archive table
+-- query : create_fill_style_table# Create initial blob archive table
 CREATE TABLE
     fill_style (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
@@ -36,7 +36,7 @@ CREATE TABLE
         pattern_type TEXT -- Pattern Type JSON
     );
 
--- query : #create_border_style_table# Create initial blob archive table
+-- query : create_border_style_table# Create initial blob archive table
 CREATE TABLE
     border_style (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
@@ -46,7 +46,7 @@ CREATE TABLE
         bottom_border TEXT -- Bottom border setting JSON
     );
 
--- query : #create_cell_style_table# Create initial blob archive table
+-- query : create_cell_style_table# Create initial blob archive table
 CREATE TABLE
     cell_xfs (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file

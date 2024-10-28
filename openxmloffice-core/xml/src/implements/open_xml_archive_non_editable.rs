@@ -1,4 +1,4 @@
-use crate::structs::open_xml_archive_read::OpenXmlNonEditable;
+use crate::OpenXmlNonEditable;
 
 impl OpenXmlNonEditable {
     ///
