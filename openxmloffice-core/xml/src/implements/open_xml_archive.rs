@@ -1,5 +1,6 @@
-use crate::{file_handling::compress_content, get_all_queries, OpenXmlFile};
-use rusqlite::{Connection, Error, ToSql};
+use crate::{file_handling::compress_content, get_all_queries, get_specific_queries, OpenXmlFile};
+use anyhow::Result;
+use rusqlite::{params, Connection, Error, ToSql};
 use std::{
     fs::{metadata, remove_file, File},
     io::Read,
@@ -49,6 +50,16 @@ impl OpenXmlFile {
         return self.get_database_connection().execute(&query, params);
     }
 
+    pub fn add_update_file_content(&self, data: Vec<u8>, file_name: &str) -> Result<usize, Error> {
+        let query = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
+            .expect("Specific query pull fail");
+        let gzip = compress_content(&data).expect("Recompressing in GZip Failed");
+        return self.archive_db.execute(
+            &query,
+            params![file_name, gzip.len(), data.len(), 1, "gzip", gzip],
+        );
+    }
+
     /// Save the current temp directory state file into final result
     pub fn save(&self, save_file: &str) {
         if metadata(save_file).is_ok() {
@@ -82,8 +93,20 @@ impl OpenXmlFile {
                 .read_to_end(&mut uncompressed_data)
                 .expect("File Uncompressed failed");
             let gzip = compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
+            let query = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
+                .expect("Specific query pull fail");
             archive_db
-                .execute("INSERT INTO archive (filename, compression_level, compression_type, content) VALUES (?1, ?2, ?3, ?4)", (file_content.name(),1,1,gzip))
+                .execute(
+                    &query,
+                    params![
+                        file_content.name(),
+                        gzip.len(),
+                        uncompressed_data.len(),
+                        1,
+                        "gzip",
+                        gzip
+                    ],
+                )
                 .expect("Archive content load failed.");
         }
     }

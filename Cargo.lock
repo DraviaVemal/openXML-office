@@ -1108,7 +1108,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "openxmloffice_core_efi"
+name = "openxmloffice_core_ffi"
 version = "0.1.0"
 dependencies = [
  "openxmloffice_core_document",
@@ -1121,6 +1121,7 @@ name = "openxmloffice_core_global"
 version = "0.1.0"
 dependencies = [
  "openxmloffice_core_xml",
+ "quick-xml",
 ]
 
 [[package]]
@@ -1149,9 +1150,9 @@ dependencies = [
  "anyhow",
  "chrono",
  "flate2",
+ "quick-xml",
  "rusqlite",
  "tempfile",
- "xml",
  "zip",
 ]
 
@@ -1258,6 +1259,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c3a7fc5db1e57d5a779a352c8cdb57b29aa4c40cc69c3a68a7fedc815fbf2f9"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "quick-xml"
+version = "0.37.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffbfb3ddf5364c9cfcd65549a1e7b801d0e8d1b14c1a1590a6408aa93cfbfa84"
+dependencies = [
+ "memchr",
 ]
 
 [[package]]
@@ -1866,21 +1876,6 @@ name = "windows_x86_64_msvc"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
-
-[[package]]
-name = "xml"
-version = "0.8.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ede1c99c55b4b3ad0349018ef0eccbe954ce9c342334410707ee87177fcf2ab4"
-dependencies = [
- "xml-rs",
-]
-
-[[package]]
-name = "xml-rs"
-version = "0.8.22"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af4e2e2f7cba5a093896c1e150fbfe177d1883e7448200efb81d40b9d339ef26"
 
 [[package]]
 name = "zerocopy"
