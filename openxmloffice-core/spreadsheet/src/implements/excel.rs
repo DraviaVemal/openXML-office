@@ -1,5 +1,9 @@
-use crate::structs::{excel::Excel, worksheet::Worksheet, Workbook};
+use crate::{
+    structs::{Workbook, Worksheet},
+    Excel,
+};
 use anyhow::{Ok, Result};
+use openxmloffice_core_global::*;
 use openxmloffice_core_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 
@@ -9,11 +13,14 @@ impl Excel {
             let xml_fs = OpenXmlFile::open(&file_name, true);
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
             Self::load_common_reference(&xml_fs);
+            CoreProperties::update_core_properties(&xml_fs);
             let workbook = Workbook::new(&xml_fs);
             return Self { xml_fs, workbook };
         } else {
             let xml_fs = OpenXmlFile::create();
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
+            Self::initialize_common_reference(&xml_fs);
+            CoreProperties::initialize_core_properties(&xml_fs);
             let workbook = Workbook::new(&xml_fs);
             return Self { xml_fs, workbook };
         }
@@ -36,7 +43,10 @@ impl Excel {
         Ok(())
     }
     /// For new file initialize the default reference
-    fn initialize_common_reference(xml_fs: &OpenXmlFile) {}
+    fn initialize_common_reference(xml_fs: &OpenXmlFile) {
+        // Share String Start
+        // Style Start
+    }
     /// Load existing data from excel to database
     fn load_common_reference(xml_fs: &OpenXmlFile) {
         // xml_fs.get_database_connection().execute(sql, params)

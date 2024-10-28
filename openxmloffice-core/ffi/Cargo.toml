@@ -1,5 +1,5 @@
 [package]
-name = "openxmloffice_core_efi"
+name = "openxmloffice_core_ffi"
 version = "0.1.0"
 edition = "2021"
 
