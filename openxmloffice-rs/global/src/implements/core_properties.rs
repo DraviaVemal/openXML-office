@@ -1,5 +1,5 @@
 use crate::CoreProperties;
-use openxmloffice_core_xml::OpenXmlFile;
+use openxmloffice_xml::OpenXmlFile;
 use quick_xml::Reader;
 
 impl CoreProperties {

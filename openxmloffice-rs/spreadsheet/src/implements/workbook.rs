@@ -1,5 +1,5 @@
 use crate::structs::workbook::Workbook;
-use openxmloffice_core_xml::{get_specific_queries, OpenXmlFile};
+use openxmloffice_xml::{get_specific_queries, OpenXmlFile};
 use rusqlite::params;
 
 impl Workbook {
