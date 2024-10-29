@@ -36,10 +36,7 @@ impl OpenXmlFile {
         query: &str,
         params: &[&(dyn ToSql)],
     ) -> Result<Option<Vec<u8>>, Error> {
-        match self
-            .get_database_connection()
-            .query_row(&query, params, |row| row.get(0))
-        {
+        match self.archive_db.query_row(&query, params, |row| row.get(0)) {
             Ok(content) => Ok(Some(content)),
             Err(Error::QueryReturnedNoRows) => Ok(None), // Handle the "no rows" case.
             Err(e) => Err(e),
@@ -47,7 +44,7 @@ impl OpenXmlFile {
     }
 
     pub fn execute_query(&self, query: &str, params: &[&(dyn ToSql)]) -> Result<usize, Error> {
-        return self.get_database_connection().execute(&query, params);
+        return self.archive_db.execute(&query, params);
     }
 
     pub fn add_update_file_content(&self, data: Vec<u8>, file_name: &str) -> Result<usize, Error> {
@@ -65,11 +62,6 @@ impl OpenXmlFile {
         if metadata(save_file).is_ok() {
             remove_file(save_file).expect("Failed to Remove existing file");
         }
-    }
-
-    /// Get Database connection
-    fn get_database_connection(&self) -> &Connection {
-        return &self.archive_db;
     }
 
     /// Initialize Local archive Database
