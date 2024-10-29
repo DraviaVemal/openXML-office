@@ -3,8 +3,8 @@ use crate::{
     Excel,
 };
 use anyhow::{Ok, Result};
-use openxmloffice_core_global::*;
-use openxmloffice_core_xml::{get_all_queries, OpenXmlFile};
+use openxmloffice_global::*;
+use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 
 impl Excel {
