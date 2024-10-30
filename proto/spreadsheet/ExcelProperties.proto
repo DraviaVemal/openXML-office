@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package excel_properties;
-option go_package = "/home/draviavemal/repo/OpenXML-Office/go/spreadsheet";
+option go_package = "../../go/spreadsheet";
 
 message ExcelProperties {
   ExcelSettings settings = 1;
