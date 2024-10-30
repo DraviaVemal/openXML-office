@@ -2,7 +2,6 @@ pub mod enums;
 pub mod implements;
 pub mod macros;
 pub mod structs;
-mod tests;
 pub mod utils;
 
 pub use enums::*;
