@@ -1,4 +1,10 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+use openxmloffice_spreadsheet::Excel;
 
+#[no_mangle]
+pub extern "C" fn create_excel(file_name: Option<String>) -> *mut Excel {
+    if let Some(file_name) = file_name {
+        return Excel::new(Some(file_name));
+    } else {
+        return Excel::new(None);
+    }
+}
