@@ -1,12 +1,13 @@
-mod enums;
-mod implements;
-mod macros;
-mod structs;
+pub mod enums;
+pub mod implements;
+pub mod macros;
+pub mod structs;
 mod tests;
-mod utils;
+pub mod utils;
 
+pub use enums::*;
 pub use macros::*;
-pub use structs::open_xml_archive::*;
+pub use structs::*;
 pub use utils::*;
 
 /// Create new file to work with

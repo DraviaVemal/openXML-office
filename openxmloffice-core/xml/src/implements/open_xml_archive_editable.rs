@@ -1,6 +1,6 @@
 use anyhow::{Ok, Result};
 
-use crate::structs::open_xml_archive_write::OpenXmlEditable;
+use crate::OpenXmlEditable;
 
 impl OpenXmlEditable {
     /// Create a Editor object for the current file

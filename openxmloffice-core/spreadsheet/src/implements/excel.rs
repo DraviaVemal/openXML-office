@@ -1,6 +1,7 @@
-use crate::structs::{excel::Excel, workbook::Workbook, worksheet::Worksheet};
+use crate::structs::{excel::Excel, worksheet::Worksheet, Workbook};
 use anyhow::{Ok, Result};
 use openxmloffice_core_xml::{get_all_queries, OpenXmlFile};
+use rusqlite::params;
 
 impl Excel {
     pub fn new(file_name: Option<String>) -> Self {
@@ -29,8 +30,7 @@ impl Excel {
         let scheme = get_all_queries!("excel.sql");
         for query in scheme {
             xml_fs
-                .get_database_connection()
-                .execute(&query, ())
+                .execute_query(&query, params![])
                 .expect("Share string table failed");
         }
         Ok(())
