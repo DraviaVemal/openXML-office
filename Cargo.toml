@@ -1,11 +1,14 @@
 [workspace]
 resolver = "2"
 members = [
-    "openxmloffice-rs/xml",
-    "openxmloffice-rs/global",
-    "openxmloffice-rs/spreadsheet",
-    "openxmloffice-rs/presentation",
-    "openxmloffice-rs/document",
-    "openxmloffice-rs/ffi",
-    "openxmloffice-rs-api", "openxmloffice-ts/document", "openxmloffice-ts/presentation", "openxmloffice-ts/spreadsheet",
+    "rs/xml",
+    "rs/global",
+    "rs/spreadsheet",
+    "rs/presentation",
+    "rs/document",
+    "rs/ffi",
+    "rs-api",
+    "ts/document",
+    "ts/presentation",
+    "ts/spreadsheet",
 ]
