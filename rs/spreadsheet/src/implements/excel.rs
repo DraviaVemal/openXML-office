@@ -1,6 +1,6 @@
 use crate::{
     structs::{Workbook, Worksheet},
-    Excel,
+    Excel, ExcelProperties,
 };
 use anyhow::{Ok, Result};
 use openxmloffice_global::*;
@@ -8,7 +8,7 @@ use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 
 impl Excel {
-    pub fn new(file_name: Option<String>) -> Self {
+    pub fn new(file_name: Option<String>, excel_setting: Option<ExcelProperties>) -> Self {
         if let Some(file_name) = file_name {
             let xml_fs = OpenXmlFile::open(&file_name, true);
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
