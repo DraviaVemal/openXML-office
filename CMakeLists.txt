@@ -14,10 +14,11 @@ set(SPREADSHEET_PATH "spreadsheet")
 set(PRESENTATION_PATH "presentation")
 set(DOCUMENT_PATH "document")
 
-
-
 # Step 1: Prepare the proto buf structs
 message("Proto Buffer build Start")
+
+set(PROTOC_COMMANDS)
+set(PROTOC_OUTPUTS)
 
 # Glob recursively for all .proto files in the specified PROTO_PATH
 file(GLOB_RECURSE PROTO_FILES "${PROTO_PATH}/*.proto")
@@ -61,7 +62,7 @@ foreach(PROTO_FILE ${PROTO_FILES})
     set(UPDATED_STRING "${FIRST_LETTER_UPPER}${REST_STRING}")
 
     # Set the output directory for C# files
-    set(OUTPUT_C_SHARP_DIR "${C_SHARP_PATH}/${UPDATED_STRING}/Schema/${REST_PATH}")
+    set(OUTPUT_C_SHARP_DIR "${C_SHARP_PATH}/${UPDATED_STRING}/schema/${REST_PATH}")
 
     # Set the output directory for Go files
     set(OUTPUT_GO_DIR "${GO_PATH}/${FIRST_DIR}")
@@ -78,29 +79,39 @@ foreach(PROTO_FILE ${PROTO_FILES})
     file(MAKE_DIRECTORY "${OUTPUT_GO_DIR}")
     file(MAKE_DIRECTORY "${OUTPUT_JAVA_DIR}")
 
-    # Add a custom command to generate the code using protoc
-    add_custom_command(
-        OUTPUT ${OUTPUT_FILE}
-        COMMAND protoc --proto_path=proto/${DIRECTORY_NAME} --rs_out=${OUTPUT_RUST_DIR} --csharp_out=${OUTPUT_C_SHARP_DIR} --go_out=${OUTPUT_GO_DIR} --java_out=${OUTPUT_JAVA_DIR} ${FILE_NAME}
-        DEPENDS "proto/${RELATIVE_PROTO_FILE}"
-        COMMENT "Generating code for ${FILE_NAME}"
-        COMMAND_ERROR_IS_FATAL ANY
-    )
-
-    # Create a custom target that depends on the generated file
-    add_custom_target(generate_${FILE_NAME} DEPENDS ${OUTPUT_FILE})
+    # Append protoc command
+    list(APPEND PROTOC_COMMANDS "protoc --proto_path=. --rs_out=${OUTPUT_RUST_DIR} --csharp_out=${OUTPUT_C_SHARP_DIR} --go_out=${OUTPUT_GO_DIR} --java_out=${OUTPUT_JAVA_DIR} proto/${DIRECTORY_NAME}/*.proto")
+    list(APPEND PROTOC_OUTPUTS "proto/${DIRECTORY_NAME}/*.proto")
 endforeach()
 
+set(UNIQUE_COMMANDS)
+set(UNIQUE_OUTPUTS)
+
+set(CURRENT_INDEX 0)
+foreach(CMD ${PROTOC_COMMANDS})
+    list(FIND UNIQUE_COMMANDS "${CMD}" INDEX)
+    if(INDEX EQUAL -1)
+        list(GET PROTOC_OUTPUTS ${CURRENT_INDEX} OUTPUT)
+        list(APPEND UNIQUE_COMMANDS "${CMD}")
+        list(APPEND UNIQUE_OUTPUTS "${OUTPUT}")
+    endif()
+    math(EXPR CURRENT_INDEX "${CURRENT_INDEX} + 1")
+endforeach()
+
+set(CURRENT_INDEX 0)
+foreach(CMD ${UNIQUE_COMMANDS})
+    list(GET UNIQUE_OUTPUTS ${CURRENT_INDEX} OUTPUT)
+    add_custom_command(
+        OUTPUT "pwd && ${OUTPUT}"
+        COMMAND ${CMD}
+        COMMENT "Executing: ${CMD}"
+        VERBATIM
+    )
+    # Add a custom target that depends on this command
+    add_custom_target("generate_protobuf_${CURRENT_INDEX}" ALL DEPENDS "${OUTPUT}")
+    math(EXPR CURRENT_INDEX "${CURRENT_INDEX} + 1")
+endforeach()
 
 message("Proto Buffer build Complete")
 
-
-message("Rust build Start")
-message("Rust build Complete")
-message("CSharp build Start")
-message("CSharp build Complete")
-message("Gol lang build Start")
-message("Gol lang build Complete")
-message("Java build Start")
-message("Java build Complete")
 
