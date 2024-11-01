@@ -11,7 +11,7 @@ message PowerPointSettings {
 }
 
 message PowerPointProperties {
-    PowerPointSettings settings = 1;
-    OpenXMLOffice.Global_2007.ThemePallet theme = 2;
-    OpenXMLOffice.Global_2007.CorePropertiesModel core_properties = 3;
+  PowerPointSettings settings = 1;
+  OpenXMLOffice.Global_2007.ThemePallet theme = 2;
+  OpenXMLOffice.Global_2007.CorePropertiesModel core_properties = 3;
 }
