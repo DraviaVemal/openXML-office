@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package OpenXMLOffice.Spreadsheet_2007;
+
+import "proto/global/2007/ThemeModel.proto";
+import "proto/global/2007/CorePropertiesModel.proto";
+
+message ExcelSettings {
+  // Add fields here if needed
+}
+
+message ExcelProperties {
+  ExcelSettings settings = 1;
+  OpenXMLOffice.Global_2007.ThemePallet theme = 2;
+  OpenXMLOffice.Global_2007.CorePropertiesModel core_properties = 3;
+}
