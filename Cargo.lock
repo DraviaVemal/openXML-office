@@ -1099,6 +1099,7 @@ name = "openxmloffice_document"
 version = "0.1.0"
 dependencies = [
  "openxmloffice_global",
+ "openxmloffice_proto",
  "openxmloffice_spreadsheet",
  "openxmloffice_xml",
 ]
@@ -1125,8 +1126,18 @@ name = "openxmloffice_presentation"
 version = "0.1.0"
 dependencies = [
  "openxmloffice_global",
+ "openxmloffice_proto",
  "openxmloffice_spreadsheet",
  "openxmloffice_xml",
+]
+
+[[package]]
+name = "openxmloffice_proto"
+version = "0.1.0"
+dependencies = [
+ "openxmloffice_xml",
+ "protobuf",
+ "quick-xml",
 ]
 
 [[package]]
@@ -1144,6 +1155,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "openxmloffice_global",
+ "openxmloffice_proto",
  "openxmloffice_xml",
  "protobuf",
  "rusqlite",

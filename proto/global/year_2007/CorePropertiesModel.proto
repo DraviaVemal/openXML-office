@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package OpenXMLOffice.Global_2007;
-option go_package = "src/schema/2007";
+option go_package = "global/year_2007";
 
 message CorePropertiesModel {
     string title = 1;
