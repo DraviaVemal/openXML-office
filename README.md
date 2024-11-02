@@ -36,20 +36,21 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | --------- | ------------ | -------- |
 | proto buf | common       | 🟩⬜⬜⬜⬜    |
 | rs        | xml          | 🟩⬜⬜⬜⬜    |
+| rs        | proto        | ⬜⬜⬜⬜⬜    |
 | rs        | global       | ⬜⬜⬜⬜⬜    |
 | rs        | spreadsheet  | 🟩⬜⬜⬜⬜    |
 | rs        | presentation | ⬜⬜⬜⬜⬜    |
 | rs        | document     | ⬜⬜⬜⬜⬜    |
 | rs        | FFI          | ⬜⬜⬜⬜⬜    |
-| cs        | global       | ⬜⬜⬜⬜⬜    |
+| cs        | proto        | ⬜⬜⬜⬜⬜    |
 | cs        | spreadsheet  | ⬜⬜⬜⬜⬜    |
 | cs        | presentation | ⬜⬜⬜⬜⬜    |
 | cs        | document     | ⬜⬜⬜⬜⬜    |
-| java      | global       | ⬜⬜⬜⬜⬜    |
+| java      | proto        | ⬜⬜⬜⬜⬜    |
 | java      | spreadsheet  | ⬜⬜⬜⬜⬜    |
 | java      | presentation | ⬜⬜⬜⬜⬜    |
 | java      | document     | ⬜⬜⬜⬜⬜    |
-| go        | global       | ⬜⬜⬜⬜⬜    |
+| go        | proto        | ⬜⬜⬜⬜⬜    |
 | go        | spreadsheet  | ⬜⬜⬜⬜⬜    |
 | go        | presentation | ⬜⬜⬜⬜⬜    |
 | go        | document     | ⬜⬜⬜⬜⬜    |

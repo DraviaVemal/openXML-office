@@ -1,9 +1,9 @@
 use crate::{
     structs::{Workbook, Worksheet},
-    Excel, ExcelProperties,
+    Excel,
 };
 use anyhow::{Ok, Result};
-use openxmloffice_global::*;
+use openxmloffice_proto::*;
 use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 

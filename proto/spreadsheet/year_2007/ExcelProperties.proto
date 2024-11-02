@@ -1,10 +1,10 @@
 syntax = "proto3";
 
 package OpenXMLOffice.Spreadsheet_2007;
-option go_package = "src/schema/2007";
+option go_package = "spreadsheet/year_2007";
 
-import "proto/global/2007/ThemeModel.proto";
-import "proto/global/2007/CorePropertiesModel.proto";
+import "proto/global/year_2007/ThemeModel.proto";
+import "proto/global/year_2007/CorePropertiesModel.proto";
 
 message ExcelSettings {
   // Add fields here if needed
