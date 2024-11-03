@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package OpenXMLOffice.Global_2007;
+
+message ThemePallet {
+    string accent1 = 1;
+    string accent2 = 2;
+    string accent3 = 3;
+    string accent4 = 4;
+    string accent5 = 5;
+    string accent6 = 6;
+    string dark1 = 7;
+    string dark2 = 8;
+    string followed_hyperlink = 9;
+    string hyperlink = 10;
+    string light1 = 11;
+    string light2 = 12;
+  }
