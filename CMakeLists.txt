@@ -4,7 +4,7 @@ project(OpenXxlOffice)
 
 # Master Variables
 set(ROOT_PATH ${CMAKE_CURRENT_LIST_DIR})
-set(PROTO_PATH "proto")
+set(FLAT_BIFFER_PATH "fbs")
 set(RUST_PATH "rs")
 set(C_SHARP_PATH "cs")
 set(GO_PATH "go")
@@ -16,8 +16,8 @@ message("Proto Buffer build Start")
 set(PROTOC_COMMANDS)
 set(PROTOC_OUTPUTS)
 
-# Glob recursively for all .proto files in the specified PROTO_PATH
-file(GLOB_RECURSE PROTO_FILES "${PROTO_PATH}/*.proto")
+# Glob recursively for all .proto files in the specified FLAT_BIFFER_PATH
+file(GLOB_RECURSE PROTO_FILES "${PROTO_PATH}/*.fbs")
 
 # Iterate over each found .proto file
 foreach(PROTO_FILE ${PROTO_FILES})

@@ -1,4 +1,4 @@
-proto/src/global
-proto/src/spreadsheet
-proto/src/presentation
-proto/src/document
+fbs/src/global
+fbs/src/spreadsheet
+fbs/src/presentation
+fbs/src/document

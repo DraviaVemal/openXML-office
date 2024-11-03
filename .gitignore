@@ -14,7 +14,7 @@ build/
 /Cargo.lock
 **/*.rs.bk
 
-# Protobuf generated files
+# Flatbuffer generated files
 *.pb.cc
 *.pb.h
 *.pb.go

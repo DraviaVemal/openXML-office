@@ -32,28 +32,28 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 
 ## V4 Status Development
 
-| Language  | Package      | Progress |
-| --------- | ------------ | -------- |
-| proto buf | common       | 🟩⬜⬜⬜⬜    |
-| rs        | xml          | 🟩⬜⬜⬜⬜    |
-| rs        | proto        | ⬜⬜⬜⬜⬜    |
-| rs        | global       | ⬜⬜⬜⬜⬜    |
-| rs        | spreadsheet  | 🟩⬜⬜⬜⬜    |
-| rs        | presentation | ⬜⬜⬜⬜⬜    |
-| rs        | document     | ⬜⬜⬜⬜⬜    |
-| rs        | FFI          | ⬜⬜⬜⬜⬜    |
-| cs        | proto        | ⬜⬜⬜⬜⬜    |
-| cs        | spreadsheet  | ⬜⬜⬜⬜⬜    |
-| cs        | presentation | ⬜⬜⬜⬜⬜    |
-| cs        | document     | ⬜⬜⬜⬜⬜    |
-| java      | proto        | ⬜⬜⬜⬜⬜    |
-| java      | spreadsheet  | ⬜⬜⬜⬜⬜    |
-| java      | presentation | ⬜⬜⬜⬜⬜    |
-| java      | document     | ⬜⬜⬜⬜⬜    |
-| go        | proto        | ⬜⬜⬜⬜⬜    |
-| go        | spreadsheet  | ⬜⬜⬜⬜⬜    |
-| go        | presentation | ⬜⬜⬜⬜⬜    |
-| go        | document     | ⬜⬜⬜⬜⬜    |
+| Language    | Package      | Progress |
+| ----------- | ------------ | -------- |
+| flatbuffers | common       | 🟩⬜⬜⬜⬜    |
+| rs          | xml          | 🟩⬜⬜⬜⬜    |
+| rs          | fbs          | ⬜⬜⬜⬜⬜    |
+| rs          | global       | ⬜⬜⬜⬜⬜    |
+| rs          | spreadsheet  | 🟩⬜⬜⬜⬜    |
+| rs          | presentation | ⬜⬜⬜⬜⬜    |
+| rs          | document     | ⬜⬜⬜⬜⬜    |
+| rs          | FFI          | ⬜⬜⬜⬜⬜    |
+| cs          | fbs          | ⬜⬜⬜⬜⬜    |
+| cs          | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| cs          | presentation | ⬜⬜⬜⬜⬜    |
+| cs          | document     | ⬜⬜⬜⬜⬜    |
+| java        | fbs          | ⬜⬜⬜⬜⬜    |
+| java        | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| java        | presentation | ⬜⬜⬜⬜⬜    |
+| java        | document     | ⬜⬜⬜⬜⬜    |
+| go          | fbs          | ⬜⬜⬜⬜⬜    |
+| go          | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| go          | presentation | ⬜⬜⬜⬜⬜    |
+| go          | document     | ⬜⬜⬜⬜⬜    |
 
 ## Technical Details
 

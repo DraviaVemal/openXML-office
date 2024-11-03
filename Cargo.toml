@@ -2,7 +2,7 @@
 resolver = "2"
 members = [
     "rs/xml",
-    "rs/proto",
+    "rs/fbs",
     "rs/global",
     "rs/spreadsheet",
     "rs/presentation",
