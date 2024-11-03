@@ -95,3 +95,6 @@ Desktop.ini
 # Build results
 **/target
 **/openxmloffice.*
+**/openxmloffice
+rs/fbs/src/global
+rs/fbs/src/spreadsheet
