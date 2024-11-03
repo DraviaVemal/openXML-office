@@ -30,4 +30,12 @@ SET
     compression_type = excluded.compression_type,
     content = excluded.content
 WHERE
-    file_name = excluded.file_name
+    file_name = excluded.file_name;
+
+-- query : select_archive_table# Get All content from archive table
+SELECT
+    *
+FROM
+    archive
+ORDER BY
+    id;
