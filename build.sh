@@ -5,6 +5,14 @@ C_SHARP_DIR="cs/Fbs"
 GO_DIR="go/fbs/src"
 JAVA_DIR="java/fbs/src/main/java/com/draviavemal"
 
+rm -rf "$RUST_DIR/global"
+rm -rf "$RUST_DIR/spreadsheet"
+rm -rf "$RUST_DIR/presentation"
+rm -rf "$RUST_DIR/document"
+rm -rf "$C_SHARP_DIR/openxmloffice"
+rm -rf "$GO_DIR/openxmloffice"
+rm -rf "$JAVA_DIR/openxmloffice"
+
 # Find and compile each .fbs file
 find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
   # Get the directory of the .fbs file relative to SOURCE_DIR
