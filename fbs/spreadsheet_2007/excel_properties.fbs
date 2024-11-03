@@ -1,5 +1,5 @@
-include "../../global/year_2007/theme_model.fbs";
-include "../../global/year_2007/core_properties_model.fbs";
+include "../global_2007/theme_model.fbs";
+include "../global_2007/core_properties_model.fbs";
 
 namespace openxmloffice.spreadsheet_2007;
 
