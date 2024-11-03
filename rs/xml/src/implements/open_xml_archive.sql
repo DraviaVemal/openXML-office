@@ -34,7 +34,13 @@ WHERE
 
 -- query : select_archive_table# Get All content from archive table
 SELECT
-    *
+    id,
+    file_name,
+    compressed_file_size,
+    uncompressed_file_size,
+    compression_level,
+    compression_type,
+    content
 FROM
     archive
 ORDER BY

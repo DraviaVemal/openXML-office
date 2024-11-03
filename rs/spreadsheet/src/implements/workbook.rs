@@ -1,6 +1,6 @@
 use crate::structs::workbook::Workbook;
 use openxmloffice_xml::{get_specific_queries, OpenXmlFile};
-use rusqlite::params;
+use rusqlite::{params, Row};
 
 impl Workbook {
     /// Create workbook
@@ -13,8 +13,11 @@ impl Workbook {
     fn get_workbook_xml(xml_fs: &OpenXmlFile) -> Vec<u8> {
         let query = get_specific_queries!("workbook.sql", "select_workbook")
             .expect("Workbook data query failed");
+        fn row_mapper(row: &Row) -> Result<Vec<u8>, rusqlite::Error> {
+            Ok(row.get(0)?)
+        }
         let results = xml_fs
-            .get_query_result(&query, params!["xl/workbook.xml"])
+            .find_one(&query, params!["xl/workbook.xml"], row_mapper)
             .expect("Get workbook content failed");
         if let Some(results) = results {
             return results;
