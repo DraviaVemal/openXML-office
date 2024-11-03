@@ -76,7 +76,6 @@ Desktop.ini
 # Logs and databases
 *.log
 *.sqlite3
-*.sql
 *.env
 *.bak
 
@@ -98,3 +97,6 @@ Desktop.ini
 **/openxmloffice
 rs/fbs/src/global
 rs/fbs/src/spreadsheet
+*.xlsx
+*.pptx
+*.docx
