@@ -1098,10 +1098,18 @@ checksum = "1261fe7e33c73b354eab43b1273a57c8f967d0391e80353e51f764ac02cf6775"
 name = "openxmloffice_document"
 version = "0.1.0"
 dependencies = [
+ "openxmloffice_fbs",
  "openxmloffice_global",
- "openxmloffice_proto",
  "openxmloffice_spreadsheet",
  "openxmloffice_xml",
+]
+
+[[package]]
+name = "openxmloffice_fbs"
+version = "0.1.0"
+dependencies = [
+ "openxmloffice_xml",
+ "quick-xml",
 ]
 
 [[package]]
@@ -1125,19 +1133,10 @@ dependencies = [
 name = "openxmloffice_presentation"
 version = "0.1.0"
 dependencies = [
+ "openxmloffice_fbs",
  "openxmloffice_global",
- "openxmloffice_proto",
  "openxmloffice_spreadsheet",
  "openxmloffice_xml",
-]
-
-[[package]]
-name = "openxmloffice_proto"
-version = "0.1.0"
-dependencies = [
- "openxmloffice_xml",
- "protobuf",
- "quick-xml",
 ]
 
 [[package]]
@@ -1154,10 +1153,9 @@ name = "openxmloffice_spreadsheet"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "openxmloffice_fbs",
  "openxmloffice_global",
- "openxmloffice_proto",
  "openxmloffice_xml",
- "protobuf",
  "rusqlite",
 ]
 
@@ -1268,26 +1266,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f139b0662de085916d1fb67d2b4169d1addddda1919e696f3252b740b629986e"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "protobuf"
-version = "3.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a3a7c64d9bf75b1b8d981124c14c179074e8caa7dfe7b6a12e6222ddcd0c8f72"
-dependencies = [
- "once_cell",
- "protobuf-support",
- "thiserror",
-]
-
-[[package]]
-name = "protobuf-support"
-version = "3.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b088fd20b938a875ea00843b6faf48579462630015c3788d397ad6a786663252"
-dependencies = [
- "thiserror",
 ]
 
 [[package]]

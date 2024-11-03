@@ -3,7 +3,7 @@ use crate::{
     Excel,
 };
 use anyhow::{Ok, Result};
-use openxmloffice_proto::*;
+use openxmloffice_fbs::*;
 use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 
