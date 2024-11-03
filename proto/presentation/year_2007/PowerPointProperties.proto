@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package OpenXMLOffice.Presentation_2007;
+option go_package = "presentation/year_2007";
+
+import "proto/global/year_2007/ThemeModel.proto";
+import "proto/global/year_2007/CorePropertiesModel.proto";
+
+message PowerPointSettings {
+  // Add fields here if needed
+}
+
+message PowerPointProperties {
+  PowerPointSettings settings = 1;
+  OpenXMLOffice.Global_2007.ThemePallet theme = 2;
+  OpenXMLOffice.Global_2007.CorePropertiesModel core_properties = 3;
+}
