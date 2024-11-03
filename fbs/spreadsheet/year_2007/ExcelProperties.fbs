@@ -1,13 +1,13 @@
 include "../../global/year_2007/ThemeModel.fbs";
 include "../../global/year_2007/CorePropertiesModel.fbs";
 
-namespace OpenXMLOffice.Spreadsheet_2007;
+namespace openxmloffice.spreadsheet_2007;
 
 // Define the ExcelProperties table with three fields
 table ExcelProperties {
   settings: ExcelSettings;
-  theme: OpenXMLOffice.Global_2007.ThemePallet;
-  core_properties: OpenXMLOffice.Global_2007.CorePropertiesModel;
+  theme: openxmloffice.global_2007.ThemePallet;
+  core_properties: openxmloffice.global_2007.CorePropertiesModel;
 }
 
 // Define the ExcelSettings table

@@ -1,31 +1,24 @@
-# Build Core components
-cargo build  --manifest-path openxmloffice-core/xml/Cargo.toml
-cargo build  --manifest-path openxmloffice-core/global/Cargo.toml
-cargo build  --manifest-path openxmloffice-core/spreadsheet/Cargo.toml
-cargo build  --manifest-path openxmloffice-core/presentation/Cargo.toml
-cargo build  --manifest-path openxmloffice-core/document/Cargo.toml
-cargo build  --manifest-path openxmloffice-core/efi/Cargo.toml
+# Define the source and target directories
+SOURCE_DIR="fbs"
+RUST_DIR="rs/fbs/src"
+C_SHARP_DIR="cs/Fbs"
+GO_DIR="go/fbs/src"
+JAVA_DIR="java/fbs/src/main/java/com/draviavemal"
 
-# Build Rust Wrapper
-cargo build  --manifest-path openxmloffice-rs/Cargo.toml
+# Find and compile each .fbs file
+find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
+  # Get the directory of the .fbs file relative to SOURCE_DIR
+  relative_dir=$(dirname "$fbs_file" | sed "s|$SOURCE_DIR||")
 
-# Build Rust API Container
-cargo build  --manifest-path openxmloffice-rs-api/Cargo.toml
+  # Create the corresponding output directory in TARGET_DIR
+  mkdir -p "$RUST_DIR$relative_dir"
+  mkdir -p "$C_SHARP_DIR"
+  mkdir -p "$GO_DIR"
+  mkdir -p "$JAVA_DIR"
 
-# Build C# Wrapper
-dotnet build openxmloffice-cs/openXML-Office.sln
-
-# Build Java Wrapper
-mvn clean install -f openxmloffice-java/spreadsheet/pom.xml
-mvn clean install -f openxmloffice-java/presentation/pom.xml
-mvn clean install -f openxmloffice-java/document/pom.xml
-
-# Build Go Wrapper
-cd openxmloffice-go/spreadsheet && go build && cd ../..
-cd openxmloffice-go/presentation && go build && cd ../..
-cd openxmloffice-go/document && go build && cd ../..
-
-# Build TS Wrapper
-cd openxmloffice-ts/document && napi build && cd ../..
-cd openxmloffice-ts/presentation && napi build && cd ../..
-cd openxmloffice-ts/spreadsheet && napi build && cd ../..
+  # Compile the .fbs file with flatc, targeting the appropriate directory
+  flatc --rust -o "$RUST_DIR$relative_dir" "$fbs_file"
+  flatc --csharp -o "$C_SHARP_DIR" "$fbs_file"
+  flatc --go -o "$GO_DIR" "$fbs_file"
+  flatc --java -o "$JAVA_DIR" "$fbs_file"
+done
