@@ -1,8 +1,7 @@
-use std::io::Write;
-
 use anyhow::Result;
 use flate2::write::GzEncoder;
 use flate2::Compression;
+use std::io::Write;
 
 pub fn compress_content(data: &[u8]) -> Result<Vec<u8>> {
     let mut encoder = GzEncoder::new(Vec::new(), Compression::default());

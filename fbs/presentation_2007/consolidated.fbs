@@ -1,1 +1,1 @@
-include "presentation_properties.fbs";
+include "presentation_properties_model.fbs";
