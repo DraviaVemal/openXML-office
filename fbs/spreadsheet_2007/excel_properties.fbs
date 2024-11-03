@@ -1,0 +1,19 @@
+include "../global_2007/theme_model.fbs";
+include "../global_2007/core_properties_model.fbs";
+
+namespace openxmloffice.spreadsheet_2007;
+
+// Define the ExcelProperties table with three fields
+table ExcelProperties {
+  settings: ExcelSettings;
+  theme: openxmloffice.global_2007.ThemePallet;
+  core_properties: openxmloffice.global_2007.CorePropertiesModel;
+}
+
+// Define the ExcelSettings table
+table ExcelSettings {
+  // Add fields here as needed
+}
+
+// Root type
+root_type ExcelProperties;
