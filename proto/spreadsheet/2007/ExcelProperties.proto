@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package OpenXMLOffice.Spreadsheet_2007;
+option go_package = "src/schema/2007";
 
 import "proto/global/2007/ThemeModel.proto";
 import "proto/global/2007/CorePropertiesModel.proto";

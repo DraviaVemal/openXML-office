@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package OpenXMLOffice.Global_2007;
+option go_package = "src/schema/2007";
 
 message ThemePallet {
     string accent1 = 1;
