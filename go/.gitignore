@@ -1,4 +1,4 @@
-proto/global
-proto/spreadsheet
-proto/presentation
-proto/document
+fbs/global
+fbs/spreadsheet
+fbs/presentation
+fbs/document

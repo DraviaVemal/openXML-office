@@ -1,0 +1,10 @@
+namespace OpenXMLOffice.Global_2007;
+
+table CorePropertiesModel {
+  title: string;
+  subject: string;
+  description: string;
+  tags: string;
+  category: string;
+  creator: string;
+}
