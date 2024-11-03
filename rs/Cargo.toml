@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = [
+    "xml",
+    "fbs",
+    "global",
+    "spreadsheet",
+    "presentation",
+    "document",
+    "ffi",
+]
