@@ -1,5 +1,3 @@
-pub mod global;
-pub mod spreadsheet;
+pub mod consolidated_generated;
 
-pub use global::*;
-pub use spreadsheet::*;
+pub use consolidated_generated::openxmloffice::*;
