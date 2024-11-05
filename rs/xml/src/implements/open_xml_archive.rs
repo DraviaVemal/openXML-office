@@ -1,6 +1,8 @@
-use crate::{file_handling::compress_content, get_specific_queries, OpenXmlFile};
-use anyhow::Result;
-use rusqlite::{params, Connection, Error, ToSql};
+use crate::{
+    file_handling::compress_content, get_specific_queries, ArchiveRecordModel, OpenXmlFile,
+};
+use anyhow::{Error as AnyError, Result as AnyResult};
+use rusqlite::{params, Connection, Row, ToSql};
 use std::{
     fs::{metadata, remove_file, File},
     io::Read,
@@ -30,32 +32,69 @@ impl OpenXmlFile {
         }
     }
 
-    pub fn get_query_result(
+    /// Find one result and map the row to a specific type using the closure.
+    pub fn find_one<F, T>(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
-    ) -> Result<Option<Vec<u8>>, Error> {
-        match self.archive_db.query_row(&query, params, |row| row.get(0)) {
-            Ok(content) => Ok(Some(content)),
-            Err(Error::QueryReturnedNoRows) => Ok(None), // Handle the "no rows" case.
-            Err(e) => Err(e),
-        }
+        row_mapper: F,
+    ) -> AnyResult<Option<T>, AnyError>
+    where
+        F: Fn(&Row) -> AnyResult<T, rusqlite::Error>,
+    {
+        let mut stmt = self
+            .archive_db
+            .prepare(query)
+            .expect("Failed to prepare query");
+        return match stmt.query_row(params, row_mapper) {
+            Ok(result) => Ok(Some(result)),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+            Err(e) => Err(e.into()),
+        };
     }
 
-    pub fn execute_query(&self, query: &str, params: &[&(dyn ToSql)]) -> Result<usize, Error> {
-        return self.archive_db.execute(&query, params);
+    /// Find multiple results and map each row to a specific type using the closure.
+    pub fn find_many<F, T>(
+        &self,
+        query: &str,
+        params: &[&(dyn ToSql)],
+        row_mapper: F,
+    ) -> AnyResult<Vec<T>, AnyError>
+    where
+        F: Fn(&Row) -> AnyResult<T, rusqlite::Error>,
+    {
+        let mut stmt = self
+            .archive_db
+            .prepare(query)
+            .expect("Failed to prepare query");
+        let results = stmt
+            .query_map(params, row_mapper)?
+            .collect::<AnyResult<Vec<T>, _>>()
+            .expect("Consolidating Result into vectors");
+        Ok(results)
+    }
+
+    pub fn execute_query(
+        &self,
+        query: &str,
+        params: &[&(dyn ToSql)],
+    ) -> AnyResult<usize, AnyError> {
+        return match self.archive_db.execute(&query, params) {
+            Ok(result) => Ok(result),
+            Err(e) => Err(e.into()),
+        };
     }
 
     pub fn add_update_file_content(
         &self,
         file_name: &str,
         uncompressed_data: Vec<u8>,
-    ) -> Result<usize, Error> {
+    ) -> Result<usize, AnyError> {
         let query: String = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
             .expect("Specific query pull fail");
         let compressed_data: Vec<u8> =
             compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
-        return self.archive_db.execute(
+        return match self.archive_db.execute(
             &query,
             params![
                 file_name,
@@ -65,7 +104,10 @@ impl OpenXmlFile {
                 "gzip",
                 compressed_data
             ],
-        );
+        ) {
+            Ok(result) => Ok(result),
+            Err(e) => Err(e.into()),
+        };
     }
 
     /// Save the current temp directory state file into final result
@@ -75,7 +117,20 @@ impl OpenXmlFile {
         }
         let query: String = get_specific_queries!("open_xml_archive.sql", "select_archive_table")
             .expect("Read Select Query Pull Failed");
-        let result = self.get_query_result(&query, params![]).expect("Select Query Results");
+        fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordModel, rusqlite::Error> {
+            Ok(ArchiveRecordModel {
+                id: row.get(0)?,
+                file_name: row.get(1)?,
+                compressed_file_size: row.get(2)?,
+                uncompressed_file_size: row.get(3)?,
+                compression_level: row.get(4)?,
+                compression_type: row.get(5)?,
+                content: row.get(6)?,
+            })
+        }
+        let result = self
+            .find_many(&query, params![], row_mapper)
+            .expect("Select Query Results");
         println!("{}", "Test")
     }
     /// Common initialization
@@ -116,7 +171,8 @@ impl OpenXmlFile {
             file_content
                 .read_to_end(&mut uncompressed_data)
                 .expect("File Uncompressed failed");
-            let gzip = compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
+            let compressed =
+                compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
             let query = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
                 .expect("Specific query pull fail");
             archive_db
@@ -124,11 +180,11 @@ impl OpenXmlFile {
                     &query,
                     params![
                         file_content.name(),
-                        gzip.len(),
+                        compressed.len(),
                         uncompressed_data.len(),
                         1,
                         "gzip",
-                        gzip
+                        compressed
                     ],
                 )
                 .expect("Archive content load failed.");
