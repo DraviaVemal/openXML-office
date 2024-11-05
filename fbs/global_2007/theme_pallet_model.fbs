@@ -1,6 +1,6 @@
 namespace openxmloffice.global_2007;
 
-table ThemePallet {
+table ThemePalletModel {
   accent1: string;
   accent2: string;
   accent3: string;
@@ -14,3 +14,6 @@ table ThemePallet {
   hyperlink: string;
   followed_hyperlink: string;
 }
+
+// Root type
+root_type ThemePalletModel;

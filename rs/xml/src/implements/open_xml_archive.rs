@@ -9,8 +9,14 @@ use zip::ZipArchive;
 
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source
-    pub fn open(file_path: &str, is_editable: bool) -> Self {
-        let archive_db = Connection::open_in_memory().expect("Local Lite DB Failed");
+    pub fn open(file_path: &str, is_editable: bool, is_in_memory: bool) -> Self {
+        let archive_db;
+        if is_in_memory {
+            archive_db = Connection::open("./local.db").expect("Local Lite DB Failed");
+        } else {
+            // In memory operation
+            archive_db = Connection::open_in_memory().expect("Local Lite DB Failed");
+        }
         Self::initialize_database(&archive_db);
         Self::load_archive_into_database(&archive_db, file_path);
         // Create a clone copy of master file to work with code
@@ -21,8 +27,14 @@ impl OpenXmlFile {
     }
 
     /// Create Current file helper object a new file to work with
-    pub fn create() -> Self {
-        let archive_db = Connection::open_in_memory().expect("Local Lite DB Failed");
+    pub fn create(is_in_memory: bool) -> Self {
+        let archive_db;
+        if is_in_memory {
+            archive_db = Connection::open("./local.db").expect("Local Lite DB Failed");
+        } else {
+            // In memory operation
+            archive_db = Connection::open_in_memory().expect("Local Lite DB Failed");
+        }
         // Default List of files common for all types
         Self::initialize_database(&archive_db);
         Self {
@@ -47,13 +59,25 @@ impl OpenXmlFile {
         return self.archive_db.execute(&query, params);
     }
 
-    pub fn add_update_file_content(&self, data: Vec<u8>, file_name: &str) -> Result<usize, Error> {
+    pub fn add_update_file_content(
+        &self,
+        file_name: &str,
+        uncompressed_data: Vec<u8>,
+    ) -> Result<usize, Error> {
         let query = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
             .expect("Specific query pull fail");
-        let gzip = compress_content(&data).expect("Recompressing in GZip Failed");
+        let compressed_data =
+            compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
         return self.archive_db.execute(
             &query,
-            params![file_name, gzip.len(), data.len(), 1, "gzip", gzip],
+            params![
+                file_name,
+                compressed_data.len(),
+                uncompressed_data.len(),
+                1,
+                "gzip",
+                compressed_data
+            ],
         );
     }
 
