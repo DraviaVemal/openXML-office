@@ -1,13 +1,14 @@
 use crate::{
-    file_handling::compress_content, get_specific_queries, ArchiveRecordModel, OpenXmlFile,
+    file_handling::{compress_content, decompress_content},
+    get_specific_queries, ArchiveRecordModel, OpenXmlFile,
 };
 use anyhow::{Error as AnyError, Result as AnyResult};
 use rusqlite::{params, Connection, Row, ToSql};
 use std::{
     fs::{metadata, remove_file, File},
-    io::Read,
+    io::{Cursor, Read, Write},
 };
-use zip::ZipArchive;
+use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source
@@ -112,26 +113,13 @@ impl OpenXmlFile {
 
     /// Save the current temp directory state file into final result
     pub fn save(&self, save_file: &str) {
+        let file_content = self.save_database_into_archive();
         if metadata(save_file).is_ok() {
             remove_file(save_file).expect("Failed to Remove existing file");
         }
-        let query: String = get_specific_queries!("open_xml_archive.sql", "select_archive_table")
-            .expect("Read Select Query Pull Failed");
-        fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordModel, rusqlite::Error> {
-            Ok(ArchiveRecordModel {
-                id: row.get(0)?,
-                file_name: row.get(1)?,
-                compressed_file_size: row.get(2)?,
-                uncompressed_file_size: row.get(3)?,
-                compression_level: row.get(4)?,
-                compression_type: row.get(5)?,
-                content: row.get(6)?,
-            })
-        }
-        let result = self
-            .find_many(&query, params![], row_mapper)
-            .expect("Select Query Results");
-        println!("{}", "Test")
+        let mut file = File::create(save_file).expect("Create Zip File");
+        file.write_all(&file_content)
+            .expect("Write final Zip Resutl");
     }
     /// Common initialization
     fn common_initialization(is_in_memory: bool) -> Connection {
@@ -158,6 +146,49 @@ impl OpenXmlFile {
         archive_db
             .execute(&query, ())
             .expect("Base Database Struct Setup Failed");
+    }
+
+    /// Save the database content into file archive
+    fn save_database_into_archive(&self) -> Vec<u8> {
+        let query: String = get_specific_queries!("open_xml_archive.sql", "select_archive_table")
+            .expect("Read Select Query Pull Failed");
+        fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordModel, rusqlite::Error> {
+            Ok(ArchiveRecordModel {
+                id: row.get(0)?,
+                file_name: row.get(1)?,
+                compressed_file_size: row.get(2)?,
+                uncompressed_file_size: row.get(3)?,
+                compression_level: row.get(4)?,
+                compression_type: row.get(5)?,
+                content: row.get(6)?,
+            })
+        }
+        let result = self
+            .find_many(&query, params![], row_mapper)
+            .expect("Select Query Results");
+        let mut buffer = Cursor::new(Vec::new());
+        let mut zip_writer: ZipWriter<&mut Cursor<Vec<u8>>> = ZipWriter::new(&mut buffer);
+        let zip_option = SimpleFileOptions::default();
+        for ArchiveRecordModel {
+            id: _,
+            file_name,
+            compressed_file_size: _,
+            uncompressed_file_size: _,
+            compression_level: _,
+            compression_type: _,
+            content,
+        } in result
+        {
+            let uncompressed = decompress_content(&content).expect("decompress Table data Failed");
+            zip_writer
+                .start_file(file_name, zip_option)
+                .expect("Zip File content Start fail");
+            zip_writer
+                .write_all(&uncompressed)
+                .expect("Zip Write all content");
+        }
+        zip_writer.finish().expect("Save Zip write Failed");
+        return buffer.into_inner();
     }
 
     /// Read Zip file and load it into database after compression
