@@ -21,14 +21,14 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 
 # Version 4 Goals and Objectives
 
-| Supported Languages | Readme link | Packages   | package link                                             | Description                                          |
-| ------------------- | ----------- | ---------- | -------------------------------------------------------- | ---------------------------------------------------- |
-| Rust                | TODO        | Rust       | [Crates](https://crates.io/)                             | Rust crate directly connecting to core lib           |
-| C#                  | TODO        | C#         | [Nuget](https://www.nuget.org/)                          | C# wrapper package wrote around FFI layer of rust    |
-| Java                | TODO        | Java       | [Maven Central](https://mvnrepository.com/)              | Java wrapper package wrote around FFI layer of rust  |
-| Go                  | TODO        | Go         | [Github](https://github.com/DraviaVemal/OpenXML-Office/) | Go wrapper package wrote around FFI layer of rust    |
-| TypeScript          | TODO        | TypeScript | [npm](https://www.npmjs.com/)                            | NAPI-RS is used to expose the core lib as node addon |
-|                     |             | Rust-API   | [Docker Hub](https://hub.docker.com/)                    | API container running rust crate for HTTP support    |
+| Supported Languages | Support Version | Readme link | Packages   | package link                                             | Description                                          |
+| ------------------- | --------------- | ----------- | ---------- | -------------------------------------------------------- | ---------------------------------------------------- |
+| Rust                |                 | TODO        | Rust       | [Crates](https://crates.io/)                             | Rust crate directly connecting to core lib           |
+| C#                  | .net6.0         | TODO        | C#         | [Nuget](https://www.nuget.org/)                          | C# wrapper package wrote around FFI layer of rust    |
+| Java                |                 | TODO        | Java       | [Maven Central](https://mvnrepository.com/)              | Java wrapper package wrote around FFI layer of rust  |
+| Go                  |                 | TODO        | Go         | [Github](https://github.com/DraviaVemal/OpenXML-Office/) | Go wrapper package wrote around FFI layer of rust    |
+| TypeScript          |                 | TODO        | TypeScript | [npm](https://www.npmjs.com/)                            | NAPI-RS is used to expose the core lib as node addon |
+|                     |                 |             | Rust-API   | [Docker Hub](https://hub.docker.com/)                    | API container running rust crate for HTTP support    |
 
 ## V4 Status Development
 
@@ -55,6 +55,10 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | go          | presentation | ⬜⬜⬜⬜⬜    |
 | go          | document     | ⬜⬜⬜⬜⬜    |
 
+## Repo & Design Block Diagram
+![Design](design.svg)
+
+
 ## Technical Details
 
 This release marks a significant evolution for the OpenXML-office project. The upcoming version, V4, will be a complete rewrite of this package. It aims to maintain previous release structures as much as possible, with a strong focus on minimizing migration efforts for adopters.
@@ -65,7 +69,7 @@ This project has been in the works for nearly a year, driven by a desire to expl
 
 ### Architecture
 
-The core system is written in Rust, ensuring optimal performance and memory usage. This system is then exposed as a "C" extern FFI, facilitating interaction with other languages. Wrappers for each supported language have been created, and the package is published in the respective package managers. For TypeScript, `napi-rs` is utilized to create a Node.js addon, preserving performance advantages. The data transmission is handled using Protocol Buffers, following a central schema that ensures consistent patterns across all supported languages and facilitates code organization and documentation maintenance.
+The core system is written in Rust, ensuring optimal performance and memory usage. This system is then exposed as a "C" extern FFI, facilitating interaction with other languages. Wrappers for each supported language have been created, and the package is published in the respective package managers. For TypeScript, `napi-rs` is utilized to create a Node.js addon, preserving performance advantages. The data transmission is handled using FlatBuffer, following a central schema that ensures consistent patterns across all supported languages and facilitates code organization and documentation maintenance.
 
 ## Support Scope
 

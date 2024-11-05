@@ -8,3 +8,6 @@ table CorePropertiesModel {
   category: string;
   creator: string;
 }
+
+// Root type
+root_type CorePropertiesModel;

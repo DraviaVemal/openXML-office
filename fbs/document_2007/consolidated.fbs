@@ -1,1 +1,1 @@
-include "document_properties.fbs";
+include "document_properties_model.fbs";

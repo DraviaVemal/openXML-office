@@ -535,8 +535,6 @@ name = "openxmloffice_fbs"
 version = "0.1.0"
 dependencies = [
  "flatbuffers",
- "openxmloffice_xml",
- "quick-xml",
 ]
 
 [[package]]
@@ -544,6 +542,8 @@ name = "openxmloffice_ffi"
 version = "0.1.0"
 dependencies = [
  "openxmloffice_document",
+ "openxmloffice_fbs",
+ "openxmloffice_global",
  "openxmloffice_presentation",
  "openxmloffice_spreadsheet",
 ]
@@ -560,7 +560,6 @@ dependencies = [
 name = "openxmloffice_presentation"
 version = "0.1.0"
 dependencies = [
- "openxmloffice_fbs",
  "openxmloffice_global",
  "openxmloffice_spreadsheet",
  "openxmloffice_xml",
@@ -571,7 +570,6 @@ name = "openxmloffice_spreadsheet"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "openxmloffice_fbs",
  "openxmloffice_global",
  "openxmloffice_xml",
  "rusqlite",
