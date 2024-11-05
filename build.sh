@@ -1,10 +1,11 @@
 # Define the source and target directories
 SOURCE_DIR="fbs"
-RUST_DIR="rs/fbs/src"
+RUST_FFI_DIR="rs-ffl/fbs/src"
 C_SHARP_DIR="cs/Fbs"
 GO_DIR="go/fbs/src"
 JAVA_DIR="java/fbs/src/main/java/com/draviavemal"
 
+# Flatbuffer Generated code setup
 rm -rf "$C_SHARP_DIR/openxmloffice"
 rm -rf "$GO_DIR/openxmloffice"
 rm -rf "$JAVA_DIR/openxmloffice"
@@ -25,4 +26,20 @@ find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
   flatc -j -o "$JAVA_DIR" "$fbs_file"
 done
 # Rust code get complied as one source to maintain the modular hierarchy
-  flatc -r --gen-all -o "$RUST_DIR" "fbs/consolidated.fbs"
+flatc -r --gen-all -o "$RUST_FFI_DIR" "fbs/consolidated.fbs"
+
+# Build Rust Core Libraries
+
+# Build Rust dynamic link file
+
+cd rs-ffl
+
+cargo build --release --target x86_64-pc-windows-gnu
+
+cargo build --release --target x86_64-unknown-linux-gnu
+
+cargo build --release --target x86_64-apple-darwin
+
+cd ..
+
+# Build wrapper library using link files
