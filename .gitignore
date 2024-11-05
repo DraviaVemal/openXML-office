@@ -1,14 +1,3 @@
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-build/
-*.cmake
-*.vcxproj
-*.vcxproj.user
-*.vcxproj.filters
-
 # Rust specific
 /target/
 /Cargo.lock
@@ -65,20 +54,24 @@ dist/
 .DS_Store
 .AppleDouble
 .LSOverride
+.dylib
 
 # Windows generated files
 Thumbs.db
 Desktop.ini
+.dll
 
 # Linux generated files
 *.out
 *.dSYM/
+.so
 
 # Logs and databases
 *.log
 *.sqlite3
 *.env
 *.bak
+*.db
 
 # IDE/editor specific files
 .vscode/

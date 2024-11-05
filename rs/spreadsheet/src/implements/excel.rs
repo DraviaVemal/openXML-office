@@ -1,30 +1,29 @@
 use crate::{
     structs::{Workbook, Worksheet},
-    Excel,
+    Excel, ExcelPropertiesModel,
 };
 use anyhow::{Ok, Result};
-use openxmloffice_fbs::spreadsheet_2007::ExcelPropertiesModel;
 use openxmloffice_global::CoreProperties;
 use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 
 impl Excel {
     /// Create new or clone source file to start working on excel
-    pub fn new(file_name: Option<String>, excel_setting: Option<ExcelPropertiesModel>) -> Self {
+    pub fn new(file_name: Option<String>, excel_setting: ExcelPropertiesModel) -> Self {
         let workbook;
         let xml_fs;
         //
         if let Some(file_name) = file_name {
-            xml_fs = OpenXmlFile::open(&file_name, true);
+            xml_fs = OpenXmlFile::open(&file_name, true, excel_setting.is_in_memory);
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
             Self::load_common_reference(&xml_fs);
-            CoreProperties::initialize_core_properties(&xml_fs);
+            CoreProperties::update_core_properties(&xml_fs);
             workbook = Workbook::new(&xml_fs);
         } else {
-            xml_fs = OpenXmlFile::create();
+            xml_fs = OpenXmlFile::create(excel_setting.is_in_memory);
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
             Self::initialize_common_reference(&xml_fs);
-            CoreProperties::update_core_properties(&xml_fs);
+            CoreProperties::initialize_core_properties(&xml_fs);
             workbook = Workbook::new(&xml_fs);
         }
         return Self { xml_fs, workbook };

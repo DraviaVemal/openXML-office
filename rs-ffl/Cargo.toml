@@ -1,0 +1,14 @@
+[package]
+name = "openxmloffice_ffi"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+openxmloffice_fbs = { path = "fbs", version = ">= 0.1.0" }
+openxmloffice_global = { path = "../rs/global", version = ">= 0.1.0" }
+openxmloffice_spreadsheet = { path = "../rs/spreadsheet", version = ">= 0.1.0" }
+openxmloffice_document = { path = "../rs/document", version = ">= 0.1.0" }
+openxmloffice_presentation = { path = "../rs/presentation", version = ">= 0.1.0" }
