@@ -1,27 +1,26 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::structs::workbook::Workbook;
-use openxmloffice_global::xml_file::XmlElement;
+use crate::{xml_file::XmlElement, ContentTypesPart, MasterRelsPart};
 use openxmloffice_xml::OpenXmlFile;
+use quick_xml::Reader;
 
-impl Drop for Workbook {
+impl Drop for MasterRelsPart {
     fn drop(&mut self) {
         self.xml_fs
             .borrow()
             .add_update_xml_content(&self.file_name, &self.file_content)
-            .expect("Workbook Save Failed");
+            .expect("Core Property Save Failed");
     }
 }
 
-impl XmlElement for Workbook {
-    /// Create workbook
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Self {
-        let file_name = "xl/workbook.xml".to_string();
-        return Self {
-            xml_fs: Rc::clone(&xml_fs),
+impl XmlElement for MasterRelsPart {
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> MasterRelsPart {
+        let file_name = ".rels.xml".to_string();
+        Self {
+            xml_fs: Rc::clone(xml_fs),
             file_content: Self::get_content_xml(&xml_fs, &file_name),
             file_name,
-        };
+        }
     }
 
     fn flush(self) {}
@@ -38,7 +37,10 @@ impl XmlElement for Workbook {
 
     /// Initialize workbook for new excel
     fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8> {
-        let content = Vec::new();
-        return content;
+        let template_core_properties = include_str!("rels.xml");
+        let mut xml_parsed = Reader::from_str(&template_core_properties);
+        return Vec::new();
     }
 }
+
+impl ContentTypesPart {}
