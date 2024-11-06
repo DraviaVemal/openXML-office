@@ -1,15 +1,18 @@
-use std::{cell::RefCell, rc::Rc};
-
 use crate::{
     structs::{Workbook, Worksheet},
     Excel, ExcelPropertiesModel,
 };
 use anyhow::{Ok, Result};
-use openxmloffice_global::{xml_file::XmlElement, CorePropertiesPart, MasterRelsPart, ThemePart};
+use openxmloffice_global::{xml_file::XmlElement, CorePropertiesPart, RelationsPart, ThemePart};
 use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
+use std::{cell::RefCell, rc::Rc};
 
 impl Excel {
+    /// Default Excel Setting
+    pub fn default() -> ExcelPropertiesModel {
+        return ExcelPropertiesModel { is_in_memory: true };
+    }
     /// Create new or clone source file to start working on excel
     pub fn new(file_name: Option<String>, excel_setting: ExcelPropertiesModel) -> Self {
         let workbook;
@@ -26,7 +29,7 @@ impl Excel {
             xml_fs = Rc::new(RefCell::new(open_xml_file));
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
             Self::initialize_common_reference(&xml_fs);
-            MasterRelsPart::new(&xml_fs, None);
+            RelationsPart::new(&xml_fs, None);
             CorePropertiesPart::new(&xml_fs, None);
             ThemePart::new(&xml_fs, Some("xl/theme/theme1.xml"));
             workbook = Workbook::new(&xml_fs, None);

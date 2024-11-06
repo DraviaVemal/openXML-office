@@ -1,20 +1,23 @@
+use crate::Excel;
+
 #[test]
 fn blank_excel() {
-    let file = crate::Excel::new(None, crate::ExcelPropertiesModel { is_in_memory: true });
+    let file = Excel::new(None, Excel::default());
     file.add_sheet(&"Test".to_string());
     file.save_as(&"this.xlsx".to_string());
     assert_eq!(true, true);
 }
+
 #[test]
 fn edit_excel() {
-    let file = crate::Excel::new(
+    let file = Excel::new(
         Some(
             "/home/draviavemal/repo/OpenXML-Office/rs/spreadsheet/src/tests/test_file.xlsx"
                 .to_string(),
         ),
-        crate::ExcelPropertiesModel { is_in_memory: true },
+        Excel::default(),
     );
-    let worksheet = file.add_sheet(&"Test".to_string());
+    file.add_sheet(&"Test".to_string());
     file.save_as(&"this.xlsx".to_string());
     assert_eq!(true, true);
 }

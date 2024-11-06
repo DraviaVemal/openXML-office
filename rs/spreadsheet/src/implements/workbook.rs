@@ -32,13 +32,13 @@ impl XmlElement for Workbook {
         if let Some(results) = results {
             return results;
         } else {
-            return Self::initialize_content_xml(&xml_fs);
+            return Self::initialize_content_xml();
         }
     }
 
-    /// Initialize workbook for new excel
-    fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8> {
-        let content = Vec::new();
-        return content;
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> Vec<u8> {
+        let template_core_properties = r#"<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></workbook>"#;
+        return template_core_properties.as_bytes().to_vec();
     }
 }
