@@ -36,13 +36,13 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | ----------- | ------------ | -------- |
 | flatbuffers | common       | 🟩⬜⬜⬜⬜    |
 | rs          | xml          | 🟩⬜⬜⬜⬜    |
-| rs          | fbs          | ⬜⬜⬜⬜⬜    |
-| rs          | global       | ⬜⬜⬜⬜⬜    |
-| rs          | spreadsheet  | 🟩⬜⬜⬜⬜    |
+| rs          | fbs          | 🟩⬜⬜⬜⬜    |
+| rs          | global       | 🟩⬜⬜⬜⬜    |
+| rs          | spreadsheet  | 🟩🟩⬜⬜⬜    |
 | rs          | presentation | ⬜⬜⬜⬜⬜    |
 | rs          | document     | ⬜⬜⬜⬜⬜    |
 | rs          | FFI          | ⬜⬜⬜⬜⬜    |
-| cs          | fbs          | ⬜⬜⬜⬜⬜    |
+| cs          | fbs          | 🟩⬜⬜⬜⬜    |
 | cs          | spreadsheet  | ⬜⬜⬜⬜⬜    |
 | cs          | presentation | ⬜⬜⬜⬜⬜    |
 | cs          | document     | ⬜⬜⬜⬜⬜    |

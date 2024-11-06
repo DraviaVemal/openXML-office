@@ -14,7 +14,7 @@ fn edit_excel() {
         ),
         crate::ExcelPropertiesModel { is_in_memory: true },
     );
-    file.add_sheet(&"Test".to_string());
+    let worksheet = file.add_sheet(&"Test".to_string());
     file.save_as(&"this.xlsx".to_string());
     assert_eq!(true, true);
 }

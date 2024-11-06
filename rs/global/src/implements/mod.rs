@@ -1,3 +1,3 @@
-pub mod core_properties;
+pub mod parts;
 
-pub use core_properties::*;
+pub use parts::*;
