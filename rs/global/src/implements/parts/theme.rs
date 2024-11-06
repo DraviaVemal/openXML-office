@@ -1,8 +1,6 @@
-use std::{cell::RefCell, rc::Rc};
-
 use crate::{xml_file::XmlElement, ThemePart};
 use openxmloffice_xml::OpenXmlFile;
-use quick_xml::Reader;
+use std::{cell::RefCell, rc::Rc};
 
 impl Drop for ThemePart {
     fn drop(&mut self) {
@@ -34,15 +32,14 @@ impl XmlElement for ThemePart {
         if let Some(results) = results {
             return results;
         } else {
-            return Self::initialize_content_xml(&xml_fs);
+            return Self::initialize_content_xml();
         }
     }
 
-    /// Initialize workbook for new excel
-    fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8> {
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> Vec<u8> {
         let template_core_properties = include_str!("theme.xml");
-        let mut xml_parsed = Reader::from_str(template_core_properties);
-        return Vec::new();
+        return template_core_properties.as_bytes().to_vec();
     }
 }
 
