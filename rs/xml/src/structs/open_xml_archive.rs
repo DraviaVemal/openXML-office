@@ -9,6 +9,7 @@ pub struct OpenXmlFile {
     pub archive_db: Connection,
 }
 
+#[derive(Debug)]
 pub struct ArchiveRecordModel {
     pub(crate) id: i16,
     pub(crate) file_name: String,

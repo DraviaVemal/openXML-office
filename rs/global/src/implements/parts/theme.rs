@@ -9,17 +9,20 @@ impl Drop for ThemePart {
         self.xml_fs
             .borrow()
             .add_update_xml_content(&self.file_name, &self.file_content)
-            .expect("Core Property Save Failed");
+            .expect("Theme Part Save Failed");
     }
 }
 
 impl XmlElement for ThemePart {
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> ThemePart {
-        let file_name = "[Content_Types].xml".to_string();
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, file_name: Option<&str>) -> ThemePart {
+        let mut local_file_name = "".to_string();
+        if let Some(file_name) = file_name {
+            local_file_name = file_name.to_string();
+        }
         Self {
             xml_fs: Rc::clone(xml_fs),
-            file_content: Self::get_content_xml(&xml_fs, &file_name),
-            file_name,
+            file_content: Self::get_content_xml(&xml_fs, &local_file_name),
+            file_name: local_file_name.to_string(),
         }
     }
 
@@ -38,7 +41,7 @@ impl XmlElement for ThemePart {
     /// Initialize workbook for new excel
     fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8> {
         let template_core_properties = include_str!("theme.xml");
-        let mut xml_parsed = Reader::from_str(&template_core_properties);
+        let mut xml_parsed = Reader::from_str(template_core_properties);
         return Vec::new();
     }
 }

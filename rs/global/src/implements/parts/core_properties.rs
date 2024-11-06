@@ -6,15 +6,16 @@ use quick_xml::Reader;
 
 impl Drop for CorePropertiesPart {
     fn drop(&mut self) {
+        self.update_last_modified();
         self.xml_fs
             .borrow()
             .add_update_xml_content(&self.file_name, &self.file_content)
-            .expect("Core Property Save Failed");
+            .expect("Core Property Part Save Failed");
     }
 }
 
 impl XmlElement for CorePropertiesPart {
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> CorePropertiesPart {
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> CorePropertiesPart {
         let file_name = "docProps/core.xml".to_string();
         Self {
             xml_fs: Rc::clone(xml_fs),
@@ -38,9 +39,14 @@ impl XmlElement for CorePropertiesPart {
     /// Initialize workbook for new excel
     fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8> {
         let template_core_properties = include_str!("core_properties.xml");
-        let mut xml_parsed = Reader::from_str(&template_core_properties);
+        let mut xml_parsed = Reader::from_str(template_core_properties);
         return Vec::new();
     }
 }
 
-impl CorePropertiesPart {}
+impl CorePropertiesPart {
+
+    fn update_last_modified(&self){
+
+    }
+}

@@ -9,12 +9,12 @@ impl Drop for MasterRelsPart {
         self.xml_fs
             .borrow()
             .add_update_xml_content(&self.file_name, &self.file_content)
-            .expect("Core Property Save Failed");
+            .expect("Master Rels Part Save Failed");
     }
 }
 
 impl XmlElement for MasterRelsPart {
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> MasterRelsPart {
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> MasterRelsPart {
         let file_name = ".rels.xml".to_string();
         Self {
             xml_fs: Rc::clone(xml_fs),
@@ -37,8 +37,8 @@ impl XmlElement for MasterRelsPart {
 
     /// Initialize workbook for new excel
     fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8> {
-        let template_core_properties = include_str!("rels.xml");
-        let mut xml_parsed = Reader::from_str(&template_core_properties);
+        let template_core_properties = include_str!("master_rels.xml");
+        let mut xml_parsed = Reader::from_str(template_core_properties);
         return Vec::new();
     }
 }
