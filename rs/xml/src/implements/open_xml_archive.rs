@@ -28,8 +28,6 @@ impl OpenXmlFile {
     /// Create Current file helper object a new file to work with
     pub fn create(is_in_memory: bool) -> Self {
         let archive_db: Connection = Self::common_initialization(is_in_memory);
-        // Default List of files common for all types
-        Self::initialize_database(&archive_db);
         Self {
             is_editable: true,
             archive_db,

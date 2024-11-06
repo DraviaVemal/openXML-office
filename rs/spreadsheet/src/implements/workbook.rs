@@ -15,7 +15,7 @@ impl Drop for Workbook {
 
 impl XmlElement for Workbook {
     /// Create workbook
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Self {
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> Self {
         let file_name = "xl/workbook.xml".to_string();
         return Self {
             xml_fs: Rc::clone(&xml_fs),

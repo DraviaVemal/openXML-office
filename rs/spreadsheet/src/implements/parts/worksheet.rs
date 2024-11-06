@@ -7,7 +7,7 @@ use crate::structs::worksheet::Worksheet;
 
 impl XmlElement for Worksheet {
     /// Create New object for the group
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Self {
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, sheet_name: Option<&str>) -> Self {
         //TODO: Dynamically Update file name
         let file_name = "xl/workbook.xml".to_string();
         return Self {
