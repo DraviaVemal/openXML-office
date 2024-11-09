@@ -1,5 +1,5 @@
 use crate::{xml_file::XmlElement, CorePropertiesPart};
-use openxmloffice_xml::OpenXmlFile;
+use openxmloffice_xml::{update_element_value, OpenXmlFile};
 use std::{cell::RefCell, rc::Rc};
 
 impl Drop for CorePropertiesPart {
@@ -22,17 +22,8 @@ impl XmlElement for CorePropertiesPart {
         }
     }
 
+    /// Save the current file state
     fn flush(self) {}
-
-    /// Read and load workbook xml to work with
-    fn get_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>, file_name: &str) -> Vec<u8> {
-        let results = xml_fs.borrow().get_xml_content(file_name);
-        if let Some(results) = results {
-            return results;
-        } else {
-            return Self::initialize_content_xml();
-        }
-    }
 
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> Vec<u8> {
@@ -42,5 +33,7 @@ impl XmlElement for CorePropertiesPart {
 }
 
 impl CorePropertiesPart {
-    fn update_last_modified(&self) {}
+    fn update_last_modified(&self) {
+        update_element_value("element", "test");
+    }
 }
