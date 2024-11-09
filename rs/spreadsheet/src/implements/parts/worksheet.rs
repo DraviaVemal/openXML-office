@@ -1,15 +1,13 @@
-use std::{cell::RefCell, rc::Rc};
-
+use crate::structs::worksheet::Worksheet;
 use openxmloffice_global::xml_file::XmlElement;
 use openxmloffice_xml::OpenXmlFile;
-
-use crate::structs::worksheet::Worksheet;
+use std::{cell::RefCell, rc::Rc};
 
 impl XmlElement for Worksheet {
     /// Create New object for the group
     fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, sheet_name: Option<&str>) -> Self {
         //TODO: Dynamically Update file name
-        let file_name = "xl/workbook.xml".to_string();
+        let mut file_name = "xl/worksheets/sheet1.xml".to_string();
         return Self {
             xml_fs: Rc::clone(xml_fs),
             file_content: Self::get_content_xml(&xml_fs, &file_name),
@@ -24,14 +22,14 @@ impl XmlElement for Worksheet {
         if let Some(results) = results {
             return results;
         } else {
-            return Self::initialize_content_xml(&xml_fs);
+            return Self::initialize_content_xml();
         }
     }
 
-    /// Initialize workbook for new excel
-    fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8> {
-        let content = Vec::new();
-        return content;
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> Vec<u8> {
+        let template_core_properties = r#"<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></worksheet>"#;
+        return template_core_properties.as_bytes().to_vec();
     }
 }
 

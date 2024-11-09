@@ -10,5 +10,5 @@ pub trait XmlElement {
     /// Get content of the current xml
     fn get_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>, file_name: &str) -> Vec<u8>;
     /// Initialize the content if not already exist
-    fn initialize_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Vec<u8>;
+    fn initialize_content_xml() -> Vec<u8>;
 }
