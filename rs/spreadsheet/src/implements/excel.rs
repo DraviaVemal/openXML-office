@@ -5,7 +5,7 @@ use crate::{
     Excel, ExcelPropertiesModel,
 };
 use anyhow::{Ok, Result};
-use openxmloffice_global::xml_file::XmlElement;
+use openxmloffice_global::{xml_file::XmlElement, CorePropertiesPart, MasterRelsPart, ThemePart};
 use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 
@@ -20,21 +20,23 @@ impl Excel {
             xml_fs = Rc::new(RefCell::new(open_xml_file));
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
             Self::load_common_reference(&xml_fs);
-            workbook = Workbook::new(&xml_fs);
+            workbook = Workbook::new(&xml_fs, None);
         } else {
             let open_xml_file = OpenXmlFile::create(excel_setting.is_in_memory);
             xml_fs = Rc::new(RefCell::new(open_xml_file));
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
             Self::initialize_common_reference(&xml_fs);
-            workbook = Workbook::new(&xml_fs);
+            MasterRelsPart::new(&xml_fs, None);
+            CorePropertiesPart::new(&xml_fs, None);
+            ThemePart::new(&xml_fs, Some("xl/theme/theme1.xml"));
+            workbook = Workbook::new(&xml_fs, None);
         }
         return Self { xml_fs, workbook };
     }
 
     /// Add sheet to the current excel
     pub fn add_sheet(&self, sheet_name: &str) -> Worksheet {
-        let worksheet = Worksheet::new(&self.xml_fs);
-        worksheet.rename_sheet(sheet_name);
+        let worksheet = Worksheet::new(&self.xml_fs, Some(sheet_name));
         return worksheet;
     }
 

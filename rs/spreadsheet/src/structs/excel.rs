@@ -8,6 +8,7 @@ pub struct Excel {
     pub(crate) workbook: Workbook,
 }
 
+#[derive(Debug)]
 pub struct ExcelPropertiesModel {
     pub(crate) is_in_memory: bool,
 }
