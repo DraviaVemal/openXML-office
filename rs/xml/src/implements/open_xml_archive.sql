@@ -32,7 +32,7 @@ SET
 WHERE
     file_name = excluded.file_name;
 
--- query : select_archive_table# Get All content from archive table
+-- query : select_all_archive_table# Get All content from archive table
 SELECT
     id,
     file_name,
@@ -45,3 +45,11 @@ FROM
     archive
 ORDER BY
     id;
+
+-- query : select_archive_content# select and pull workbook blob content
+SELECT
+    content
+FROM
+    archive
+WHERE
+    file_name = ?;

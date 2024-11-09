@@ -1,3 +1,5 @@
+// TODO : After the file gets shaped with multiple function. Reorganize it to xml, archive and database into separate implementation
+
 use crate::{
     file_handling::{compress_content, decompress_content},
     get_specific_queries, ArchiveRecordModel, OpenXmlFile,
@@ -8,6 +10,7 @@ use std::{
     fs::{metadata, remove_file, File},
     io::{Cursor, Read, Write},
 };
+use tempfile::NamedTempFile;
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 impl OpenXmlFile {
@@ -31,6 +34,49 @@ impl OpenXmlFile {
             is_editable: true,
             archive_db,
         }
+    }
+
+    /// Get File XML Content
+    pub fn get_xml_content(&self, file_name: &str) -> Option<Vec<u8>> {
+        let query = get_specific_queries!("open_xml_archive.sql", "select_archive_content")
+            .expect("Query Pull Failed");
+        fn row_mapper(row: &Row) -> Result<Vec<u8>, rusqlite::Error> {
+            Ok(row.get(0)?)
+        }
+        let result = self
+            .find_one(&query, params![file_name], row_mapper)
+            .expect("Get Content Failed");
+        if let Some(result) = result {
+            return Some(decompress_content(&result).expect("Decompress data content"));
+        } else {
+            return None;
+        }
+    }
+
+    /// Set or Update XML Content of target file
+    pub fn add_update_xml_content(
+        &self,
+        file_name: &str,
+        uncompressed_data: &Vec<u8>,
+    ) -> Result<usize, AnyError> {
+        let query: String = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
+            .expect("Specific query pull fail");
+        let compressed_data: Vec<u8> =
+            compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
+        return match self.archive_db.execute(
+            &query,
+            params![
+                file_name,
+                compressed_data.len(),
+                uncompressed_data.len(),
+                1,
+                "gzip",
+                compressed_data
+            ],
+        ) {
+            Ok(result) => Ok(result),
+            Err(e) => Err(e.into()),
+        };
     }
 
     /// Find one result and map the row to a specific type using the closure.
@@ -86,31 +132,6 @@ impl OpenXmlFile {
         };
     }
 
-    pub fn add_update_file_content(
-        &self,
-        file_name: &str,
-        uncompressed_data: Vec<u8>,
-    ) -> Result<usize, AnyError> {
-        let query: String = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
-            .expect("Specific query pull fail");
-        let compressed_data: Vec<u8> =
-            compress_content(&uncompressed_data).expect("Recompressing in GZip Failed");
-        return match self.archive_db.execute(
-            &query,
-            params![
-                file_name,
-                compressed_data.len(),
-                uncompressed_data.len(),
-                1,
-                "gzip",
-                compressed_data
-            ],
-        ) {
-            Ok(result) => Ok(result),
-            Err(e) => Err(e.into()),
-        };
-    }
-
     /// Save the current temp directory state file into final result
     pub fn save(&self, save_file: &str) {
         let file_content = self.save_database_into_archive();
@@ -119,8 +140,9 @@ impl OpenXmlFile {
         }
         let mut file = File::create(save_file).expect("Create Zip File");
         file.write_all(&file_content)
-            .expect("Write final Zip Resutl");
+            .expect("Write final Zip Result");
     }
+
     /// Common initialization
     fn common_initialization(is_in_memory: bool) -> Connection {
         let archive_db;
@@ -128,12 +150,13 @@ impl OpenXmlFile {
             // In memory operation
             archive_db = Connection::open_in_memory().expect("Local Lite DB Failed");
         } else {
-            match remove_file("./local.db") {
+            let temp_file = NamedTempFile::new().expect("Db temp file");
+            match remove_file(&temp_file) {
                 Ok(_) => (),
                 Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
                 Err(e) => eprintln!("Failed to delete the file: {}", e),
             }
-            archive_db = Connection::open("./local.db").expect("Local Lite DB Failed");
+            archive_db = Connection::open(&temp_file).expect("Local Lite DB Failed");
         }
         Self::initialize_database(&archive_db);
         archive_db
