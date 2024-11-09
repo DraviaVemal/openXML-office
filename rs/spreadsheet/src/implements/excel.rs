@@ -23,6 +23,7 @@ impl Excel {
             xml_fs = Rc::new(RefCell::new(open_xml_file));
             Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
             Self::load_common_reference(&xml_fs);
+            CorePropertiesPart::new(&xml_fs, None);
             workbook = Workbook::new(&xml_fs, None);
         } else {
             let open_xml_file = OpenXmlFile::create(excel_setting.is_in_memory);

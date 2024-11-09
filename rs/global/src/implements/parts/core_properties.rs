@@ -1,5 +1,5 @@
-use crate::{xml_file::XmlElement, CorePropertiesPart};
-use openxmloffice_xml::{update_element_value, OpenXmlFile};
+use crate::{CorePropertiesPart, XmlElement};
+use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
 
 impl Drop for CorePropertiesPart {
@@ -33,7 +33,5 @@ impl XmlElement for CorePropertiesPart {
 }
 
 impl CorePropertiesPart {
-    fn update_last_modified(&self) {
-        update_element_value("element", "test");
-    }
+    fn update_last_modified(&mut self) {}
 }
