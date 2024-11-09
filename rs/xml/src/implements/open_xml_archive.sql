@@ -3,6 +3,7 @@ CREATE TABLE
     archive (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
         file_name TEXT NOT NULL UNIQUE, -- Name of the file including directory
+        content_type TEXT NOT NULL, -- File content type
         compressed_file_size INTEGER, -- Size of compressed file in bytes
         uncompressed_file_size INTEGER, -- Size of uncompressed file in bytes
         compression_level INTEGER NOT NULL, -- File Compression level can be adjusted to adjust CPU load
@@ -14,6 +15,7 @@ CREATE TABLE
 INSERT INTO
     archive (
         file_name,
+        content_type,
         compressed_file_size,
         uncompressed_file_size,
         compression_level,
@@ -21,7 +23,7 @@ INSERT INTO
         content
     )
 VALUES
-    (?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
+    (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
 UPDATE
 SET
     compressed_file_size = excluded.compressed_file_size,
@@ -32,10 +34,11 @@ SET
 WHERE
     file_name = excluded.file_name;
 
--- query : select_all_archive_table# Get All content from archive table
+-- query : select_all_archive_rows# Get All content from archive table
 SELECT
     id,
     file_name,
+    content_type,
     compressed_file_size,
     uncompressed_file_size,
     compression_level,

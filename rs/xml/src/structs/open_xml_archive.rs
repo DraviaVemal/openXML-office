@@ -13,6 +13,7 @@ pub struct OpenXmlFile {
 pub struct ArchiveRecordModel {
     pub(crate) id: i16,
     pub(crate) file_name: String,
+    pub(crate) content_type: String,
     pub(crate) compressed_file_size: i32,
     pub(crate) uncompressed_file_size: i32,
     pub(crate) compression_level: i8,

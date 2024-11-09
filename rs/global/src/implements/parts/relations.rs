@@ -12,8 +12,11 @@ impl Drop for RelationsPart {
 }
 
 impl XmlElement for RelationsPart {
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> RelationsPart {
-        let file_name = ".rels.xml".to_string();
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, relation_file_name: Option<&str>) -> RelationsPart {
+        let mut file_name = ".rels".to_string();
+        if let Some(relation_file_name) = relation_file_name {
+            file_name = relation_file_name.to_string();
+        }
         Self {
             xml_fs: Rc::clone(xml_fs),
             file_content: Self::get_content_xml(&xml_fs, &file_name),

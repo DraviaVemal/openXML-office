@@ -65,6 +65,7 @@ impl OpenXmlFile {
             &query,
             params![
                 file_name,
+                "todo",
                 compressed_data.len(),
                 uncompressed_data.len(),
                 1,
@@ -171,17 +172,19 @@ impl OpenXmlFile {
 
     /// Save the database content into file archive
     fn save_database_into_archive(&self) -> Vec<u8> {
-        let query: String = get_specific_queries!("open_xml_archive.sql", "select_archive_table")
-            .expect("Read Select Query Pull Failed");
+        let query: String =
+            get_specific_queries!("open_xml_archive.sql", "select_all_archive_rows")
+                .expect("Read Select Query Pull Failed");
         fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordModel, rusqlite::Error> {
             Ok(ArchiveRecordModel {
                 id: row.get(0)?,
                 file_name: row.get(1)?,
-                compressed_file_size: row.get(2)?,
-                uncompressed_file_size: row.get(3)?,
-                compression_level: row.get(4)?,
-                compression_type: row.get(5)?,
-                content: row.get(6)?,
+                content_type: row.get(2)?,
+                compressed_file_size: row.get(3)?,
+                uncompressed_file_size: row.get(4)?,
+                compression_level: row.get(5)?,
+                compression_type: row.get(6)?,
+                content: row.get(7)?,
             })
         }
         let result = self
@@ -193,6 +196,7 @@ impl OpenXmlFile {
         for ArchiveRecordModel {
             id: _,
             file_name,
+            content_type,
             compressed_file_size: _,
             uncompressed_file_size: _,
             compression_level: _,
@@ -232,6 +236,7 @@ impl OpenXmlFile {
                     &query,
                     params![
                         file_content.name(),
+                        "todo",
                         compressed.len(),
                         uncompressed_data.len(),
                         1,
