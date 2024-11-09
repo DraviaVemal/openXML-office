@@ -45,6 +45,7 @@ impl Excel {
 
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) {
+        self.workbook.flush();
         self.xml_fs.borrow().save(file_name);
     }
 
