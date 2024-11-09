@@ -15,8 +15,10 @@ impl Drop for Worksheet {
 impl XmlElement for Worksheet {
     /// Create New object for the group
     fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, sheet_name: Option<&str>) -> Self {
-        //TODO: Dynamically Update file name
-        let mut file_name = "xl/worksheets/sheet1.xml".to_string();
+        let mut file_name: String = "xl/worksheets/sheet1.xml".to_string();
+        if let Some(sheet_name) = sheet_name {
+            file_name = sheet_name.to_string();
+        }
         return Self {
             xml_fs: Rc::clone(xml_fs),
             file_content: Self::get_content_xml(&xml_fs, &file_name),
