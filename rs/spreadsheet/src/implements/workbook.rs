@@ -26,19 +26,9 @@ impl XmlElement for Workbook {
 
     fn flush(self) {}
 
-    /// Read and load workbook xml to work with
-    fn get_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>, file_name: &str) -> Vec<u8> {
-        let results = xml_fs.borrow().get_xml_content(file_name);
-        if let Some(results) = results {
-            return results;
-        } else {
-            return Self::initialize_content_xml();
-        }
-    }
-
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> Vec<u8> {
-        let template_core_properties = r#"<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></workbook>"#;
+        let template_core_properties = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></workbook>"#;
         return template_core_properties.as_bytes().to_vec();
     }
 }

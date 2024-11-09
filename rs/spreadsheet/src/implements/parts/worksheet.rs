@@ -3,6 +3,15 @@ use openxmloffice_global::xml_file::XmlElement;
 use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
 
+impl Drop for Worksheet {
+    fn drop(&mut self) {
+        self.xml_fs
+            .borrow()
+            .add_update_xml_content(&self.file_name, &self.file_content)
+            .expect("Workbook Save Failed");
+    }
+}
+
 impl XmlElement for Worksheet {
     /// Create New object for the group
     fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, sheet_name: Option<&str>) -> Self {
@@ -17,18 +26,9 @@ impl XmlElement for Worksheet {
 
     fn flush(self) {}
 
-    fn get_content_xml(xml_fs: &Rc<RefCell<OpenXmlFile>>, file_name: &str) -> Vec<u8> {
-        let results = xml_fs.borrow().get_xml_content(file_name);
-        if let Some(results) = results {
-            return results;
-        } else {
-            return Self::initialize_content_xml();
-        }
-    }
-
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> Vec<u8> {
-        let template_core_properties = r#"<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></worksheet>"#;
+        let template_core_properties = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></worksheet>"#;
         return template_core_properties.as_bytes().to_vec();
     }
 }
