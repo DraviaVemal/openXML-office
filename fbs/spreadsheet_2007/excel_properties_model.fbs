@@ -1,6 +1,6 @@
 include "../global_2007/consolidated.fbs";
 
-namespace openxmloffice.spreadsheet_2007;
+namespace openxmloffice_fbs.spreadsheet_2007;
 
 // Define the ExcelPropertiesModel table with three fields
 table ExcelPropertiesModel {

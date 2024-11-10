@@ -522,7 +522,7 @@ checksum = "1261fe7e33c73b354eab43b1273a57c8f967d0391e80353e51f764ac02cf6775"
 
 [[package]]
 name = "openxmloffice_document"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
  "anyhow",
  "openxmloffice_global",
@@ -535,15 +535,16 @@ dependencies = [
 
 [[package]]
 name = "openxmloffice_fbs"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
  "flatbuffers",
 ]
 
 [[package]]
 name = "openxmloffice_ffi"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
+ "anyhow",
  "flatbuffers",
  "openxmloffice_document",
  "openxmloffice_fbs",
@@ -554,7 +555,7 @@ dependencies = [
 
 [[package]]
 name = "openxmloffice_global"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
  "anyhow",
  "openxmloffice_xml",
@@ -565,7 +566,7 @@ dependencies = [
 
 [[package]]
 name = "openxmloffice_presentation"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
  "anyhow",
  "openxmloffice_global",
@@ -578,7 +579,7 @@ dependencies = [
 
 [[package]]
 name = "openxmloffice_spreadsheet"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
  "anyhow",
  "openxmloffice_global",
@@ -590,7 +591,7 @@ dependencies = [
 
 [[package]]
 name = "openxmloffice_xml"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
  "anyhow",
  "chrono",

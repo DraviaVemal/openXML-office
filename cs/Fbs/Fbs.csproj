@@ -7,7 +7,7 @@
 		<RootNamespace>OpenXMLOffice.Global_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
 		<TargetFrameworks>net6.0;netstandard2.1;net7.0</TargetFrameworks>
-		<LangVersion>5.0</LangVersion>
+		<LangVersion>10.0</LangVersion>
 		<PackageDescription>This is OpenXML-Office Common package. Bundles shared components and
 			parts.</PackageDescription>
 	</PropertyGroup>
@@ -16,6 +16,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 </Project>
