@@ -44,16 +44,16 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | rs          | FFI          | 🟩⬜⬜⬜⬜    |
 | cs          | fbs          | 🟩⬜⬜⬜⬜    |
 | cs          | spreadsheet  | 🟩⬜⬜⬜⬜    |
-| cs          | presentation | 🟩⬜⬜⬜⬜    |
-| cs          | document     | 🟩⬜⬜⬜⬜    |
-| java        | fbs          | 🟩⬜⬜⬜⬜    |
-| java        | spreadsheet  | 🟩⬜⬜⬜⬜    |
-| java        | presentation | 🟩⬜⬜⬜⬜    |
-| java        | document     | 🟩⬜⬜⬜⬜    |
-| go          | fbs          | 🟩⬜⬜⬜⬜    |
-| go          | spreadsheet  | 🟩⬜⬜⬜⬜    |
-| go          | presentation | 🟩⬜⬜⬜⬜    |
-| go          | document     | 🟩⬜⬜⬜⬜    |
+| cs          | presentation | ⬜⬜⬜⬜⬜    |
+| cs          | document     | ⬜⬜⬜⬜⬜    |
+| java        | fbs          | ⬜⬜⬜⬜⬜    |
+| java        | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| java        | presentation | ⬜⬜⬜⬜⬜    |
+| java        | document     | ⬜⬜⬜⬜⬜    |
+| go          | fbs          | ⬜⬜⬜⬜⬜    |
+| go          | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| go          | presentation | ⬜⬜⬜⬜⬜    |
+| go          | document     | ⬜⬜⬜⬜⬜    |
 
 ## Repo & Design Block Diagram
 ![Design](design.svg)
