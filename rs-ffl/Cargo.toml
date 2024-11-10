@@ -12,3 +12,4 @@ openxmloffice_global = { path = "../rs/global", version = ">= 0.1.0" }
 openxmloffice_spreadsheet = { path = "../rs/spreadsheet", version = ">= 0.1.0" }
 openxmloffice_document = { path = "../rs/document", version = ">= 0.1.0" }
 openxmloffice_presentation = { path = "../rs/presentation", version = ">= 0.1.0" }
+flatbuffers = "24.3.25"

@@ -4,9 +4,10 @@ namespace openxmloffice.presentation_2007;
 
 // Define the PresentationPropertiesModel table with three fields
 table PresentationPropertiesModel {
-  settings: PresentationSettingsModel;
-  theme: global_2007.ThemePalletModel;
-  core_properties: global_2007.CorePropertiesModel;
+  is_in_memory:bool;
+  // settings: PresentationSettingsModel;
+  // theme: global_2007.ThemePalletModel;
+  // core_properties: global_2007.CorePropertiesModel;
 }
 
 // Define the PresentationSettingsModel table
