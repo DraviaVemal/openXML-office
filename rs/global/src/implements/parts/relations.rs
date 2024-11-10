@@ -7,7 +7,6 @@ impl Drop for RelationsPart {
         self.xml_fs
             .borrow()
             .add_update_xml_content(&self.file_name, &self.file_content)
-            .expect("Master Rels Part Save Failed");
     }
 }
 
