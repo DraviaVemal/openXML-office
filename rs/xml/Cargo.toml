@@ -7,7 +7,8 @@ edition = "2021"
 anyhow = "1.0.90"
 chrono = "0.4.38"
 flate2 = "1.0.34"
-quick-xml = "0.37.0"
+quick-xml = { version = "0.37.0",features = ["serialize"] }
 rusqlite = { version = "0.32.0", features = ["bundled"] }
+serde = "1.0.214"
 tempfile = "3.13.0"
 zip = "2.2.0"
