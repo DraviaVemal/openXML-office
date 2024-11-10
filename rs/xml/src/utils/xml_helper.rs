@@ -1,13 +1,11 @@
-use std::io::{Cursor, Write};
-
 use quick_xml::{events::Event, NsReader};
+use std::io::{Cursor, Write};
 
 pub struct XmlHelper {
     root_element: Vec<u8>,
 }
 
 impl XmlHelper {
-
     /// Create new xml element object
     pub fn new(root_element: Vec<u8>) -> Self {
         Self { root_element }
@@ -63,7 +61,7 @@ impl XmlHelper {
         }
         self.root_element = writer.into_inner();
     }
-    
+
     pub fn get_first_element() {}
 
     pub fn get_last_element() {}
