@@ -508,17 +508,23 @@ checksum = "1261fe7e33c73b354eab43b1273a57c8f967d0391e80353e51f764ac02cf6775"
 name = "openxmloffice_document"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "openxmloffice_global",
  "openxmloffice_spreadsheet",
  "openxmloffice_xml",
+ "quick-xml",
+ "rusqlite",
+ "serde",
 ]
 
 [[package]]
 name = "openxmloffice_global"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "openxmloffice_xml",
  "quick-xml",
+ "rusqlite",
  "serde",
 ]
 
@@ -526,9 +532,13 @@ dependencies = [
 name = "openxmloffice_presentation"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "openxmloffice_global",
  "openxmloffice_spreadsheet",
  "openxmloffice_xml",
+ "quick-xml",
+ "rusqlite",
+ "serde",
 ]
 
 [[package]]
@@ -538,7 +548,9 @@ dependencies = [
  "anyhow",
  "openxmloffice_global",
  "openxmloffice_xml",
+ "quick-xml",
  "rusqlite",
+ "serde",
 ]
 
 [[package]]

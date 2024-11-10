@@ -4,7 +4,7 @@ use crate::Excel;
 fn blank_excel() {
     let file = Excel::new(None, Excel::default());
     file.add_sheet(&"Test".to_string());
-    file.save_as(&"this.xlsx".to_string());
+    file.save_as(&"test.xlsx".to_string());
     assert_eq!(true, true);
 }
 
@@ -18,6 +18,6 @@ fn edit_excel() {
         Excel::default(),
     );
     // file.add_sheet(&"Test".to_string());
-    file.save_as(&"this.xlsx".to_string());
+    file.save_as(&"test.xlsx".to_string());
     assert_eq!(true, true);
 }

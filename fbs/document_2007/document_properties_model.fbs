@@ -4,9 +4,10 @@ namespace openxmloffice.document_2007;
 
 // Define the DocumentPropertiesModel table with three fields
 table DocumentPropertiesModel {
-  settings: DocumentSettingsModel;
-  theme: global_2007.ThemePalletModel;
-  core_properties: global_2007.CorePropertiesModel;
+  is_in_memory:bool;
+  // settings: DocumentSettingsModel;
+  // theme: global_2007.ThemePalletModel;
+  // core_properties: global_2007.CorePropertiesModel;
 }
 
 // Define the DocumentSettingsModel table
