@@ -4,9 +4,10 @@ namespace openxmloffice.spreadsheet_2007;
 
 // Define the ExcelPropertiesModel table with three fields
 table ExcelPropertiesModel {
-  settings: ExcelSettingsModel;
-  theme: global_2007.ThemePalletModel;
-  core_properties: global_2007.CorePropertiesModel;
+  is_in_memory:bool;
+  // settings: ExcelSettingsModel;
+  // theme: global_2007.ThemePalletModel;
+  // core_properties: global_2007.CorePropertiesModel;
 }
 
 // Define the ExcelSettingsModel table
