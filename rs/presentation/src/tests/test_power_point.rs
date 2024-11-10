@@ -2,7 +2,7 @@ use crate::PowerPoint;
 
 #[test]
 fn blank_power_point() {
-    let file = PowerPoint::new(None, PowerPoint::default());
+    let file = PowerPoint::new(None, PowerPoint::default()).expect("Create New File Failed");
     file.save_as(&"test.pptx".to_string());
     assert_eq!(true, true);
 }
@@ -15,7 +15,8 @@ fn edit_power_point() {
                 .to_string(),
         ),
         PowerPoint::default(),
-    );
+    )
+    .expect("Open Existing file failed");
     file.save_as(&"test.pptx".to_string());
     assert_eq!(true, true);
 }

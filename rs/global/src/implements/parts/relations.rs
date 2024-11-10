@@ -1,4 +1,5 @@
 use crate::{xml_file::XmlElement, RelationsPart};
+use anyhow::{Error as AnyError, Result as AnyResult};
 use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
 
@@ -6,21 +7,25 @@ impl Drop for RelationsPart {
     fn drop(&mut self) {
         self.xml_fs
             .borrow()
-            .add_update_xml_content(&self.file_name, &self.file_content)
+            .add_update_xml_content(&self.file_name, &self.file_content);
     }
 }
 
 impl XmlElement for RelationsPart {
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, relation_file_name: Option<&str>) -> RelationsPart {
+    fn new(
+        xml_fs: &Rc<RefCell<OpenXmlFile>>,
+        relation_file_name: Option<&str>,
+    ) -> AnyResult<Self, AnyError> {
         let mut file_name = ".rels".to_string();
         if let Some(relation_file_name) = relation_file_name {
             file_name = relation_file_name.to_string();
         }
-        Self {
+        let file_content = Self::get_content_xml(&xml_fs, &file_name)?;
+        Ok(Self {
             xml_fs: Rc::clone(xml_fs),
-            file_content: Self::get_content_xml(&xml_fs, &file_name),
+            file_content,
             file_name,
-        }
+        })
     }
 
     fn flush(self) {}
