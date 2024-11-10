@@ -1,3 +1,20 @@
+#!/bin/bash
+
+# Default to an empty string (no --release)
+release_flag=""
+win_binary_dir="target/x86_64-pc-windows-gnu/debug"
+linux_binary_dir="target/x86_64-unknown-linux-gnu/debug"
+
+# Check if --release is passed as an argument
+for arg in "$@"; do
+  if [ "$arg" == "--release" ]; then
+    release_flag="--release"
+    win_binary_dir="target/x86_64-pc-windows-gnu/release"
+    linux_binary_dir="target/x86_64-unknown-linux-gnu/release"
+    break
+  fi
+done
+
 # Define the source and target directories
 SOURCE_DIR="fbs"
 RUST_FFI_DIR="rs-ffl/fbs/src"
@@ -6,9 +23,9 @@ GO_DIR="go/fbs/src"
 JAVA_DIR="java/fbs/src/main/java/com/draviavemal"
 
 # Flatbuffer Generated code setup
-rm -rf "$C_SHARP_DIR/openxmloffice"
-rm -rf "$GO_DIR/openxmloffice"
-rm -rf "$JAVA_DIR/openxmloffice"
+rm -rf "$C_SHARP_DIR/openxmloffice_fbs"
+rm -rf "$GO_DIR/openxmloffice_fbs"
+rm -rf "$JAVA_DIR/openxmloffice_fbs"
 
 # Find and compile each .fbs file
 find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
@@ -44,21 +61,21 @@ rm -rf ../cs/Document/Lib && mkdir -p ../cs/Document/Lib
 cargo clean
 
 # Windows
-cargo build --release --target x86_64-pc-windows-gnu
+cargo build $release_flag --target x86_64-pc-windows-gnu
 
 # Linux
-cargo build --release --target x86_64-unknown-linux-gnu
+cargo build $release_flag --target x86_64-unknown-linux-gnu
 
 # Mac osX
 # cargo build --release --target x86_64-apple-darwin
 
 # Copy Result binary to targets
-cp target/x86_64-pc-windows-gnu/release/openxmloffice_ffi.dll ../cs/Spreadsheet/Lib/openxmloffice_ffi.dll
-cp target/x86_64-pc-windows-gnu/release/openxmloffice_ffi.dll ../cs/Presentation/Lib/openxmloffice_ffi.dll
-cp target/x86_64-pc-windows-gnu/release/openxmloffice_ffi.dll ../cs/Document/Lib/openxmloffice_ffi.dll
-cp target/x86_64-unknown-linux-gnu/release/libopenxmloffice_ffi.so ../cs/Spreadsheet/Lib/openxmloffice_ffi.so
-cp target/x86_64-unknown-linux-gnu/release/libopenxmloffice_ffi.so ../cs/Presentation/Lib/openxmloffice_ffi.so
-cp target/x86_64-unknown-linux-gnu/release/libopenxmloffice_ffi.so ../cs/Document/Lib/openxmloffice_ffi.so
+cp $win_binary_dir/openxmloffice_ffi.dll ../cs/Spreadsheet/Lib/openxmloffice_ffi.dll
+cp $win_binary_dir/openxmloffice_ffi.dll ../cs/Presentation/Lib/openxmloffice_ffi.dll
+cp $win_binary_dir/openxmloffice_ffi.dll ../cs/Document/Lib/openxmloffice_ffi.dll
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../cs/Spreadsheet/Lib/openxmloffice_ffi.so
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../cs/Presentation/Lib/openxmloffice_ffi.so
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../cs/Document/Lib/openxmloffice_ffi.so
 
 cd ..
 
