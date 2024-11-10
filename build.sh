@@ -55,6 +55,12 @@ cd rs-ffl
 rm -rf ../cs/Spreadsheet/Lib && mkdir -p ../cs/Spreadsheet/Lib
 rm -rf ../cs/Presentation/Lib && mkdir -p ../cs/Presentation/Lib
 rm -rf ../cs/Document/Lib && mkdir -p ../cs/Document/Lib
+rm -rf ../java/spreadsheet/src/lib && mkdir -p ../java/spreadsheet/src/lib
+rm -rf ../java/presentation/src/lib && mkdir -p ../java/presentation/src/lib
+rm -rf ../java/document/src/lib && mkdir -p ../java/document/src/lib
+rm -rf ../go/spreadsheet/src/lib && mkdir -p ../go/spreadsheet/src/lib
+rm -rf ../go/presentation/src/lib && mkdir -p ../go/presentation/src/lib
+rm -rf ../go/document/src/lib && mkdir -p ../go/document/src/lib
 
 # Cargo Build FFI binary
 # Clear build history
@@ -69,7 +75,7 @@ cargo build $release_flag --target x86_64-unknown-linux-gnu
 # Mac osX
 # cargo build --release --target x86_64-apple-darwin
 
-# Copy Result binary to targets
+# Copy Result binary to CS targets
 cp $win_binary_dir/openxmloffice_ffi.dll ../cs/Spreadsheet/Lib/openxmloffice_ffi.dll
 cp $win_binary_dir/openxmloffice_ffi.dll ../cs/Presentation/Lib/openxmloffice_ffi.dll
 cp $win_binary_dir/openxmloffice_ffi.dll ../cs/Document/Lib/openxmloffice_ffi.dll
@@ -77,6 +83,21 @@ cp $linux_binary_dir/libopenxmloffice_ffi.so ../cs/Spreadsheet/Lib/openxmloffice
 cp $linux_binary_dir/libopenxmloffice_ffi.so ../cs/Presentation/Lib/openxmloffice_ffi.so
 cp $linux_binary_dir/libopenxmloffice_ffi.so ../cs/Document/Lib/openxmloffice_ffi.so
 
+# Copy Result binary to Java targets
+cp $win_binary_dir/openxmloffice_ffi.dll ../java/spreadsheet/src/lib/openxmloffice_ffi.dll
+cp $win_binary_dir/openxmloffice_ffi.dll ../java/presentation/src/lib/openxmloffice_ffi.dll
+cp $win_binary_dir/openxmloffice_ffi.dll ../java/document/src/lib/openxmloffice_ffi.dll
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../java/spreadsheet/src/lib/openxmloffice_ffi.so
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../java/presentation/src/lib/openxmloffice_ffi.so
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../java/document/src/lib/openxmloffice_ffi.so
+
+# Copy Result binary to Go targets
+cp $win_binary_dir/openxmloffice_ffi.dll ../go/spreadsheet/src/lib/openxmloffice_ffi.dll
+cp $win_binary_dir/openxmloffice_ffi.dll ../go/presentation/src/lib/openxmloffice_ffi.dll
+cp $win_binary_dir/openxmloffice_ffi.dll ../go/document/src/lib/openxmloffice_ffi.dll
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../go/spreadsheet/src/lib/openxmloffice_ffi.so
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../go/presentation/src/lib/openxmloffice_ffi.so
+cp $linux_binary_dir/libopenxmloffice_ffi.so ../go/document/src/lib/openxmloffice_ffi.so
 cd ..
 
 # Build wrapper library using link files
