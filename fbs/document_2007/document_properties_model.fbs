@@ -1,6 +1,6 @@
 include "../global_2007/consolidated.fbs";
 
-namespace openxmloffice.document_2007;
+namespace openxmloffice_fbs.document_2007;
 
 // Define the DocumentPropertiesModel table with three fields
 table DocumentPropertiesModel {

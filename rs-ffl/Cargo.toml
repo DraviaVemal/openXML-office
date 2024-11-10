@@ -1,6 +1,6 @@
 [package]
 name = "openxmloffice_ffi"
-version = "0.1.0"
+version = "4.0.0"
 edition = "2021"
 
 [lib]
@@ -13,3 +13,7 @@ openxmloffice_spreadsheet = { path = "../rs/spreadsheet", version = ">= 0.1.0" }
 openxmloffice_document = { path = "../rs/document", version = ">= 0.1.0" }
 openxmloffice_presentation = { path = "../rs/presentation", version = ">= 0.1.0" }
 flatbuffers = "24.3.25"
+anyhow = "1.0.90"
+
+[profile.dev]
+debug = true
