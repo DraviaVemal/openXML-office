@@ -80,3 +80,11 @@ cp $linux_binary_dir/libopenxmloffice_ffi.so ../cs/Document/Lib/openxmloffice_ff
 cd ..
 
 # Build wrapper library using link files
+
+# C# Project Build
+
+cd cs
+
+dotnet build
+
+cd ..
