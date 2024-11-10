@@ -3,11 +3,10 @@
 		<Folder Include="openxmloffice/" />
 	</ItemGroup>
 	<PropertyGroup>
+		<NoWarn>$(NoWarn);1591</NoWarn>
 		<PackageId>OpenXMLOffice.Fbs</PackageId>
 		<RootNamespace>OpenXMLOffice.Global_2007</RootNamespace>
 		<WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
-		<TargetFrameworks>net6.0;netstandard2.1;net7.0</TargetFrameworks>
-		<LangVersion>10.0</LangVersion>
 		<PackageDescription>This is OpenXML-Office Common package. Bundles shared components and
 			parts.</PackageDescription>
 	</PropertyGroup>
