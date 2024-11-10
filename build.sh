@@ -34,11 +34,31 @@ flatc -r --gen-all -o "$RUST_FFI_DIR" "fbs/consolidated.fbs"
 
 cd rs-ffl
 
+# Prepare Build Result Directory
+rm -rf ../cs/Spreadsheet/Lib && mkdir -p ../cs/Spreadsheet/Lib
+rm -rf ../cs/Presentation/Lib && mkdir -p ../cs/Presentation/Lib
+rm -rf ../cs/Document/Lib && mkdir -p ../cs/Document/Lib
+
+# Cargo Build FFI binary
+# Clear build history
+cargo clean
+
+# Windows
 cargo build --release --target x86_64-pc-windows-gnu
 
+# Linux
 cargo build --release --target x86_64-unknown-linux-gnu
 
-cargo build --release --target x86_64-apple-darwin
+# Mac osX
+# cargo build --release --target x86_64-apple-darwin
+
+# Copy Result binary to targets
+cp target/x86_64-pc-windows-gnu/release/openxmloffice_ffi.dll ../cs/Spreadsheet/Lib/openxmloffice_ffi.dll
+cp target/x86_64-pc-windows-gnu/release/openxmloffice_ffi.dll ../cs/Presentation/Lib/openxmloffice_ffi.dll
+cp target/x86_64-pc-windows-gnu/release/openxmloffice_ffi.dll ../cs/Document/Lib/openxmloffice_ffi.dll
+cp target/x86_64-unknown-linux-gnu/release/libopenxmloffice_ffi.so ../cs/Spreadsheet/Lib/openxmloffice_ffi.so
+cp target/x86_64-unknown-linux-gnu/release/libopenxmloffice_ffi.so ../cs/Presentation/Lib/openxmloffice_ffi.so
+cp target/x86_64-unknown-linux-gnu/release/libopenxmloffice_ffi.so ../cs/Document/Lib/openxmloffice_ffi.so
 
 cd ..
 
