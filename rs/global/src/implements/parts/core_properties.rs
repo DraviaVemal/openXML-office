@@ -1,4 +1,5 @@
 use crate::{CorePropertiesPart, XmlElement};
+use anyhow::{Error as AnyError, Result as AnyResult};
 use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
 
@@ -7,18 +8,19 @@ impl Drop for CorePropertiesPart {
         self.update_last_modified();
         self.xml_fs
             .borrow()
-            .add_update_xml_content(&self.file_name, &self.file_content)
+            .add_update_xml_content(&self.file_name, &self.file_content);
     }
 }
 
 impl XmlElement for CorePropertiesPart {
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> CorePropertiesPart {
+    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> AnyResult<Self, AnyError> {
         let file_name = "docProps/core.xml".to_string();
-        Self {
+        let file_content = Self::get_content_xml(&xml_fs, &file_name)?;
+        Ok(Self {
             xml_fs: Rc::clone(xml_fs),
-            file_content: Self::get_content_xml(&xml_fs, &file_name),
+            file_content,
             file_name,
-        }
+        })
     }
 
     /// Save the current file state
