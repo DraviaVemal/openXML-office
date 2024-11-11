@@ -22,7 +22,8 @@ impl OpenXmlFile {
     ) -> AnyResult<Self, AnyError> {
         let archive_db =
             Self::common_initialization(is_in_memory).context("Create Connection Fail")?;
-        Self::load_archive_into_database(&archive_db, file_path);
+        Self::load_archive_into_database(&archive_db, file_path)
+            .context("Load OpenXML Archive Into Database Failed")?;
         // Create a clone copy of master file to work with code
         Ok(Self {
             is_editable,
@@ -44,7 +45,7 @@ impl OpenXmlFile {
     pub fn get_xml_content(&self, file_name: &str) -> AnyResult<Option<Vec<u8>>, AnyError> {
         let query = get_specific_queries!("open_xml_archive.sql", "select_archive_content")
             .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
-        fn row_mapper(row: &Row) -> Result<Vec<u8>, rusqlite::Error> {
+        fn row_mapper(row: &Row) -> AnyResult<Vec<u8>, rusqlite::Error> {
             row.get(0)
         }
         let result = self
@@ -120,8 +121,12 @@ impl OpenXmlFile {
             .archive_db
             .prepare(query)
             .map_err(|e| anyhow!("Failed to Run Find Many Query {}", e))?;
-        stmt.query_map(params, row_mapper)?
-            .collect::<AnyResult<Vec<T>, _>>()
+        let mut results = Vec::new();
+        for row in stmt.query_map(params, row_mapper)? {
+            let item = row?;
+            results.push(item);
+        }
+        Ok(results)
     }
 
     pub fn execute_query(
@@ -165,7 +170,7 @@ impl OpenXmlFile {
             archive_db =
                 Connection::open(&temp_file).map_err(|e| anyhow!("Open file DB failed. {}", e))?;
         }
-        Self::initialize_database(&archive_db);
+        Self::initialize_database(&archive_db).context("Initialize Database Failed")?;
         Ok(archive_db)
     }
 
@@ -183,19 +188,21 @@ impl OpenXmlFile {
         let query: String =
             get_specific_queries!("open_xml_archive.sql", "select_all_archive_rows")
                 .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
-        fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordModel, rusqlite::Error> {
-            Ok(ArchiveRecordModel {
-                id: row.get(0),
-                file_name: row.get(1),
-                content_type: row.get(2),
-                compressed_file_size: row.get(3),
-                uncompressed_file_size: row.get(4),
-                compression_level: row.get(5),
-                compression_type: row.get(6),
-                content: row.get(7),
+        fn row_mapper(row: &Row) -> Result<ArchiveRecordModel, rusqlite::Error> {
+            Result::Ok(ArchiveRecordModel {
+                id: row.get(0)?,
+                file_name: row.get(1)?,
+                content_type: row.get(2)?,
+                compressed_file_size: row.get(3)?,
+                uncompressed_file_size: row.get(4)?,
+                compression_level: row.get(5)?,
+                compression_type: row.get(6)?,
+                content: row.get(7)?,
             })
         }
-        let result = self.find_many(&query, params![], row_mapper)?;
+        let result = self
+            .find_many(&query, params![], row_mapper)
+            .context("Query Get Many Failed")?;
         let mut buffer = Cursor::new(Vec::new());
         let mut zip_writer: ZipWriter<&mut Cursor<Vec<u8>>> = ZipWriter::new(&mut buffer);
         let zip_option = SimpleFileOptions::default();

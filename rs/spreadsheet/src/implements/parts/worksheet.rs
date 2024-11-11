@@ -1,4 +1,5 @@
 use crate::structs::worksheet::Worksheet;
+use anyhow::{Error as AnyError, Result as AnyResult};
 use openxmloffice_global::xml_file::XmlElement;
 use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
@@ -7,22 +8,26 @@ impl Drop for Worksheet {
     fn drop(&mut self) {
         self.xml_fs
             .borrow()
-            .add_update_xml_content(&self.file_name, &self.file_content)
+            .add_update_xml_content(&self.file_name, &self.file_content);
     }
 }
 
 impl XmlElement for Worksheet {
     /// Create New object for the group
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, sheet_name: Option<&str>) -> Self {
+    fn new(
+        xml_fs: &Rc<RefCell<OpenXmlFile>>,
+        sheet_name: Option<&str>,
+    ) -> AnyResult<Self, AnyError> {
         let mut file_name: String = "xl/worksheets/sheet1.xml".to_string();
         if let Some(sheet_name) = sheet_name {
             file_name = sheet_name.to_string();
         }
-        return Self {
+        let file_content = Self::get_content_xml(&xml_fs, &file_name)?;
+        return Ok(Self {
             xml_fs: Rc::clone(xml_fs),
-            file_content: Self::get_content_xml(&xml_fs, &file_name),
+            file_content,
             file_name,
-        };
+        });
     }
 
     fn flush(self) {}
