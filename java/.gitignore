@@ -2,3 +2,4 @@ fbs/src/global
 fbs/src/spreadsheet
 fbs/src/presentation
 fbs/src/document
+**/src/lib
