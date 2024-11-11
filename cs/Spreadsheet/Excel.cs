@@ -17,22 +17,23 @@ namespace OpenXMLOffice.Spreadsheet_2007
     public class Excel : PrivacyProperties
     {
         private readonly IntPtr ffiExcel;
-        
+
         /// <summary>
         /// 
         /// </summary>
         [DllImport("Lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr create_excel(
+        public static extern sbyte create_excel(
             [MarshalAs(UnmanagedType.LPStr)] string optional_string,
             IntPtr buffer,
-            int length
+            int length,
+            out IntPtr excel
         );
 
         /// <summary>
         /// 
         /// </summary>
         [DllImport("Lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr save_as(
+        public static extern sbyte save_as(
             IntPtr excelPtr,
             [MarshalAs(UnmanagedType.LPStr)] string file_name
         );
@@ -54,7 +55,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
                 fixed (byte* bufferPtr = buffer)
                 {
                     IntPtr bufferIntPtr = (IntPtr)bufferPtr;
-                    ffiExcel = create_excel(null, bufferIntPtr, bufferSize);
+                    StatusCode.ProcessStatusCode(create_excel(null, bufferIntPtr, bufferSize, out ffiExcel));
                 }
             }
         }
@@ -78,7 +79,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
                 fixed (byte* bufferPtr = buffer)
                 {
                     IntPtr bufferIntPtr = (IntPtr)bufferPtr;
-                    ffiExcel = create_excel(fileName, bufferIntPtr, bufferSize);
+                    StatusCode.ProcessStatusCode(create_excel(fileName, bufferIntPtr, bufferSize, out ffiExcel));
                 }
             }
         }
@@ -90,7 +91,7 @@ namespace OpenXMLOffice.Spreadsheet_2007
         /// </summary>
         public void SaveAs(string filePath)
         {
-            save_as(ffiExcel, filePath);
+            StatusCode.ProcessStatusCode(save_as(ffiExcel, filePath));
         }
 
     }

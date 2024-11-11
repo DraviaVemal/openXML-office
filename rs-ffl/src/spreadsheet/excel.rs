@@ -5,6 +5,8 @@ use std::{
     slice::from_raw_parts,
 };
 
+use crate::StatusCode;
+
 #[no_mangle]
 /// Creates a new Excel object.
 ///
@@ -14,7 +16,8 @@ pub extern "C" fn create_excel(
     file_name: *const c_char,
     buffer: *const u8,
     buffer_size: usize,
-) -> *mut Excel {
+    out_excel: *mut *mut Excel,
+) -> i8 {
     let file_name = if file_name.is_null() {
         None
     } else {
@@ -25,8 +28,7 @@ pub extern "C" fn create_excel(
         )
     };
     if buffer.is_null() || buffer_size == 0 {
-        eprintln!("Received null buffer or zero size");
-        return std::ptr::null_mut();
+        return StatusCode::InvalidArgument as i8;
     }
     let buffer_slice = unsafe { from_raw_parts(buffer, buffer_size) };
     match flatbuffers::root::<spreadsheet_2007::ExcelPropertiesModel>(buffer_slice) {
@@ -39,21 +41,23 @@ pub extern "C" fn create_excel(
             } else {
                 Box::new(Excel::new(None, excel_properties))
             };
-            return Box::into_raw(excel);
+            unsafe {
+                *out_excel = Box::into_raw(excel);
+            }
+            return StatusCode::Success as i8;
         }
         Err(e) => {
-            eprintln!("Flatbuffer parsing failed : {}", e);
-            return std::ptr::null_mut();
+            return StatusCode::FlatBufferError as i8;
         }
     }
 }
 
 #[no_mangle]
 ///Save the Excel File in provided file path
-pub extern "C" fn save_as(excel_ptr: *const u8, file_name: *const c_char) {
+pub extern "C" fn save_as(excel_ptr: *const u8, file_name: *const c_char) -> i8 {
     if excel_ptr.is_null() || file_name.is_null() {
         eprintln!("Received null pointer");
-        return;
+        return StatusCode::InvalidArgument as i8;
     }
     let file_name = unsafe { CStr::from_ptr(file_name) }
         .to_string_lossy()
@@ -61,4 +65,5 @@ pub extern "C" fn save_as(excel_ptr: *const u8, file_name: *const c_char) {
     let excel_ptr = excel_ptr as *mut Excel;
     let excel = unsafe { Box::from_raw(excel_ptr) };
     excel.save_as(&file_name);
+    return StatusCode::Success as i8;
 }

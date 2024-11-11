@@ -9,7 +9,6 @@ impl Drop for Workbook {
         self.xml_fs
             .borrow()
             .add_update_xml_content(&self.file_name, &self.file_content)
-            .expect("Workbook Save Failed");
     }
 }
 

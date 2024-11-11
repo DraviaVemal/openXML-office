@@ -2,7 +2,7 @@ use crate::{
     structs::{Workbook, Worksheet},
     Excel, ExcelPropertiesModel,
 };
-use anyhow::{Ok, Result};
+use anyhow::{Error as AnyError, Ok, Result as AnyResult};
 use openxmloffice_global::{xml_file::XmlElement, CorePropertiesPart, RelationsPart, ThemePart};
 use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
@@ -14,28 +14,31 @@ impl Excel {
         return ExcelPropertiesModel { is_in_memory: true };
     }
     /// Create new or clone source file to start working on excel
-    pub fn new(file_name: Option<String>, excel_setting: ExcelPropertiesModel) -> Self {
+    pub fn new(
+        file_name: Option<String>,
+        excel_setting: ExcelPropertiesModel,
+    ) -> AnyResult<Self, AnyError> {
         let workbook;
         let xml_fs;
         //
         if let Some(file_name) = file_name {
             let open_xml_file = OpenXmlFile::open(&file_name, true, excel_setting.is_in_memory);
             xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
+            Self::setup_database_schema(&xml_fs);
             Self::load_common_reference(&xml_fs);
             CorePropertiesPart::new(&xml_fs, None);
             workbook = Workbook::new(&xml_fs, None);
         } else {
             let open_xml_file = OpenXmlFile::create(excel_setting.is_in_memory);
             xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs).expect("Initial schema setup Failed");
+            Self::setup_database_schema(&xml_fs);
             Self::initialize_common_reference(&xml_fs);
             RelationsPart::new(&xml_fs, None);
             CorePropertiesPart::new(&xml_fs, None);
             ThemePart::new(&xml_fs, Some("xl/theme/theme1.xml"));
             workbook = Workbook::new(&xml_fs, None);
         }
-        return Self { xml_fs, workbook };
+        return Ok(Self { xml_fs, workbook });
     }
 
     /// Add sheet to the current excel
@@ -51,13 +54,13 @@ impl Excel {
     }
 
     /// Initialism table schema for Excel
-    fn setup_database_schema(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> Result<()> {
+    fn setup_database_schema(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> AnyResult<(), AnyError> {
         let scheme = get_all_queries!("excel.sql");
         for query in scheme {
-            xml_fs
-                .borrow()
-                .execute_query(&query, params![])
-                .expect("Share string table failed");
+            match xml_fs.borrow().execute_query(&query, params![]) {
+                Ok(res) => Ok(()),
+                Err(e) => Err(e.into()),
+            };
         }
         Ok(())
     }
