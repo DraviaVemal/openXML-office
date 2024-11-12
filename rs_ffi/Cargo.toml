@@ -1,0 +1,15 @@
+[package]
+name = "openxmloffice_ffi"
+version = "4.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+draviavema_openxml_office = { path = "../rs", version = ">= 4.0.0" }
+flatbuffers = "24.3.25"
+anyhow = "1.0.90"
+
+[profile.dev]
+debug = true
