@@ -1,5 +1,5 @@
+use crate::OpenXmlFile;
 use anyhow::{Error as AnyError, Ok, Result as AnyResult};
-use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
 
 pub trait XmlElement {
