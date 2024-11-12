@@ -3,6 +3,7 @@ pub mod global;
 pub mod macros;
 pub mod presentation;
 pub mod spreadsheet;
+pub mod tests;
 pub mod utils;
 pub mod xml;
 
