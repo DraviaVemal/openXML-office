@@ -3,7 +3,7 @@
 using draviavemal.openxml_office.global_2007;
 using draviavemal.openxml_office.spreadsheet_2007;
 
-namespace openxmloffice.Tests
+namespace openxmloffice.tests
 {
     /// <summary>
     /// Excel Test
