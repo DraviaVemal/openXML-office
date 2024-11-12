@@ -1,7 +1,13 @@
-use crate::{CorePropertiesPart, XmlElement};
+use crate::{OpenXmlFile, XmlElement};
 use anyhow::{Error as AnyError, Result as AnyResult};
-use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
+
+#[derive(Debug)]
+pub struct CorePropertiesPart {
+    pub xml_fs: Rc<RefCell<OpenXmlFile>>,
+    pub file_content: Vec<u8>,
+    pub file_name: String,
+}
 
 impl Drop for CorePropertiesPart {
     fn drop(&mut self) {

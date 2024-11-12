@@ -1,7 +1,13 @@
-use crate::{xml_file::XmlElement, ContentTypesPart};
+use crate::{OpenXmlFile, XmlElement};
 use anyhow::{Error as AnyError, Result as AnyResult};
-use openxmloffice_xml::OpenXmlFile;
 use std::{cell::RefCell, rc::Rc};
+
+#[derive(Debug)]
+pub struct ContentTypesPart {
+    pub xml_fs: Rc<RefCell<OpenXmlFile>>,
+    pub file_content: Vec<u8>,
+    pub file_name: String,
+}
 
 impl Drop for ContentTypesPart {
     fn drop(&mut self) {

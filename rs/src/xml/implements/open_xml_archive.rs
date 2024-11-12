@@ -2,7 +2,7 @@
 
 use crate::{
     file_handling::{compress_content, decompress_content},
-    get_specific_queries, ArchiveRecordModel, OpenXmlFile,
+    get_specific_queries,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
 use rusqlite::{params, Connection, Row, ToSql};
@@ -12,6 +12,27 @@ use std::{
 };
 use tempfile::NamedTempFile;
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
+
+/**
+ * This contains the root document to work with
+ */
+#[derive(Debug)]
+pub struct OpenXmlFile {
+    pub is_editable: bool,
+    pub archive_db: Connection,
+}
+
+#[derive(Debug)]
+pub struct ArchiveRecordModel {
+    pub(crate) id: i16,
+    pub(crate) file_name: String,
+    pub(crate) content_type: String,
+    pub(crate) compressed_file_size: i32,
+    pub(crate) uncompressed_file_size: i32,
+    pub(crate) compression_level: i8,
+    pub(crate) compression_type: String,
+    pub(crate) content: Vec<u8>,
+}
 
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source

@@ -1,12 +1,22 @@
+use super::{worksheet::Worksheet, Workbook};
 use crate::{
-    structs::{Workbook, Worksheet},
-    Excel, ExcelPropertiesModel,
+    core_properties::CorePropertiesPart, get_all_queries, relations::RelationsPart,
+    theme::ThemePart, OpenXmlFile, XmlElement,
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use openxmloffice_global::{xml_file::XmlElement, CorePropertiesPart, RelationsPart, ThemePart};
-use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 use std::{cell::RefCell, rc::Rc};
+
+#[derive(Debug)]
+pub struct Excel {
+    pub(crate) xml_fs: Rc<RefCell<OpenXmlFile>>,
+    pub(crate) workbook: Workbook,
+}
+
+#[derive(Debug)]
+pub struct ExcelPropertiesModel {
+    pub is_in_memory: bool,
+}
 
 impl Excel {
     /// Default Excel Setting
