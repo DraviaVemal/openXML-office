@@ -68,7 +68,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         public Excel(string fileName, ExcelProperties excelProperties)
         {
             FlatBufferBuilder builder = new(1024);
-            builder.StartTable(1);
+            ExcelPropertiesModel.StartExcelPropertiesModel(builder);
             ExcelPropertiesModel.AddIsInMemory(builder, excelProperties.IsInMemory);
             Offset<ExcelPropertiesModel> excelPropertiesModel = ExcelPropertiesModel.EndExcelPropertiesModel(builder);
             builder.Finish(excelPropertiesModel.Value);
