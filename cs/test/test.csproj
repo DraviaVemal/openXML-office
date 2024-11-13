@@ -33,6 +33,6 @@
 		<PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
 			<CopyCommand>cp -r </CopyCommand>
 		</PropertyGroup>
-		<Exec Command="$(CopyCommand) &quot;$(ProjectDir)TestFiles&quot; &quot;$(TargetDir)TestFiles&quot;" />
+		<Exec Command="$(CopyCommand) &quot;$(ProjectDir)test_files&quot; &quot;$(TargetDir)test_files&quot;" />
 	</Target>
 </Project>
