@@ -1,5 +1,3 @@
-src/global
-src/spreadsheet
-src/presentation
-src/document
-src/**/**/lib
+**/*.dll
+*/*.so
+**/openxml_office/
