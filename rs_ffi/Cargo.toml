@@ -1,5 +1,9 @@
 [package]
 name = "openxmloffice_ffi"
+description = "FFI Interface crate for multi language support expansion"
+license = "MIT"
+repository = "https://github.com/DraviaVemal/openxml-office"
+documentation = "https://openxml-office.draviavemal.com/"
 version = "4.0.0"
 edition = "2021"
 
