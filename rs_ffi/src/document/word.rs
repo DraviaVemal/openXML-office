@@ -1,20 +1,20 @@
 use crate::{chain_error, openxml_office, StatusCode};
-use draviavema_openxml_office::spreadsheet_2007::{Excel, ExcelPropertiesModel};
+use draviavema_openxml_office::document_2007::{Word, WordPropertiesModel};
 use std::{
     ffi::{c_char, CStr, CString},
     slice::from_raw_parts,
 };
 
 #[no_mangle]
-/// Creates a new Excel object.
+/// Creates a new Word object.
 ///
-/// Returns a pointer to the newly created Excel object.
+/// Returns a pointer to the newly created Word object.
 /// If an error occurs, returns a null pointer.
-pub extern "C" fn create_excel(
+pub extern "C" fn create_word(
     file_name: *const c_char,
     buffer: *const u8,
     buffer_size: usize,
-    out_excel: *mut *mut Excel,
+    out_word: *mut *mut Word,
     out_error: *mut *const c_char,
 ) -> i8 {
     let file_name = if file_name.is_null() {
@@ -30,21 +30,22 @@ pub extern "C" fn create_excel(
         return StatusCode::InvalidArgument as i8;
     }
     let buffer_slice = unsafe { from_raw_parts(buffer, buffer_size) };
-    match flatbuffers::root::<openxml_office::spreadsheet_2007::ExcelPropertiesModel>(buffer_slice)
-    {
-        Ok(fbs_excel_properties) => {
-            let excel_properties = ExcelPropertiesModel {
-                is_in_memory: fbs_excel_properties.is_in_memory(),
+    match flatbuffers::root::<openxml_office::presentation_2007::PresentationPropertiesModel>(
+        buffer_slice,
+    ) {
+        Ok(fbs_word_properties) => {
+            let word_properties = WordPropertiesModel {
+                is_in_memory: fbs_word_properties.is_in_memory(),
             };
-            let excel = if let Some(file_name) = file_name {
-                Excel::new(Some(file_name), excel_properties)
+            let word = if let Some(file_name) = file_name {
+                Word::new(Some(file_name), word_properties)
             } else {
-                Excel::new(None, excel_properties)
+                Word::new(None, word_properties)
             };
-            match excel {
-                Ok(excel) => {
+            match word {
+                Ok(word) => {
                     unsafe {
-                        *out_excel = Box::into_raw(Box::new(excel));
+                        *out_word = Box::into_raw(Box::new(word));
                     }
                     StatusCode::Success as i8
                 }
@@ -62,22 +63,22 @@ pub extern "C" fn create_excel(
 }
 
 #[no_mangle]
-///Save the Excel File in provided file path
+///Save the Word File in provided file path
 pub extern "C" fn save_as(
-    excel_ptr: *const u8,
+    word_ptr: *const u8,
     file_name: *const c_char,
     out_error: *mut *const c_char,
 ) -> i8 {
-    if excel_ptr.is_null() || file_name.is_null() {
+    if word_ptr.is_null() || file_name.is_null() {
         eprintln!("Received null pointer");
         return StatusCode::InvalidArgument as i8;
     }
     let file_name = unsafe { CStr::from_ptr(file_name) }
         .to_string_lossy()
         .into_owned();
-    let excel_ptr = excel_ptr as *mut Excel;
-    let excel = unsafe { Box::from_raw(excel_ptr) };
-    match excel.save_as(&file_name) {
+    let word_ptr = word_ptr as *mut Word;
+    let word = unsafe { Box::from_raw(word_ptr) };
+    match word.save_as(&file_name) {
         Result::Ok(()) => StatusCode::Success as i8,
         Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
             Result::Ok(str) => {

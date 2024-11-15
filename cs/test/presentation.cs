@@ -1,19 +1,19 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using draviavemal.openxml_office.global_2007;
-using draviavemal.openxml_office.spreadsheet_2007;
+using draviavemal.openxml_office.presentation_2007;
 
 namespace openxmloffice.tests
 {
     /// <summary>
-    /// Excel Test
+    /// Power Point Test
     /// </summary>
     [TestClass]
-    public class Spreadsheet
+    public class Presentation
     {
         private static readonly string resultPath = "../../test_results";
         /// <summary>
-        /// Initialize excel Test
+        /// Initialize power point Test
         /// </summary>
         /// <param name="context">
         /// </param>
@@ -36,33 +36,33 @@ namespace openxmloffice.tests
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            // excel.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+            // powerPoint.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         // [TestMethod]
         public void BlankFile()
         {
-            Excel excel2 = new(new()
+            PowerPoint powerPoint2 = new(new()
             {
                 IsInMemory = false
             });
-            excel2.SaveAs(string.Format("{1}/Blank-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+            powerPoint2.SaveAs(string.Format("{1}/Blank-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
         }
 
         /// <summary>
         /// Test existing file
         /// </summary>
         [TestMethod]
-        public void OpenExistingExcel()
+        public void OpenExistingPowerPoint()
         {
-            Excel excel1 = new("test_files/basic_test.xlsx", new()
+            PowerPoint powerPoint1 = new("test_files/basic_test.pptx", new()
             {
                 IsInMemory = false
             });
-            excel1.SaveAs(string.Format("{1}/EditStyle-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+            powerPoint1.SaveAs(string.Format("{1}/EditStyle-{0}.pptx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
             Assert.IsTrue(true);
         }
     }

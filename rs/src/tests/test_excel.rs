@@ -1,4 +1,4 @@
-use crate::{Excel, ExcelPropertiesModel};
+use crate::spreadsheet_2007::{Excel, ExcelPropertiesModel};
 
 #[test]
 fn blank_excel() {

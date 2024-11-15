@@ -44,8 +44,8 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | rs          | FFI          | 🟩⬜⬜⬜⬜    |
 | cs          | fbs          | 🟩⬜⬜⬜⬜    |
 | cs          | spreadsheet  | 🟩⬜⬜⬜⬜    |
-| cs          | presentation | ⬜⬜⬜⬜⬜    |
-| cs          | document     | ⬜⬜⬜⬜⬜    |
+| cs          | presentation | 🟩⬜⬜⬜⬜    |
+| cs          | document     | 🟩⬜⬜⬜⬜    |
 | java        | fbs          | ⬜⬜⬜⬜⬜    |
 | java        | spreadsheet  | ⬜⬜⬜⬜⬜    |
 | java        | presentation | ⬜⬜⬜⬜⬜    |

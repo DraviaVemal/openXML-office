@@ -1,4 +1,4 @@
-use crate::presentation::implements::power_point::PowerPoint;
+use crate::presentation_2007::PowerPoint;
 
 #[test]
 fn blank_power_point() {

@@ -1,19 +1,19 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using draviavemal.openxml_office.global_2007;
-using draviavemal.openxml_office.spreadsheet_2007;
+using draviavemal.openxml_office.document_2007;
 
 namespace openxmloffice.tests
 {
     /// <summary>
-    /// Excel Test
+    /// Word Test
     /// </summary>
     [TestClass]
-    public class Spreadsheet
+    public class Document
     {
         private static readonly string resultPath = "../../test_results";
         /// <summary>
-        /// Initialize excel Test
+        /// Initialize word Test
         /// </summary>
         /// <param name="context">
         /// </param>
@@ -36,33 +36,33 @@ namespace openxmloffice.tests
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            // excel.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+            // word.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         // [TestMethod]
         public void BlankFile()
         {
-            Excel excel2 = new(new()
+            Word word2 = new(new()
             {
                 IsInMemory = false
             });
-            excel2.SaveAs(string.Format("{1}/Blank-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+            word2.SaveAs(string.Format("{1}/Blank-{0}.docx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
         }
 
         /// <summary>
         /// Test existing file
         /// </summary>
         [TestMethod]
-        public void OpenExistingExcel()
+        public void OpenExistingWord()
         {
-            Excel excel1 = new("test_files/basic_test.xlsx", new()
+            Word word1 = new("test_files/basic_test.docx", new()
             {
                 IsInMemory = false
             });
-            excel1.SaveAs(string.Format("{1}/EditStyle-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+            word1.SaveAs(string.Format("{1}/EditStyle-{0}.docx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
             Assert.IsTrue(true);
         }
     }

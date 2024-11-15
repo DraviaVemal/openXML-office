@@ -7,11 +7,7 @@ using openxml_office.spreadsheet_2007;
 namespace draviavemal.openxml_office.spreadsheet_2007
 {
     /// <summary>
-    /// This class serves as a versatile tool for working with Excel spreadsheets, built upon the
-    /// foundation of the OpenXML SDK. This class offers a wide range of functionalities for
-    /// handling Excel-related objects and operation It is designed to simplify tasks related to
-    /// Excel file manipulation, including the creation of new Excel files, reading and updating
-    /// existing files, and processing Excel data from stream
+    /// This class serves as a versatile tool for working with Excel spreadsheets.
     /// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
     /// </summary>
     public class Excel : PrivacyProperties
@@ -47,6 +43,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         public Excel(ExcelProperties excelProperties)
         {
             FlatBufferBuilder builder = new(1024);
+            ExcelPropertiesModel.StartExcelPropertiesModel(builder);
             ExcelPropertiesModel.AddIsInMemory(builder, excelProperties.IsInMemory);
             Offset<ExcelPropertiesModel> excelPropertiesModel = ExcelPropertiesModel.EndExcelPropertiesModel(builder);
             builder.Finish(excelPropertiesModel.Value);

@@ -1,20 +1,20 @@
 use crate::{chain_error, openxml_office, StatusCode};
-use draviavema_openxml_office::spreadsheet_2007::{Excel, ExcelPropertiesModel};
+use draviavema_openxml_office::presentation_2007::{PowerPoint, PowerPointPropertiesModel};
 use std::{
     ffi::{c_char, CStr, CString},
     slice::from_raw_parts,
 };
 
 #[no_mangle]
-/// Creates a new Excel object.
+/// Creates a new Power Point object.
 ///
-/// Returns a pointer to the newly created Excel object.
+/// Returns a pointer to the newly created Power Point object.
 /// If an error occurs, returns a null pointer.
-pub extern "C" fn create_excel(
+pub extern "C" fn create_kl(
     file_name: *const c_char,
     buffer: *const u8,
     buffer_size: usize,
-    out_excel: *mut *mut Excel,
+    out_power_point: *mut *mut PowerPoint,
     out_error: *mut *const c_char,
 ) -> i8 {
     let file_name = if file_name.is_null() {
@@ -30,21 +30,22 @@ pub extern "C" fn create_excel(
         return StatusCode::InvalidArgument as i8;
     }
     let buffer_slice = unsafe { from_raw_parts(buffer, buffer_size) };
-    match flatbuffers::root::<openxml_office::spreadsheet_2007::ExcelPropertiesModel>(buffer_slice)
-    {
-        Ok(fbs_excel_properties) => {
-            let excel_properties = ExcelPropertiesModel {
-                is_in_memory: fbs_excel_properties.is_in_memory(),
+    match flatbuffers::root::<openxml_office::presentation_2007::PresentationPropertiesModel>(
+        buffer_slice,
+    ) {
+        Ok(fbs_power_point_properties) => {
+            let power_point_properties = PowerPointPropertiesModel {
+                is_in_memory: fbs_power_point_properties.is_in_memory(),
             };
-            let excel = if let Some(file_name) = file_name {
-                Excel::new(Some(file_name), excel_properties)
+            let power_point = if let Some(file_name) = file_name {
+                PowerPoint::new(Some(file_name), power_point_properties)
             } else {
-                Excel::new(None, excel_properties)
+                PowerPoint::new(None, power_point_properties)
             };
-            match excel {
-                Ok(excel) => {
+            match power_point {
+                Ok(power_point) => {
                     unsafe {
-                        *out_excel = Box::into_raw(Box::new(excel));
+                        *out_power_point = Box::into_raw(Box::new(power_point));
                     }
                     StatusCode::Success as i8
                 }
@@ -62,22 +63,22 @@ pub extern "C" fn create_excel(
 }
 
 #[no_mangle]
-///Save the Excel File in provided file path
+///Save the Power Point File in provided file path
 pub extern "C" fn save_as(
-    excel_ptr: *const u8,
+    power_point_ptr: *const u8,
     file_name: *const c_char,
     out_error: *mut *const c_char,
 ) -> i8 {
-    if excel_ptr.is_null() || file_name.is_null() {
+    if power_point_ptr.is_null() || file_name.is_null() {
         eprintln!("Received null pointer");
         return StatusCode::InvalidArgument as i8;
     }
     let file_name = unsafe { CStr::from_ptr(file_name) }
         .to_string_lossy()
         .into_owned();
-    let excel_ptr = excel_ptr as *mut Excel;
-    let excel = unsafe { Box::from_raw(excel_ptr) };
-    match excel.save_as(&file_name) {
+    let power_point_ptr = power_point_ptr as *mut PowerPoint;
+    let power_point = unsafe { Box::from_raw(power_point_ptr) };
+    match power_point.save_as(&file_name) {
         Result::Ok(()) => StatusCode::Success as i8,
         Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
             Result::Ok(str) => {
