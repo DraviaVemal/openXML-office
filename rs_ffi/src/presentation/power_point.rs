@@ -10,7 +10,7 @@ use std::{
 ///
 /// Returns a pointer to the newly created Power Point object.
 /// If an error occurs, returns a null pointer.
-pub extern "C" fn create_kl(
+pub extern "C" fn power_point_create(
     file_name: *const c_char,
     buffer: *const u8,
     buffer_size: usize,
@@ -64,7 +64,7 @@ pub extern "C" fn create_kl(
 
 #[no_mangle]
 ///Save the Power Point File in provided file path
-pub extern "C" fn save_as(
+pub extern "C" fn power_point_save_as(
     power_point_ptr: *const u8,
     file_name: *const c_char,
     out_error: *mut *const c_char,
