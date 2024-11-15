@@ -1,5 +1,9 @@
 [package]
 name = "draviavema_openxml_office"
+description = "Crate to create and manipulate excel,power point and word documents"
+license = "MIT"
+repository = "https://github.com/DraviaVemal/openxml-office"
+documentation = "https://openxml-office.draviavemal.com/"
 version = "4.0.0"
 edition = "2021"
 
