@@ -12,3 +12,7 @@ rusqlite = { version = "0.32.0", features = ["bundled"] }
 serde = "1.0.214"
 tempfile = "3.13.0"
 zip = "2.2.0"
+
+[dependencies.uuid]
+version = "1.11.0"
+features = ["v4", "fast-rng", "macro-diagnostics"]

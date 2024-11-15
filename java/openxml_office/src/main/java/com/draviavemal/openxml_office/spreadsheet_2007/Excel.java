@@ -6,7 +6,7 @@ import com.google.flatbuffers.FlatBufferBuilder;
 public class Excel {
 
     static {
-        System.loadLibrary("src/lib/openxmloffice_ffi");
+        System.loadLibrary("src/main/resources/lib/openxmloffice_ffi");
     }
 
     private native byte create_excel(String fileName, byte[] buffer, int bufferSize, long[] outExcel);

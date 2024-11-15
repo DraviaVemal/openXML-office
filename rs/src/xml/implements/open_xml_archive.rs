@@ -6,11 +6,12 @@ use crate::{
 };
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
 use rusqlite::{params, Connection, Row, ToSql};
+use std::{env::temp_dir, path::PathBuf};
 use std::{
     fs::{metadata, remove_file, File},
     io::{Cursor, Read, Write},
 };
-use tempfile::NamedTempFile;
+use uuid::Uuid;
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 /**
@@ -20,6 +21,7 @@ use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 pub struct OpenXmlFile {
     pub is_editable: bool,
     pub archive_db: Connection,
+    db_path: PathBuf,
 }
 
 #[derive(Debug)]
@@ -34,6 +36,17 @@ pub struct ArchiveRecordModel {
     pub(crate) content: Vec<u8>,
 }
 
+impl Drop for OpenXmlFile {
+    fn drop(&mut self) {
+        if self.db_path.exists() {
+            match remove_file(&self.db_path) {
+                Result::Ok(_) => println!("File successfully deleted: {}", self.db_path.display()),
+                Err(err) => eprintln!("Failed to delete file {}: {}", self.db_path.display(), err),
+            }
+        }
+    }
+}
+
 impl OpenXmlFile {
     /// Create Current file helper object from exiting source
     pub fn open(
@@ -41,24 +54,28 @@ impl OpenXmlFile {
         is_editable: bool,
         is_in_memory: bool,
     ) -> AnyResult<Self, AnyError> {
-        let archive_db =
-            Self::common_initialization(is_in_memory).context("Create Connection Fail")?;
+        let db_path: PathBuf = temp_dir().join(format!("{}.db", uuid::Uuid::new_v4()));
+        let archive_db = Self::common_initialization(&db_path, is_in_memory)
+            .context("Create Connection Fail")?;
         Self::load_archive_into_database(&archive_db, file_path)
             .context("Load OpenXML Archive Into Database Failed")?;
         // Create a clone copy of master file to work with code
         Ok(Self {
             is_editable,
             archive_db,
+            db_path,
         })
     }
 
     /// Create Current file helper object a new file to work with
     pub fn create(is_in_memory: bool) -> AnyResult<Self, AnyError> {
-        let archive_db: Connection =
-            Self::common_initialization(is_in_memory).context("Create Connection Fail")?;
+        let db_path: PathBuf = temp_dir().join(format!("{}.db", uuid::Uuid::new_v4()));
+        let archive_db: Connection = Self::common_initialization(&db_path, is_in_memory)
+            .context("Create Connection Fail")?;
         Ok(Self {
             is_editable: true,
             archive_db,
+            db_path,
         })
     }
 
@@ -175,21 +192,17 @@ impl OpenXmlFile {
     }
 
     /// Common initialization
-    fn common_initialization(is_in_memory: bool) -> AnyResult<Connection, AnyError> {
+    fn common_initialization(
+        db_path: &PathBuf,
+        is_in_memory: bool,
+    ) -> AnyResult<Connection, AnyError> {
         let archive_db;
         if is_in_memory {
             // In memory operation
             archive_db = Connection::open_in_memory()
                 .map_err(|e| anyhow!("Open in memory DB failed. {}", e))?;
         } else {
-            let temp_file = NamedTempFile::new().context("Temp. File Creation Failed")?;
-            match remove_file(&temp_file) {
-                Result::Ok(_) => (),
-                Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
-                Err(e) => eprintln!("Failed to delete the file: {}", e),
-            }
-            archive_db =
-                Connection::open(&temp_file).map_err(|e| anyhow!("Open file DB failed. {}", e))?;
+            archive_db = Connection::open(db_path).context("Open File Based DB failed")?;
         }
         Self::initialize_database(&archive_db).context("Initialize Database Failed")?;
         Ok(archive_db)
@@ -255,7 +268,7 @@ impl OpenXmlFile {
         archive_db: &Connection,
         file_path: &str,
     ) -> AnyResult<(), AnyError> {
-        let file: File = File::open(file_path).context("Open Existing File")?;
+        let file: File = File::open(file_path).context("Open Existing archive File")?;
         let mut zip_read: ZipArchive<File> =
             ZipArchive::new(file).context("Archive read Failed")?;
         let file_count: usize = zip_read.len();

@@ -1,5 +1,5 @@
-fbs/src/global
-fbs/src/spreadsheet
-fbs/src/presentation
-fbs/src/document
-**/src/lib
+src/global
+src/spreadsheet
+src/presentation
+src/document
+src/**/**/lib
