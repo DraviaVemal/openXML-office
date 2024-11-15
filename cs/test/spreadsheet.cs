@@ -38,18 +38,19 @@ namespace openxmloffice.tests
         {
             // excel.SaveAs(string.Format("{1}/test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
         }
+        
         /// <summary>
         /// 
         /// </summary>
         // [TestMethod]
-        // public void BlankFile()
-        // {
-        //     Excel excel2 = new(new()
-        //     {
-        //         IsInMemory = false
-        //     });
-        //     excel2.SaveAs(string.Format("{1}/Blank-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
-        // }
+        public void BlankFile()
+        {
+            Excel excel2 = new(new()
+            {
+                IsInMemory = false
+            });
+            excel2.SaveAs(string.Format("{1}/Blank-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
+        }
 
         /// <summary>
         /// Test existing file
@@ -57,7 +58,7 @@ namespace openxmloffice.tests
         [TestMethod]
         public void OpenExistingExcelStyleString()
         {
-            Excel excel1 = new("/home/draviavemal/repo/OpenXML-Office/cs/Test/TestFiles/basic_test.xlsx", new()
+            Excel excel1 = new("test_files/basic_test.xlsx", new()
             {
                 IsInMemory = false
             });

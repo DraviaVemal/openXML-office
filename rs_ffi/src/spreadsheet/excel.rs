@@ -1,7 +1,7 @@
-use crate::{openxml_office, StatusCode};
+use crate::{chain_error, openxml_office, StatusCode};
 use draviavema_openxml_office::{spreadsheet::Excel, ExcelPropertiesModel};
 use std::{
-    ffi::{c_char, CStr},
+    ffi::{c_char, CStr, CString},
     slice::from_raw_parts,
 };
 
@@ -15,6 +15,7 @@ pub extern "C" fn create_excel(
     buffer: *const u8,
     buffer_size: usize,
     out_excel: *mut *mut Excel,
+    out_error: *mut *const c_char,
 ) -> i8 {
     let file_name = if file_name.is_null() {
         None
@@ -47,18 +48,26 @@ pub extern "C" fn create_excel(
                     }
                     StatusCode::Success as i8
                 }
-                Err(e) => StatusCode::UnknownError as i8,
+                Err(e) => {
+                    unsafe { *out_error = chain_error(&e) };
+                    StatusCode::UnknownError as i8
+                }
             }
         }
         Err(e) => {
-            return StatusCode::FlatBufferError as i8;
+            unsafe { *out_error = chain_error(&e.into()) };
+            StatusCode::FlatBufferError as i8
         }
     }
 }
 
 #[no_mangle]
 ///Save the Excel File in provided file path
-pub extern "C" fn save_as(excel_ptr: *const u8, file_name: *const c_char) -> i8 {
+pub extern "C" fn save_as(
+    excel_ptr: *const u8,
+    file_name: *const c_char,
+    out_error: *mut *const c_char,
+) -> i8 {
     if excel_ptr.is_null() || file_name.is_null() {
         eprintln!("Received null pointer");
         return StatusCode::InvalidArgument as i8;
@@ -68,6 +77,17 @@ pub extern "C" fn save_as(excel_ptr: *const u8, file_name: *const c_char) -> i8 
         .into_owned();
     let excel_ptr = excel_ptr as *mut Excel;
     let excel = unsafe { Box::from_raw(excel_ptr) };
-    excel.save_as(&file_name);
-    return StatusCode::Success as i8;
+    match excel.save_as(&file_name) {
+        Result::Ok(()) => StatusCode::Success as i8,
+        Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
+            Result::Ok(str) => {
+                unsafe { *out_error = str.into_raw() };
+                StatusCode::Success as i8
+            }
+            Err(e) => {
+                eprintln!("Error String send Error. {}", e);
+                StatusCode::IoError as i8
+            }
+        },
+    }
 }
