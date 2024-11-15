@@ -10,7 +10,7 @@ use std::{
 ///
 /// Returns a pointer to the newly created Excel object.
 /// If an error occurs, returns a null pointer.
-pub extern "C" fn create_excel(
+pub extern "C" fn excel_create(
     file_name: *const c_char,
     buffer: *const u8,
     buffer_size: usize,
@@ -63,7 +63,7 @@ pub extern "C" fn create_excel(
 
 #[no_mangle]
 ///Save the Excel File in provided file path
-pub extern "C" fn save_as(
+pub extern "C" fn excel_save_as(
     excel_ptr: *const u8,
     file_name: *const c_char,
     out_error: *mut *const c_char,

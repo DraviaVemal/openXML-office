@@ -18,7 +18,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// 
         /// </summary>
         [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern sbyte create_excel(
+        public static extern sbyte excel_create(
             [MarshalAs(UnmanagedType.LPStr)] string optional_string,
             IntPtr buffer,
             int length,
@@ -30,7 +30,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// 
         /// </summary>
         [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern sbyte save_as(
+        public static extern sbyte excel_save_as(
             IntPtr excelPtr,
             [MarshalAs(UnmanagedType.LPStr)] string file_name,
             out IntPtr error_msg
@@ -54,7 +54,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
                 fixed (byte* bufferPtr = buffer)
                 {
                     IntPtr bufferIntPtr = (IntPtr)bufferPtr;
-                    sbyte statusCode = create_excel(null, bufferIntPtr, bufferSize, out ffiExcel, out IntPtr errorMsg);
+                    sbyte statusCode = excel_create(null, bufferIntPtr, bufferSize, out ffiExcel, out IntPtr errorMsg);
                     StatusCode.ProcessStatusCode(statusCode, errorMsg);
                 }
             }
@@ -79,7 +79,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
                 fixed (byte* bufferPtr = buffer)
                 {
                     IntPtr bufferIntPtr = (IntPtr)bufferPtr;
-                    sbyte statusCode = create_excel(fileName, bufferIntPtr, bufferSize, out ffiExcel, out IntPtr errorMsg);
+                    sbyte statusCode = excel_create(fileName, bufferIntPtr, bufferSize, out ffiExcel, out IntPtr errorMsg);
                     StatusCode.ProcessStatusCode(statusCode, errorMsg);
                 }
             }
@@ -92,7 +92,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// </summary>
         public void SaveAs(string filePath)
         {
-            sbyte statusCode = save_as(ffiExcel, filePath, out IntPtr errorMsg);
+            sbyte statusCode = excel_save_as(ffiExcel, filePath, out IntPtr errorMsg);
             StatusCode.ProcessStatusCode(statusCode, errorMsg);
         }
 
