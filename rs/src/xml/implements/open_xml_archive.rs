@@ -11,7 +11,6 @@ use std::{
     fs::{metadata, remove_file, File},
     io::{Cursor, Read, Write},
 };
-use uuid::Uuid;
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 /**

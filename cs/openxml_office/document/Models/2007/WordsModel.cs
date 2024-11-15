@@ -2,23 +2,23 @@
 
 using draviavemal.openxml_office.global_2007;
 
-namespace draviavemal.openxml_office.spreadsheet_2007
+namespace draviavemal.openxml_office.document_2007
 {
 	/// <summary>
-	/// Represents the properties of a column in a worksheet.
+	/// Represents the properties of a document.
 	/// </summary>
-	public class ExcelProperties
+	public class WordProperties
 	{
 		/// <summary>
 		/// 
 		/// </summary>
 		public bool IsInMemory = false;
 		/// <summary>
-		/// Spreadsheet settings
+		/// Gets or sets the document settings.
 		/// </summary>
-		public ExcelSettings settings = new();
+		public WordSettings settings = new();
 		/// <summary>
-		/// Spreadsheet theme settings
+		/// Gets or sets the theme of the document.
 		/// </summary>
 		public ThemePallet theme = new();
 		/// <summary>
@@ -27,12 +27,11 @@ namespace draviavemal.openxml_office.spreadsheet_2007
 		public CorePropertiesModel coreProperties = new();
 	}
 	/// <summary>
-	/// Represents the settings of a spreadsheet.
+	/// Represents the settings of a document.
 	/// </summary>
-	public class ExcelSettings
-	{
-	}
-	internal class ExcelInfo
+	public class WordSettings { }
+
+	internal class WordInfo
 	{
 		public bool isEditable = true;
 		public bool isExistingFile;
