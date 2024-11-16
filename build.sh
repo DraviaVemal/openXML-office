@@ -55,7 +55,7 @@ flatc -r --gen-all -o "$RUST_FFI_DIR" "fbs/consolidated.fbs"
 
 # Prepare Build Result Directory
 rm -rf cs/openxml_office/lib && mkdir -p cs/openxml_office/lib
-rm -rf python/draviavemal_openxml_office/lib && mkdir -p python/draviavemal_openxml_office/lib
+rm -rf python/lib && mkdir -p python/lib
 rm -rf java/draviavemal_openxml_office/src/lib && mkdir -p java/draviavemal_openxml_office/src/main/resources/lib
 rm -rf go/openxml_office/src/lib && mkdir -p go/openxml_office/src/lib
 
@@ -77,8 +77,8 @@ cp $win_binary_dir/openxmloffice_ffi.dll cs/openxml_office/lib/openxmloffice_ffi
 cp $linux_binary_dir/libopenxmloffice_ffi.so cs/openxml_office/lib/openxmloffice_ffi.so
 
 # Copy Result binary to Python targets
-cp $win_binary_dir/openxmloffice_ffi.dll python/draviavemal_openxml_office/lib/openxmloffice_ffi.dll
-cp $linux_binary_dir/libopenxmloffice_ffi.so python/draviavemal_openxml_office/lib/openxmloffice_ffi.so
+cp $win_binary_dir/openxmloffice_ffi.dll python/lib/openxmloffice_ffi.dll
+cp $linux_binary_dir/libopenxmloffice_ffi.so python/lib/libopenxmloffice_ffi.so
 
 # Copy Result binary to Java targets
 cp $win_binary_dir/openxmloffice_ffi.dll java/draviavemal_openxml_office/src/main/resources/lib/openxmloffice_ffi.dll
@@ -100,8 +100,10 @@ cd ..
 
 # Python Build
 
-cd python
+# cd python
 
-python3 setup.py sdist bdist_wheel
+# python3 setup.py clean --all
 
-cd ..
+# python3 setup.py build
+
+# cd ..
