@@ -19,11 +19,11 @@ impl XmlHelper {
         let mut temp_buffer: Vec<u8> = Vec::new();
         fn write_element(writer: &mut Cursor<Vec<u8>>, content: &[u8], wrap_closer: bool) {
             if wrap_closer {
-                writer.write(b"<").expect("Wrap XML Failed");
-                writer.write(content).expect("Clone Source Data");
-                writer.write(b">").expect("Wrap XML Failed");
+                writer.write_all(b"<").expect("Wrap XML Failed");
+                writer.write_all(content).expect("Clone Source Data");
+                writer.write_all(b">").expect("Wrap XML Failed");
             } else {
-                writer.write(content).expect("Clone Source Data");
+                writer.write_all(content).expect("Clone Source Data");
             }
         }
         loop {

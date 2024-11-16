@@ -40,7 +40,7 @@ impl XmlElement for ThemePart {
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> Vec<u8> {
         let template_core_properties = include_str!("theme.xml");
-        return template_core_properties.as_bytes().to_vec();
+        template_core_properties.as_bytes().to_vec()
     }
 }
 
