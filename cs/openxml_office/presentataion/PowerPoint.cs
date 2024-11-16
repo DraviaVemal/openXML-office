@@ -18,7 +18,7 @@ namespace draviavemal.openxml_office.presentation_2007
         /// 
         /// </summary>
         [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern sbyte create_power_point(
+        public static extern sbyte power_point_create(
             [MarshalAs(UnmanagedType.LPStr)] string optional_string,
             IntPtr buffer,
             int length,
@@ -30,7 +30,7 @@ namespace draviavemal.openxml_office.presentation_2007
         /// 
         /// </summary>
         [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern sbyte save_as(
+        public static extern sbyte power_point_save_as(
             IntPtr powerPointPtr,
             [MarshalAs(UnmanagedType.LPStr)] string file_name,
             out IntPtr error_msg
@@ -54,7 +54,7 @@ namespace draviavemal.openxml_office.presentation_2007
                 fixed (byte* bufferPtr = buffer)
                 {
                     IntPtr bufferIntPtr = (IntPtr)bufferPtr;
-                    sbyte statusCode = create_power_point(null, bufferIntPtr, bufferSize, out ffiPowerPoint, out IntPtr errorMsg);
+                    sbyte statusCode = power_point_create(null, bufferIntPtr, bufferSize, out ffiPowerPoint, out IntPtr errorMsg);
                     StatusCode.ProcessStatusCode(statusCode, errorMsg);
                 }
             }
@@ -79,7 +79,7 @@ namespace draviavemal.openxml_office.presentation_2007
                 fixed (byte* bufferPtr = buffer)
                 {
                     IntPtr bufferIntPtr = (IntPtr)bufferPtr;
-                    sbyte statusCode = create_power_point(fileName, bufferIntPtr, bufferSize, out ffiPowerPoint, out IntPtr errorMsg);
+                    sbyte statusCode = power_point_create(fileName, bufferIntPtr, bufferSize, out ffiPowerPoint, out IntPtr errorMsg);
                     StatusCode.ProcessStatusCode(statusCode, errorMsg);
                 }
             }
@@ -92,7 +92,7 @@ namespace draviavemal.openxml_office.presentation_2007
         /// </summary>
         public void SaveAs(string filePath)
         {
-            sbyte statusCode = save_as(ffiPowerPoint, filePath, out IntPtr errorMsg);
+            sbyte statusCode = power_point_save_as(ffiPowerPoint, filePath, out IntPtr errorMsg);
             StatusCode.ProcessStatusCode(statusCode, errorMsg);
         }
 
