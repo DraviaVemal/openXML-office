@@ -27,7 +27,7 @@ GO_DIR="go/openxml_office/src"
 rm -rf "$C_SHARP_DIR/openxml_office_ffi"
 rm -rf "$GO_DIR/openxml_office_ffi"
 rm -rf "$JAVA_DIR/openxml_office_ffi"
-rm -rf "$PYTHON_DIR/openxml_office"
+rm -rf "$PYTHON_DIR/openxml_office_ffi"
 
 # Find and compile each .fbs file
 find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
@@ -44,9 +44,9 @@ find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
   flatc -n -o "$C_SHARP_DIR" "$fbs_file"
   flatc -g -o "$GO_DIR" "$fbs_file"
   flatc -j -o "$JAVA_DIR" "$fbs_file"
-  flatc -p -o "$PYTHON_DIR" "$fbs_file"
 done
 # Rust code get complied as one source to maintain the modular hierarchy
+flatc -p --gen-all -o "$PYTHON_DIR" "fbs/consolidated.fbs"
 flatc -r --gen-all -o "$RUST_FFI_DIR" "fbs/consolidated.fbs"
 
 # Build Rust Core Libraries
@@ -55,7 +55,7 @@ flatc -r --gen-all -o "$RUST_FFI_DIR" "fbs/consolidated.fbs"
 
 # Prepare Build Result Directory
 rm -rf cs/openxml_office/lib && mkdir -p cs/openxml_office/lib
-rm -rf cs/openxml_office/lib && mkdir -p python/openxml_office/lib
+rm -rf python/draviavemal_openxml_office/lib && mkdir -p python/draviavemal_openxml_office/lib
 rm -rf java/draviavemal_openxml_office/src/lib && mkdir -p java/draviavemal_openxml_office/src/main/resources/lib
 rm -rf go/openxml_office/src/lib && mkdir -p go/openxml_office/src/lib
 
@@ -77,8 +77,8 @@ cp $win_binary_dir/openxmloffice_ffi.dll cs/openxml_office/lib/openxmloffice_ffi
 cp $linux_binary_dir/libopenxmloffice_ffi.so cs/openxml_office/lib/openxmloffice_ffi.so
 
 # Copy Result binary to Python targets
-cp $win_binary_dir/openxmloffice_ffi.dll python/openxml_office/lib/openxmloffice_ffi.dll
-cp $linux_binary_dir/libopenxmloffice_ffi.so python/openxml_office/lib/openxmloffice_ffi.so
+cp $win_binary_dir/openxmloffice_ffi.dll python/draviavemal_openxml_office/lib/openxmloffice_ffi.dll
+cp $linux_binary_dir/libopenxmloffice_ffi.so python/draviavemal_openxml_office/lib/openxmloffice_ffi.so
 
 # Copy Result binary to Java targets
 cp $win_binary_dir/openxmloffice_ffi.dll java/draviavemal_openxml_office/src/main/resources/lib/openxmloffice_ffi.dll
@@ -95,5 +95,13 @@ cp $linux_binary_dir/libopenxmloffice_ffi.so go/openxml_office/src/lib/openxmlof
 cd cs
 
 dotnet build
+
+cd ..
+
+# Python Build
+
+cd python
+
+python3 setup.py sdist bdist_wheel
 
 cd ..
