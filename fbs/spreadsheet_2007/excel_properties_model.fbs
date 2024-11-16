@@ -5,7 +5,7 @@ namespace openxml_office_ffi.spreadsheet_2007;
 // Define the ExcelPropertiesModel table with three fields
 table ExcelPropertiesModel {
   is_in_memory:bool;
-  // settings: ExcelSettingsModel;
+  settings: ExcelSettingsModel;
   // theme: global_2007.ThemePalletModel;
   // core_properties: global_2007.CorePropertiesModel;
 }
