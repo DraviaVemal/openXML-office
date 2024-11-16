@@ -5,4 +5,5 @@ pub enum StatusCode {
     InvalidArgument = 1,
     FlatBufferError = 2,
     FileNotFound = 3,
+    IoError = 4,
 }
