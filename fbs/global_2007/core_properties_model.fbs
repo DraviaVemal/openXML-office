@@ -1,4 +1,4 @@
-namespace openxmloffice_fbs.global_2007;
+namespace openxml_office.global_2007;
 
 table CorePropertiesModel {
   title: string;

@@ -94,4 +94,5 @@ rs/fbs/src/spreadsheet
 *.xlsx
 *.pptx
 *.docx
-cs/**/Lib
+cs/**/lib
+cs/**/fbs
