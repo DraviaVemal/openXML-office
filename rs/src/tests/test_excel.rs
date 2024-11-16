@@ -11,7 +11,7 @@ fn blank_excel() {
 #[test]
 fn edit_excel() {
     let file = Excel::new(
-        Some("/home/draviavemal/repo/OpenXML-Office/cs/Test/TestFiles/basic_test.xlsx".to_string()),
+        Some("/home/draviavemal/repo/OpenXML-Office/rs/src/tests/TestFiles/basic_test.xlsx".to_string()),
         Excel::default(),
     )
     .expect("Open Existing File Failed");
