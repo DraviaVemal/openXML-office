@@ -1,11 +1,9 @@
-use openxmloffice_fbs::draviavemal::openxml_office::spreadsheet_2007;
-use openxmloffice_spreadsheet::Excel;
+use crate::{openxml_office, StatusCode};
+use draviavema_openxml_office::{spreadsheet::Excel, ExcelPropertiesModel};
 use std::{
     ffi::{c_char, CStr},
     slice::from_raw_parts,
 };
-
-use crate::StatusCode;
 
 #[no_mangle]
 /// Creates a new Excel object.
@@ -31,9 +29,10 @@ pub extern "C" fn create_excel(
         return StatusCode::InvalidArgument as i8;
     }
     let buffer_slice = unsafe { from_raw_parts(buffer, buffer_size) };
-    match flatbuffers::root::<spreadsheet_2007::ExcelPropertiesModel>(buffer_slice) {
+    match flatbuffers::root::<openxml_office::spreadsheet_2007::ExcelPropertiesModel>(buffer_slice)
+    {
         Ok(fbs_excel_properties) => {
-            let excel_properties = openxmloffice_spreadsheet::ExcelPropertiesModel {
+            let excel_properties = ExcelPropertiesModel {
                 is_in_memory: fbs_excel_properties.is_in_memory(),
             };
             let excel = if let Some(file_name) = file_name {

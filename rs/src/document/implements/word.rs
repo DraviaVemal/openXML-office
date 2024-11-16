@@ -1,9 +1,20 @@
-use crate::{Word, WordPropertiesModel};
+use crate::{
+    core_properties::CorePropertiesPart, get_all_queries, relations::RelationsPart,
+    theme::ThemePart, OpenXmlFile, XmlElement,
+};
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use openxmloffice_global::{xml_file::XmlElement, CorePropertiesPart, RelationsPart, ThemePart};
-use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 use std::{cell::RefCell, rc::Rc};
+
+#[derive(Debug)]
+pub struct Word {
+    pub(crate) xml_fs: Rc<RefCell<OpenXmlFile>>,
+}
+
+#[derive(Debug)]
+pub struct WordPropertiesModel {
+    pub(crate) is_in_memory: bool,
+}
 
 impl Word {
     /// Default Word Setting

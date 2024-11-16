@@ -1,9 +1,21 @@
-use crate::{PowerPoint, PowerPointPropertiesModel};
 use anyhow::{Error as AnyError, Ok, Result as AnyResult};
-use openxmloffice_global::{xml_file::XmlElement, CorePropertiesPart, RelationsPart, ThemePart};
-use openxmloffice_xml::{get_all_queries, OpenXmlFile};
 use rusqlite::params;
 use std::{cell::RefCell, rc::Rc};
+
+use crate::{
+    core_properties::CorePropertiesPart, get_all_queries, relations::RelationsPart,
+    theme::ThemePart, OpenXmlFile, XmlElement,
+};
+
+#[derive(Debug)]
+pub struct PowerPoint {
+    pub(crate) xml_fs: Rc<RefCell<OpenXmlFile>>,
+}
+
+#[derive(Debug)]
+pub struct PowerPointPropertiesModel {
+    pub(crate) is_in_memory: bool,
+}
 
 impl PowerPoint {
     /// Default Power Point Setting
