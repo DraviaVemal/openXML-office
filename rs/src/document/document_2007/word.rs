@@ -4,7 +4,7 @@ use crate::{
         parts::{CorePropertiesPart, RelationsPart, ThemePart},
         traits::XmlElement,
     },
-    xml::OpenXmlFile,
+    files::OpenXmlFile,
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
 use rusqlite::params;

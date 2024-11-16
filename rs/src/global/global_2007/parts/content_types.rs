@@ -1,4 +1,4 @@
-use crate::{global_2007::traits::XmlElement, xml::OpenXmlFile};
+use crate::{global_2007::traits::XmlElement, files::OpenXmlFile};
 use anyhow::{Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 

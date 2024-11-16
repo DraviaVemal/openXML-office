@@ -1,6 +1,6 @@
 // As Is Modules
 pub mod macros;
-pub mod xml;
+pub mod files;
 // Aliased Modules
 pub mod document;
 pub mod global;

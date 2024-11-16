@@ -1,4 +1,4 @@
-use crate::xml::OpenXmlFile;
+use crate::files::OpenXmlFile;
 use anyhow::{Error as AnyError, Ok, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
