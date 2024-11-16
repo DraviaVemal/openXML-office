@@ -1,0 +1,6 @@
+int8_t power_point_create(
+    const char *file_name,
+    const uint8_t *buffer,
+    size_t buffer_size,
+    void **out_power_point,
+    const char **out_error);
