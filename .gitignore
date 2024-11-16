@@ -93,5 +93,20 @@ rs/fbs/src/spreadsheet
 *.xlsx
 *.pptx
 *.docx
+
+# Rust
+
+# CS
 cs/**/lib
 cs/**/fbs
+!cd/test/test_files/**
+**/test_results
+
+# Python
+python/openxml_office_ffi
+
+# Java
+java/**/lib
+java/draviavemal_openxml_office/src/main/java/openxml_office_ffi/
+
+# Go

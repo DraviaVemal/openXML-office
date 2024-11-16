@@ -1,4 +1,4 @@
-namespace openxml_office.global_2007;
+namespace openxml_office_ffi.global_2007;
 
 table ThemePalletModel {
   accent1: string;

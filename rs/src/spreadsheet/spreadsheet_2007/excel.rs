@@ -25,7 +25,7 @@ pub struct ExcelPropertiesModel {
 impl Excel {
     /// Default Excel Setting
     pub fn default() -> ExcelPropertiesModel {
-        return ExcelPropertiesModel { is_in_memory: true };
+        ExcelPropertiesModel { is_in_memory: true }
     }
     /// Create new or clone source file to start working on excel
     pub fn new(
@@ -52,7 +52,7 @@ impl Excel {
             ThemePart::new(&xml_fs, Some("xl/theme/theme1.xml"))?;
         }
         let workbook = WorkbookPart::new(&xml_fs, None).context("Workbook Creation Failed")?;
-        return Ok(Self { xml_fs, workbook });
+        Ok(Self { xml_fs, workbook })
     }
 
     /// Add sheet to the current excel

@@ -1,6 +1,0 @@
-Fbs/global
-Fbs/spreadsheet
-Fbs/presentation
-Fbs/document
-!test/test_files/**
-**/test_results
