@@ -19,7 +19,7 @@ namespace draviavemal.openxml_office.global_2007
             switch (status)
             {
                 case StatusCodeValues.UnknownError:
-                    throw new Exception("Unknow Error");
+                    throw new Exception("Unknown Error");
                 case StatusCodeValues.InvalidArgument:
                     throw new ArgumentException("Method argument failed");
                 case StatusCodeValues.FlatBufferError:

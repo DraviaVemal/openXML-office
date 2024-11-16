@@ -34,18 +34,18 @@ impl Excel {
             let open_xml_file = OpenXmlFile::open(&file_name, true, excel_setting.is_in_memory)
                 .context("Open Existing File Failed")?;
             xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs);
+            Self::setup_database_schema(&xml_fs)?;
             Self::load_common_reference(&xml_fs);
-            CorePropertiesPart::new(&xml_fs, None);
+            CorePropertiesPart::new(&xml_fs, None)?;
         } else {
             let open_xml_file = OpenXmlFile::create(excel_setting.is_in_memory)
                 .context("Create New File Failed")?;
             xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs);
+            Self::setup_database_schema(&xml_fs)?;
             Self::initialize_common_reference(&xml_fs);
-            RelationsPart::new(&xml_fs, None);
-            CorePropertiesPart::new(&xml_fs, None);
-            ThemePart::new(&xml_fs, Some("xl/theme/theme1.xml"));
+            RelationsPart::new(&xml_fs, None)?;
+            CorePropertiesPart::new(&xml_fs, None)?;
+            ThemePart::new(&xml_fs, Some("xl/theme/theme1.xml"))?;
         }
         let workbook = Workbook::new(&xml_fs, None).context("Workbook Creation Failed")?;
         return Ok(Self { xml_fs, workbook });
@@ -58,19 +58,23 @@ impl Excel {
     }
 
     /// Save/Replace the current file into target destination
-    pub fn save_as(self, file_name: &str) {
+    pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
         self.workbook.flush();
-        self.xml_fs.borrow().save(file_name);
+        self.xml_fs
+            .borrow()
+            .save(file_name)
+            .context("File Save Failed for the target path.")?;
+        Ok(())
     }
 
     /// Initialism table schema for Excel
     fn setup_database_schema(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> AnyResult<(), AnyError> {
         let scheme = get_all_queries!("excel.sql");
         for query in scheme {
-            match xml_fs.borrow().execute_query(&query, params![]) {
-                Result::Ok(_) => Ok(()),
-                Err(e) => Err(e.into()),
-            };
+            xml_fs
+                .borrow()
+                .execute_query(&query, params![])
+                .context(format!("Failed Executing Query : {}", &query))?;
         }
         Ok(())
     }

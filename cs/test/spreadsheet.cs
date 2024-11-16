@@ -11,7 +11,7 @@ namespace openxmloffice.tests
     [TestClass]
     public class Spreadsheet
     {
-        private static readonly string resultPath = "../../TestOutputFiles";
+        private static readonly string resultPath = "../../test_results";
         /// <summary>
         /// Initialize excel Test
         /// </summary>
