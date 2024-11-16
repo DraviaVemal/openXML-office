@@ -56,7 +56,7 @@ namespace openxmloffice.tests
         /// Test existing file
         /// </summary>
         [TestMethod]
-        public void OpenExistingExcelStyleString()
+        public void OpenExistingExcel()
         {
             Excel excel1 = new("test_files/basic_test.xlsx", new()
             {

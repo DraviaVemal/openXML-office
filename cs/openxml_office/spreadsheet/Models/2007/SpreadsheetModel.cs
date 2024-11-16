@@ -1,6 +1,7 @@
 // Copyright (c) DraviaVemal. Licensed under the MIT License. See License in the project root.
 
 using draviavemal.openxml_office.global_2007;
+
 namespace draviavemal.openxml_office.spreadsheet_2007
 {
 	/// <summary>

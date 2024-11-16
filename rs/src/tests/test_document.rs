@@ -1,4 +1,4 @@
-use crate::Word;
+use crate::document_2007::Word;
 
 #[test]
 fn blank_document() {
