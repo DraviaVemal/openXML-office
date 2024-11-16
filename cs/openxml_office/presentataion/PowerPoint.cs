@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Google.FlatBuffers;
 using draviavemal.openxml_office.global_2007;
-using openxml_office.presentation_2007;
+using openxml_office_ffi.presentation_2007;
 
 namespace draviavemal.openxml_office.presentation_2007
 {

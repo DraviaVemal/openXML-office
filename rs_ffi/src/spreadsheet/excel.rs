@@ -1,4 +1,4 @@
-use crate::{chain_error, openxml_office, StatusCode};
+use crate::{chain_error, openxml_office_ffi, StatusCode};
 use draviavema_openxml_office::spreadsheet_2007::{Excel, ExcelPropertiesModel};
 use std::{
     ffi::{c_char, CStr, CString},
@@ -30,7 +30,7 @@ pub extern "C" fn excel_create(
         return StatusCode::InvalidArgument as i8;
     }
     let buffer_slice = unsafe { from_raw_parts(buffer, buffer_size) };
-    match flatbuffers::root::<openxml_office::spreadsheet_2007::ExcelPropertiesModel>(buffer_slice)
+    match flatbuffers::root::<openxml_office_ffi::spreadsheet_2007::ExcelPropertiesModel>(buffer_slice)
     {
         Ok(fbs_excel_properties) => {
             let excel_properties = ExcelPropertiesModel {
