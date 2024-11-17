@@ -171,7 +171,8 @@ impl OfficeDocument {
                         uncompressed_data.len(),
                         1,
                         "gzip",
-                        compressed
+                        compressed,
+                        Option::<String>::None
                     ],
                 )
                 .context("Archive content load failed.")?;
