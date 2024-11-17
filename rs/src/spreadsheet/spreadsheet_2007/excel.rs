@@ -5,7 +5,7 @@ use crate::{
         traits::XmlElement,
     },
     spreadsheet_2007::parts::{WorkSheetPart, WorkbookPart},
-    xml::OpenXmlFile,
+    files::OpenXmlFile,
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
 use rusqlite::params;
