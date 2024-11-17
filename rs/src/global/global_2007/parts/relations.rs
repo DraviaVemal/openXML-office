@@ -40,7 +40,7 @@ impl XmlElement for RelationsPart {
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> Vec<u8> {
         let template_core_properties = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>"#;
-        return template_core_properties.as_bytes().to_vec();
+        template_core_properties.as_bytes().to_vec()
     }
 }
 

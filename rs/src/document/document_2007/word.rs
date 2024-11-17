@@ -23,7 +23,7 @@ pub struct WordPropertiesModel {
 impl Word {
     /// Default Word Setting
     pub fn default() -> WordPropertiesModel {
-        return WordPropertiesModel { is_in_memory: true };
+        WordPropertiesModel { is_in_memory: true }
     }
     /// Create new or clone source file to start working on Word
     pub fn new(
@@ -49,7 +49,7 @@ impl Word {
             CorePropertiesPart::new(&xml_fs, None)?;
             ThemePart::new(&xml_fs, Some("doc/theme/theme1.xml"))?;
         }
-        return Ok(Self { xml_fs });
+        Ok(Self { xml_fs })
     }
 
     /// Save/Replace the current file into target destination
