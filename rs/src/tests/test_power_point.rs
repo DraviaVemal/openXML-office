@@ -1,9 +1,10 @@
-use crate::presentation_2007::PowerPoint;
+use crate::presentation_2007::{PowerPoint, PowerPointPropertiesModel};
 
 #[test]
 fn blank_power_point() {
     let file = PowerPoint::new(None, PowerPoint::default()).expect("Create New File Failed");
-    file.save_as(&"test.pptx".to_string());
+    file.save_as(&"test.pptx".to_string())
+        .expect("Failed to save Empty Power Point");
     assert_eq!(true, true);
 }
 
@@ -17,6 +18,7 @@ fn edit_power_point() {
         PowerPoint::default(),
     )
     .expect("Open Existing file failed");
-    file.save_as(&"test.pptx".to_string());
+    file.save_as(&"test.pptx".to_string())
+        .expect("Failed to save Edit Power Point");
     assert_eq!(true, true);
 }

@@ -1,16 +1,14 @@
+use crate::{
+    file_handling::{compress_content, decompress_content},
+    files::{SqliteDatabases, XmlElement, XmlSerializer},
+    get_specific_queries,
+};
+use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
+use rusqlite::{params, Row};
 use std::{
     fs::{metadata, remove_file, File},
     io::{Cursor, Read, Write},
-    ptr::null,
 };
-
-use crate::{
-    file_handling::{compress_content, decompress_content},
-    files::SqliteDatabases,
-    get_specific_queries,
-};
-use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{params, Row};
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 #[derive(Debug)]
@@ -51,6 +49,28 @@ impl OfficeDocument {
         &self.sqlite_database
     }
 
+    /// Get Xml tree from content
+    pub fn get_xml_tree(&self, file_path: &str) -> AnyResult<Option<XmlElement>, AnyError> {
+        let query = get_specific_queries!("office_document.sql", "select_archive_content")
+            .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
+        fn row_mapper(row: &Row) -> AnyResult<Vec<u8>, rusqlite::Error> {
+            row.get(0)
+        }
+        let result = self
+            .get_connection()
+            .find_one(&query, params![file_path], row_mapper)
+            .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
+        if let Some(query_result) = result {
+            let decompressed_data =
+                decompress_content(&query_result).context("Raw Content Decompression Failed")?;
+            let xml_tree = XmlSerializer::xml_str_to_xml_tree(decompressed_data)
+                .context("Xml Serializer Failed")?;
+            Ok(Some(xml_tree))
+        } else {
+            Ok(None)
+        }
+    }
+
     /// Save Current Document to final result
     pub fn save_as(&self, file_path: &str) -> AnyResult<(), AnyError> {
         let file_content = self
@@ -66,7 +86,7 @@ impl OfficeDocument {
 
     /// Initialize Local archive Database
     fn initialize_database(sqlite_databases: &SqliteDatabases) -> AnyResult<usize, AnyError> {
-        let query: String = get_specific_queries!("open_xml_archive.sql", "create_archive_table")
+        let query: String = get_specific_queries!("office_document.sql", "create_archive_table")
             .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
         sqlite_databases
             .create_table(&query)
@@ -75,9 +95,8 @@ impl OfficeDocument {
 
     /// Save the database content into file archive
     fn save_database_into_archive(&self) -> AnyResult<Vec<u8>, AnyError> {
-        let query: String =
-            get_specific_queries!("open_xml_archive.sql", "select_all_archive_rows")
-                .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
+        let query: String = get_specific_queries!("office_document.sql", "select_all_archive_rows")
+            .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
         fn row_mapper(row: &Row) -> Result<ArchiveRecordModel, rusqlite::Error> {
             Result::Ok(ArchiveRecordModel {
                 id: row.get(0)?,
@@ -125,7 +144,7 @@ impl OfficeDocument {
 
     /// Read Zip file and load it into database after compression
     fn load_archive_into_database(
-        &sqlite_database: &SqliteDatabases,
+        sqlite_database: &SqliteDatabases,
         file_path: &str,
     ) -> AnyResult<(), AnyError> {
         let file: File = File::open(file_path).context("Open Existing archive File")?;
@@ -140,7 +159,7 @@ impl OfficeDocument {
                 .context("File Uncompressed failed")?;
             let compressed =
                 compress_content(&uncompressed_data).context("Recompressing in GZip Failed")?;
-            let query = get_specific_queries!("open_xml_archive.sql", "insert_archive_table")
+            let query = get_specific_queries!("office_document.sql", "insert_archive_table")
                 .map_err(|e| anyhow!("Specific query pull fail. {}", e))?;
             sqlite_database
                 .insert_record(
@@ -152,8 +171,7 @@ impl OfficeDocument {
                         uncompressed_data.len(),
                         1,
                         "gzip",
-                        compressed,
-                        null()
+                        compressed
                     ],
                 )
                 .context("Archive content load failed.")?;
