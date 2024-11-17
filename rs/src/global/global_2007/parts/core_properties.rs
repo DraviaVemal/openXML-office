@@ -1,10 +1,10 @@
-use crate::{global_2007::traits::XmlElement, files::OpenXmlFile};
+use crate::{global_2007::traits::XmlDocument, files::OfficeDocument};
 use anyhow::{Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]
 pub struct CorePropertiesPart {
-    pub xml_fs: Rc<RefCell<OpenXmlFile>>,
+    pub office_document: Rc<RefCell<OfficeDocument>>,
     pub file_content: Vec<u8>,
     pub file_name: String,
 }
@@ -13,18 +13,18 @@ impl Drop for CorePropertiesPart {
     fn drop(&mut self) {
         self.update_last_modified();
         let _ = self
-            .xml_fs
+            .office_document
             .borrow()
             .add_update_xml_content(&self.file_name, &self.file_content);
     }
 }
 
-impl XmlElement for CorePropertiesPart {
-    fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> AnyResult<Self, AnyError> {
+impl XmlDocument for CorePropertiesPart {
+    fn new(office_document: &Rc<RefCell<OfficeDocument>>, _: Option<&str>) -> AnyResult<Self, AnyError> {
         let file_name = "docProps/core.xml".to_string();
-        let file_content = Self::get_content_xml(&xml_fs, &file_name)?;
+        let file_content = Self::get_content_xml(&office_document, &file_name)?;
         Ok(Self {
-            xml_fs: Rc::clone(xml_fs),
+            office_document: Rc::clone(office_document),
             file_content,
             file_name,
         })
