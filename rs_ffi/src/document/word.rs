@@ -1,4 +1,4 @@
-use crate::{chain_error, openxml_office, StatusCode};
+use crate::{chain_error, openxml_office_ffi, StatusCode};
 use draviavema_openxml_office::document_2007::{Word, WordPropertiesModel};
 use std::{
     ffi::{c_char, CStr, CString},
@@ -30,7 +30,7 @@ pub extern "C" fn word_create(
         return StatusCode::InvalidArgument as i8;
     }
     let buffer_slice = unsafe { from_raw_parts(buffer, buffer_size) };
-    match flatbuffers::root::<openxml_office::presentation_2007::PresentationPropertiesModel>(
+    match flatbuffers::root::<openxml_office_ffi::presentation_2007::PresentationPropertiesModel>(
         buffer_slice,
     ) {
         Ok(fbs_word_properties) => {

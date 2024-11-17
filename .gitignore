@@ -84,29 +84,19 @@ Desktop.ini
 **/*.node
 **/*.d.ts
 
-# Build results
+# Commons
+**/openxml_office_ffi
 **/target
-**/openxmloffice.*
-**/openxmloffice_fbs
-rs/fbs/src/global
-rs/fbs/src/spreadsheet
-*.xlsx
-*.pptx
-*.docx
+**/lib
+**/test_results
 
 # Rust
 
 # CS
-cs/**/lib
-cs/**/fbs
 !cd/test/test_files/**
-**/test_results
 
 # Python
-python/openxml_office_ffi
 
 # Java
-java/**/lib
-java/draviavemal_openxml_office/src/main/java/openxml_office_ffi/
 
 # Go
