@@ -44,9 +44,9 @@ impl Excel {
             RelationsPart::new(&rc_office_document, None)
                 .context("Initialize Relation Part failed")?;
             CorePropertiesPart::new(&rc_office_document, None)
-                .context("Create CorePart for new file failed");
-            ThemePart::new(&rc_office_document, Some("doc/theme/theme1.xml"))
-                .context("Initializing new theme part failed");
+                .context("Create CorePart for new file failed")?;
+            ThemePart::new(&rc_office_document, Some("xl/theme/theme1.xml"))
+                .context("Initializing new theme part failed")?;
         }
         let workbook =
             WorkbookPart::new(&rc_office_document, None).context("Workbook Creation Failed")?;
