@@ -1,18 +1,17 @@
 use crate::{
+    files::OfficeDocument,
     get_all_queries,
     global_2007::{
         parts::{CorePropertiesPart, RelationsPart, ThemePart},
-        traits::XmlElement,
+        traits::XmlDocument,
     },
-    files::OpenXmlFile,
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use rusqlite::params;
 use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]
 pub struct Word {
-    pub(crate) xml_fs: Rc<RefCell<OpenXmlFile>>,
+    pub(crate) office_document: Rc<RefCell<OfficeDocument>>,
 }
 
 #[derive(Debug)]
@@ -30,51 +29,45 @@ impl Word {
         file_name: Option<String>,
         word_setting: WordPropertiesModel,
     ) -> AnyResult<Self, AnyError> {
-        let xml_fs;
-        //
-        if let Some(file_name) = file_name {
-            let open_xml_file = OpenXmlFile::open(&file_name, true, word_setting.is_in_memory)
-                .context("Open Existing File Failed")?;
-            xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs)?;
-            Self::load_common_reference(&xml_fs);
-            CorePropertiesPart::new(&xml_fs, None)?;
+        let is_file_exist = file_name.is_some();
+        let office_document = OfficeDocument::new(file_name, word_setting.is_in_memory)
+            .context("Creating Office Document Struct Failed")?;
+        let rc_office_document: Rc<RefCell<OfficeDocument>> =
+            Rc::new(RefCell::new(office_document));
+        Self::setup_database_schema(&rc_office_document).context("Word Schema Setup Failed")?;
+        if is_file_exist {
+            CorePropertiesPart::new(&rc_office_document, None)
+                .context("Load CorePart for Existing file failed")?;
         } else {
-            let open_xml_file =
-                OpenXmlFile::create(word_setting.is_in_memory).context("Create New File Failed")?;
-            xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs)?;
-            Self::initialize_common_reference(&xml_fs);
-            RelationsPart::new(&xml_fs, None)?;
-            CorePropertiesPart::new(&xml_fs, None)?;
-            ThemePart::new(&xml_fs, Some("doc/theme/theme1.xml"))?;
+            RelationsPart::new(&rc_office_document, None)
+                .context("Initialize Relation Part failed")?;
+            CorePropertiesPart::new(&rc_office_document, None)
+                .context("Create CorePart for new file failed");
+            ThemePart::new(&rc_office_document, Some("doc/theme/theme1.xml"))
+                .context("Initializing new theme part failed");
         }
-        Ok(Self { xml_fs })
+        Ok(Self {
+            office_document: rc_office_document,
+        })
     }
 
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
-        self.xml_fs.borrow().save(file_name)
+        self.office_document.borrow().save_as(file_name)
     }
 
     /// Initialism table schema for Word
-    fn setup_database_schema(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> AnyResult<(), AnyError> {
+    fn setup_database_schema(
+        office_document: &Rc<RefCell<OfficeDocument>>,
+    ) -> AnyResult<(), AnyError> {
         let scheme = get_all_queries!("word.sql");
         for query in scheme {
-            xml_fs.borrow().execute_query(&query, params![])?;
+            office_document
+                .borrow()
+                .get_connection()
+                .create_table(&query)
+                .context("Word Schema Initialization Failed")?;
         }
         Ok(())
-    }
-
-    /// For new file initialize the default reference
-    fn initialize_common_reference(xml_fs: &Rc<RefCell<OpenXmlFile>>) {
-        // Share String Start
-        // Style Start
-    }
-
-    /// Load existing data from Word to database
-    fn load_common_reference(xml_fs: &Rc<RefCell<OpenXmlFile>>) {
-        // xml_fs.get_database_connection().execute(sql, params)
-        // Ok(());
     }
 }

@@ -9,12 +9,13 @@ edition = "2021"
 msrv = "1.32.0"
 
 [dependencies]
+serde = { version = "1.0.214", features = ["derive"] }
 anyhow = "1.0.90"
+bincode = "1.3.3"
 chrono = "0.4.38"
 flate2 = "1.0.34"
 quick-xml = { version = "0.37.0", features = ["serialize"] }
 rusqlite = { version = "0.32.0", features = ["bundled"] }
-serde = "1.0.214"
 tempfile = "3.13.0"
 zip = "2.2.0"
 

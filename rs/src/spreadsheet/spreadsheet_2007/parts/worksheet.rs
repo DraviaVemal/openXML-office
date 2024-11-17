@@ -1,4 +1,4 @@
-use crate::{global_2007::traits::XmlElement, files::OpenXmlFile};
+use crate::{global_2007::traits::XmlDocument, files::OpenXmlFile};
 use anyhow::{Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
@@ -18,7 +18,7 @@ impl Drop for WorkSheetPart {
     }
 }
 
-impl XmlElement for WorkSheetPart {
+impl XmlDocument for WorkSheetPart {
     /// Create New object for the group
     fn new(
         xml_fs: &Rc<RefCell<OpenXmlFile>>,

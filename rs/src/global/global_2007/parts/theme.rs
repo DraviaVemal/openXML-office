@@ -1,4 +1,4 @@
-use crate::{global_2007::traits::XmlElement, files::OpenXmlFile};
+use crate::{global_2007::traits::XmlDocument, files::OpenXmlFile};
 use anyhow::{Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
@@ -18,7 +18,7 @@ impl Drop for ThemePart {
     }
 }
 
-impl XmlElement for ThemePart {
+impl XmlDocument for ThemePart {
     fn new(
         xml_fs: &Rc<RefCell<OpenXmlFile>>,
         file_name: Option<&str>,

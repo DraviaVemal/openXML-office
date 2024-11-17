@@ -1,10 +1,10 @@
-use crate::{global_2007::traits::XmlElement, files::OpenXmlFile};
+use crate::{files::OfficeDocument, global_2007::traits::XmlDocument};
 use anyhow::{Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]
 pub struct WorkbookPart {
-    pub xml_fs: Rc<RefCell<OpenXmlFile>>,
+    pub xml_fs: Rc<RefCell<OfficeDocument>>,
     pub file_content: Vec<u8>,
     pub file_name: String,
 }
@@ -18,7 +18,7 @@ impl Drop for WorkbookPart {
     }
 }
 
-impl XmlElement for WorkbookPart {
+impl XmlDocument for WorkbookPart {
     /// Create workbook
     fn new(xml_fs: &Rc<RefCell<OpenXmlFile>>, _: Option<&str>) -> AnyResult<Self, AnyError> {
         let file_name = "xl/workbook.xml".to_string();
