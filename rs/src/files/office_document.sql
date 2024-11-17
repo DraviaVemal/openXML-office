@@ -55,7 +55,8 @@ ORDER BY
 
 -- query : select_archive_content# select and pull workbook blob content
 SELECT
-    content
+    file_content,
+    tree_content
 FROM
     archive
 WHERE

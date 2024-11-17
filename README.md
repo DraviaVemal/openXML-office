@@ -21,23 +21,26 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 
 # Version 4 Goals and Objectives
 
-| Supported Languages | Support Version | Readme link | Packages   | package link                                             | Description                                           |
-| ------------------- | --------------- | ----------- | ---------- | -------------------------------------------------------- | ----------------------------------------------------- |
-| Rust                |                 | TODO        | Rust       | [Crates](https://crates.io/)                             | Rust crate directly connecting to core lib            |
-| C#                  | .net6.0         | TODO        | C#         | [Nuget](https://www.nuget.org/)                          | C# wrapper package wrote around FFI layer of rust     |
-| Java                |                 | TODO        | Java       | [Maven Central](https://mvnrepository.com/)              | Java wrapper package wrote around FFI layer of rust   |
-| Python              |                 | TODO        | Python     | [PyPi](https://pypi.org/)                                | Python Wrapper package wrote around FFI layer of rust |
-| Go                  |                 | TODO        | Go         | [Github](https://github.com/DraviaVemal/OpenXML-Office/) | Go wrapper package wrote around FFI layer of rust     |
-| TypeScript          |                 | TODO        | TypeScript | [npm](https://www.npmjs.com/)                            | NAPI-RS is used to expose the core lib as node addon  |
-|                     |                 |             | Rust-API   | [Docker Hub](https://hub.docker.com/)                    | API container running rust crate for HTTP support     |
+| Supported Languages  | Min.Support Version | Readme link  | Packages   | package link                                             | Description                                                    |
+| -------------------- | ------------------- | ------------ | ---------- | -------------------------------------------------------- | -------------------------------------------------------------- |
+| Rust                 | 1.32                | TODO         | Rust       | [Crates](https://crates.io/)                             | Rust crate directly connecting to core lib                     |
+| C#                   | .net6.0             | TODO         | C#         | [Nuget](https://www.nuget.org/)                          | C# wrapper package wrote around FFI layer of rust              |
+| Python               |                     | TODO         | Python     | [PyPi](https://pypi.org/)                                | Python Wrapper package wrote around FFI layer of rust          |
+| -------------------- | ---------------     | ------------ | --------   | -------------                                            | -------------------------------------------------------------- |
+| PHASE 2              | PHASE 2             | PHASE 2      | PHASE 2    | PHASE 2                                                  | PHASE 2                                                        |
+| -------------------- | ---------------     | ------------ | --------   | -------------                                            | -------------------------------------------------------------- |
+| Java                 | 1.8                 | TODO         | Java       | [Maven Central](https://mvnrepository.com/)              | Java wrapper package wrote around FFI layer of rust            |
+| Go                   | 1.22                | TODO         | Go         | [Github](https://github.com/DraviaVemal/OpenXML-Office/) | Go wrapper package wrote around FFI layer of rust              |
+| TypeScript           |                     | TODO         | TypeScript | [npm](https://www.npmjs.com/)                            | NAPI-RS is used to expose the core lib as node addon           |
+|                      |                     |              | Rust-API   | [Docker Hub](https://hub.docker.com/)                    | API container running rust crate for HTTP support              |
 
 ## V4 Status Development
 
 | Language    | Package      | Progress |
 | ----------- | ------------ | -------- |
 | Flatbuffers | common       | 🟩⬜⬜⬜⬜    |
-| Rust        | xml          | 🟩⬜⬜⬜⬜    |
 | Rust        | fbs          | 🟩⬜⬜⬜⬜    |
+| Rust        | xml          | 🟩🟩⬜⬜⬜    |
 | Rust        | global       | 🟩⬜⬜⬜⬜    |
 | Rust        | spreadsheet  | 🟩🟩⬜⬜⬜    |
 | Rust        | presentation | 🟩⬜⬜⬜⬜    |
@@ -54,14 +57,18 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | ----------- | -----------  | -------- |
 | PHASE 2     | PHASE 2      | PHASE 2  |
 | ----------- | -----------  | -------- |
-| java        | fbs          | ⬜⬜⬜⬜⬜    |
-| java        | spreadsheet  | ⬜⬜⬜⬜⬜    |
-| java        | presentation | ⬜⬜⬜⬜⬜    |
-| java        | document     | ⬜⬜⬜⬜⬜    |
-| go          | fbs          | ⬜⬜⬜⬜⬜    |
-| go          | spreadsheet  | ⬜⬜⬜⬜⬜    |
-| go          | presentation | ⬜⬜⬜⬜⬜    |
-| go          | document     | ⬜⬜⬜⬜⬜    |
+| Java        | fbs          | ⬜⬜⬜⬜⬜    |
+| Java        | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| Java        | presentation | ⬜⬜⬜⬜⬜    |
+| Java        | document     | ⬜⬜⬜⬜⬜    |
+| Go          | fbs          | ⬜⬜⬜⬜⬜    |
+| Go          | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| Go          | presentation | ⬜⬜⬜⬜⬜    |
+| Go          | document     | ⬜⬜⬜⬜⬜    |
+| TypeScript  | fbs          | ⬜⬜⬜⬜⬜    |
+| TypeScript  | spreadsheet  | ⬜⬜⬜⬜⬜    |
+| TypeScript  | presentation | ⬜⬜⬜⬜⬜    |
+| TypeScript  | document     | ⬜⬜⬜⬜⬜    |
 
 ## Repo & Design Block Diagram
 ![Design](design.svg)
