@@ -1,0 +1,6 @@
+int8_t word_create(
+    const char *file_name,
+    const uint8_t *buffer,
+    size_t buffer_size,
+    void **out_word,
+    const char **out_error);
