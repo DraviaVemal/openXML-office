@@ -1,19 +1,18 @@
 use crate::{
+    files::OfficeDocument,
     get_all_queries,
     global_2007::{
         parts::{CorePropertiesPart, RelationsPart, ThemePart},
-        traits::XmlElement,
+        traits::XmlDocument,
     },
     spreadsheet_2007::parts::{WorkSheetPart, WorkbookPart},
-    files::OpenXmlFile,
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use rusqlite::params;
 use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]
 pub struct Excel {
-    xml_fs: Rc<RefCell<OpenXmlFile>>,
+    pub(crate) office_document: Rc<RefCell<OfficeDocument>>,
     workbook: WorkbookPart,
 }
 
@@ -32,66 +31,57 @@ impl Excel {
         file_name: Option<String>,
         excel_setting: ExcelPropertiesModel,
     ) -> AnyResult<Self, AnyError> {
-        let xml_fs;
-        //
-        if let Some(file_name) = file_name {
-            let open_xml_file = OpenXmlFile::open(&file_name, true, excel_setting.is_in_memory)
-                .context("Open Existing File Failed")?;
-            xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs)?;
-            Self::load_common_reference(&xml_fs);
-            CorePropertiesPart::new(&xml_fs, None)?;
+        let is_file_exist = file_name.is_some();
+        let office_document = OfficeDocument::new(file_name, excel_setting.is_in_memory)
+            .context("Creating Office Document Struct Failed")?;
+        let rc_office_document: Rc<RefCell<OfficeDocument>> =
+            Rc::new(RefCell::new(office_document));
+        Self::setup_database_schema(&rc_office_document).context("Excel Schema Setup Failed")?;
+        if is_file_exist {
+            CorePropertiesPart::new(&rc_office_document, None)
+                .context("Load CorePart for Existing file failed")?;
         } else {
-            let open_xml_file = OpenXmlFile::create(excel_setting.is_in_memory)
-                .context("Create New File Failed")?;
-            xml_fs = Rc::new(RefCell::new(open_xml_file));
-            Self::setup_database_schema(&xml_fs)?;
-            Self::initialize_common_reference(&xml_fs);
-            RelationsPart::new(&xml_fs, None)?;
-            CorePropertiesPart::new(&xml_fs, None)?;
-            ThemePart::new(&xml_fs, Some("xl/theme/theme1.xml"))?;
+            RelationsPart::new(&rc_office_document, None)
+                .context("Initialize Relation Part failed")?;
+            CorePropertiesPart::new(&rc_office_document, None)
+                .context("Create CorePart for new file failed");
+            ThemePart::new(&rc_office_document, Some("doc/theme/theme1.xml"))
+                .context("Initializing new theme part failed");
         }
-        let workbook = WorkbookPart::new(&xml_fs, None).context("Workbook Creation Failed")?;
-        Ok(Self { xml_fs, workbook })
+        let workbook =
+            WorkbookPart::new(&rc_office_document, None).context("Workbook Creation Failed")?;
+        Ok(Self {
+            office_document: rc_office_document,
+            workbook,
+        })
     }
 
     /// Add sheet to the current excel
     pub fn add_sheet(&self, sheet_name: &str) -> AnyResult<WorkSheetPart, AnyError> {
-        let worksheet = WorkSheetPart::new(&self.xml_fs, Some(sheet_name));
+        let worksheet = WorkSheetPart::new(&self.office_document, Some(sheet_name));
         worksheet
     }
 
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
         self.workbook.flush();
-        self.xml_fs
+        self.office_document
             .borrow()
-            .save(file_name)
+            .save_as(file_name)
             .context("File Save Failed for the target path.")?;
         Ok(())
     }
 
     /// Initialism table schema for Excel
-    fn setup_database_schema(xml_fs: &Rc<RefCell<OpenXmlFile>>) -> AnyResult<(), AnyError> {
+    fn setup_database_schema(xml_fs: &Rc<RefCell<OfficeDocument>>) -> AnyResult<(), AnyError> {
         let scheme = get_all_queries!("excel.sql");
         for query in scheme {
             xml_fs
                 .borrow()
-                .execute_query(&query, params![])
-                .context(format!("Failed Executing Query : {}", &query))?;
+                .get_connection()
+                .create_table(&query)
+                .context("Excel Schema Initialization Failed")?;
         }
         Ok(())
-    }
-
-    /// For new file initialize the default reference
-    fn initialize_common_reference(xml_fs: &Rc<RefCell<OpenXmlFile>>) {
-        // Share String Start
-        // Style Start
-    }
-
-    /// Load existing data from excel to database
-    fn load_common_reference(xml_fs: &Rc<RefCell<OpenXmlFile>>) {
-        // xml_fs.get_database_connection().execute(sql, params)
-        // Ok(());
     }
 }
