@@ -42,9 +42,9 @@ impl Word {
             RelationsPart::new(&rc_office_document, None)
                 .context("Initialize Relation Part failed")?;
             CorePropertiesPart::new(&rc_office_document, None)
-                .context("Create CorePart for new file failed");
+                .context("Create CorePart for new file failed")?;
             ThemePart::new(&rc_office_document, Some("doc/theme/theme1.xml"))
-                .context("Initializing new theme part failed");
+                .context("Initializing new theme part failed")?;
         }
         Ok(Self {
             office_document: rc_office_document,
