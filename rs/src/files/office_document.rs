@@ -1,6 +1,6 @@
 use crate::{
     file_handling::{compress_content, decompress_content},
-    files::{SqliteDatabases, XmlElement, XmlSerializer},
+    files::{SqliteDatabases, XmlDeSerializer, XmlElement, XmlSerializer},
     get_specific_queries,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
@@ -21,8 +21,8 @@ pub struct ArchiveRecordModel {
     uncompressed_file_size: i32,
     compression_level: i8,
     compression_type: String,
-    file_content: Vec<u8>,
-    tree_content: Vec<u8>,
+    file_content: Option<Vec<u8>>,
+    tree_content: Option<Vec<u8>>,
 }
 
 #[derive(Debug)]
@@ -153,17 +153,29 @@ impl OfficeDocument {
             compression_level: _,
             compression_type: _,
             file_content,
-            tree_content: _,
+            tree_content,
         } in result
         {
-            // TODO : Create New File Content for the Tree View
-            let uncompressed = decompress_content(&file_content).context("Decompress Error")?;
             zip_writer
                 .start_file(file_name, zip_option)
                 .context("Zip File Write Start Fail")?;
-            zip_writer
-                .write_all(&uncompressed)
-                .context("Writing compressed data to ZIp")?;
+            if let Some(xml_tree_compressed) = tree_content {
+                let xml_tree_bytes = decompress_content(&xml_tree_compressed)
+                    .context("Xml Tree Content Decompression Failed.")?;
+                let xml_tree = deserialize::<XmlElement>(&xml_tree_bytes)
+                    .context("Bincode deserialize XML Tree Failed")?;
+                let xml_content = XmlDeSerializer::xml_tree_to_xml_vec(&xml_tree);
+                zip_writer
+                    .write_all(&xml_content)
+                    .context("Writing compressed data to ZIp")?;
+            }
+            if let Some(xml_content_compressed) = file_content {
+                let uncompressed =
+                    decompress_content(&xml_content_compressed).context("Decompress Error")?;
+                zip_writer
+                    .write_all(&uncompressed)
+                    .context("Writing compressed data to ZIp")?;
+            }
         }
         zip_writer.finish().context("Zip Close Failed")?;
         Ok(buffer.into_inner())

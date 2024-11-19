@@ -58,8 +58,8 @@ impl XmlSerializer {
                         })
                         .collect::<AnyResult<HashMap<String, String>>>()?;
                     // Create new element
-                    let tag = String::from_utf8_lossy(element.name().into_inner()).to_string();
-                    let mut xml_element = XmlElement::new(tag.clone(), None);
+                    let tag: String = String::from_utf8_lossy(element.name().into_inner()).to_string();
+                    let mut xml_element: XmlElement = XmlElement::new(tag.clone(), None);
                     if !attributes.is_empty() {
                         xml_element.set_attribute(attributes);
                     }
@@ -94,7 +94,7 @@ impl XmlSerializer {
                 }
                 // Read element tag and attributes, without text content
                 Result::Ok(Event::Empty(element)) => {
-                    let attributes = element
+                    let attributes: HashMap<String, String> = element
                         .attributes()
                         .map(|a| {
                             let attribute = a.context("Failed to parse attribute")?;
@@ -105,8 +105,8 @@ impl XmlSerializer {
                         })
                         .collect::<AnyResult<HashMap<String, String>>>()?;
                     // Create new element
-                    let tag = String::from_utf8_lossy(element.name().into_inner()).to_string();
-                    let mut xml_element = XmlElement::new(tag.clone(), None);
+                    let tag: String = String::from_utf8_lossy(element.name().into_inner()).to_string();
+                    let mut xml_element: XmlElement = XmlElement::new(tag.clone(), None);
                     if !attributes.is_empty() {
                         xml_element.set_attribute(attributes);
                     }
