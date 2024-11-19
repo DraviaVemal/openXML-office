@@ -32,6 +32,10 @@ impl XmlElement {
         }
     }
 
+    pub fn is_empty_tag(&self) -> bool {
+        self.value.is_none() && self.children.is_none()
+    }
+
     pub fn get_tag(&self) -> &str {
         &self.tag
     }
@@ -42,6 +46,10 @@ impl XmlElement {
 
     pub fn get_value(&self) -> &Option<String> {
         &self.value
+    }
+
+    pub fn get_children(&self) -> &Option<Vec<Vec<u8>>> {
+        &self.children
     }
 
     pub fn get_first_children(&self) -> Option<XmlElement> {
