@@ -17,6 +17,7 @@ pub struct XmlElement {
     children: Option<Vec<Vec<u8>>>,
     /// Child node tag name list if applicable
     children_meta: Option<Vec<String>>,
+    value: Option<String>,
 }
 
 impl XmlElement {
@@ -27,7 +28,20 @@ impl XmlElement {
             attributes: None,
             children: None,
             children_meta: None,
+            value: None,
         }
+    }
+
+    pub fn get_tag(&self) -> &str {
+        &self.tag
+    }
+
+    pub fn get_attribute(&self) -> &Option<HashMap<String, String>> {
+        &self.attributes
+    }
+
+    pub fn get_value(&self) -> &Option<String> {
+        &self.value
     }
 
     pub fn get_first_children(&self) -> Option<XmlElement> {
@@ -54,18 +68,25 @@ impl XmlElement {
         }
     }
 
+    pub fn set_attribute(&mut self, attributes: HashMap<String, String>) -> () {
+        self.attributes = Some(attributes)
+    }
+
+    pub fn set_value(&mut self, text: String) -> () {
+        self.value = Some(text)
+    }
+
     pub fn push_children(&mut self, xml_element: XmlElement) -> AnyResult<(), AnyError> {
         if self.children_meta.is_none() {
             self.children = Some(Vec::new());
             self.children_meta = Some(Vec::new());
-        } else {
+        }
+        if let Some(children) = &mut self.children {
+            let serialized = serialize(&xml_element).context("Serializing XML Node failed")?;
             self.children_meta
                 .as_mut()
                 .unwrap()
                 .push(xml_element.tag.to_string());
-        }
-        if let Some(children) = &mut self.children {
-            let serialized = serialize(&xml_element).context("Serializing XML Node failed")?;
             children.push(serialized);
         }
         Ok(())

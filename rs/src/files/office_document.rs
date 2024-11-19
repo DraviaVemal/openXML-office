@@ -4,7 +4,8 @@ use crate::{
     get_specific_queries,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
-use rusqlite::{params, Row};
+use bincode::{deserialize, serialize};
+use rusqlite::{params, Error, Row};
 use std::{
     fs::{metadata, remove_file, File},
     io::{Cursor, Read, Write},
@@ -22,6 +23,12 @@ pub struct ArchiveRecordModel {
     compression_type: String,
     file_content: Vec<u8>,
     tree_content: Vec<u8>,
+}
+
+#[derive(Debug)]
+pub struct ArchiveRecordFileModel {
+    file_content: Option<Vec<u8>>,
+    tree_content: Option<Vec<u8>>,
 }
 
 #[derive(Debug)]
@@ -53,19 +60,39 @@ impl OfficeDocument {
     pub fn get_xml_tree(&self, file_path: &str) -> AnyResult<Option<XmlElement>, AnyError> {
         let query = get_specific_queries!("office_document.sql", "select_archive_content")
             .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
-        fn row_mapper(row: &Row) -> AnyResult<Vec<u8>, rusqlite::Error> {
-            row.get(0)
+        fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordFileModel, Error> {
+            Result::Ok(ArchiveRecordFileModel {
+                file_content: row.get(0)?,
+                tree_content: row.get(1)?,
+            })
         }
         let result = self
             .get_connection()
             .find_one(&query, params![file_path], row_mapper)
             .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
         if let Some(query_result) = result {
-            let decompressed_data =
-                decompress_content(&query_result).context("Raw Content Decompression Failed")?;
-            let xml_tree = XmlSerializer::xml_str_to_xml_tree(decompressed_data)
-                .context("Xml Serializer Failed")?;
-            Ok(Some(xml_tree))
+            if let Some(compress_content) = &query_result.tree_content {
+                let xml_tree_bytes = decompress_content(compress_content)
+                    .context("Raw Content Decompression Failed")?;
+                let xml_tree = deserialize::<XmlElement>(&xml_tree_bytes)
+                    .context("Bincode Deserializing Failed")?;
+                Ok(Some(xml_tree))
+            } else {
+                let decompressed_data = decompress_content(&query_result.file_content.unwrap())
+                    .context("Raw Content Decompression Failed")?;
+                let xml_tree = XmlSerializer::xml_str_to_xml_tree(decompressed_data)
+                    .context("Xml Serializer Failed")?;
+                let xml_tree_bytes = serialize(&xml_tree).context("Bincode Serializing Failed")?;
+                let xml_tree_compressed = compress_content(&xml_tree_bytes)
+                    .context("XML Tree Content Compression Failed")?;
+                let update_query =
+                    get_specific_queries!("office_document.sql", "update_tree_content")
+                        .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
+                self.sqlite_database
+                    .update_record(&update_query, params![xml_tree_compressed, file_path])
+                    .context("Parsing Tree From Content Failed")?;
+                Ok(Some(xml_tree))
+            }
         } else {
             Ok(None)
         }
@@ -97,7 +124,7 @@ impl OfficeDocument {
     fn save_database_into_archive(&self) -> AnyResult<Vec<u8>, AnyError> {
         let query: String = get_specific_queries!("office_document.sql", "select_all_archive_rows")
             .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
-        fn row_mapper(row: &Row) -> Result<ArchiveRecordModel, rusqlite::Error> {
+        fn row_mapper(row: &Row) -> Result<ArchiveRecordModel, Error> {
             Result::Ok(ArchiveRecordModel {
                 id: row.get(0)?,
                 file_name: row.get(1)?,
