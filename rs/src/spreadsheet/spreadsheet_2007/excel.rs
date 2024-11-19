@@ -74,7 +74,7 @@ impl Excel {
 
     /// Initialism table schema for Excel
     fn setup_database_schema(xml_fs: &Rc<RefCell<OfficeDocument>>) -> AnyResult<(), AnyError> {
-        let scheme = get_all_queries!("excel.sql");
+        let scheme: Vec<String> = get_all_queries!("excel.sql");
         for query in scheme {
             xml_fs
                 .borrow()
