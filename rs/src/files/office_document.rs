@@ -17,8 +17,10 @@ pub struct ArchiveRecordModel {
     id: i16,
     file_name: String,
     content_type: String,
-    compressed_file_size: i32,
-    uncompressed_file_size: i32,
+    compressed_xml_file_size: i32,
+    uncompressed_xml_file_size: i32,
+    compressed_xml_tree_size: i32,
+    uncompressed_xml_tree_size: i32,
     compression_level: i8,
     compression_type: String,
     file_content: Option<Vec<u8>>,
@@ -39,7 +41,7 @@ pub struct OfficeDocument {
 impl OfficeDocument {
     /// Create or Clone existing document to start with
     pub fn new(file_path: Option<String>, is_in_memory: bool) -> AnyResult<Self, AnyError> {
-        let sqlite_database =
+        let sqlite_database: SqliteDatabases =
             SqliteDatabases::new(is_in_memory).context("Sqlite database initialization failed")?;
         Self::initialize_database(&sqlite_database).context("Initialize Database Failed")?;
         if let Some(file_path) = file_path {
@@ -58,15 +60,15 @@ impl OfficeDocument {
 
     /// Get Xml tree from content
     pub fn get_xml_tree(&self, file_path: &str) -> AnyResult<Option<XmlElement>, AnyError> {
-        let query = get_specific_queries!("office_document.sql", "select_archive_content")
-            .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
+        let query: String = get_specific_queries!("office_document.sql", "select_archive_content")
+            .map_err(|e: String| anyhow!("Query Macro Error : {}", e))?;
         fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordFileModel, Error> {
             Result::Ok(ArchiveRecordFileModel {
                 file_content: row.get(0)?,
                 tree_content: row.get(1)?,
             })
         }
-        let result = self
+        let result: Option<ArchiveRecordFileModel> = self
             .get_connection()
             .find_one(&query, params![file_path], row_mapper)
             .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
@@ -78,18 +80,28 @@ impl OfficeDocument {
                     .context("Bincode Deserializing Failed")?;
                 Ok(Some(xml_tree))
             } else {
-                let decompressed_data = decompress_content(&query_result.file_content.unwrap())
-                    .context("Raw Content Decompression Failed")?;
-                let xml_tree = XmlSerializer::xml_str_to_xml_tree(decompressed_data)
+                let decompressed_data: Vec<u8> =
+                    decompress_content(&query_result.file_content.unwrap())
+                        .context("Raw Content Decompression Failed")?;
+                let xml_tree: XmlElement = XmlSerializer::xml_str_to_xml_tree(decompressed_data)
                     .context("Xml Serializer Failed")?;
-                let xml_tree_bytes = serialize(&xml_tree).context("Bincode Serializing Failed")?;
-                let xml_tree_compressed = compress_content(&xml_tree_bytes)
+                let xml_tree_bytes: Vec<u8> =
+                    serialize(&xml_tree).context("Bincode Serializing Failed")?;
+                let xml_tree_compressed: Vec<u8> = compress_content(&xml_tree_bytes)
                     .context("XML Tree Content Compression Failed")?;
-                let update_query =
+                let update_query: String =
                     get_specific_queries!("office_document.sql", "update_tree_content")
-                        .map_err(|e| anyhow!("Query Macro Error : {}", e))?;
+                        .map_err(|err| anyhow!("Query Macro Error : {}", err))?;
                 self.sqlite_database
-                    .update_record(&update_query, params![xml_tree_compressed, file_path])
+                    .update_record(
+                        &update_query,
+                        params![
+                            xml_tree_compressed,
+                            xml_tree_bytes.len(),
+                            xml_tree_compressed.len(),
+                            file_path
+                        ],
+                    )
                     .context("Parsing Tree From Content Failed")?;
                 Ok(Some(xml_tree))
             }
@@ -100,7 +112,7 @@ impl OfficeDocument {
 
     /// Save Current Document to final result
     pub fn save_as(&self, file_path: &str) -> AnyResult<(), AnyError> {
-        let file_content = self
+        let file_content: Vec<u8> = self
             .save_database_into_archive()
             .context("Save Archive Data into Database")?;
         if metadata(file_path).is_ok() {
@@ -129,12 +141,14 @@ impl OfficeDocument {
                 id: row.get(0)?,
                 file_name: row.get(1)?,
                 content_type: row.get(2)?,
-                compressed_file_size: row.get(3)?,
-                uncompressed_file_size: row.get(4)?,
-                compression_level: row.get(5)?,
-                compression_type: row.get(6)?,
-                file_content: row.get(7)?,
-                tree_content: row.get(8)?,
+                compressed_xml_file_size: row.get(3)?,
+                uncompressed_xml_file_size: row.get(4)?,
+                compressed_xml_tree_size: row.get(5)?,
+                uncompressed_xml_tree_size: row.get(6)?,
+                compression_level: row.get(7)?,
+                compression_type: row.get(8)?,
+                file_content: row.get(9)?,
+                tree_content: row.get(10)?,
             })
         }
         let result = self
@@ -148,8 +162,10 @@ impl OfficeDocument {
             id: _,
             file_name,
             content_type: _,
-            compressed_file_size: _,
-            uncompressed_file_size: _,
+            compressed_xml_file_size: _,
+            uncompressed_xml_file_size: _,
+            compressed_xml_tree_size: _,
+            uncompressed_xml_tree_size: _,
             compression_level: _,
             compression_type: _,
             file_content,
@@ -160,11 +176,12 @@ impl OfficeDocument {
                 .start_file(file_name, zip_option)
                 .context("Zip File Write Start Fail")?;
             if let Some(xml_tree_compressed) = tree_content {
-                let xml_tree_bytes = decompress_content(&xml_tree_compressed)
+                let xml_tree_bytes: Vec<u8> = decompress_content(&xml_tree_compressed)
                     .context("Xml Tree Content Decompression Failed.")?;
-                let xml_tree = deserialize::<XmlElement>(&xml_tree_bytes)
+                let xml_tree: XmlElement = deserialize::<XmlElement>(&xml_tree_bytes)
                     .context("Bincode deserialize XML Tree Failed")?;
-                let xml_content = XmlDeSerializer::xml_tree_to_xml_vec(&xml_tree);
+                let xml_content: Vec<u8> = XmlDeSerializer::xml_tree_to_xml_vec(&xml_tree)
+                    .context("Xml Tree To Context Parsing Failed")?;
                 zip_writer
                     .write_all(&xml_content)
                     .context("Writing compressed data to ZIp")?;
@@ -208,6 +225,8 @@ impl OfficeDocument {
                         "todo",
                         compressed.len(),
                         uncompressed_data.len(),
+                        0,
+                        0,
                         1,
                         "gzip",
                         compressed,
