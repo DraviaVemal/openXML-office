@@ -1,6 +1,6 @@
 use crate::{
     files::{OfficeDocument, XmlElement, XmlSerializer},
-    global_2007::traits::XmlDocument,
+    global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
@@ -12,7 +12,7 @@ pub struct WorkSheetPart {
     pub file_name: String,
 }
 
-impl XmlDocument for WorkSheetPart {
+impl XmlDocumentPart for WorkSheetPart {
     /// Create New object for the group
     fn new(
         office_document: &Rc<RefCell<OfficeDocument>>,

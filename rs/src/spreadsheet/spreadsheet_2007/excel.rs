@@ -3,7 +3,7 @@ use crate::{
     get_all_queries,
     global_2007::{
         parts::{CorePropertiesPart, RelationsPart, ThemePart},
-        traits::XmlDocument,
+        traits::XmlDocumentPart,
     },
     spreadsheet_2007::parts::{WorkSheetPart, WorkbookPart},
 };

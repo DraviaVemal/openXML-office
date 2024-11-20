@@ -2,7 +2,7 @@ use crate::files::{OfficeDocument, XmlElement};
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
-pub trait XmlDocument {
+pub trait XmlDocumentPart {
     /// Create new object with file connector handle
     fn new(
         office_document: &Rc<RefCell<OfficeDocument>>,
@@ -17,7 +17,7 @@ pub trait XmlDocument {
         office_document: &Rc<RefCell<OfficeDocument>>,
         file_name: &str,
     ) -> AnyResult<XmlElement, AnyError> {
-        let xml_tree = office_document
+        let xml_tree: Option<XmlElement> = office_document
             .borrow()
             .get_xml_tree(file_name)
             .context(format!("XML Tree Parsing Failed for File : {}", file_name))?;
