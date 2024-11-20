@@ -108,6 +108,17 @@ impl SqliteDatabases {
             .context("Failed to Run Insert Record Query")
     }
 
+    /// Insert Record Into Database
+    pub fn update_record(
+        &self,
+        query: &str,
+        params: &[&(dyn ToSql)],
+    ) -> AnyResult<usize, AnyError> {
+        self.connection
+            .execute(&query, params)
+            .context("Failed to Run Update Record Query")
+    }
+
     /// Create Table
     pub fn create_table(&self, query: &str) -> AnyResult<usize, AnyError> {
         self.connection

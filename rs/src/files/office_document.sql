@@ -37,6 +37,13 @@ SET
 WHERE
     file_name = excluded.file_name;
 
+-- query : update_tree_content# Update the parsed tree into table
+UPDATE archive
+SET
+    tree_content = ?
+WHERE
+    file_name = ?;
+
 -- query : select_all_archive_rows# Get All content from archive table
 SELECT
     id,

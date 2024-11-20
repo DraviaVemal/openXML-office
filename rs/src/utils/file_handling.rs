@@ -20,8 +20,8 @@ pub fn compress_content(uncompressed_data: &[u8]) -> AnyResult<Vec<u8>, AnyError
 }
 
 pub fn decompress_content(compressed_data: &[u8]) -> AnyResult<Vec<u8>, AnyError> {
-    let mut decoder = GzDecoder::new(compressed_data);
-    let mut decompressed_data = Vec::new();
+    let mut decoder: GzDecoder<&[u8]> = GzDecoder::new(compressed_data);
+    let mut decompressed_data: Vec<u8> = Vec::new();
     decoder.read_to_end(&mut decompressed_data)?;
     Ok(decompressed_data)
 }
