@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug)]
-pub struct XmlDocument {
+struct _XmlDocument {
     namespace_collection: HashMap<String, String>,
     xml_tree: XmlElement,
 }
@@ -13,10 +13,10 @@ pub struct XmlDocument {
 /// This helps in keeping the XML validation clean across document for all relations
 /// TODO: Clear Unused namespace
 /// TODO: Give clear handle for attribute and Namespace handling of root element
-impl XmlDocument {
+impl _XmlDocument {
     /// Create new XML Document Tree.
     /// The Root element will be created by default.
-    pub fn new(
+    pub fn _new(
         root_name: String,
         namespace_url: Option<String>,
         namespace_alias: Option<String>,
@@ -33,13 +33,13 @@ impl XmlDocument {
     }
 
     /// Get Root XML Element
-    pub fn get_root_element(&mut self) -> &mut XmlElement {
-        &mut self.xml_tree
+    pub fn _get_root_element(self) -> XmlElement {
+        self.xml_tree
     }
 
     /// Create Note Element in the document.
     /// Note: Its not inserted into tree. use push children to push it at specific leaf
-    fn create_element(
+    pub fn _create_element(
         &self,
         tag: String,
         namespace: Option<String>,
@@ -73,7 +73,7 @@ pub struct XmlElement {
 }
 
 impl XmlElement {
-    fn new(tag: String, namespace: Option<String>) -> Self {
+    pub fn new(tag: String, namespace: Option<String>) -> Self {
         Self {
             tag,
             namespace,
