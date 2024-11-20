@@ -3,7 +3,7 @@ use crate::{
     get_all_queries,
     global_2007::{
         parts::{CorePropertiesPart, RelationsPart, ThemePart},
-        traits::XmlDocument,
+        traits::XmlDocumentPart,
     },
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
