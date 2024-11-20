@@ -1,6 +1,6 @@
 use crate::{
     files::{OfficeDocument, XmlElement, XmlSerializer},
-    global_2007::traits::XmlDocument,
+    global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
@@ -12,7 +12,7 @@ pub struct RelationsPart {
     pub file_name: String,
 }
 
-impl XmlDocument for RelationsPart {
+impl XmlDocumentPart for RelationsPart {
     fn new(
         office_document: &Rc<RefCell<OfficeDocument>>,
         relation_file_name: Option<&str>,

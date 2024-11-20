@@ -9,7 +9,10 @@ use quick_xml::{
 };
 use std::{collections::HashMap, io::Cursor};
 
+use super::XmlDocument;
+
 enum MethodResult {
+    XmlDocument(XmlDocument),
     XmlElement(XmlElement),
     String(String),
     EndTag(String),
@@ -19,12 +22,12 @@ enum MethodResult {
 pub struct XmlSerializer {}
 
 impl XmlSerializer {
-    pub fn xml_str_to_xml_tree(xml_str: Vec<u8>) -> AnyResult<XmlElement, AnyError> {
+    pub fn xml_str_to_xml_tree(xml_str: Vec<u8>) -> AnyResult<XmlDocument, AnyError> {
         let mut reader: NsReader<Cursor<Vec<u8>>> = NsReader::from_reader(Cursor::new(xml_str));
         reader.config_mut().trim_text(true);
         match Self::recursive_xml_element_parser(&mut reader) {
             Result::Ok(method_result) => match method_result {
-                MethodResult::XmlElement(element) => Ok(element),
+                MethodResult::XmlDocument(element) => Ok(element),
                 _ => Err(anyhow!("This is not valid XML to parse.")),
             },
             Err(e) => Err(e),
@@ -53,12 +56,14 @@ impl XmlSerializer {
                                 attribute_result.context("Failed to parse attribute")?;
                             let key: String =
                                 String::from_utf8_lossy(attribute.key.into_inner()).to_string();
-                            let value: String = String::from_utf8_lossy(&attribute.value).to_string();
+                            let value: String =
+                                String::from_utf8_lossy(&attribute.value).to_string();
                             Ok((key, value))
                         })
                         .collect::<AnyResult<HashMap<String, String>>>()?;
                     // Create new element
-                    let tag: String = String::from_utf8_lossy(element.name().into_inner()).to_string();
+                    let tag: String =
+                        String::from_utf8_lossy(element.name().into_inner()).to_string();
                     let mut xml_element: XmlElement = XmlElement::new(tag.clone(), None);
                     if !attributes.is_empty() {
                         xml_element.set_attribute(attributes);
@@ -105,7 +110,8 @@ impl XmlSerializer {
                         })
                         .collect::<AnyResult<HashMap<String, String>>>()?;
                     // Create new element
-                    let tag: String = String::from_utf8_lossy(element.name().into_inner()).to_string();
+                    let tag: String =
+                        String::from_utf8_lossy(element.name().into_inner()).to_string();
                     let mut xml_element: XmlElement = XmlElement::new(tag.clone(), None);
                     if !attributes.is_empty() {
                         xml_element.set_attribute(attributes);
