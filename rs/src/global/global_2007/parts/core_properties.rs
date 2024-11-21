@@ -18,7 +18,10 @@ pub struct CorePropertiesPart {
 impl Drop for CorePropertiesPart {
     fn drop(&mut self) {
         // Update Last modified date part
-        
+        if let Some(xml_tree_ref) = self.file_tree.upgrade() {
+            let mut xml_tree = xml_tree_ref.try_borrow_mut().unwrap();
+            xml_tree.update_text_value("cp:coreProperties->dcterms:modified", "date update");
+        }
         // Update the current state to DB before dropping the object
         if let Some(xml_tree) = self.office_document.upgrade() {
             let _ = xml_tree

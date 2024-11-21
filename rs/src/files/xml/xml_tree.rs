@@ -83,7 +83,7 @@ impl XmlElement {
             value: None,
         }
     }
-
+    // ===================== Data Read Only Methods ===============================
     pub fn is_empty_tag(&self) -> bool {
         self.value.is_none() && self.children.is_none()
     }
@@ -104,6 +104,7 @@ impl XmlElement {
         &self.children
     }
 
+    /// Get the element to read the content
     pub fn find_child_element_by_attribute(
         &self,
         attribute: &str,
@@ -147,6 +148,12 @@ impl XmlElement {
         } else {
             None
         }
+    }
+
+    // ===================== Data Update Methods ===============================
+    pub fn update_text_value(&mut self, xml_path: &str, new_value: &str) {
+        let tree_path: Vec<&str> = xml_path.split("->").collect();
+        
     }
 
     pub fn set_attribute(&mut self, attributes: HashMap<String, String>) -> () {
