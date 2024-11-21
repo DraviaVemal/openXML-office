@@ -67,9 +67,9 @@ impl RelationsPart {
         &self,
         content_type: &str,
     ) -> AnyResult<Option<String>, AnyError> {
-        let xml_tree_ref = self.file_tree.borrow().upgrade();
+        let xml_tree_ref: Option<Rc<RefCell<XmlElement>>> = self.file_tree.borrow().upgrade();
         if let Some(xml_tree) = xml_tree_ref {
-            let xml_element = xml_tree
+            let xml_element: Option<XmlElement> = xml_tree
                 .try_borrow()
                 .context("XML Tree Borrow Failed")?
                 .find_child_element_by_attribute("Type", content_type)
