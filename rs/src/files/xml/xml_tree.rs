@@ -104,6 +104,27 @@ impl XmlElement {
         &self.children
     }
 
+    pub fn find_child_element_by_attribute(
+        &self,
+        attribute: &str,
+        value: &str,
+    ) -> AnyResult<Option<XmlElement>, AnyError> {
+        if let Some(children) = &self.children {
+            for item in children {
+                let xml_element =
+                    deserialize::<XmlElement>(item).context("Deserializing bincode failed")?;
+                if let Some(attributes) = &xml_element.attributes {
+                    if let Some((_, attr_value)) = attributes.get_key_value(attribute) {
+                        if attr_value == value {
+                            return Ok(Some(xml_element));
+                        }
+                    }
+                }
+            }
+        }
+        Ok(None)
+    }
+
     pub fn get_first_children(&self) -> Option<XmlElement> {
         if let Some(children) = &self.children {
             if let Some(element_bytes) = children.get(0) {
