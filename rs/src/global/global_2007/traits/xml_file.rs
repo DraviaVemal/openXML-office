@@ -1,14 +1,11 @@
-use crate::files::{OfficeDocument, XmlElement};
-use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use std::{
-    cell::RefCell,
-    rc::{Rc, Weak},
-};
+use crate::files::{OfficeDocument, XmlDocument};
+use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
+use std::{cell::RefCell, rc::Weak};
 
 pub trait XmlDocumentPart {
     /// Create new object with file connector handle
     fn new(
-        office_document: &Rc<RefCell<OfficeDocument>>,
+        office_document: Weak<RefCell<OfficeDocument>>,
         file_name: Option<String>,
     ) -> AnyResult<Self, AnyError>
     where
@@ -16,24 +13,30 @@ pub trait XmlDocumentPart {
     /// Save the current file state
     fn flush(self);
     /// Get content of the current xml
-    fn get_xml_tree(
-        office_document: &Rc<RefCell<OfficeDocument>>,
+    fn get_xml_document(
+        office_document: &Weak<RefCell<OfficeDocument>>,
         file_name: &str,
-    ) -> AnyResult<Weak<RefCell<XmlElement>>, AnyError> {
-        let xml_tree: XmlElement = if let Some(xml_tree) = office_document
+    ) -> AnyResult<Weak<RefCell<XmlDocument>>, AnyError> {
+        let xml_document: XmlDocument = if let Some(xml_document) = office_document
+            .upgrade()
+            .ok_or(anyhow!("Document Upgrade Handled Failed"))
+            .context("XML Document Read Failed")?
             .borrow()
             .get_xml_tree(file_name)
             .context(format!("XML Tree Parsing Failed for File : {}", file_name))?
         {
-            xml_tree
+            xml_document
         } else {
             Self::initialize_content_xml().context("Initial XML element parsing failed")?
         };
         Ok(office_document
+            .upgrade()
+            .ok_or(anyhow!("Document Upgrade Handled Failed"))
+            .context("XML Document Read Failed")?
             .try_borrow_mut()
             .context("Getting XML Tree Handle Failed")?
-            .get_xml_tree_ref(file_name, xml_tree))
+            .get_xml_document_ref(file_name, xml_document))
     }
     /// Initialize the content if not already exist
-    fn initialize_content_xml() -> AnyResult<XmlElement, AnyError>;
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError>;
 }
