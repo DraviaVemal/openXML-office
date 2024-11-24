@@ -1,12 +1,15 @@
 use crate::files::{OfficeDocument, XmlElement};
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::RefCell,
+    rc::{Rc, Weak},
+};
 
 pub trait XmlDocumentPart {
     /// Create new object with file connector handle
     fn new(
         office_document: &Rc<RefCell<OfficeDocument>>,
-        file_name: Option<&str>,
+        file_name: Option<String>,
     ) -> AnyResult<Self, AnyError>
     where
         Self: Sized;
@@ -16,18 +19,20 @@ pub trait XmlDocumentPart {
     fn get_xml_tree(
         office_document: &Rc<RefCell<OfficeDocument>>,
         file_name: &str,
-    ) -> AnyResult<XmlElement, AnyError> {
-        let xml_tree: Option<XmlElement> = office_document
+    ) -> AnyResult<Weak<RefCell<XmlElement>>, AnyError> {
+        let xml_tree: XmlElement = if let Some(xml_tree) = office_document
             .borrow()
             .get_xml_tree(file_name)
-            .context(format!("XML Tree Parsing Failed for File : {}", file_name))?;
-        if let Some(results) = xml_tree {
-            Ok(results)
+            .context(format!("XML Tree Parsing Failed for File : {}", file_name))?
+        {
+            xml_tree
         } else {
-            let tree =
-                Self::initialize_content_xml().context("Initial XML element parsing failed")?;
-            Ok(tree)
-        }
+            Self::initialize_content_xml().context("Initial XML element parsing failed")?
+        };
+        Ok(office_document
+            .try_borrow_mut()
+            .context("Getting XML Tree Handle Failed")?
+            .get_xml_tree_ref(file_name, xml_tree))
     }
     /// Initialize the content if not already exist
     fn initialize_content_xml() -> AnyResult<XmlElement, AnyError>;

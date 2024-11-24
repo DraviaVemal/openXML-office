@@ -43,8 +43,11 @@ impl PowerPoint {
                 .context("Initialize Relation Part failed")?;
             CorePropertiesPart::new(&rc_office_document, None)
                 .context("Create CorePart for new file failed")?;
-            ThemePart::new(&rc_office_document, Some("ppt/theme/theme1.xml"))
-                .context("Initializing new theme part failed")?;
+            ThemePart::new(
+                &rc_office_document,
+                Some("ppt/theme/theme1.xml".to_string()),
+            )
+            .context("Initializing new theme part failed")?;
         }
         Ok(Self {
             office_document: rc_office_document,
@@ -53,7 +56,11 @@ impl PowerPoint {
 
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
-        self.office_document.borrow().save_as(file_name)
+        self.office_document
+            .try_borrow_mut()
+            .context("Save Office Document handle Failed")?
+            .save_as(file_name)
+            .context("File Save Failed for the target path.")
     }
 
     /// Initialism table schema for PowerPoint

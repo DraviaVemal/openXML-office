@@ -3,25 +3,39 @@ use crate::{
     global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{Error as AnyError, Result as AnyResult};
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::RefCell,
+    rc::{Rc, Weak},
+};
 
 #[derive(Debug)]
 pub struct ContentTypesPart {
-    pub office_document: Rc<RefCell<OfficeDocument>>,
-    pub file_content: XmlElement,
-    pub file_name: String,
+    office_document: Weak<RefCell<OfficeDocument>>,
+    file_tree: Weak<RefCell<XmlElement>>,
+    file_name: String,
+}
+
+impl Drop for ContentTypesPart {
+    fn drop(&mut self) {
+        if let Some(xml_tree) = self.office_document.upgrade() {
+            let _ = xml_tree
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_tree(&self.file_name);
+        }
+    }
 }
 
 impl XmlDocumentPart for ContentTypesPart {
     fn new(
         office_document: &Rc<RefCell<OfficeDocument>>,
-        _: Option<&str>,
+        _: Option<String>,
     ) -> AnyResult<Self, AnyError> {
         let file_name = "[Content_Types].xml".to_string();
-        let file_content = Self::get_xml_tree(&office_document, &file_name)?;
+        let file_tree = Self::get_xml_tree(&office_document, &file_name)?;
         Ok(Self {
-            office_document: Rc::clone(office_document),
-            file_content,
+            office_document: Rc::downgrade(office_document),
+            file_tree,
             file_name,
         })
     }
