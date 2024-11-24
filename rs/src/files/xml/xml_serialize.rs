@@ -9,10 +9,7 @@ use quick_xml::{
 };
 use std::{collections::HashMap, io::Cursor};
 
-use super::XmlDocument;
-
 enum MethodResult {
-    XmlDocument(XmlDocument),
     XmlElement(XmlElement),
     String(String),
     EndTag(String),
@@ -22,12 +19,12 @@ enum MethodResult {
 pub struct XmlSerializer {}
 
 impl XmlSerializer {
-    pub fn xml_str_to_xml_tree(xml_str: Vec<u8>) -> AnyResult<XmlDocument, AnyError> {
+    pub fn xml_str_to_xml_tree(xml_str: Vec<u8>) -> AnyResult<XmlElement, AnyError> {
         let mut reader: NsReader<Cursor<Vec<u8>>> = NsReader::from_reader(Cursor::new(xml_str));
         reader.config_mut().trim_text(true);
         match Self::recursive_xml_element_parser(&mut reader) {
             Result::Ok(method_result) => match method_result {
-                MethodResult::XmlDocument(element) => Ok(element),
+                MethodResult::XmlElement(element) => Ok(element),
                 _ => Err(anyhow!("This is not valid XML to parse.")),
             },
             Err(e) => Err(e),
