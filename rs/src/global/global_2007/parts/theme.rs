@@ -23,6 +23,7 @@ impl Drop for ThemePart {
     }
 }
 
+/// ######################### Train implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for ThemePart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,

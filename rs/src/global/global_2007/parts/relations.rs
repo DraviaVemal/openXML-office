@@ -28,6 +28,7 @@ impl Drop for RelationsPart {
     }
 }
 
+/// ######################### Train implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for RelationsPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,

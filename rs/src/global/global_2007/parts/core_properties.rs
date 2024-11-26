@@ -34,6 +34,7 @@ impl Drop for CorePropertiesPart {
     }
 }
 
+/// ######################### Train implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for CorePropertiesPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,

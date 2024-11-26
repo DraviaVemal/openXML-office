@@ -23,6 +23,7 @@ impl Drop for ContentTypesPart {
     }
 }
 
+/// ######################### Train implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for ContentTypesPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,

@@ -135,6 +135,36 @@ impl XmlDocument {
         found_id
     }
 
+    // pub fn find_all_element_mut(&mut self, tag_path: &str) -> Option<Vec<&mut XmlElement>> {
+    //     if let Some(element_id) = self.find_all_element_id(tag_path) {
+    //         return self.get_element_mut(element_id);
+    //     }
+    //     None
+    // }
+
+    // fn find_all_element_id(&self, tag_path: &str) -> Option<Vec<usize>> {
+    //     let mut found_id: Option<usize> = None;
+    //     let mut path_parts = tag_path
+    //         .split("->")
+    //         .map(String::from)
+    //         .collect::<Vec<String>>();
+    //     path_parts.reverse();
+    //     path_parts.pop();
+    //     let xml_doc_tree = self.document_tree.borrow_mut();
+    //     if let Some(tree) = xml_doc_tree.xml_tree.get(&0) {
+    //         path_parts.iter().filter_map(|item|{
+    //             let found_item = tree
+    //                 .children_tags
+    //                 .iter()
+    //                 .position(|element_tag| element_tag == item);
+    //             if let Some(item) = found_item {
+    //                 found_id = Some(tree.children_id[item]);
+    //             }
+    //         }).collect::<Vec<usize>>();
+    //     }
+    //     found_id
+    // }
+
     // ############### Actions Performed on xml_element_collection ############
     fn get_next_id(&mut self) -> usize {
         self.running_id += 1;
