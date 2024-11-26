@@ -2,7 +2,13 @@ use crate::spreadsheet_2007::{Excel, ExcelPropertiesModel};
 
 #[test]
 fn blank_excel() {
-    let file = Excel::new(None, Excel::default()).expect("Create New File Failed");
+    let file = Excel::new(
+        None,
+        ExcelPropertiesModel {
+            is_in_memory: false,
+        },
+    )
+    .expect("Create New File Failed");
     // file.add_sheet(&"Test".to_string());
     file.save_as(&"test.xlsx".to_string())
         .expect("File Save Failed");

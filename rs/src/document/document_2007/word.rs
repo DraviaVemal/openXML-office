@@ -36,15 +36,15 @@ impl Word {
             Rc::new(RefCell::new(office_document));
         Self::setup_database_schema(&rc_office_document).context("Word Schema Setup Failed")?;
         if is_file_exist {
-            CorePropertiesPart::new(&rc_office_document, None)
+            CorePropertiesPart::new(Rc::downgrade(&rc_office_document), None)
                 .context("Load CorePart for Existing file failed")?;
         } else {
-            RelationsPart::new(&rc_office_document, None)
+            RelationsPart::new(Rc::downgrade(&rc_office_document), None)
                 .context("Initialize Relation Part failed")?;
-            CorePropertiesPart::new(&rc_office_document, None)
+            CorePropertiesPart::new(Rc::downgrade(&rc_office_document), None)
                 .context("Create CorePart for new file failed")?;
             ThemePart::new(
-                &rc_office_document,
+                Rc::downgrade(&rc_office_document),
                 Some("doc/theme/theme1.xml".to_string()),
             )
             .context("Initializing new theme part failed")?;
