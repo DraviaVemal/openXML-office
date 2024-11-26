@@ -1,8 +1,62 @@
+use crate::{
+    files::{OfficeDocument, XmlDocument},
+    global_2007::traits::XmlDocumentPart,
+};
+use anyhow::{Error as AnyError, Result as AnyResult};
+use std::{cell::RefCell, collections::HashMap, rc::Weak};
+
 #[derive(Debug)]
-pub struct ShareString {}
+pub struct ShareString {
+    office_document: Weak<RefCell<OfficeDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
+    file_path: String,
+}
+
+impl Drop for ShareString {
+    fn drop(&mut self) {
+        if let Some(xml_tree) = self.office_document.upgrade() {
+            let _ = xml_tree
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_document(&self.file_path);
+        }
+    }
+}
+
+impl XmlDocumentPart for ShareString {
+    fn new(
+        office_document: Weak<RefCell<OfficeDocument>>,
+        file_path: Option<String>,
+    ) -> AnyResult<Self, AnyError> {
+        let file_path = file_path.unwrap_or("sharedStrings.xml".to_string());
+        let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
+        Self::load_content_to_database(&mut xml_document);
+        Ok(Self {
+            office_document,
+            xml_document,
+            file_path,
+        })
+    }
+
+    fn flush(self) {}
+
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+        let mut attributes: HashMap<String, String> = HashMap::new();
+        attributes.insert(
+            "xmlns".to_string(),
+            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
+        );
+        let mut xml_document = XmlDocument::new();
+        xml_document.create_root("sst").set_attribute(attributes);
+        Ok(xml_document)
+    }
+}
 
 impl ShareString {
-    pub fn new() -> Self {
-        Self {}
+    fn load_content_to_database(xml_document: &mut Weak<RefCell<XmlDocument>>) {
+        if let Some(xml_doc) = xml_document.upgrade() {
+            // xml_doc.borrow_mut().find_first_element_mut(tag_path)
+        }
     }
 }
