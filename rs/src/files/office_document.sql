@@ -6,12 +6,9 @@ CREATE TABLE
         content_type TEXT NOT NULL, -- File content type
         compressed_xml_file_size INTEGER, -- Size of compressed file in bytes
         uncompressed_xml_file_size INTEGER, -- Size of uncompressed file in bytes
-        compressed_xml_tree_size INTEGER, -- Size of compressed xml tree in bytes
-        uncompressed_xml_tree_size INTEGER, -- Size of uncompressed xml tree in bytes
         compression_level INTEGER NOT NULL, -- File Compression level can be adjusted to adjust CPU load
         compression_type TEXT NOT NULL, -- File Compression type
-        file_content BLOB, -- File content as a BLOB
-        tree_content BLOB -- Tree content as a BLOB
+        file_content BLOB -- File content as a BLOB
     );
 
 -- query : insert_archive_table# Create initial blob archive table
@@ -21,36 +18,21 @@ INSERT INTO
         content_type,
         compressed_xml_file_size,
         uncompressed_xml_file_size,
-        compressed_xml_tree_size,
-        uncompressed_xml_tree_size,
         compression_level,
         compression_type,
-        file_content,
-        tree_content
+        file_content
     )
 VALUES
-    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
+    (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
 UPDATE
 SET
     compressed_xml_file_size = excluded.compressed_xml_file_size,
     uncompressed_xml_file_size = excluded.uncompressed_xml_file_size,
-    compressed_xml_tree_size = excluded.compressed_xml_tree_size,
-    uncompressed_xml_tree_size = excluded.uncompressed_xml_tree_size,
     compression_level = excluded.compression_level,
     compression_type = excluded.compression_type,
-    file_content = excluded.file_content,
-    tree_content = excluded.tree_content
+    file_content = excluded.file_content
 WHERE
     file_name = excluded.file_name;
-
--- query : update_tree_content# Update the parsed tree into table
-UPDATE archive
-SET
-    tree_content = ?,
-    compressed_xml_tree_size = ?,
-    uncompressed_xml_tree_size = ?
-WHERE
-    file_name = ?;
 
 -- query : select_all_archive_rows# Get All content from archive table
 SELECT
@@ -59,12 +41,9 @@ SELECT
     content_type,
     compressed_xml_file_size,
     uncompressed_xml_file_size,
-    compressed_xml_tree_size,
-    uncompressed_xml_tree_size,
     compression_level,
     compression_type,
-    file_content,
-    tree_content
+    file_content
 FROM
     archive
 ORDER BY
@@ -72,8 +51,7 @@ ORDER BY
 
 -- query : select_archive_content# select and pull workbook blob content
 SELECT
-    file_content,
-    tree_content
+    file_content
 FROM
     archive
 WHERE

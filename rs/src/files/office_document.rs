@@ -1,10 +1,9 @@
 use crate::{
     file_handling::{compress_content, decompress_content},
-    files::{SqliteDatabases, XmlDeSerializer, XmlElement, XmlSerializer},
+    files::{SqliteDatabases, XmlDeSerializer, XmlDocument, XmlSerializer},
     get_specific_queries,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
-use bincode::{deserialize, serialize};
 use rusqlite::{params, Error, Row};
 use std::{
     cell::RefCell,
@@ -22,24 +21,20 @@ pub struct ArchiveRecordModel {
     content_type: String,
     compressed_xml_file_size: i32,
     uncompressed_xml_file_size: i32,
-    compressed_xml_tree_size: i32,
-    uncompressed_xml_tree_size: i32,
     compression_level: i8,
     compression_type: String,
     file_content: Option<Vec<u8>>,
-    tree_content: Option<Vec<u8>>,
 }
 
 #[derive(Debug)]
 pub struct ArchiveRecordFileModel {
     file_content: Option<Vec<u8>>,
-    tree_content: Option<Vec<u8>>,
 }
 
 #[derive(Debug)]
 pub struct OfficeDocument {
     sqlite_database: SqliteDatabases,
-    xml_tree_collection: HashMap<String, Rc<RefCell<XmlElement>>>,
+    xml_document_collection: HashMap<String, Rc<RefCell<XmlDocument>>>,
 }
 
 impl OfficeDocument {
@@ -56,7 +51,7 @@ impl OfficeDocument {
         }
         Ok(Self {
             sqlite_database,
-            xml_tree_collection: HashMap::new(),
+            xml_document_collection: HashMap::new(),
         })
     }
 
@@ -65,26 +60,25 @@ impl OfficeDocument {
         &self.sqlite_database
     }
 
-    pub fn get_xml_tree_ref(
+    pub fn get_xml_document_ref(
         &mut self,
         file_name: &str,
-        xml_tree: XmlElement,
-    ) -> Weak<RefCell<XmlElement>> {
-        let ref_xml_tree = Rc::new(RefCell::new(xml_tree));
-        let weak_xml_tree = Rc::downgrade(&ref_xml_tree);
-        self.xml_tree_collection
-            .insert(file_name.to_string(), ref_xml_tree);
-        weak_xml_tree
+        xml_tree: XmlDocument,
+    ) -> Weak<RefCell<XmlDocument>> {
+        let ref_xml_document = Rc::new(RefCell::new(xml_tree));
+        let weak_xml_document = Rc::downgrade(&ref_xml_document);
+        self.xml_document_collection
+            .insert(file_name.to_string(), ref_xml_document);
+        weak_xml_document
     }
 
     /// Get Xml tree from content
-    pub fn get_xml_tree(&self, file_path: &str) -> AnyResult<Option<XmlElement>, AnyError> {
+    pub fn get_xml_tree(&self, file_path: &str) -> AnyResult<Option<XmlDocument>, AnyError> {
         let query: String = get_specific_queries!("office_document.sql", "select_archive_content")
             .map_err(|e: String| anyhow!("Query Macro Error : {}", e))?;
         fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordFileModel, Error> {
             Result::Ok(ArchiveRecordFileModel {
                 file_content: row.get(0)?,
-                tree_content: row.get(1)?,
             })
         }
         let result: Option<ArchiveRecordFileModel> = self
@@ -92,47 +86,30 @@ impl OfficeDocument {
             .find_one(&query, params![file_path], row_mapper)
             .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
         if let Some(query_result) = result {
-            if let Some(compress_content) = &query_result.tree_content {
-                let xml_tree_bytes = decompress_content(compress_content)
+            let decompressed_data: Vec<u8> =
+                decompress_content(&query_result.file_content.unwrap())
                     .context("Raw Content Decompression Failed")?;
-                let xml_tree = deserialize::<XmlElement>(&xml_tree_bytes)
-                    .context("Bincode Deserializing Failed")?;
-                Ok(Some(xml_tree))
-            } else {
-                let decompressed_data: Vec<u8> =
-                    decompress_content(&query_result.file_content.unwrap())
-                        .context("Raw Content Decompression Failed")?;
-                let xml_tree: XmlElement = XmlSerializer::xml_str_to_xml_tree(decompressed_data)
-                    .context("Xml Serializer Failed")?;
-                Ok(Some(xml_tree))
-            }
+            let xml_tree: XmlDocument = XmlSerializer::vec_to_xml_doc_tree(decompressed_data)
+                .context("Xml Serializer Failed")?;
+            Ok(Some(xml_tree))
         } else {
             Ok(None)
         }
     }
 
     /// Update the XML tree data to database and close the refCell
-    pub fn close_xml_tree(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
-        let xml_tree_option = self.xml_tree_collection.remove(file_path);
+    pub fn close_xml_document(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
+        let xml_tree_option = self.xml_document_collection.remove(file_path);
         if let Some(xml_tree) = xml_tree_option {
-            let xml_tree_bytes: Vec<u8> =
-                serialize(&*xml_tree.borrow()).context("Bincode Serializing Failed")?;
-            let xml_tree_compressed: Vec<u8> =
-                compress_content(&xml_tree_bytes).context("XML Tree Content Compression Failed")?;
-            let update_query: String =
-                get_specific_queries!("office_document.sql", "update_tree_content")
-                    .map_err(|err| anyhow!("Query Macro Error : {}", err))?;
-            self.sqlite_database
-                .update_record(
-                    &update_query,
-                    params![
-                        xml_tree_compressed,
-                        xml_tree_bytes.len(),
-                        xml_tree_compressed.len(),
-                        file_path
-                    ],
-                )
-                .context("Parsing Tree From Content Failed")?;
+            let xml_document = xml_tree.borrow();
+            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&xml_document)
+                .context("Xml Tree to String content")?;
+            Self::insert_update_archive_record(
+                &self.sqlite_database,
+                file_path,
+                &mut uncompressed_data,
+            )
+            .context("Create or update archive DB record Failed")?;
         }
         Ok(())
     }
@@ -141,12 +118,12 @@ impl OfficeDocument {
     pub fn save_as(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
         // Save the live content update object to database
         let keys = self
-            .xml_tree_collection
+            .xml_document_collection
             .keys()
             .cloned()
             .collect::<Vec<String>>();
         for key_file_path in keys {
-            self.close_xml_tree(&key_file_path)
+            self.close_xml_document(&key_file_path)
                 .context("Saving open object content failed")?;
         }
         let file_content: Vec<u8> = self
@@ -180,12 +157,9 @@ impl OfficeDocument {
                 content_type: row.get(2)?,
                 compressed_xml_file_size: row.get(3)?,
                 uncompressed_xml_file_size: row.get(4)?,
-                compressed_xml_tree_size: row.get(5)?,
-                uncompressed_xml_tree_size: row.get(6)?,
-                compression_level: row.get(7)?,
-                compression_type: row.get(8)?,
-                file_content: row.get(9)?,
-                tree_content: row.get(10)?,
+                compression_level: row.get(5)?,
+                compression_type: row.get(6)?,
+                file_content: row.get(7)?,
             })
         }
         let result = self
@@ -201,28 +175,15 @@ impl OfficeDocument {
             content_type: _,
             compressed_xml_file_size: _,
             uncompressed_xml_file_size: _,
-            compressed_xml_tree_size: _,
-            uncompressed_xml_tree_size: _,
             compression_level: _,
             compression_type: _,
             file_content,
-            tree_content,
         } in result
         {
             zip_writer
                 .start_file(file_name, zip_option)
                 .context("Zip File Write Start Fail")?;
-            if let Some(xml_tree_compressed) = tree_content {
-                let xml_tree_bytes: Vec<u8> = decompress_content(&xml_tree_compressed)
-                    .context("Xml Tree Content Decompression Failed.")?;
-                let xml_tree: XmlElement = deserialize::<XmlElement>(&xml_tree_bytes)
-                    .context("Bincode deserialize XML Tree Failed")?;
-                let xml_content: Vec<u8> = XmlDeSerializer::xml_tree_to_xml_vec(&xml_tree)
-                    .context("Xml Tree To Context Parsing Failed")?;
-                zip_writer
-                    .write_all(&xml_content)
-                    .context("Writing compressed data to ZIp")?;
-            } else if let Some(xml_content_compressed) = file_content {
+            if let Some(xml_content_compressed) = file_content {
                 let uncompressed =
                     decompress_content(&xml_content_compressed).context("Decompress Error")?;
                 zip_writer
@@ -249,28 +210,39 @@ impl OfficeDocument {
             file_content
                 .read_to_end(&mut uncompressed_data)
                 .context("File Uncompressed failed")?;
-            let compressed =
-                compress_content(&uncompressed_data).context("Recompressing in GZip Failed")?;
-            let query = get_specific_queries!("office_document.sql", "insert_archive_table")
-                .map_err(|e| anyhow!("Specific query pull fail. {}", e))?;
-            sqlite_database
-                .insert_record(
-                    &query,
-                    params![
-                        file_content.name(),
-                        "todo",
-                        compressed.len(),
-                        uncompressed_data.len(),
-                        0,
-                        0,
-                        1,
-                        "gzip",
-                        compressed,
-                        Option::<String>::None
-                    ],
-                )
-                .context("Archive content load failed.")?;
+            Self::insert_update_archive_record(
+                sqlite_database,
+                file_content.name(),
+                &mut uncompressed_data,
+            )
+            .context("Create or update archive DB record Failed")?;
         }
+        Ok(())
+    }
+
+    fn insert_update_archive_record(
+        sqlite_database: &SqliteDatabases,
+        file_path: &str,
+        uncompressed_data: &mut Vec<u8>,
+    ) -> AnyResult<(), AnyError> {
+        let query = get_specific_queries!("office_document.sql", "insert_archive_table")
+            .map_err(|e| anyhow!("Specific query pull fail. {}", e))?;
+        let compressed =
+            compress_content(&uncompressed_data).context("Recompressing in GZip Failed")?;
+        sqlite_database
+            .insert_record(
+                &query,
+                params![
+                    file_path,
+                    "todo",
+                    compressed.len(),
+                    uncompressed_data.len(),
+                    1,
+                    "gzip",
+                    compressed
+                ],
+            )
+            .context("Archive content load failed.")?;
         Ok(())
     }
 }

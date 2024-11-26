@@ -1,7 +1,7 @@
 #[derive(Debug)]
-pub struct ShareString {}
+pub struct CalculationChain {}
 
-impl ShareString {
+impl CalculationChain {
     pub fn new() -> Self {
         Self {}
     }
