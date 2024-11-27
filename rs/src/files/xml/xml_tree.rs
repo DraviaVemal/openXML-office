@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
+use anyhow::{anyhow, Error as AnyError, Result as AnyResult};
 use std::{
     cell::RefCell,
     collections::HashMap,
@@ -7,22 +7,130 @@ use std::{
 
 #[derive(Debug)]
 pub struct XmlDocument {
-    document_tree: Rc<RefCell<XmlDocumentTree>>,
     running_id: usize,
+    /// XML Namespace collection
+    namespace_collection: Rc<RefCell<HashMap<String, String>>>,
     /// XML Element Collection
     xml_element_collection: HashMap<usize, XmlElement>,
 }
 
-/// XML Document In Execution
-#[derive(Debug)]
-pub struct XmlDocumentTree {
-    namespace_collection: HashMap<String, String>,
-    /// XML Tree Element
-    xml_tree: HashMap<usize, XmlElementChildren>,
+/// ####################### Im-Mut Access Fuctions ####################
+impl XmlDocument {
+    pub fn new() -> Self {
+        Self {
+            running_id: 0,
+            namespace_collection: Rc::new(RefCell::new(HashMap::new())),
+            xml_element_collection: HashMap::new(),
+        }
+    }
+
+    pub fn get_root(&self) -> Option<&XmlElement> {
+        self.xml_element_collection.get(&0)
+    }
+
+    pub fn find_element_by_attribute(
+        &self,
+        parent_id: &usize,
+        attribute_key: &str,
+        attribute_value: &str,
+    ) -> Option<&XmlElement> {
+        if let Some(parent_element) = self.xml_element_collection.get(&parent_id) {
+            if let Some(found_child) = parent_element.children.borrow().iter().find(|item| {
+                if let Some(current) = self.xml_element_collection.get(&item.id) {
+                    if let Some(attribute) = current.get_attribute() {
+                        if let Some(value) = attribute.get(attribute_key) {
+                            return value == attribute_value;
+                        }
+                    }
+                }
+                false
+            }) {
+                return self.xml_element_collection.get(&found_child.id);
+            }
+        }
+        None
+    }
+
+    pub fn get_element(&self, element_id: &usize) -> Option<&XmlElement> {
+        self.xml_element_collection.get(element_id)
+    }
 }
 
+/// ####################### Mut Access Fuctions ####################
+impl XmlDocument {
+    pub fn get_root_mut(&mut self) -> Option<&mut XmlElement> {
+        self.xml_element_collection.get_mut(&0)
+    }
+
+    pub fn create_root_mut(&mut self, tag: &str) -> &mut XmlElement {
+        self.xml_element_collection.insert(
+            0,
+            XmlElement::new(Rc::downgrade(&self.namespace_collection), tag),
+        );
+        self.xml_element_collection.get_mut(&0).unwrap()
+    }
+
+    pub fn insert_child_mut(
+        &mut self,
+        parent_id: &usize,
+        tag: &str,
+    ) -> AnyResult<&mut XmlElement, AnyError> {
+        if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
+            let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag);
+            element.set_parent_id(*parent_id);
+            self.running_id += 1;
+            element.set_id(self.running_id);
+            parent_element.add_children(self.running_id, tag);
+            self.xml_element_collection.insert(self.running_id, element);
+            Ok(self
+                .xml_element_collection
+                .get_mut(&self.running_id)
+                .unwrap())
+        } else {
+            return Err(anyhow!("Parent Element Not Found"));
+        }
+    }
+
+    pub fn get_first_element_mut(
+        &mut self,
+        start_element: &usize,
+        mut element_tree: Vec<String>,
+    ) -> Option<&mut XmlElement> {
+        element_tree.reverse();
+        let mut current_id = *start_element;
+        loop {
+            if let Some(find_tag) = element_tree.pop() {
+                let element = self.xml_element_collection.get(&current_id).unwrap();
+                let element_child = element.children.borrow_mut();
+                if let Some(found_child) = element_child.iter().find(|item| item.tag == find_tag) {
+                    current_id = found_child.id;
+                } else {
+                    // Not Able to find any one Child
+                    return None;
+                }
+                if element_tree.len() == 0 {
+                    break;
+                }
+            } else {
+                // If Vec has No Value to start
+                return None;
+            }
+        }
+        self.xml_element_collection.get_mut(&current_id)
+    }
+
+    pub fn get_element_mut(&mut self, element_id: &usize) -> Option<&mut XmlElement> {
+        self.xml_element_collection.get_mut(element_id)
+    }
+}
+
+#[derive(Debug)]
+pub struct XmlElementChild {
+    id: usize,
+    tag: String,
+}
 /// Normalized XML representation
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct XmlElement {
     /// Current node Id
     id: usize,
@@ -34,207 +142,25 @@ pub struct XmlElement {
     attributes: Option<HashMap<String, String>>,
     /// Internal Value of the
     value: Option<String>,
-    /// XML Document Tree Reference
-    document_tree_ref: Weak<RefCell<XmlDocumentTree>>,
-}
-///
-#[derive(Debug)]
-pub struct XmlElementChildren {
     /// Child Element Names to pull up nodes quickly
-    children_tags: Vec<String>,
-    /// Child Element Id that has full element
-    children_id: Vec<usize>,
-}
-
-impl XmlDocument {
-    pub fn new() -> Self {
-        let document_tree: Rc<RefCell<XmlDocumentTree>> =
-            Rc::new(RefCell::new(XmlDocumentTree::new()));
-        Self {
-            document_tree,
-            running_id: 0,
-            xml_element_collection: HashMap::new(),
-        }
-    }
-    // #################### Non Editable Section ###################
-
-    pub fn get_root(&self) -> Option<&XmlElement> {
-        self.get_element(0)
-    }
-
-    pub fn find_child_by_attribute(
-        &self,
-        parent: &XmlElement,
-        attribute_key: &str,
-        attribute_value: &str,
-    ) -> Option<&XmlElement> {
-        if let Some(children) = self.document_tree.borrow().xml_tree.get(&parent.id) {
-            for child_id in children.children_id.iter() {
-                let element = self.get_element(*child_id).unwrap();
-                if let Some(attributes) = element.get_attribute() {
-                    let attr = attributes.get(attribute_key);
-                    if let Some(val) = attr {
-                        if val == attribute_value {
-                            return Some(element);
-                        }
-                    }
-                }
-            }
-        }
-        None
-    }
-
-    //############### Editable Section ##############
-    pub fn create_root(&mut self, element_tag: &str) -> &mut XmlElement {
-        let root_element: XmlElement =
-            XmlElement::new(Rc::downgrade(&self.document_tree), element_tag);
-        self.insert_element_collection(0, root_element);
-        self.get_element_mut(0).unwrap()
-    }
-
-    pub fn insert_element(&mut self, parent_id: &usize, element_tag: &str) -> &mut XmlElement {
-        let mut child_element: XmlElement =
-            XmlElement::new(Rc::downgrade(&self.document_tree), element_tag);
-        let element_id = self.get_next_id();
-        child_element.set_id(element_id);
-        child_element.set_parent_id(*parent_id);
-        self.document_tree
-            .borrow_mut()
-            .insert_tree_child(*parent_id, element_id, element_tag);
-        self.insert_element_collection(element_id, child_element);
-        self.get_element_mut(element_id).unwrap()
-    }
-
-    pub fn find_first_element_mut(&mut self, tag_path: &str) -> Option<&mut XmlElement> {
-        if let Some(element_id) = self.find_first_element_id(tag_path) {
-            return self.get_element_mut(element_id);
-        }
-        None
-    }
-
-    fn find_first_element_id(&self, tag_path: &str) -> Option<usize> {
-        let mut found_id: Option<usize> = None;
-        let mut path_parts = tag_path
-            .split("->")
-            .map(String::from)
-            .collect::<Vec<String>>();
-        path_parts.reverse();
-        path_parts.pop();
-        let xml_doc_tree = self.document_tree.borrow_mut();
-        if let Some(tree) = xml_doc_tree.xml_tree.get(&0) {
-            for tag in path_parts.iter() {
-                let found_item = tree
-                    .children_tags
-                    .iter()
-                    .position(|element_tag| element_tag == tag);
-                if let Some(item) = found_item {
-                    found_id = Some(tree.children_id[item]);
-                }
-            }
-        }
-        found_id
-    }
-
-    // pub fn find_all_element_mut(&mut self, tag_path: &str) -> Option<Vec<&mut XmlElement>> {
-    //     if let Some(element_id) = self.find_all_element_id(tag_path) {
-    //         return self.get_element_mut(element_id);
-    //     }
-    //     None
-    // }
-
-    // fn find_all_element_id(&self, tag_path: &str) -> Option<Vec<usize>> {
-    //     let mut found_id: Option<usize> = None;
-    //     let mut path_parts = tag_path
-    //         .split("->")
-    //         .map(String::from)
-    //         .collect::<Vec<String>>();
-    //     path_parts.reverse();
-    //     path_parts.pop();
-    //     let xml_doc_tree = self.document_tree.borrow_mut();
-    //     if let Some(tree) = xml_doc_tree.xml_tree.get(&0) {
-    //         path_parts.iter().filter_map(|item|{
-    //             let found_item = tree
-    //                 .children_tags
-    //                 .iter()
-    //                 .position(|element_tag| element_tag == item);
-    //             if let Some(item) = found_item {
-    //                 found_id = Some(tree.children_id[item]);
-    //             }
-    //         }).collect::<Vec<usize>>();
-    //     }
-    //     found_id
-    // }
-
-    // ############### Actions Performed on xml_element_collection ############
-    fn get_next_id(&mut self) -> usize {
-        self.running_id += 1;
-        self.running_id
-    }
-
-    fn insert_element_collection(&mut self, id: usize, xml_element: XmlElement) {
-        self.xml_element_collection.insert(id, xml_element);
-    }
-
-    pub fn get_element_mut(&mut self, element_id: usize) -> Option<&mut XmlElement> {
-        self.xml_element_collection.get_mut(&element_id)
-    }
-
-    pub fn get_element(&self, element_id: usize) -> Option<&XmlElement> {
-        self.xml_element_collection.get(&element_id)
-    }
-}
-
-/// Master XML document
-/// This helps in keeping the XML validation clean across document for all relations
-/// TODO: Clear Unused namespace
-/// TODO: Give clear handle for attribute and Namespace handling of root element
-impl XmlDocumentTree {
-    /// Create new XML Document Tree.
-    /// The Root element will be created by default.
-    fn new() -> Self {
-        Self {
-            namespace_collection: HashMap::new(),
-            xml_tree: HashMap::new(),
-        }
-    }
-
-    fn insert_tree_child(&mut self, parent_id: usize, child_id: usize, element_tag: &str) {
-        let element_child_option = self.xml_tree.get_mut(&parent_id);
-        if let Some(element_child) = element_child_option {
-            element_child.children_id.push(child_id);
-            element_child.children_tags.push(element_tag.to_string());
-        } else {
-            let mut element_child = XmlElementChildren {
-                children_tags: Vec::new(),
-                children_id: Vec::new(),
-            };
-            element_child.children_id.push(child_id);
-            element_child.children_tags.push(element_tag.to_string());
-            self.xml_tree.insert(parent_id, element_child);
-        }
-    }
-
-    fn pop_children(&mut self, id: usize) -> Option<usize> {
-        if let Some(child) = self.xml_tree.get_mut(&id) {
-            if child.children_tags.len() > 0 {
-                child.children_tags.remove(0);
-                return Some(child.children_id.remove(0));
-            }
-        }
-        None
-    }
+    children: Rc<RefCell<Vec<XmlElementChild>>>,
+    // ######################## Document Parts ##########################
+    /// XML Namespace collection
+    namespace_collection: Weak<RefCell<HashMap<String, String>>>,
 }
 
 impl XmlElement {
     /// Create element with tree document reference
-    fn new(document_tree_ref: Weak<RefCell<XmlDocumentTree>>, tag: &str) -> Self {
+    fn new(namespace_collection: Weak<RefCell<HashMap<String, String>>>, tag: &str) -> Self {
+        // TODO :: Validate the Name Space
         Self {
             id: 0,
             parent_id: 0,
             tag: tag.to_string(),
             attributes: None,
             value: None,
-            document_tree_ref,
+            children: Rc::new(RefCell::new(Vec::new())),
+            namespace_collection,
         }
     }
     // ######################## Data Read Only Methods ###########################
@@ -248,7 +174,7 @@ impl XmlElement {
     }
 
     pub fn is_empty_tag(&self) -> bool {
-        self.attributes.is_none() && self.value.is_none()
+        self.children.borrow().len() == 0 && self.value.is_none()
     }
 
     pub fn get_attribute(&self) -> &Option<HashMap<String, String>> {
@@ -263,20 +189,25 @@ impl XmlElement {
         self.id
     }
 
-    pub fn pop_children(&self, id: usize) -> AnyResult<Option<usize>, AnyError> {
-        if let Some(master_tree) = self.document_tree_ref.upgrade() {
-            return Ok(master_tree
-                .try_borrow_mut()
-                .context("Document Tree is not valid")?
-                .pop_children(id));
-        }
-        Err(anyhow!("Document Tree is no longer valid"))
-    }
-
     pub fn get_parent_id(&self) -> usize {
         self.parent_id
     }
     // ########################## Data Write Methods ###########################
+    /// Remove the child reference irreversible
+    pub fn pop_child_id_mut(&self) -> Option<usize> {
+        if self.children.borrow_mut().len() > 0 {
+            return Some(self.children.borrow_mut().remove(0).id);
+        }
+        None
+    }
+
+    fn add_children(&mut self, child_id: usize, tag: &str) {
+        self.children.borrow_mut().push(XmlElementChild {
+            id: child_id,
+            tag: tag.to_string(),
+        });
+    }
+
     fn set_id(&mut self, id: usize) {
         self.id = id;
     }
@@ -286,6 +217,7 @@ impl XmlElement {
     }
 
     pub fn set_attribute(&mut self, attributes: HashMap<String, String>) -> &mut Self {
+        // TODO :: Validate the Name Space
         self.attributes = Some(attributes);
         self
     }

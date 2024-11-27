@@ -52,7 +52,7 @@ impl XmlDocumentPart for Style {
         );
         let mut xml_document = XmlDocument::new();
         xml_document
-            .create_root("styleSheet")
+            .create_root_mut("styleSheet")
             .set_attribute(attributes);
         Ok(xml_document)
     }
