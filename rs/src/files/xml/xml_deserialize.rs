@@ -26,27 +26,31 @@ impl XmlDeSerializer {
                 } else {
                     let mut parent_id = 0;
                     loop {
-                        if let Some(current_id) = xml_root
-                            .pop_children(parent_id)
-                            .context("XML Node Children pull failed")?
-                        {
-                            // Pop Next Valid Child From the tree
-                            if let Some(element) = xml_document.get_element(current_id) {
-                                if element.is_empty_tag() {
-                                    master_string.push_str(
-                                        Self::generate_xml_element(element, true).as_str(),
-                                    );
-                                } else {
-                                    master_string.push_str(
-                                        Self::generate_xml_element(element, false).as_str(),
-                                    );
-                                    if let Some(value) = element.get_value() {
-                                        master_string.push_str(&Self::generate_xml_value_close(
-                                            value, element,
-                                        ));
+                        if let Some(current_element) = xml_document.get_element(&parent_id) {
+                            if let Some(current_id) = current_element.pop_child_id_mut() {
+                                // Pop Next Valid Child From the tree
+                                if let Some(element) = xml_document.get_element(&current_id) {
+                                    if element.is_empty_tag() {
+                                        master_string.push_str(
+                                            Self::generate_xml_element(element, true).as_str(),
+                                            
+                                        );
                                     } else {
-                                        parent_id = current_id
+                                        master_string.push_str(
+                                            Self::generate_xml_element(element, false).as_str(),
+                                        );
+                                        if let Some(value) = element.get_value() {
+                                            master_string.push_str(
+                                                &Self::generate_xml_value_close(value, element),
+                                            );
+                                        } else {
+                                            parent_id = current_id
+                                        }
                                     }
+                                }
+                            } else {
+                                if parent_id == 0 {
+                                    break;
                                 }
                             }
                         } else {
@@ -54,7 +58,7 @@ impl XmlDeSerializer {
                                 break;
                             }
                             // Travel Up as there is no active child to continue
-                            if let Some(element) = xml_document.get_element(parent_id) {
+                            if let Some(element) = xml_document.get_element(&parent_id) {
                                 master_string
                                     .push_str(&Self::generate_xml_value_close("", element));
                                 parent_id = element.get_parent_id()
