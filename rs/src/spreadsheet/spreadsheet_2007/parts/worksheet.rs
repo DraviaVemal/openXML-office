@@ -1,6 +1,9 @@
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
-    spreadsheet_2007::services::CommonServices,
+    spreadsheet_2007::{
+        models::{ColumnCell, ColumnProperties, RowProperties},
+        services::CommonServices,
+    },
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
@@ -82,5 +85,14 @@ impl WorkSheet {
 
 // ##################################### Feature Function ################################
 impl WorkSheet {
-    
+    pub fn angitu (&mut self, column_id: &usize, column_properties: ColumnProperties) -> () {
+    }
+
+    pub fn set_row_mut(
+        &mut self,
+        cell_id: &usize,
+        column_cell: Vec<ColumnCell>,
+        row_properties: RowProperties,
+    ) -> () {
+    }
 }
