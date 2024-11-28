@@ -5,7 +5,11 @@ use crate::{
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::{params, Row};
-use std::{cell::RefCell, collections::HashMap, rc::Weak};
+use std::{
+    cell::RefCell,
+    collections::{HashMap, HashSet},
+    rc::Weak,
+};
 
 #[derive(Debug)]
 pub struct ShareString {
@@ -30,6 +34,22 @@ impl Drop for ShareString {
                     .unwrap();
                 if let Some(xml_doc) = self.xml_document.upgrade() {
                     let mut doc = xml_doc.borrow_mut();
+                    // Update count & uniqueCount in root
+                    if let Some(root) = doc.get_root_mut() {
+                        if let Some(attributes) = root.get_attribute_mut() {
+                            attributes
+                                .insert("count".to_string(), string_collection.len().to_string());
+                            attributes.insert(
+                                "uniqueCount".to_string(),
+                                string_collection
+                                    .iter()
+                                    .map(|s| s.to_string())
+                                    .collect::<HashSet<String>>()
+                                    .len()
+                                    .to_string(),
+                            );
+                        }
+                    }
                     for string in string_collection {
                         let parent_id = doc.insert_child_mut(&0, "si").unwrap().get_id();
                         doc.insert_child_mut(&parent_id, "t")
@@ -77,7 +97,7 @@ impl XmlDocumentPart for ShareString {
         let mut xml_document = XmlDocument::new();
         xml_document
             .create_root_mut("sst")
-            .set_attribute(attributes);
+            .set_attribute_mut(attributes);
         Ok(xml_document)
     }
 }

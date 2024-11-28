@@ -8,7 +8,7 @@ use std::{cell::RefCell, rc::Weak};
 #[derive(Debug)]
 pub struct ContentTypesPart {
     office_document: Weak<RefCell<OfficeDocument>>,
-    file_tree: Weak<RefCell<XmlDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
     file_name: String,
 }
 
@@ -30,10 +30,10 @@ impl XmlDocumentPart for ContentTypesPart {
         _: Option<String>,
     ) -> AnyResult<Self, AnyError> {
         let file_name = "[Content_Types].xml".to_string();
-        let file_tree = Self::get_xml_document(&office_document, &file_name)?;
+        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
-            file_tree,
+            xml_document,
             file_name,
         })
     }
