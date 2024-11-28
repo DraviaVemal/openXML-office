@@ -28,11 +28,7 @@ macro_rules! get_specific_queries {
             queries
         }
         let sql_content = include_str!($file);
-        let queries = load_queries(sql_content);
-        queries
-            .get($query_name)
-            .cloned()
-            .ok_or_else(|| format!("Query '{}' not found.", $query_name))
+        load_queries(sql_content).get($query_name)
     }};
 }
 
@@ -61,6 +57,11 @@ macro_rules! get_all_queries {
             queries.push(current_query.trim().to_string());
         }
 
-        queries
+        // Return an Option based on the results
+        if !queries.is_empty() {
+            Some(queries)
+        } else {
+            None
+        }
     }};
 }

@@ -1,5 +1,5 @@
 use crate::files::{XmlDocument, XmlElement};
-use anyhow::{Context, Error as AnyError, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 
 pub struct XmlDeSerializer {}
 
@@ -16,6 +16,8 @@ impl XmlDeSerializer {
         xml_document: &XmlDocument,
         master_string: &mut String,
     ) -> AnyResult<(), AnyError> {
+        let max_count = xml_document.get_element_count() * 2;
+        let mut current_count = 0;
         if let Some(xml_root) = xml_document.get_root() {
             if xml_root.is_empty_tag() {
                 master_string.push_str(Self::generate_xml_element(xml_root, true).as_str());
@@ -26,6 +28,10 @@ impl XmlDeSerializer {
                 } else {
                     let mut parent_id = 0;
                     loop {
+                        current_count += 1;
+                        if current_count > max_count {
+                            return Err(anyhow!("Loop Safety Error Triggered at XML Deserialized"));
+                        }
                         if let Some(current_element) = xml_document.get_element(&parent_id) {
                             if let Some(current_id) = current_element.pop_child_id_mut() {
                                 // Pop Next Valid Child From the tree
@@ -33,7 +39,6 @@ impl XmlDeSerializer {
                                     if element.is_empty_tag() {
                                         master_string.push_str(
                                             Self::generate_xml_element(element, true).as_str(),
-                                            
                                         );
                                     } else {
                                         master_string.push_str(
@@ -51,18 +56,17 @@ impl XmlDeSerializer {
                             } else {
                                 if parent_id == 0 {
                                     break;
+                                } else {
+                                    // Travel Up as there is no active child to continue
+                                    if let Some(element) = xml_document.get_element(&parent_id) {
+                                        master_string
+                                            .push_str(&Self::generate_xml_value_close("", element));
+                                        parent_id = element.get_parent_id()
+                                    }
                                 }
                             }
                         } else {
-                            if parent_id == 0 {
-                                break;
-                            }
-                            // Travel Up as there is no active child to continue
-                            if let Some(element) = xml_document.get_element(&parent_id) {
-                                master_string
-                                    .push_str(&Self::generate_xml_value_close("", element));
-                                parent_id = element.get_parent_id()
-                            }
+                            return Err(anyhow!("Un know Element pull failed"));
                         }
                     }
                     master_string.push_str(&Self::generate_xml_value_close("", xml_root));

@@ -29,7 +29,7 @@ pub struct WorkbookPart {
 impl Drop for WorkbookPart {
     fn drop(&mut self) {
         if let Some(xml_tree) = self.office_document.upgrade() {
-            let _ = xml_tree
+            let data = xml_tree
                 .try_borrow_mut()
                 .unwrap()
                 .close_xml_document(&self.file_path);
