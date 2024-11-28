@@ -91,13 +91,14 @@ impl Excel {
 
     /// Initialism table schema for Excel
     fn setup_database_schema(xml_fs: &Rc<RefCell<OfficeDocument>>) -> AnyResult<(), AnyError> {
-        let scheme: Vec<String> = get_all_queries!("excel.sql");
-        for query in scheme {
-            xml_fs
-                .borrow()
-                .get_connection()
-                .create_table(&query)
-                .context("Excel Schema Initialization Failed")?;
+        if let Some(scheme) = get_all_queries!("excel.sql") {
+            for query in scheme {
+                xml_fs
+                    .borrow()
+                    .get_connection()
+                    .create_table(&query)
+                    .context("Excel Schema Initialization Failed")?;
+            }
         }
         Ok(())
     }

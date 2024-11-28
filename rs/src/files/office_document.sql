@@ -36,7 +36,6 @@ WHERE
 
 -- query : select_all_archive_rows# Get All content from archive table
 SELECT
-    id,
     file_name,
     content_type,
     compressed_xml_file_size,
