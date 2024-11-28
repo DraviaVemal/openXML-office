@@ -8,7 +8,7 @@ use std::{cell::RefCell, rc::Weak};
 #[derive(Debug)]
 pub struct ThemePart {
     office_document: Weak<RefCell<OfficeDocument>>,
-    file_tree: Weak<RefCell<XmlDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
     file_name: String,
 }
 
@@ -33,10 +33,10 @@ impl XmlDocumentPart for ThemePart {
         if let Some(file_name) = file_name {
             local_file_name = file_name.to_string();
         }
-        let file_tree = Self::get_xml_document(&office_document, &local_file_name)?;
+        let xml_document = Self::get_xml_document(&office_document, &local_file_name)?;
         Ok(Self {
             office_document,
-            file_tree,
+            xml_document,
             file_name: local_file_name.to_string(),
         })
     }

@@ -9,14 +9,14 @@ use std::{cell::RefCell, rc::Weak};
 #[derive(Debug)]
 pub struct CorePropertiesPart {
     office_document: Weak<RefCell<OfficeDocument>>,
-    file_tree: Weak<RefCell<XmlDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
     file_name: String,
 }
 
 impl Drop for CorePropertiesPart {
     fn drop(&mut self) {
         // Update Last modified date part
-        if let Some(xml_document_ref) = self.file_tree.upgrade() {
+        if let Some(xml_document_ref) = self.xml_document.upgrade() {
             let mut xml_document = xml_document_ref.borrow_mut();
             let start_element_id = xml_document.get_root().unwrap().get_id();
             if let Some(element) = xml_document.get_first_element_mut(
@@ -46,10 +46,10 @@ impl XmlDocumentPart for CorePropertiesPart {
         _: Option<String>,
     ) -> AnyResult<Self, AnyError> {
         let file_name = "docProps/core.xml".to_string();
-        let file_tree = Self::get_xml_document(&office_document, &file_name)?;
+        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
-            file_tree,
+            xml_document,
             file_name,
         })
     }

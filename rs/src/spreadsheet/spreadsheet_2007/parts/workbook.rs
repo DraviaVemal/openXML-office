@@ -19,7 +19,7 @@ use std::{
 #[derive(Debug)]
 pub struct WorkbookPart {
     office_document: Weak<RefCell<OfficeDocument>>,
-    file_tree: Weak<RefCell<XmlDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
     common_service: Rc<RefCell<CommonServices>>,
     relations_part: RelationsPart,
@@ -103,7 +103,7 @@ impl XmlDocumentPart for WorkbookPart {
         )));
         return Ok(Self {
             office_document,
-            file_tree,
+            xml_document: file_tree,
             file_path,
             common_service,
             relations_part,
