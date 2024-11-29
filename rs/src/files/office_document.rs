@@ -12,7 +12,10 @@ use std::{
     io::{Cursor, Read, Write},
     rc::{Rc, Weak},
 };
-use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
+use zip::{
+    write::{FileOptions, SimpleFileOptions},
+    ZipArchive, ZipWriter,
+};
 
 #[derive(Debug)]
 pub struct ArchiveRecordModel {
@@ -171,7 +174,7 @@ impl OfficeDocument {
                 .find_many(&query, params![], row_mapper)
                 .context("Query Get Many Failed")?;
             let mut zip_writer: ZipWriter<&mut Cursor<Vec<u8>>> = ZipWriter::new(&mut buffer);
-            let zip_option = SimpleFileOptions::default();
+            let zip_option = SimpleFileOptions::default().compression_level(Some(4));
             for ArchiveRecordModel {
                 file_name,
                 content_type: _,
@@ -231,8 +234,9 @@ impl OfficeDocument {
         uncompressed_data: &mut Vec<u8>,
     ) -> AnyResult<(), AnyError> {
         if let Some(query) = get_specific_queries!("office_document.sql", "insert_archive_table") {
-            let compressed =
-                compress_content(&uncompressed_data).context("Recompressing in GZip Failed")?;
+            let compression_level = 4;
+            let compressed = compress_content(&uncompressed_data, compression_level)
+                .context("Recompressing in GZip Failed")?;
             sqlite_database
                 .insert_record(
                     &query,
@@ -241,14 +245,14 @@ impl OfficeDocument {
                         "todo",
                         compressed.len(),
                         uncompressed_data.len(),
-                        1,
+                        compression_level,
                         "gzip",
                         compressed
                     ],
                 )
                 .context("Archive content load failed.")?;
             Ok(())
-        }else{
+        } else {
             Err(anyhow!("Insert Query Failed"))
         }
     }

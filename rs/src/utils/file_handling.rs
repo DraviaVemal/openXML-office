@@ -12,8 +12,11 @@ pub fn vector_to_string(vector_data: &Vec<u8>) -> AnyResult<String, AnyError> {
     };
 }
 
-pub fn compress_content(uncompressed_data: &[u8]) -> AnyResult<Vec<u8>, AnyError> {
-    let mut encoder = GzEncoder::new(Vec::new(), Compression::default());
+pub fn compress_content(
+    uncompressed_data: &[u8],
+    compression_level: u32,
+) -> AnyResult<Vec<u8>, AnyError> {
+    let mut encoder = GzEncoder::new(Vec::new(), Compression::new(compression_level));
     encoder.write_all(uncompressed_data)?;
     let compressed_data = encoder.finish()?;
     Ok(compressed_data)

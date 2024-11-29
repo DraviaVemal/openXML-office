@@ -28,7 +28,7 @@ impl XmlDocumentPart for Style {
         office_document: Weak<RefCell<OfficeDocument>>,
         file_path: Option<String>,
     ) -> AnyResult<Self, AnyError> {
-        let file_path = file_path.unwrap_or("styles.xml".to_string());
+        let file_path = file_path.unwrap_or("xl/styles.xml".to_string());
         let xml_document = Self::get_xml_document(&office_document, &file_path)?;
         Ok(Self {
             office_document,
