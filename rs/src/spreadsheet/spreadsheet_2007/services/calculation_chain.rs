@@ -34,7 +34,8 @@ impl Drop for CalculationChain {
                         let mut attributes = HashMap::new();
                         attributes.insert("r".to_string(), cell_id);
                         attributes.insert("i".to_string(), sheet_id);
-                        doc.insert_child_mut(&0, "c")
+                        let _ = doc
+                            .insert_child_mut(&0, "c")
                             .unwrap()
                             .set_attribute_mut(attributes);
                     }
@@ -79,7 +80,9 @@ impl XmlDocumentPart for CalculationChain {
         let mut xml_document = XmlDocument::new();
         xml_document
             .create_root_mut("calcChain")
-            .set_attribute_mut(attributes);
+            .context("Create XML Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Set Attribute Failed")?;
         Ok(xml_document)
     }
 }

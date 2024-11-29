@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Error as AnyError, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{
     cell::RefCell,
     collections::HashMap,
@@ -86,12 +86,11 @@ impl XmlDocument {
         self.xml_element_collection.get_mut(&0)
     }
 
-    pub fn create_root_mut(&mut self, tag: &str) -> &mut XmlElement {
-        self.xml_element_collection.insert(
-            0,
-            XmlElement::new(Rc::downgrade(&self.namespace_collection), tag),
-        );
-        self.xml_element_collection.get_mut(&0).unwrap()
+    pub fn create_root_mut(&mut self, tag: &str) -> AnyResult<&mut XmlElement, AnyError> {
+        let element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
+            .context("Create XML Element Failed")?;
+        self.xml_element_collection.insert(0, element);
+        Ok(self.xml_element_collection.get_mut(&0).unwrap())
     }
     /// Removes the child reference from parent and remove the master element itself from collection
     pub fn pop_elements_by_tag_mut(
@@ -134,7 +133,8 @@ impl XmlDocument {
         tag: &str,
     ) -> AnyResult<&mut XmlElement, AnyError> {
         if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
-            let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag);
+            let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
+                .context("Create XML Element Failed")?;
             element.set_parent_id_mut(*parent_id);
             self.running_id += 1;
             element.set_id_mut(self.running_id);
@@ -231,23 +231,62 @@ pub struct XmlElement {
     children: Rc<RefCell<Vec<XmlElementChild>>>,
     // ######################## Document Parts ##########################
     /// XML Namespace collection
-    namespace_collection: Weak<RefCell<HashMap<String, String>>>,
+    namespace_collection_ref: Weak<RefCell<HashMap<String, String>>>,
 }
 
 impl XmlElement {
     /// Create element with tree document reference
-    fn new(namespace_collection: Weak<RefCell<HashMap<String, String>>>, tag: &str) -> Self {
-        // TODO :: Validate the Name Space
-        Self {
-            id: 0,
-            parent_id: 0,
-            tag: tag.to_string(),
-            attributes: None,
-            value: None,
-            children: Rc::new(RefCell::new(Vec::new())),
-            namespace_collection,
+    fn new(
+        namespace_collection: Weak<RefCell<HashMap<String, String>>>,
+        tag: &str,
+    ) -> AnyResult<Self, AnyError> {
+        if Self::is_valid_xml_name(tag) {
+            return Ok(Self {
+                id: 0,
+                parent_id: 0,
+                tag: tag.to_string(),
+                attributes: None,
+                value: None,
+                children: Rc::new(RefCell::new(Vec::new())),
+                namespace_collection_ref: namespace_collection,
+            });
         }
+        Err(anyhow!("Provided Tag Name \"{}\" is not valid.", tag))
     }
+
+    fn is_valid_xml_name(name: &str) -> bool {
+        fn is_name_start_char(c: char) -> bool {
+            c.is_ascii_alphabetic() || c == '_' || c.is_alphabetic()
+        }
+
+        fn is_name_char(c: char) -> bool {
+            is_name_start_char(c) || c.is_ascii_digit() || c == '-' || c == '.' || c == ':'
+        }
+
+        if name.is_empty() {
+            return false;
+        }
+
+        let mut chars = name.chars();
+        if let Some(first_char) = chars.next() {
+            if !is_name_start_char(first_char) {
+                return false;
+            }
+        }
+        let mut colon_count = 0;
+        for c in chars {
+            if c == ':' {
+                colon_count += 1;
+                if colon_count > 1 {
+                    return false;
+                }
+            } else if !is_name_char(c) {
+                return false;
+            }
+        }
+        true
+    }
+
     // ######################## Data Read Only Methods ###########################
 
     pub fn get_tag(&self) -> &str {
@@ -315,10 +354,63 @@ impl XmlElement {
         self.parent_id = parent_id;
     }
 
-    pub fn set_attribute_mut(&mut self, attributes: HashMap<String, String>) -> &mut Self {
-        // TODO :: Validate the Name Space
+    fn validate_namespace(
+        &mut self,
+        attributes: &HashMap<String, String>,
+    ) -> AnyResult<(), AnyError> {
+        Ok(())
+    }
+
+    pub fn set_attribute_mut(
+        &mut self,
+        mut attributes: HashMap<String, String>,
+    ) -> AnyResult<&mut Self, AnyError> {
+        let keys = attributes
+            .keys()
+            .clone()
+            .map(|item| item.to_string())
+            .collect::<Vec<String>>();
+        if !keys
+            .iter()
+            .map(|item| item.to_string())
+            .all(|item| Self::is_valid_xml_name(&item))
+        {
+            return Err(anyhow!("Not All the attribute satisfy naming standards"));
+        }
+        let ns_keys = keys
+            .iter()
+            .map(|item| item.to_string())
+            .filter(|item| item.starts_with("xmlns"))
+            .clone()
+            .collect::<Vec<String>>();
+        if !ns_keys.is_empty() {
+            if let Some(ns_collection) = self.namespace_collection_ref.upgrade() {
+                let mut namespace_collection = ns_collection
+                    .try_borrow_mut()
+                    .context("Namespace Collection Borrow Failed")?;
+                for ns_key in ns_keys.clone() {
+                    let ns_alias = ns_key.split(":").collect::<Vec<&str>>();
+                    if ns_alias.len() > 0 {
+                        if !namespace_collection.contains_key(&ns_alias[1].to_string()) {
+                            namespace_collection.insert(
+                                ns_alias[1].to_string(),
+                                attributes.get(&ns_key).unwrap().to_string(),
+                            );
+                        }
+                    } else {
+                        namespace_collection.insert(
+                            "<Default>".to_string(),
+                            attributes.get(&ns_key).unwrap().to_string(),
+                        );
+                    }
+                }
+            }
+        }
+        attributes.retain(|key, _| !ns_keys.contains(key));
+        self.validate_namespace(&attributes)
+            .context("Attribute NameSpace Validation Failed")?;
         self.attributes = Some(attributes);
-        self
+        Ok(self)
     }
 
     pub fn set_value(&mut self, text: String) -> &mut Self {

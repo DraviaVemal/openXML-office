@@ -53,9 +53,11 @@ impl XmlDocumentPart for WorkbookPart {
             .unwrap_or(Path::new(""))
             .display()
             .to_string();
-        let relations_part =
-            RelationsPart::new(office_document.clone(), Some(format!("{}/_rels/workbook.xml.rels",relation_path)))
-                .context("Creating Relation ship part for workbook failed.")?;
+        let relations_part = RelationsPart::new(
+            office_document.clone(),
+            Some(format!("{}/_rels/workbook.xml.rels", relation_path)),
+        )
+        .context("Creating Relation ship part for workbook failed.")?;
         let theme_part_path: Option<String> = relations_part
             .get_relationship_target_by_type(
                 "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
@@ -115,7 +117,11 @@ impl XmlDocumentPart for WorkbookPart {
 
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        let template_core_properties = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></workbook>"#;
+        let template_core_properties = r#"
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+            <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7"/>
+        </workbook>"#;
         XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
     }
 }
