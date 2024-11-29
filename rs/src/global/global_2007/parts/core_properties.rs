@@ -2,7 +2,7 @@ use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::traits::XmlDocumentPart,
 };
-use anyhow::{Error as AnyError, Result as AnyResult};
+use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;
 use std::{cell::RefCell, rc::Weak};
 
@@ -19,14 +19,21 @@ impl Drop for CorePropertiesPart {
         if let Some(xml_document_ref) = self.xml_document.upgrade() {
             let mut xml_document = xml_document_ref.borrow_mut();
             let start_element_id = xml_document.get_root().unwrap().get_id();
-            if let Some(element) = xml_document.get_first_element_mut(
+            match xml_document.get_first_element_mut(
                 &start_element_id,
                 vec![
                     "cp:coreProperties".to_string(),
                     "dcterms:modified".to_string(),
                 ],
             ) {
-                element.set_value(Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true));
+                Ok(result) => {
+                    if let Some(element) = result {
+                        element.set_value(
+                            Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+                        );
+                    }
+                }
+                Err(_) => (),
             }
         }
         // Update the current state to DB before dropping the object

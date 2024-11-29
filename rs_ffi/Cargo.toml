@@ -12,7 +12,7 @@ msrv = "1.32.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-draviavema_openxml_office = { path = "../rs", version = ">= 4.0.0" }
+draviavemal_openxml_office = { path = "../rs", version = ">= 4.0.0" }
 flatbuffers = "24.3.25"
 anyhow = "1.0.90"
 

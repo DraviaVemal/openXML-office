@@ -1,5 +1,5 @@
 use crate::{chain_error, openxml_office_ffi, StatusCode};
-use draviavema_openxml_office::presentation_2007::{PowerPoint, PowerPointPropertiesModel};
+use draviavemal_openxml_office::presentation_2007::{PowerPoint, PowerPointPropertiesModel};
 use std::{
     ffi::{c_char, CStr, CString},
     slice::from_raw_parts,
