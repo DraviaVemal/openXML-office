@@ -54,7 +54,7 @@ impl XmlSerializer {
                     if root_loaded {
                         // Add child to parent
                         active_xml_element_id = xml_document
-                            .insert_child_mut(&active_xml_element_id, &tag)
+                            .append_child_mut(&active_xml_element_id, &tag)
                             .context("Insert XML Child Failed.")?
                             .set_attribute_mut(attributes)
                             .context("Attribute Update Error")?
@@ -88,7 +88,7 @@ impl XmlSerializer {
                         })
                         .collect::<AnyResult<HashMap<String, String>>>()?;
                     xml_document
-                        .insert_child_mut(&active_xml_element_id, &tag)
+                        .append_child_mut(&active_xml_element_id, &tag)
                         .context("Insert XML Child Failed.")?
                         .set_attribute_mut(attributes)
                         .context("Parser Attribute Validation Failed")?;

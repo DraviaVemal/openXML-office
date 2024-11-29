@@ -1,5 +1,6 @@
 [package]
-name = "draviavema_openxml_office"
+name = "draviavemal_openxml_office"
+authors = ["Dravia Vemal"]
 description = "Crate to create and manipulate excel,power point and word documents"
 license = "MIT"
 repository = "https://github.com/DraviaVemal/openxml-office"

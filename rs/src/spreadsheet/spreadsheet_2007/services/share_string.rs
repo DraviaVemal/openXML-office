@@ -51,8 +51,8 @@ impl Drop for ShareString {
                         }
                     }
                     for string in string_collection {
-                        let parent_id = doc.insert_child_mut(&0, "si").unwrap().get_id();
-                        doc.insert_child_mut(&parent_id, "t")
+                        let parent_id = doc.append_child_mut(&0, "si").unwrap().get_id();
+                        doc.append_child_mut(&parent_id, "t")
                             .unwrap()
                             .set_value(string);
                     }

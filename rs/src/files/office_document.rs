@@ -103,8 +103,8 @@ impl OfficeDocument {
     pub fn close_xml_document(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
         let xml_tree_option = self.xml_document_collection.remove(file_path);
         if let Some(xml_tree) = xml_tree_option {
-            let xml_document = xml_tree.borrow();
-            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&xml_document)
+            let mut xml_document = xml_tree.borrow_mut();
+            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_document)
                 .context("Xml Tree to String content")?;
             Self::insert_update_archive_record(
                 &self.sqlite_database,

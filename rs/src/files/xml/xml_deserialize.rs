@@ -1,28 +1,47 @@
 use crate::files::{XmlDocument, XmlElement};
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
+use chrono::Utc;
 
 pub struct XmlDeSerializer {}
 
 impl XmlDeSerializer {
-    pub fn xml_tree_to_vec(xml_document: &XmlDocument) -> AnyResult<Vec<u8>, AnyError> {
+    pub fn xml_tree_to_vec(xml_document: &mut XmlDocument) -> AnyResult<Vec<u8>, AnyError> {
         let mut xml_content = String::new();
-        xml_content.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>"#);
+        xml_content.push_str(
+            format!(
+                r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+<dvmo:office>
+    <dvmo:appName>{}</dvmo:appName>
+    <dvmo:repo>{}</dvmo:repo>
+    <dvmo:version>{}</dvmo:version>
+    <dvmo:modified>{}</dvmo:modified>
+</dvmo:office>
+-->
+                "#,
+                env!("CARGO_PKG_NAME"),
+                env!("CARGO_PKG_REPOSITORY"),
+                env!("CARGO_PKG_VERSION"),
+                Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
+            )
+            .as_str(),
+        );
         Self::build_xml_tree(xml_document, &mut xml_content)
             .context("Create XML Contact String Failed")?;
         Ok(xml_content.as_bytes().to_vec())
     }
 
     fn build_xml_tree(
-        xml_document: &XmlDocument,
+        xml_document: &mut XmlDocument,
         master_string: &mut String,
     ) -> AnyResult<(), AnyError> {
         let max_count = xml_document.get_element_count() * 2;
         let mut current_count = 0;
         if let Some(xml_root) = xml_document.get_root() {
             if xml_root.is_empty_tag() {
-                master_string.push_str(Self::generate_xml_element(xml_root, true).as_str());
+                master_string.push_str(Self::generate_xml_element(xml_root, true, true).as_str());
             } else {
-                master_string.push_str(Self::generate_xml_element(xml_root, false).as_str());
+                master_string.push_str(Self::generate_xml_element(xml_root, false, true).as_str());
                 if let Some(value) = xml_root.get_value() {
                     master_string.push_str(&Self::generate_xml_value_close(value, xml_root));
                 } else {
@@ -38,11 +57,13 @@ impl XmlDeSerializer {
                                 if let Some(element) = xml_document.get_element(&current_id) {
                                     if element.is_empty_tag() {
                                         master_string.push_str(
-                                            Self::generate_xml_element(element, true).as_str(),
+                                            Self::generate_xml_element(element, true, false)
+                                                .as_str(),
                                         );
                                     } else {
                                         master_string.push_str(
-                                            Self::generate_xml_element(element, false).as_str(),
+                                            Self::generate_xml_element(element, false, false)
+                                                .as_str(),
                                         );
                                         if let Some(value) = element.get_value() {
                                             master_string.push_str(
@@ -76,8 +97,33 @@ impl XmlDeSerializer {
         Ok(())
     }
 
-    fn generate_xml_element(xml_element: &XmlElement, close: bool) -> String {
+    fn generate_xml_element(xml_element: &XmlElement, close: bool, root_element: bool) -> String {
         let mut element_tag = format!("<{}", xml_element.get_tag());
+        if root_element {
+            if let Some(mut namespace) = xml_element.get_namespace() {
+                namespace.insert(
+                    "dvmo".to_string(),
+                    "http://schemas.draviavemal.com/openxml-office".to_string(),
+                );
+                element_tag.push_str(
+                    format!(
+                        " {}",
+                        namespace
+                            .iter()
+                            .map(|(key, value)| {
+                                if key == "<Default>" {
+                                    format!("xmlns=\"{}\"", value)
+                                } else {
+                                    format!("xmlns:{}=\"{}\"", key, value)
+                                }
+                            })
+                            .collect::<Vec<String>>()
+                            .join(" ")
+                    )
+                    .as_str(),
+                );
+            }
+        }
         if let Some(attributes) = xml_element.get_attribute() {
             element_tag.push_str(
                 format!(

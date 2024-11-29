@@ -127,7 +127,53 @@ impl XmlDocument {
         self.xml_element_collection.remove(element_id)
     }
 
-    pub fn insert_child_mut(
+    pub fn insert_children_before_tag_mut(
+        &mut self,
+        parent_id: &usize,
+        find_tag: &str,
+        tag: &str,
+    ) -> AnyResult<&mut XmlElement, AnyError> {
+        if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
+            let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
+                .context("Create XML Element Failed")?;
+            element.set_parent_id_mut(*parent_id);
+            self.running_id += 1;
+            element.set_id_mut(self.running_id);
+            parent_element.insert_children_before_tag_mut(self.running_id, find_tag, tag);
+            self.xml_element_collection.insert(self.running_id, element);
+            Ok(self
+                .xml_element_collection
+                .get_mut(&self.running_id)
+                .unwrap())
+        } else {
+            return Err(anyhow!("Parent Element Not Found"));
+        }
+    }
+
+    pub fn insert_child_at_mut(
+        &mut self,
+        parent_id: &usize,
+        position: &usize,
+        tag: &str,
+    ) -> AnyResult<&mut XmlElement, AnyError> {
+        if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
+            let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
+                .context("Create XML Element Failed")?;
+            element.set_parent_id_mut(*parent_id);
+            self.running_id += 1;
+            element.set_id_mut(self.running_id);
+            parent_element.insert_children_at_mut(self.running_id, *position, tag);
+            self.xml_element_collection.insert(self.running_id, element);
+            Ok(self
+                .xml_element_collection
+                .get_mut(&self.running_id)
+                .unwrap())
+        } else {
+            return Err(anyhow!("Parent Element Not Found"));
+        }
+    }
+
+    pub fn append_child_mut(
         &mut self,
         parent_id: &usize,
         tag: &str,
@@ -138,7 +184,7 @@ impl XmlDocument {
             element.set_parent_id_mut(*parent_id);
             self.running_id += 1;
             element.set_id_mut(self.running_id);
-            parent_element.add_children_mut(self.running_id, tag);
+            parent_element.append_children_mut(self.running_id, tag);
             self.xml_element_collection.insert(self.running_id, element);
             Ok(self
                 .xml_element_collection
@@ -153,20 +199,25 @@ impl XmlDocument {
         &mut self,
         start_element: &usize,
         mut element_tree: Vec<String>,
-    ) -> Option<&mut XmlElement> {
+    ) -> AnyResult<Option<&mut XmlElement>, AnyError> {
         element_tree.reverse();
         let mut current_id = *start_element;
+        let mut is_found = false;
         loop {
             if let Some(find_tag) = element_tree.pop() {
                 let element = self.xml_element_collection.get(&current_id).unwrap();
-                let element_child = element.children.borrow_mut();
+                let element_child = element
+                    .children
+                    .try_borrow_mut()
+                    .context("Children Borrow Failed")?;
                 if let Some(found_child) = element_child.iter().find(|item| item.tag == find_tag) {
                     current_id = found_child.id;
+                    if element_tree.len() == 0 {
+                        is_found = true;
+                        break;
+                    }
                 } else {
                     // Not Able to find any one Child
-                    break;
-                }
-                if element_tree.len() == 0 {
                     break;
                 }
             } else {
@@ -174,7 +225,10 @@ impl XmlDocument {
                 break;
             }
         }
-        self.xml_element_collection.get_mut(&current_id)
+        if is_found {
+            return Ok(self.xml_element_collection.get_mut(&current_id));
+        }
+        Ok(None)
     }
 
     pub fn get_element_by_attribute_mut(
@@ -305,6 +359,13 @@ impl XmlElement {
         self.attributes.as_ref()
     }
 
+    pub fn get_namespace(&self) -> Option<HashMap<String, String>> {
+        if let Some(namespace_collection) = self.namespace_collection_ref.upgrade() {
+            return Some(namespace_collection.borrow().clone());
+        }
+        None
+    }
+
     pub fn get_value(&self) -> &Option<String> {
         &self.value
     }
@@ -335,11 +396,39 @@ impl XmlElement {
         None
     }
 
-    fn add_children_mut(&mut self, child_id: usize, tag: &str) {
+    fn append_children_mut(&mut self, child_id: usize, tag: &str) {
         self.children.borrow_mut().push(XmlElementChild {
             id: child_id,
             tag: tag.to_string(),
         });
+    }
+
+    fn insert_children_before_tag_mut(&mut self, child_id: usize, find_tag: &str, tag: &str) {
+        let mut children = self.children.borrow_mut();
+        if let Some(index) = children.iter().position(|item| item.tag == find_tag) {
+            children.insert(
+                index,
+                XmlElementChild {
+                    id: child_id,
+                    tag: tag.to_string(),
+                },
+            );
+        } else {
+            children.push(XmlElementChild {
+                id: child_id,
+                tag: tag.to_string(),
+            });
+        }
+    }
+
+    fn insert_children_at_mut(&mut self, child_id: usize, position: usize, tag: &str) {
+        self.children.borrow_mut().insert(
+            position,
+            XmlElementChild {
+                id: child_id,
+                tag: tag.to_string(),
+            },
+        );
     }
 
     pub fn get_attribute_mut(&mut self) -> Option<&mut HashMap<String, String>> {
@@ -390,7 +479,7 @@ impl XmlElement {
                     .context("Namespace Collection Borrow Failed")?;
                 for ns_key in ns_keys.clone() {
                     let ns_alias = ns_key.split(":").collect::<Vec<&str>>();
-                    if ns_alias.len() > 0 {
+                    if ns_alias.len() > 1 {
                         if !namespace_collection.contains_key(&ns_alias[1].to_string()) {
                             namespace_collection.insert(
                                 ns_alias[1].to_string(),

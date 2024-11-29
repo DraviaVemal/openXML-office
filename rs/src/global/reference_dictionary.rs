@@ -8,7 +8,7 @@ pub struct NameSpace {
 pub static NAME_SPACE_COLLECTION: Map<&'static str, &'static NameSpace> = phf_map! {
     "https://draviavemal.com/openxml-office" => &NameSpace{
         url:"https://draviavemal.com/openxml-office",
-        alias:"mdoo"
+        alias:"dvmo"
     },
     "http://purl.org/dc/elements/1.1/" => &NameSpace{
         url:"http://purl.org/dc/elements/1.1/",
