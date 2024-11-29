@@ -57,12 +57,15 @@ impl XmlSerializer {
                             .insert_child_mut(&active_xml_element_id, &tag)
                             .context("Insert XML Child Failed.")?
                             .set_attribute_mut(attributes)
+                            .context("Attribute Update Error")?
                             .get_id() as usize;
                     } else {
                         // Create the root element
                         active_xml_element_id = xml_document
                             .create_root_mut(&tag)
+                            .context("Create XML Root Element Failed")?
                             .set_attribute_mut(attributes)
+                            .context("Attribute Update Error")?
                             .get_id() as usize;
                         root_loaded = true
                     }
@@ -87,7 +90,8 @@ impl XmlSerializer {
                     xml_document
                         .insert_child_mut(&active_xml_element_id, &tag)
                         .context("Insert XML Child Failed.")?
-                        .set_attribute_mut(attributes);
+                        .set_attribute_mut(attributes)
+                        .context("Parser Attribute Validation Failed")?;
                 }
 
                 // Read text content

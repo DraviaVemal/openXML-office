@@ -22,6 +22,7 @@ uuid = { version = "1.11.0", features = [
     "fast-rng",
     "macro-diagnostics",
 ] }
+phf = { version = "0.11.2", features = ["macros"] }
 
 [dev-dependencies]
 criterion = "0.4"

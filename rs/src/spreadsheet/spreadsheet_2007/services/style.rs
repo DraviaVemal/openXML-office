@@ -2,7 +2,7 @@ use crate::{
     files::{OfficeDocument, XmlDocument},
     global_2007::traits::XmlDocumentPart,
 };
-use anyhow::{Error as AnyError, Result as AnyResult};
+use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
@@ -53,7 +53,9 @@ impl XmlDocumentPart for Style {
         let mut xml_document = XmlDocument::new();
         xml_document
             .create_root_mut("styleSheet")
-            .set_attribute_mut(attributes);
+            .context("Create XML Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Set Attribute Failed")?;
         Ok(xml_document)
     }
 }

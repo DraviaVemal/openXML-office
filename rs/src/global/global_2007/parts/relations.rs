@@ -58,7 +58,9 @@ impl XmlDocumentPart for RelationsPart {
         let mut xml_document = XmlDocument::new();
         xml_document
             .create_root_mut("Relationships")
-            .set_attribute_mut(attributes);
+            .context("Create XML Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Updating Attribute Failed")?;
         Ok(xml_document)
     }
 }
