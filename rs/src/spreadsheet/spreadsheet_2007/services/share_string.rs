@@ -74,7 +74,7 @@ impl XmlDocumentPart for ShareString {
         office_document: Weak<RefCell<OfficeDocument>>,
         file_path: Option<String>,
     ) -> AnyResult<Self, AnyError> {
-        let file_path = file_path.unwrap_or("sharedStrings.xml".to_string());
+        let file_path = file_path.unwrap_or("xl/sharedStrings.xml".to_string());
         let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
         Self::load_content_to_database(&office_document, &mut xml_document)
             .context("Load Share String To DB Failed")?;
