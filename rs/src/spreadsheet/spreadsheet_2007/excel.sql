@@ -1,10 +1,3 @@
--- query : create_share_string_table# Create initial blob archive table
-CREATE TABLE
-    share_string (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
-        string TEXT NOT NULL -- Common String
-    );
-
 -- query : create_number_format_table# Create initial blob archive table
 CREATE TABLE
     number_formats (

@@ -67,13 +67,14 @@ impl Word {
     fn setup_database_schema(
         office_document: &Rc<RefCell<OfficeDocument>>,
     ) -> AnyResult<(), AnyError> {
-        let scheme = get_all_queries!("word.sql");
-        for query in scheme {
-            office_document
-                .borrow()
-                .get_connection()
-                .create_table(&query)
-                .context("Word Schema Initialization Failed")?;
+        if let Some(scheme) = get_all_queries!("word.sql") {
+            for query in scheme {
+                office_document
+                    .borrow()
+                    .get_connection()
+                    .create_table(&query)
+                    .context("Word Schema Initialization Failed")?;
+            }
         }
         Ok(())
     }

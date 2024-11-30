@@ -77,7 +77,7 @@ impl RelationsPart {
                 .context("XML Document Borrow Failed")?;
             if let Some(xml_root) = xml_doc.get_root() {
                 if let Some(result) =
-                    xml_doc.find_element_by_attribute(&xml_root.get_id(), "Type", content_type)
+                    xml_doc.get_element_by_attribute(&xml_root.get_id(), "Type", content_type)
                 {
                     return Ok(Some(
                         result
