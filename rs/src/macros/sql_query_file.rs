@@ -1,6 +1,6 @@
 #[macro_export]
-macro_rules! get_specific_queries {
-    ($file:expr, $query_name:expr) => {{
+macro_rules! get_all_queries {
+    ($file:expr) => {{
         use std::collections::HashMap;
         // Helper function to load queries
         fn load_queries(sql_content: &str) -> HashMap<String, String> {
@@ -28,40 +28,6 @@ macro_rules! get_specific_queries {
             queries
         }
         let sql_content = include_str!($file);
-        load_queries(sql_content).get($query_name)
-    }};
-}
-
-#[macro_export]
-macro_rules! get_all_queries {
-    ($file:expr) => {{
-        let sql_content = include_str!($file);
-        let mut queries = Vec::new();
-        let mut current_query = String::new();
-
-        for line in sql_content.lines() {
-            if line.starts_with("-- query : ") {
-                // If we hit a new query, push the previous one to the vector
-                if !current_query.trim().is_empty() {
-                    queries.push(current_query.trim().to_string());
-                }
-                current_query.clear(); // Start a new query
-            } else {
-                current_query.push_str(line);
-                current_query.push('\n');
-            }
-        }
-
-        // Push the last query if it exists
-        if !current_query.trim().is_empty() {
-            queries.push(current_query.trim().to_string());
-        }
-
-        // Return an Option based on the results
-        if !queries.is_empty() {
-            Some(queries)
-        } else {
-            None
-        }
+        load_queries(sql_content)
     }};
 }

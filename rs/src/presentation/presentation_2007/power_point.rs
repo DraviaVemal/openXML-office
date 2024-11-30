@@ -65,14 +65,12 @@ impl PowerPoint {
 
     /// Initialism table schema for PowerPoint
     fn setup_database_schema(xml_fs: &Rc<RefCell<OfficeDocument>>) -> AnyResult<(), AnyError> {
-        if let Some(scheme) = get_all_queries!("power_point.sql") {
-            for query in scheme {
-                xml_fs
-                    .borrow()
-                    .get_connection()
-                    .create_table(&query)
-                    .context("Power Point Schema Initialization Failed")?;
-            }
+        for query in get_all_queries!("power_point.sql").values() {
+            xml_fs
+                .borrow()
+                .get_connection()
+                .create_table(&query)
+                .context("Power Point Schema Initialization Failed")?;
         }
         Ok(())
     }
