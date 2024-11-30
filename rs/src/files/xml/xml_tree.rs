@@ -32,12 +32,14 @@ impl XmlDocument {
         self.xml_element_collection.get(&0)
     }
 
-    pub fn get_element_by_attribute(
+    pub fn get_element_id_by_attribute(
         &self,
-        parent_id: &usize,
         attribute_key: &str,
         attribute_value: &str,
-    ) -> Option<&XmlElement> {
+        parent_id: Option<&usize>,
+    ) -> Option<usize> {
+        let parent_id = parent_id.unwrap_or(&0);
+        let mut id: Option<usize> = None;
         if let Some(parent_element) = self.xml_element_collection.get(&parent_id) {
             if let Some(found_child) = parent_element.children.borrow().iter().find(|item| {
                 if let Some(current) = self.xml_element_collection.get(&item.id) {
@@ -49,17 +51,33 @@ impl XmlDocument {
                 }
                 false
             }) {
-                return self.xml_element_collection.get(&found_child.id);
+                id = Some(found_child.id);
             }
         }
-        None
+        id
+    }
+
+    pub fn get_element_by_attribute(
+        &self,
+        attribute_key: &str,
+        attribute_value: &str,
+        parent_id: Option<&usize>,
+    ) -> Option<&XmlElement> {
+        if let Some(id) =
+            self.get_element_id_by_attribute(attribute_key, attribute_value, parent_id)
+        {
+            self.xml_element_collection.get(&id)
+        } else {
+            None
+        }
     }
 
     pub fn get_element_ids_by_tag(
         &self,
-        parent_id: &usize,
         filter_tag: &str,
+        parent_id: Option<&usize>,
     ) -> Option<Vec<usize>> {
+        let parent_id = parent_id.unwrap_or(&0);
         if let Some(parent_element) = self.xml_element_collection.get(parent_id) {
             let element_id_list = parent_element
                 .children
@@ -92,21 +110,16 @@ impl XmlDocument {
         self.xml_element_collection.insert(0, element);
         Ok(self.xml_element_collection.get_mut(&0).unwrap())
     }
+
     /// Removes the child reference from parent and remove the master element itself from collection
     pub fn pop_elements_by_tag_mut(
         &mut self,
-        parent_id: &usize,
         filter_tag: &str,
+        parent_id: Option<&usize>,
     ) -> Option<Vec<XmlElement>> {
-        if let Some(parent_element) = self.xml_element_collection.get(parent_id) {
-            let element_id_list = parent_element
-                .children
-                .borrow()
-                .iter()
-                .filter(|item| item.tag == filter_tag)
-                .map(|item| item.id)
-                .collect::<Vec<usize>>();
-            if element_id_list.len() > 0 {
+        let parent_id_def = parent_id.unwrap_or(&0);
+        if let Some(parent_element) = self.xml_element_collection.get(parent_id_def) {
+            if let Some(element_id_list) = self.get_element_ids_by_tag(filter_tag, parent_id) {
                 parent_element
                     .children
                     .borrow_mut()
@@ -146,7 +159,7 @@ impl XmlDocument {
                 .get_mut(&self.running_id)
                 .unwrap())
         } else {
-            return Err(anyhow!("Parent Element Not Found"));
+            Err(anyhow!("Parent Element Not Found"))
         }
     }
 
@@ -169,7 +182,7 @@ impl XmlDocument {
                 .get_mut(&self.running_id)
                 .unwrap())
         } else {
-            return Err(anyhow!("Parent Element Not Found"));
+            Err(anyhow!("Parent Element Not Found"))
         }
     }
 
@@ -191,24 +204,32 @@ impl XmlDocument {
                 .get_mut(&self.running_id)
                 .unwrap())
         } else {
-            return Err(anyhow!("Parent Element Not Found"));
+            Err(anyhow!("Parent Element Not Found"))
         }
     }
 
-    pub fn get_first_element_mut(
-        &mut self,
-        start_element: &usize,
-        mut element_tree: Vec<String>,
-    ) -> AnyResult<Option<&mut XmlElement>, AnyError> {
+    pub fn get_first_element_id(
+        &self,
+        mut element_tree: Vec<&str>,
+        start_element: Option<&usize>,
+    ) -> AnyResult<Option<usize>, AnyError> {
         element_tree.reverse();
-        let mut current_id = *start_element;
+        let mut current_id = *start_element.unwrap_or(&0);
         let mut is_found = false;
         loop {
             if let Some(find_tag) = element_tree.pop() {
                 let element = self.xml_element_collection.get(&current_id).unwrap();
+                if element.get_tag() == find_tag && current_id == 0 {
+                    // Skip the root element
+                    if element_tree.len() == 0 {
+                        is_found = true;
+                        break;
+                    }
+                    continue;
+                }
                 let element_child = element
                     .children
-                    .try_borrow_mut()
+                    .try_borrow()
                     .context("Children Borrow Failed")?;
                 if let Some(found_child) = element_child.iter().find(|item| item.tag == find_tag) {
                     current_id = found_child.id;
@@ -226,36 +247,40 @@ impl XmlDocument {
             }
         }
         if is_found {
-            return Ok(self.xml_element_collection.get_mut(&current_id));
+            Ok(Some(current_id))
+        } else {
+            Ok(None)
         }
-        Ok(None)
+    }
+
+    pub fn get_first_element_mut(
+        &mut self,
+        element_tree: Vec<&str>,
+        start_element: Option<&usize>,
+    ) -> AnyResult<Option<&mut XmlElement>, AnyError> {
+        if let Some(element_id) = self
+            .get_first_element_id(element_tree, start_element)
+            .context("Find Element By Id Failed")?
+        {
+            Ok(self.xml_element_collection.get_mut(&element_id))
+        } else {
+            Ok(None)
+        }
     }
 
     pub fn get_element_by_attribute_mut(
         &mut self,
-        parent_id: &usize,
         attribute_key: &str,
         attribute_value: &str,
+        parent_id: Option<&usize>,
     ) -> Option<&mut XmlElement> {
-        let mut id: Option<usize> = None;
-        if let Some(parent_element) = self.xml_element_collection.get(&parent_id) {
-            if let Some(found_child) = parent_element.children.borrow().iter().find(|item| {
-                if let Some(current) = self.xml_element_collection.get(&item.id) {
-                    if let Some(attribute) = current.get_attribute() {
-                        if let Some(value) = attribute.get(attribute_key) {
-                            return value == attribute_value;
-                        }
-                    }
-                }
-                false
-            }) {
-                id = Some(found_child.id);
-            }
+        if let Some(find_id) =
+            self.get_element_id_by_attribute(attribute_key, attribute_value, parent_id)
+        {
+            self.xml_element_collection.get_mut(&find_id)
+        } else {
+            None
         }
-        if let Some(find_id) = id {
-            return self.xml_element_collection.get_mut(&find_id);
-        }
-        None
     }
 
     pub fn get_element_mut(&mut self, element_id: &usize) -> Option<&mut XmlElement> {
@@ -295,7 +320,7 @@ impl XmlElement {
         tag: &str,
     ) -> AnyResult<Self, AnyError> {
         if Self::is_valid_xml_name(tag) {
-            return Ok(Self {
+            Ok(Self {
                 id: 0,
                 parent_id: 0,
                 tag: tag.to_string(),
@@ -303,24 +328,22 @@ impl XmlElement {
                 value: None,
                 children: Rc::new(RefCell::new(Vec::new())),
                 namespace_collection_ref: namespace_collection,
-            });
+            })
+        } else {
+            Err(anyhow!("Provided Tag Name \"{}\" is not valid.", tag))
         }
-        Err(anyhow!("Provided Tag Name \"{}\" is not valid.", tag))
     }
 
     fn is_valid_xml_name(name: &str) -> bool {
         fn is_name_start_char(c: char) -> bool {
             c.is_ascii_alphabetic() || c == '_' || c.is_alphabetic()
         }
-
         fn is_name_char(c: char) -> bool {
             is_name_start_char(c) || c.is_ascii_digit() || c == '-' || c == '.' || c == ':'
         }
-
         if name.is_empty() {
             return false;
         }
-
         let mut chars = name.chars();
         if let Some(first_char) = chars.next() {
             if !is_name_start_char(first_char) {
@@ -361,9 +384,10 @@ impl XmlElement {
 
     pub fn get_namespace(&self) -> Option<HashMap<String, String>> {
         if let Some(namespace_collection) = self.namespace_collection_ref.upgrade() {
-            return Some(namespace_collection.borrow().clone());
+            Some(namespace_collection.borrow().clone())
+        } else {
+            None
         }
-        None
     }
 
     pub fn get_value(&self) -> &Option<String> {
@@ -376,9 +400,10 @@ impl XmlElement {
 
     pub fn get_first_child_id(&self) -> Option<usize> {
         if let Some(child_element) = self.children.borrow().get(0) {
-            return Some(child_element.id);
+            Some(child_element.id)
+        } else {
+            None
         }
-        None
     }
 
     pub fn get_parent_id(&self) -> usize {
@@ -391,9 +416,10 @@ impl XmlElement {
     /// Remove the child reference irreversible
     pub fn pop_child_id_mut(&self) -> Option<usize> {
         if self.children.borrow_mut().len() > 0 {
-            return Some(self.children.borrow_mut().remove(0).id);
+            Some(self.children.borrow_mut().remove(0).id)
+        } else {
+            None
         }
-        None
     }
 
     fn append_children_mut(&mut self, child_id: usize, tag: &str) {
@@ -502,7 +528,7 @@ impl XmlElement {
         Ok(self)
     }
 
-    pub fn set_value(&mut self, text: String) -> &mut Self {
+    pub fn set_value_mut(&mut self, text: String) -> &mut Self {
         self.value = Some(text);
         self
     }

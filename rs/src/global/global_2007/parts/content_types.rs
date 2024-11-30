@@ -1,3 +1,4 @@
+use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::traits::XmlDocumentPart,
@@ -23,6 +24,13 @@ impl Drop for ContentTypesPart {
     }
 }
 
+impl XmlDocumentPartCommon for ContentTypesPart {
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+        XmlSerializer::vec_to_xml_doc_tree(include_str!("content_types.xml").as_bytes().to_vec())
+    }
+}
+
 /// ######################### Train implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for ContentTypesPart {
     fn new(
@@ -36,13 +44,6 @@ impl XmlDocumentPart for ContentTypesPart {
             xml_document,
             file_name,
         })
-    }
-
-    fn flush(self) {}
-
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        XmlSerializer::vec_to_xml_doc_tree(include_str!("content_types.xml").as_bytes().to_vec())
     }
 }
 

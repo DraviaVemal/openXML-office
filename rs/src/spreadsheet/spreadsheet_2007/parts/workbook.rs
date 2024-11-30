@@ -1,3 +1,4 @@
+use crate::global_2007::traits::{XmlDocumentPartCommon, XmlDocumentServicePart};
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::{
@@ -36,6 +37,19 @@ impl Drop for WorkbookPart {
         }
     }
 }
+
+impl XmlDocumentPartCommon for WorkbookPart {
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+        let template_core_properties = r#"
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+            <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7"/>
+        </workbook>"#;
+        XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+    }
+}
+
 /// ######################### Train implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for WorkbookPart {
     /// Create workbook
@@ -107,26 +121,14 @@ impl XmlDocumentPart for WorkbookPart {
             share_string,
             style,
         )));
-        return Ok(Self {
+        Ok(Self {
             office_document,
             xml_document: file_tree,
             file_path,
             common_service,
             relations_part,
             theme_part,
-        });
-    }
-
-    fn flush(self) {}
-
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        let template_core_properties = r#"
-        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-            <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7"/>
-        </workbook>"#;
-        XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+        })
     }
 }
 

@@ -1,3 +1,4 @@
+use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     get_all_queries,
@@ -25,7 +26,7 @@ impl Drop for ShareString {
                 get_all_queries!("share_string.sql").get("select_share_string_table")
             {
                 fn row_mapper(row: &Row) -> AnyResult<String, rusqlite::Error> {
-                    Result::Ok(row.get(0)?)
+                    Ok(row.get(0)?)
                 }
                 let string_collection = office_doc_ref
                     .borrow()
@@ -54,7 +55,7 @@ impl Drop for ShareString {
                         let parent_id = doc.append_child_mut(&0, "si").unwrap().get_id();
                         doc.append_child_mut(&parent_id, "t")
                             .unwrap()
-                            .set_value(string);
+                            .set_value_mut(string);
                     }
                 }
             }
@@ -66,6 +67,24 @@ impl Drop for ShareString {
                 .unwrap()
                 .close_xml_document(&self.file_path);
         }
+    }
+}
+
+impl XmlDocumentPartCommon for ShareString {
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+        let mut attributes: HashMap<String, String> = HashMap::new();
+        attributes.insert(
+            "xmlns".to_string(),
+            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
+        );
+        let mut xml_document = XmlDocument::new();
+        xml_document
+            .create_root_mut("sst")
+            .context("Create Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Set Attribute Failed")?;
+        Ok(xml_document)
     }
 }
 
@@ -83,24 +102,6 @@ impl XmlDocumentPart for ShareString {
             xml_document,
             file_path,
         })
-    }
-
-    fn flush(self) {}
-
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        let mut attributes: HashMap<String, String> = HashMap::new();
-        attributes.insert(
-            "xmlns".to_string(),
-            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
-        );
-        let mut xml_document = XmlDocument::new();
-        xml_document
-            .create_root_mut("sst")
-            .context("Create Root Element Failed")?
-            .set_attribute_mut(attributes)
-            .context("Set Attribute Failed")?;
-        Ok(xml_document)
     }
 }
 
@@ -126,7 +127,7 @@ impl ShareString {
                 .context("Create Share String Table Failed")?;
             if let Some(xml_doc) = xml_document.upgrade() {
                 let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
-                if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut(&0, "si") {
+                if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("si", None) {
                     for element in elements {
                         if let Some(child_id) = element.get_first_child_id() {
                             if let Some(text_element) = xml_doc_mut.pop_element_mut(&child_id) {
