@@ -97,7 +97,9 @@ impl XmlDocumentPart for ShareString {
         let mut xml_document = XmlDocument::new();
         xml_document
             .create_root_mut("sst")
-            .set_attribute_mut(attributes);
+            .context("Create Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Set Attribute Failed")?;
         Ok(xml_document)
     }
 }
