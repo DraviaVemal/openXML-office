@@ -5,13 +5,10 @@ use crate::{
         parts::{ContentTypesPart, CorePropertiesPart, RelationsPart},
         traits::XmlDocumentPart,
     },
-    spreadsheet_2007::parts::{WorkSheetPart, WorkbookPart},
+    spreadsheet_2007::parts::{WorkSheet, WorkbookPart},
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use std::{
-    cell::RefCell,
-    rc::{Rc, Weak},
-};
+use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]
 pub struct Excel {
@@ -27,6 +24,7 @@ pub struct ExcelPropertiesModel {
     pub is_in_memory: bool,
 }
 
+// ##################################### Feature Function ################################
 impl Excel {
     /// Default Excel Setting
     pub fn default() -> ExcelPropertiesModel {
@@ -49,10 +47,10 @@ impl Excel {
             .context("Initializing Content Type Part Failed")?;
         // Load relevant parts from root relations part
         let core_properties_path: Option<String> = root_relations.get_relationship_target_by_type("http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties").context("Parsing Core Properties path failed")?;
+        let workbook_path: Option<String> = root_relations.get_relationship_target_by_type("http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument").context("Parsing workbook path failed")?;
         let core_properties =
             CorePropertiesPart::new(Rc::downgrade(&rc_office_document), core_properties_path)
                 .context("Load CorePart for Existing file failed")?;
-        let workbook_path: Option<String> = root_relations.get_relationship_target_by_type("http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument").context("Parsing workbook path failed")?;
         let workbook: WorkbookPart =
             WorkbookPart::new(Rc::downgrade(&rc_office_document), workbook_path)
                 .context("Workbook Creation Failed")?;
@@ -66,9 +64,8 @@ impl Excel {
     }
 
     /// Add sheet to the current excel
-    pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheetPart, AnyError> {
-        let office_doc_ref: Weak<RefCell<OfficeDocument>> = Rc::downgrade(&self.office_document);
-        self.get_workbook().add_sheet(office_doc_ref, sheet_name)
+    pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
+        self.get_workbook().add_sheet(sheet_name)
     }
 
     /// Save/Replace the current file into target destination
@@ -84,7 +81,10 @@ impl Excel {
             .context("File Save Failed for the target path.")?;
         Ok(())
     }
+}
 
+// ############################# Internal Function ######################################
+impl Excel {
     fn get_workbook(&mut self) -> &mut WorkbookPart {
         &mut self.workbook
     }

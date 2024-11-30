@@ -40,9 +40,9 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | ----------- | ------------ | -------- |
 | Flatbuffers | common       | 🟩⬜⬜⬜⬜    |
 | Rust        | fbs          | 🟩⬜⬜⬜⬜    |
-| Rust        | xml          | 🟩🟩🟩⬜⬜    |
-| Rust        | global       | 🟩⬜⬜⬜⬜    |
-| Rust        | spreadsheet  | 🟩🟩⬜⬜⬜    |
+| Rust        | xml          | 🟩🟩🟩🟩⬜    |
+| Rust        | global       | 🟩🟩⬜⬜⬜    |
+| Rust        | spreadsheet  | 🟩🟩🟩⬜⬜    |
 | Rust        | presentation | 🟩⬜⬜⬜⬜    |
 | Rust        | document     | 🟩⬜⬜⬜⬜    |
 | Rust        | FFI          | 🟩⬜⬜⬜⬜    |

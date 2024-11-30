@@ -10,10 +10,11 @@ pub struct CommonServices {
 }
 
 impl CommonServices {
-    pub fn new() -> Self {
-        let calculation_chain = CalculationChain::new();
-        let share_string = ShareString::new();
-        let style = Style::new();
+    pub fn new(
+        calculation_chain: CalculationChain,
+        share_string: ShareString,
+        style: Style,
+    ) -> Self {
         Self {
             calculation_chain,
             share_string,
