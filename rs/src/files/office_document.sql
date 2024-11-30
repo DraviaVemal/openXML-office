@@ -11,7 +11,7 @@ CREATE TABLE
         file_content BLOB -- File content as a BLOB
     );
 
--- query : insert_archive_table# Create initial blob archive table
+-- query : insert_archive_table# 
 INSERT INTO
     archive (
         file_name,
