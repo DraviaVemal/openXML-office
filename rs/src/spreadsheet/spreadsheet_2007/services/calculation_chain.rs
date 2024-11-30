@@ -1,6 +1,6 @@
 use crate::{
     files::{OfficeDocument, XmlDocument},
-    get_specific_queries,
+    get_all_queries,
     global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
@@ -17,28 +17,26 @@ pub struct CalculationChain {
 impl Drop for CalculationChain {
     fn drop(&mut self) {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
-            if let Some(select_query) =
-                get_specific_queries!("calculation_chain.sql", "select_calculation_chain_table")
-            {
-                fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
-                    Result::Ok((row.get(0)?, row.get(1)?))
-                }
-                let string_collection = office_doc_ref
-                    .borrow()
-                    .get_connection()
-                    .find_many(&select_query, params![], row_mapper)
-                    .unwrap();
-                if let Some(xml_doc) = self.xml_document.upgrade() {
-                    let mut doc = xml_doc.borrow_mut();
-                    for (cell_id, sheet_id) in string_collection {
-                        let mut attributes = HashMap::new();
-                        attributes.insert("r".to_string(), cell_id);
-                        attributes.insert("i".to_string(), sheet_id);
-                        let _ = doc
-                            .append_child_mut(&0, "c")
-                            .unwrap()
-                            .set_attribute_mut(attributes);
-                    }
+            let queries = get_all_queries!("calculation_chain.sql");
+            let select_query = queries.get("select_calculation_chain_table").unwrap();
+            fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
+                Result::Ok((row.get(0)?, row.get(1)?))
+            }
+            let string_collection = office_doc_ref
+                .borrow()
+                .get_connection()
+                .find_many(&select_query, params![], row_mapper)
+                .unwrap();
+            if let Some(xml_doc) = self.xml_document.upgrade() {
+                let mut doc = xml_doc.borrow_mut();
+                for (cell_id, sheet_id) in string_collection {
+                    let mut attributes = HashMap::new();
+                    attributes.insert("r".to_string(), cell_id);
+                    attributes.insert("i".to_string(), sheet_id);
+                    let _ = doc
+                        .append_child_mut(&0, "c")
+                        .unwrap()
+                        .set_attribute_mut(attributes);
                 }
             }
         }
@@ -93,12 +91,9 @@ impl CalculationChain {
         xml_document: &mut Weak<RefCell<XmlDocument>>,
     ) -> AnyResult<(), AnyError> {
         if let Some(office_doc_ref) = office_document.upgrade() {
-            if let Some(create_query) =
-                get_specific_queries!("calculation_chain.sql", "create_calculation_chain_table")
-            {
-                if let Some(insert_query) =
-                    get_specific_queries!("calculation_chain.sql", "insert_calculation_chain_table")
-                {
+            let queries = get_all_queries!("calculation_chain.sql");
+            if let Some(create_query) = queries.get("create_calculation_chain_table") {
+                if let Some(insert_query) = queries.get("insert_calculation_chain_table") {
                     let office_doc = office_doc_ref
                         .try_borrow()
                         .context("Pulling Office Doc Failed")?;

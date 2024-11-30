@@ -1,4 +1,4 @@
--- query : create_calculation_chain_table# Create initial blob archive table
+-- query : create_calculation_chain_table# 
 CREATE TABLE
     calculation_chain (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
@@ -6,7 +6,7 @@ CREATE TABLE
         sheet_id TEXT NOT NULL -- Sheet of the Cell String
     );
 
--- query : insert_calculation_chain_table# Create initial blob archive table
+-- query : insert_calculation_chain_table# 
 INSERT INTO
     calculation_chain (
         cell, -- Excel Cell ID String
@@ -15,7 +15,7 @@ INSERT INTO
 VALUES
     (?, ?);
 
--- query : select_calculation_chain_table# Create initial blob archive table
+-- query : select_calculation_chain_table# 
 SELECT
     cell,
     sheet_id

@@ -1,7 +1,7 @@
 use crate::{
     file_handling::{compress_content, decompress_content},
     files::{SqliteDatabases, XmlDeSerializer, XmlDocument, XmlSerializer},
-    get_specific_queries,
+    get_all_queries,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
 use rusqlite::{params, Error, Row};
@@ -12,10 +12,7 @@ use std::{
     io::{Cursor, Read, Write},
     rc::{Rc, Weak},
 };
-use zip::{
-    write::{FileOptions, SimpleFileOptions},
-    ZipArchive, ZipWriter,
-};
+use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 #[derive(Debug)]
 pub struct ArchiveRecordModel {
@@ -76,29 +73,28 @@ impl OfficeDocument {
 
     /// Get Xml tree from content
     pub fn get_xml_tree(&self, file_path: &str) -> AnyResult<Option<XmlDocument>, AnyError> {
-        if let Some(query) = get_specific_queries!("office_document.sql", "select_archive_content")
-        {
-            fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordFileModel, Error> {
-                Result::Ok(ArchiveRecordFileModel {
-                    file_content: row.get(0)?,
-                })
-            }
-            let result: Option<ArchiveRecordFileModel> = self
-                .get_connection()
-                .find_one(&query, params![file_path], row_mapper)
-                .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
-            if let Some(query_result) = result {
-                let decompressed_data: Vec<u8> =
-                    decompress_content(&query_result.file_content.unwrap())
-                        .context("Raw Content Decompression Failed")?;
-                let xml_tree: XmlDocument = XmlSerializer::vec_to_xml_doc_tree(decompressed_data)
-                    .context("Xml Serializer Failed")?;
-                Ok(Some(xml_tree))
-            } else {
-                Ok(None)
-            }
+        let queries = get_all_queries!("office_document.sql");
+        let query = queries
+            .get("select_archive_content")
+            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+        fn row_mapper(row: &Row) -> AnyResult<ArchiveRecordFileModel, Error> {
+            Result::Ok(ArchiveRecordFileModel {
+                file_content: row.get(0)?,
+            })
+        }
+        let result: Option<ArchiveRecordFileModel> = self
+            .get_connection()
+            .find_one(&query, params![file_path], row_mapper)
+            .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
+        if let Some(query_result) = result {
+            let decompressed_data: Vec<u8> =
+                decompress_content(&query_result.file_content.unwrap())
+                    .context("Raw Content Decompression Failed")?;
+            let xml_tree: XmlDocument = XmlSerializer::vec_to_xml_doc_tree(decompressed_data)
+                .context("Xml Serializer Failed")?;
+            Ok(Some(xml_tree))
         } else {
-            Err(anyhow!("Get XML Tree of document failed"))
+            Ok(None)
         }
     }
 
@@ -144,63 +140,62 @@ impl OfficeDocument {
 
     /// Initialize Local archive Database
     fn initialize_database(sqlite_databases: &SqliteDatabases) -> AnyResult<usize, AnyError> {
-        if let Some(query) = get_specific_queries!("office_document.sql", "create_archive_table") {
-            sqlite_databases
-                .create_table(&query)
-                .context("Initialize Database Failed for Office Document")
-        } else {
-            Err(anyhow!("Initialize Database Failed"))
-        }
+        let queries = get_all_queries!("office_document.sql");
+        let query = queries
+            .get("create_archive_table")
+            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+        sqlite_databases
+            .create_table(&query)
+            .context("Initialize Database Failed for Office Document")
     }
 
     /// Save the database content into file archive
     fn save_database_into_archive(&self) -> AnyResult<Vec<u8>, AnyError> {
-        if let Some(query) = get_specific_queries!("office_document.sql", "select_all_archive_rows")
-        {
-            let mut buffer = Cursor::new(Vec::new());
-            fn row_mapper(row: &Row) -> Result<ArchiveRecordModel, Error> {
-                Result::Ok(ArchiveRecordModel {
-                    file_name: row.get(0)?,
-                    content_type: row.get(1)?,
-                    compressed_xml_file_size: row.get(2)?,
-                    uncompressed_xml_file_size: row.get(3)?,
-                    compression_level: row.get(4)?,
-                    compression_type: row.get(5)?,
-                    file_content: row.get(6)?,
-                })
-            }
-            let result = self
-                .sqlite_database
-                .find_many(&query, params![], row_mapper)
-                .context("Query Get Many Failed")?;
-            let mut zip_writer: ZipWriter<&mut Cursor<Vec<u8>>> = ZipWriter::new(&mut buffer);
-            let zip_option = SimpleFileOptions::default().compression_level(Some(4));
-            for ArchiveRecordModel {
-                file_name,
-                content_type: _,
-                compressed_xml_file_size: _,
-                uncompressed_xml_file_size: _,
-                compression_level: _,
-                compression_type: _,
-                file_content,
-            } in result
-            {
-                zip_writer
-                    .start_file(file_name, zip_option)
-                    .context("Zip File Write Start Fail")?;
-                if let Some(xml_content_compressed) = file_content {
-                    let uncompressed =
-                        decompress_content(&xml_content_compressed).context("Decompress Error")?;
-                    zip_writer
-                        .write_all(&uncompressed)
-                        .context("Writing compressed data to ZIp")?;
-                }
-            }
-            zip_writer.finish().context("Zip Close Failed")?;
-            Ok(buffer.into_inner())
-        } else {
-            Err(anyhow!("Save Data to Zip File from Database"))
+        let queries = get_all_queries!("office_document.sql");
+        let query = queries
+            .get("select_all_archive_rows")
+            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+        let mut buffer = Cursor::new(Vec::new());
+        fn row_mapper(row: &Row) -> Result<ArchiveRecordModel, Error> {
+            Result::Ok(ArchiveRecordModel {
+                file_name: row.get(0)?,
+                content_type: row.get(1)?,
+                compressed_xml_file_size: row.get(2)?,
+                uncompressed_xml_file_size: row.get(3)?,
+                compression_level: row.get(4)?,
+                compression_type: row.get(5)?,
+                file_content: row.get(6)?,
+            })
         }
+        let result = self
+            .sqlite_database
+            .find_many(&query, params![], row_mapper)
+            .context("Query Get Many Failed")?;
+        let mut zip_writer: ZipWriter<&mut Cursor<Vec<u8>>> = ZipWriter::new(&mut buffer);
+        let zip_option = SimpleFileOptions::default().compression_level(Some(4));
+        for ArchiveRecordModel {
+            file_name,
+            content_type: _,
+            compressed_xml_file_size: _,
+            uncompressed_xml_file_size: _,
+            compression_level: _,
+            compression_type: _,
+            file_content,
+        } in result
+        {
+            zip_writer
+                .start_file(file_name, zip_option)
+                .context("Zip File Write Start Fail")?;
+            if let Some(xml_content_compressed) = file_content {
+                let uncompressed =
+                    decompress_content(&xml_content_compressed).context("Decompress Error")?;
+                zip_writer
+                    .write_all(&uncompressed)
+                    .context("Writing compressed data to ZIp")?;
+            }
+        }
+        zip_writer.finish().context("Zip Close Failed")?;
+        Ok(buffer.into_inner())
     }
 
     /// Read Zip file and load it into database after compression
@@ -233,27 +228,27 @@ impl OfficeDocument {
         file_path: &str,
         uncompressed_data: &mut Vec<u8>,
     ) -> AnyResult<(), AnyError> {
-        if let Some(query) = get_specific_queries!("office_document.sql", "insert_archive_table") {
-            let compression_level = 4;
-            let compressed = compress_content(&uncompressed_data, compression_level)
-                .context("Recompressing in GZip Failed")?;
-            sqlite_database
-                .insert_record(
-                    &query,
-                    params![
-                        file_path,
-                        "todo",
-                        compressed.len(),
-                        uncompressed_data.len(),
-                        compression_level,
-                        "gzip",
-                        compressed
-                    ],
-                )
-                .context("Archive content load failed.")?;
-            Ok(())
-        } else {
-            Err(anyhow!("Insert Query Failed"))
-        }
+        let queries = get_all_queries!("office_document.sql");
+        let query = queries
+            .get("insert_archive_table")
+            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+        let compression_level = 4;
+        let compressed = compress_content(&uncompressed_data, compression_level)
+            .context("Recompressing in GZip Failed")?;
+        sqlite_database
+            .insert_record(
+                &query,
+                params![
+                    file_path,
+                    "todo",
+                    compressed.len(),
+                    uncompressed_data.len(),
+                    compression_level,
+                    "gzip",
+                    compressed
+                ],
+            )
+            .context("Archive content load failed.")?;
+        Ok(())
     }
 }

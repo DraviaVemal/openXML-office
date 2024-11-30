@@ -1,6 +1,6 @@
 use crate::{
     files::{OfficeDocument, XmlDocument},
-    get_specific_queries,
+    get_all_queries,
     global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
@@ -22,7 +22,7 @@ impl Drop for ShareString {
     fn drop(&mut self) {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
             if let Some(select_query) =
-                get_specific_queries!("share_string.sql", "select_share_string_table")
+                get_all_queries!("share_string.sql").get("select_share_string_table")
             {
                 fn row_mapper(row: &Row) -> AnyResult<String, rusqlite::Error> {
                     Result::Ok(row.get(0)?)
@@ -110,46 +110,36 @@ impl ShareString {
         xml_document: &mut Weak<RefCell<XmlDocument>>,
     ) -> AnyResult<(), AnyError> {
         if let Some(office_doc_ref) = office_document.upgrade() {
-            if let Some(create_query) =
-                get_specific_queries!("share_string.sql", "create_share_string_table")
-            {
-                if let Some(insert_query) =
-                    get_specific_queries!("share_string.sql", "insert_share_string_table")
-                {
-                    let office_doc = office_doc_ref
-                        .try_borrow()
-                        .context("Pulling Office Doc Failed")?;
-                    office_doc
-                        .get_connection()
-                        .create_table(&create_query)
-                        .context("Create Share String Table Failed")?;
-                    if let Some(xml_doc) = xml_document.upgrade() {
-                        let mut xml_doc_mut =
-                            xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
-                        if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut(&0, "si") {
-                            for element in elements {
-                                if let Some(child_id) = element.get_first_child_id() {
-                                    if let Some(text_element) =
-                                        xml_doc_mut.pop_element_mut(&child_id)
-                                    {
-                                        let value = text_element
-                                            .get_value()
-                                            .clone()
-                                            .unwrap_or("".to_string());
-                                        let _ = office_doc
-                                            .get_connection()
-                                            .insert_record(&insert_query, params![value])
-                                            .context("Create Share String Table Failed")?;
-                                    }
-                                }
+            let queries = get_all_queries!("share_string.sql");
+            let create_query = queries
+                .get("create_share_string_table")
+                .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+            let insert_query = queries
+                .get("insert_share_string_table")
+                .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+            let office_doc = office_doc_ref
+                .try_borrow()
+                .context("Pulling Office Doc Failed")?;
+            office_doc
+                .get_connection()
+                .create_table(&create_query)
+                .context("Create Share String Table Failed")?;
+            if let Some(xml_doc) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+                if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut(&0, "si") {
+                    for element in elements {
+                        if let Some(child_id) = element.get_first_child_id() {
+                            if let Some(text_element) = xml_doc_mut.pop_element_mut(&child_id) {
+                                let value =
+                                    text_element.get_value().clone().unwrap_or("".to_string());
+                                let _ = office_doc
+                                    .get_connection()
+                                    .insert_record(&insert_query, params![value])
+                                    .context("Create Share String Table Failed")?;
                             }
                         }
                     }
-                } else {
-                    return Err(anyhow!("Insert Query Failed"));
                 }
-            } else {
-                return Err(anyhow!("Create Table Failed"));
             }
         }
         Ok(())

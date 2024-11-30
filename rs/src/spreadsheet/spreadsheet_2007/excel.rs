@@ -1,6 +1,5 @@
 use crate::{
     files::OfficeDocument,
-    get_all_queries,
     global_2007::{
         parts::{ContentTypesPart, CorePropertiesPart, RelationsPart},
         traits::XmlDocumentPart,
@@ -40,7 +39,6 @@ impl Excel {
                 .context("Creating Office Document Struct Failed")?;
         let rc_office_document: Rc<RefCell<OfficeDocument>> =
             Rc::new(RefCell::new(office_document));
-        Self::setup_database_schema(&rc_office_document).context("Excel Schema Setup Failed")?;
         let root_relations = RelationsPart::new(Rc::downgrade(&rc_office_document), None)
             .context("Initialize Root Relation Part failed")?;
         let content_type = ContentTypesPart::new(Rc::downgrade(&rc_office_document), None)
@@ -87,19 +85,5 @@ impl Excel {
 impl Excel {
     fn get_workbook(&mut self) -> &mut WorkbookPart {
         &mut self.workbook
-    }
-
-    /// Initialism table schema for Excel
-    fn setup_database_schema(xml_fs: &Rc<RefCell<OfficeDocument>>) -> AnyResult<(), AnyError> {
-        if let Some(scheme) = get_all_queries!("excel.sql") {
-            for query in scheme {
-                xml_fs
-                    .borrow()
-                    .get_connection()
-                    .create_table(&query)
-                    .context("Excel Schema Initialization Failed")?;
-            }
-        }
-        Ok(())
     }
 }
