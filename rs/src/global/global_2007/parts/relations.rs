@@ -13,7 +13,7 @@ use std::{
 #[derive(Debug)]
 pub struct RelationsPart {
     office_document: Weak<RefCell<OfficeDocument>>,
-    file_tree: Weak<RefCell<XmlDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
     file_name: String,
 }
 
@@ -38,10 +38,10 @@ impl XmlDocumentPart for RelationsPart {
         if let Some(dir_path) = dir_path {
             file_name = format!("{}/_rels/.rels", dir_path.to_string());
         }
-        let file_tree = Self::get_xml_document(&office_document, &file_name)?;
+        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
-            file_tree,
+            xml_document,
             file_name,
         })
     }
@@ -58,7 +58,7 @@ impl XmlDocumentPart for RelationsPart {
         let mut xml_document = XmlDocument::new();
         xml_document
             .create_root_mut("Relationships")
-            .set_attribute(attributes);
+            .set_attribute_mut(attributes);
         Ok(xml_document)
     }
 }
@@ -70,7 +70,7 @@ impl RelationsPart {
         &self,
         content_type: &str,
     ) -> AnyResult<Option<String>, AnyError> {
-        let xml_document_ref: Option<Rc<RefCell<XmlDocument>>> = self.file_tree.borrow().upgrade();
+        let xml_document_ref: Option<Rc<RefCell<XmlDocument>>> = self.xml_document.borrow().upgrade();
         if let Some(xml_document) = xml_document_ref {
             let xml_doc = xml_document
                 .try_borrow_mut()

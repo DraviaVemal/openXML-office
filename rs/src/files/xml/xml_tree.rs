@@ -135,10 +135,10 @@ impl XmlDocument {
     ) -> AnyResult<&mut XmlElement, AnyError> {
         if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
             let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag);
-            element.set_parent_id(*parent_id);
+            element.set_parent_id_mut(*parent_id);
             self.running_id += 1;
-            element.set_id(self.running_id);
-            parent_element.add_children(self.running_id, tag);
+            element.set_id_mut(self.running_id);
+            parent_element.add_children_mut(self.running_id, tag);
             self.xml_element_collection.insert(self.running_id, element);
             Ok(self
                 .xml_element_collection
@@ -262,8 +262,8 @@ impl XmlElement {
         self.children.borrow().len() == 0 && self.value.is_none()
     }
 
-    pub fn get_attribute(&self) -> &Option<HashMap<String, String>> {
-        &self.attributes
+    pub fn get_attribute(&self) -> Option<&HashMap<String, String>> {
+        self.attributes.as_ref()
     }
 
     pub fn get_value(&self) -> &Option<String> {
@@ -284,7 +284,10 @@ impl XmlElement {
     pub fn get_parent_id(&self) -> usize {
         self.parent_id
     }
-    // ########################## Data Write Methods ###########################
+}
+
+// ########################## Data Write Methods ###########################
+impl XmlElement {
     /// Remove the child reference irreversible
     pub fn pop_child_id_mut(&self) -> Option<usize> {
         if self.children.borrow_mut().len() > 0 {
@@ -293,22 +296,26 @@ impl XmlElement {
         None
     }
 
-    fn add_children(&mut self, child_id: usize, tag: &str) {
+    fn add_children_mut(&mut self, child_id: usize, tag: &str) {
         self.children.borrow_mut().push(XmlElementChild {
             id: child_id,
             tag: tag.to_string(),
         });
     }
 
-    fn set_id(&mut self, id: usize) {
+    pub fn get_attribute_mut(&mut self) -> Option<&mut HashMap<String, String>> {
+        self.attributes.as_mut()
+    }
+
+    fn set_id_mut(&mut self, id: usize) {
         self.id = id;
     }
 
-    fn set_parent_id(&mut self, parent_id: usize) {
+    fn set_parent_id_mut(&mut self, parent_id: usize) {
         self.parent_id = parent_id;
     }
 
-    pub fn set_attribute(&mut self, attributes: HashMap<String, String>) -> &mut Self {
+    pub fn set_attribute_mut(&mut self, attributes: HashMap<String, String>) -> &mut Self {
         // TODO :: Validate the Name Space
         self.attributes = Some(attributes);
         self

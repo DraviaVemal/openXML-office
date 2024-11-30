@@ -8,7 +8,7 @@ use std::{cell::RefCell, collections::HashMap, rc::Weak};
 #[derive(Debug)]
 pub struct Style {
     office_document: Weak<RefCell<OfficeDocument>>,
-    file_tree: Weak<RefCell<XmlDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
 }
 
@@ -29,10 +29,10 @@ impl XmlDocumentPart for Style {
         file_path: Option<String>,
     ) -> AnyResult<Self, AnyError> {
         let file_path = file_path.unwrap_or("styles.xml".to_string());
-        let file_tree = Self::get_xml_document(&office_document, &file_path)?;
+        let xml_document = Self::get_xml_document(&office_document, &file_path)?;
         Ok(Self {
             office_document,
-            file_tree,
+            xml_document,
             file_path,
         })
     }
@@ -53,7 +53,7 @@ impl XmlDocumentPart for Style {
         let mut xml_document = XmlDocument::new();
         xml_document
             .create_root_mut("styleSheet")
-            .set_attribute(attributes);
+            .set_attribute_mut(attributes);
         Ok(xml_document)
     }
 }

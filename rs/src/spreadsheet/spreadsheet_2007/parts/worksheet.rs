@@ -8,7 +8,7 @@ use std::{cell::RefCell, rc::Weak};
 #[derive(Debug)]
 pub struct WorkSheet {
     office_document: Weak<RefCell<OfficeDocument>>,
-    file_tree: Weak<RefCell<XmlDocument>>,
+    xml_document: Weak<RefCell<XmlDocument>>,
     common_service: Weak<RefCell<CommonServices>>,
     file_name: String,
 }
@@ -36,10 +36,10 @@ impl WorkSheet {
         if let Some(sheet_name) = sheet_name {
             file_name = sheet_name.to_string();
         }
-        let file_tree = Self::get_xml_document(&office_document, &file_name)?;
+        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         return Ok(Self {
             office_document,
-            file_tree,
+            xml_document,
             common_service,
             file_name,
         });
