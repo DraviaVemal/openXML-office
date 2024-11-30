@@ -413,7 +413,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "draviavema_openxml_office"
+name = "draviavemal_openxml_office"
 version = "4.0.0"
 dependencies = [
  "anyhow",
@@ -760,7 +760,7 @@ name = "openxmloffice_ffi"
 version = "4.0.0"
 dependencies = [
  "anyhow",
- "draviavema_openxml_office",
+ "draviavemal_openxml_office",
  "flatbuffers",
 ]
 

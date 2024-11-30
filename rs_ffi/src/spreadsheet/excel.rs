@@ -1,5 +1,5 @@
 use crate::{chain_error, openxml_office_ffi, StatusCode};
-use draviavema_openxml_office::spreadsheet_2007::{Excel, ExcelPropertiesModel};
+use draviavemal_openxml_office::spreadsheet_2007::{Excel, ExcelPropertiesModel};
 use std::{
     ffi::{c_char, CStr, CString},
     slice::from_raw_parts,

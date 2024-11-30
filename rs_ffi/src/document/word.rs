@@ -1,5 +1,5 @@
 use crate::{chain_error, openxml_office_ffi, StatusCode};
-use draviavema_openxml_office::document_2007::{Word, WordPropertiesModel};
+use draviavemal_openxml_office::document_2007::{Word, WordPropertiesModel};
 use std::{
     ffi::{c_char, CStr, CString},
     slice::from_raw_parts,
