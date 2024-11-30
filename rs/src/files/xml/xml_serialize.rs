@@ -1,5 +1,6 @@
 use crate::files::XmlDocument;
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
+use quick_xml::events::BytesStart;
 use quick_xml::{
     events::{
         attributes::{AttrError, Attribute},
@@ -38,18 +39,7 @@ impl XmlSerializer {
                 Result::Ok(Event::Start(element)) => {
                     let tag: String =
                         String::from_utf8_lossy(element.name().into_inner()).to_string();
-                    let attributes: HashMap<String, String> = element
-                        .attributes()
-                        .map(|attribute_result: Result<Attribute<'_>, AttrError>| {
-                            let attribute: Attribute<'_> =
-                                attribute_result.context("Failed to parse attribute")?;
-                            let key: String =
-                                String::from_utf8_lossy(attribute.key.into_inner()).to_string();
-                            let value: String =
-                                String::from_utf8_lossy(&attribute.value).to_string();
-                            Ok((key, value))
-                        })
-                        .collect::<AnyResult<HashMap<String, String>>>()?;
+                    let attributes = Self::get_attributes_string(element)?;
                     // Update tree structure
                     if root_loaded {
                         // Add child to parent
@@ -58,7 +48,7 @@ impl XmlSerializer {
                             .context("Insert XML Child Failed.")?
                             .set_attribute_mut(attributes)
                             .context("Attribute Update Error")?
-                            .get_id() as usize;
+                            .get_id();
                     } else {
                         // Create the root element
                         active_xml_element_id = xml_document
@@ -66,7 +56,7 @@ impl XmlSerializer {
                             .context("Create XML Root Element Failed")?
                             .set_attribute_mut(attributes)
                             .context("Attribute Update Error")?
-                            .get_id() as usize;
+                            .get_id();
                         root_loaded = true
                     }
                 }
@@ -75,18 +65,7 @@ impl XmlSerializer {
                 Result::Ok(Event::Empty(element)) => {
                     let tag: String =
                         String::from_utf8_lossy(element.name().into_inner()).to_string();
-                    let attributes: HashMap<String, String> = element
-                        .attributes()
-                        .map(|attribute_result: Result<Attribute<'_>, AttrError>| {
-                            let attribute: Attribute<'_> =
-                                attribute_result.context("Failed to parse attribute")?;
-                            let key: String =
-                                String::from_utf8_lossy(attribute.key.into_inner()).to_string();
-                            let value: String =
-                                String::from_utf8_lossy(&attribute.value).to_string();
-                            Ok((key, value))
-                        })
-                        .collect::<AnyResult<HashMap<String, String>>>()?;
+                    let attributes = Self::get_attributes_string(element)?;
                     xml_document
                         .append_child_mut(&active_xml_element_id, &tag)
                         .context("Insert XML Child Failed.")?
@@ -101,7 +80,7 @@ impl XmlSerializer {
                         .get_element_mut(&active_xml_element_id)
                         .ok_or(anyhow!("Converting Option to Result Failed"))
                         .context("Getting Target Element Failed")?
-                        .set_value(text.to_string());
+                        .set_value_mut(text.to_string());
                 }
 
                 // Handle end tag
@@ -128,5 +107,18 @@ impl XmlSerializer {
             }
             temp_buffer.clear();
         }
+    }
+
+    fn get_attributes_string(element: BytesStart) -> AnyResult<HashMap<String, String>, AnyError> {
+        element
+            .attributes()
+            .map(|attribute_result: Result<Attribute<'_>, AttrError>| {
+                let attribute: Attribute<'_> =
+                    attribute_result.context("Failed to parse attribute")?;
+                let key: String = String::from_utf8_lossy(attribute.key.into_inner()).to_string();
+                let value: String = String::from_utf8_lossy(&attribute.value).to_string();
+                Ok((key, value))
+            })
+            .collect::<AnyResult<HashMap<String, String>>>()
     }
 }

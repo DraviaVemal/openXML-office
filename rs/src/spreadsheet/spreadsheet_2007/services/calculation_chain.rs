@@ -1,3 +1,4 @@
+use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     get_all_queries,
@@ -50,24 +51,7 @@ impl Drop for CalculationChain {
     }
 }
 
-impl XmlDocumentPart for CalculationChain {
-    fn new(
-        office_document: Weak<RefCell<OfficeDocument>>,
-        file_path: Option<String>,
-    ) -> AnyResult<Self, AnyError> {
-        let file_path = file_path.unwrap_or("xl/calcChain.xml".to_string());
-        let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
-        Self::load_content_to_database(&office_document, &mut xml_document)
-            .context("Load Calculation Chain To DB Failed")?;
-        Ok(Self {
-            office_document,
-            xml_document,
-            file_path,
-        })
-    }
-
-    fn flush(self) {}
-
+impl XmlDocumentPartCommon for CalculationChain {
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
         let mut attributes: HashMap<String, String> = HashMap::new();
@@ -82,6 +66,23 @@ impl XmlDocumentPart for CalculationChain {
             .set_attribute_mut(attributes)
             .context("Set Attribute Failed")?;
         Ok(xml_document)
+    }
+}
+
+impl XmlDocumentPart for CalculationChain {
+    fn new(
+        office_document: Weak<RefCell<OfficeDocument>>,
+        file_path: Option<String>,
+    ) -> AnyResult<Self, AnyError> {
+        let file_path = file_path.unwrap_or("xl/calcChain.xml".to_string());
+        let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
+        Self::load_content_to_database(&office_document, &mut xml_document)
+            .context("Load Calculation Chain To DB Failed")?;
+        Ok(Self {
+            office_document,
+            xml_document,
+            file_path,
+        })
     }
 }
 
@@ -104,7 +105,7 @@ impl CalculationChain {
                     if let Some(xml_doc) = xml_document.upgrade() {
                         let mut xml_doc_mut =
                             xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
-                        if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut(&0, "c") {
+                        if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("c", None) {
                             for element in elements {
                                 if let Some(attributes) = element.get_attribute() {
                                     let _ = office_doc
