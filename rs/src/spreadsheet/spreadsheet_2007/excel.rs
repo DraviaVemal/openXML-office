@@ -8,6 +8,7 @@ use crate::{
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
+use crate::global_2007::traits::XmlDocumentPartCommon;
 
 #[derive(Debug)]
 pub struct Excel {
@@ -29,7 +30,7 @@ impl Excel {
     pub fn default() -> ExcelPropertiesModel {
         ExcelPropertiesModel { is_in_memory: true }
     }
-    /// Create new or clone source file to start working on excel
+    /// Create new or clone source file to start working on Excel
     pub fn new(
         file_name: Option<String>,
         excel_setting: ExcelPropertiesModel,

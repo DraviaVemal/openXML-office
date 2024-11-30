@@ -1,8 +1,9 @@
+use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::traits::XmlDocumentPart,
 };
-use anyhow::{Context, Error as AnyError, Result as AnyResult};
+use anyhow::{Error as AnyError, Result as AnyResult};
 use chrono::Utc;
 use std::{cell::RefCell, rc::Weak};
 
@@ -18,17 +19,12 @@ impl Drop for CorePropertiesPart {
         // Update Last modified date part
         if let Some(xml_document_ref) = self.xml_document.upgrade() {
             let mut xml_document = xml_document_ref.borrow_mut();
-            let start_element_id = xml_document.get_root().unwrap().get_id();
-            match xml_document.get_first_element_mut(
-                &start_element_id,
-                vec![
-                    "cp:coreProperties".to_string(),
-                    "dcterms:modified".to_string(),
-                ],
-            ) {
+            match xml_document
+                .get_first_element_mut(vec!["cp:coreProperties", "dcterms:modified"], None)
+            {
                 Ok(result) => {
                     if let Some(element) = result {
-                        element.set_value(
+                        element.set_value_mut(
                             Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
                         );
                     }
@@ -46,6 +42,13 @@ impl Drop for CorePropertiesPart {
     }
 }
 
+impl XmlDocumentPartCommon for CorePropertiesPart {
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+        XmlSerializer::vec_to_xml_doc_tree(include_str!("core_properties.xml").as_bytes().to_vec())
+    }
+}
+
 /// ######################### Train implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for CorePropertiesPart {
     fn new(
@@ -59,14 +62,6 @@ impl XmlDocumentPart for CorePropertiesPart {
             xml_document,
             file_name,
         })
-    }
-
-    /// Save the current file state
-    fn flush(self) {}
-
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        XmlSerializer::vec_to_xml_doc_tree(include_str!("core_properties.xml").as_bytes().to_vec())
     }
 }
 

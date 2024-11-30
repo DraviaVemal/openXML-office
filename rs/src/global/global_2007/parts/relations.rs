@@ -1,3 +1,4 @@
+use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     global_2007::traits::XmlDocumentPart,
@@ -28,26 +29,7 @@ impl Drop for RelationsPart {
     }
 }
 
-/// ######################### Train implementation of XML Part - Only accessible within crate ##############
-impl XmlDocumentPart for RelationsPart {
-    fn new(
-        office_document: Weak<RefCell<OfficeDocument>>,
-        dir_path: Option<String>,
-    ) -> AnyResult<Self, AnyError> {
-        let mut file_name = "_rels/.rels".to_string();
-        if let Some(specific_file_name) = dir_path {
-            file_name = specific_file_name;
-        }
-        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
-        Ok(Self {
-            office_document,
-            xml_document,
-            file_name,
-        })
-    }
-
-    fn flush(self) {}
-
+impl XmlDocumentPartCommon for RelationsPart {
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
         let mut attributes: HashMap<String, String> = HashMap::new();
@@ -65,6 +47,25 @@ impl XmlDocumentPart for RelationsPart {
     }
 }
 
+/// ######################### Train implementation of XML Part - Only accessible within crate ##############
+impl XmlDocumentPart for RelationsPart {
+    fn new(
+        office_document: Weak<RefCell<OfficeDocument>>,
+        dir_path: Option<String>,
+    ) -> AnyResult<Self, AnyError> {
+        let mut file_name = "_rels/.rels".to_string();
+        if let Some(specific_file_name) = dir_path {
+            file_name = specific_file_name;
+        }
+        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
+        Ok(Self {
+            office_document,
+            xml_document,
+            file_name,
+        })
+    }
+}
+
 impl RelationsPart {
     /// Get Relation Target based on Type
     /// Note: This will get the first element match the criteria
@@ -78,20 +79,16 @@ impl RelationsPart {
             let xml_doc = xml_document
                 .try_borrow_mut()
                 .context("XML Document Borrow Failed")?;
-            if let Some(xml_root) = xml_doc.get_root() {
-                if let Some(result) =
-                    xml_doc.get_element_by_attribute(&xml_root.get_id(), "Type", content_type)
-                {
-                    return Ok(Some(
-                        result
-                            .get_attribute()
-                            .as_ref()
-                            .unwrap()
-                            .get("Target")
-                            .unwrap()
-                            .to_string(),
-                    ));
-                }
+            if let Some(result) = xml_doc.get_element_by_attribute("Type", content_type, None) {
+                return Ok(Some(
+                    result
+                        .get_attribute()
+                        .as_ref()
+                        .unwrap()
+                        .get("Target")
+                        .unwrap()
+                        .to_string(),
+                ));
             }
         }
         Ok(None)
