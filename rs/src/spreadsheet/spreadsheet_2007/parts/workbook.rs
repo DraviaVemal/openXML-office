@@ -54,7 +54,7 @@ impl XmlDocumentPart for WorkbookPart {
             .display()
             .to_string();
         let relations_part =
-            RelationsPart::new(office_document.clone(), Some(relation_path.clone()))
+            RelationsPart::new(office_document.clone(), Some(format!("{}/_rels/workbook.xml.rels",relation_path)))
                 .context("Creating Relation ship part for workbook failed.")?;
         let theme_part_path: Option<String> = relations_part
             .get_relationship_target_by_type(

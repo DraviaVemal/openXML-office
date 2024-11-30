@@ -35,8 +35,8 @@ impl XmlDocumentPart for RelationsPart {
         dir_path: Option<String>,
     ) -> AnyResult<Self, AnyError> {
         let mut file_name = "_rels/.rels".to_string();
-        if let Some(dir_path) = dir_path {
-            file_name = format!("{}/_rels/.rels", dir_path.to_string());
+        if let Some(specific_file_name) = dir_path {
+            file_name = specific_file_name;
         }
         let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
@@ -70,7 +70,8 @@ impl RelationsPart {
         &self,
         content_type: &str,
     ) -> AnyResult<Option<String>, AnyError> {
-        let xml_document_ref: Option<Rc<RefCell<XmlDocument>>> = self.xml_document.borrow().upgrade();
+        let xml_document_ref: Option<Rc<RefCell<XmlDocument>>> =
+            self.xml_document.borrow().upgrade();
         if let Some(xml_document) = xml_document_ref {
             let xml_doc = xml_document
                 .try_borrow_mut()
