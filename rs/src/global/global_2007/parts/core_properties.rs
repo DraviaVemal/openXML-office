@@ -18,9 +18,14 @@ impl Drop for CorePropertiesPart {
         // Update Last modified date part
         if let Some(xml_document_ref) = self.file_tree.upgrade() {
             let mut xml_document = xml_document_ref.borrow_mut();
-            if let Some(element) =
-                xml_document.find_first_element_mut("cp:coreProperties->dcterms:modified")
-            {
+            let start_element_id = xml_document.get_root().unwrap().get_id();
+            if let Some(element) = xml_document.get_first_element_mut(
+                &start_element_id,
+                vec![
+                    "cp:coreProperties".to_string(),
+                    "dcterms:modified".to_string(),
+                ],
+            ) {
                 element.set_value(Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true));
             }
         }

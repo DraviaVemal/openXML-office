@@ -54,13 +54,14 @@ impl XmlSerializer {
                     if root_loaded {
                         // Add child to parent
                         active_xml_element_id = xml_document
-                            .insert_element(&active_xml_element_id, &tag)
+                            .insert_child_mut(&active_xml_element_id, &tag)
+                            .context("Insert XML Child Failed.")?
                             .set_attribute(attributes)
                             .get_id() as usize;
                     } else {
                         // Create the root element
                         active_xml_element_id = xml_document
-                            .create_root(&tag)
+                            .create_root_mut(&tag)
                             .set_attribute(attributes)
                             .get_id() as usize;
                         root_loaded = true
@@ -84,7 +85,8 @@ impl XmlSerializer {
                         })
                         .collect::<AnyResult<HashMap<String, String>>>()?;
                     xml_document
-                        .insert_element(&active_xml_element_id, &tag)
+                        .insert_child_mut(&active_xml_element_id, &tag)
+                        .context("Insert XML Child Failed.")?
                         .set_attribute(attributes);
                 }
 
@@ -92,7 +94,7 @@ impl XmlSerializer {
                 Result::Ok(Event::Text(byte_text)) => {
                     let text = byte_text.unescape().context("XML Text parsing error")?;
                     xml_document
-                        .get_element_mut(active_xml_element_id)
+                        .get_element_mut(&active_xml_element_id)
                         .ok_or(anyhow!("Converting Option to Result Failed"))
                         .context("Getting Target Element Failed")?
                         .set_value(text.to_string());
@@ -104,7 +106,7 @@ impl XmlSerializer {
                     let tag: String =
                         String::from_utf8_lossy(element.name().into_inner()).to_string();
                     let element = xml_document
-                        .get_element_mut(active_xml_element_id)
+                        .get_element_mut(&active_xml_element_id)
                         .ok_or(anyhow!("Converting Option to Result Failed"))
                         .context("Getting Target Element Failed")?;
                     if element.get_tag() == tag {

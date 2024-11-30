@@ -48,7 +48,7 @@ impl XmlDocumentPart for ShareString {
             "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
         );
         let mut xml_document = XmlDocument::new();
-        xml_document.create_root("sst").set_attribute(attributes);
+        xml_document.create_root_mut("sst").set_attribute(attributes);
         Ok(xml_document)
     }
 }
