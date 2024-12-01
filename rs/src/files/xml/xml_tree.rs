@@ -264,7 +264,7 @@ impl XmlDocument {
         {
             Ok(self.xml_element_collection.get_mut(&element_id))
         } else {
-            Ok(None)
+            Ok(None) 
         }
     }
 
