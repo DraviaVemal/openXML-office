@@ -5,7 +5,11 @@ use std::{cell::RefCell, rc::Weak};
 
 pub trait XmlDocumentPartCommon {
     /// Save the current file state
-    fn flush(self) {}
+    fn flush(self)
+    where
+        Self: Sized,
+    {
+    }
     /// Get content of the current xml
     fn get_xml_document(
         office_document: &Weak<RefCell<OfficeDocument>>,
@@ -45,8 +49,8 @@ pub trait XmlDocumentServicePart: XmlDocumentPartCommon {
     where
         Self: Sized;
 }
-
-pub trait XmlDocumentPart: XmlDocumentPartCommon + Drop {
+#[warn(drop_bounds)]
+pub trait XmlDocumentPart: XmlDocumentPartCommon {
     /// Create new object with file connector handle
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
