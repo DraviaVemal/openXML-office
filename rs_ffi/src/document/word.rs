@@ -1,7 +1,7 @@
 use crate::{chain_error, openxml_office_ffi, StatusCode};
 use draviavemal_openxml_office::document_2007::{Word, WordPropertiesModel};
 use std::{
-    ffi::{c_char, CStr, CString},
+    ffi::{c_char, c_void, CStr, CString},
     slice::from_raw_parts,
 };
 
@@ -14,7 +14,7 @@ pub extern "C" fn word_create(
     file_name: *const c_char,
     buffer: *const u8,
     buffer_size: usize,
-    out_word: *mut *mut Word,
+    out_word: *mut *mut c_void,
     out_error: *mut *const c_char,
 ) -> i8 {
     let file_name = if file_name.is_null() {
@@ -45,7 +45,7 @@ pub extern "C" fn word_create(
             match word {
                 Ok(word) => {
                     unsafe {
-                        *out_word = Box::into_raw(Box::new(word));
+                        *out_word = Box::into_raw(Box::new(word)) as *mut c_void;
                     }
                     StatusCode::Success as i8
                 }
@@ -65,7 +65,7 @@ pub extern "C" fn word_create(
 #[no_mangle]
 ///Save the Word File in provided file path
 pub extern "C" fn word_save_as(
-    word_ptr: *const u8,
+    word_ptr: *const c_void,
     file_name: *const c_char,
     out_error: *mut *const c_char,
 ) -> i8 {
