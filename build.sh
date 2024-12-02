@@ -29,6 +29,9 @@ rm -rf "$GO_DIR/openxml_office_ffi"
 rm -rf "$JAVA_DIR/openxml_office_ffi"
 rm -rf "$PYTHON_DIR/openxml_office_ffi"
 
+# Remove Previous Build Results
+rm -rf target
+
 # Find and compile each .fbs file
 find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
   # Get the directory of the .fbs file relative to SOURCE_DIR
@@ -68,6 +71,13 @@ cargo build $release_flag --target x86_64-pc-windows-gnu
 
 # Linux
 cargo build $release_flag --target x86_64-unknown-linux-gnu
+
+# Python wheel
+cd rs_ffi
+
+maturin build $release_flag -b cffi
+
+cd ..
 
 # Mac osX
 # cargo build --release --target x86_64-apple-darwin

@@ -1,7 +1,7 @@
 use crate::{chain_error, openxml_office_ffi, StatusCode};
 use draviavemal_openxml_office::presentation_2007::{PowerPoint, PowerPointPropertiesModel};
 use std::{
-    ffi::{c_char, CStr, CString},
+    ffi::{c_char, c_void, CStr, CString},
     slice::from_raw_parts,
 };
 
@@ -14,7 +14,7 @@ pub extern "C" fn power_point_create(
     file_name: *const c_char,
     buffer: *const u8,
     buffer_size: usize,
-    out_power_point: *mut *mut PowerPoint,
+    out_power_point: *mut *mut c_void,
     out_error: *mut *const c_char,
 ) -> i8 {
     let file_name = if file_name.is_null() {
@@ -45,7 +45,7 @@ pub extern "C" fn power_point_create(
             match power_point {
                 Ok(power_point) => {
                     unsafe {
-                        *out_power_point = Box::into_raw(Box::new(power_point));
+                        *out_power_point = Box::into_raw(Box::new(power_point)) as *mut c_void;
                     }
                     StatusCode::Success as i8
                 }
@@ -65,7 +65,7 @@ pub extern "C" fn power_point_create(
 #[no_mangle]
 ///Save the Power Point File in provided file path
 pub extern "C" fn power_point_save_as(
-    power_point_ptr: *const u8,
+    power_point_ptr: *const c_void,
     file_name: *const c_char,
     out_error: *mut *const c_char,
 ) -> i8 {
