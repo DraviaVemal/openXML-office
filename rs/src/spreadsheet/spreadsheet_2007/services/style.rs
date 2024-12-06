@@ -2,8 +2,8 @@ use crate::files::{OfficeDocument, XmlDocument, XmlElement};
 use crate::get_all_queries;
 use crate::global_2007::traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon};
 use crate::spreadsheet_2007::models::{
-    BorderSetting, BorderStyleValues, ColorSetting, ColorSettingTypeValues, FillStyle, FontStyle,
-    PatternTypeValues, SchemeValues,
+    BorderSetting, BorderStyleValues, CellXfs, ColorSetting, ColorSettingTypeValues, FillStyle,
+    FontStyle, HorizontalAlignmentValues, PatternTypeValues, SchemeValues, VerticalAlignmentValues,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::params;
@@ -20,6 +20,8 @@ pub struct Style {
 impl Drop for Style {
     fn drop(&mut self) {
         if let Some(xml_tree) = self.office_document.upgrade() {
+            let _ = Self::save_content_to_tree(&self.office_document, &mut self.xml_document)
+                .context("Load Share String To DB Failed");
             let _ = xml_tree
                 .try_borrow_mut()
                 .unwrap()
@@ -89,8 +91,11 @@ impl Style {
             let create_query_border_style = queries
                 .get("create_border_style_table")
                 .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-            let create_query_cell_style = queries
-                .get("create_cell_style_table")
+            let create_query_cell_style_xfs = queries
+                .get("create_cell_style_xfs_table")
+                .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+            let create_query_cell_xfs = queries
+                .get("create_cell_xfs_table")
                 .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
             office_doc
                 .get_connection()
@@ -110,9 +115,20 @@ impl Style {
                 .context("Create Border Style Table Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query_cell_style)
+                .create_table(&create_query_cell_style_xfs)
+                .context("Create Cell Style Table Failed")?;
+            office_doc
+                .get_connection()
+                .create_table(&create_query_cell_xfs)
                 .context("Create Cell Style Table Failed")?;
         }
+        Ok(())
+    }
+
+    fn save_content_to_tree(
+        office_document: &Weak<RefCell<OfficeDocument>>,
+        xml_document: &mut Weak<RefCell<XmlDocument>>,
+    ) -> AnyResult<(), AnyError> {
         Ok(())
     }
 
@@ -129,13 +145,12 @@ impl Style {
             let queries = get_all_queries!("style.sql");
             Self::initialize_database(office_document, &queries)
                 .context("Database Initialization Failed")?;
-
             if let Some(xml_doc) = xml_document.upgrade() {
                 let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
                 // Load Number Format Region
                 if let Some(number_formats) = xml_doc_mut
                     .pop_elements_by_tag_mut("numFmts", None)
-                    .context("Failed find the Target node")?
+                    .context("Failed find the Target number format node")?
                     .pop()
                 {
                     loop {
@@ -169,7 +184,7 @@ impl Style {
                 }
                 if let Some(fonts) = xml_doc_mut
                     .pop_elements_by_tag_mut("fonts", None)
-                    .context("Failed find the Target node")?
+                    .context("Failed find the Target font node")?
                     .pop()
                 {
                     // fonts
@@ -307,7 +322,7 @@ impl Style {
                 }
                 if let Some(fills) = xml_doc_mut
                     .pop_elements_by_tag_mut("fills", None)
-                    .context("Failed find the Target node")?
+                    .context("Failed find the Target fill node")?
                     .pop()
                 {
                     loop {
@@ -449,7 +464,7 @@ impl Style {
                 }
                 if let Some(borders) = xml_doc_mut
                     .pop_elements_by_tag_mut("borders", None)
-                    .context("Failed find the Target node")?
+                    .context("Failed find the Target border node")?
                     .pop()
                 {
                     loop {
@@ -467,7 +482,7 @@ impl Style {
                                         {
                                             match current_element.get_tag() {
                                                 "left" => {
-                                                    deserialize_border_setting(
+                                                    Style::deserialize_border_setting(
                                                         &current_element,
                                                         &mut left_border,
                                                         &mut xml_doc_mut,
@@ -475,7 +490,7 @@ impl Style {
                                                     .context("Left Border Decode Failed")?;
                                                 }
                                                 "right" => {
-                                                    deserialize_border_setting(
+                                                    Style::deserialize_border_setting(
                                                         &current_element,
                                                         &mut right_border,
                                                         &mut xml_doc_mut,
@@ -483,7 +498,7 @@ impl Style {
                                                     .context("Left Border Decode Failed")?;
                                                 }
                                                 "top" => {
-                                                    deserialize_border_setting(
+                                                    Style::deserialize_border_setting(
                                                         &current_element,
                                                         &mut top_border,
                                                         &mut xml_doc_mut,
@@ -491,7 +506,7 @@ impl Style {
                                                     .context("Left Border Decode Failed")?;
                                                 }
                                                 "bottom" => {
-                                                    deserialize_border_setting(
+                                                    Style::deserialize_border_setting(
                                                         &current_element,
                                                         &mut bottom_border,
                                                         &mut xml_doc_mut,
@@ -499,7 +514,7 @@ impl Style {
                                                     .context("Left Border Decode Failed")?;
                                                 }
                                                 "diagonal" => {
-                                                    deserialize_border_setting(
+                                                    Style::deserialize_border_setting(
                                                         &current_element,
                                                         &mut diagonal_border,
                                                         &mut xml_doc_mut,
@@ -544,73 +559,217 @@ impl Style {
                         }
                     }
                 }
-
-                if let Some(cell_style_xf) = xml_doc_mut
-                    .pop_elements_by_tag_mut("cell_style_xfs", None)
-                    .context("Failed find the Target node")?
+                if let Some(cell_style_xfs) = xml_doc_mut
+                    .pop_elements_by_tag_mut("cellStyleXfs", None)
+                    .context("Failed find the Target cell style xfs node")?
                     .pop()
-                {}
+                {
+                    Style::deserialize_cell_style(
+                        cell_style_xfs,
+                        &mut xml_doc_mut,
+                        &office_doc,
+                        &queries,
+                        "insert_cell_style_xfs_table",
+                    )
+                    .context("Deserializing Cell Style Xfs Failed")?;
+                }
                 if let Some(cell_xfs) = xml_doc_mut
-                    .pop_elements_by_tag_mut("cell_xfs", None)
-                    .context("Failed find the Target node")?
+                    .pop_elements_by_tag_mut("cellXfs", None)
+                    .context("Failed find the Target cell xfs node")?
                     .pop()
-                {}
-                if let Some(cell_styles) = xml_doc_mut
-                    .pop_elements_by_tag_mut("cell_styles", None)
-                    .context("Failed find the Target node")?
-                    .pop()
-                {}
-                if let Some(dxf) = xml_doc_mut
-                    .pop_elements_by_tag_mut("dxfs", None)
-                    .context("Failed find the Target node")?
-                    .pop()
-                {}
-                if let Some(table_style) = xml_doc_mut
-                    .pop_elements_by_tag_mut("table_styles", None)
-                    .context("Failed find the Target node")?
-                    .pop()
-                {}
+                {
+                    Style::deserialize_cell_style(
+                        cell_xfs,
+                        &mut xml_doc_mut,
+                        &office_doc,
+                        &queries,
+                        "insert_cell_xfs_table",
+                    )
+                    .context("Deserializing Cell Xfs Failed")?;
+                }
+                // if let Some(cell_styles) = xml_doc_mut
+                //     .pop_elements_by_tag_mut("cell_styles", None)
+                //     .context("Failed find the Target node")?
+                //     .pop()
+                // {}
+                // if let Some(dxf) = xml_doc_mut
+                //     .pop_elements_by_tag_mut("dxfs", None)
+                //     .context("Failed find the Target node")?
+                //     .pop()
+                // {}
+                // if let Some(table_style) = xml_doc_mut
+                //     .pop_elements_by_tag_mut("table_styles", None)
+                //     .context("Failed find the Target node")?
+                //     .pop()
+                // {}
             }
         }
         Ok(())
     }
-}
+    pub(crate) fn deserialize_cell_style(
+        style_xfs: XmlElement,
+        xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
+        office_doc: &std::cell::Ref<'_, OfficeDocument>,
+        queries: &HashMap<String, String>,
+        query_target: &str,
+    ) -> Result<(), AnyError> {
+        loop {
+            if let Some(xf_id) = style_xfs.pop_child_id_mut() {
+                let mut cell_xf = CellXfs::default();
+                if let Some(current_element) = xml_doc_mut.pop_element_mut(&xf_id) {
+                    if let Some(attributes) = current_element.get_attribute() {
+                        if let Some(number_format_id) = attributes.get("numFmtId") {
+                            cell_xf.number_format_id = number_format_id
+                                .parse()
+                                .context("Number Number Format Id Parse Failed")?;
+                        }
+                        if let Some(font_id) = attributes.get("fontId") {
+                            cell_xf.font_id =
+                                font_id.parse().context("Number Font Id Parse Failed")?;
+                        }
+                        if let Some(fill_id) = attributes.get("fillId") {
+                            cell_xf.fill_id =
+                                fill_id.parse().context("Number Fill Id Parse Failed")?;
+                        }
+                        if let Some(border_id) = attributes.get("borderId") {
+                            cell_xf.border_id =
+                                border_id.parse().context("Number Border Id Parse Failed")?;
+                        }
+                        if let Some(format_id) = attributes.get("xfId") {
+                            cell_xf.format_id =
+                                format_id.parse().context("Number Format Id Parse Failed")?;
+                        }
+                        if let Some(apply_protection) = attributes.get("applyProtection") {
+                            cell_xf.apply_protection = apply_protection
+                                .parse()
+                                .context("Number Apply Protection Parse Failed")?;
+                        }
+                        if let Some(apply_alignment) = attributes.get("applyAlignment") {
+                            cell_xf.apply_alignment = apply_alignment
+                                .parse()
+                                .context("Number Apply Alignment Parse Failed")?;
+                        }
+                        if let Some(apply_border) = attributes.get("applyBorder") {
+                            cell_xf.apply_border = apply_border
+                                .parse()
+                                .context("Number Apply Border Parse Failed")?;
+                        }
+                        if let Some(apply_fill) = attributes.get("applyFill") {
+                            cell_xf.apply_fill = apply_fill
+                                .parse()
+                                .context("Number Apply Fill Parse Failed")?;
+                        }
+                        if let Some(apply_font) = attributes.get("applyFont") {
+                            cell_xf.apply_font = apply_font
+                                .parse()
+                                .context("Number Apply Font Parse Failed")?;
+                        }
+                        if let Some(apply_number_format) = attributes.get("applyNumberFormat") {
+                            cell_xf.apply_number_format = apply_number_format
+                                .parse()
+                                .context("Number Apply Number Format Parse Failed")?;
+                        }
+                        // Load Alignment Values if exist
+                        if let Some(alignment_id) = current_element.pop_child_id_mut() {
+                            if let Some(alignment_element) =
+                                xml_doc_mut.pop_element_mut(&alignment_id)
+                            {
+                                if let Some(alignment_attributes) =
+                                    alignment_element.get_attribute()
+                                {
+                                    if let Some(is_wrap_text) = alignment_attributes.get("wrapText")
+                                    {
+                                        cell_xf.is_wrap_text = is_wrap_text
+                                            .parse()
+                                            .context("Number Wrap Text Parse Failed")?;
+                                    }
+                                    if let Some(vertical_alignment) =
+                                        alignment_attributes.get("horizontal")
+                                    {
+                                        cell_xf.vertical_alignment =
+                                            VerticalAlignmentValues::get_enum(vertical_alignment);
+                                    }
+                                    if let Some(horizontal_alignment) =
+                                        alignment_attributes.get("horizontal")
+                                    {
+                                        cell_xf.horizontal_alignment =
+                                            HorizontalAlignmentValues::get_enum(
+                                                horizontal_alignment,
+                                            );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    let insert_query_style_xfs = queries
+                        .get(query_target)
+                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+                    office_doc
+                        .get_connection()
+                        .insert_record(
+                            &insert_query_style_xfs,
+                            params![
+                                cell_xf.format_id,
+                                cell_xf.number_format_id,
+                                cell_xf.font_id,
+                                cell_xf.fill_id,
+                                cell_xf.border_id,
+                                cell_xf.apply_font,
+                                cell_xf.apply_alignment,
+                                cell_xf.apply_fill,
+                                cell_xf.apply_border,
+                                cell_xf.apply_number_format,
+                                cell_xf.apply_protection,
+                                cell_xf.is_wrap_text,
+                                HorizontalAlignmentValues::get_string(cell_xf.horizontal_alignment),
+                                VerticalAlignmentValues::get_string(cell_xf.vertical_alignment),
+                            ],
+                        )
+                        .context("Insert border Style Failed")?;
+                }
+            } else {
+                break;
+            }
+        }
+        Ok(())
+    }
 
-fn deserialize_border_setting(
-    current_element: &XmlElement,
-    border: &mut BorderSetting,
-    xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
-) -> Result<(), AnyError> {
-    Ok(if let Some(attributes) = current_element.get_attribute() {
-        if let Some(style) = attributes.get("style") {
-            border.style = BorderStyleValues::get_enum(&style);
-            if border.style != BorderStyleValues::None {
-                if let Some(color_id) = current_element.pop_child_id_mut() {
-                    if let Some(color_element) = xml_doc_mut.pop_element_mut(&color_id) {
-                        if let Some(attributes) = color_element.get_attribute() {
-                            if let Some(theme) = attributes.get("theme") {
-                                border.border_color = Some(ColorSetting {
-                                    color_setting_type: ColorSettingTypeValues::Theme,
-                                    value: theme.parse().context("color theme parse failed")?,
-                                });
-                            } else if let Some(rgb) = attributes.get("rgb") {
-                                let rgb_string = rgb.to_string();
-                                border.border_color = Some(ColorSetting {
-                                    color_setting_type: ColorSettingTypeValues::Rgb,
-                                    value: rgb_string,
-                                });
-                            } else if let Some(indexed) = attributes.get("indexed") {
-                                border.border_color = Some(ColorSetting {
-                                    color_setting_type: ColorSettingTypeValues::Indexed,
-                                    value: indexed
-                                        .parse()
-                                        .context("color color index parse failed")?,
-                                });
+    pub(crate) fn deserialize_border_setting(
+        current_element: &XmlElement,
+        border: &mut BorderSetting,
+        xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
+    ) -> Result<(), AnyError> {
+        Ok(if let Some(attributes) = current_element.get_attribute() {
+            if let Some(style) = attributes.get("style") {
+                border.style = BorderStyleValues::get_enum(&style);
+                if border.style != BorderStyleValues::None {
+                    if let Some(color_id) = current_element.pop_child_id_mut() {
+                        if let Some(color_element) = xml_doc_mut.pop_element_mut(&color_id) {
+                            if let Some(attributes) = color_element.get_attribute() {
+                                if let Some(theme) = attributes.get("theme") {
+                                    border.border_color = Some(ColorSetting {
+                                        color_setting_type: ColorSettingTypeValues::Theme,
+                                        value: theme.parse().context("color theme parse failed")?,
+                                    });
+                                } else if let Some(rgb) = attributes.get("rgb") {
+                                    let rgb_string = rgb.to_string();
+                                    border.border_color = Some(ColorSetting {
+                                        color_setting_type: ColorSettingTypeValues::Rgb,
+                                        value: rgb_string,
+                                    });
+                                } else if let Some(indexed) = attributes.get("indexed") {
+                                    border.border_color = Some(ColorSetting {
+                                        color_setting_type: ColorSettingTypeValues::Indexed,
+                                        value: indexed
+                                            .parse()
+                                            .context("color color index parse failed")?,
+                                    });
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-    })
+        })
+    }
 }

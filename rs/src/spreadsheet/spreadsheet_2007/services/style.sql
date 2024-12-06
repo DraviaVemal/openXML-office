@@ -42,7 +42,27 @@ CREATE TABLE
         diagonal_border TEXT -- Bottom border setting JSON
     );
 
--- query : create_cell_style_table# 
+-- query : create_cell_style_xfs_table# 
+CREATE TABLE
+    cell_style_xfs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
+        format_id INTEGER, -- Format Id
+        number_format_id INTEGER, -- Number Format Id
+        font_id INTEGER, -- Font Id
+        fill_id INTEGER, -- Fill Id
+        border_id INTEGER, -- Border Id
+        is_apply_font INTEGER, -- Apply font flag BOOL
+        is_apply_alignment INTEGER, -- Apply alignment flag BOOL
+        is_apply_fill INTEGER, -- Apply fill flag BOOL
+        is_apply_border INTEGER, -- Apply border flag BOOL
+        is_apply_number_format INTEGER, -- Apply number format flag BOOL
+        is_apply_protection INTEGER, -- Apply protection flag BOOL
+        is_wrap_text INTEGER, -- Wrap cell text flag BOOL
+        horizontal_alignment TEXT, -- Horizontal alignment setting JSON
+        vertical_alignment TEXT -- Vertical alignment setting JSON
+    );
+
+-- query : create_cell_xfs_table# 
 CREATE TABLE
     cell_xfs (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
@@ -107,7 +127,28 @@ INSERT INTO
 VALUES
     (?, ?, ?, ?, ?);
 
--- query : insert_cell_style_table# 
+-- query : insert_cell_style_xfs_table# 
+INSERT INTO
+    cell_style_xfs (
+        format_id,
+        number_format_id,
+        font_id,
+        fill_id,
+        border_id,
+        is_apply_font,
+        is_apply_alignment,
+        is_apply_fill,
+        is_apply_border,
+        is_apply_number_format,
+        is_apply_protection,
+        is_wrap_text,
+        horizontal_alignment,
+        vertical_alignment
+    )
+VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- query : insert_cell_xfs_table# 
 INSERT INTO
     cell_xfs (
         format_id,
@@ -176,7 +217,28 @@ FROM
 ORDER BY
     id;
 
--- query : select_cell_style_table# 
+-- query : select_cell_style_xfs_table# 
+SELECT
+    format_id,
+    number_format_id,
+    font_id,
+    fill_id,
+    border_id,
+    is_apply_font,
+    is_apply_alignment,
+    is_apply_fill,
+    is_apply_border,
+    is_apply_number_format,
+    is_apply_protection,
+    is_wrap_text,
+    horizontal_alignment,
+    vertical_alignment
+FROM
+    cell_style_xfs
+ORDER BY
+    id;
+
+-- query : select_cell_xfs_table# 
 SELECT
     format_id,
     number_format_id,
