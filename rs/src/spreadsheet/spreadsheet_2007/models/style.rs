@@ -185,11 +185,58 @@ impl Default for BorderStyle {
 #[derive(Debug, Deserialize, Serialize)]
 pub enum HorizontalAlignmentValues {
     None,
+    LEFT,
+    CENTER,
+    RIGHT,
+    JUSTIFY,
+}
+
+impl Enum<HorizontalAlignmentValues> for HorizontalAlignmentValues {
+    fn get_string(input_enum: HorizontalAlignmentValues) -> String {
+        match input_enum {
+            HorizontalAlignmentValues::LEFT => "left".to_string(),
+            HorizontalAlignmentValues::CENTER => "center".to_string(),
+            HorizontalAlignmentValues::RIGHT => "right".to_string(),
+            HorizontalAlignmentValues::JUSTIFY => "justify".to_string(),
+            HorizontalAlignmentValues::None => "none".to_string(),
+        }
+    }
+    fn get_enum(input_string: &str) -> HorizontalAlignmentValues {
+        match input_string {
+            "left" => HorizontalAlignmentValues::LEFT,
+            "center" => HorizontalAlignmentValues::CENTER,
+            "right" => HorizontalAlignmentValues::RIGHT,
+            "justify" => HorizontalAlignmentValues::JUSTIFY,
+            _ => HorizontalAlignmentValues::None,
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum VerticalAlignmentValues {
     None,
+    TOP,
+    MIDDLE,
+    BOTTOM,
+}
+
+impl Enum<VerticalAlignmentValues> for VerticalAlignmentValues {
+    fn get_string(input_enum: VerticalAlignmentValues) -> String {
+        match input_enum {
+            VerticalAlignmentValues::TOP => "top".to_string(),
+            VerticalAlignmentValues::MIDDLE => "center".to_string(),
+            VerticalAlignmentValues::BOTTOM => "bottom".to_string(),
+            VerticalAlignmentValues::None => "none".to_string(),
+        }
+    }
+    fn get_enum(input_string: &str) -> VerticalAlignmentValues {
+        match input_string {
+            "top" => VerticalAlignmentValues::TOP,
+            "center" => VerticalAlignmentValues::MIDDLE,
+            "bottom" => VerticalAlignmentValues::BOTTOM,
+            _ => VerticalAlignmentValues::None,
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -243,18 +290,18 @@ impl Default for CellStyleSetting {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CellXfs {
     pub id: u32,
-    pub format_id: u32,
-    pub number_format_id: u32,
-    pub font_id: u32,
-    pub fill_id: u32,
-    pub border_id: u32,
-    pub apply_font: bool,
-    pub apply_alignment: bool,
-    pub apply_fill: bool,
-    pub apply_border: bool,
-    pub apply_number_format: bool,
-    pub apply_protection: bool,
-    pub is_wrap_text: bool,
+    pub format_id: u8,
+    pub number_format_id: u8,
+    pub font_id: u8,
+    pub fill_id: u8,
+    pub border_id: u8,
+    pub apply_font: u8,
+    pub apply_alignment: u8,
+    pub apply_fill: u8,
+    pub apply_border: u8,
+    pub apply_number_format: u8,
+    pub apply_protection: u8,
+    pub is_wrap_text: u8,
     pub horizontal_alignment: HorizontalAlignmentValues,
     pub vertical_alignment: VerticalAlignmentValues,
 }
@@ -268,13 +315,13 @@ impl Default for CellXfs {
             font_id: 0,
             fill_id: 0,
             border_id: 0,
-            apply_font: false,
-            apply_alignment: false,
-            apply_fill: false,
-            apply_border: false,
-            apply_number_format: false,
-            apply_protection: false,
-            is_wrap_text: false,
+            apply_font: 0,
+            apply_alignment: 0,
+            apply_fill: 0,
+            apply_border: 0,
+            apply_number_format: 0,
+            apply_protection: 0,
+            is_wrap_text: 0,
             horizontal_alignment: HorizontalAlignmentValues::None,
             vertical_alignment: VerticalAlignmentValues::None,
         }
