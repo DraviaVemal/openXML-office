@@ -3,10 +3,11 @@ use crate::get_all_queries;
 use crate::global_2007::traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon};
 use crate::spreadsheet_2007::models::{
     BorderSetting, BorderStyleValues, CellXfs, ColorSetting, ColorSettingTypeValues, FillStyle,
-    FontStyle, HorizontalAlignmentValues, PatternTypeValues, SchemeValues, VerticalAlignmentValues,
+    FontStyle, HorizontalAlignmentValues, NumberFormats, PatternTypeValues, SchemeValues,
+    VerticalAlignmentValues,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::params;
+use rusqlite::{params, Row};
 use serde_json::to_string;
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
@@ -129,7 +130,86 @@ impl Style {
         office_document: &Weak<RefCell<OfficeDocument>>,
         xml_document: &mut Weak<RefCell<XmlDocument>>,
     ) -> AnyResult<(), AnyError> {
-        
+        if let Some(office_doc_ref) = office_document.upgrade() {
+            // Decode XML to load in DB
+            let office_doc = office_doc_ref
+                .try_borrow()
+                .context("Pulling Office Doc Failed")?;
+            let queries = get_all_queries!("style.sql");
+            if let Some(xml_doc) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+                // Create Number Formats Element
+                let num_formats = xml_doc_mut
+                    .append_child_mut("numFmts", None)
+                    .context("Create Number Formats Parent Failed.")?;
+                if let Some(num_format_query) = queries.get("select_number_formats_table") {
+                    fn row_mapper(row: &Row) -> AnyResult<NumberFormats, rusqlite::Error> {
+                        Ok(NumberFormats {
+                            id: 0,
+                            format_id: row.get(0)?,
+                            format_code: row.get(1)?,
+                        })
+                    }
+                    let num_format_data = office_doc
+                        .get_connection()
+                        .find_many(num_format_query, params![], row_mapper)
+                        .context("Num Format Query Results")?;
+                    let mut attributes = HashMap::new();
+                    attributes.insert("count".to_string(), num_format_data.len().to_string());
+                    num_formats
+                        .set_attribute_mut(attributes)
+                        .context("Updating Number Formats Element Attributes Failed")?;
+                    let num_formats_id = num_formats.get_id();
+                    for num_format in num_format_data {
+                        let num_format_element = xml_doc_mut
+                            .append_child_mut("numFmt ", Some(&num_formats_id))
+                            .context("Create Number Format Element Failed")?;
+                        let mut attributes = HashMap::new();
+                        attributes.insert("numFmtId".to_string(), num_format.format_id.to_string());
+                        attributes.insert("formatCode".to_string(), num_format.format_code);
+                        num_format_element
+                            .set_attribute_mut(attributes)
+                            .context("Updating Number Format Element Attributes Failed")?;
+                    }
+                }
+                // Create Fonts Element
+                let fonts = xml_doc_mut
+                    .append_child_mut("fonts", None)
+                    .context("Create Fonts Parent Failed.")?;
+                let fonts_id = fonts.get_id();
+                if let Some(fonts_query) = queries.get("select_fonts_table") {
+                    fn row_mapper(row: &Row) -> AnyResult<FontStyle, rusqlite::Error> {
+                        let color_type: String = row.get(1)?;
+                        let font_scheme: String = row.get(5)?;
+                        Ok(FontStyle {
+                            id: 0,
+                            name: row.get(0)?,
+                            color: ColorSetting {
+                                color_setting_type: ColorSettingTypeValues::get_enum(&color_type),
+                                value: row.get(2)?,
+                            },
+                            family: row.get(3)?,
+                            size: row.get(4)?,
+                            font_scheme: SchemeValues::get_enum(&font_scheme),
+                            is_bold: row.get(6)?,
+                            is_italic: row.get(7)?,
+                            is_underline: row.get(8)?,
+                            is_double_underline: row.get(9)?,
+                        })
+                    }
+                    let fonts_data = office_doc
+                        .get_connection()
+                        .find_many(fonts_query, params![], row_mapper)
+                        .context("Num Format Query Results")?;
+                    for font_style in fonts_data {
+                        let font = xml_doc_mut
+                            .append_child_mut("font", Some(&fonts_id))
+                            .context("Adding Font to Fonts Failed")?;
+                        
+                    }
+                }
+            }
+        }
         Ok(())
     }
 
@@ -588,21 +668,6 @@ impl Style {
                     )
                     .context("Deserializing Cell Xfs Failed")?;
                 }
-                // if let Some(cell_styles) = xml_doc_mut
-                //     .pop_elements_by_tag_mut("cell_styles", None)
-                //     .context("Failed find the Target node")?
-                //     .pop()
-                // {}
-                // if let Some(dxf) = xml_doc_mut
-                //     .pop_elements_by_tag_mut("dxfs", None)
-                //     .context("Failed find the Target node")?
-                //     .pop()
-                // {}
-                // if let Some(table_style) = xml_doc_mut
-                //     .pop_elements_by_tag_mut("table_styles", None)
-                //     .context("Failed find the Target node")?
-                //     .pop()
-                // {}
             }
         }
         Ok(())
