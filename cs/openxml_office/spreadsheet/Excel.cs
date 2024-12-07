@@ -17,7 +17,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lib/openxmloffice_ffi", EntryPoint = "excel_create", CallingConvention = CallingConvention.Cdecl)]
         public static extern sbyte excel_create(
             [MarshalAs(UnmanagedType.LPStr)] string optional_string,
             IntPtr buffer,

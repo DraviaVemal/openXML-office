@@ -1,0 +1,4 @@
+language = "C"
+include_guard = "OPENXML_OFFICE_H"
+namespace = "openxmloffice_ffi"
+export = ["public_function"]
