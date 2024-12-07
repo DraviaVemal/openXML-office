@@ -188,13 +188,14 @@ impl XmlDocument {
 
     pub fn append_child_mut(
         &mut self,
-        parent_id: &usize,
         tag: &str,
+        parent_id: Option<&usize>,
     ) -> AnyResult<&mut XmlElement, AnyError> {
-        if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
+        let id = parent_id.unwrap_or(&0);
+        if let Some(parent_element) = self.xml_element_collection.get_mut(id) {
             let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
                 .context("Create XML Element Failed")?;
-            element.set_parent_id_mut(*parent_id);
+            element.set_parent_id_mut(*id);
             self.running_id += 1;
             element.set_id_mut(self.running_id);
             parent_element.append_children_mut(self.running_id, tag);
