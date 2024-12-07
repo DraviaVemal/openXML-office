@@ -12,7 +12,6 @@ pub struct SqliteDatabases {
 impl Drop for SqliteDatabases {
     fn drop(&mut self) {
         if self.db_path.exists() {
-            let test = format!("{}", self.db_path.display());
             match remove_file(&self.db_path) {
                 Result::Ok(_) => println!(
                     "Database File successfully deleted: {}",
