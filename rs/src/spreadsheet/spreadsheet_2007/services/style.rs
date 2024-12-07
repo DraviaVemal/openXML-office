@@ -129,6 +129,7 @@ impl Style {
         office_document: &Weak<RefCell<OfficeDocument>>,
         xml_document: &mut Weak<RefCell<XmlDocument>>,
     ) -> AnyResult<(), AnyError> {
+        
         Ok(())
     }
 
