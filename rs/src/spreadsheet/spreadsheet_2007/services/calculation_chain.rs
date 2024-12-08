@@ -35,7 +35,7 @@ impl Drop for CalculationChain {
                     attributes.insert("r".to_string(), cell_id);
                     attributes.insert("i".to_string(), sheet_id);
                     let _ = doc
-                        .append_child_mut(&0, "c")
+                        .append_child_mut("c", None)
                         .unwrap()
                         .set_attribute_mut(attributes);
                 }

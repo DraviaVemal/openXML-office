@@ -384,6 +384,7 @@ impl Default for FontStyle {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NumberFormats {
     pub id: u32,
+    pub format_id: u32,
     pub format_code: String,
 }
 
@@ -391,6 +392,7 @@ impl Default for NumberFormats {
     fn default() -> Self {
         Self {
             id: 0,
+            format_id: 0,
             format_code: "General".to_string(),
         }
     }

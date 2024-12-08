@@ -169,20 +169,20 @@ INSERT INTO
 VALUES
     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
--- query : select_share_string_table# 
+-- query : select_number_formats_table# 
 SELECT
-    format_code,
-    format_id
+    format_id,
+    format_code
 FROM
     number_formats
 ORDER BY
     id;
 
--- query : select_share_string_table# 
+-- query : select_fonts_table# 
 SELECT
     font_name,
-    color_theme,
-    color_rgb,
+    color_type,
+    color_value,
     family_id,
     font_size,
     font_scheme,
