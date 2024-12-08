@@ -19,12 +19,7 @@ pub struct WorkSheet {
 
 impl Drop for WorkSheet {
     fn drop(&mut self) {
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            let _ = xml_tree
-                .try_borrow_mut()
-                .unwrap()
-                .close_xml_document(&self.file_name);
-        }
+        let _ = self.close_document();
     }
 }
 
@@ -33,6 +28,18 @@ impl XmlDocumentPartCommon for WorkSheet {
     fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
         let template_core_properties = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"></worksheet>"#;
         XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+    }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
+        if let Some(xml_tree) = self.office_document.upgrade() {
+            xml_tree
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_document(&self.file_name)?;
+        }
+        Ok(())
     }
 }
 

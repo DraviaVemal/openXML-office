@@ -2,25 +2,25 @@ use crate::global_2007::traits::Enum;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
-pub enum SchemeValues {
+pub enum FontSchemeValues {
     None,
     Minor,
     Major,
 }
 
-impl Enum<SchemeValues> for SchemeValues {
-    fn get_string(input_enum: SchemeValues) -> String {
+impl Enum<FontSchemeValues> for FontSchemeValues {
+    fn get_string(input_enum: FontSchemeValues) -> String {
         match input_enum {
-            SchemeValues::Major => "major".to_string(),
-            SchemeValues::Minor => "minor".to_string(),
-            SchemeValues::None => "none".to_string(),
+            FontSchemeValues::Major => "major".to_string(),
+            FontSchemeValues::Minor => "minor".to_string(),
+            FontSchemeValues::None => "none".to_string(),
         }
     }
-    fn get_enum(input_string: &str) -> SchemeValues {
+    fn get_enum(input_string: &str) -> FontSchemeValues {
         match input_string {
-            "major" => SchemeValues::Major,
-            "minor" => SchemeValues::Minor,
-            _ => SchemeValues::None,
+            "major" => FontSchemeValues::Major,
+            "minor" => FontSchemeValues::Minor,
+            _ => FontSchemeValues::None,
         }
     }
 }
@@ -168,6 +168,7 @@ pub struct BorderStyle {
     pub left: BorderSetting,
     pub right: BorderSetting,
     pub top: BorderSetting,
+    pub diagonal: BorderSetting,
 }
 
 impl Default for BorderStyle {
@@ -178,11 +179,12 @@ impl Default for BorderStyle {
             left: BorderSetting::default(),
             right: BorderSetting::default(),
             top: BorderSetting::default(),
+            diagonal: BorderSetting::default(),
         }
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub enum HorizontalAlignmentValues {
     None,
     LEFT,
@@ -212,7 +214,7 @@ impl Enum<HorizontalAlignmentValues> for HorizontalAlignmentValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub enum VerticalAlignmentValues {
     None,
     TOP,
@@ -237,27 +239,6 @@ impl Enum<VerticalAlignmentValues> for VerticalAlignmentValues {
             _ => VerticalAlignmentValues::None,
         }
     }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct CellStyleSetting {
-    pub background_color: Option<String>,
-    pub border_bottom: BorderSetting,
-    pub border_left: BorderSetting,
-    pub border_right: BorderSetting,
-    pub border_top: BorderSetting,
-    pub font_family: String,
-    pub font_size: u32,
-    pub foreground_color: Option<String>,
-    pub horizontal_alignment: HorizontalAlignmentValues,
-    pub is_bold: bool,
-    pub is_double_underline: bool,
-    pub is_italic: bool,
-    pub is_underline: bool,
-    pub is_wrap_text: bool,
-    pub number_format: String,
-    pub text_color: ColorSetting,
-    pub vertical_alignment: VerticalAlignmentValues,
 }
 
 impl Default for CellStyleSetting {
@@ -354,7 +335,7 @@ pub struct FontStyle {
     pub size: u32,
     pub color: ColorSetting,
     pub family: i32,
-    pub font_scheme: SchemeValues,
+    pub font_scheme: FontSchemeValues,
     pub is_bold: bool,
     pub is_double_underline: bool,
     pub is_italic: bool,
@@ -370,7 +351,7 @@ impl Default for FontStyle {
                 ..Default::default()
             },
             family: 2,
-            font_scheme: SchemeValues::None,
+            font_scheme: FontSchemeValues::None,
             is_bold: false,
             is_double_underline: false,
             is_italic: false,
@@ -382,13 +363,13 @@ impl Default for FontStyle {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct NumberFormats {
-    pub id: u32,
-    pub format_id: u32,
+pub struct NumberFormat {
+    pub id: usize,
+    pub format_id: usize,
     pub format_code: String,
 }
 
-impl Default for NumberFormats {
+impl Default for NumberFormat {
     fn default() -> Self {
         Self {
             id: 0,
@@ -396,4 +377,26 @@ impl Default for NumberFormats {
             format_code: "General".to_string(),
         }
     }
+}
+
+/// Get Column Cell Input Combined for styling
+#[derive(Debug, Deserialize, Serialize)]
+pub struct CellStyleSetting {
+    pub background_color: Option<String>,
+    pub border_bottom: BorderSetting,
+    pub border_left: BorderSetting,
+    pub border_right: BorderSetting,
+    pub border_top: BorderSetting,
+    pub font_family: String,
+    pub font_size: u32,
+    pub foreground_color: Option<String>,
+    pub horizontal_alignment: HorizontalAlignmentValues,
+    pub is_bold: bool,
+    pub is_double_underline: bool,
+    pub is_italic: bool,
+    pub is_underline: bool,
+    pub is_wrap_text: bool,
+    pub number_format: String,
+    pub text_color: ColorSetting,
+    pub vertical_alignment: VerticalAlignmentValues,
 }

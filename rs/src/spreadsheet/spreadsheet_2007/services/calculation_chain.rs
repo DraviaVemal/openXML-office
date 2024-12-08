@@ -17,37 +17,7 @@ pub struct CalculationChain {
 
 impl Drop for CalculationChain {
     fn drop(&mut self) {
-        if let Some(office_doc_ref) = self.office_document.upgrade() {
-            let queries = get_all_queries!("calculation_chain.sql");
-            let select_query = queries.get("select_calculation_chain_table").unwrap();
-            fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
-                Result::Ok((row.get(0)?, row.get(1)?))
-            }
-            let string_collection = office_doc_ref
-                .borrow()
-                .get_connection()
-                .find_many(&select_query, params![], row_mapper)
-                .unwrap();
-            if let Some(xml_doc) = self.xml_document.upgrade() {
-                let mut doc = xml_doc.borrow_mut();
-                for (cell_id, sheet_id) in string_collection {
-                    let mut attributes = HashMap::new();
-                    attributes.insert("r".to_string(), cell_id);
-                    attributes.insert("i".to_string(), sheet_id);
-                    let _ = doc
-                        .append_child_mut("c", None)
-                        .unwrap()
-                        .set_attribute_mut(attributes);
-                }
-            }
-        }
-
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            let _ = xml_tree
-                .try_borrow_mut()
-                .unwrap()
-                .close_xml_document(&self.file_path);
-        }
+        let _ = self.close_document();
     }
 }
 
@@ -66,6 +36,42 @@ impl XmlDocumentPartCommon for CalculationChain {
             .set_attribute_mut(attributes)
             .context("Set Attribute Failed")?;
         Ok(xml_document)
+    }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
+        if let Some(office_doc_ref) = self.office_document.upgrade() {
+            let queries = get_all_queries!("calculation_chain.sql");
+            let select_query = queries.get("select_calculation_chain_table").unwrap();
+            fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
+                Result::Ok((row.get(0)?, row.get(1)?))
+            }
+            let string_collection = office_doc_ref
+                .borrow()
+                .get_connection()
+                .find_many(&select_query, params![], row_mapper)
+                .unwrap();
+            if let Some(xml_doc) = self.xml_document.upgrade() {
+                let mut doc = xml_doc.borrow_mut();
+                for (cell_id, sheet_id) in string_collection {
+                    let mut attributes = HashMap::new();
+                    attributes.insert("r".to_string(), cell_id);
+                    attributes.insert("i".to_string(), sheet_id);
+                    doc.append_child_mut("c", None)
+                        .unwrap()
+                        .set_attribute_mut(attributes)?;
+                }
+            }
+        }
+
+        if let Some(xml_tree) = self.office_document.upgrade() {
+            xml_tree
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_document(&self.file_path)?;
+        }
+        Ok(())
     }
 }
 
@@ -108,7 +114,7 @@ impl CalculationChain {
                         if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("c", None) {
                             for element in elements {
                                 if let Some(attributes) = element.get_attribute() {
-                                    let _ = office_doc
+                                    office_doc
                                         .get_connection()
                                         .insert_record(
                                             &insert_query,

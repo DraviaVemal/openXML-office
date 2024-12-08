@@ -2,13 +2,13 @@ use crate::files::{OfficeDocument, XmlDocument, XmlElement};
 use crate::get_all_queries;
 use crate::global_2007::traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon};
 use crate::spreadsheet_2007::models::{
-    BorderSetting, BorderStyleValues, CellXfs, ColorSetting, ColorSettingTypeValues, FillStyle,
-    FontStyle, HorizontalAlignmentValues, NumberFormats, PatternTypeValues, SchemeValues,
-    VerticalAlignmentValues,
+    BorderSetting, BorderStyle, BorderStyleValues, CellXfs, ColorSetting, ColorSettingTypeValues,
+    FillStyle, FontSchemeValues, FontStyle, HorizontalAlignmentValues, NumberFormat,
+    PatternTypeValues, VerticalAlignmentValues,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::{params, Row};
-use serde_json::to_string;
+use serde_json::{from_str, to_string};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
@@ -20,14 +20,7 @@ pub struct Style {
 
 impl Drop for Style {
     fn drop(&mut self) {
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            let _ = Self::save_content_to_tree(&self.office_document, &mut self.xml_document)
-                .context("Load Share String To DB Failed");
-            let _ = xml_tree
-                .try_borrow_mut()
-                .unwrap()
-                .close_xml_document(&self.file_path);
-        }
+        let _ = self.close_document();
     }
 }
 
@@ -51,6 +44,20 @@ impl XmlDocumentPartCommon for Style {
             .context("Set Attribute Failed")?;
         Ok(xml_document)
     }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
+        if let Some(xml_tree) = self.office_document.upgrade() {
+            Self::save_content_to_tree(&self.office_document, &mut self.xml_document)
+                .context("Style Save Content Failed")?;
+            xml_tree
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_document(&self.file_path)?;
+        }
+        Ok(())
+    }
 }
 
 impl XmlDocumentPart for Style {
@@ -71,6 +78,7 @@ impl XmlDocumentPart for Style {
 }
 
 impl Style {
+    /// Create the new Table Required to Load the data
     fn initialize_database(
         office_document: &Weak<RefCell<OfficeDocument>>,
         queries: &HashMap<String, String>,
@@ -125,94 +133,7 @@ impl Style {
         }
         Ok(())
     }
-
-    fn save_content_to_tree(
-        office_document: &Weak<RefCell<OfficeDocument>>,
-        xml_document: &mut Weak<RefCell<XmlDocument>>,
-    ) -> AnyResult<(), AnyError> {
-        if let Some(office_doc_ref) = office_document.upgrade() {
-            // Decode XML to load in DB
-            let office_doc = office_doc_ref
-                .try_borrow()
-                .context("Pulling Office Doc Failed")?;
-            let queries = get_all_queries!("style.sql");
-            if let Some(xml_doc) = xml_document.upgrade() {
-                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
-                // Create Number Formats Element
-                let num_formats = xml_doc_mut
-                    .append_child_mut("numFmts", None)
-                    .context("Create Number Formats Parent Failed.")?;
-                if let Some(num_format_query) = queries.get("select_number_formats_table") {
-                    fn row_mapper(row: &Row) -> AnyResult<NumberFormats, rusqlite::Error> {
-                        Ok(NumberFormats {
-                            id: 0,
-                            format_id: row.get(0)?,
-                            format_code: row.get(1)?,
-                        })
-                    }
-                    let num_format_data = office_doc
-                        .get_connection()
-                        .find_many(num_format_query, params![], row_mapper)
-                        .context("Num Format Query Results")?;
-                    let mut attributes = HashMap::new();
-                    attributes.insert("count".to_string(), num_format_data.len().to_string());
-                    num_formats
-                        .set_attribute_mut(attributes)
-                        .context("Updating Number Formats Element Attributes Failed")?;
-                    let num_formats_id = num_formats.get_id();
-                    for num_format in num_format_data {
-                        let num_format_element = xml_doc_mut
-                            .append_child_mut("numFmt ", Some(&num_formats_id))
-                            .context("Create Number Format Element Failed")?;
-                        let mut attributes = HashMap::new();
-                        attributes.insert("numFmtId".to_string(), num_format.format_id.to_string());
-                        attributes.insert("formatCode".to_string(), num_format.format_code);
-                        num_format_element
-                            .set_attribute_mut(attributes)
-                            .context("Updating Number Format Element Attributes Failed")?;
-                    }
-                }
-                // Create Fonts Element
-                let fonts = xml_doc_mut
-                    .append_child_mut("fonts", None)
-                    .context("Create Fonts Parent Failed.")?;
-                let fonts_id = fonts.get_id();
-                if let Some(fonts_query) = queries.get("select_fonts_table") {
-                    fn row_mapper(row: &Row) -> AnyResult<FontStyle, rusqlite::Error> {
-                        let color_type: String = row.get(1)?;
-                        let font_scheme: String = row.get(5)?;
-                        Ok(FontStyle {
-                            id: 0,
-                            name: row.get(0)?,
-                            color: ColorSetting {
-                                color_setting_type: ColorSettingTypeValues::get_enum(&color_type),
-                                value: row.get(2)?,
-                            },
-                            family: row.get(3)?,
-                            size: row.get(4)?,
-                            font_scheme: SchemeValues::get_enum(&font_scheme),
-                            is_bold: row.get(6)?,
-                            is_italic: row.get(7)?,
-                            is_underline: row.get(8)?,
-                            is_double_underline: row.get(9)?,
-                        })
-                    }
-                    let fonts_data = office_doc
-                        .get_connection()
-                        .find_many(fonts_query, params![], row_mapper)
-                        .context("Num Format Query Results")?;
-                    for font_style in fonts_data {
-                        let font = xml_doc_mut
-                            .append_child_mut("font", Some(&fonts_id))
-                            .context("Adding Font to Fonts Failed")?;
-                        
-                    }
-                }
-            }
-        }
-        Ok(())
-    }
-
+    /// Load existing file style to database
     fn load_content_to_database(
         office_document: &Weak<RefCell<OfficeDocument>>,
         xml_document: &mut Weak<RefCell<XmlDocument>>,
@@ -240,21 +161,24 @@ impl Style {
                                 .pop_element_mut(&element_id)
                                 .ok_or(anyhow!("Element not Found Error"))?;
                             if let Some(attributes) = num_fmt.get_attribute() {
+                                let mut number_format = NumberFormat::default();
                                 let insert_query_num_format = queries
                                     .get("insert_number_format_table")
                                     .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+                                number_format.format_id = attributes
+                                    .get("numFmtId")
+                                    .ok_or(anyhow!("numFmtId Attribute Not Found!"))?
+                                    .parse()
+                                    .context("Number format ID parsing Failed")?;
+                                number_format.format_code = attributes
+                                    .get("formatCode")
+                                    .ok_or(anyhow!("formatCode Attribute Not Found!"))?
+                                    .to_string();
                                 office_doc
                                     .get_connection()
                                     .insert_record(
                                         &insert_query_num_format,
-                                        params![
-                                            attributes
-                                                .get("numFmtId")
-                                                .ok_or(anyhow!("numFmtId Attribute Not Found!"))?,
-                                            attributes.get("formatCode").ok_or(anyhow!(
-                                                "formatCode Attribute Not Found!"
-                                            ))?
-                                        ],
+                                        params![number_format.format_id, number_format.format_code],
                                     )
                                     .context("Number Format Data Insert Failed")?;
                             }
@@ -359,7 +283,7 @@ impl Style {
                                             {
                                                 if let Some(val) = attributes.get("val") {
                                                     font_style.font_scheme =
-                                                        SchemeValues::get_enum(val)
+                                                        FontSchemeValues::get_enum(val)
                                                 }
                                             }
                                         }
@@ -388,7 +312,7 @@ impl Style {
                                         font_style.color.value,
                                         font_style.family,
                                         font_style.size,
-                                        SchemeValues::get_string(font_style.font_scheme),
+                                        FontSchemeValues::get_string(font_style.font_scheme),
                                         font_style.is_bold,
                                         font_style.is_italic,
                                         font_style.is_underline,
@@ -551,11 +475,7 @@ impl Style {
                     loop {
                         if let Some(border_id) = borders.pop_child_id_mut() {
                             if let Some(border) = xml_doc_mut.pop_element_mut(&border_id) {
-                                let mut left_border = BorderSetting::default();
-                                let mut right_border = BorderSetting::default();
-                                let mut top_border = BorderSetting::default();
-                                let mut bottom_border = BorderSetting::default();
-                                let mut diagonal_border = BorderSetting::default();
+                                let mut border_style = BorderStyle::default();
                                 loop {
                                     if let Some(border_child_id) = border.pop_child_id_mut() {
                                         if let Some(current_element) =
@@ -565,7 +485,7 @@ impl Style {
                                                 "left" => {
                                                     Style::deserialize_border_setting(
                                                         &current_element,
-                                                        &mut left_border,
+                                                        &mut border_style.left,
                                                         &mut xml_doc_mut,
                                                     )
                                                     .context("Left Border Decode Failed")?;
@@ -573,7 +493,7 @@ impl Style {
                                                 "right" => {
                                                     Style::deserialize_border_setting(
                                                         &current_element,
-                                                        &mut right_border,
+                                                        &mut border_style.right,
                                                         &mut xml_doc_mut,
                                                     )
                                                     .context("Left Border Decode Failed")?;
@@ -581,7 +501,7 @@ impl Style {
                                                 "top" => {
                                                     Style::deserialize_border_setting(
                                                         &current_element,
-                                                        &mut top_border,
+                                                        &mut border_style.top,
                                                         &mut xml_doc_mut,
                                                     )
                                                     .context("Left Border Decode Failed")?;
@@ -589,7 +509,7 @@ impl Style {
                                                 "bottom" => {
                                                     Style::deserialize_border_setting(
                                                         &current_element,
-                                                        &mut bottom_border,
+                                                        &mut border_style.bottom,
                                                         &mut xml_doc_mut,
                                                     )
                                                     .context("Left Border Decode Failed")?;
@@ -597,7 +517,7 @@ impl Style {
                                                 "diagonal" => {
                                                     Style::deserialize_border_setting(
                                                         &current_element,
-                                                        &mut diagonal_border,
+                                                        &mut border_style.diagonal,
                                                         &mut xml_doc_mut,
                                                     )
                                                     .context("Left Border Decode Failed")?;
@@ -621,16 +541,16 @@ impl Style {
                                     .insert_record(
                                         &insert_query_border_style,
                                         params![
-                                            to_string(&left_border)
+                                            to_string(&border_style.left)
                                                 .context("Left Border Parsing Failed")?,
-                                            to_string(&top_border)
+                                            to_string(&border_style.top)
                                                 .context("Top Border Parsing Failed")?,
-                                            to_string(&right_border)
+                                            to_string(&border_style.right)
                                                 .context("Right Border Parsing Failed")?,
-                                            to_string(&bottom_border)
+                                            to_string(&border_style.bottom)
                                                 .context("Bottom Border Parsing Failed")?,
-                                            to_string(&diagonal_border)
-                                                .context("Bottom Border Parsing Failed")?
+                                            to_string(&border_style.diagonal)
+                                                .context("diagonal Border Parsing Failed")?
                                         ],
                                     )
                                     .context("Insert border Style Failed")?;
@@ -672,6 +592,374 @@ impl Style {
         }
         Ok(())
     }
+    /// Save Database record back to XML File
+    fn save_content_to_tree(
+        office_document: &Weak<RefCell<OfficeDocument>>,
+        xml_document: &mut Weak<RefCell<XmlDocument>>,
+    ) -> AnyResult<(), AnyError> {
+        if let Some(office_doc_ref) = office_document.upgrade() {
+            // Decode XML to load in DB
+            let office_doc = office_doc_ref
+                .try_borrow()
+                .context("Pulling Office Doc Failed")?;
+            let queries = get_all_queries!("style.sql");
+            if let Some(xml_doc) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+                // Create Number Formats Elements
+                {
+                    let num_formats = xml_doc_mut
+                        .append_child_mut("numFmts", None)
+                        .context("Create Number Formats Parent Failed.")?;
+                    let num_formats_id = num_formats.get_id();
+                    if let Some(num_format_query) = queries.get("select_number_formats_table") {
+                        fn row_mapper(row: &Row) -> AnyResult<NumberFormat, rusqlite::Error> {
+                            Ok(NumberFormat {
+                                id: 0,
+                                format_id: row.get(0)?,
+                                format_code: row.get(1)?,
+                            })
+                        }
+                        let num_format_data = office_doc
+                            .get_connection()
+                            .find_many(num_format_query, params![], row_mapper)
+                            .context("Num Format Query Results Failed")?;
+                        let mut attributes = HashMap::new();
+                        attributes.insert("count".to_string(), num_format_data.len().to_string());
+                        num_formats
+                            .set_attribute_mut(attributes)
+                            .context("Updating Number Formats Element Attributes Failed")?;
+                        for num_format in num_format_data {
+                            let num_format_element = xml_doc_mut
+                                .append_child_mut("numFmt", Some(&num_formats_id))
+                                .context("Create Number Format Element Failed")?;
+                            let mut attributes = HashMap::new();
+                            attributes
+                                .insert("numFmtId".to_string(), num_format.format_id.to_string());
+                            attributes.insert("formatCode".to_string(), num_format.format_code);
+                            num_format_element
+                                .set_attribute_mut(attributes)
+                                .context("Updating Number Format Element Attributes Failed")?;
+                        }
+                    }
+                }
+                // Create Fonts Elements
+                {
+                    let fonts = xml_doc_mut
+                        .append_child_mut("fonts", None)
+                        .context("Create Fonts Parent Failed.")?;
+                    let fonts_id = fonts.get_id();
+                    if let Some(fonts_query) = queries.get("select_fonts_table") {
+                        fn row_mapper(row: &Row) -> AnyResult<FontStyle, rusqlite::Error> {
+                            let color_type: String = row.get(1)?;
+                            let font_scheme: String = row.get(5)?;
+                            Ok(FontStyle {
+                                id: 0,
+                                name: row.get(0)?,
+                                color: ColorSetting {
+                                    color_setting_type: ColorSettingTypeValues::get_enum(
+                                        &color_type,
+                                    ),
+                                    value: row.get(2)?,
+                                },
+                                family: row.get(3)?,
+                                size: row.get(4)?,
+                                font_scheme: FontSchemeValues::get_enum(&font_scheme),
+                                is_bold: row.get(6)?,
+                                is_italic: row.get(7)?,
+                                is_underline: row.get(8)?,
+                                is_double_underline: row.get(9)?,
+                            })
+                        }
+                        let fonts_data = office_doc
+                            .get_connection()
+                            .find_many(fonts_query, params![], row_mapper)
+                            .context("Fonts Query Results Failed")?;
+                        let mut attributes = HashMap::new();
+                        attributes.insert("count".to_string(), fonts_data.len().to_string());
+                        fonts
+                            .set_attribute_mut(attributes)
+                            .context("Set attribute failed for fonts style")?;
+                        for font_style in fonts_data {
+                            let font_id = xml_doc_mut
+                                .append_child_mut("font", Some(&fonts_id))
+                                .context("Adding Font to Fonts Failed")?
+                                .get_id();
+                            if font_style.is_bold {
+                                xml_doc_mut
+                                    .append_child_mut("b", Some(&font_id))
+                                    .context("Create Size Failed")?;
+                            }
+                            if font_style.is_italic {
+                                xml_doc_mut
+                                    .append_child_mut("i", Some(&font_id))
+                                    .context("Create Size Failed")?;
+                            }
+                            if font_style.is_underline {
+                                xml_doc_mut
+                                    .append_child_mut("u", Some(&font_id))
+                                    .context("Create Size Failed")?;
+                            }
+                            if font_style.is_double_underline {
+                                let double_underline = xml_doc_mut
+                                    .append_child_mut("u", Some(&font_id))
+                                    .context("Create Size Failed")?;
+                                let mut double_underline_attributes: HashMap<String, String> =
+                                    HashMap::new();
+                                double_underline_attributes
+                                    .insert("val".to_string(), "double".to_string());
+                                double_underline
+                                    .set_attribute_mut(double_underline_attributes)
+                                    .context("Setting Size Attribute Failing")?;
+                            }
+                            let size = xml_doc_mut
+                                .append_child_mut("sz", Some(&font_id))
+                                .context("Create Size Failed")?;
+                            let mut size_attributes: HashMap<String, String> = HashMap::new();
+                            size_attributes.insert("val".to_string(), font_style.size.to_string());
+                            size.set_attribute_mut(size_attributes)
+                                .context("Setting Size Attribute Failing")?;
+                            Style::add_color_element(
+                                Some(font_style.color),
+                                &mut xml_doc_mut,
+                                font_id,
+                            )?;
+                            let name = xml_doc_mut
+                                .append_child_mut("name", Some(&font_id))
+                                .context("Create Name Failed")?;
+                            let mut name_attributes: HashMap<String, String> = HashMap::new();
+                            name_attributes.insert("val".to_string(), font_style.name);
+                            name.set_attribute_mut(name_attributes)
+                                .context("Setting name Attribute Failing")?;
+                            let family = xml_doc_mut
+                                .append_child_mut("family", Some(&font_id))
+                                .context("Create Name Failed")?;
+                            let mut family_attributes: HashMap<String, String> = HashMap::new();
+                            family_attributes
+                                .insert("val".to_string(), font_style.family.to_string());
+                            family
+                                .set_attribute_mut(family_attributes)
+                                .context("Setting family attribute failing")?;
+                            let scheme = xml_doc_mut
+                                .append_child_mut("scheme", Some(&font_id))
+                                .context("Create scheme Failed")?;
+                            let mut scheme_attributes: HashMap<String, String> = HashMap::new();
+                            scheme_attributes.insert(
+                                "val".to_string(),
+                                FontSchemeValues::get_string(font_style.font_scheme),
+                            );
+                            scheme
+                                .set_attribute_mut(scheme_attributes)
+                                .context("Setting scheme attribute failing")?;
+                        }
+                    }
+                }
+                // Create Fills Elements
+                {
+                    let fills = xml_doc_mut
+                        .append_child_mut("fills", None)
+                        .context("Create Fills parents Failed.")?;
+                    let fills_id = fills.get_id();
+                    if let Some(fills_query) = queries.get("select_fill_style_table") {
+                        fn row_mapper(row: &Row) -> AnyResult<FillStyle, rusqlite::Error> {
+                            let mut fill_style = FillStyle::default();
+                            let background_color: String = row.get(0)?;
+                            let foreground_color: String = row.get(1)?;
+                            let pattern_type: String = row.get(2)?;
+                            fill_style.background_color =
+                                from_str(&background_color).map_err(|err| {
+                                    rusqlite::Error::InvalidColumnName(
+                                        format!("Column : {} Parsing Failed", err.column())
+                                            .to_string(),
+                                    )
+                                })?;
+                            fill_style.foreground_color =
+                                from_str(&foreground_color).map_err(|err| {
+                                    rusqlite::Error::InvalidColumnName(
+                                        format!("Column : {} Parsing Failed", err.column())
+                                            .to_string(),
+                                    )
+                                })?;
+                            fill_style.pattern_type = PatternTypeValues::get_enum(&pattern_type);
+                            Ok(fill_style)
+                        }
+                        let fills_data = office_doc
+                            .get_connection()
+                            .find_many(fills_query, params![], row_mapper)
+                            .context("Fills Data Pull Failed")?;
+                        // .context("Fills Query Results Failed")?;
+                        let mut attributes = HashMap::new();
+                        attributes.insert("count".to_string(), fills_data.len().to_string());
+                        fills
+                            .set_attribute_mut(attributes)
+                            .context("Set Fill Attribute Failed")?;
+                        for fill_data in fills_data {
+                            let fill_id = xml_doc_mut
+                                .append_child_mut("fill", Some(&fills_id))
+                                .context("Adding Fill Element Failed")?
+                                .get_id();
+                            let pattern_fill_element = xml_doc_mut
+                                .append_child_mut("patternFill", Some(&fill_id))
+                                .context("Pattern Fill Element Failed")?;
+                            let mut pattern_attribute: HashMap<String, String> = HashMap::new();
+                            pattern_attribute.insert(
+                                "patternType".to_string(),
+                                PatternTypeValues::get_string(fill_data.pattern_type),
+                            );
+                            pattern_fill_element
+                                .set_attribute_mut(pattern_attribute)
+                                .context("Set Pattern Fill Attribute Failed")?;
+                            let pattern_fill_id = pattern_fill_element.get_id();
+                            if let Some(fg_setting) = fill_data.foreground_color {
+                                let fg_element = xml_doc_mut
+                                    .append_child_mut("fgColor", Some(&pattern_fill_id))
+                                    .context("Pattern Fill Foreground Element Failed")?;
+                                let mut fg_attributes: HashMap<String, String> = HashMap::new();
+                                fg_attributes.insert(
+                                    ColorSettingTypeValues::get_string(
+                                        fg_setting.color_setting_type,
+                                    ),
+                                    fg_setting.value,
+                                );
+                                fg_element
+                                    .set_attribute_mut(fg_attributes)
+                                    .context("Set Foreground attribute Failed")?;
+                            }
+                            if let Some(bg_setting) = fill_data.background_color {
+                                let bg_element = xml_doc_mut
+                                    .append_child_mut("bgColor", Some(&pattern_fill_id))
+                                    .context("Pattern Fill Background Element Failed")?;
+                                let mut bg_attributes: HashMap<String, String> = HashMap::new();
+                                bg_attributes.insert(
+                                    ColorSettingTypeValues::get_string(
+                                        bg_setting.color_setting_type,
+                                    ),
+                                    bg_setting.value,
+                                );
+                                bg_element
+                                    .set_attribute_mut(bg_attributes)
+                                    .context("Set Background attribute Failed")?;
+                            }
+                        }
+                    }
+                }
+                // Create Border Elements
+                {
+                    let borders = xml_doc_mut
+                        .append_child_mut("borders", None)
+                        .context("Create borders parents Failed.")?;
+                    let borders_id = borders.get_id();
+                    if let Some(borders_query) = queries.get("select_border_style_table") {
+                        fn row_mapper(row: &Row) -> AnyResult<BorderStyle, rusqlite::Error> {
+                            let mut border_style = BorderStyle::default();
+                            let left_border: String = row.get(0)?;
+                            let top_border: String = row.get(1)?;
+                            let right_border: String = row.get(2)?;
+                            let bottom_border: String = row.get(3)?;
+                            let diagonal_border: String = row.get(4)?;
+                            border_style.left = from_str(&left_border).map_err(|_| {
+                                rusqlite::Error::InvalidColumnName(
+                                    "Left border parsing failed".to_string(),
+                                )
+                            })?;
+                            border_style.top = from_str(&top_border).map_err(|_| {
+                                rusqlite::Error::InvalidColumnName(
+                                    "Top border parsing failed".to_string(),
+                                )
+                            })?;
+                            border_style.right = from_str(&right_border).map_err(|_| {
+                                rusqlite::Error::InvalidColumnName(
+                                    "Right border parsing failed".to_string(),
+                                )
+                            })?;
+                            border_style.bottom = from_str(&bottom_border).map_err(|_| {
+                                rusqlite::Error::InvalidColumnName(
+                                    "Bottom border parsing failed".to_string(),
+                                )
+                            })?;
+                            border_style.diagonal = from_str(&diagonal_border).map_err(|_| {
+                                rusqlite::Error::InvalidColumnName(
+                                    "Diagonal border parsing failed".to_string(),
+                                )
+                            })?;
+                            Ok(border_style)
+                        }
+                        let borders_data = office_doc
+                            .get_connection()
+                            .find_many(borders_query, params![], row_mapper)
+                            .context("Border Style Query Results Failed")?;
+                        let mut attributes = HashMap::new();
+                        attributes.insert("count".to_string(), borders_data.len().to_string());
+                        borders
+                            .set_attribute_mut(attributes)
+                            .context("Updating Number Formats Element Attributes Failed")?;
+                        for border_data in borders_data {
+                            let border_id = xml_doc_mut
+                                .append_child_mut("border", Some(&borders_id))
+                                .context("Create Border Failed")?
+                                .get_id();
+                            // Left Border Setting
+                            Style::add_border_element(
+                                "left",
+                                &mut xml_doc_mut,
+                                &border_id,
+                                border_data.left,
+                            )?;
+                            // Top Border Setting
+                            Style::add_border_element(
+                                "top",
+                                &mut xml_doc_mut,
+                                &border_id,
+                                border_data.top,
+                            )?;
+                            //Right Border Setting
+                            Style::add_border_element(
+                                "right",
+                                &mut xml_doc_mut,
+                                &border_id,
+                                border_data.right,
+                            )?;
+                            // Bottom Border Setting
+                            Style::add_border_element(
+                                "bottom",
+                                &mut xml_doc_mut,
+                                &border_id,
+                                border_data.bottom,
+                            )?;
+                            // Diagonal Border Setting
+                            Style::add_border_element(
+                                "diagonal",
+                                &mut xml_doc_mut,
+                                &border_id,
+                                border_data.diagonal,
+                            )?;
+                        }
+                    }
+                }
+                // Create Defined Cell Style Elements
+                {
+                    Style::add_cell_style(
+                        "cellStyleXfs",
+                        "select_cell_style_xfs_table",
+                        &mut xml_doc_mut,
+                        &queries,
+                        &office_doc,
+                    )?;
+                }
+                // Create Cell Style Elements
+                {
+                    Style::add_cell_style(
+                        "cellXfs",
+                        "select_cell_xfs_table",
+                        &mut xml_doc_mut,
+                        &queries,
+                        &office_doc,
+                    )?;
+                }
+            }
+        }
+        Ok(())
+    }
+
     pub(crate) fn deserialize_cell_style(
         style_xfs: XmlElement,
         xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
@@ -750,7 +1038,7 @@ impl Style {
                                             .context("Number Wrap Text Parse Failed")?;
                                     }
                                     if let Some(vertical_alignment) =
-                                        alignment_attributes.get("horizontal")
+                                        alignment_attributes.get("vertical")
                                     {
                                         cell_xf.vertical_alignment =
                                             VerticalAlignmentValues::get_enum(vertical_alignment);
@@ -834,6 +1122,181 @@ impl Style {
                             }
                         }
                     }
+                }
+            }
+        })
+    }
+    /// Add Color Element Node To XML
+    fn add_color_element(
+        color_setting: Option<ColorSetting>,
+        xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
+        parent_id: usize,
+    ) -> Result<(), AnyError> {
+        Ok(if let Some(border_color_setting) = color_setting {
+            let colors = xml_doc_mut
+                .append_child_mut("color", Some(&parent_id))
+                .context("Create Color Element Failed")?;
+            let mut color_attribute: HashMap<String, String> = HashMap::new();
+            color_attribute.insert(
+                ColorSettingTypeValues::get_string(border_color_setting.color_setting_type),
+                border_color_setting.value,
+            );
+            colors
+                .set_attribute_mut(color_attribute)
+                .context("Setting Color Attribute Failed")?;
+        })
+    }
+    /// Add Border Element Node to XML
+    fn add_border_element(
+        border_side: &str,
+        xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
+        border_id: &usize,
+        border_data: BorderSetting,
+    ) -> Result<(), AnyError> {
+        let border_direction = xml_doc_mut
+            .append_child_mut(border_side, Some(&border_id))
+            .context(format!("{} Border Element Creation Failed", border_side))?;
+        let id = border_direction.get_id();
+        if border_data.style != BorderStyleValues::None {
+            let mut left_attribute: HashMap<String, String> = HashMap::new();
+            left_attribute.insert(
+                "style".to_string(),
+                BorderStyleValues::get_string(border_data.style),
+            );
+            border_direction
+                .set_attribute_mut(left_attribute)
+                .context(format!("Set {} Attribute Failed", border_side))?;
+            Style::add_color_element(border_data.border_color, xml_doc_mut, id)?;
+        }
+        Ok(())
+    }
+    fn add_cell_style(
+        parent_tag: &str,
+        query_id: &str,
+        xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
+        queries: &HashMap<String, String>,
+        office_doc: &std::cell::Ref<'_, OfficeDocument>,
+    ) -> Result<(), AnyError> {
+        let cell_style_xfs = xml_doc_mut
+            .append_child_mut(parent_tag, None)
+            .context("Create Cell Style parents Failed.")?;
+        let cell_style_xfs_id = cell_style_xfs.get_id();
+        Ok(if let Some(cell_style_xfs_query) = queries.get(query_id) {
+            fn row_mapper(row: &Row) -> AnyResult<CellXfs, rusqlite::Error> {
+                let horizontal_alignment: String = row.get(12)?;
+                let vertical_alignment: String = row.get(13)?;
+                let cell_style = CellXfs {
+                    id: 0,
+                    format_id: row.get(0)?,
+                    number_format_id: row.get(1)?,
+                    font_id: row.get(2)?,
+                    fill_id: row.get(3)?,
+                    border_id: row.get(4)?,
+                    apply_font: row.get(5)?,
+                    apply_alignment: row.get(6)?,
+                    apply_fill: row.get(7)?,
+                    apply_border: row.get(8)?,
+                    apply_number_format: row.get(9)?,
+                    apply_protection: row.get(10)?,
+                    is_wrap_text: row.get(11)?,
+                    horizontal_alignment: HorizontalAlignmentValues::get_enum(
+                        &horizontal_alignment,
+                    ),
+                    vertical_alignment: VerticalAlignmentValues::get_enum(&vertical_alignment),
+                };
+                Ok(cell_style)
+            }
+            let cell_style_xfs_data = office_doc
+                .get_connection()
+                .find_many(cell_style_xfs_query, params![], row_mapper)
+                .context("Num Format Query Results Failed")?;
+            let mut attributes = HashMap::new();
+            attributes.insert("count".to_string(), cell_style_xfs_data.len().to_string());
+            cell_style_xfs
+                .set_attribute_mut(attributes)
+                .context("Updating Number Formats Element Attributes Failed")?;
+            for cell_style_xfs in cell_style_xfs_data {
+                let xf = xml_doc_mut
+                    .append_child_mut("xf", Some(&cell_style_xfs_id))
+                    .context("Create Cell Style Config Failed")?;
+                let xf_id = xf.get_id();
+                let mut attributes: HashMap<String, String> = HashMap::new();
+                attributes.insert(
+                    "numFmtId".to_string(),
+                    cell_style_xfs.number_format_id.to_string(),
+                );
+                attributes.insert("fontId".to_string(), cell_style_xfs.font_id.to_string());
+                attributes.insert("fillId".to_string(), cell_style_xfs.fill_id.to_string());
+                attributes.insert("borderId".to_string(), cell_style_xfs.border_id.to_string());
+                if cell_style_xfs.apply_font > 0 {
+                    attributes.insert(
+                        "applyFont".to_string(),
+                        cell_style_xfs.apply_font.to_string(),
+                    );
+                }
+                if cell_style_xfs.apply_alignment > 0 {
+                    attributes.insert(
+                        "applyAlignment".to_string(),
+                        cell_style_xfs.apply_alignment.to_string(),
+                    );
+                }
+                if cell_style_xfs.apply_fill > 0 {
+                    attributes.insert(
+                        "applyFill".to_string(),
+                        cell_style_xfs.apply_fill.to_string(),
+                    );
+                }
+                if cell_style_xfs.apply_border > 0 {
+                    attributes.insert(
+                        "applyBorder".to_string(),
+                        cell_style_xfs.apply_border.to_string(),
+                    );
+                }
+                if cell_style_xfs.apply_number_format > 0 {
+                    attributes.insert(
+                        "applyNumberFormat".to_string(),
+                        cell_style_xfs.apply_number_format.to_string(),
+                    );
+                }
+                if cell_style_xfs.apply_protection > 0 {
+                    attributes.insert(
+                        "applyProtection".to_string(),
+                        cell_style_xfs.apply_protection.to_string(),
+                    );
+                }
+                xf.set_attribute_mut(attributes)
+                    .context("Setting Attributes Failed")?;
+                if cell_style_xfs.is_wrap_text > 0
+                    || cell_style_xfs.vertical_alignment != VerticalAlignmentValues::None
+                    || cell_style_xfs.horizontal_alignment != HorizontalAlignmentValues::None
+                {
+                    let alignment = xml_doc_mut
+                        .append_child_mut("alignment", Some(&xf_id))
+                        .context("Create Cell Alignment Style Config Failed")?;
+                    let mut alignment_attributes: HashMap<String, String> = HashMap::new();
+                    if cell_style_xfs.is_wrap_text > 0 {
+                        alignment_attributes.insert(
+                            "wrapText".to_string(),
+                            cell_style_xfs.is_wrap_text.to_string(),
+                        );
+                    }
+                    if cell_style_xfs.vertical_alignment != VerticalAlignmentValues::None {
+                        alignment_attributes.insert(
+                            "vertical".to_string(),
+                            VerticalAlignmentValues::get_string(cell_style_xfs.vertical_alignment),
+                        );
+                    }
+                    if cell_style_xfs.horizontal_alignment != HorizontalAlignmentValues::None {
+                        alignment_attributes.insert(
+                            "horizontal".to_string(),
+                            HorizontalAlignmentValues::get_string(
+                                cell_style_xfs.horizontal_alignment,
+                            ),
+                        );
+                    }
+                    alignment
+                        .set_attribute_mut(alignment_attributes)
+                        .context("Setting Alignment Attribute Failed")?;
                 }
             }
         })

@@ -20,12 +20,7 @@ pub struct RelationsPart {
 
 impl Drop for RelationsPart {
     fn drop(&mut self) {
-        if let Some(xml_document) = self.office_document.upgrade() {
-            let _ = xml_document
-                .try_borrow_mut()
-                .unwrap()
-                .close_xml_document(&self.file_name);
-        }
+        let _ = self.close_document();
     }
 }
 
@@ -44,6 +39,18 @@ impl XmlDocumentPartCommon for RelationsPart {
             .set_attribute_mut(attributes)
             .context("Updating Attribute Failed")?;
         Ok(xml_document)
+    }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
+        if let Some(xml_document) = self.office_document.upgrade() {
+            xml_document
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_document(&self.file_name)?;
+        }
+        Ok(())
     }
 }
 
