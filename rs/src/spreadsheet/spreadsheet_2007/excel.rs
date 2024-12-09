@@ -1,3 +1,4 @@
+use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::OfficeDocument,
     global_2007::{
@@ -8,7 +9,6 @@ use crate::{
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
-use crate::global_2007::traits::XmlDocumentPartCommon;
 
 #[derive(Debug)]
 pub struct Excel {
@@ -69,10 +69,10 @@ impl Excel {
 
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
-        self.workbook.flush();
-        self.content_type.flush();
-        self.core_properties.flush();
-        self.root_relations.flush();
+        self.workbook.flush()?;
+        self.content_type.flush()?;
+        self.core_properties.flush()?;
+        self.root_relations.flush()?;
         self.office_document
             .try_borrow_mut()
             .context("Save Office Document handle Failed")?

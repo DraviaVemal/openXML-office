@@ -84,7 +84,7 @@ CREATE TABLE
 
 -- query : insert_number_format_table# 
 INSERT INTO
-    number_formats (format_code, format_id)
+    number_formats (format_id, format_code)
 VALUES
     (?, ?);
 
@@ -195,7 +195,7 @@ FROM
 ORDER BY
     id;
 
--- query : select_share_string_table# 
+-- query : select_fill_style_table# 
 SELECT
     background_color_setting,
     foreground_color_setting,
@@ -205,7 +205,7 @@ FROM
 ORDER BY
     id;
 
--- query : select_share_string_table# 
+-- query : select_border_style_table# 
 SELECT
     left_border,
     top_border,

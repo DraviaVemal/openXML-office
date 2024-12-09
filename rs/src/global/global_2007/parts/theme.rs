@@ -3,7 +3,7 @@ use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::traits::XmlDocumentPart,
 };
-use anyhow::{Error as AnyError, Result as AnyResult};
+use anyhow::{Error as AnyError, Ok, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
 #[derive(Debug)]
@@ -15,12 +15,7 @@ pub struct ThemePart {
 
 impl Drop for ThemePart {
     fn drop(&mut self) {
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            let _ = xml_tree
-                .try_borrow_mut()
-                .unwrap()
-                .close_xml_document(&self.file_name);
-        }
+        let _ = self.close_document();
     }
 }
 
@@ -28,6 +23,18 @@ impl XmlDocumentPartCommon for ThemePart {
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
         XmlSerializer::vec_to_xml_doc_tree(include_str!("theme.xml").as_bytes().to_vec())
+    }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
+        if let Some(xml_tree) = self.office_document.upgrade() {
+            xml_tree
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_document(&self.file_name)?;
+        }
+        Ok(())
     }
 }
 

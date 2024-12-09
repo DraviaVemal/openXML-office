@@ -29,12 +29,7 @@ pub struct WorkbookPart {
 
 impl Drop for WorkbookPart {
     fn drop(&mut self) {
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            let data = xml_tree
-                .try_borrow_mut()
-                .unwrap()
-                .close_xml_document(&self.file_path);
-        }
+        let _ = self.close_document();
     }
 }
 
@@ -47,6 +42,18 @@ impl XmlDocumentPartCommon for WorkbookPart {
             <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7"/>
         </workbook>"#;
         XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+    }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
+        if let Some(xml_tree) = self.office_document.upgrade() {
+            xml_tree
+                .try_borrow_mut()
+                .unwrap()
+                .close_xml_document(&self.file_path)?;
+        }
+        Ok(())
     }
 }
 

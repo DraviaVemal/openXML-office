@@ -91,7 +91,7 @@ impl SqliteDatabases {
             .map_err(|e| anyhow!("Failed to Run Find Many Query {}", e))?;
         let mut results = Vec::new();
         for row in stmt.query_map(params, row_mapper)? {
-            let item = row?;
+            let item = row.context("Parsing the Row Error")?;
             results.push(item);
         }
         Ok(results)

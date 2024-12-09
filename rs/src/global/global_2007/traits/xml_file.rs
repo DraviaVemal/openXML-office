@@ -5,11 +5,15 @@ use std::{cell::RefCell, rc::Weak};
 
 pub trait XmlDocumentPartCommon {
     /// Save the current file state
-    fn flush(self)
+    fn flush(mut self) -> AnyResult<(), AnyError>
     where
         Self: Sized,
     {
+        self.close_document()
     }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized;
     /// Get content of the current xml
     fn get_xml_document(
         office_document: &Weak<RefCell<OfficeDocument>>,
