@@ -16,6 +16,20 @@ pub struct CorePropertiesPart {
 
 impl Drop for CorePropertiesPart {
     fn drop(&mut self) {
+        let _ = self.close_document();
+    }
+}
+
+impl XmlDocumentPartCommon for CorePropertiesPart {
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+        XmlSerializer::vec_to_xml_doc_tree(include_str!("core_properties.xml").as_bytes().to_vec())
+    }
+
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
         // Update Last modified date part
         if let Some(xml_document_ref) = self.xml_document.upgrade() {
             let mut xml_document = xml_document_ref.borrow_mut();
@@ -34,18 +48,12 @@ impl Drop for CorePropertiesPart {
         }
         // Update the current state to DB before dropping the object
         if let Some(xml_tree) = self.office_document.upgrade() {
-            let _ = xml_tree
+            xml_tree
                 .try_borrow_mut()
                 .unwrap()
-                .close_xml_document(&self.file_name);
+                .close_xml_document(&self.file_name)?;
         }
-    }
-}
-
-impl XmlDocumentPartCommon for CorePropertiesPart {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        XmlSerializer::vec_to_xml_doc_tree(include_str!("core_properties.xml").as_bytes().to_vec())
+        Ok(())
     }
 }
 

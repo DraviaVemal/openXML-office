@@ -21,6 +21,30 @@ pub struct ShareString {
 
 impl Drop for ShareString {
     fn drop(&mut self) {
+        let _ = self.close_document();
+    }
+}
+
+impl XmlDocumentPartCommon for ShareString {
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+        let mut attributes: HashMap<String, String> = HashMap::new();
+        attributes.insert(
+            "xmlns".to_string(),
+            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
+        );
+        let mut xml_document = XmlDocument::new();
+        xml_document
+            .create_root_mut("sst")
+            .context("Create Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Set Attribute Failed")?;
+        Ok(xml_document)
+    }
+    fn close_document(&mut self) -> AnyResult<(), AnyError>
+    where
+        Self: Sized,
+    {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
             if let Some(select_query) =
                 get_all_queries!("share_string.sql").get("select_share_string_table")
@@ -62,29 +86,12 @@ impl Drop for ShareString {
         }
 
         if let Some(xml_tree) = self.office_document.upgrade() {
-            let _ = xml_tree
+            xml_tree
                 .try_borrow_mut()
                 .unwrap()
-                .close_xml_document(&self.file_path);
+                .close_xml_document(&self.file_path)?;
         }
-    }
-}
-
-impl XmlDocumentPartCommon for ShareString {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        let mut attributes: HashMap<String, String> = HashMap::new();
-        attributes.insert(
-            "xmlns".to_string(),
-            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
-        );
-        let mut xml_document = XmlDocument::new();
-        xml_document
-            .create_root_mut("sst")
-            .context("Create Root Element Failed")?
-            .set_attribute_mut(attributes)
-            .context("Set Attribute Failed")?;
-        Ok(xml_document)
+        Ok(())
     }
 }
 
@@ -133,7 +140,7 @@ impl ShareString {
                             if let Some(text_element) = xml_doc_mut.pop_element_mut(&child_id) {
                                 let value =
                                     text_element.get_value().clone().unwrap_or("".to_string());
-                                let _ = office_doc
+                                office_doc
                                     .get_connection()
                                     .insert_record(&insert_query, params![value])
                                     .context("Create Share String Table Failed")?;
