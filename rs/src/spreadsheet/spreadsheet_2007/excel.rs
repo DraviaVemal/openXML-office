@@ -8,6 +8,7 @@ use crate::{
     spreadsheet_2007::parts::{WorkSheet, WorkbookPart},
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
+use std::rc::Weak;
 use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]
@@ -40,19 +41,21 @@ impl Excel {
                 .context("Creating Office Document Struct Failed")?;
         let rc_office_document: Rc<RefCell<OfficeDocument>> =
             Rc::new(RefCell::new(office_document));
-        let root_relations = RelationsPart::new(Rc::downgrade(&rc_office_document), None)
-            .context("Initialize Root Relation Part failed")?;
-        let content_type = ContentTypesPart::new(Rc::downgrade(&rc_office_document), None)
-            .context("Initializing Content Type Part Failed")?;
+        let mut root_relations =
+            RelationsPart::new(Rc::downgrade(&rc_office_document), "_rels/.rels")
+                .context("Initialize Root Relation Part failed")?;
+        let content_type =
+            ContentTypesPart::new(Rc::downgrade(&rc_office_document), "[Content_Types].xml")
+                .context("Initializing Content Type Part Failed")?;
         // Load relevant parts from root relations part
-        let core_properties_path: Option<String> = root_relations.get_relationship_target_by_type("http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties").context("Parsing Core Properties path failed")?;
-        let workbook_path: Option<String> = root_relations.get_relationship_target_by_type("http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument").context("Parsing workbook path failed")?;
-        let core_properties =
-            CorePropertiesPart::new(Rc::downgrade(&rc_office_document), core_properties_path)
-                .context("Load CorePart for Existing file failed")?;
-        let workbook: WorkbookPart =
-            WorkbookPart::new(Rc::downgrade(&rc_office_document), workbook_path)
-                .context("Workbook Creation Failed")?;
+        let core_properties = CorePropertiesPart::create_core_properties(
+            &mut root_relations,
+            Rc::downgrade(&rc_office_document),
+        )
+        .context("Creating Core Property Part Failed.")?;
+        let workbook =
+            Excel::create_workbook_part(&mut root_relations, Rc::downgrade(&rc_office_document))
+                .context("Creating Workbook part Failed")?;
         Ok(Self {
             office_document: rc_office_document,
             root_relations,
@@ -86,5 +89,24 @@ impl Excel {
 impl Excel {
     fn get_workbook(&mut self) -> &mut WorkbookPart {
         &mut self.workbook
+    }
+
+    fn create_workbook_part(
+        relations_part: &mut RelationsPart,
+        office_document: Weak<RefCell<OfficeDocument>>,
+    ) -> AnyResult<WorkbookPart, AnyError> {
+        let workbook_path: Option<String> = relations_part.get_relationship_target_by_type("http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument").context("Parsing workbook path failed")?;
+        Ok(if let Some(part_path) = workbook_path {
+            WorkbookPart::new(office_document, &part_path).context("Workbook Creation Failed")?
+        } else {
+            relations_part
+                .set_new_relationship_mut(
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
+                    "xl/workbook.xml",
+                )
+                .context("Setting New Theme Relationship Failed.")?;
+            WorkbookPart::new(office_document, "xl/workbook.xml")
+                .context("Workbook Creation Failed")?
+        })
     }
 }

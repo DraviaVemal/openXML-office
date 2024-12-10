@@ -10,7 +10,7 @@ use crate::{
         services::{CalculationChain, CommonServices, ShareString, Style},
     },
 };
-use anyhow::{Context, Error as AnyError, Result as AnyResult};
+use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
 use std::{
     cell::RefCell,
     path::Path,
@@ -62,67 +62,43 @@ impl XmlDocumentPart for WorkbookPart {
     /// Create workbook
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_path_option: Option<String>,
+        file_path: &str,
     ) -> AnyResult<Self, AnyError> {
-        let mut file_path = "xl/workbook.xml".to_string();
-        if let Some(path) = file_path_option {
-            file_path = path.to_string()
-        }
-        let file_tree = Self::get_xml_document(&office_document, &file_path)?;
+        let file_tree = Self::get_xml_document(&office_document, file_path)?;
         let relation_path = Path::new(&file_path)
             .parent()
             .unwrap_or(Path::new(""))
             .display()
             .to_string();
-        let relations_part = RelationsPart::new(
+        let mut relations_part = RelationsPart::new(
             office_document.clone(),
-            Some(format!("{}/_rels/workbook.xml.rels", relation_path)),
+            &format!("{}/_rels/workbook.xml.rels", relation_path),
         )
         .context("Creating Relation ship part for workbook failed.")?;
-        let theme_part_path: String = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
-            )
-            .context("Parsing Theme part path failed")?
-            .unwrap_or(format!("{}/theme/theme1.xml", relation_path));
-        let share_string_path: String = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
-            )
-            .context("Parsing Theme part path failed")?
-            .unwrap_or(format!("{}/sharedStrings.xml", relation_path));
-        let calculation_chain_path: String = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/calcChain",
-            )
-            .context("Parsing Theme part path failed")?
-            .unwrap_or(format!("{}/calcChain.xml", relation_path));
-        let style_path: String = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
-            )
-            .context("Parsing Theme part path failed")?
-            .unwrap_or(format!("{}/styles.xml", relation_path));
-        let theme_part = ThemePart::new(
+        let theme_part = WorkbookPart::create_theme_part(
+            &mut relations_part,
             office_document.clone(),
-            Some(format!("{}/{}", relation_path, theme_part_path)),
+            &relation_path,
         )
-        .context("Creating Theme part for workbook failed")?;
-        let share_string = ShareString::new(
+        .context("Loading Theme Part Failed")?;
+        let share_string = WorkbookPart::create_share_string(
+            &mut relations_part,
             office_document.clone(),
-            Some(format!("{}/{}", relation_path, share_string_path)),
+            &relation_path,
         )
-        .context("Share String Service Object Creation Failure")?;
-        let calculation_chain = CalculationChain::new(
+        .context("Loading Share String Failed")?;
+        let calculation_chain = WorkbookPart::create_calculation_chain(
+            &mut relations_part,
             office_document.clone(),
-            Some(format!("{}/{}", relation_path, calculation_chain_path)),
+            &relation_path,
         )
-        .context("Calculation Chain Service Object Creation Failure")?;
-        let style = Style::new(
+        .context("Loading Calculation Chain Failed")?;
+        let style = WorkbookPart::create_style_part(
+            &mut relations_part,
             office_document.clone(),
-            Some(format!("{}/{}", relation_path, style_path)),
+            &relation_path,
         )
-        .context("Style Service Object Creation Failure")?;
+        .context("Loading Style Part Failed")?;
         let common_service = Rc::new(RefCell::new(CommonServices::new(
             calculation_chain,
             share_string,
@@ -131,7 +107,7 @@ impl XmlDocumentPart for WorkbookPart {
         Ok(Self {
             office_document,
             xml_document: file_tree,
-            file_path,
+            file_path: file_path.to_string(),
             common_service,
             relations_part,
             theme_part,
@@ -140,6 +116,119 @@ impl XmlDocumentPart for WorkbookPart {
 }
 
 // ############################# Internal Function ######################################
+impl WorkbookPart {
+    fn create_theme_part(
+        relations_part: &mut RelationsPart,
+        office_document: Weak<RefCell<OfficeDocument>>,
+        relation_path: &str,
+    ) -> AnyResult<ThemePart, AnyError> {
+        let theme_part_path = relations_part
+            .get_relationship_target_by_type(
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
+            )
+            .context("Parsing Theme part path failed")?;
+        Ok(if let Some(part_path) = theme_part_path {
+            ThemePart::new(office_document.clone(), &part_path)
+                .context("Creating Theme part for workbook failed")?
+        } else {
+            relations_part
+                .set_new_relationship_mut(
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
+                    &format!("{}/theme/theme1.xml", relation_path),
+                )
+                .context("Setting New Theme Relationship Failed.")?;
+            ThemePart::new(
+                office_document.clone(),
+                &format!("{}/theme/theme1.xml", relation_path),
+            )
+            .context("Creating Theme part for workbook failed")?
+        })
+    }
+    fn create_share_string(
+        relations_part: &mut RelationsPart,
+        office_document: Weak<RefCell<OfficeDocument>>,
+        relation_path: &str,
+    ) -> AnyResult<ShareString, AnyError> {
+        let share_string_path = relations_part
+            .get_relationship_target_by_type(
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
+            )
+            .context("Parsing Theme part path failed")?;
+        Ok(if let Some(part_path) = share_string_path {
+            ShareString::new(office_document.clone(), &part_path)
+                .context("Share String Service Object Creation Failure")?
+        } else {
+            relations_part
+            .set_new_relationship_mut(
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
+                &format!("{}/sharedStrings.xml", relation_path),
+            )
+            .context("Setting New Theme Relationship Failed.")?;
+            ShareString::new(
+                office_document.clone(),
+                &format!("{}/sharedStrings.xml", relation_path),
+            )
+            .context("Share String Service Object Creation Failure")?
+        })
+    }
+    fn create_calculation_chain(
+        relations_part: &mut RelationsPart,
+        office_document: Weak<RefCell<OfficeDocument>>,
+        relation_path: &str,
+    ) -> AnyResult<CalculationChain, AnyError> {
+        let calculation_chain_path = relations_part
+            .get_relationship_target_by_type(
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/calcChain",
+            )
+            .context("Parsing Theme part path failed")?;
+        Ok(if let Some(part_path) = calculation_chain_path {
+            CalculationChain::new(office_document.clone(), &part_path)
+                .context("Calculation Chain Service Object Creation Failure")?
+        } else {
+            relations_part
+                .set_new_relationship_mut(
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/calcChain",
+                    &format!("{}/calcChain.xml", relation_path),
+                )
+                .context("Setting New Theme Relationship Failed.")?;
+            CalculationChain::new(
+                office_document.clone(),
+                &format!("{}/calcChain.xml", relation_path),
+            )
+            .context("Calculation Chain Service Object Creation Failure")?
+        })
+    }
+
+    fn create_style_part(
+        relations_part: &mut RelationsPart,
+        office_document: Weak<RefCell<OfficeDocument>>,
+        relation_path: &str,
+    ) -> AnyResult<Style, AnyError> {
+        let style_path = relations_part
+            .get_relationship_target_by_type(
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+            )
+            .context("Parsing Theme part path failed")?;
+        Ok(if let Some(part_path) = style_path {
+            Style::new(office_document.clone(), &part_path)
+                .context("Style Service Object Creation Failure")?
+        } else {
+            relations_part
+                .set_new_relationship_mut(
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+                    &format!("{}/styles.xml", relation_path),
+                )
+                .context("Setting New Theme Relationship Failed.")?;
+            Style::new(
+                office_document.clone(),
+                &format!("{}/styles.xml", relation_path),
+            )
+            .context("Style Service Object Creation Failure")?
+        })
+    }
+}
+
+// ############################# Feature Function ######################################
 impl WorkbookPart {
     pub(crate) fn add_sheet(
         &mut self,

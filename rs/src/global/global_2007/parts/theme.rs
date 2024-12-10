@@ -42,17 +42,13 @@ impl XmlDocumentPartCommon for ThemePart {
 impl XmlDocumentPart for ThemePart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_name: Option<String>,
+        file_name: &str,
     ) -> AnyResult<Self, AnyError> {
-        let mut local_file_name = "theme/theme1.xml".to_string();
-        if let Some(file_name) = file_name {
-            local_file_name = file_name.to_string();
-        }
-        let xml_document = Self::get_xml_document(&office_document, &local_file_name)?;
+        let xml_document = Self::get_xml_document(&office_document, file_name)?;
         Ok(Self {
             office_document,
             xml_document,
-            file_name: local_file_name.to_string(),
+            file_name: file_name.to_string(),
         })
     }
 }

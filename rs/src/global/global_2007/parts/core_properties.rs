@@ -1,9 +1,9 @@
-use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
-    global_2007::traits::XmlDocumentPart,
+    global_2007::parts::RelationsPart,
+    global_2007::traits::{XmlDocumentPart, XmlDocumentPartCommon},
 };
-use anyhow::{Error as AnyError, Result as AnyResult};
+use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;
 use std::{cell::RefCell, rc::Weak};
 
@@ -61,16 +61,35 @@ impl XmlDocumentPartCommon for CorePropertiesPart {
 impl XmlDocumentPart for CorePropertiesPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        _: Option<String>,
+        file_name: &str,
     ) -> AnyResult<Self, AnyError> {
-        let file_name = "docProps/core.xml".to_string();
         let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
             xml_document,
-            file_name,
+            file_name: file_name.to_string(),
         })
     }
 }
 
-impl CorePropertiesPart {}
+impl CorePropertiesPart {
+    pub(crate) fn create_core_properties(
+        relations_part: &mut RelationsPart,
+        office_document: Weak<RefCell<OfficeDocument>>,
+    ) -> AnyResult<CorePropertiesPart, AnyError> {
+        let core_properties_path: Option<String> = relations_part.get_relationship_target_by_type("http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties").context("Parsing Core Properties path failed")?;
+        Ok(if let Some(part_path) = core_properties_path {
+            CorePropertiesPart::new(office_document, &part_path)
+                .context("Load CorePart for Existing file failed")?
+        } else {
+            relations_part
+                .set_new_relationship_mut(
+                    "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties",
+                    "docProps/core.xml",
+                )
+                .context("Setting New Theme Relationship Failed.")?;
+            CorePropertiesPart::new(office_document, "docProps/core.xml")
+                .context("Load CorePart for Existing file failed")?
+        })
+    }
+}

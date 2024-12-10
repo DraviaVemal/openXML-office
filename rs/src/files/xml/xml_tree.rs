@@ -367,6 +367,10 @@ impl XmlElement {
 
     // ######################## Data Read Only Methods ###########################
 
+    pub fn get_child_count(&self) -> usize {
+        self.children.borrow().len()
+    }
+
     pub fn get_tag(&self) -> &str {
         &self.tag
     }

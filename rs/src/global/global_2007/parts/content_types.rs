@@ -43,14 +43,13 @@ impl XmlDocumentPartCommon for ContentTypesPart {
 impl XmlDocumentPart for ContentTypesPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        _: Option<String>,
+        file_name: &str,
     ) -> AnyResult<Self, AnyError> {
-        let file_name = "[Content_Types].xml".to_string();
         let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
             xml_document,
-            file_name,
+            file_name: file_name.to_string(),
         })
     }
 }
