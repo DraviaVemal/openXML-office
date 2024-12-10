@@ -258,3 +258,132 @@ FROM
     cell_xfs
 ORDER BY
     id;
+
+-- query : default_font_value#
+INSERT INTO
+    font_style (
+        font_name,
+        color_type,
+        color_value,
+        family_id,
+        font_size,
+        font_scheme,
+        is_bold,
+        is_italic,
+        is_underline,
+        is_double_underline
+    )
+VALUES
+    (
+        'Calibri',
+        'theme',
+        '1',
+        2,
+        11,
+        'minor',
+        0,
+        0,
+        0,
+        0
+    );
+
+-- query : default_fill_value#
+INSERT INTO
+    fill_style (
+        background_color_setting,
+        foreground_color_setting,
+        pattern_type
+    )
+VALUES
+    ('null', 'null', 'none'),
+    ('null', 'null', 'gray125');
+
+-- query : default_border_value#
+INSERT INTO
+    border_style (
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+        diagonal_border
+    )
+VALUES
+    (
+        '{"border_color":null,"style":"None"}',
+        '{"border_color":null,"style":"None"}',
+        '{"border_color":null,"style":"None"}',
+        '{"border_color":null,"style":"None"}',
+        '{"border_color":null,"style":"None"}'
+    );
+
+-- query : default_style_xfs_value#
+INSERT INTO
+    cell_style_xfs (
+        format_id,
+        number_format_id,
+        font_id,
+        fill_id,
+        border_id,
+        is_apply_font,
+        is_apply_alignment,
+        is_apply_fill,
+        is_apply_border,
+        is_apply_number_format,
+        is_apply_protection,
+        is_wrap_text,
+        horizontal_alignment,
+        vertical_alignment
+    )
+VALUES
+    (
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        'none',
+        'none'
+    );
+
+-- query : default_xfs_value#
+INSERT INTO
+    cell_xfs (
+        format_id,
+        number_format_id,
+        font_id,
+        fill_id,
+        border_id,
+        is_apply_font,
+        is_apply_alignment,
+        is_apply_fill,
+        is_apply_border,
+        is_apply_number_format,
+        is_apply_protection,
+        is_wrap_text,
+        horizontal_alignment,
+        vertical_alignment
+    )
+VALUES
+    (
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        'none',
+        'none'
+    );

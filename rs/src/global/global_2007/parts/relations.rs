@@ -1,15 +1,9 @@
-use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument},
-    global_2007::traits::XmlDocumentPart,
+    global_2007::traits::{XmlDocumentPart, XmlDocumentPartCommon},
 };
-use anyhow::{Context, Error as AnyError, Result as AnyResult};
-use std::{
-    borrow::Borrow,
-    cell::RefCell,
-    collections::HashMap,
-    rc::{Rc, Weak},
-};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
+use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
 pub struct RelationsPart {
@@ -58,21 +52,17 @@ impl XmlDocumentPartCommon for RelationsPart {
 impl XmlDocumentPart for RelationsPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        dir_path: Option<String>,
+        file_name: &str,
     ) -> AnyResult<Self, AnyError> {
-        let mut file_name = "_rels/.rels".to_string();
-        if let Some(specific_file_name) = dir_path {
-            file_name = specific_file_name;
-        }
         let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
             xml_document,
-            file_name,
+            file_name: file_name.to_string(),
         })
     }
 }
-
+/// ####################### Im-Mut Access Functions ####################
 impl RelationsPart {
     /// Get Relation Target based on Type
     /// Note: This will get the first element match the criteria
@@ -80,11 +70,9 @@ impl RelationsPart {
         &self,
         content_type: &str,
     ) -> AnyResult<Option<String>, AnyError> {
-        let xml_document_ref: Option<Rc<RefCell<XmlDocument>>> =
-            self.xml_document.borrow().upgrade();
-        if let Some(xml_document) = xml_document_ref {
+        if let Some(xml_document) = self.xml_document.upgrade() {
             let xml_doc = xml_document
-                .try_borrow_mut()
+                .try_borrow()
                 .context("XML Document Borrow Failed")?;
             if let Some(result) = xml_doc.get_element_by_attribute("Type", content_type, None) {
                 return Ok(Some(
@@ -99,5 +87,55 @@ impl RelationsPart {
             }
         }
         Ok(None)
+    }
+
+    fn get_next_relationship_id(&self) -> AnyResult<String, AnyError> {
+        if let Some(xml_document) = self.xml_document.upgrade() {
+            let xml_doc = xml_document
+                .try_borrow()
+                .context("XML Document Borrow Failed")?;
+            if let Some(root) = xml_doc.get_root() {
+                let mut children = root.get_child_count() + 1;
+                loop {
+                    if let Some(_) =
+                        xml_doc.get_element_by_attribute("Id", &format!("rId{}", children), None)
+                    {
+                        children += 1;
+                    } else {
+                        break;
+                    }
+                }
+                return Ok(format!("rId{}", children));
+            }
+        }
+        Err(anyhow!("Generating Relationship Id Failed"))
+    }
+}
+/// ####################### Mut Access Functions ####################
+impl RelationsPart {
+    pub fn set_new_relationship_mut(
+        &mut self,
+        content_type: &str,
+        target: &str,
+    ) -> AnyResult<(), AnyError> {
+        if let Some(xml_document) = self.xml_document.upgrade() {
+            let next_id = self
+                .get_next_relationship_id()
+                .context("Create New Relation Get next Id Failed")?;
+            let mut xml_doc_mut = xml_document
+                .try_borrow_mut()
+                .context("XML Document Borrow Failed")?;
+            let new_relationship = xml_doc_mut
+                .append_child_mut("Relationship", None)
+                .context("Creating Relationship Failed")?;
+            let mut attributes: HashMap<String, String> = HashMap::new();
+            attributes.insert("Id".to_string(), next_id);
+            attributes.insert("Type".to_string(), content_type.to_string());
+            attributes.insert("Target".to_string(), target.to_string());
+            new_relationship
+                .set_attribute_mut(attributes)
+                .context("Setting Relationship Attributes Failed.")?;
+        }
+        Ok(())
     }
 }
