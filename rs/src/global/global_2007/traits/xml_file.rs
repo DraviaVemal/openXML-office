@@ -48,7 +48,7 @@ pub trait XmlDocumentServicePart: XmlDocumentPartCommon {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         common_service: Weak<RefCell<CommonServices>>,
-        file_name: Option<String>,
+        file_name: &str,
     ) -> AnyResult<Self, AnyError>
     where
         Self: Sized;

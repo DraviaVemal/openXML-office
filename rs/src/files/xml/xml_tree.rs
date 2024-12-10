@@ -32,41 +32,46 @@ impl XmlDocument {
         self.xml_element_collection.get(&0)
     }
 
-    pub fn get_element_id_by_attribute(
+    pub fn get_element_ids_by_attribute(
         &self,
         attribute_key: &str,
         attribute_value: &str,
         parent_id: Option<&usize>,
-    ) -> Option<usize> {
+    ) -> Option<Vec<usize>> {
         let parent_id = parent_id.unwrap_or(&0);
-        let mut id: Option<usize> = None;
+        let mut element_ids: Option<Vec<usize>> = None;
         if let Some(parent_element) = self.xml_element_collection.get(&parent_id) {
-            if let Some(found_child) = parent_element.children.borrow().iter().find(|item| {
-                if let Some(current) = self.xml_element_collection.get(&item.id) {
-                    if let Some(attribute) = current.get_attribute() {
-                        if let Some(value) = attribute.get(attribute_key) {
-                            return value == attribute_value;
+            let matching_element_ids = parent_element
+                .children
+                .borrow()
+                .iter()
+                .filter(|item| {
+                    if let Some(current) = self.xml_element_collection.get(&item.id) {
+                        if let Some(attribute) = current.get_attribute() {
+                            if let Some(value) = attribute.get(attribute_key) {
+                                return value == attribute_value;
+                            }
                         }
                     }
-                }
-                false
-            }) {
-                id = Some(found_child.id);
-            }
+                    false
+                })
+                .map(|item| item.id)
+                .collect::<Vec<usize>>();
+            element_ids = Some(matching_element_ids);
         }
-        id
+        element_ids
     }
 
-    pub fn get_element_by_attribute(
+    pub fn get_first_element_by_attribute(
         &self,
         attribute_key: &str,
         attribute_value: &str,
         parent_id: Option<&usize>,
     ) -> Option<&XmlElement> {
-        if let Some(id) =
-            self.get_element_id_by_attribute(attribute_key, attribute_value, parent_id)
+        if let Some(ids) =
+            self.get_element_ids_by_attribute(attribute_key, attribute_value, parent_id)
         {
-            self.xml_element_collection.get(&id)
+            self.xml_element_collection.get(&ids[0])
         } else {
             None
         }
@@ -269,16 +274,16 @@ impl XmlDocument {
         }
     }
 
-    pub fn get_element_by_attribute_mut(
+    pub fn get_first_element_by_attribute_mut(
         &mut self,
         attribute_key: &str,
         attribute_value: &str,
         parent_id: Option<&usize>,
     ) -> Option<&mut XmlElement> {
-        if let Some(find_id) =
-            self.get_element_id_by_attribute(attribute_key, attribute_value, parent_id)
+        if let Some(ids) =
+            self.get_element_ids_by_attribute(attribute_key, attribute_value, parent_id)
         {
-            self.xml_element_collection.get_mut(&find_id)
+            self.xml_element_collection.get_mut(&ids[0])
         } else {
             None
         }

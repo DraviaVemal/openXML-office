@@ -1,18 +1,18 @@
-use crate::global_2007::traits::{XmlDocumentPartCommon, XmlDocumentServicePart};
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::{
         parts::{RelationsPart, ThemePart},
-        traits::XmlDocumentPart,
+        traits::{XmlDocumentPart, XmlDocumentPartCommon, XmlDocumentServicePart},
     },
     spreadsheet_2007::{
         parts::WorkSheet,
         services::{CalculationChain, CommonServices, ShareString, Style},
     },
 };
-use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{
     cell::RefCell,
+    collections::HashMap,
     path::Path,
     rc::{Rc, Weak},
 };
@@ -25,6 +25,9 @@ pub struct WorkbookPart {
     common_service: Rc<RefCell<CommonServices>>,
     relations_part: RelationsPart,
     theme_part: ThemePart,
+    relation_path: String,
+    /// This contain the sheet name and order along with relationId
+    sheet_names: Vec<(String, String)>,
 }
 
 impl Drop for WorkbookPart {
@@ -38,15 +41,40 @@ impl XmlDocumentPartCommon for WorkbookPart {
     fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
         let template_core_properties = r#"
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
             <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7"/>
         </workbook>"#;
         XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
     }
+
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where
         Self: Sized,
     {
+        // Write Sheet Records to Workbook
+        if let Some(xml_document_mut) = self.xml_document.upgrade() {
+            let mut xml_doc_mut = xml_document_mut
+                .try_borrow_mut()
+                .context("Borrow XML Document Failed")?;
+            let sheets_id = xml_doc_mut
+                .append_child_mut("sheets", None)
+                .context("Create Sheets Node Failed")?
+                .get_id();
+            let mut sheet_count = 1;
+            for (sheet_display_name, relationship_id) in &self.sheet_names {
+                let sheet = xml_doc_mut
+                    .append_child_mut("sheet", Some(&sheets_id))
+                    .context("Create Sheet Node Failed")?;
+                let mut attributes: HashMap<String, String> = HashMap::new();
+                attributes.insert("name".to_string(), sheet_display_name.to_string());
+                attributes.insert("sheetId".to_string(), sheet_count.to_string());
+                attributes.insert("r:id".to_string(), relationship_id.to_string());
+                sheet
+                    .set_attribute_mut(attributes)
+                    .context("Sheet Attributes Failed")?;
+                sheet_count += 1;
+            }
+        }
         if let Some(xml_tree) = self.office_document.upgrade() {
             xml_tree
                 .try_borrow_mut()
@@ -64,7 +92,7 @@ impl XmlDocumentPart for WorkbookPart {
         office_document: Weak<RefCell<OfficeDocument>>,
         file_path: &str,
     ) -> AnyResult<Self, AnyError> {
-        let file_tree = Self::get_xml_document(&office_document, file_path)?;
+        let mut file_tree = Self::get_xml_document(&office_document, file_path)?;
         let relation_path = Path::new(&file_path)
             .parent()
             .unwrap_or(Path::new(""))
@@ -104,6 +132,8 @@ impl XmlDocumentPart for WorkbookPart {
             share_string,
             style,
         )));
+        let sheet_names =
+            WorkbookPart::load_sheet_names(&mut file_tree).context("Loading Sheet Names Failed")?;
         Ok(Self {
             office_document,
             xml_document: file_tree,
@@ -111,11 +141,14 @@ impl XmlDocumentPart for WorkbookPart {
             common_service,
             relations_part,
             theme_part,
+            sheet_names,
+            relation_path,
         })
     }
 }
 
 // ############################# Internal Function ######################################
+// ############################# mut Function ######################################
 impl WorkbookPart {
     fn create_theme_part(
         relations_part: &mut RelationsPart,
@@ -128,7 +161,7 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = theme_part_path {
-            ThemePart::new(office_document.clone(), &part_path)
+            ThemePart::new(office_document.clone(), &format!("{}/", &part_path))
                 .context("Creating Theme part for workbook failed")?
         } else {
             relations_part
@@ -155,7 +188,7 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = share_string_path {
-            ShareString::new(office_document.clone(), &part_path)
+            ShareString::new(office_document.clone(), &format!("{}/", &part_path))
                 .context("Share String Service Object Creation Failure")?
         } else {
             relations_part
@@ -182,7 +215,7 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = calculation_chain_path {
-            CalculationChain::new(office_document.clone(), &part_path)
+            CalculationChain::new(office_document.clone(), &format!("{}/", &part_path))
                 .context("Calculation Chain Service Object Creation Failure")?
         } else {
             relations_part
@@ -198,7 +231,6 @@ impl WorkbookPart {
             .context("Calculation Chain Service Object Creation Failure")?
         })
     }
-
     fn create_style_part(
         relations_part: &mut RelationsPart,
         office_document: Weak<RefCell<OfficeDocument>>,
@@ -210,7 +242,7 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = style_path {
-            Style::new(office_document.clone(), &part_path)
+            Style::new(office_document.clone(), &format!("{}/", &part_path))
                 .context("Style Service Object Creation Failure")?
         } else {
             relations_part
@@ -226,25 +258,94 @@ impl WorkbookPart {
             .context("Style Service Object Creation Failure")?
         })
     }
+    fn load_sheet_names(
+        xml_document: &mut Weak<RefCell<XmlDocument>>,
+    ) -> AnyResult<Vec<(String, String)>, AnyError> {
+        let mut sheet_names: Vec<(String, String)> = Vec::new();
+        if let Some(xml_doc) = xml_document.upgrade() {
+            let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+            if let Some(mut sheets_vec) = xml_doc_mut.pop_elements_by_tag_mut("sheets", None) {
+                if let Some(sheets) = sheets_vec.pop() {
+                    // Load Sheet from File if exist
+                    loop {
+                        if let Some(sheet_id) = sheets.pop_child_id_mut() {
+                            if let Some(sheet) = xml_doc_mut.pop_element_mut(&sheet_id) {
+                                if let Some(attributes) = sheet.get_attribute() {
+                                    let name = attributes.get("name").ok_or(anyhow!(
+                                        "Error When Trying to read Sheet Details."
+                                    ))?;
+                                    let r_id = attributes.get("r:id").ok_or(anyhow!(
+                                        "Error When Trying to read Sheet Details."
+                                    ))?;
+                                    sheet_names.push((name.to_string(), r_id.to_string()));
+                                }
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        Ok(sheet_names)
+    }
 }
 
 // ############################# Feature Function ######################################
+// ############################# mut Function ######################################
 impl WorkbookPart {
     pub(crate) fn add_sheet(
         &mut self,
-        file_name: Option<String>,
+        sheet_name: Option<String>,
     ) -> AnyResult<WorkSheet, AnyError> {
+        let mut sheet_count = self.sheet_names.len();
+        loop {
+            if let Some(office_doc) = self.office_document.upgrade() {
+                let document = office_doc
+                    .try_borrow()
+                    .context("Failed to Borrow Document")?;
+                if document
+                    .check_file_exist(format!(
+                        "{}/worksheets/sheet{}.xml",
+                        self.relation_path, sheet_count
+                    ))
+                    .context("Failed to Check the File Exist")?
+                {
+                    sheet_count += 1;
+                } else {
+                    break;
+                }
+            }
+            break;
+        }
+        let sheet_name = sheet_name.unwrap_or(format!("sheet{}", sheet_count));
+        let sheet_path = format!("{}/worksheets/sheet{}.xml", self.relation_path, sheet_count);
+        let sheet_id = self
+            .relations_part
+            .set_new_relationship_mut(
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet",
+                &sheet_path,
+            )
+            .context("Failed to Create Sheet Relationship")?;
+        self.sheet_names.push((sheet_name, sheet_id));
         Ok(WorkSheet::new(
             self.office_document.clone(),
             Rc::downgrade(&self.common_service),
-            file_name,
+            &sheet_path,
         )
         .context("Worksheet Creation Failed")?)
     }
 
     pub(crate) fn set_active_sheet(&mut self, sheet_name: &str) {}
 
-    pub(crate) fn get_sheet_name(&self, sheet_name: &str) {}
-
-    pub(crate) fn rename_sheet_name(&self, sheet_name: &str, new_sheet_name: &str) {}
+    pub(crate) fn rename_sheet_name(&mut self, sheet_name: &str, new_sheet_name: &str) {}
+}
+// ############################# im-mut Function ######################################
+impl WorkbookPart {
+    pub(crate) fn list_sheet_names(&self) -> Vec<String> {
+        self.sheet_names
+            .iter()
+            .map(|(sheet_name, _)| sheet_name.to_string())
+            .collect::<Vec<String>>()
+    }
 }
