@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::{Connection, Row, ToSql};
 use std::{fs::remove_file, path::PathBuf};
 use tempfile::env::temp_dir;
@@ -52,6 +52,25 @@ impl SqliteDatabases {
             archive_db = Connection::open(db_path).context("Open File Based DB failed")?;
         }
         Ok(archive_db)
+    }
+
+    pub fn get_count(
+        &self,
+        query: &str,
+        params: &[&(dyn ToSql)],
+    ) -> AnyResult<Option<usize>, AnyError> {
+        fn row_mapper(row: &Row) -> Result<usize, rusqlite::Error> {
+            Ok(row.get(0)?)
+        }
+        let mut stmt = self
+            .connection
+            .prepare(query)
+            .map_err(|e| anyhow!("Failed to Run Get Count Query {}", e))?;
+        match stmt.query_row(params, row_mapper) {
+            Result::Ok(result) => Ok(Some(result)),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+            Err(e) => Err(e.into()),
+        }
     }
 
     /// Find one result and map the row to a specific type using the closure.
