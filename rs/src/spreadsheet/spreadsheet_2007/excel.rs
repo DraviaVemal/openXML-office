@@ -1,4 +1,5 @@
 use crate::global_2007::traits::XmlDocumentPartCommon;
+use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
     files::OfficeDocument,
     global_2007::{
@@ -97,15 +98,15 @@ impl Excel {
         relations_part: &mut RelationsPart,
         office_document: Weak<RefCell<OfficeDocument>>,
     ) -> AnyResult<WorkbookPart, AnyError> {
-        let workbook_path: Option<String> = relations_part.get_relationship_target_by_type("http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument").context("Parsing workbook path failed")?;
+        let workbook_content = EXCEL_TYPE_COLLECTION.get("workbook").unwrap();
+        let workbook_path: Option<String> = relations_part
+            .get_relationship_target_by_type(&workbook_content.schemas_type)
+            .context("Parsing workbook path failed")?;
         Ok(if let Some(part_path) = workbook_path {
             WorkbookPart::new(office_document, &part_path).context("Workbook Creation Failed")?
         } else {
             relations_part
-                .set_new_relationship_mut(
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
-                    "xl/workbook.xml",
-                )
+                .set_new_relationship_mut(workbook_content, None)
                 .context("Setting New Theme Relationship Failed.")?;
             WorkbookPart::new(office_document, "xl/workbook.xml")
                 .context("Workbook Creation Failed")?
