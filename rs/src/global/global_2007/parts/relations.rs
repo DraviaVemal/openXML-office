@@ -1,6 +1,7 @@
 use crate::{
     files::{OfficeDocument, XmlDocument},
     global_2007::traits::{XmlDocumentPart, XmlDocumentPartCommon},
+    reference_dictionary::Content,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
@@ -118,8 +119,8 @@ impl RelationsPart {
 impl RelationsPart {
     pub fn set_new_relationship_mut(
         &mut self,
-        content_type: &str,
-        target: &str,
+        content: &Content,
+        file_name: Option<String>,
     ) -> AnyResult<String, AnyError> {
         let next_id = self
             .get_next_relationship_id()
@@ -133,8 +134,16 @@ impl RelationsPart {
                 .context("Creating Relationship Failed")?;
             let mut attributes: HashMap<String, String> = HashMap::new();
             attributes.insert("Id".to_string(), next_id.clone());
-            attributes.insert("Type".to_string(), content_type.to_string());
-            attributes.insert("Target".to_string(), target.to_string());
+            attributes.insert("Type".to_string(), content.schemas_type.to_string());
+            attributes.insert(
+                "Target".to_string(),
+                format!(
+                    "/{}/{}.{}",
+                    content.default_path,
+                    file_name.unwrap_or(content.default_name.to_string()),
+                    content.extension
+                ),
+            );
             new_relationship
                 .set_attribute_mut(attributes)
                 .context("Setting Relationship Attributes Failed.")?;
