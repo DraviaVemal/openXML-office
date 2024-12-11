@@ -37,7 +37,7 @@ impl Excel {
         excel_setting: ExcelPropertiesModel,
     ) -> AnyResult<Self, AnyError> {
         let office_document: OfficeDocument =
-            OfficeDocument::new(file_name, excel_setting.is_in_memory)
+            OfficeDocument::new(file_name.clone(), excel_setting.is_in_memory)
                 .context("Creating Office Document Struct Failed")?;
         let rc_office_document: Rc<RefCell<OfficeDocument>> =
             Rc::new(RefCell::new(office_document));
@@ -56,13 +56,19 @@ impl Excel {
         let workbook =
             Excel::create_workbook_part(&mut root_relations, Rc::downgrade(&rc_office_document))
                 .context("Creating Workbook part Failed")?;
-        Ok(Self {
+        let mut excel = Self {
             office_document: rc_office_document,
             root_relations,
             content_type,
             core_properties,
             workbook,
-        })
+        };
+        if file_name.is_none() {
+            excel
+                .add_sheet(None)
+                .context("Failed To Add Default Sheet to excel")?;
+        }
+        Ok(excel)
     }
 
     /// Add sheet to the current excel

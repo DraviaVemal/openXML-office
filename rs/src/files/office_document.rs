@@ -3,7 +3,7 @@ use crate::{
     files::{SqliteDatabases, XmlDeSerializer, XmlDocument, XmlSerializer},
     get_all_queries,
 };
-use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::{params, Error, Row};
 use std::{
     cell::RefCell,
@@ -65,7 +65,12 @@ impl OfficeDocument {
     pub fn check_file_exist(&self, file_path: String) -> AnyResult<bool, AnyError> {
         if let Some(count) = self
             .get_connection()
-            .get_count("count_archive_content", params![file_path])
+            .get_count(
+                self.queries
+                    .get("count_archive_content")
+                    .ok_or(anyhow!("Reading Query Failed"))?,
+                params![file_path],
+            )
             .context("Get count DB Execution Failed")?
         {
             Ok(count > 0)
