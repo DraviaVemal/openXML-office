@@ -43,6 +43,11 @@ impl XmlDocumentPartCommon for WorkbookPart {
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
             <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7"/>
+            <workbookPr defaultThemeVersion="166925"/>
+            <bookViews>
+                <workbookView xWindow="2295" yWindow="3345" windowWidth="34065" windowHeight="15345" activeTab="1"/>
+            </bookViews>
+            <calcPr calcId="191029"/>
         </workbook>"#;
         XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
     }
@@ -57,7 +62,7 @@ impl XmlDocumentPartCommon for WorkbookPart {
                 .try_borrow_mut()
                 .context("Borrow XML Document Failed")?;
             let sheets_id = xml_doc_mut
-                .append_child_mut("sheets", None)
+                .insert_children_after_tag_mut("sheets", "bookViews", None)
                 .context("Create Sheets Node Failed")?
                 .get_id();
             let mut sheet_count = 1;
@@ -161,13 +166,16 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = theme_part_path {
-            ThemePart::new(office_document.clone(), &format!("{}/", &part_path))
-                .context("Creating Theme part for workbook failed")?
+            ThemePart::new(
+                office_document.clone(),
+                &format!("{}/{}", relation_path, &part_path),
+            )
+            .context("Creating Theme part for workbook failed")?
         } else {
             relations_part
                 .set_new_relationship_mut(
                     "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
-                    &format!("{}/theme/theme1.xml", relation_path),
+                    "theme/theme1.xml",
                 )
                 .context("Setting New Theme Relationship Failed.")?;
             ThemePart::new(
@@ -188,13 +196,16 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = share_string_path {
-            ShareString::new(office_document.clone(), &format!("{}/", &part_path))
-                .context("Share String Service Object Creation Failure")?
+            ShareString::new(
+                office_document.clone(),
+                &format!("{}/{}", relation_path, &part_path),
+            )
+            .context("Share String Service Object Creation Failure")?
         } else {
             relations_part
             .set_new_relationship_mut(
                 "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
-                &format!("{}/sharedStrings.xml", relation_path),
+                "sharedStrings.xml",
             )
             .context("Setting New Theme Relationship Failed.")?;
             ShareString::new(
@@ -215,13 +226,16 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = calculation_chain_path {
-            CalculationChain::new(office_document.clone(), &format!("{}/", &part_path))
-                .context("Calculation Chain Service Object Creation Failure")?
+            CalculationChain::new(
+                office_document.clone(),
+                &format!("{}/{}", relation_path, &part_path),
+            )
+            .context("Calculation Chain Service Object Creation Failure")?
         } else {
             relations_part
                 .set_new_relationship_mut(
                     "http://schemas.openxmlformats.org/officeDocument/2006/relationships/calcChain",
-                    &format!("{}/calcChain.xml", relation_path),
+                    "calcChain.xml",
                 )
                 .context("Setting New Theme Relationship Failed.")?;
             CalculationChain::new(
@@ -242,13 +256,16 @@ impl WorkbookPart {
             )
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = style_path {
-            Style::new(office_document.clone(), &format!("{}/", &part_path))
-                .context("Style Service Object Creation Failure")?
+            Style::new(
+                office_document.clone(),
+                &format!("{}/{}", relation_path, &part_path),
+            )
+            .context("Style Service Object Creation Failure")?
         } else {
             relations_part
                 .set_new_relationship_mut(
                     "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
-                    &format!("{}/styles.xml", relation_path),
+                    "styles.xml",
                 )
                 .context("Setting New Theme Relationship Failed.")?;
             Style::new(
@@ -298,7 +315,7 @@ impl WorkbookPart {
         &mut self,
         sheet_name: Option<String>,
     ) -> AnyResult<WorkSheet, AnyError> {
-        let mut sheet_count = self.sheet_names.len();
+        let mut sheet_count = self.sheet_names.len() + 1;
         loop {
             if let Some(office_doc) = self.office_document.upgrade() {
                 let document = office_doc
@@ -319,19 +336,18 @@ impl WorkbookPart {
             break;
         }
         let sheet_name = sheet_name.unwrap_or(format!("sheet{}", sheet_count));
-        let sheet_path = format!("{}/worksheets/sheet{}.xml", self.relation_path, sheet_count);
         let sheet_id = self
             .relations_part
             .set_new_relationship_mut(
                 "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet",
-                &sheet_path,
+                &format!("worksheets/sheet{}.xml", sheet_count),
             )
             .context("Failed to Create Sheet Relationship")?;
         self.sheet_names.push((sheet_name, sheet_id));
         Ok(WorkSheet::new(
             self.office_document.clone(),
             Rc::downgrade(&self.common_service),
-            &sheet_path,
+            &format!("{}/worksheets/sheet{}.xml", self.relation_path, sheet_count),
         )
         .context("Worksheet Creation Failed")?)
     }
@@ -340,6 +356,7 @@ impl WorkbookPart {
 
     pub(crate) fn rename_sheet_name(&mut self, sheet_name: &str, new_sheet_name: &str) {}
 }
+
 // ############################# im-mut Function ######################################
 impl WorkbookPart {
     pub(crate) fn list_sheet_names(&self) -> Vec<String> {
