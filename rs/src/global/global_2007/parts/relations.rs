@@ -42,7 +42,7 @@ impl XmlDocumentPartCommon for RelationsPart {
         if let Some(xml_document) = self.office_document.upgrade() {
             xml_document
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed to Pull Open XML Handle")?
                 .close_xml_document(&self.file_name)?;
         }
         Ok(())

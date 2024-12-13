@@ -65,7 +65,7 @@ impl XmlDocumentPartCommon for CorePropertiesPart {
         if let Some(xml_tree) = self.office_document.upgrade() {
             xml_tree
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed to Pull XML Handle")?
                 .close_xml_document(&self.file_name)?;
         }
         Ok(())

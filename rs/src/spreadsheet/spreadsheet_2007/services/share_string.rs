@@ -32,7 +32,11 @@ impl XmlDocumentPartCommon for ShareString {
         let mut attributes: HashMap<String, String> = HashMap::new();
         attributes.insert(
             "xmlns".to_string(),
-            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
+            EXCEL_TYPE_COLLECTION
+                .get("share_string")
+                .unwrap()
+                .schemas_namespace
+                .to_string(),
         );
         let mut xml_document = XmlDocument::new();
         xml_document
@@ -66,7 +70,7 @@ impl XmlDocumentPartCommon for ShareString {
                     .borrow()
                     .get_connection()
                     .find_many(&select_query, params![], row_mapper)
-                    .unwrap();
+                    .context("Getting Share String Records Failed")?;
                 if let Some(xml_doc) = self.xml_document.upgrade() {
                     let mut doc = xml_doc.borrow_mut();
                     // Update count & uniqueCount in root
@@ -88,7 +92,7 @@ impl XmlDocumentPartCommon for ShareString {
                     for string in string_collection {
                         let parent_id = doc.append_child_mut("si", None).unwrap().get_id();
                         doc.append_child_mut("t", Some(&parent_id))
-                            .unwrap()
+                            .context("Creating Share String Child Failed")?
                             .set_value_mut(string);
                     }
                 }
@@ -98,7 +102,7 @@ impl XmlDocumentPartCommon for ShareString {
         if let Some(xml_tree) = self.office_document.upgrade() {
             xml_tree
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed To pull XML Handle")?
                 .close_xml_document(&self.file_path)?;
         }
         Ok(())
