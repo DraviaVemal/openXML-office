@@ -155,7 +155,7 @@ impl WorkbookPart {
     ) -> AnyResult<ThemePart, AnyError> {
         let theme_content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
         let theme_part_path = relations_part
-            .get_relationship_target_by_type(&theme_content.schemas_namespace)
+            .get_relationship_target_by_type(&theme_content.schemas_type)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = theme_part_path {
             ThemePart::new(
@@ -184,7 +184,7 @@ impl WorkbookPart {
     ) -> AnyResult<ShareString, AnyError> {
         let share_string_content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
         let share_string_path = relations_part
-            .get_relationship_target_by_type(&share_string_content.schemas_namespace)
+            .get_relationship_target_by_type(&share_string_content.schemas_type)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = share_string_path {
             ShareString::new(
@@ -215,7 +215,7 @@ impl WorkbookPart {
     ) -> AnyResult<CalculationChain, AnyError> {
         let calc_chain_content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
         let calculation_chain_path = relations_part
-            .get_relationship_target_by_type(&calc_chain_content.schemas_namespace)
+            .get_relationship_target_by_type(&calc_chain_content.schemas_type)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = calculation_chain_path {
             CalculationChain::new(
@@ -246,7 +246,7 @@ impl WorkbookPart {
     ) -> AnyResult<Style, AnyError> {
         let style_content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
         let style_path = relations_part
-            .get_relationship_target_by_type(&style_content.schemas_namespace)
+            .get_relationship_target_by_type(&style_content.schemas_type)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = style_path {
             Style::new(
