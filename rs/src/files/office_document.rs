@@ -16,18 +16,7 @@ use std::{
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 #[derive(Debug)]
-pub struct ArchiveRecordModel {
-    file_name: String,
-    content_type: String,
-    compressed_xml_file_size: i32,
-    uncompressed_xml_file_size: i32,
-    compression_level: i8,
-    compression_type: String,
-    file_content: Option<Vec<u8>>,
-}
-
-#[derive(Debug)]
-pub struct OfficeDocument {
+pub(crate) struct OfficeDocument {
     sqlite_database: SqliteDatabases,
     xml_document_collection: HashMap<String, (Rc<RefCell<XmlDocument>>, Option<String>)>,
     queries: HashMap<String, String>,
@@ -35,7 +24,7 @@ pub struct OfficeDocument {
 
 impl OfficeDocument {
     /// Create or Clone existing document to start with
-    pub fn new(file_path: Option<String>, is_in_memory: bool) -> AnyResult<Self, AnyError> {
+    pub(crate) fn new(file_path: Option<String>, is_in_memory: bool) -> AnyResult<Self, AnyError> {
         let sqlite_database: SqliteDatabases =
             SqliteDatabases::new(is_in_memory).context("Sqlite database initialization failed")?;
         let queries = get_all_queries!("office_document.sql");
@@ -54,11 +43,11 @@ impl OfficeDocument {
     }
 
     /// Get DB Options
-    pub fn get_connection(&self) -> &SqliteDatabases {
+    pub(crate) fn get_connection(&self) -> &SqliteDatabases {
         &self.sqlite_database
     }
 
-    pub fn check_file_exist(&self, file_path: String) -> AnyResult<bool, AnyError> {
+    pub(crate) fn check_file_exist(&self, file_path: String) -> AnyResult<bool, AnyError> {
         if let Some(count) = self
             .get_connection()
             .get_count(
@@ -75,7 +64,12 @@ impl OfficeDocument {
         }
     }
 
-    pub fn get_xml_document_ref(
+    pub(crate) fn delete_document_mut(&mut self, file_name: &str) -> AnyResult<(), AnyError> {
+        // TODO Delete Document
+        Ok(())
+    }
+
+    pub(crate) fn get_xml_document_ref(
         &mut self,
         file_name: &str,
         content_type: Option<String>,
@@ -89,7 +83,7 @@ impl OfficeDocument {
     }
 
     /// Get Xml tree from content
-    pub fn get_xml_tree(
+    pub(crate) fn get_xml_tree(
         &self,
         file_path: &str,
     ) -> AnyResult<Option<(XmlDocument, Option<String>)>, AnyError> {
@@ -116,7 +110,7 @@ impl OfficeDocument {
     }
 
     /// Update the XML tree data to database and close the refCell
-    pub fn close_xml_document(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
+    pub(crate) fn close_xml_document(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
         let xml_tree_option = self.xml_document_collection.remove(file_path);
         if let Some((xml_tree, content_type)) = xml_tree_option {
             let mut xml_document = xml_tree.borrow_mut();
@@ -141,7 +135,7 @@ impl OfficeDocument {
     }
 
     /// Save Current Document to final result
-    pub fn save_as(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
+    pub(crate) fn save_as(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
         // Save the live content update object to database
         let keys = self
             .xml_document_collection
@@ -184,7 +178,7 @@ impl OfficeDocument {
 
     /// Save the database content into file archive
     fn save_database_into_archive(&self) -> AnyResult<Vec<u8>, AnyError> {
-        let mut extensions: Vec<(String, String)> = Vec::new();
+        let extensions: Vec<(String, String)>;
         let mut overrides: Vec<(String, String)> = Vec::new();
         let mut buffer = Cursor::new(Vec::new());
         let mut zip_writer: ZipWriter<&mut Cursor<Vec<u8>>> = ZipWriter::new(&mut buffer);

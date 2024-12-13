@@ -6,7 +6,7 @@ use std::{
 };
 
 #[derive(Debug)]
-pub struct XmlDocument {
+pub(crate) struct XmlDocument {
     running_id: usize,
     /// XML Namespace collection
     namespace_collection: Rc<RefCell<HashMap<String, String>>>,
@@ -16,7 +16,7 @@ pub struct XmlDocument {
 
 /// ####################### Im-Mut Access Functions ####################
 impl XmlDocument {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             running_id: 0,
             namespace_collection: Rc::new(RefCell::new(HashMap::new())),
@@ -24,15 +24,15 @@ impl XmlDocument {
         }
     }
 
-    pub fn get_element_count(&self) -> usize {
+    pub(crate) fn get_element_count(&self) -> usize {
         self.xml_element_collection.len()
     }
 
-    pub fn get_root(&self) -> Option<&XmlElement> {
+    pub(crate) fn get_root(&self) -> Option<&XmlElement> {
         self.xml_element_collection.get(&0)
     }
 
-    pub fn get_element_ids_by_attribute(
+    pub(crate) fn get_element_ids_by_attribute(
         &self,
         attribute_key: &str,
         attribute_value: &str,
@@ -64,7 +64,7 @@ impl XmlDocument {
         element_ids
     }
 
-    pub fn get_first_element_by_attribute(
+    pub(crate) fn get_first_element_by_attribute(
         &self,
         attribute_key: &str,
         attribute_value: &str,
@@ -79,7 +79,7 @@ impl XmlDocument {
         }
     }
 
-    pub fn get_element_ids_by_tag(
+    pub(crate) fn get_element_ids_by_tag(
         &self,
         filter_tag: &str,
         parent_id: Option<&usize>,
@@ -100,18 +100,18 @@ impl XmlDocument {
         None
     }
 
-    pub fn get_element(&self, element_id: &usize) -> Option<&XmlElement> {
+    pub(crate) fn get_element(&self, element_id: &usize) -> Option<&XmlElement> {
         self.xml_element_collection.get(element_id)
     }
 }
 
 /// ####################### Mut Access Functions ####################
 impl XmlDocument {
-    pub fn get_root_mut(&mut self) -> Option<&mut XmlElement> {
+    pub(crate) fn get_root_mut(&mut self) -> Option<&mut XmlElement> {
         self.xml_element_collection.get_mut(&0)
     }
 
-    pub fn create_root_mut(&mut self, tag: &str) -> AnyResult<&mut XmlElement, AnyError> {
+    pub(crate) fn create_root_mut(&mut self, tag: &str) -> AnyResult<&mut XmlElement, AnyError> {
         let element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
             .context("Create Root XML Element Failed")?;
         self.xml_element_collection.insert(0, element);
@@ -119,7 +119,7 @@ impl XmlDocument {
     }
 
     /// Removes the child reference from parent and remove the master element itself from collection
-    pub fn pop_elements_by_tag_mut(
+    pub(crate) fn pop_elements_by_tag_mut(
         &mut self,
         filter_tag: &str,
         parent_id: Option<&usize>,
@@ -143,11 +143,11 @@ impl XmlDocument {
         None
     }
 
-    pub fn pop_element_mut(&mut self, element_id: &usize) -> Option<XmlElement> {
+    pub(crate) fn pop_element_mut(&mut self, element_id: &usize) -> Option<XmlElement> {
         self.xml_element_collection.remove(element_id)
     }
     /// Insert Children Before specific Tag
-    pub fn insert_children_before_tag_mut(
+    pub(crate) fn insert_children_before_tag_mut(
         &mut self,
         tag: &str,
         find_tag: &str,
@@ -171,7 +171,7 @@ impl XmlDocument {
         }
     }
     /// Insert Children After specific Tag
-    pub fn insert_children_after_tag_mut(
+    pub(crate) fn insert_children_after_tag_mut(
         &mut self,
         tag: &str,
         find_tag: &str,
@@ -195,7 +195,7 @@ impl XmlDocument {
         }
     }
     /// Insert Child At Specific Position
-    pub fn insert_child_at_mut(
+    pub(crate) fn insert_child_at_mut(
         &mut self,
         tag: &str,
         position: &usize,
@@ -219,7 +219,7 @@ impl XmlDocument {
         }
     }
 
-    pub fn append_child_mut(
+    pub(crate) fn append_child_mut(
         &mut self,
         tag: &str,
         parent_id: Option<&usize>,
@@ -242,7 +242,7 @@ impl XmlDocument {
         }
     }
 
-    pub fn get_first_element_id(
+    pub(crate) fn get_first_element_id(
         &self,
         mut element_tree: Vec<&str>,
         start_element: Option<&usize>,
@@ -287,7 +287,7 @@ impl XmlDocument {
         }
     }
 
-    pub fn get_first_element_mut(
+    pub(crate) fn get_first_element_mut(
         &mut self,
         element_tree: Vec<&str>,
         start_element: Option<&usize>,
@@ -302,7 +302,7 @@ impl XmlDocument {
         }
     }
 
-    pub fn get_first_element_by_attribute_mut(
+    pub(crate) fn get_first_element_by_attribute_mut(
         &mut self,
         attribute_key: &str,
         attribute_value: &str,
@@ -317,19 +317,19 @@ impl XmlDocument {
         }
     }
 
-    pub fn get_element_mut(&mut self, element_id: &usize) -> Option<&mut XmlElement> {
+    pub(crate) fn get_element_mut(&mut self, element_id: &usize) -> Option<&mut XmlElement> {
         self.xml_element_collection.get_mut(element_id)
     }
 }
 
 #[derive(Debug)]
-pub struct XmlElementChild {
+pub(crate) struct XmlElementChild {
     id: usize,
     tag: String,
 }
 /// Normalized XML representation
 #[derive(Debug)]
-pub struct XmlElement {
+pub(crate) struct XmlElement {
     /// Current node Id
     id: usize,
     /// Parent id if applicable else -1
@@ -400,27 +400,27 @@ impl XmlElement {
 
     // ######################## Data Read Only Methods ###########################
 
-    pub fn get_child_count(&self) -> usize {
+    pub(crate) fn get_child_count(&self) -> usize {
         self.children.borrow().len()
     }
 
-    pub fn get_tag(&self) -> &str {
+    pub(crate) fn get_tag(&self) -> &str {
         &self.tag
     }
 
-    pub fn has_value(&self) -> bool {
+    pub(crate) fn has_value(&self) -> bool {
         self.get_value().is_some()
     }
 
-    pub fn is_empty_tag(&self) -> bool {
+    pub(crate) fn is_empty_tag(&self) -> bool {
         self.children.borrow().len() == 0 && self.value.is_none()
     }
 
-    pub fn get_attribute(&self) -> Option<&HashMap<String, String>> {
+    pub(crate) fn get_attribute(&self) -> Option<&HashMap<String, String>> {
         self.attributes.as_ref()
     }
 
-    pub fn get_namespace(&self) -> Option<HashMap<String, String>> {
+    pub(crate) fn get_namespace(&self) -> Option<HashMap<String, String>> {
         if let Some(namespace_collection) = self.namespace_collection_ref.upgrade() {
             Some(namespace_collection.borrow().clone())
         } else {
@@ -428,15 +428,15 @@ impl XmlElement {
         }
     }
 
-    pub fn get_value(&self) -> &Option<String> {
+    pub(crate) fn get_value(&self) -> &Option<String> {
         &self.value
     }
 
-    pub fn get_id(&self) -> usize {
+    pub(crate) fn get_id(&self) -> usize {
         self.id
     }
 
-    pub fn get_first_child_id(&self) -> Option<usize> {
+    pub(crate) fn get_first_child_id(&self) -> Option<usize> {
         if let Some(child_element) = self.children.borrow().get(0) {
             Some(child_element.id)
         } else {
@@ -444,7 +444,7 @@ impl XmlElement {
         }
     }
 
-    pub fn get_parent_id(&self) -> usize {
+    pub(crate) fn get_parent_id(&self) -> usize {
         self.parent_id
     }
 }
@@ -452,7 +452,7 @@ impl XmlElement {
 // ########################## Data Write Methods ###########################
 impl XmlElement {
     /// Remove the child reference irreversible
-    pub fn pop_child_id_mut(&self) -> Option<usize> {
+    pub(crate) fn pop_child_id_mut(&self) -> Option<usize> {
         if self.children.borrow_mut().len() > 0 {
             Some(self.children.borrow_mut().remove(0).id)
         } else {
@@ -517,7 +517,7 @@ impl XmlElement {
         );
     }
 
-    pub fn get_attribute_mut(&mut self) -> Option<&mut HashMap<String, String>> {
+    pub(crate) fn get_attribute_mut(&mut self) -> Option<&mut HashMap<String, String>> {
         self.attributes.as_mut()
     }
 
@@ -536,7 +536,7 @@ impl XmlElement {
         Ok(())
     }
 
-    pub fn set_attribute_mut(
+    pub(crate) fn set_attribute_mut(
         &mut self,
         mut attributes: HashMap<String, String>,
     ) -> AnyResult<&mut Self, AnyError> {
@@ -588,7 +588,7 @@ impl XmlElement {
         Ok(self)
     }
 
-    pub fn set_value_mut(&mut self, text: String) -> &mut Self {
+    pub(crate) fn set_value_mut(&mut self, text: String) -> &mut Self {
         self.value = Some(text);
         self
     }

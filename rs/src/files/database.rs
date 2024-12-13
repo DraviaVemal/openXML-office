@@ -4,7 +4,7 @@ use std::{fs::remove_file, path::PathBuf};
 use tempfile::env::temp_dir;
 
 #[derive(Debug)]
-pub struct SqliteDatabases {
+pub(crate) struct SqliteDatabases {
     db_path: PathBuf,
     connection: Connection,
 }
@@ -28,7 +28,7 @@ impl Drop for SqliteDatabases {
 }
 
 impl SqliteDatabases {
-    pub fn new(is_in_memory: bool) -> AnyResult<Self, AnyError> {
+    pub(crate) fn new(is_in_memory: bool) -> AnyResult<Self, AnyError> {
         let db_path: PathBuf = temp_dir().join(format!("{}.db", uuid::Uuid::new_v4()));
         let archive_db = Self::database_initialization(&db_path, is_in_memory)
             .context("Create Database Connection Fail")?;
@@ -54,7 +54,7 @@ impl SqliteDatabases {
         Ok(archive_db)
     }
 
-    pub fn get_count(
+    pub(crate) fn get_count(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
@@ -74,7 +74,7 @@ impl SqliteDatabases {
     }
 
     /// Find one result and map the row to a specific type using the closure.
-    pub fn find_one<F, T>(
+    pub(crate) fn find_one<F, T>(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
@@ -95,7 +95,7 @@ impl SqliteDatabases {
     }
 
     /// Find multiple results and map each row to a specific type using the closure.
-    pub fn find_many<F, T>(
+    pub(crate) fn find_many<F, T>(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
@@ -117,7 +117,7 @@ impl SqliteDatabases {
     }
 
     /// Insert Record Into Database
-    pub fn insert_record(
+    pub(crate) fn insert_record(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
@@ -128,7 +128,7 @@ impl SqliteDatabases {
     }
 
     /// Insert Record Into Database
-    pub fn update_record(
+    pub(crate) fn update_record(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
@@ -139,14 +139,14 @@ impl SqliteDatabases {
     }
 
     /// Create Table
-    pub fn create_table(&self, query: &str) -> AnyResult<usize, AnyError> {
+    pub(crate) fn create_table(&self, query: &str) -> AnyResult<usize, AnyError> {
         self.connection
             .execute(&query, ())
             .context("Failed to Run Create Table Query")
     }
 
     /// Insert Default Record
-    pub fn insert_default(&self, query: &str) -> AnyResult<usize, AnyError> {
+    pub(crate) fn insert_default(&self, query: &str) -> AnyResult<usize, AnyError> {
         self.connection
             .execute(&query, ())
             .context("Failed to Run Create Table Query")
@@ -154,7 +154,7 @@ impl SqliteDatabases {
 
     /// Execute sent query directly without classification
     /// Try to avoid using this for code consistency
-    pub fn execute_query(
+    pub(crate) fn execute_query(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
