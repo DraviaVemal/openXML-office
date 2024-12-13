@@ -58,11 +58,12 @@ impl XmlDocumentPartCommon for WorkbookPart {
     where
         Self: Sized,
     {
-        let common_service = self
-            .common_service
+        self.theme_part.close_document()?;
+        self.common_service
             .try_borrow_mut()
-            .context("Common Service borrow failed")?;
-
+            .context("Failed to pull common Service Handle")?
+            .close_service()
+            .context("Failed to Close Common Service From Workbook")?;
         // Write Sheet Records to Workbook
         if let Some(xml_document_mut) = self.xml_document.upgrade() {
             let mut xml_doc_mut = xml_document_mut
@@ -90,7 +91,7 @@ impl XmlDocumentPartCommon for WorkbookPart {
         if let Some(xml_tree) = self.office_document.upgrade() {
             xml_tree
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed To Pull XML Handle")?
                 .close_xml_document(&self.file_path)?;
         }
         Ok(())

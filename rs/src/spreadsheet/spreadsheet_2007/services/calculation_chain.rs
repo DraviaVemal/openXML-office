@@ -28,7 +28,11 @@ impl XmlDocumentPartCommon for CalculationChain {
         let mut attributes: HashMap<String, String> = HashMap::new();
         attributes.insert(
             "xmlns".to_string(),
-            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
+            EXCEL_TYPE_COLLECTION
+                .get("calc_chain")
+                .unwrap()
+                .schemas_namespace
+                .to_string(),
         );
         let mut xml_document = XmlDocument::new();
         xml_document
@@ -61,7 +65,7 @@ impl XmlDocumentPartCommon for CalculationChain {
                 .borrow()
                 .get_connection()
                 .find_many(&select_query, params![], row_mapper)
-                .unwrap();
+                .context("Failed to Pull All Calculation Chain Items")?;
             if let Some(xml_doc) = self.xml_document.upgrade() {
                 let mut doc = xml_doc.borrow_mut();
                 for (cell_id, sheet_id) in string_collection {
@@ -69,7 +73,7 @@ impl XmlDocumentPartCommon for CalculationChain {
                     attributes.insert("r".to_string(), cell_id);
                     attributes.insert("i".to_string(), sheet_id);
                     doc.append_child_mut("c", None)
-                        .unwrap()
+                        .context("Failed To Add Child Item")?
                         .set_attribute_mut(attributes)?;
                 }
             }
@@ -78,7 +82,7 @@ impl XmlDocumentPartCommon for CalculationChain {
         if let Some(xml_tree) = self.office_document.upgrade() {
             xml_tree
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed to Borrow Share Tree")?
                 .close_xml_document(&self.file_path)?;
         }
         Ok(())

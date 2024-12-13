@@ -11,7 +11,7 @@ use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
 #[derive(Debug)]
-pub(crate) struct WorkSheet {
+pub struct WorkSheet {
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     common_service: Weak<RefCell<CommonServices>>,
@@ -47,7 +47,7 @@ impl XmlDocumentPartCommon for WorkSheet {
         if let Some(xml_tree) = self.office_document.upgrade() {
             xml_tree
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed to Pull XML Handle")?
                 .close_xml_document(&self.file_name)?;
         }
         Ok(())
@@ -74,10 +74,10 @@ impl XmlDocumentServicePart for WorkSheet {
 
 // ##################################### Feature Function ################################
 impl WorkSheet {
-    pub(crate) fn set_column_mut(&mut self, column_id: &usize, column_properties: ColumnProperties) -> () {
+    pub fn set_column_mut(&mut self, column_id: &usize, column_properties: ColumnProperties) -> () {
     }
 
-    pub(crate) fn set_row_mut(
+    pub fn set_row_mut(
         &mut self,
         cell_id: &usize,
         column_cell: Vec<ColumnCell>,

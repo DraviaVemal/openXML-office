@@ -51,7 +51,7 @@ impl XmlDocumentPartCommon for Style {
                 .context("Style Save Content Failed")?;
             xml_tree
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed To pull XML Handle")?
                 .close_xml_document(&self.file_path)?;
         }
         Ok(())

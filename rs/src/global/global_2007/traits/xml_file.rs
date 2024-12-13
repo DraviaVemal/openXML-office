@@ -3,7 +3,7 @@ use crate::spreadsheet_2007::services::CommonServices;
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
-pub trait XmlDocumentPartCommon {
+pub(crate) trait XmlDocumentPartCommon {
     /// Save the current file state
     fn flush(mut self) -> AnyResult<(), AnyError>
     where
@@ -59,7 +59,7 @@ pub trait XmlDocumentPartCommon {
     fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError>;
 }
 
-pub trait XmlDocumentServicePart: XmlDocumentPartCommon {
+pub(crate) trait XmlDocumentServicePart: XmlDocumentPartCommon {
     /// Create new object with file connector handle
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
@@ -70,7 +70,7 @@ pub trait XmlDocumentServicePart: XmlDocumentPartCommon {
         Self: Sized;
 }
 #[warn(drop_bounds)]
-pub trait XmlDocumentPart: XmlDocumentPartCommon {
+pub(crate) trait XmlDocumentPart: XmlDocumentPartCommon {
     /// Create new object with file connector handle
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
