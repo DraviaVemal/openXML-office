@@ -7,25 +7,25 @@ pub struct XmlDeSerializer {}
 impl XmlDeSerializer {
     pub fn xml_tree_to_vec(xml_document: &mut XmlDocument) -> AnyResult<Vec<u8>, AnyError> {
         let mut xml_content = String::new();
-        xml_content.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>"#);
-        //         xml_content.push_str(
-        //             format!(
-        //                 r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        // <!--
-        // <dvmo:office>
-        //     <dvmo:appName>{}</dvmo:appName>
-        //     <dvmo:repo>{}</dvmo:repo>
-        //     <dvmo:version>{}</dvmo:version>
-        //     <dvmo:modified>{}</dvmo:modified>
-        // </dvmo:office>
-        // -->"#,
-        //                 env!("CARGO_PKG_NAME"),
-        //                 env!("CARGO_PKG_REPOSITORY"),
-        //                 env!("CARGO_PKG_VERSION"),
-        //                 Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
-        //             )
-        //             .as_str(),
-        //         );
+        xml_content.push_str(
+            format!(
+                r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <!--
+        <dvmo:office>
+            <dvmo:appName>{}</dvmo:appName>
+            <dvmo:repo>{}</dvmo:repo>
+            <dvmo:version>{}</dvmo:version>
+            <dvmo:modified>{}</dvmo:modified>
+        </dvmo:office>
+        -->
+        "#,
+                env!("CARGO_PKG_NAME"),
+                env!("CARGO_PKG_REPOSITORY"),
+                env!("CARGO_PKG_VERSION"),
+                Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
+            )
+            .as_str(),
+        );
         Self::build_xml_tree(xml_document, &mut xml_content)
             .context("Create XML Contact String Failed")?;
         Ok(xml_content.as_bytes().to_vec())
