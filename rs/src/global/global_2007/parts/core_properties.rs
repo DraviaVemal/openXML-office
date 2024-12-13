@@ -25,8 +25,20 @@ impl Drop for CorePropertiesPart {
 
 impl XmlDocumentPartCommon for CorePropertiesPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        XmlSerializer::vec_to_xml_doc_tree(include_str!("core_properties.xml").as_bytes().to_vec())
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+        Ok((
+            XmlSerializer::vec_to_xml_doc_tree(
+                include_str!("core_properties.xml").as_bytes().to_vec(),
+            )
+            .context("Initializing Core Property Failed")?,
+            Some(
+                COMMON_TYPE_COLLECTION
+                    .get("docProps_core")
+                    .unwrap()
+                    .content_type
+                    .to_string(),
+            ),
+        ))
     }
 
     fn close_document(&mut self) -> AnyResult<(), AnyError>

@@ -1,11 +1,10 @@
-use crate::global_2007::traits::XmlDocumentPartCommon;
-use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
     files::OfficeDocument,
     global_2007::{
-        parts::{ContentTypesPart, CorePropertiesPart, RelationsPart},
-        traits::XmlDocumentPart,
+        parts::{CorePropertiesPart, RelationsPart},
+        traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
+    reference_dictionary::EXCEL_TYPE_COLLECTION,
     spreadsheet_2007::parts::{WorkSheet, WorkbookPart},
 };
 use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
@@ -16,7 +15,6 @@ use std::{cell::RefCell, rc::Rc};
 pub struct Excel {
     office_document: Rc<RefCell<OfficeDocument>>,
     root_relations: RelationsPart,
-    content_type: ContentTypesPart,
     core_properties: CorePropertiesPart,
     workbook: WorkbookPart,
 }
@@ -45,9 +43,6 @@ impl Excel {
         let mut root_relations =
             RelationsPart::new(Rc::downgrade(&rc_office_document), "_rels/.rels")
                 .context("Initialize Root Relation Part failed")?;
-        let content_type =
-            ContentTypesPart::new(Rc::downgrade(&rc_office_document), "[Content_Types].xml")
-                .context("Initializing Content Type Part Failed")?;
         // Load relevant parts from root relations part
         let core_properties = CorePropertiesPart::create_core_properties(
             &mut root_relations,
@@ -60,7 +55,6 @@ impl Excel {
         let mut excel = Self {
             office_document: rc_office_document,
             root_relations,
-            content_type,
             core_properties,
             workbook,
         };
@@ -80,7 +74,6 @@ impl Excel {
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
         self.workbook.flush()?;
-        self.content_type.flush()?;
         self.core_properties.flush()?;
         self.root_relations.flush()?;
         self.office_document

@@ -1,12 +1,13 @@
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::traits::{XmlDocumentPartCommon, XmlDocumentServicePart},
+    reference_dictionary::EXCEL_TYPE_COLLECTION,
     spreadsheet_2007::{
         models::{ColumnCell, ColumnProperties, RowProperties},
         services::CommonServices,
     },
 };
-use anyhow::{Error as AnyError, Result as AnyResult};
+use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
 #[derive(Debug)]
@@ -25,21 +26,19 @@ impl Drop for WorkSheet {
 
 impl XmlDocumentPartCommon for WorkSheet {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        let template_core_properties = r#"
-        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
-            xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
-            <dimension ref="A1" />
-            <sheetViews>
-                <sheetView tabSelected="1" workbookViewId="0" />
-            </sheetViews>
-            <sheetFormatPr defaultRowHeight="15"/>
-            <sheetData />
-            <pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3" />
-        </worksheet>"#;
-        XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+        let template_core_properties = include_str!("worksheet.xml");
+        Ok((
+            XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+                .context("Initializing Worksheet Failed")?,
+            Some(
+                EXCEL_TYPE_COLLECTION
+                    .get("worksheet")
+                    .unwrap()
+                    .content_type
+                    .to_string(),
+            ),
+        ))
     }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where

@@ -1,4 +1,5 @@
 use crate::global_2007::traits::XmlDocumentPartCommon;
+use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     get_all_queries,
@@ -27,7 +28,7 @@ impl Drop for ShareString {
 
 impl XmlDocumentPartCommon for ShareString {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
         let mut attributes: HashMap<String, String> = HashMap::new();
         attributes.insert(
             "xmlns".to_string(),
@@ -39,7 +40,16 @@ impl XmlDocumentPartCommon for ShareString {
             .context("Create Root Element Failed")?
             .set_attribute_mut(attributes)
             .context("Set Attribute Failed")?;
-        Ok(xml_document)
+        Ok((
+            xml_document,
+            Some(
+                EXCEL_TYPE_COLLECTION
+                    .get("share_string")
+                    .unwrap()
+                    .content_type
+                    .to_string(),
+            ),
+        ))
     }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where

@@ -4,7 +4,7 @@ use crate::{
         parts::{RelationsPart, ThemePart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon, XmlDocumentServicePart},
     },
-    reference_dictionary::EXCEL_TYPE_COLLECTION,
+    reference_dictionary::{COMMON_TYPE_COLLECTION, EXCEL_TYPE_COLLECTION},
     spreadsheet_2007::{
         parts::WorkSheet,
         services::{CalculationChain, CommonServices, ShareString, Style},
@@ -39,18 +39,19 @@ impl Drop for WorkbookPart {
 
 impl XmlDocumentPartCommon for WorkbookPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        let template_core_properties = r#"
-        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-            <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7"/>
-            <workbookPr defaultThemeVersion="166925"/>
-            <bookViews>
-                <workbookView xWindow="2295" yWindow="3345" windowWidth="34065" windowHeight="15345" activeTab="1"/>
-            </bookViews>
-            <calcPr calcId="191029"/>
-        </workbook>"#;
-        XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+        let template_core_properties = include_str!("workbook.xml");
+        Ok((
+            XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
+                .context("Initializing Workbook Failed")?,
+            Some(
+                EXCEL_TYPE_COLLECTION
+                    .get("workbook")
+                    .unwrap()
+                    .content_type
+                    .to_string(),
+            ),
+        ))
     }
 
     fn close_document(&mut self) -> AnyResult<(), AnyError>
@@ -109,37 +110,28 @@ impl XmlDocumentPart for WorkbookPart {
             &format!("{}/_rels/workbook.xml.rels", relation_path),
         )
         .context("Creating Relation ship part for workbook failed.")?;
-        let theme_part = WorkbookPart::create_theme_part(
-            &mut relations_part,
-            office_document.clone(),
-            &relation_path,
-        )
-        .context("Loading Theme Part Failed")?;
-        let share_string = WorkbookPart::create_share_string(
-            &mut relations_part,
-            office_document.clone(),
-            &relation_path,
-        )
-        .context("Loading Share String Failed")?;
-        let calculation_chain = WorkbookPart::create_calculation_chain(
+        let theme_part =
+            Self::create_theme_part(&mut relations_part, office_document.clone(), &relation_path)
+                .context("Loading Theme Part Failed")?;
+        let share_string =
+            Self::create_share_string(&mut relations_part, office_document.clone(), &relation_path)
+                .context("Loading Share String Failed")?;
+        let calculation_chain = Self::create_calculation_chain(
             &mut relations_part,
             office_document.clone(),
             &relation_path,
         )
         .context("Loading Calculation Chain Failed")?;
-        let style = WorkbookPart::create_style_part(
-            &mut relations_part,
-            office_document.clone(),
-            &relation_path,
-        )
-        .context("Loading Style Part Failed")?;
+        let style =
+            Self::create_style_part(&mut relations_part, office_document.clone(), &relation_path)
+                .context("Loading Style Part Failed")?;
         let common_service = Rc::new(RefCell::new(CommonServices::new(
             calculation_chain,
             share_string,
             style,
         )));
         let sheet_names =
-            WorkbookPart::load_sheet_names(&mut file_tree).context("Loading Sheet Names Failed")?;
+            Self::load_sheet_names(&mut file_tree).context("Loading Sheet Names Failed")?;
         Ok(Self {
             office_document,
             xml_document: file_tree,
@@ -161,7 +153,7 @@ impl WorkbookPart {
         office_document: Weak<RefCell<OfficeDocument>>,
         relation_path: &str,
     ) -> AnyResult<ThemePart, AnyError> {
-        let theme_content = EXCEL_TYPE_COLLECTION.get("theme").unwrap();
+        let theme_content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
         let theme_part_path = relations_part
             .get_relationship_target_by_type(&theme_content.schemas_namespace)
             .context("Parsing Theme part path failed")?;

@@ -1,57 +1,109 @@
-use crate::global_2007::traits::XmlDocumentPartCommon;
+use std::collections::HashMap;
+
 use crate::{
-    files::{OfficeDocument, XmlDocument, XmlSerializer},
-    global_2007::traits::XmlDocumentPart,
+    document,
+    files::{XmlDeSerializer, XmlDocument, XmlElement, XmlSerializer},
+    reference_dictionary::COMMON_TYPE_COLLECTION,
 };
-use anyhow::{Error as AnyError, Result as AnyResult};
-use std::{cell::RefCell, rc::Weak};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 
 #[derive(Debug)]
-pub struct ContentTypesPart {
-    office_document: Weak<RefCell<OfficeDocument>>,
-    xml_document: Weak<RefCell<XmlDocument>>,
-    file_name: String,
+pub(crate) struct ContentTypesPart {
+    xml_document: XmlDocument,
 }
 
-impl Drop for ContentTypesPart {
-    fn drop(&mut self) {
-        let _ = self.close_document();
+impl ContentTypesPart {
+    pub(crate) fn new(xml_file_content: Vec<u8>) -> AnyResult<Self, AnyError> {
+        let xml_document = XmlSerializer::vec_to_xml_doc_tree(xml_file_content)
+            .context("Decoding Content Type Failed")?;
+        Ok(Self { xml_document })
     }
-}
-
-impl XmlDocumentPartCommon for ContentTypesPart {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
-        XmlSerializer::vec_to_xml_doc_tree(include_str!("content_types.xml").as_bytes().to_vec())
-    }
-
-    fn close_document(&mut self) -> AnyResult<(), AnyError>
-    where
-        Self: Sized,
-    {
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            xml_tree
-                .try_borrow_mut()
-                .unwrap()
-                .close_xml_document(&self.file_name)?;
+    pub(crate) fn get_extensions(&mut self) -> AnyResult<Option<Vec<XmlElement>>, AnyError> {
+        let mut elements: Vec<XmlElement> = Vec::new();
+        if let Some(element_ids) = self.xml_document.get_element_ids_by_tag("Default", None) {
+            for element_id in element_ids {
+                elements.push(
+                    self.xml_document
+                        .pop_element_mut(&element_id)
+                        .ok_or(anyhow!("Element Id not Found"))?,
+                );
+            }
+            if elements.len() > 0 {
+                return Ok(Some(elements));
+            }
         }
-        Ok(())
+        Ok(None)
     }
-}
 
-/// ######################### Train implementation of XML Part - Only accessible within crate ##############
-impl XmlDocumentPart for ContentTypesPart {
-    fn new(
-        office_document: Weak<RefCell<OfficeDocument>>,
+    pub(crate) fn get_override_content_type(
+        &mut self,
         file_name: &str,
-    ) -> AnyResult<Self, AnyError> {
-        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
-        Ok(Self {
-            office_document,
-            xml_document,
-            file_name: file_name.to_string(),
-        })
+    ) -> AnyResult<Option<String>, AnyError> {
+        if let Some(mut find_ids) = self.xml_document.get_element_ids_by_attribute(
+            "PartName",
+            &format!("/{}", file_name),
+            None,
+        ) {
+            if let Some(id) = find_ids.pop() {
+                if let Some(element) = self.xml_document.pop_element_mut(&id) {
+                    if let Some(attributes) = element.get_attribute() {
+                        let res = attributes.get("ContentType").unwrap().to_string();
+                        return Ok(Some(res));
+                    }
+                }
+            }
+        }
+        Ok(None)
+    }
+
+    pub(crate) fn create_xml_file(
+        extensions: Vec<(String, String)>,
+        overrides: Vec<(String, String)>,
+    ) -> AnyResult<Vec<u8>, AnyError> {
+        let mut document = XmlDocument::new();
+        let root_element = document
+            .create_root_mut("Types")
+            .context("Failed to Create Root Element")?;
+        let mut attributes = HashMap::new();
+        attributes.insert(
+            "xmlns".to_string(),
+            COMMON_TYPE_COLLECTION
+                .get("content_type")
+                .unwrap()
+                .schemas_namespace
+                .to_string(),
+        );
+        root_element
+            .set_attribute_mut(attributes)
+            .context("Set Attributes on root element failed")?;
+        // Load Default Elements
+        {
+            for (extension, content_type) in extensions {
+                let element = document
+                    .append_child_mut("Default", None)
+                    .context("Append child to root failed")?;
+                let mut attributes = HashMap::new();
+                attributes.insert("Extension".to_string(), extension);
+                attributes.insert("ContentType".to_string(), content_type);
+                element
+                    .set_attribute_mut(attributes)
+                    .context("Adding attributes to Default element Failed")?;
+            }
+        }
+        // Load Override Elements
+        {
+            for (part_name, content_type) in overrides {
+                let element = document
+                    .append_child_mut("Override", None)
+                    .context("Append child to root failed")?;
+                let mut attributes = HashMap::new();
+                attributes.insert("PartName".to_string(), part_name);
+                attributes.insert("ContentType".to_string(), content_type);
+                element
+                    .set_attribute_mut(attributes)
+                    .context("Adding attributes to Default element Failed")?;
+            }
+        }
+        XmlDeSerializer::xml_tree_to_vec(&mut document)
     }
 }
-
-impl ContentTypesPart {}
