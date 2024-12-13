@@ -21,7 +21,7 @@ impl Drop for RelationsPart {
 
 impl XmlDocumentPartCommon for RelationsPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<XmlDocument, AnyError> {
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
         let mut attributes: HashMap<String, String> = HashMap::new();
         attributes.insert(
             "xmlns".to_string(),
@@ -33,7 +33,7 @@ impl XmlDocumentPartCommon for RelationsPart {
             .context("Create XML Root Element Failed")?
             .set_attribute_mut(attributes)
             .context("Updating Attribute Failed")?;
-        Ok(xml_document)
+        Ok((xml_document, None))
     }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where

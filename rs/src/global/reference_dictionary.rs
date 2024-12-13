@@ -47,6 +47,15 @@ pub static COMMON_TYPE_COLLECTION: Map<&'static str, &'static Content> = phf_map
         default_path:"docProps",
         default_name:"core"
     },
+    "theme"=>&Content{
+        schemas_namespace:"",
+        schemas_type:"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
+        alias:"",
+        content_type:"application/vnd.openxmlformats-officedocument.theme+xml",
+        extension:"xml",
+        default_path:"theme",
+        default_name:"theme1"
+    },
 };
 /// Excel Related Content
 pub static EXCEL_TYPE_COLLECTION: Map<&'static str, &'static Content> = phf_map! {
@@ -85,15 +94,6 @@ pub static EXCEL_TYPE_COLLECTION: Map<&'static str, &'static Content> = phf_map!
         extension:"xml",
         default_path:"xl",
         default_name:"workbook"
-    },
-    "theme"=>&Content{
-        schemas_namespace:"http://schemas.openxmlformats.org/spreadsheetml/2006/main",
-        schemas_type:"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
-        alias:"x",
-        content_type:"application/vnd.openxmlformats-officedocument.theme+xml",
-        extension:"xml",
-        default_path:"xl/theme",
-        default_name:"theme1"
     },
     "table"=>&Content{
         schemas_namespace:"http://schemas.openxmlformats.org/spreadsheetml/2006/main",

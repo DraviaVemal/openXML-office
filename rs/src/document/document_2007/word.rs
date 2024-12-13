@@ -2,7 +2,7 @@ use crate::{
     files::OfficeDocument,
     get_all_queries,
     global_2007::{
-        parts::{ContentTypesPart, CorePropertiesPart, RelationsPart},
+        parts::{CorePropertiesPart, RelationsPart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
 };
@@ -13,7 +13,6 @@ use std::{cell::RefCell, rc::Rc};
 pub struct Word {
     office_document: Rc<RefCell<OfficeDocument>>,
     root_relations: RelationsPart,
-    content_type: ContentTypesPart,
     core_properties: CorePropertiesPart,
 }
 
@@ -40,9 +39,6 @@ impl Word {
         let mut root_relations =
             RelationsPart::new(Rc::downgrade(&rc_office_document), "_rels/.rels")
                 .context("Initialize Root Relation Part failed")?;
-        let content_type =
-            ContentTypesPart::new(Rc::downgrade(&rc_office_document), "[Content_Types].xml")
-                .context("Initializing Content Type Part Failed")?;
         let core_properties = CorePropertiesPart::create_core_properties(
             &mut root_relations,
             Rc::downgrade(&rc_office_document),
@@ -51,14 +47,12 @@ impl Word {
         Ok(Self {
             office_document: rc_office_document,
             root_relations,
-            content_type,
             core_properties,
         })
     }
 
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
-        self.content_type.flush()?;
         self.core_properties.flush()?;
         self.root_relations.flush()?;
         self.office_document
