@@ -7,7 +7,7 @@ use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
-pub struct RelationsPart {
+pub(crate) struct RelationsPart {
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     file_name: String,
@@ -67,7 +67,7 @@ impl XmlDocumentPart for RelationsPart {
 impl RelationsPart {
     /// Get Relation Target based on Type
     /// Note: This will get the first element match the criteria
-    pub fn get_relationship_target_by_type(
+    pub(crate) fn get_relationship_target_by_type(
         &self,
         content_type: &str,
     ) -> AnyResult<Option<String>, AnyError> {
@@ -117,10 +117,11 @@ impl RelationsPart {
 }
 /// ####################### Mut Access Functions ####################
 impl RelationsPart {
-    pub fn set_new_relationship_mut(
+    pub(crate) fn set_new_relationship_mut(
         &mut self,
         content: &Content,
         file_name: Option<String>,
+        file_path: Option<String>,
     ) -> AnyResult<String, AnyError> {
         let next_id = self
             .get_next_relationship_id()
@@ -139,7 +140,7 @@ impl RelationsPart {
                 "Target".to_string(),
                 format!(
                     "/{}/{}.{}",
-                    content.default_path,
+                    file_path.unwrap_or(content.default_path.to_string()),
                     file_name.unwrap_or(content.default_name.to_string()),
                     content.extension
                 ),

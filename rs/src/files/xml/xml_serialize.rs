@@ -13,7 +13,7 @@ use std::{collections::HashMap, io::Cursor};
 pub struct XmlSerializer {}
 
 impl XmlSerializer {
-    pub fn vec_to_xml_doc_tree(xml_str: Vec<u8>) -> AnyResult<XmlDocument, AnyError> {
+    pub(crate) fn vec_to_xml_doc_tree(xml_str: Vec<u8>) -> AnyResult<XmlDocument, AnyError> {
         let mut reader: NsReader<Cursor<Vec<u8>>> = NsReader::from_reader(Cursor::new(xml_str));
         let mut xml_document = XmlDocument::new();
         reader.config_mut().trim_text(true);

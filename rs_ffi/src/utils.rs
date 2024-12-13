@@ -2,7 +2,7 @@ use std::ffi::{c_char, CString};
 
 use anyhow::Error as AnyError;
 
-pub fn chain_error(error: &AnyError) -> *mut c_char {
+pub(crate) fn chain_error(error: &AnyError) -> *mut c_char {
     let mut message = String::new();
     for (i, chain) in error.chain().enumerate() {
         if i > 0 {

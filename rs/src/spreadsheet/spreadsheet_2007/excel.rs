@@ -99,7 +99,7 @@ impl Excel {
             WorkbookPart::new(office_document, &part_path).context("Workbook Creation Failed")?
         } else {
             relations_part
-                .set_new_relationship_mut(workbook_content, None)
+                .set_new_relationship_mut(workbook_content, None, None)
                 .context("Setting New Theme Relationship Failed.")?;
             WorkbookPart::new(office_document, "xl/workbook.xml")
                 .context("Workbook Creation Failed")?
