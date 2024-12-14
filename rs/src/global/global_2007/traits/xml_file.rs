@@ -58,7 +58,7 @@ pub trait XmlDocumentPart: XmlDocumentPartCommon {
     /// Create new object with file connector handle
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_name: Option<String>,
+        file_name: &str,
     ) -> AnyResult<Self, AnyError>
     where
         Self: Sized;

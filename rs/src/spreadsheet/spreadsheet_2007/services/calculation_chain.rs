@@ -78,16 +78,15 @@ impl XmlDocumentPartCommon for CalculationChain {
 impl XmlDocumentPart for CalculationChain {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_path: Option<String>,
+        file_path: &str,
     ) -> AnyResult<Self, AnyError> {
-        let file_path = file_path.unwrap_or("xl/calcChain.xml".to_string());
         let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
         Self::load_content_to_database(&office_document, &mut xml_document)
             .context("Load Calculation Chain To DB Failed")?;
         Ok(Self {
             office_document,
             xml_document,
-            file_path,
+            file_path: file_path.to_string(),
         })
     }
 }
