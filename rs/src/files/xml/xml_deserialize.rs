@@ -1,7 +1,6 @@
 use crate::files::{XmlDocument, XmlElement};
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;
-use std::collections::HashMap;
 
 pub struct XmlDeSerializer {}
 
@@ -11,15 +10,14 @@ impl XmlDeSerializer {
         xml_content.push_str(
             format!(
                 r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                    <!--
-                    <dvmo:office>
-                        <dvmo:appName>{}</dvmo:appName>
-                        <dvmo:repo>{}</dvmo:repo>
-                        <dvmo:version>{}</dvmo:version>
-                        <dvmo:modified>{}</dvmo:modified>
-                    </dvmo:office>
-                    -->
-                "#,
+<!--
+<dvmo:office>
+    <dvmo:appName>{}</dvmo:appName>
+    <dvmo:repo>{}</dvmo:repo>
+    <dvmo:version>{}</dvmo:version>
+    <dvmo:modified>{}</dvmo:modified>
+</dvmo:office>
+-->"#,
                 env!("CARGO_PKG_NAME"),
                 env!("CARGO_PKG_REPOSITORY"),
                 env!("CARGO_PKG_VERSION"),

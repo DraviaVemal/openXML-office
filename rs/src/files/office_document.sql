@@ -21,16 +21,18 @@ INSERT INTO
         uncompressed_xml_file_size,
         compression_level,
         compression_type,
+        skip_file,
         file_content
     )
 VALUES
-    (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
+    (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
 UPDATE
 SET
     compressed_xml_file_size = excluded.compressed_xml_file_size,
     uncompressed_xml_file_size = excluded.uncompressed_xml_file_size,
     compression_level = excluded.compression_level,
     compression_type = excluded.compression_type,
+    skip_file = excluded.skip_file,
     file_content = excluded.file_content
 WHERE
     file_name = excluded.file_name;

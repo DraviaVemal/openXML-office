@@ -4,6 +4,7 @@ use crate::{
         parts::{RelationsPart, ThemePart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon, XmlDocumentServicePart},
     },
+    reference_dictionary::EXCEL_TYPE_COLLECTION,
     spreadsheet_2007::{
         parts::WorkSheet,
         services::{CalculationChain, CommonServices, ShareString, Style},
@@ -160,10 +161,9 @@ impl WorkbookPart {
         office_document: Weak<RefCell<OfficeDocument>>,
         relation_path: &str,
     ) -> AnyResult<ThemePart, AnyError> {
+        let theme_content = EXCEL_TYPE_COLLECTION.get("theme").unwrap();
         let theme_part_path = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
-            )
+            .get_relationship_target_by_type(&theme_content.schemas_namespace)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = theme_part_path {
             ThemePart::new(
@@ -173,14 +173,14 @@ impl WorkbookPart {
             .context("Creating Theme part for workbook failed")?
         } else {
             relations_part
-                .set_new_relationship_mut(
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
-                    "theme/theme1.xml",
-                )
+                .set_new_relationship_mut(theme_content, None)
                 .context("Setting New Theme Relationship Failed.")?;
             ThemePart::new(
                 office_document.clone(),
-                &format!("{}/theme/theme1.xml", relation_path),
+                &format!(
+                    "{}/{}.{}",
+                    theme_content.default_path, theme_content.default_name, theme_content.extension
+                ),
             )
             .context("Creating Theme part for workbook failed")?
         })
@@ -190,10 +190,9 @@ impl WorkbookPart {
         office_document: Weak<RefCell<OfficeDocument>>,
         relation_path: &str,
     ) -> AnyResult<ShareString, AnyError> {
+        let share_string_content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
         let share_string_path = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
-            )
+            .get_relationship_target_by_type(&share_string_content.schemas_namespace)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = share_string_path {
             ShareString::new(
@@ -203,14 +202,16 @@ impl WorkbookPart {
             .context("Share String Service Object Creation Failure")?
         } else {
             relations_part
-            .set_new_relationship_mut(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
-                "sharedStrings.xml",
-            )
-            .context("Setting New Theme Relationship Failed.")?;
+                .set_new_relationship_mut(share_string_content, None)
+                .context("Setting New Theme Relationship Failed.")?;
             ShareString::new(
                 office_document.clone(),
-                &format!("{}/sharedStrings.xml", relation_path),
+                &format!(
+                    "{}/{}.{}",
+                    share_string_content.default_path,
+                    share_string_content.default_name,
+                    share_string_content.extension
+                ),
             )
             .context("Share String Service Object Creation Failure")?
         })
@@ -220,10 +221,9 @@ impl WorkbookPart {
         office_document: Weak<RefCell<OfficeDocument>>,
         relation_path: &str,
     ) -> AnyResult<CalculationChain, AnyError> {
+        let calc_chain_content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
         let calculation_chain_path = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/calcChain",
-            )
+            .get_relationship_target_by_type(&calc_chain_content.schemas_namespace)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = calculation_chain_path {
             CalculationChain::new(
@@ -233,14 +233,16 @@ impl WorkbookPart {
             .context("Calculation Chain Service Object Creation Failure")?
         } else {
             relations_part
-                .set_new_relationship_mut(
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/calcChain",
-                    "calcChain.xml",
-                )
+                .set_new_relationship_mut(calc_chain_content, None)
                 .context("Setting New Theme Relationship Failed.")?;
             CalculationChain::new(
                 office_document.clone(),
-                &format!("{}/calcChain.xml", relation_path),
+                &format!(
+                    "{}/{}.{}",
+                    calc_chain_content.default_path,
+                    calc_chain_content.default_name,
+                    calc_chain_content.extension
+                ),
             )
             .context("Calculation Chain Service Object Creation Failure")?
         })
@@ -250,10 +252,9 @@ impl WorkbookPart {
         office_document: Weak<RefCell<OfficeDocument>>,
         relation_path: &str,
     ) -> AnyResult<Style, AnyError> {
+        let style_content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
         let style_path = relations_part
-            .get_relationship_target_by_type(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
-            )
+            .get_relationship_target_by_type(&style_content.schemas_namespace)
             .context("Parsing Theme part path failed")?;
         Ok(if let Some(part_path) = style_path {
             Style::new(
@@ -263,14 +264,14 @@ impl WorkbookPart {
             .context("Style Service Object Creation Failure")?
         } else {
             relations_part
-                .set_new_relationship_mut(
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
-                    "styles.xml",
-                )
+                .set_new_relationship_mut(style_content, None)
                 .context("Setting New Theme Relationship Failed.")?;
             Style::new(
                 office_document.clone(),
-                &format!("{}/styles.xml", relation_path),
+                &format!(
+                    "{}/{}.{}",
+                    style_content.default_path, style_content.default_name, style_content.extension
+                ),
             )
             .context("Style Service Object Creation Failure")?
         })
@@ -336,14 +337,12 @@ impl WorkbookPart {
             break;
         }
         let sheet_name = sheet_name.unwrap_or(format!("sheet{}", sheet_count));
-        let sheet_id = self
+        let worksheet_content = EXCEL_TYPE_COLLECTION.get("worksheet").unwrap();
+        let sheet_relationship_id = self
             .relations_part
-            .set_new_relationship_mut(
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet",
-                &format!("worksheets/sheet{}.xml", sheet_count),
-            )
+            .set_new_relationship_mut(&worksheet_content, Some(format!("sheet{}", sheet_count)))
             .context("Failed to Create Sheet Relationship")?;
-        self.sheet_names.push((sheet_name, sheet_id));
+        self.sheet_names.push((sheet_name, sheet_relationship_id));
         Ok(WorkSheet::new(
             self.office_document.clone(),
             Rc::downgrade(&self.common_service),

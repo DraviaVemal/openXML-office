@@ -1,7 +1,10 @@
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
-    global_2007::parts::RelationsPart,
-    global_2007::traits::{XmlDocumentPart, XmlDocumentPartCommon},
+    global_2007::{
+        parts::RelationsPart,
+        traits::{XmlDocumentPart, XmlDocumentPartCommon},
+    },
+    reference_dictionary::COMMON_TYPE_COLLECTION,
 };
 use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;
@@ -82,11 +85,9 @@ impl CorePropertiesPart {
             CorePropertiesPart::new(office_document, &part_path)
                 .context("Load CorePart for Existing file failed")?
         } else {
+            let relationship_content = COMMON_TYPE_COLLECTION.get("docProps_core").unwrap();
             relations_part
-                .set_new_relationship_mut(
-                    "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties",
-                    "docProps/core.xml",
-                )
+                .set_new_relationship_mut(relationship_content, None)
                 .context("Setting New Theme Relationship Failed.")?;
             CorePropertiesPart::new(office_document, "docProps/core.xml")
                 .context("Load CorePart for Existing file failed")?

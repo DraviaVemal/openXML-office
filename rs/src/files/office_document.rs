@@ -123,6 +123,11 @@ impl OfficeDocument {
         let xml_tree_option = self.xml_document_collection.remove(file_path);
         if let Some(xml_tree) = xml_tree_option {
             let mut xml_document = xml_tree.borrow_mut();
+            let skip_file = false;
+            // TODO : Centralize the Relationships so can be filtered on no use
+            // if let Some(element) = xml_document.get_root() {
+            //     skip_file = element.get_child_count() < 1
+            // }
             let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_document)
                 .context("Xml Tree to String content")?;
             Self::insert_update_archive_record(
@@ -130,6 +135,7 @@ impl OfficeDocument {
                 &self.queries,
                 file_path,
                 &mut uncompressed_data,
+                skip_file,
             )
             .context("Create or update archive DB record Failed")?;
         }
@@ -242,6 +248,7 @@ impl OfficeDocument {
                 queries,
                 file_content.name(),
                 &mut uncompressed_data,
+                false,
             )
             .context("Create or update archive DB record Failed")?;
         }
@@ -253,6 +260,7 @@ impl OfficeDocument {
         queries: &HashMap<String, String>,
         file_path: &str,
         uncompressed_data: &mut Vec<u8>,
+        skip_file: bool,
     ) -> AnyResult<(), AnyError> {
         let query = queries
             .get("insert_archive_table")
@@ -270,6 +278,7 @@ impl OfficeDocument {
                     uncompressed_data.len(),
                     compression_level,
                     "gzip",
+                    if skip_file { 1 } else { 0 },
                     compressed
                 ],
             )
