@@ -56,34 +56,38 @@ impl XmlDocumentPartCommon for CalculationChain {
         Self: Sized,
     {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
-            let queries = get_all_queries!("calculation_chain.sql");
-            let select_query = queries.get("select_calculation_chain_table").unwrap();
+            let select_query = get_all_queries!("calculation_chain.sql").get("select_calculation_chain_table").unwrap().to_owned();
             fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
                 Result::Ok((row.get(0)?, row.get(1)?))
             }
             let string_collection = office_doc_ref
-                .borrow()
+                .try_borrow()
+                .context("Failed to get office handle")?
                 .get_connection()
                 .find_many(&select_query, params![], row_mapper)
                 .context("Failed to Pull All Calculation Chain Items")?;
-            if let Some(xml_doc) = self.xml_document.upgrade() {
-                let mut doc = xml_doc.borrow_mut();
-                for (cell_id, sheet_id) in string_collection {
-                    let mut attributes = HashMap::new();
-                    attributes.insert("r".to_string(), cell_id);
-                    attributes.insert("i".to_string(), sheet_id);
-                    doc.append_child_mut("c", None)
-                        .context("Failed To Add Child Item")?
-                        .set_attribute_mut(attributes)?;
+            if string_collection.len() > 0 {
+                if let Some(xml_doc) = self.xml_document.upgrade() {
+                    let mut doc = xml_doc.borrow_mut();
+                    for (cell_id, sheet_id) in string_collection {
+                        let mut attributes = HashMap::new();
+                        attributes.insert("r".to_string(), cell_id);
+                        attributes.insert("i".to_string(), sheet_id);
+                        doc.append_child_mut("c", None)
+                            .context("Failed To Add Child Item")?
+                            .set_attribute_mut(attributes)?;
+                    }
                 }
+                office_doc_ref
+                    .try_borrow_mut()
+                    .context("Failed to Borrow Share Tree")?
+                    .close_xml_document(&self.file_path)?;
+            } else {
+                office_doc_ref
+                    .try_borrow_mut()
+                    .context("Failed to Borrow Share Tree")?
+                    .delete_document_mut(&self.file_path)?;
             }
-        }
-
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            xml_tree
-                .try_borrow_mut()
-                .context("Failed to Borrow Share Tree")?
-                .close_xml_document(&self.file_path)?;
         }
         Ok(())
     }

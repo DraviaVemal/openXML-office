@@ -1,4 +1,5 @@
-pub mod style;
+pub(crate) mod style;
 pub mod worksheet;
-pub use style::*;
+
+pub(crate) use style::*;
 pub use worksheet::*;

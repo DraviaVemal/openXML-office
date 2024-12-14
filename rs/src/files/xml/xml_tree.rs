@@ -157,7 +157,7 @@ impl XmlDocument {
         if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
             let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
                 .context("Create XML Element Failed in insert before")?;
-            element.set_parent_id_mut(*parent_id);
+            element.set_parent_id_mut(parent_id.to_owned());
             self.running_id += 1;
             element.set_id_mut(self.running_id);
             parent_element.insert_children_before_tag_mut(self.running_id, tag, find_tag);
@@ -181,7 +181,7 @@ impl XmlDocument {
         if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
             let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
                 .context("Create XML Element Failed in insert before")?;
-            element.set_parent_id_mut(*parent_id);
+            element.set_parent_id_mut(parent_id.to_owned());
             self.running_id += 1;
             element.set_id_mut(self.running_id);
             parent_element.insert_children_after_tag_mut(self.running_id, tag, find_tag);
@@ -208,7 +208,7 @@ impl XmlDocument {
             element.set_parent_id_mut(*parent_id);
             self.running_id += 1;
             element.set_id_mut(self.running_id);
-            parent_element.insert_children_at_mut(self.running_id, *position, tag);
+            parent_element.insert_children_at_mut(self.running_id, position.to_owned(), tag);
             self.xml_element_collection.insert(self.running_id, element);
             Ok(self
                 .xml_element_collection

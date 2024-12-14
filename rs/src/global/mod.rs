@@ -1,2 +1,2 @@
-pub mod global_2007;
-pub mod reference_dictionary;
+pub(crate) mod global_2007;
+pub(crate) mod reference_dictionary;

@@ -60,17 +60,18 @@ impl XmlDocumentPartCommon for ShareString {
         Self: Sized,
     {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
-            if let Some(select_query) =
-                get_all_queries!("share_string.sql").get("select_share_string_table")
-            {
-                fn row_mapper(row: &Row) -> AnyResult<String, rusqlite::Error> {
-                    Ok(row.get(0)?)
-                }
-                let string_collection = office_doc_ref
-                    .borrow()
-                    .get_connection()
-                    .find_many(&select_query, params![], row_mapper)
-                    .context("Getting Share String Records Failed")?;
+            let select_query = get_all_queries!("share_string.sql")
+                .get("select_share_string_table")
+                .unwrap().to_owned();
+            fn row_mapper(row: &Row) -> AnyResult<String, rusqlite::Error> {
+                Ok(row.get(0)?)
+            }
+            let string_collection = office_doc_ref
+                .borrow()
+                .get_connection()
+                .find_many(&select_query, params![], row_mapper)
+                .context("Getting Share String Records Failed")?;
+            if string_collection.len() > 0 {
                 if let Some(xml_doc) = self.xml_document.upgrade() {
                     let mut doc = xml_doc.borrow_mut();
                     // Update count & uniqueCount in root
@@ -95,15 +96,17 @@ impl XmlDocumentPartCommon for ShareString {
                             .context("Creating Share String Child Failed")?
                             .set_value_mut(string);
                     }
+                    office_doc_ref
+                        .try_borrow_mut()
+                        .context("Failed To pull XML Handle")?
+                        .close_xml_document(&self.file_path)?;
                 }
+            } else {
+                office_doc_ref
+                    .try_borrow_mut()
+                    .context("Failed To pull XML Handle")?
+                    .delete_document_mut(&self.file_path)?;
             }
-        }
-
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            xml_tree
-                .try_borrow_mut()
-                .context("Failed To pull XML Handle")?
-                .close_xml_document(&self.file_path)?;
         }
         Ok(())
     }

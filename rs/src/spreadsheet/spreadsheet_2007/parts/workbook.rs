@@ -64,6 +64,9 @@ impl XmlDocumentPartCommon for WorkbookPart {
             .context("Failed to pull common Service Handle")?
             .close_service()
             .context("Failed to Close Common Service From Workbook")?;
+        self.relations_part
+            .close_document()
+            .context("Failed to Close work")?;
         // Write Sheet Records to Workbook
         if let Some(xml_document_mut) = self.xml_document.upgrade() {
             let mut xml_doc_mut = xml_document_mut
@@ -78,7 +81,7 @@ impl XmlDocumentPartCommon for WorkbookPart {
                 let sheet = xml_doc_mut
                     .append_child_mut("sheet", Some(&sheets_id))
                     .context("Create Sheet Node Failed")?;
-                let mut attributes: HashMap<String, String> = HashMap::new();
+                let mut attributes = HashMap::new();
                 attributes.insert("name".to_string(), sheet_display_name.to_string());
                 attributes.insert("sheetId".to_string(), sheet_count.to_string());
                 attributes.insert("r:id".to_string(), relationship_id.to_string());
@@ -318,10 +321,7 @@ impl WorkbookPart {
 // ############################# Feature Function ######################################
 // ############################# mut Function ######################################
 impl WorkbookPart {
-    pub(crate) fn add_sheet(
-        &mut self,
-        sheet_name: Option<String>,
-    ) -> AnyResult<WorkSheet, AnyError> {
+    pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
         let mut sheet_count = self.sheet_names.len() + 1;
         loop {
             if let Some(office_doc) = self.office_document.upgrade() {
@@ -361,14 +361,14 @@ impl WorkbookPart {
         .context("Worksheet Creation Failed")?)
     }
 
-    pub(crate) fn set_active_sheet(&mut self, sheet_name: &str) {}
+    pub fn set_active_sheet(&mut self, sheet_name: &str) {}
 
-    pub(crate) fn rename_sheet_name(&mut self, sheet_name: &str, new_sheet_name: &str) {}
+    pub fn rename_sheet_name(&mut self, sheet_name: &str, new_sheet_name: &str) {}
 }
 
 // ############################# im-mut Function ######################################
 impl WorkbookPart {
-    pub(crate) fn list_sheet_names(&self) -> Vec<String> {
+    pub fn list_sheet_names(&self) -> Vec<String> {
         self.sheet_names
             .iter()
             .map(|(sheet_name, _)| sheet_name.to_string())

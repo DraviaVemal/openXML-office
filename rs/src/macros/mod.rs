@@ -1,1 +1,1 @@
-pub mod sql_query_file;
+pub(crate) mod sql_query_file;

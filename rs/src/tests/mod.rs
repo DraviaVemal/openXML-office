@@ -1,3 +1,3 @@
-pub mod test_document;
-pub mod test_excel;
-pub mod test_power_point;
+pub(crate) mod test_document;
+pub(crate) mod test_excel;
+pub(crate) mod test_power_point;

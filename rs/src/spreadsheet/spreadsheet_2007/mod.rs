@@ -1,6 +1,6 @@
+pub(crate) mod models;
 pub mod parts;
-pub mod services;
-pub mod models;
+pub(crate) mod services;
 // Local Class
 pub mod excel;
 pub use excel::*;
