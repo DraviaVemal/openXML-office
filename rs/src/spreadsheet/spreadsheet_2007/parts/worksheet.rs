@@ -1,6 +1,6 @@
-use crate::global_2007::traits::{XmlDocumentPartCommon, XmlDocumentServicePart};
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
+    global_2007::traits::{XmlDocumentPartCommon, XmlDocumentServicePart},
     spreadsheet_2007::{
         models::{ColumnCell, ColumnProperties, RowProperties},
         services::CommonServices,
@@ -49,18 +49,14 @@ impl XmlDocumentServicePart for WorkSheet {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         common_service: Weak<RefCell<CommonServices>>,
-        sheet_name: Option<String>,
+        file_name: &str,
     ) -> AnyResult<Self, AnyError> {
-        let mut file_name: String = "xl/worksheets/sheet1.xml".to_string();
-        if let Some(sheet_name) = sheet_name {
-            file_name = sheet_name.to_string();
-        }
         let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
             xml_document,
             common_service,
-            file_name,
+            file_name: file_name.to_string(),
         })
     }
 }

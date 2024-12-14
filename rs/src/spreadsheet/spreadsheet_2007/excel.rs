@@ -67,7 +67,7 @@ impl Excel {
 
     /// Add sheet to the current excel
     pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook().add_sheet(sheet_name)
+        self.get_workbook_mut().add_sheet(sheet_name)
     }
 
     /// Save/Replace the current file into target destination
@@ -87,10 +87,6 @@ impl Excel {
 
 // ############################# Internal Function ######################################
 impl Excel {
-    fn get_workbook(&mut self) -> &mut WorkbookPart {
-        &mut self.workbook
-    }
-
     fn create_workbook_part(
         relations_part: &mut RelationsPart,
         office_document: Weak<RefCell<OfficeDocument>>,
@@ -108,5 +104,20 @@ impl Excel {
             WorkbookPart::new(office_document, "xl/workbook.xml")
                 .context("Workbook Creation Failed")?
         })
+    }
+}
+// ############################# Mut Function      ######################################
+impl Excel {
+    fn get_workbook_mut(&mut self) -> &mut WorkbookPart {
+        &mut self.workbook
+    }
+}
+// ############################# Im-Mut Function   ######################################
+impl Excel {
+    fn get_workbook(&self) -> &WorkbookPart {
+        &self.workbook
+    }
+    pub fn list_sheet_names(&self) -> Vec<String> {
+        self.get_workbook().list_sheet_names()
     }
 }

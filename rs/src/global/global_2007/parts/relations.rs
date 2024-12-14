@@ -74,7 +74,8 @@ impl RelationsPart {
             let xml_doc = xml_document
                 .try_borrow()
                 .context("XML Document Borrow Failed")?;
-            if let Some(result) = xml_doc.get_element_by_attribute("Type", content_type, None) {
+            if let Some(result) = xml_doc.get_first_element_by_attribute("Type", content_type, None)
+            {
                 return Ok(Some(
                     result
                         .get_attribute()
@@ -97,9 +98,11 @@ impl RelationsPart {
             if let Some(root) = xml_doc.get_root() {
                 let mut children = root.get_child_count() + 1;
                 loop {
-                    if let Some(_) =
-                        xml_doc.get_element_by_attribute("Id", &format!("rId{}", children), None)
-                    {
+                    if let Some(_) = xml_doc.get_first_element_by_attribute(
+                        "Id",
+                        &format!("rId{}", children),
+                        None,
+                    ) {
                         children += 1;
                     } else {
                         break;
@@ -117,11 +120,11 @@ impl RelationsPart {
         &mut self,
         content_type: &str,
         target: &str,
-    ) -> AnyResult<(), AnyError> {
+    ) -> AnyResult<String, AnyError> {
+        let next_id = self
+            .get_next_relationship_id()
+            .context("Create New Relation Get next Id Failed")?;
         if let Some(xml_document) = self.xml_document.upgrade() {
-            let next_id = self
-                .get_next_relationship_id()
-                .context("Create New Relation Get next Id Failed")?;
             let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("XML Document Borrow Failed")?;
@@ -129,13 +132,13 @@ impl RelationsPart {
                 .append_child_mut("Relationship", None)
                 .context("Creating Relationship Failed")?;
             let mut attributes: HashMap<String, String> = HashMap::new();
-            attributes.insert("Id".to_string(), next_id);
+            attributes.insert("Id".to_string(), next_id.clone());
             attributes.insert("Type".to_string(), content_type.to_string());
             attributes.insert("Target".to_string(), target.to_string());
             new_relationship
                 .set_attribute_mut(attributes)
                 .context("Setting Relationship Attributes Failed.")?;
         }
-        Ok(())
+        Ok(next_id)
     }
 }
