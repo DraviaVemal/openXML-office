@@ -1,4 +1,4 @@
-use anyhow::{Error as AnyError, Ok, Result as AnyResult};
+use anyhow::{Error as AnyError, Result as AnyResult};
 use core::str;
 use flate2::bufread::GzDecoder;
 use flate2::write::GzEncoder;
@@ -14,9 +14,9 @@ pub fn vector_to_string(vector_data: &Vec<u8>) -> AnyResult<String, AnyError> {
 
 pub fn compress_content(
     uncompressed_data: &[u8],
-    compression_level: u32,
+    compression_level: usize,
 ) -> AnyResult<Vec<u8>, AnyError> {
-    let mut encoder = GzEncoder::new(Vec::new(), Compression::new(compression_level));
+    let mut encoder = GzEncoder::new(Vec::new(), Compression::new(compression_level as u32));
     encoder.write_all(uncompressed_data)?;
     let compressed_data = encoder.finish()?;
     Ok(compressed_data)
