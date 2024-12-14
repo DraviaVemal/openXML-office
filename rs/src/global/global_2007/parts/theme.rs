@@ -42,7 +42,7 @@ impl XmlDocumentPartCommon for ThemePart {
         if let Some(xml_tree) = self.office_document.upgrade() {
             xml_tree
                 .try_borrow_mut()
-                .unwrap()
+                .context("Failed to pull XML Handle")?
                 .close_xml_document(&self.file_name)?;
         }
         Ok(())
