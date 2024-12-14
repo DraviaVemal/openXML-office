@@ -1,2 +1,3 @@
-pub mod common_properties;
-pub use common_properties::*;
+pub(crate) mod common_properties;
+
+pub(crate) use common_properties::*;

@@ -1,13 +1,13 @@
-pub mod consolidated_generated;
-pub mod document;
-pub mod presentation;
-pub mod spreadsheet;
-pub mod status_code;
-pub mod utils;
+pub(crate) mod consolidated_generated;
+pub(crate) mod document;
+pub(crate) mod presentation;
+pub(crate) mod spreadsheet;
+pub(crate) mod status_code;
+pub(crate) mod utils;
 
-pub use consolidated_generated::*;
-pub use document::*;
-pub use presentation::*;
-pub use spreadsheet::*;
-pub use status_code::*;
-pub use utils::*;
+pub(crate) use consolidated_generated::*;
+pub(crate) use document::*;
+pub(crate) use presentation::*;
+pub(crate) use spreadsheet::*;
+pub(crate) use status_code::*;
+pub(crate) use utils::*;

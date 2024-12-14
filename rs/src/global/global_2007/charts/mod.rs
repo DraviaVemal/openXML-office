@@ -1,5 +1,5 @@
-pub mod base;
-pub mod bar_column;
+pub(crate) mod bar_column;
+pub(crate) mod base;
 
-pub use base::*;
-pub use bar_column::*;
+pub(crate) use bar_column::*;
+pub(crate) use base::*;

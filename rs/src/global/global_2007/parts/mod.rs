@@ -1,9 +1,9 @@
-pub mod content_types;
-pub mod core_properties;
-pub mod relations;
-pub mod theme;
+pub(crate) mod content_types;
+pub(crate) mod core_properties;
+pub(crate) mod relations;
+pub(crate) mod theme;
 
-pub use content_types::*;
-pub use core_properties::*;
-pub use relations::*;
-pub use theme::*;
+pub(crate) use content_types::*;
+pub(crate) use core_properties::*;
+pub(crate) use relations::*;
+pub(crate) use theme::*;

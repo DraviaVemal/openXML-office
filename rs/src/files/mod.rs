@@ -1,7 +1,7 @@
-pub mod database;
-pub mod office_document;
-pub mod xml;
+pub(crate) mod database;
+pub(crate) mod office_document;
+pub(crate) mod xml;
 
-pub use database::*;
-pub use office_document::*;
-pub use xml::*;
+pub(crate) use database::*;
+pub(crate) use office_document::*;
+pub(crate) use xml::*;
