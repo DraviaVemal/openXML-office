@@ -144,7 +144,7 @@ impl OfficeDocument {
             .collect::<Vec<String>>();
         for key_file_path in keys {
             self.close_xml_document(&key_file_path)
-                .context("Saving open object content failed")?;
+                .context(" Saving open object content failed")?;
         }
         let file_content: Vec<u8> = self
             .save_database_into_archive()

@@ -1,10 +1,8 @@
-use crate::spreadsheet_2007::{Excel, ExcelPropertiesModel};
-
 #[test]
 fn blank_excel() {
-    let file = Excel::new(
+    let file = crate::spreadsheet_2007::Excel::new(
         None,
-        ExcelPropertiesModel {
+        crate::spreadsheet_2007::ExcelPropertiesModel {
             is_in_memory: false,
         },
     )
@@ -17,9 +15,9 @@ fn blank_excel() {
 
 #[test]
 fn edit_excel() {
-    let file = Excel::new(
+    let file = crate::spreadsheet_2007::Excel::new(
         Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
-        ExcelPropertiesModel {
+        crate::spreadsheet_2007::ExcelPropertiesModel {
             is_in_memory: false,
         },
     )

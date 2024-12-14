@@ -1,3 +1,1 @@
-pub mod file_handling;
-pub mod query_helper;
-pub mod strings;
+pub(crate) mod file_handling;

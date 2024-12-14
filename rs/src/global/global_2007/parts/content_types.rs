@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use crate::{
-    document,
     files::{XmlDeSerializer, XmlDocument, XmlElement, XmlSerializer},
     reference_dictionary::COMMON_TYPE_COLLECTION,
 };

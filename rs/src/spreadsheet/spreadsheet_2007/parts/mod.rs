@@ -1,5 +1,5 @@
-pub mod workbook;
+pub(crate) mod workbook;
 pub mod worksheet;
 
-pub use workbook::*;
+pub(crate) use workbook::*;
 pub use worksheet::*;
