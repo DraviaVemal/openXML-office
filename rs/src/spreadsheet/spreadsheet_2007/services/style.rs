@@ -1,4 +1,4 @@
-use crate::files::{OfficeDocument, XmlDocument, XmlElement};
+use crate::files::{OfficeDocument, XmlDocument, XmlElement, XmlSerializer};
 use crate::get_all_queries;
 use crate::global_2007::traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon};
 use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
@@ -28,23 +28,9 @@ impl Drop for Style {
 impl XmlDocumentPartCommon for Style {
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
-        let mut attributes: HashMap<String, String> = HashMap::new();
-        attributes.insert(
-            "xmlns".to_string(),
-            "http://schemas.openxmlformats.org/spreadsheetml/2006/main".to_string(),
-        );
-        attributes.insert(
-            "xmlns:mc".to_string(),
-            "http://schemas.openxmlformats.org/markup-compatibility/2006".to_string(),
-        );
-        let mut xml_document = XmlDocument::new();
-        xml_document
-            .create_root_mut("styleSheet")
-            .context("Create XML Root Element Failed")?
-            .set_attribute_mut(attributes)
-            .context("Set Attribute Failed")?;
         Ok((
-            xml_document,
+            XmlSerializer::vec_to_xml_doc_tree(include_str!("style.xml").as_bytes().to_vec())
+                .context("Initializing Theme Failed")?,
             Some(
                 EXCEL_TYPE_COLLECTION
                     .get("style")
