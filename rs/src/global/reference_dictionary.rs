@@ -47,8 +47,9 @@ pub static COMMON_TYPE_COLLECTION: Map<&'static str, &'static Content> = phf_map
         default_path:"docProps",
         default_name:"core"
     },
+    // TODO Move to Drawing
     "theme"=>&Content{
-        schemas_namespace:"",
+        schemas_namespace:"http://schemas.openxmlformats.org/drawingml/2006/main",
         schemas_type:"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
         alias:"",
         content_type:"application/vnd.openxmlformats-officedocument.theme+xml",

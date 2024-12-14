@@ -1,11 +1,13 @@
-use crate::files::{OfficeDocument, XmlDocument, XmlElement, XmlSerializer};
-use crate::get_all_queries;
-use crate::global_2007::traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon};
-use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
-use crate::spreadsheet_2007::models::{
-    BorderSetting, BorderStyle, BorderStyleValues, CellXfs, ColorSetting, ColorSettingTypeValues,
-    FillStyle, FontSchemeValues, FontStyle, HorizontalAlignmentValues, NumberFormat,
-    PatternTypeValues, VerticalAlignmentValues,
+use crate::{
+    files::{OfficeDocument, XmlDocument, XmlElement, XmlSerializer},
+    get_all_queries,
+    global_2007::traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon},
+    reference_dictionary::EXCEL_TYPE_COLLECTION,
+    spreadsheet_2007::models::{
+        BorderSetting, BorderStyle, BorderStyleValues, CellXfs, ColorSetting,
+        ColorSettingTypeValues, FillStyle, FontSchemeValues, FontStyle, HorizontalAlignmentValues,
+        NumberFormat, PatternTypeValues, VerticalAlignmentValues,
+    },
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::{params, Row};
@@ -324,14 +326,6 @@ impl Style {
                             }
                         }
                     }
-                } else {
-                    let default_font_values = queries
-                        .get("default_font_value")
-                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                    office_doc
-                        .get_connection()
-                        .insert_default(&default_font_values)
-                        .context("Insert Default Font Style Failed")?;
                 }
                 if let Some(mut fills_vec) = xml_doc_mut.pop_elements_by_tag_mut("fills", None) {
                     if let Some(fills) = fills_vec.pop() {
@@ -478,14 +472,6 @@ impl Style {
                             }
                         }
                     }
-                } else {
-                    let default_fill_value = queries
-                        .get("default_fill_value")
-                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                    office_doc
-                        .get_connection()
-                        .insert_default(&default_fill_value)
-                        .context("Insert Default Fill Style Failed")?;
                 }
                 if let Some(mut borders_vec) = xml_doc_mut.pop_elements_by_tag_mut("borders", None)
                 {
@@ -578,14 +564,6 @@ impl Style {
                             }
                         }
                     }
-                } else {
-                    let default_border_value = queries
-                        .get("default_border_value")
-                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                    office_doc
-                        .get_connection()
-                        .insert_default(&default_border_value)
-                        .context("Insert Default Border Style Failed")?;
                 }
                 if let Some(mut cell_style_xfs_vec) =
                     xml_doc_mut.pop_elements_by_tag_mut("cellStyleXfs", None)
@@ -600,14 +578,6 @@ impl Style {
                         )
                         .context("Deserializing Cell Style Xfs Failed")?;
                     }
-                } else {
-                    let default_style_xfs_value = queries
-                        .get("default_style_xfs_value")
-                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                    office_doc
-                        .get_connection()
-                        .insert_default(&default_style_xfs_value)
-                        .context("Insert Default Cell Style xfs Failed")?;
                 }
                 if let Some(mut cell_xfs_vec) = xml_doc_mut.pop_elements_by_tag_mut("cellXfs", None)
                 {
@@ -621,14 +591,6 @@ impl Style {
                         )
                         .context("Deserializing Cell Xfs Failed")?;
                     }
-                } else {
-                    let default_xfs_value = queries
-                        .get("default_xfs_value")
-                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                    office_doc
-                        .get_connection()
-                        .insert_default(&default_xfs_value)
-                        .context("Insert Default Cell xfs Failed")?;
                 }
             }
         }
@@ -977,21 +939,21 @@ impl Style {
                         }
                     }
                 }
-                // Create Defined Cell Style Elements
-                {
-                    Style::add_cell_style(
-                        "cellStyleXfs",
-                        "select_cell_style_xfs_table",
-                        &mut xml_doc_mut,
-                        &queries,
-                        &office_doc,
-                    )?;
-                }
                 // Create Cell Style Elements
                 {
                     Style::add_cell_style(
                         "cellXfs",
                         "select_cell_xfs_table",
+                        &mut xml_doc_mut,
+                        &queries,
+                        &office_doc,
+                    )?;
+                }
+                // Create Defined Cell Style Elements
+                {
+                    Style::add_cell_style(
+                        "cellStyleXfs",
+                        "select_cell_style_xfs_table",
                         &mut xml_doc_mut,
                         &queries,
                         &office_doc,

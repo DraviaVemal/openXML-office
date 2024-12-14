@@ -2,10 +2,4 @@
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
     xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
     <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7" />
-    <workbookPr defaultThemeVersion="166925" />
-    <bookViews>
-        <workbookView xWindow="2295" yWindow="3345" windowWidth="34065" windowHeight="15345"
-            activeTab="1" />
-    </bookViews>
-    <calcPr calcId="191029" />
 </workbook>
