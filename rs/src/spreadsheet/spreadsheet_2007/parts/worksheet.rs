@@ -11,7 +11,7 @@ use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
 #[derive(Debug)]
-pub struct WorkSheet {
+pub(crate) struct WorkSheet {
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     common_service: Weak<RefCell<CommonServices>>,
@@ -74,10 +74,10 @@ impl XmlDocumentServicePart for WorkSheet {
 
 // ##################################### Feature Function ################################
 impl WorkSheet {
-    pub fn set_column_mut(&mut self, column_id: &usize, column_properties: ColumnProperties) -> () {
+    pub(crate) fn set_column_mut(&mut self, column_id: &usize, column_properties: ColumnProperties) -> () {
     }
 
-    pub fn set_row_mut(
+    pub(crate) fn set_row_mut(
         &mut self,
         cell_id: &usize,
         column_cell: Vec<ColumnCell>,

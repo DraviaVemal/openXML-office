@@ -99,7 +99,7 @@ impl CorePropertiesPart {
         } else {
             let relationship_content = COMMON_TYPE_COLLECTION.get("docProps_core").unwrap();
             relations_part
-                .set_new_relationship_mut(relationship_content, None)
+                .set_new_relationship_mut(relationship_content, None, None)
                 .context("Setting New Theme Relationship Failed.")?;
             CorePropertiesPart::new(office_document, "docProps/core.xml")
                 .context("Load CorePart for Existing file failed")?

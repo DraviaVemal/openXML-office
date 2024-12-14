@@ -1,6 +1,6 @@
 use crate::files::{OfficeDocument, XmlDocument};
 use crate::spreadsheet_2007::services::CommonServices;
-use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
 pub trait XmlDocumentPartCommon {
@@ -11,6 +11,21 @@ pub trait XmlDocumentPartCommon {
     {
         self.close_document()
     }
+
+    fn delete_xml_document_mut(
+        &mut self,
+        office_document: &Weak<RefCell<OfficeDocument>>,
+        file_name: &str,
+    ) -> AnyResult<(), AnyError> {
+        office_document
+            .upgrade()
+            .ok_or(anyhow!("Document Upgrade Handled Failed"))
+            .context("XML Document Read Failed")?
+            .try_borrow_mut()
+            .context("Getting XML Tree Handle Failed")?
+            .delete_document_mut(file_name)
+    }
+
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where
         Self: Sized;

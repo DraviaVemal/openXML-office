@@ -58,6 +58,11 @@ impl XmlDocumentPartCommon for WorkbookPart {
     where
         Self: Sized,
     {
+        let common_service = self
+            .common_service
+            .try_borrow_mut()
+            .context("Common Service borrow failed")?;
+
         // Write Sheet Records to Workbook
         if let Some(xml_document_mut) = self.xml_document.upgrade() {
             let mut xml_doc_mut = xml_document_mut
@@ -110,18 +115,22 @@ impl XmlDocumentPart for WorkbookPart {
             &format!("{}/_rels/workbook.xml.rels", relation_path),
         )
         .context("Creating Relation ship part for workbook failed.")?;
+        // Theme
         let theme_part =
             Self::create_theme_part(&mut relations_part, office_document.clone(), &relation_path)
                 .context("Loading Theme Part Failed")?;
+        // Share String
         let share_string =
             Self::create_share_string(&mut relations_part, office_document.clone(), &relation_path)
                 .context("Loading Share String Failed")?;
+        // Calculation chain
         let calculation_chain = Self::create_calculation_chain(
             &mut relations_part,
             office_document.clone(),
             &relation_path,
         )
         .context("Loading Calculation Chain Failed")?;
+        // Style
         let style =
             Self::create_style_part(&mut relations_part, office_document.clone(), &relation_path)
                 .context("Loading Style Part Failed")?;
@@ -165,12 +174,16 @@ impl WorkbookPart {
             .context("Creating Theme part for workbook failed")?
         } else {
             relations_part
-                .set_new_relationship_mut(theme_content, None)
+                .set_new_relationship_mut(
+                    theme_content,
+                    None,
+                    Some(format!("xl/{}", theme_content.default_path)),
+                )
                 .context("Setting New Theme Relationship Failed.")?;
             ThemePart::new(
                 office_document.clone(),
                 &format!(
-                    "{}/{}.{}",
+                    "xl/{}/{}.{}",
                     theme_content.default_path, theme_content.default_name, theme_content.extension
                 ),
             )
@@ -194,7 +207,7 @@ impl WorkbookPart {
             .context("Share String Service Object Creation Failure")?
         } else {
             relations_part
-                .set_new_relationship_mut(share_string_content, None)
+                .set_new_relationship_mut(share_string_content, None, None)
                 .context("Setting New Theme Relationship Failed.")?;
             ShareString::new(
                 office_document.clone(),
@@ -225,7 +238,7 @@ impl WorkbookPart {
             .context("Calculation Chain Service Object Creation Failure")?
         } else {
             relations_part
-                .set_new_relationship_mut(calc_chain_content, None)
+                .set_new_relationship_mut(calc_chain_content, None, None)
                 .context("Setting New Theme Relationship Failed.")?;
             CalculationChain::new(
                 office_document.clone(),
@@ -256,7 +269,7 @@ impl WorkbookPart {
             .context("Style Service Object Creation Failure")?
         } else {
             relations_part
-                .set_new_relationship_mut(style_content, None)
+                .set_new_relationship_mut(style_content, None, None)
                 .context("Setting New Theme Relationship Failed.")?;
             Style::new(
                 office_document.clone(),
@@ -332,7 +345,11 @@ impl WorkbookPart {
         let worksheet_content = EXCEL_TYPE_COLLECTION.get("worksheet").unwrap();
         let sheet_relationship_id = self
             .relations_part
-            .set_new_relationship_mut(&worksheet_content, Some(format!("sheet{}", sheet_count)))
+            .set_new_relationship_mut(
+                &worksheet_content,
+                Some(format!("sheet{}", sheet_count)),
+                None,
+            )
             .context("Failed to Create Sheet Relationship")?;
         self.sheet_names.push((sheet_name, sheet_relationship_id));
         Ok(WorkSheet::new(

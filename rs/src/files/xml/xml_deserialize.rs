@@ -5,7 +5,7 @@ use chrono::Utc;
 pub struct XmlDeSerializer {}
 
 impl XmlDeSerializer {
-    pub fn xml_tree_to_vec(xml_document: &mut XmlDocument) -> AnyResult<Vec<u8>, AnyError> {
+    pub(crate) fn xml_tree_to_vec(xml_document: &mut XmlDocument) -> AnyResult<Vec<u8>, AnyError> {
         let mut xml_content = String::new();
         xml_content.push_str(
             format!(
