@@ -57,7 +57,9 @@ impl XmlDocument {
                 })
                 .map(|item| item.id)
                 .collect::<Vec<usize>>();
-            element_ids = Some(matching_element_ids);
+            if matching_element_ids.len() > 0 {
+                element_ids = Some(matching_element_ids);
+            }
         }
         element_ids
     }
@@ -147,17 +149,42 @@ impl XmlDocument {
     /// Insert Children Before specific Tag
     pub fn insert_children_before_tag_mut(
         &mut self,
-        parent_id: &usize,
-        find_tag: &str,
         tag: &str,
+        find_tag: &str,
+        parent_id: Option<&usize>,
     ) -> AnyResult<&mut XmlElement, AnyError> {
+        let parent_id = parent_id.unwrap_or(&0);
         if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
             let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
                 .context("Create XML Element Failed in insert before")?;
             element.set_parent_id_mut(*parent_id);
             self.running_id += 1;
             element.set_id_mut(self.running_id);
-            parent_element.insert_children_before_tag_mut(self.running_id, find_tag, tag);
+            parent_element.insert_children_before_tag_mut(self.running_id, tag, find_tag);
+            self.xml_element_collection.insert(self.running_id, element);
+            Ok(self
+                .xml_element_collection
+                .get_mut(&self.running_id)
+                .unwrap())
+        } else {
+            Err(anyhow!("Parent Element Not Found"))
+        }
+    }
+    /// Insert Children After specific Tag
+    pub fn insert_children_after_tag_mut(
+        &mut self,
+        tag: &str,
+        find_tag: &str,
+        parent_id: Option<&usize>,
+    ) -> AnyResult<&mut XmlElement, AnyError> {
+        let parent_id = parent_id.unwrap_or(&0);
+        if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
+            let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
+                .context("Create XML Element Failed in insert before")?;
+            element.set_parent_id_mut(*parent_id);
+            self.running_id += 1;
+            element.set_id_mut(self.running_id);
+            parent_element.insert_children_after_tag_mut(self.running_id, tag, find_tag);
             self.xml_element_collection.insert(self.running_id, element);
             Ok(self
                 .xml_element_collection
@@ -171,9 +198,10 @@ impl XmlDocument {
     pub fn insert_child_at_mut(
         &mut self,
         tag: &str,
-        parent_id: &usize,
         position: &usize,
+        parent_id: Option<&usize>,
     ) -> AnyResult<&mut XmlElement, AnyError> {
+        let parent_id = parent_id.unwrap_or(&0);
         if let Some(parent_element) = self.xml_element_collection.get_mut(&parent_id) {
             let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
                 .context("Create XML Element Failed insert child")?;
@@ -440,11 +468,32 @@ impl XmlElement {
         });
     }
 
-    fn insert_children_before_tag_mut(&mut self, child_id: usize, find_tag: &str, tag: &str) {
+    fn insert_children_before_tag_mut(&mut self, child_id: usize, tag: &str, find_tag: &str) {
         let mut children = self.children.borrow_mut();
         if let Some(index) = children.iter().position(|item| item.tag == find_tag) {
             children.insert(
                 index,
+                XmlElementChild {
+                    id: child_id,
+                    tag: tag.to_string(),
+                },
+            );
+        } else {
+            children.insert(
+                0,
+                XmlElementChild {
+                    id: child_id,
+                    tag: tag.to_string(),
+                },
+            );
+        }
+    }
+
+    fn insert_children_after_tag_mut(&mut self, child_id: usize, tag: &str, find_tag: &str) {
+        let mut children = self.children.borrow_mut();
+        if let Some(index) = children.iter().rposition(|item| item.tag == find_tag) {
+            children.insert(
+                index + 1,
                 XmlElementChild {
                     id: child_id,
                     tag: tag.to_string(),

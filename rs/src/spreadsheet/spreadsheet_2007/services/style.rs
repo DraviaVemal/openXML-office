@@ -654,7 +654,7 @@ impl Style {
                 // Create Number Formats Elements
                 {
                     let num_formats = xml_doc_mut
-                        .append_child_mut("numFmts", None)
+                        .insert_child_at_mut("numFmts", &0, None)
                         .context("Create Number Formats Parent Failed.")?;
                     let num_formats_id = num_formats.get_id();
                     if let Some(num_format_query) = queries.get("select_number_formats_table") {
@@ -691,7 +691,7 @@ impl Style {
                 // Create Fonts Elements
                 {
                     let fonts = xml_doc_mut
-                        .append_child_mut("fonts", None)
+                        .insert_children_after_tag_mut("fonts", "numFmts", None)
                         .context("Create Fonts Parent Failed.")?;
                     let fonts_id = fonts.get_id();
                     if let Some(fonts_query) = queries.get("select_fonts_table") {
@@ -802,7 +802,7 @@ impl Style {
                 // Create Fills Elements
                 {
                     let fills = xml_doc_mut
-                        .append_child_mut("fills", None)
+                        .insert_children_after_tag_mut("fills", "fonts", None)
                         .context("Create Fills parents Failed.")?;
                     let fills_id = fills.get_id();
                     if let Some(fills_query) = queries.get("select_fill_style_table") {
@@ -891,7 +891,7 @@ impl Style {
                 // Create Border Elements
                 {
                     let borders = xml_doc_mut
-                        .append_child_mut("borders", None)
+                        .insert_children_after_tag_mut("borders", "fills", None)
                         .context("Create borders parents Failed.")?;
                     let borders_id = borders.get_id();
                     if let Some(borders_query) = queries.get("select_border_style_table") {
@@ -950,19 +950,19 @@ impl Style {
                                 &border_id,
                                 border_data.left,
                             )?;
-                            // Top Border Setting
-                            Style::add_border_element(
-                                "top",
-                                &mut xml_doc_mut,
-                                &border_id,
-                                border_data.top,
-                            )?;
                             //Right Border Setting
                             Style::add_border_element(
                                 "right",
                                 &mut xml_doc_mut,
                                 &border_id,
                                 border_data.right,
+                            )?;
+                            // Top Border Setting
+                            Style::add_border_element(
+                                "top",
+                                &mut xml_doc_mut,
+                                &border_id,
+                                border_data.top,
                             )?;
                             // Bottom Border Setting
                             Style::add_border_element(
@@ -1224,7 +1224,7 @@ impl Style {
         office_doc: &std::cell::Ref<'_, OfficeDocument>,
     ) -> Result<(), AnyError> {
         let cell_style_xfs = xml_doc_mut
-            .append_child_mut(parent_tag, None)
+            .insert_children_after_tag_mut(parent_tag, "borders", None)
             .context("Create Cell Style parents Failed.")?;
         let cell_style_xfs_id = cell_style_xfs.get_id();
         Ok(if let Some(cell_style_xfs_query) = queries.get(query_id) {

@@ -8,6 +8,7 @@ CREATE TABLE
         uncompressed_xml_file_size INTEGER, -- Size of uncompressed file in bytes
         compression_level INTEGER NOT NULL, -- File Compression level can be adjusted to adjust CPU load
         compression_type TEXT NOT NULL, -- File Compression type
+        skip_file INTEGER DEFAULT 0,
         file_content BLOB -- File content as a BLOB
     );
 
@@ -45,6 +46,8 @@ SELECT
     file_content
 FROM
     archive
+WHERE
+    skip_file = 0
 ORDER BY
     id;
 
@@ -56,9 +59,9 @@ FROM
 WHERE
     file_name = ?;
 
--- query : count_archive_content# select and pull workbook blob content
+-- query : count_archive_content#
 SELECT
-    count(*)
+    COUNT(*)
 FROM
     archive
 WHERE

@@ -1,6 +1,7 @@
 use crate::files::{XmlDocument, XmlElement};
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;
+use std::collections::HashMap;
 
 pub struct XmlDeSerializer {}
 
@@ -10,14 +11,14 @@ impl XmlDeSerializer {
         xml_content.push_str(
             format!(
                 r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--
-<dvmo:office>
-    <dvmo:appName>{}</dvmo:appName>
-    <dvmo:repo>{}</dvmo:repo>
-    <dvmo:version>{}</dvmo:version>
-    <dvmo:modified>{}</dvmo:modified>
-</dvmo:office>
--->
+                    <!--
+                    <dvmo:office>
+                        <dvmo:appName>{}</dvmo:appName>
+                        <dvmo:repo>{}</dvmo:repo>
+                        <dvmo:version>{}</dvmo:version>
+                        <dvmo:modified>{}</dvmo:modified>
+                    </dvmo:office>
+                    -->
                 "#,
                 env!("CARGO_PKG_NAME"),
                 env!("CARGO_PKG_REPOSITORY"),
@@ -125,12 +126,13 @@ impl XmlDeSerializer {
             }
         }
         if let Some(attributes) = xml_element.get_attribute() {
+            let mut keys = attributes.keys().cloned().collect::<Vec<String>>();
+            keys.sort();
             element_tag.push_str(
                 format!(
                     " {}",
-                    attributes
-                        .iter()
-                        .map(|(key, value)| format!("{}=\"{}\"", key, value))
+                    keys.iter()
+                        .map(|key| format!("{}=\"{}\"", key, attributes.get(key).unwrap()))
                         .collect::<Vec<String>>()
                         .join(" ")
                 )
