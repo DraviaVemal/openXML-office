@@ -1,3 +1,4 @@
+use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
@@ -14,21 +15,24 @@ use std::{
 };
 
 #[derive(Debug)]
-pub struct ShareString {
+pub struct ShareStringPart {
     office_document: Weak<RefCell<OfficeDocument>>,
+    parent_relationship_part: Weak<RefCell<RelationsPart>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
 }
 
-impl Drop for ShareString {
+impl Drop for ShareStringPart {
     fn drop(&mut self) {
         let _ = self.close_document();
     }
 }
 
-impl XmlDocumentPartCommon for ShareString {
+impl XmlDocumentPartCommon for ShareStringPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
         let mut attributes: HashMap<String, String> = HashMap::new();
         attributes.insert(
             "xmlns".to_string(),
@@ -46,13 +50,9 @@ impl XmlDocumentPartCommon for ShareString {
             .context("Set Attribute Failed")?;
         Ok((
             xml_document,
-            Some(
-                EXCEL_TYPE_COLLECTION
-                    .get("share_string")
-                    .unwrap()
-                    .content_type
-                    .to_string(),
-            ),
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
         ))
     }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
@@ -62,18 +62,22 @@ impl XmlDocumentPartCommon for ShareString {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
             let select_query = get_all_queries!("share_string.sql")
                 .get("select_share_string_table")
-                .unwrap().to_owned();
+                .unwrap()
+                .to_owned();
             fn row_mapper(row: &Row) -> AnyResult<String, rusqlite::Error> {
                 Ok(row.get(0)?)
             }
             let string_collection = office_doc_ref
-                .borrow()
+                .try_borrow()
+                .context("Failed to borrow Doc Handle")?
                 .get_connection()
                 .find_many(&select_query, params![], row_mapper)
                 .context("Getting Share String Records Failed")?;
             if string_collection.len() > 0 {
                 if let Some(xml_doc) = self.xml_document.upgrade() {
-                    let mut doc = xml_doc.borrow_mut();
+                    let mut doc = xml_doc
+                        .try_borrow_mut()
+                        .context("Failed to Pull Doc Reference")?;
                     // Update count & uniqueCount in root
                     if let Some(root) = doc.get_root_mut() {
                         if let Some(attributes) = root.get_attribute_mut() {
@@ -96,39 +100,93 @@ impl XmlDocumentPartCommon for ShareString {
                             .context("Creating Share String Child Failed")?
                             .set_value_mut(string);
                     }
-                    office_doc_ref
-                        .try_borrow_mut()
-                        .context("Failed To pull XML Handle")?
-                        .close_xml_document(&self.file_path)?;
                 }
-            } else {
                 office_doc_ref
                     .try_borrow_mut()
                     .context("Failed To pull XML Handle")?
-                    .delete_document_mut(&self.file_path)?;
+                    .close_xml_document(&self.file_path)
+                    .context("Failed to close XML Document Share String")?;
+            } else {
+                if let Some(relationship_part) = self.parent_relationship_part.upgrade() {
+                    relationship_part
+                        .try_borrow_mut()
+                        .context("Failed To pull parent relation ship part of Share String")?
+                        .delete_relationship_mut(&self.file_path);
+                    office_doc_ref
+                        .try_borrow_mut()
+                        .context("Failed To pull XML Handle")?
+                        .delete_document_mut(&self.file_path)
+                        .context("Failed to delete XML Document Share String")?;
+                }
             }
         }
         Ok(())
     }
 }
 
-impl XmlDocumentPart for ShareString {
+impl XmlDocumentPart for ShareStringPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_path: &str,
+        parent_relationship_part: Weak<RefCell<RelationsPart>>,
+        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
-        let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
+        let file_name = Self::get_share_string_file_name(&parent_relationship_part)
+            .context("Failed to pull share string file name")?
+            .to_string();
+        let mut xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Self::load_content_to_database(&office_document, &mut xml_document)
             .context("Load Share String To DB Failed")?;
         Ok(Self {
             office_document,
+            parent_relationship_part,
             xml_document,
-            file_path: file_path.to_string(),
+            file_path: file_name,
         })
     }
 }
 
-impl ShareString {
+impl ShareStringPart {
+    fn get_share_string_file_name(
+        relations_part: &Weak<RefCell<RelationsPart>>,
+    ) -> AnyResult<String, AnyError> {
+        let share_string_content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
+        if let Some(relations_part) = relations_part.upgrade() {
+            let part_path = relations_part
+                .try_borrow_mut()
+                .context("Failed to pull relationship connection")?
+                .get_relationship_target_by_type(&share_string_content.schemas_type);
+            Ok(if let Some(part_path) = part_path {
+                if part_path.starts_with("/") {
+                    part_path.strip_prefix("/").unwrap().to_string()
+                } else {
+                    format!(
+                        "{}/{}",
+                        relations_part
+                            .try_borrow_mut()
+                            .context("Failed to pull relationship connection")?
+                            .get_relative_path()
+                            .context("Get Relative Path for Part File")?,
+                        &part_path
+                    )
+                }
+            } else {
+                relations_part
+                    .try_borrow_mut()
+                    .context("Failed to Get Relationship Handle")?
+                    .set_new_relationship_mut(share_string_content, None, None)
+                    .context("Setting New Share String Relationship Failed.")?;
+                format!(
+                    "{}/{}.{}",
+                    share_string_content.default_path,
+                    share_string_content.default_name,
+                    share_string_content.extension
+                )
+            })
+        } else {
+            Err(anyhow!("Failed to upgrade relation part"))
+        }
+    }
+
     fn load_content_to_database(
         office_document: &Weak<RefCell<OfficeDocument>>,
         xml_document: &mut Weak<RefCell<XmlDocument>>,

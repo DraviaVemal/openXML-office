@@ -1,19 +1,19 @@
 use crate::global_2007::traits::XmlDocumentPartCommon;
-use crate::spreadsheet_2007::services::{CalculationChain, ShareString, Style};
+use crate::spreadsheet_2007::services::{CalculationChainPart, ShareStringPart, StylePart};
 use anyhow::{Context, Error as AnyError, Result as AnyResult};
 
 #[derive(Debug)]
 pub(crate) struct CommonServices {
-    calculation_chain: CalculationChain,
-    share_string: ShareString,
-    style: Style,
+    calculation_chain: CalculationChainPart,
+    share_string: ShareStringPart,
+    style: StylePart,
 }
 
 impl CommonServices {
     pub(crate) fn new(
-        calculation_chain: CalculationChain,
-        share_string: ShareString,
-        style: Style,
+        calculation_chain: CalculationChainPart,
+        share_string: ShareStringPart,
+        style: StylePart,
     ) -> Self {
         Self {
             calculation_chain,

@@ -1,7 +1,10 @@
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlElement, XmlSerializer},
     get_all_queries,
-    global_2007::traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon},
+    global_2007::{
+        parts::RelationsPart,
+        traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon},
+    },
     reference_dictionary::EXCEL_TYPE_COLLECTION,
     spreadsheet_2007::models::{
         BorderSetting, BorderStyle, BorderStyleValues, CellXfs, ColorSetting,
@@ -15,31 +18,29 @@ use serde_json::{from_str, to_string};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
-pub struct Style {
+pub struct StylePart {
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
 }
 
-impl Drop for Style {
+impl Drop for StylePart {
     fn drop(&mut self) {
         let _ = self.close_document();
     }
 }
 
-impl XmlDocumentPartCommon for Style {
+impl XmlDocumentPartCommon for StylePart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
         Ok((
             XmlSerializer::vec_to_xml_doc_tree(include_str!("style.xml").as_bytes().to_vec())
                 .context("Initializing Theme Failed")?,
-            Some(
-                EXCEL_TYPE_COLLECTION
-                    .get("style")
-                    .unwrap()
-                    .content_type
-                    .to_string(),
-            ),
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
         ))
     }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
@@ -58,23 +59,66 @@ impl XmlDocumentPartCommon for Style {
     }
 }
 
-impl XmlDocumentPart for Style {
+impl XmlDocumentPart for StylePart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_path: &str,
+        parent_relationship_part: Weak<RefCell<RelationsPart>>,
+        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
-        let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
+        let file_name = Self::get_style_file_name(&parent_relationship_part)
+            .context("Failed to pull style file name")?
+            .to_string();
+        let mut xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Self::load_content_to_database(&office_document, &mut xml_document)
             .context("Load Share String To DB Failed")?;
         Ok(Self {
             office_document,
             xml_document,
-            file_path: file_path.to_string(),
+            file_path: file_name,
         })
     }
 }
 
-impl Style {
+impl StylePart {
+    fn get_style_file_name(
+        relations_part: &Weak<RefCell<RelationsPart>>,
+    ) -> AnyResult<String, AnyError> {
+        let style_content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
+        if let Some(relations_part) = relations_part.upgrade() {
+            let part_path = relations_part
+                .try_borrow_mut()
+                .context("Failed to pull relationship connection")?
+                .get_relationship_target_by_type(&style_content.schemas_type);
+            Ok(if let Some(part_path) = part_path {
+                if part_path.starts_with("/") {
+                    part_path.strip_prefix("/").unwrap().to_string()
+                } else {
+                    format!(
+                        "{}/{}",
+                        relations_part
+                            .try_borrow_mut()
+                            .context("Failed to pull relationship connection")?
+                            .get_relative_path()
+                            .context("Get Relative Path for Part File")?,
+                        &part_path
+                    )
+                }
+            } else {
+                relations_part
+                    .try_borrow_mut()
+                    .context("Failed to Get Relationship Handle")?
+                    .set_new_relationship_mut(style_content, None, None)
+                    .context("Setting New Style Relationship Failed.")?;
+                format!(
+                    "{}/{}.{}",
+                    style_content.default_path, style_content.default_name, style_content.extension
+                )
+            })
+        } else {
+            Err(anyhow!("Failed to upgrade relation part"))
+        }
+    }
+
     /// Create the new Table Required to Load the data
     fn initialize_database(
         office_document: &Weak<RefCell<OfficeDocument>>,
@@ -487,7 +531,7 @@ impl Style {
                                             {
                                                 match current_element.get_tag() {
                                                     "left" => {
-                                                        Style::deserialize_border_setting(
+                                                        StylePart::deserialize_border_setting(
                                                             &current_element,
                                                             &mut border_style.left,
                                                             &mut xml_doc_mut,
@@ -495,7 +539,7 @@ impl Style {
                                                         .context("Left Border Decode Failed")?;
                                                     }
                                                     "right" => {
-                                                        Style::deserialize_border_setting(
+                                                        StylePart::deserialize_border_setting(
                                                             &current_element,
                                                             &mut border_style.right,
                                                             &mut xml_doc_mut,
@@ -503,7 +547,7 @@ impl Style {
                                                         .context("Left Border Decode Failed")?;
                                                     }
                                                     "top" => {
-                                                        Style::deserialize_border_setting(
+                                                        StylePart::deserialize_border_setting(
                                                             &current_element,
                                                             &mut border_style.top,
                                                             &mut xml_doc_mut,
@@ -511,7 +555,7 @@ impl Style {
                                                         .context("Left Border Decode Failed")?;
                                                     }
                                                     "bottom" => {
-                                                        Style::deserialize_border_setting(
+                                                        StylePart::deserialize_border_setting(
                                                             &current_element,
                                                             &mut border_style.bottom,
                                                             &mut xml_doc_mut,
@@ -519,7 +563,7 @@ impl Style {
                                                         .context("Left Border Decode Failed")?;
                                                     }
                                                     "diagonal" => {
-                                                        Style::deserialize_border_setting(
+                                                        StylePart::deserialize_border_setting(
                                                             &current_element,
                                                             &mut border_style.diagonal,
                                                             &mut xml_doc_mut,
@@ -569,7 +613,7 @@ impl Style {
                     xml_doc_mut.pop_elements_by_tag_mut("cellStyleXfs", None)
                 {
                     if let Some(cell_style_xfs) = cell_style_xfs_vec.pop() {
-                        Style::deserialize_cell_style(
+                        StylePart::deserialize_cell_style(
                             cell_style_xfs,
                             &mut xml_doc_mut,
                             &office_doc,
@@ -582,7 +626,7 @@ impl Style {
                 if let Some(mut cell_xfs_vec) = xml_doc_mut.pop_elements_by_tag_mut("cellXfs", None)
                 {
                     if let Some(cell_xfs) = cell_xfs_vec.pop() {
-                        Style::deserialize_cell_style(
+                        StylePart::deserialize_cell_style(
                             cell_xfs,
                             &mut xml_doc_mut,
                             &office_doc,
@@ -596,6 +640,7 @@ impl Style {
         }
         Ok(())
     }
+
     /// Save Database record back to XML File
     fn save_content_to_tree(
         office_document: &Weak<RefCell<OfficeDocument>>,
@@ -722,7 +767,7 @@ impl Style {
                             size_attributes.insert("val".to_string(), font_style.size.to_string());
                             size.set_attribute_mut(size_attributes)
                                 .context("Setting Size Attribute Failing")?;
-                            Style::add_color_element(
+                            StylePart::add_color_element(
                                 Some(font_style.color),
                                 &mut xml_doc_mut,
                                 font_id,
@@ -902,35 +947,35 @@ impl Style {
                                 .context("Create Border Failed")?
                                 .get_id();
                             // Left Border Setting
-                            Style::add_border_element(
+                            StylePart::add_border_element(
                                 "left",
                                 &mut xml_doc_mut,
                                 &border_id,
                                 border_data.left,
                             )?;
                             //Right Border Setting
-                            Style::add_border_element(
+                            StylePart::add_border_element(
                                 "right",
                                 &mut xml_doc_mut,
                                 &border_id,
                                 border_data.right,
                             )?;
                             // Top Border Setting
-                            Style::add_border_element(
+                            StylePart::add_border_element(
                                 "top",
                                 &mut xml_doc_mut,
                                 &border_id,
                                 border_data.top,
                             )?;
                             // Bottom Border Setting
-                            Style::add_border_element(
+                            StylePart::add_border_element(
                                 "bottom",
                                 &mut xml_doc_mut,
                                 &border_id,
                                 border_data.bottom,
                             )?;
                             // Diagonal Border Setting
-                            Style::add_border_element(
+                            StylePart::add_border_element(
                                 "diagonal",
                                 &mut xml_doc_mut,
                                 &border_id,
@@ -941,7 +986,7 @@ impl Style {
                 }
                 // Create Cell Style Elements
                 {
-                    Style::add_cell_style(
+                    StylePart::add_cell_style(
                         "cellXfs",
                         "select_cell_xfs_table",
                         &mut xml_doc_mut,
@@ -951,7 +996,7 @@ impl Style {
                 }
                 // Create Defined Cell Style Elements
                 {
-                    Style::add_cell_style(
+                    StylePart::add_cell_style(
                         "cellStyleXfs",
                         "select_cell_style_xfs_table",
                         &mut xml_doc_mut,
@@ -1130,6 +1175,7 @@ impl Style {
             }
         })
     }
+
     /// Add Color Element Node To XML
     fn add_color_element(
         color_setting: Option<ColorSetting>,
@@ -1150,6 +1196,7 @@ impl Style {
                 .context("Setting Color Attribute Failed")?;
         })
     }
+
     /// Add Border Element Node to XML
     fn add_border_element(
         border_side: &str,
@@ -1170,10 +1217,11 @@ impl Style {
             border_direction
                 .set_attribute_mut(left_attribute)
                 .context(format!("Set {} Attribute Failed", border_side))?;
-            Style::add_color_element(border_data.border_color, xml_doc_mut, id)?;
+            StylePart::add_color_element(border_data.border_color, xml_doc_mut, id)?;
         }
         Ok(())
     }
+
     fn add_cell_style(
         parent_tag: &str,
         query_id: &str,

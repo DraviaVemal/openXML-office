@@ -3,56 +3,38 @@ CREATE TABLE
     archive (
         id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
         file_name TEXT NOT NULL UNIQUE, -- Name of the file including directory
+        file_extension TEXT NOT NULL, -- Contain the file extension for the file
+        extension_type TEXT NOT NULL, -- Contain the content type of the extension
         content_type TEXT, -- File content type
         compressed_xml_file_size INTEGER, -- Size of compressed file in bytes
         uncompressed_xml_file_size INTEGER, -- Size of uncompressed file in bytes
         compression_level INTEGER NOT NULL, -- File Compression level can be adjusted to adjust CPU load
-        skip_file INTEGER DEFAULT 0,
         file_content BLOB -- File content as a BLOB
-    );
-
--- query : create_extension_table# Create initial blob archive table
-CREATE TABLE
-    extensions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique ID for each file
-        file_extension TEXT NOT NULL UNIQUE, -- Name of the file including directory
-        content_type TEXT NOT NULL -- File content type
     );
 
 -- query : insert_archive_table# 
 INSERT INTO
     archive (
         file_name,
+        file_extension,
+        extension_type,
         content_type,
         compressed_xml_file_size,
         uncompressed_xml_file_size,
         compression_level,
-        skip_file,
         file_content
     )
 VALUES
-    (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
+    (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (file_name) DO
 UPDATE
 SET
     content_type = excluded.content_type,
     compressed_xml_file_size = excluded.compressed_xml_file_size,
     uncompressed_xml_file_size = excluded.uncompressed_xml_file_size,
     compression_level = excluded.compression_level,
-    skip_file = excluded.skip_file,
     file_content = excluded.file_content
 WHERE
     file_name = excluded.file_name;
-
--- query : insert_extension_table# 
-INSERT INTO
-    extensions (file_extension, content_type)
-VALUES
-    (?, ?) ON CONFLICT (file_extension) DO
-UPDATE
-SET
-    content_type = excluded.content_type
-WHERE
-    file_extension = excluded.file_extension;
 
 -- query : select_archive_files# Get All content from archive table
 SELECT
@@ -61,24 +43,27 @@ SELECT
     file_content
 FROM
     archive
-WHERE
-    skip_file = 0
 ORDER BY
     id;
 
 -- query : select_extensions# Get All content from archive table
-SELECT
+SELECT DISTINCT
     file_extension,
-    content_type
+    extension_type
 FROM
-    extensions
+    archive
+GROUP BY
+    file_extension,
+    extension_type
 ORDER BY
     id;
 
 -- query : select_archive_content# select and pull workbook blob content
 SELECT
     file_content,
-    content_type
+    content_type,
+    file_extension,
+    extension_type
 FROM
     archive
 WHERE
@@ -89,5 +74,10 @@ SELECT
     COUNT(*)
 FROM
     archive
+WHERE
+    file_name = ?;
+
+-- query : delete_archive_content# select and pull workbook blob content
+DELETE FROM archive
 WHERE
     file_name = ?;

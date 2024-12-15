@@ -4,10 +4,10 @@ use crate::{
         parts::{RelationsPart, ThemePart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon, XmlDocumentServicePart},
     },
-    reference_dictionary::{COMMON_TYPE_COLLECTION, EXCEL_TYPE_COLLECTION},
+    reference_dictionary::EXCEL_TYPE_COLLECTION,
     spreadsheet_2007::{
         parts::WorkSheet,
-        services::{CalculationChain, CommonServices, ShareString, Style},
+        services::{CalculationChainPart, CommonServices, ShareStringPart, StylePart},
     },
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
@@ -24,7 +24,7 @@ pub struct WorkbookPart {
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
     common_service: Rc<RefCell<CommonServices>>,
-    relations_part: RelationsPart,
+    relations_part: Rc<RefCell<RelationsPart>>,
     theme_part: ThemePart,
     relation_path: String,
     /// This contain the sheet name and order along with relationId
@@ -39,18 +39,16 @@ impl Drop for WorkbookPart {
 
 impl XmlDocumentPartCommon for WorkbookPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = EXCEL_TYPE_COLLECTION.get("workbook").unwrap();
         let template_core_properties = include_str!("workbook.xml");
         Ok((
             XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
                 .context("Initializing Workbook Failed")?,
-            Some(
-                EXCEL_TYPE_COLLECTION
-                    .get("workbook")
-                    .unwrap()
-                    .content_type
-                    .to_string(),
-            ),
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
         ))
     }
 
@@ -65,6 +63,8 @@ impl XmlDocumentPartCommon for WorkbookPart {
             .close_service()
             .context("Failed to Close Common Service From Workbook")?;
         self.relations_part
+            .try_borrow_mut()
+            .context("Failed to pull relationship handle")?
             .close_document()
             .context("Failed to Close work")?;
         // Write Sheet Records to Workbook
@@ -106,38 +106,53 @@ impl XmlDocumentPart for WorkbookPart {
     /// Create workbook
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_path: &str,
+        parent_relationship_part: Weak<RefCell<RelationsPart>>,
+        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
-        let mut file_tree = Self::get_xml_document(&office_document, file_path)?;
-        let relation_path = Path::new(&file_path)
+        let file_name = Self::get_workbook_file_name(&parent_relationship_part)
+            .context("Failed to pull workbook file name")?
+            .to_string();
+        let mut file_tree = Self::get_xml_document(&office_document, &file_name)?;
+        let relation_path = Path::new(&file_name)
             .parent()
             .unwrap_or(Path::new(""))
             .display()
             .to_string();
-        let mut relations_part = RelationsPart::new(
-            office_document.clone(),
-            &format!("{}/_rels/workbook.xml.rels", relation_path),
-        )
-        .context("Creating Relation ship part for workbook failed.")?;
+        let relations_part = Rc::new(RefCell::new(
+            RelationsPart::new(
+                office_document.clone(),
+                &format!("{}/_rels/workbook.xml.rels", relation_path),
+            )
+            .context("Creating Relation ship part for workbook failed.")?,
+        ));
         // Theme
-        let theme_part =
-            Self::create_theme_part(&mut relations_part, office_document.clone(), &relation_path)
-                .context("Loading Theme Part Failed")?;
-        // Share String
-        let share_string =
-            Self::create_share_string(&mut relations_part, office_document.clone(), &relation_path)
-                .context("Loading Share String Failed")?;
-        // Calculation chain
-        let calculation_chain = Self::create_calculation_chain(
-            &mut relations_part,
+        let theme_part = ThemePart::new(
             office_document.clone(),
-            &relation_path,
+            Rc::downgrade(&relations_part),
+            None,
+        )
+        .context("Loading Theme Part Failed")?;
+        // Share String
+        let share_string = ShareStringPart::new(
+            office_document.clone(),
+            Rc::downgrade(&relations_part),
+            None,
+        )
+        .context("Loading Share String Failed")?;
+        // Calculation chain
+        let calculation_chain = CalculationChainPart::new(
+            office_document.clone(),
+            Rc::downgrade(&relations_part),
+            None,
         )
         .context("Loading Calculation Chain Failed")?;
         // Style
-        let style =
-            Self::create_style_part(&mut relations_part, office_document.clone(), &relation_path)
-                .context("Loading Style Part Failed")?;
+        let style = StylePart::new(
+            office_document.clone(),
+            Rc::downgrade(&relations_part),
+            None,
+        )
+        .context("Loading Style Part Failed")?;
         let common_service = Rc::new(RefCell::new(CommonServices::new(
             calculation_chain,
             share_string,
@@ -148,7 +163,7 @@ impl XmlDocumentPart for WorkbookPart {
         Ok(Self {
             office_document,
             xml_document: file_tree,
-            file_path: file_path.to_string(),
+            file_path: file_name,
             common_service,
             relations_part,
             theme_part,
@@ -161,130 +176,6 @@ impl XmlDocumentPart for WorkbookPart {
 // ############################# Internal Function ######################################
 // ############################# mut Function ######################################
 impl WorkbookPart {
-    fn create_theme_part(
-        relations_part: &mut RelationsPart,
-        office_document: Weak<RefCell<OfficeDocument>>,
-        relation_path: &str,
-    ) -> AnyResult<ThemePart, AnyError> {
-        let theme_content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
-        let theme_part_path = relations_part
-            .get_relationship_target_by_type(&theme_content.schemas_type)
-            .context("Parsing Theme part path failed")?;
-        Ok(if let Some(part_path) = theme_part_path {
-            ThemePart::new(
-                office_document.clone(),
-                &format!("{}/{}", relation_path, &part_path),
-            )
-            .context("Creating Theme part for workbook failed")?
-        } else {
-            relations_part
-                .set_new_relationship_mut(
-                    theme_content,
-                    None,
-                    Some(format!("xl/{}", theme_content.default_path)),
-                )
-                .context("Setting New Theme Relationship Failed.")?;
-            ThemePart::new(
-                office_document.clone(),
-                &format!(
-                    "xl/{}/{}.{}",
-                    theme_content.default_path, theme_content.default_name, theme_content.extension
-                ),
-            )
-            .context("Creating Theme part for workbook failed")?
-        })
-    }
-    fn create_share_string(
-        relations_part: &mut RelationsPart,
-        office_document: Weak<RefCell<OfficeDocument>>,
-        relation_path: &str,
-    ) -> AnyResult<ShareString, AnyError> {
-        let share_string_content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
-        let share_string_path = relations_part
-            .get_relationship_target_by_type(&share_string_content.schemas_type)
-            .context("Parsing Theme part path failed")?;
-        Ok(if let Some(part_path) = share_string_path {
-            ShareString::new(
-                office_document.clone(),
-                &format!("{}/{}", relation_path, &part_path),
-            )
-            .context("Share String Service Object Creation Failure")?
-        } else {
-            relations_part
-                .set_new_relationship_mut(share_string_content, None, None)
-                .context("Setting New Theme Relationship Failed.")?;
-            ShareString::new(
-                office_document.clone(),
-                &format!(
-                    "{}/{}.{}",
-                    share_string_content.default_path,
-                    share_string_content.default_name,
-                    share_string_content.extension
-                ),
-            )
-            .context("Share String Service Object Creation Failure")?
-        })
-    }
-    fn create_calculation_chain(
-        relations_part: &mut RelationsPart,
-        office_document: Weak<RefCell<OfficeDocument>>,
-        relation_path: &str,
-    ) -> AnyResult<CalculationChain, AnyError> {
-        let calc_chain_content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
-        let calculation_chain_path = relations_part
-            .get_relationship_target_by_type(&calc_chain_content.schemas_type)
-            .context("Parsing Theme part path failed")?;
-        Ok(if let Some(part_path) = calculation_chain_path {
-            CalculationChain::new(
-                office_document.clone(),
-                &format!("{}/{}", relation_path, &part_path),
-            )
-            .context("Calculation Chain Service Object Creation Failure")?
-        } else {
-            relations_part
-                .set_new_relationship_mut(calc_chain_content, None, None)
-                .context("Setting New Theme Relationship Failed.")?;
-            CalculationChain::new(
-                office_document.clone(),
-                &format!(
-                    "{}/{}.{}",
-                    calc_chain_content.default_path,
-                    calc_chain_content.default_name,
-                    calc_chain_content.extension
-                ),
-            )
-            .context("Calculation Chain Service Object Creation Failure")?
-        })
-    }
-    fn create_style_part(
-        relations_part: &mut RelationsPart,
-        office_document: Weak<RefCell<OfficeDocument>>,
-        relation_path: &str,
-    ) -> AnyResult<Style, AnyError> {
-        let style_content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
-        let style_path = relations_part
-            .get_relationship_target_by_type(&style_content.schemas_type)
-            .context("Parsing Theme part path failed")?;
-        Ok(if let Some(part_path) = style_path {
-            Style::new(
-                office_document.clone(),
-                &format!("{}/{}", relation_path, &part_path),
-            )
-            .context("Style Service Object Creation Failure")?
-        } else {
-            relations_part
-                .set_new_relationship_mut(style_content, None, None)
-                .context("Setting New Theme Relationship Failed.")?;
-            Style::new(
-                office_document.clone(),
-                &format!(
-                    "{}/{}.{}",
-                    style_content.default_path, style_content.default_name, style_content.extension
-                ),
-            )
-            .context("Style Service Object Creation Failure")?
-        })
-    }
     fn load_sheet_names(
         xml_document: &mut Weak<RefCell<XmlDocument>>,
     ) -> AnyResult<Vec<(String, String)>, AnyError> {
@@ -318,6 +209,38 @@ impl WorkbookPart {
     }
 }
 
+// ############################# im-mut Function ######################################
+impl WorkbookPart {
+    fn get_workbook_file_name(
+        relations_part: &Weak<RefCell<RelationsPart>>,
+    ) -> AnyResult<String, AnyError> {
+        let relationship_content = EXCEL_TYPE_COLLECTION.get("workbook").unwrap();
+        if let Some(relations_part) = relations_part.upgrade() {
+            let part_path = relations_part
+                .try_borrow_mut()
+                .context("Failed to pull relationship connection")?
+                .get_relationship_target_by_type(&relationship_content.schemas_type);
+            Ok(if let Some(part_path) = part_path {
+                part_path
+            } else {
+                relations_part
+                    .try_borrow_mut()
+                    .context("Failed to pull relationship handle")?
+                    .set_new_relationship_mut(relationship_content, None, None)
+                    .context("Setting New Theme Relationship Failed.")?;
+                format!(
+                    "{}/{}.{}",
+                    relationship_content.default_path,
+                    relationship_content.default_name,
+                    relationship_content.extension
+                )
+            })
+        } else {
+            Err(anyhow!("Failed to upgrade relation part"))
+        }
+    }
+}
+
 // ############################# Feature Function ######################################
 // ############################# mut Function ######################################
 impl WorkbookPart {
@@ -346,15 +269,18 @@ impl WorkbookPart {
         let worksheet_content = EXCEL_TYPE_COLLECTION.get("worksheet").unwrap();
         let sheet_relationship_id = self
             .relations_part
+            .try_borrow_mut()
+            .context("Failed to Get Relationship Handle")?
             .set_new_relationship_mut(
                 &worksheet_content,
-                Some(format!("sheet{}", sheet_count)),
                 None,
+                Some(format!("sheet{}", sheet_count)),
             )
             .context("Failed to Create Sheet Relationship")?;
         self.sheet_names.push((sheet_name, sheet_relationship_id));
         Ok(WorkSheet::new(
             self.office_document.clone(),
+            Rc::downgrade(&self.relations_part),
             Rc::downgrade(&self.common_service),
             &format!("{}/worksheets/sheet{}.xml", self.relation_path, sheet_count),
         )
