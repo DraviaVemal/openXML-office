@@ -15,11 +15,11 @@ Please refer [stable branch](https://github.com/DraviaVemal/OpenXML-Office/tree/
 | Code Coverage     | [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage) | Excel Files Generated | [![Generated](https://draviavemal.com/openxml-office/excel-count.svg)](https://openxml-office.draviavemal.com/)                                                                                                                                   |
 | Package Downloads | [![Downloads](https://img.shields.io/nuget/dt/openxmloffice.Presentation.svg)](https://www.nuget.org/packages/openxmloffice.Presentation)                                                                                                    | Word Files Generated  | [![Generated](https://draviavemal.com/openxml-office/word-count.svg)](https://openxml-office.draviavemal.com/)                                                                                                                                    |
 
-## Important Note about V3
+## Important Note about V3 (Discontinued)
 
 After thorough analysis, I have concluded that the full OpenXML format relations and connections are adequately addressed. Therefore, to eliminate duplicate work, V3 is no longer under development. Please follow V4 updates for final results.
 
-# Version 4 Goals and Objectives
+# V4 Release and Targets
 
 | Supported Languages | Min.Support Version | Readme link                                                                         | Packages   | package link                                             | Description                                                      |
 | ------------------- | ------------------- | ----------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------- | ---------------------------------------------------------------- |
@@ -34,7 +34,7 @@ After thorough analysis, I have concluded that the full OpenXML format relations
 | TypeScript          |                     | TODO                                                                                | TypeScript | [npm](https://www.npmjs.com/)                            | NAPI-RS is used to expose the core lib as node addon             |
 |                     |                     |                                                                                     | Rust-API   | [Docker Hub](https://hub.docker.com/)                    | API container running rust crate for HTTP support                |
 
-## V4 Status Development
+## V4 Development Status
 
 | Language    | Package      | Progress |
 | ----------- | ------------ | -------- |
