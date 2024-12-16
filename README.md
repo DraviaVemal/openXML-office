@@ -2,7 +2,7 @@
 
 This project aims to provide a streamlined, efficient way to create and manipulate Excel, PowerPoint, and Word documents using the OpenXML format. By leveraging the power of modern programming languages, this library simplifies the process of document creation, enabling developers to focus on functionality rather than the intricacies of the OpenXML standard.
 
-## V2/Stable Version
+## V2/Stable Version (C# Only)
 
 Please refer [stable branch](https://github.com/DraviaVemal/OpenXML-Office/tree/stable) for V2/Stable Package related details. This is active development Branch
 
