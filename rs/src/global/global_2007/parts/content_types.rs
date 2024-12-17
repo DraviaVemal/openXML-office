@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    files::{XmlDeSerializer, XmlDocument, XmlElement, XmlSerializer},
+    files::{XmlDeSerializer, XmlDocument, XmlSerializer},
     reference_dictionary::COMMON_TYPE_COLLECTION,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
@@ -17,15 +17,27 @@ impl ContentTypesPart {
             .context("Decoding Content Type Failed")?;
         Ok(Self { xml_document })
     }
-    pub(crate) fn get_extensions(&mut self) -> AnyResult<Option<Vec<XmlElement>>, AnyError> {
-        let mut elements: Vec<XmlElement> = Vec::new();
+    pub(crate) fn get_extensions(&mut self) -> AnyResult<Option<Vec<(String, String)>>, AnyError> {
+        let mut elements: Vec<(String, String)> = Vec::new();
         if let Some(element_ids) = self.xml_document.get_element_ids_by_tag("Default", None) {
             for element_id in element_ids {
-                elements.push(
-                    self.xml_document
-                        .pop_element_mut(&element_id)
-                        .ok_or(anyhow!("Element Id not Found"))?,
-                );
+                let element = self
+                    .xml_document
+                    .pop_element_mut(&element_id)
+                    .ok_or(anyhow!("Element Id not Found"))?;
+                let attributes = element
+                    .get_attribute()
+                    .ok_or(anyhow!("Element Attribute not Found"))?;
+                elements.push((
+                    attributes
+                        .get("Extension")
+                        .ok_or(anyhow!("content type default attribute missing"))?
+                        .to_string(),
+                    attributes
+                        .get("ContentType")
+                        .ok_or(anyhow!("content type default attribute missing"))?
+                        .to_string(),
+                ));
             }
             if elements.len() > 0 {
                 return Ok(Some(elements));

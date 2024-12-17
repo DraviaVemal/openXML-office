@@ -4,17 +4,15 @@ use crate::{
         parts::{CorePropertiesPart, RelationsPart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
-    reference_dictionary::EXCEL_TYPE_COLLECTION,
     spreadsheet_2007::parts::{WorkSheet, WorkbookPart},
 };
-use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
-use std::rc::Weak;
+use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]
 pub struct Excel {
     office_document: Rc<RefCell<OfficeDocument>>,
-    root_relations: RelationsPart,
+    root_relations: Rc<RefCell<RelationsPart>>,
     core_properties: CorePropertiesPart,
     workbook: WorkbookPart,
 }
@@ -35,25 +33,29 @@ impl Excel {
         file_name: Option<String>,
         excel_setting: ExcelPropertiesModel,
     ) -> AnyResult<Self, AnyError> {
-        let office_document: OfficeDocument =
+        let office_document = Rc::new(RefCell::new(
             OfficeDocument::new(file_name.clone(), excel_setting.is_in_memory)
-                .context("Creating Office Document Struct Failed")?;
-        let rc_office_document: Rc<RefCell<OfficeDocument>> =
-            Rc::new(RefCell::new(office_document));
-        let mut root_relations =
-            RelationsPart::new(Rc::downgrade(&rc_office_document), "_rels/.rels")
-                .context("Initialize Root Relation Part failed")?;
+                .context("Creating Office Document Struct Failed")?,
+        ));
+        let root_relations = Rc::new(RefCell::new(
+            RelationsPart::new(Rc::downgrade(&office_document), "_rels/.rels")
+                .context("Initialize Root Relation Part failed")?,
+        ));
         // Load relevant parts from root relations part
-        let core_properties = CorePropertiesPart::create_core_properties(
-            &mut root_relations,
-            Rc::downgrade(&rc_office_document),
+        let core_properties = CorePropertiesPart::new(
+            Rc::downgrade(&office_document),
+            Rc::downgrade(&root_relations),
+            None,
         )
         .context("Creating Core Property Part Failed.")?;
-        let workbook =
-            Excel::create_workbook_part(&mut root_relations, Rc::downgrade(&rc_office_document))
-                .context("Creating Workbook part Failed")?;
+        let workbook = WorkbookPart::new(
+            Rc::downgrade(&office_document),
+            Rc::downgrade(&root_relations),
+            None,
+        )
+        .context("Creating Workbook part Failed")?;
         let mut excel = Self {
-            office_document: rc_office_document,
+            office_document,
             root_relations,
             core_properties,
             workbook,
@@ -75,7 +77,10 @@ impl Excel {
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
         self.workbook.flush()?;
         self.core_properties.flush()?;
-        self.root_relations.flush()?;
+        self.root_relations
+            .try_borrow_mut()
+            .context("Failed To Pull Relation Handle")?
+            .close_document()?;
         self.office_document
             .try_borrow_mut()
             .context("Save Office Document handle Failed")?
@@ -86,32 +91,13 @@ impl Excel {
 }
 
 // ############################# Internal Function ######################################
-impl Excel {
-    fn create_workbook_part(
-        relations_part: &mut RelationsPart,
-        office_document: Weak<RefCell<OfficeDocument>>,
-    ) -> AnyResult<WorkbookPart, AnyError> {
-        let workbook_content = EXCEL_TYPE_COLLECTION.get("workbook").unwrap();
-        let workbook_path: Option<String> = relations_part
-            .get_relationship_target_by_type(&workbook_content.schemas_type)
-            .context("Parsing workbook path failed")?;
-        Ok(if let Some(part_path) = workbook_path {
-            WorkbookPart::new(office_document, &part_path).context("Workbook Creation Failed")?
-        } else {
-            relations_part
-                .set_new_relationship_mut(workbook_content, None, None)
-                .context("Setting New Theme Relationship Failed.")?;
-            WorkbookPart::new(office_document, "xl/workbook.xml")
-                .context("Workbook Creation Failed")?
-        })
-    }
-}
 // ############################# Mut Function      ######################################
 impl Excel {
     fn get_workbook_mut(&mut self) -> &mut WorkbookPart {
         &mut self.workbook
     }
 }
+
 // ############################# Im-Mut Function   ######################################
 impl Excel {
     fn get_workbook(&self) -> &WorkbookPart {

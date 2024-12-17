@@ -1,17 +1,19 @@
-use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::reference_dictionary::COMMON_TYPE_COLLECTION;
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
-    global_2007::traits::XmlDocumentPart,
+    global_2007::{
+        parts::RelationsPart,
+        traits::{XmlDocumentPart, XmlDocumentPartCommon},
+    },
 };
-use anyhow::{Context, Error as AnyError, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
 #[derive(Debug)]
 pub struct ThemePart {
     office_document: Weak<RefCell<OfficeDocument>>,
-    xml_document: Weak<RefCell<XmlDocument>>,
-    file_name: String,
+    _xml_document: Weak<RefCell<XmlDocument>>,
+    file_path: String,
 }
 
 impl Drop for ThemePart {
@@ -22,17 +24,15 @@ impl Drop for ThemePart {
 
 impl XmlDocumentPartCommon for ThemePart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
         Ok((
             XmlSerializer::vec_to_xml_doc_tree(include_str!("theme.xml").as_bytes().to_vec())
                 .context("Initializing Theme Failed")?,
-            Some(
-                COMMON_TYPE_COLLECTION
-                    .get("theme")
-                    .unwrap()
-                    .content_type
-                    .to_string(),
-            ),
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
         ))
     }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
@@ -43,7 +43,7 @@ impl XmlDocumentPartCommon for ThemePart {
             xml_tree
                 .try_borrow_mut()
                 .context("Failed to pull XML Handle")?
-                .close_xml_document(&self.file_name)?;
+                .close_xml_document(&self.file_path)?;
         }
         Ok(())
     }
@@ -53,15 +53,62 @@ impl XmlDocumentPartCommon for ThemePart {
 impl XmlDocumentPart for ThemePart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_name: &str,
+        parent_relationship_part: Weak<RefCell<RelationsPart>>,
+        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
-        let xml_document = Self::get_xml_document(&office_document, file_name)?;
+        let file_name = Self::get_theme_file_name(&parent_relationship_part)
+            .context("Failed to pull theme file name")?
+            .to_string();
+        let xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Ok(Self {
             office_document,
-            xml_document,
-            file_name: file_name.to_string(),
+            _xml_document: xml_document,
+            file_path: file_name.to_string(),
         })
     }
 }
 
-impl ThemePart {}
+impl ThemePart {
+    fn get_theme_file_name(
+        relations_part: &Weak<RefCell<RelationsPart>>,
+    ) -> AnyResult<String, AnyError> {
+        let theme_content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
+        if let Some(relations_part) = relations_part.upgrade() {
+            let part_path = relations_part
+                .try_borrow_mut()
+                .context("Failed to pull relationship connection")?
+                .get_relationship_target_by_type(&theme_content.schemas_type);
+            Ok(if let Some(part_path) = part_path {
+                if part_path.starts_with("/") {
+                    part_path.strip_prefix("/").unwrap().to_string()
+                } else {
+                    format!(
+                        "{}/{}",
+                        relations_part
+                            .try_borrow_mut()
+                            .context("Failed to pull relationship connection")?
+                            .get_relative_path()
+                            .context("Get Relative Path for Part File")?,
+                        &part_path
+                    )
+                }
+            } else {
+                relations_part
+                    .try_borrow_mut()
+                    .context("Failed to Get Relationship Handle")?
+                    .set_new_relationship_mut(
+                        theme_content,
+                        Some(format!("xl/{}", theme_content.default_path)),
+                        None,
+                    )
+                    .context("Setting New Theme Relationship Failed.")?;
+                format!(
+                    "xl/{}/{}.{}",
+                    theme_content.default_path, theme_content.default_name, theme_content.extension
+                )
+            })
+        } else {
+            Err(anyhow!("Failed to upgrade relation part"))
+        }
+    }
+}

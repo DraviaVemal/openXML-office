@@ -94,6 +94,16 @@ impl SqliteDatabases {
         }
     }
 
+    pub(crate) fn delete_record(
+        &self,
+        query: &str,
+        params: &[&(dyn ToSql)],
+    ) -> AnyResult<usize, AnyError> {
+        self.connection
+            .execute(query, params)
+            .context("Failed to remove Record From DB")
+    }
+
     /// Find multiple results and map each row to a specific type using the closure.
     pub(crate) fn find_many<F, T>(
         &self,

@@ -1,3 +1,4 @@
+use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
@@ -10,21 +11,24 @@ use rusqlite::{params, Row};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
-pub struct CalculationChain {
+pub struct CalculationChainPart {
     office_document: Weak<RefCell<OfficeDocument>>,
+    parent_relationship_part: Weak<RefCell<RelationsPart>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
 }
 
-impl Drop for CalculationChain {
+impl Drop for CalculationChainPart {
     fn drop(&mut self) {
         let _ = self.close_document();
     }
 }
 
-impl XmlDocumentPartCommon for CalculationChain {
+impl XmlDocumentPartCommon for CalculationChainPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>), AnyError> {
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
         let mut attributes: HashMap<String, String> = HashMap::new();
         attributes.insert(
             "xmlns".to_string(),
@@ -42,13 +46,9 @@ impl XmlDocumentPartCommon for CalculationChain {
             .context("Set Attribute Failed")?;
         Ok((
             xml_document,
-            Some(
-                EXCEL_TYPE_COLLECTION
-                    .get("calc_chain")
-                    .unwrap()
-                    .content_type
-                    .to_string(),
-            ),
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
         ))
     }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
@@ -56,7 +56,10 @@ impl XmlDocumentPartCommon for CalculationChain {
         Self: Sized,
     {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
-            let select_query = get_all_queries!("calculation_chain.sql").get("select_calculation_chain_table").unwrap().to_owned();
+            let select_query = get_all_queries!("calculation_chain.sql")
+                .get("select_calculation_chain_table")
+                .unwrap()
+                .to_owned();
             fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
                 Result::Ok((row.get(0)?, row.get(1)?))
             }
@@ -68,7 +71,9 @@ impl XmlDocumentPartCommon for CalculationChain {
                 .context("Failed to Pull All Calculation Chain Items")?;
             if string_collection.len() > 0 {
                 if let Some(xml_doc) = self.xml_document.upgrade() {
-                    let mut doc = xml_doc.borrow_mut();
+                    let mut doc = xml_doc
+                        .try_borrow_mut()
+                        .context("Failed to pull document handle")?;
                     for (cell_id, sheet_id) in string_collection {
                         let mut attributes = HashMap::new();
                         attributes.insert("r".to_string(), cell_id);
@@ -83,33 +88,84 @@ impl XmlDocumentPartCommon for CalculationChain {
                     .context("Failed to Borrow Share Tree")?
                     .close_xml_document(&self.file_path)?;
             } else {
-                office_doc_ref
-                    .try_borrow_mut()
-                    .context("Failed to Borrow Share Tree")?
-                    .delete_document_mut(&self.file_path)?;
+                if let Some(relationship_part) = self.parent_relationship_part.upgrade() {
+                    relationship_part
+                        .try_borrow_mut()
+                        .context("Failed To pull parent relation ship part of Calc Chain")?
+                        .delete_relationship_mut(&self.file_path);
+                    office_doc_ref
+                        .try_borrow_mut()
+                        .context("Failed to Borrow Share Tree")?
+                        .delete_document_mut(&self.file_path)?;
+                }
             }
         }
         Ok(())
     }
 }
 
-impl XmlDocumentPart for CalculationChain {
+impl XmlDocumentPart for CalculationChainPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        file_path: &str,
+        parent_relationship_part: Weak<RefCell<RelationsPart>>,
+        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
-        let mut xml_document = Self::get_xml_document(&office_document, &file_path)?;
+        let file_name = Self::get_calc_chain_file_name(&parent_relationship_part)
+            .context("Failed to pull calc chain file name")?
+            .to_string();
+        let mut xml_document = Self::get_xml_document(&office_document, &file_name)?;
         Self::load_content_to_database(&office_document, &mut xml_document)
             .context("Load Calculation Chain To DB Failed")?;
         Ok(Self {
             office_document,
+            parent_relationship_part,
             xml_document,
-            file_path: file_path.to_string(),
+            file_path: file_name,
         })
     }
 }
 
-impl CalculationChain {
+impl CalculationChainPart {
+    fn get_calc_chain_file_name(
+        relations_part: &Weak<RefCell<RelationsPart>>,
+    ) -> AnyResult<String, AnyError> {
+        let calc_chain_content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
+        if let Some(relations_part) = relations_part.upgrade() {
+            let part_path = relations_part
+                .try_borrow_mut()
+                .context("Failed to pull relationship connection")?
+                .get_relationship_target_by_type(&calc_chain_content.schemas_type);
+            Ok(if let Some(part_path) = part_path {
+                if part_path.starts_with("/") {
+                    part_path.strip_prefix("/").unwrap().to_string()
+                } else {
+                    format!(
+                        "{}/{}",
+                        relations_part
+                            .try_borrow_mut()
+                            .context("Failed to pull relationship connection")?
+                            .get_relative_path()
+                            .context("Get Relative Path for Part File")?,
+                        &part_path
+                    )
+                }
+            } else {
+                relations_part
+                    .try_borrow_mut()
+                    .context("Failed to Get Relationship Handle")?
+                    .set_new_relationship_mut(calc_chain_content, None, None)
+                    .context("Setting New Calculation Chain Relationship Failed.")?;
+                format!(
+                    "{}/{}.{}",
+                    calc_chain_content.default_path,
+                    calc_chain_content.default_name,
+                    calc_chain_content.extension
+                )
+            })
+        } else {
+            Err(anyhow!("Failed to upgrade relation part"))
+        }
+    }
     fn load_content_to_database(
         office_document: &Weak<RefCell<OfficeDocument>>,
         xml_document: &mut Weak<RefCell<XmlDocument>>,
