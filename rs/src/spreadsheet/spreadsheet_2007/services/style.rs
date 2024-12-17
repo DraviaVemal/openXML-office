@@ -992,6 +992,7 @@ impl StylePart {
                         &mut xml_doc_mut,
                         &queries,
                         &office_doc,
+                        true,
                     )?;
                 }
                 // Create Defined Cell Style Elements
@@ -1002,6 +1003,7 @@ impl StylePart {
                         &mut xml_doc_mut,
                         &queries,
                         &office_doc,
+                        false,
                     )?;
                 }
             }
@@ -1228,6 +1230,7 @@ impl StylePart {
         xml_doc_mut: &mut std::cell::RefMut<'_, XmlDocument>,
         queries: &HashMap<String, String>,
         office_doc: &std::cell::Ref<'_, OfficeDocument>,
+        enable_format_id: bool,
     ) -> Result<(), AnyError> {
         let cell_style_xfs = xml_doc_mut
             .insert_children_after_tag_mut(parent_tag, "borders", None)
@@ -1280,6 +1283,9 @@ impl StylePart {
                 attributes.insert("fontId".to_string(), cell_style_xfs.font_id.to_string());
                 attributes.insert("fillId".to_string(), cell_style_xfs.fill_id.to_string());
                 attributes.insert("borderId".to_string(), cell_style_xfs.border_id.to_string());
+                if enable_format_id {
+                    attributes.insert("xfId".to_string(), cell_style_xfs.format_id.to_string());
+                }
                 if cell_style_xfs.apply_font > 0 {
                     attributes.insert(
                         "applyFont".to_string(),
