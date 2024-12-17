@@ -1,20 +1,27 @@
 use crate::files::{XmlDocument, XmlElement};
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use chrono::Utc;
 
 pub struct XmlDeSerializer {}
 
 impl XmlDeSerializer {
     pub(crate) fn xml_tree_to_vec(xml_document: &mut XmlDocument) -> AnyResult<Vec<u8>, AnyError> {
         let mut xml_content = String::new();
-        xml_content.push_str(
-            format!(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!--<dvmo:office><dvmo:appName>{}</dvmo:appName><dvmo:repo>{}</dvmo:repo><dvmo:version>{}</dvmo:version><dvmo:modified>{}</dvmo:modified></dvmo:office>-->"#,
-                env!("CARGO_PKG_NAME"),
-                env!("CARGO_PKG_REPOSITORY"),
-                env!("CARGO_PKG_VERSION"),
-                Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
-            )
-            .as_str(),);
+        #[cfg(debug_assertions)]
+        {
+            xml_content.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>"#);
+        }
+        #[cfg(not(debug_assertions))]
+        {
+            use chrono::Utc;
+            xml_content.push_str(
+                format!(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!--<dvmo:office><dvmo:appName>{}</dvmo:appName><dvmo:repo>{}</dvmo:repo><dvmo:version>{}</dvmo:version><dvmo:modified>{}</dvmo:modified></dvmo:office>-->"#,
+                    env!("CARGO_PKG_NAME"),
+                    env!("CARGO_PKG_REPOSITORY"),
+                    env!("CARGO_PKG_VERSION"),
+                    Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
+                )
+                .as_str(),);
+        }
         Self::build_xml_tree(xml_document, &mut xml_content)
             .context("Create XML Contact String Failed")?;
         Ok(xml_content.as_bytes().to_vec())
@@ -89,11 +96,15 @@ impl XmlDeSerializer {
     fn generate_xml_element(xml_element: &XmlElement, close: bool, root_element: bool) -> String {
         let mut element_tag = format!("<{}", xml_element.get_tag());
         if root_element {
+            #[allow(unused_mut)]
             if let Some(mut namespace) = xml_element.get_namespace() {
-                namespace.insert(
-                    "dvmo".to_string(),
-                    "http://schemas.draviavemal.com/openxml-office".to_string(),
-                );
+                #[cfg(not(debug_assertions))]
+                {
+                    namespace.insert(
+                        "dvmo".to_string(),
+                        "http://schemas.draviavemal.com/openxml-office".to_string(),
+                    );
+                }
                 element_tag.push_str(
                     format!(
                         " {}",

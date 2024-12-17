@@ -8,7 +8,7 @@ use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
 pub(crate) struct RelationsPart {
-    /// HoldsId,Target,Type
+    /// Holds Id,Target,Type
     relationships: Vec<(String, String, String)>,
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
@@ -207,19 +207,19 @@ impl RelationsPart {
         let next_id = self.get_next_relationship_id();
         self.relationships.push((
             next_id.clone(),
-            content.schemas_type.to_string(),
             format!(
                 "/{}/{}.{}",
                 file_path.unwrap_or(content.default_path.to_string()),
                 file_name.unwrap_or(content.default_name.to_string()),
                 content.extension
             ),
+            content.schemas_type.to_string(),
         ));
         Ok(next_id)
     }
 
     pub(crate) fn delete_relationship_mut(&mut self, file_path: &str) {
         self.relationships
-            .retain(|item| item.2 != format!("/{}", file_path))
+            .retain(|item| item.1 != format!("/{}", file_path))
     }
 }
