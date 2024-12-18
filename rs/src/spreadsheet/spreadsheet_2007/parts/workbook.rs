@@ -14,7 +14,6 @@ use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{
     cell::RefCell,
     collections::HashMap,
-    path::Path,
     rc::{Rc, Weak},
 };
 
@@ -24,9 +23,8 @@ pub struct WorkbookPart {
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
     common_service: Rc<RefCell<CommonServices>>,
-    relations_part: Rc<RefCell<RelationsPart>>,
+    workbook_relationship_part: Rc<RefCell<RelationsPart>>,
     theme_part: ThemePart,
-    relation_path: String,
     /// This contain the sheet name and order along with relationId
     sheet_names: Vec<(String, String)>,
 }
@@ -62,7 +60,7 @@ impl XmlDocumentPartCommon for WorkbookPart {
             .context("Failed to pull common Service Handle")?
             .close_service()
             .context("Failed to Close Common Service From Workbook")?;
-        self.relations_part
+        self.workbook_relationship_part
             .try_borrow_mut()
             .context("Failed to pull relationship handle")?
             .close_document()
@@ -113,43 +111,41 @@ impl XmlDocumentPart for WorkbookPart {
             .context("Failed to pull workbook file name")?
             .to_string();
         let mut file_tree = Self::get_xml_document(&office_document, &file_name)?;
-        let relation_path = Path::new(&file_name)
-            .parent()
-            .unwrap_or(Path::new(""))
-            .display()
-            .to_string();
-        let relations_part = Rc::new(RefCell::new(
+        let workbook_relationship_part = Rc::new(RefCell::new(
             RelationsPart::new(
                 office_document.clone(),
-                &format!("{}/_rels/workbook.xml.rels", relation_path),
+                &format!(
+                    "{}/_rels/workbook.xml.rels",
+                    &file_name[..file_name.rfind("/").unwrap()]
+                ),
             )
             .context("Creating Relation ship part for workbook failed.")?,
         ));
         // Theme
         let theme_part = ThemePart::new(
             office_document.clone(),
-            Rc::downgrade(&relations_part),
+            Rc::downgrade(&workbook_relationship_part),
             None,
         )
         .context("Loading Theme Part Failed")?;
         // Share String
         let share_string = ShareStringPart::new(
             office_document.clone(),
-            Rc::downgrade(&relations_part),
+            Rc::downgrade(&workbook_relationship_part),
             None,
         )
         .context("Loading Share String Failed")?;
         // Calculation chain
         let calculation_chain = CalculationChainPart::new(
             office_document.clone(),
-            Rc::downgrade(&relations_part),
+            Rc::downgrade(&workbook_relationship_part),
             None,
         )
         .context("Loading Calculation Chain Failed")?;
         // Style
         let style = StylePart::new(
             office_document.clone(),
-            Rc::downgrade(&relations_part),
+            Rc::downgrade(&workbook_relationship_part),
             None,
         )
         .context("Loading Style Part Failed")?;
@@ -165,10 +161,9 @@ impl XmlDocumentPart for WorkbookPart {
             xml_document: file_tree,
             file_path: file_name,
             common_service,
-            relations_part,
+            workbook_relationship_part,
             theme_part,
             sheet_names,
-            relation_path,
         })
     }
 }
@@ -239,13 +234,39 @@ impl WorkbookPart {
             Err(anyhow!("Failed to upgrade relation part"))
         }
     }
+    /// Get File path of given sheet name
+    fn get_sheet_path(&self, sheet_name: &str) -> AnyResult<String, AnyError> {
+        if let Some(sheet_pos) = self
+            .sheet_names
+            .iter()
+            .position(|item| item.0 == sheet_name)
+        {
+            let (_, relationship_id) = self.sheet_names[sheet_pos].clone();
+            if let Some(file_path) = self
+                .workbook_relationship_part
+                .try_borrow_mut()
+                .context("Failed to pull Parent Relationship Handle")?
+                .get_target_by_id(&relationship_id)
+            {
+                return Ok(file_path);
+            }
+        }
+        Err(anyhow!("Unable to find or get file path for the Id"))
+    }
 }
 
 // ############################# Feature Function ######################################
 // ############################# mut Function ######################################
 impl WorkbookPart {
     pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
+        // TODO : Next Pass move this into worksheet
         let mut sheet_count = self.sheet_names.len() + 1;
+        let relative_path = self
+            .workbook_relationship_part
+            .try_borrow_mut()
+            .context("Failed to pull relationship connection")?
+            .get_relative_path()
+            .context("Get Relative Path for Part File")?;
         loop {
             if let Some(office_doc) = self.office_document.upgrade() {
                 let document = office_doc
@@ -254,7 +275,7 @@ impl WorkbookPart {
                 if document
                     .check_file_exist(format!(
                         "{}/worksheets/sheet{}.xml",
-                        self.relation_path, sheet_count
+                        relative_path, sheet_count
                     ))
                     .context("Failed to Check the File Exist")?
                 {
@@ -268,7 +289,7 @@ impl WorkbookPart {
         let sheet_name = sheet_name.unwrap_or(format!("sheet{}", sheet_count));
         let worksheet_content = EXCEL_TYPE_COLLECTION.get("worksheet").unwrap();
         let sheet_relationship_id = self
-            .relations_part
+            .workbook_relationship_part
             .try_borrow_mut()
             .context("Failed to Get Relationship Handle")?
             .set_new_relationship_mut(
@@ -277,19 +298,57 @@ impl WorkbookPart {
                 Some(format!("sheet{}", sheet_count)),
             )
             .context("Failed to Create Sheet Relationship")?;
-        self.sheet_names.push((sheet_name, sheet_relationship_id));
-        Ok(WorkSheet::new(
+        // Check if sheet with same name exist
+        if self.sheet_names.iter().any(|item| sheet_name == item.0) {
+            Err(anyhow!("Sheet Name Already exist in the stack"))
+        } else {
+            self.sheet_names.push((sheet_name, sheet_relationship_id));
+            Ok(WorkSheet::new(
+                self.office_document.clone(),
+                Rc::downgrade(&self.workbook_relationship_part),
+                Rc::downgrade(&self.common_service),
+                &format!("{}/worksheets/sheet{}.xml", relative_path, sheet_count),
+            )
+            .context("Worksheet Creation Failed")?)
+        }
+    }
+
+    pub fn get_worksheet(&mut self, sheet_name: &str) -> AnyResult<WorkSheet, AnyError> {
+        let file_path = self
+            .get_sheet_path(sheet_name)
+            .context("Failed to get Path for the sheet name")?;
+        WorkSheet::new(
             self.office_document.clone(),
-            Rc::downgrade(&self.relations_part),
+            Rc::downgrade(&self.workbook_relationship_part),
             Rc::downgrade(&self.common_service),
-            &format!("{}/worksheets/sheet{}.xml", self.relation_path, sheet_count),
+            &file_path,
         )
-        .context("Worksheet Creation Failed")?)
+        .context("Worksheet Creation Failed")
     }
 
     pub fn set_active_sheet(&mut self, sheet_name: &str) {}
 
-    pub fn rename_sheet_name(&mut self, sheet_name: &str, new_sheet_name: &str) {}
+    pub fn rename_sheet_name(
+        &mut self,
+        old_sheet_name: &str,
+        new_sheet_name: &str,
+    ) -> AnyResult<(), AnyError> {
+        // Check if sheet with same name exist
+        if self.sheet_names.iter().any(|item| new_sheet_name == item.0) {
+            Err(anyhow!("New Sheet Name Already exist in the stack"))
+        } else {
+            if let Some(record) = self
+                .sheet_names
+                .iter_mut()
+                .find(|item| item.0 == old_sheet_name)
+            {
+                record.0 = new_sheet_name.to_string();
+                Ok(())
+            } else {
+                Err(anyhow!("Old Sheet Name not found in the stack"))
+            }
+        }
+    }
 }
 
 // ############################# im-mut Function ######################################

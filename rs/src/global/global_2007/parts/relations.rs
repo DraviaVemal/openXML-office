@@ -134,6 +134,18 @@ impl RelationsPart {
         Ok(self.file_path[..rels_position - 1].to_string())
     }
 
+    pub(crate) fn get_target_by_id(&self, relationship_id: &str) -> Option<String> {
+        if let Some(record) = self
+            .relationships
+            .iter()
+            .find(|item| item.0 == relationship_id)
+        {
+            Some(record.1.clone())
+        } else {
+            None
+        }
+    }
+
     /// Get Relation Target based on Type
     /// Note: This will get the first element match the criteria
     pub(crate) fn get_relationship_target_by_type(&self, content_type: &str) -> Option<String> {
