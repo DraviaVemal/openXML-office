@@ -17,12 +17,45 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        [DllImport("lib/openxmloffice_ffi", EntryPoint = "excel_create", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
         public static extern sbyte excel_create(
-            [MarshalAs(UnmanagedType.LPStr)] string optional_string,
+            [MarshalAs(UnmanagedType.LPStr)] string optional_file_path,
             IntPtr buffer,
             int length,
             out IntPtr excel,
+            out IntPtr error_msg
+        );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        public static extern sbyte excel_add_sheet(
+            IntPtr excelPtr,
+            [MarshalAs(UnmanagedType.LPStr)] string optional_sheet_name,
+            out IntPtr worksheet,
+            out IntPtr error_msg
+        );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        public static extern sbyte excel_get_sheet(
+            IntPtr excelPtr,
+            [MarshalAs(UnmanagedType.LPStr)] string sheet_name,
+            out IntPtr worksheet,
+            out IntPtr error_msg
+        );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        public static extern sbyte excel_rename_sheet(
+            IntPtr excelPtr,
+            [MarshalAs(UnmanagedType.LPStr)] string old_sheet_name,
+            [MarshalAs(UnmanagedType.LPStr)] string new_sheet_name,
             out IntPtr error_msg
         );
 
@@ -83,6 +116,50 @@ namespace draviavemal.openxml_office.spreadsheet_2007
                     StatusCode.ProcessStatusCode(statusCode, errorMsg);
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Worksheet AddWorksheet()
+        {
+            return AddWorksheet(null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="SheetName"></param>
+        /// <returns></returns>
+        public Worksheet AddWorksheet(string SheetName)
+        {
+            sbyte statusCode = excel_add_sheet(ffiExcel, SheetName, out IntPtr ffiWorksheet, out IntPtr errorMsg);
+            StatusCode.ProcessStatusCode(statusCode, errorMsg);
+            return new Worksheet(ffiWorksheet);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="SheetName"></param>
+        /// <returns></returns>
+        public Worksheet GetWorksheet(string SheetName)
+        {
+            sbyte statusCode = excel_get_sheet(ffiExcel, SheetName, out IntPtr ffiWorksheet, out IntPtr errorMsg);
+            StatusCode.ProcessStatusCode(statusCode, errorMsg);
+            return new Worksheet(ffiWorksheet);
+        }
+ 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="OldSheetName"></param>
+        /// <param name="NewSheetName"></param>
+        public void RenameSheet(string OldSheetName, string NewSheetName)
+        {
+            sbyte statusCode = excel_rename_sheet(ffiExcel, OldSheetName, NewSheetName, out IntPtr errorMsg);
+            StatusCode.ProcessStatusCode(statusCode, errorMsg);
         }
 
         /// <summary>
