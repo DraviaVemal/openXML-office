@@ -73,6 +73,21 @@ impl Excel {
         self.get_workbook_mut().add_sheet(sheet_name)
     }
 
+    /// Add sheet to the current excel
+    pub fn rename_sheet_name(
+        &mut self,
+        old_sheet_name: &str,
+        new_sheet_name: &str,
+    ) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut()
+            .rename_sheet_name(old_sheet_name, new_sheet_name)
+    }
+
+    /// Get Worksheet handle by sheet name
+    pub fn get_worksheet(&mut self, sheet_name: &str) -> AnyResult<WorkSheet, AnyError> {
+        self.get_workbook_mut().get_worksheet(sheet_name)
+    }
+
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
         self.workbook.flush()?;

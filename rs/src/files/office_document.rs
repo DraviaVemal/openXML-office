@@ -121,12 +121,18 @@ impl OfficeDocument {
         Ok(weak_xml_document)
     }
 
-    /// Get Xml tree from content
+    /// Get Xml tree from content if not already open
     pub(crate) fn get_xml_tree(
         &self,
         file_path: &str,
     ) -> AnyResult<Option<(XmlDocument, Option<String>, Option<String>, Option<String>)>, AnyError>
     {
+        // Check is the file path object already exist
+        if self.xml_document_collection.get(file_path).is_some() {
+            return Err(anyhow!(
+                "Please close the Existing object before creating new handle"
+            ));
+        }
         let query = self
             .queries
             .get("select_archive_content")

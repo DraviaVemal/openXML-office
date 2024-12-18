@@ -1,13 +1,17 @@
 #[test]
 fn blank_excel() {
-    let file = crate::spreadsheet_2007::Excel::new(
+    let mut file = crate::spreadsheet_2007::Excel::new(
         None,
         crate::spreadsheet_2007::ExcelPropertiesModel {
             is_in_memory: false,
         },
     )
     .expect("Create New File Failed");
-    // file.add_sheet(&"Test".to_string());
+    file.add_sheet(Some("Test".to_string()))
+        .expect("Failed to add static Sheet");
+    file.add_sheet(Some("bust".to_string()))
+        .expect("Failed to add static Sheet");
+    file.add_sheet(None).expect("Failed to add dynamic Sheet");
     file.save_as(&"test.xlsx".to_string())
         .expect("File Save Failed");
     assert_eq!(true, true);
