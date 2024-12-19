@@ -113,7 +113,7 @@ pub(crate) static EXCEL_TYPE_COLLECTION: Map<&'static str, &'static Content> = p
         content_type:"application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml",
         extension:"xml",
         extension_type:"application/xml",
-        default_path:"xl/tables",
+        default_path:"tables",
         default_name:"table1"
     },
     "worksheet"=>&Content{
@@ -123,8 +123,8 @@ pub(crate) static EXCEL_TYPE_COLLECTION: Map<&'static str, &'static Content> = p
         content_type:"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml",
         extension:"xml",
         extension_type:"application/xml",
-        default_path:"xl/worksheets",
-        default_name:"sheet1"
+        default_path:"worksheets",
+        default_name:"sheet"
     },
 };
 /// Power Point Related Content

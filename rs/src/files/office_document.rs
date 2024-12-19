@@ -74,7 +74,12 @@ impl OfficeDocument {
     }
 
     pub(crate) fn delete_document_mut(&mut self, file_name: &str) -> AnyResult<(), AnyError> {
-        self.xml_document_collection.remove(file_name);
+        let file_path = if file_name.starts_with("/") {
+            file_name.strip_prefix("/").unwrap()
+        } else {
+            file_name
+        };
+        self.xml_document_collection.remove(file_path);
         // Delete DB Data
         let query = self
             .queries
@@ -82,7 +87,7 @@ impl OfficeDocument {
             .unwrap()
             .to_owned();
         self.get_connection()
-            .delete_record(&query, params![file_name])
+            .delete_record(&query, params![file_path])
             .context("Delete File Record Failed")?;
         Ok(())
     }
@@ -239,11 +244,11 @@ impl OfficeDocument {
             ) -> AnyResult<(String, Option<String>, Option<Vec<u8>>), Error> {
                 Ok((row.get(0)?, row.get(1)?, row.get(2)?))
             }
-            let rows = self
+            let files = self
                 .sqlite_database
                 .find_many(&query, params![], row_mapper)
                 .context("Query Get Many Failed")?;
-            for (file_name, content_type, file_content) in rows {
+            for (file_name, content_type, file_content) in files {
                 if let Some(content_type) = content_type {
                     overrides.push((format!("/{}", file_name), content_type));
                 }
