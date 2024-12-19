@@ -45,13 +45,13 @@ fn sheet_handling() {
         .add_sheet(Some("deletethis".to_string()))
         .expect("Failed to add static Sheet");
     close_sheet.flush().expect("Failed to Close Work Sheet");
+    file.add_sheet(None).expect("Failed to add dynamic Sheet");
     let delete_sheet = file
         .get_worksheet("deletethis".to_string())
         .expect("Failed to Get the Worksheet");
     delete_sheet
         .delete_sheet_mut()
         .expect("Failed to Delete Sheet");
-    file.add_sheet(None).expect("Failed to add dynamic Sheet");
     file.rename_sheet_name("RenameThisSheet".to_string(), "RenamedSheet".to_string())
         .expect("Failed to rename the sheet");
     file.save_as(&get_save_file()).expect("File Save Failed");
