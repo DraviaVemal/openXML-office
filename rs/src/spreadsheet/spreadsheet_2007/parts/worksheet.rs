@@ -111,6 +111,25 @@ impl WorkSheet {
         let worksheet_content = EXCEL_TYPE_COLLECTION.get("worksheet").unwrap();
         if let Some(sheet_collection) = sheet_collection.upgrade() {
             if let Some(workbook_relationship_part) = workbook_relationship_part.upgrade() {
+                if let Some(sheet_name) = sheet_name.clone() {
+                    // If the Sheet name already exist get the path of sheet name
+                    if let Some((_, rel_id)) = sheet_collection
+                        .try_borrow()
+                        .context("Failed to Get Sheet Collection")?
+                        .iter()
+                        .find(|item| item.0 == sheet_name)
+                    {
+                        return Ok((
+                            workbook_relationship_part
+                                .try_borrow()
+                                .context("Failed to Get Workbook relationship")?
+                                .get_target_by_id(&rel_id)
+                                .context("Failed to Get Target Path")?
+                                .ok_or(anyhow!("Failed to Get Relationship path"))?,
+                            sheet_name,
+                        ));
+                    }
+                }
                 let mut sheet_count = sheet_collection
                     .try_borrow()
                     .context("Failed to pull Sheet Name Collection")?

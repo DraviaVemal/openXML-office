@@ -135,15 +135,26 @@ impl RelationsPart {
         Ok(self.file_path[..rels_position - 1].to_string())
     }
 
-    pub(crate) fn get_target_by_id(&self, relationship_id: &str) -> Option<String> {
+    pub(crate) fn get_target_by_id(
+        &self,
+        relationship_id: &str,
+    ) -> AnyResult<Option<String>, AnyError> {
         if let Some(record) = self
             .relationships
             .iter()
             .find(|item| item.0 == relationship_id)
         {
-            Some(record.1.clone())
+            let file_path = record.1.clone();
+            let relative_path = self
+                .get_relative_path()
+                .context("Get Relative Path for Part File")?;
+            if file_path.starts_with("/") {
+                return Ok(Some(file_path.strip_prefix("/").unwrap().to_string()));
+            } else {
+                return Ok(Some(format!("{}/{}", relative_path, file_path)));
+            }
         } else {
-            None
+            Ok(None)
         }
     }
 
