@@ -20,14 +20,20 @@ pub struct Excel {
 #[derive(Debug)]
 pub struct ExcelPropertiesModel {
     pub is_in_memory: bool,
+    pub is_editable: bool,
+}
+
+impl ExcelPropertiesModel {
+    pub fn default() -> ExcelPropertiesModel {
+        ExcelPropertiesModel {
+            is_in_memory: true,
+            is_editable: true,
+        }
+    }
 }
 
 // ##################################### Feature Function ################################
 impl Excel {
-    /// Default Excel Setting
-    pub fn default() -> ExcelPropertiesModel {
-        ExcelPropertiesModel { is_in_memory: true }
-    }
     /// Create new or clone source file to start working on Excel
     pub fn new(
         file_name: Option<String>,
@@ -76,16 +82,16 @@ impl Excel {
     /// Add sheet to the current excel
     pub fn rename_sheet_name(
         &mut self,
-        old_sheet_name: &str,
-        new_sheet_name: &str,
+        old_sheet_name: String,
+        new_sheet_name: String,
     ) -> AnyResult<(), AnyError> {
         self.get_workbook_mut()
-            .rename_sheet_name(old_sheet_name, new_sheet_name)
+            .rename_sheet_name(&old_sheet_name, &new_sheet_name)
     }
 
     /// Get Worksheet handle by sheet name
-    pub fn get_worksheet(&mut self, sheet_name: &str) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook_mut().get_worksheet(sheet_name)
+    pub fn get_worksheet(&mut self, sheet_name: String) -> AnyResult<WorkSheet, AnyError> {
+        self.get_workbook_mut().get_worksheet(&sheet_name)
     }
 
     /// Save/Replace the current file into target destination
@@ -118,7 +124,7 @@ impl Excel {
     fn get_workbook(&self) -> &WorkbookPart {
         &self.workbook
     }
-    pub fn list_sheet_names(&self) -> Vec<String> {
+    pub fn list_sheet_names(&self) -> AnyResult<Vec<String>, AnyError> {
         self.get_workbook().list_sheet_names()
     }
 }

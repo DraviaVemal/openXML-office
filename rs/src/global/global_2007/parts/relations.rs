@@ -63,7 +63,8 @@ impl XmlDocumentPartCommon for RelationsPart {
                 xml_document
                     .try_borrow_mut()
                     .context("Failed to Pull Open XML Handle")?
-                    .delete_document_mut(&self.file_path)?;
+                    .delete_document_mut(&self.file_path)
+                    .context("Failed to delete document from database")?;
             }
         }
         Ok(())
@@ -230,8 +231,15 @@ impl RelationsPart {
         Ok(next_id)
     }
 
+    /// Delete the target file path
     pub(crate) fn delete_relationship_mut(&mut self, file_path: &str) {
-        self.relationships
-            .retain(|item| item.1 != format!("/{}", file_path))
+        self.relationships.retain(|item| {
+            item.1
+                != if file_path.starts_with("/") {
+                    file_path.to_string()
+                } else {
+                    format!("/{}", file_path)
+                }
+        })
     }
 }

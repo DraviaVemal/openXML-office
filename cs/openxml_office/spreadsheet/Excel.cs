@@ -73,11 +73,16 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// Create New file in the system
         /// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
         /// </summary>
-        public Excel(ExcelProperties excelProperties)
+        public Excel(ExcelProperties excelProperties = null)
         {
+            if (excelProperties == null)
+            {
+                excelProperties = new ExcelProperties();
+            }
             FlatBufferBuilder builder = new(1024);
             ExcelPropertiesModel.StartExcelPropertiesModel(builder);
             ExcelPropertiesModel.AddIsInMemory(builder, excelProperties.IsInMemory);
+            ExcelPropertiesModel.AddIsEditable(builder, true);
             Offset<ExcelPropertiesModel> excelPropertiesModel = ExcelPropertiesModel.EndExcelPropertiesModel(builder);
             builder.Finish(excelPropertiesModel.Value);
             byte[] buffer = builder.SizedByteArray();
@@ -98,11 +103,16 @@ namespace draviavemal.openxml_office.spreadsheet_2007
 		/// Source file will be cloned and released. hence can be replace by saveAs method if you want to update the same file.
 		/// Read Privacy Details document at https://openxml-office.draviavemal.com/privacy-policy
 		/// </summary>
-        public Excel(string fileName, ExcelProperties excelProperties)
+        public Excel(string fileName, ExcelProperties excelProperties = null)
         {
+            if (excelProperties == null)
+            {
+                excelProperties = new ExcelProperties();
+            }
             FlatBufferBuilder builder = new(1024);
             ExcelPropertiesModel.StartExcelPropertiesModel(builder);
             ExcelPropertiesModel.AddIsInMemory(builder, excelProperties.IsInMemory);
+            ExcelPropertiesModel.AddIsEditable(builder, true);
             Offset<ExcelPropertiesModel> excelPropertiesModel = ExcelPropertiesModel.EndExcelPropertiesModel(builder);
             builder.Finish(excelPropertiesModel.Value);
             byte[] buffer = builder.SizedByteArray();
@@ -122,19 +132,19 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// 
         /// </summary>
         /// <returns></returns>
-        public Worksheet AddWorksheet()
+        public Worksheet AddSheet()
         {
-            return AddWorksheet(null);
+            return AddSheet(null);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="SheetName"></param>
+        /// <param name="sheetName"></param>
         /// <returns></returns>
-        public Worksheet AddWorksheet(string SheetName)
+        public Worksheet AddSheet(string sheetName)
         {
-            sbyte statusCode = excel_add_sheet(ffiExcel, SheetName, out IntPtr ffiWorksheet, out IntPtr errorMsg);
+            sbyte statusCode = excel_add_sheet(ffiExcel, sheetName, out IntPtr ffiWorksheet, out IntPtr errorMsg);
             StatusCode.ProcessStatusCode(statusCode, errorMsg);
             return new Worksheet(ffiWorksheet);
         }
@@ -142,24 +152,25 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="SheetName"></param>
+        /// <param name="sheetName"></param>
         /// <returns></returns>
-        public Worksheet GetWorksheet(string SheetName)
+        public Worksheet GetWorksheet(string sheetName)
         {
-            sbyte statusCode = excel_get_sheet(ffiExcel, SheetName, out IntPtr ffiWorksheet, out IntPtr errorMsg);
+            sbyte statusCode = excel_get_sheet(ffiExcel, sheetName, out IntPtr ffiWorksheet, out IntPtr errorMsg);
             StatusCode.ProcessStatusCode(statusCode, errorMsg);
             return new Worksheet(ffiWorksheet);
         }
- 
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="OldSheetName"></param>
-        /// <param name="NewSheetName"></param>
-        public void RenameSheet(string OldSheetName, string NewSheetName)
+        /// <param name="oldSheetName"></param>
+        /// <param name="newSheetName"></param>
+        public bool RenameSheet(string oldSheetName, string newSheetName)
         {
-            sbyte statusCode = excel_rename_sheet(ffiExcel, OldSheetName, NewSheetName, out IntPtr errorMsg);
+            sbyte statusCode = excel_rename_sheet(ffiExcel, oldSheetName, newSheetName, out IntPtr errorMsg);
             StatusCode.ProcessStatusCode(statusCode, errorMsg);
+            return true;
         }
 
         /// <summary>
