@@ -68,30 +68,38 @@ impl Excel {
         };
         if file_name.is_none() {
             excel
-                .add_sheet(None)
+                .add_sheet_mut(None)
                 .context("Failed To Add Default Sheet to excel")?;
         }
         Ok(excel)
     }
 
     /// Add sheet to the current excel
-    pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook_mut().add_sheet(sheet_name)
+    pub fn add_sheet_mut(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
+        self.get_workbook_mut().add_sheet_mut(sheet_name)
     }
 
     /// Add sheet to the current excel
-    pub fn rename_sheet_name(
+    pub fn rename_sheet_name_mut(
         &mut self,
         old_sheet_name: String,
         new_sheet_name: String,
     ) -> AnyResult<(), AnyError> {
         self.get_workbook_mut()
-            .rename_sheet_name(&old_sheet_name, &new_sheet_name)
+            .rename_sheet_name_mut(&old_sheet_name, &new_sheet_name)
+    }
+
+    pub fn set_active_sheet_mut(&mut self, sheet_name: String) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut().set_active_sheet_mut(&sheet_name)
+    }
+
+    pub fn hide_sheet_mut(&mut self, sheet_name: String) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut().hide_sheet_mut(&sheet_name)
     }
 
     /// Get Worksheet handle by sheet name
-    pub fn get_worksheet(&mut self, sheet_name: String) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook_mut().get_worksheet(&sheet_name)
+    pub fn get_worksheet_mut(&mut self, sheet_name: String) -> AnyResult<WorkSheet, AnyError> {
+        self.get_workbook_mut().get_worksheet_mut(&sheet_name)
     }
 
     /// Save/Replace the current file into target destination

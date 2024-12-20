@@ -1,4 +1,5 @@
 use crate::global_2007::traits::XmlDocumentPartCommon;
+use anyhow::Context;
 use chrono::Utc;
 use std::fs::{create_dir, exists};
 
@@ -35,25 +36,51 @@ fn sheet_handling() {
         crate::spreadsheet_2007::ExcelPropertiesModel::default(),
     )
     .expect("Create New File Failed");
-    file.add_sheet(Some("Test".to_string()))
+    file.add_sheet_mut(Some("Test".to_string()))
         .expect("Failed to add static Sheet");
-    file.add_sheet(Some("bust".to_string()))
+    file.add_sheet_mut(Some("bust".to_string()))
         .expect("Failed to add static Sheet");
-    file.add_sheet(Some("RenameThisSheet".to_string()))
+    file.add_sheet_mut(Some("RenameThisSheet".to_string()))
         .expect("Failed to add static Sheet");
     let close_sheet = file
-        .add_sheet(Some("deletethis".to_string()))
+        .add_sheet_mut(Some("deletethis".to_string()))
         .expect("Failed to add static Sheet");
     close_sheet.flush().expect("Failed to Close Work Sheet");
-    file.add_sheet(None).expect("Failed to add dynamic Sheet");
+    file.add_sheet_mut(None)
+        .expect("Failed to add dynamic Sheet");
     let delete_sheet = file
-        .get_worksheet("deletethis".to_string())
+        .get_worksheet_mut("deletethis".to_string())
         .expect("Failed to Get the Worksheet");
     delete_sheet
         .delete_sheet_mut()
         .expect("Failed to Delete Sheet");
-    file.rename_sheet_name("RenameThisSheet".to_string(), "RenamedSheet".to_string())
+    file.rename_sheet_name_mut("RenameThisSheet".to_string(), "RenamedSheet".to_string())
         .expect("Failed to rename the sheet");
+    file.save_as(&get_save_file()).expect("File Save Failed");
+    assert_eq!(true, true);
+}
+
+#[test]
+fn excel_handling() {
+    let mut file = crate::spreadsheet_2007::Excel::new(
+        None,
+        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+    )
+    .expect("Create New File Failed");
+    file.add_sheet_mut(Some("Test".to_string()))
+        .expect("Failed to add static Sheet");
+    file.add_sheet_mut(Some("bust".to_string()))
+        .expect("Failed to add static Sheet");
+    file.add_sheet_mut(None)
+        .expect("Failed to add static Sheet");
+    file.add_sheet_mut(Some("Active".to_string()))
+        .expect("Failed to add static Sheet");
+    file.set_active_sheet_mut("Active".to_string())
+        .expect("Failed To Set Active Sheet");
+    file.add_sheet_mut(Some("hideSheet".to_string()))
+        .expect("Failed to add static Sheet");
+    file.hide_sheet_mut("hideSheet".to_string())
+        .expect("Failed to hide the sheet");
     file.save_as(&get_save_file()).expect("File Save Failed");
     assert_eq!(true, true);
 }

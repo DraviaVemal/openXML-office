@@ -25,8 +25,8 @@ pub struct WorkbookPart {
     common_service: Rc<RefCell<CommonServices>>,
     workbook_relationship_part: Rc<RefCell<RelationsPart>>,
     theme_part: ThemePart,
-    /// This contain the sheet name, relationId
-    sheet_collection: Rc<RefCell<Vec<(String, String)>>>,
+    /// This contain the sheet name, relationId, active sheet, hide sheet
+    sheet_collection: Rc<RefCell<Vec<(String, String, bool, bool)>>>,
 }
 
 impl Drop for WorkbookPart {
@@ -75,7 +75,7 @@ impl XmlDocumentPartCommon for WorkbookPart {
                 .context("Create Sheets Node Failed")?
                 .get_id();
             let mut sheet_count = 1;
-            for (sheet_display_name, relationship_id) in &self
+            for (sheet_display_name, relationship_id, _, hide) in &self
                 .sheet_collection
                 .try_borrow()
                 .context("Failed to pull Sheet Name Collection")?
@@ -87,6 +87,9 @@ impl XmlDocumentPartCommon for WorkbookPart {
                 let mut attributes = HashMap::new();
                 attributes.insert("name".to_string(), sheet_display_name.to_string());
                 attributes.insert("sheetId".to_string(), sheet_count.to_string());
+                if *hide {
+                    attributes.insert("state".to_string(), "hidden".to_string());
+                }
                 attributes.insert("r:id".to_string(), relationship_id.to_string());
                 sheet
                     .set_attribute_mut(attributes)
@@ -179,8 +182,8 @@ impl XmlDocumentPart for WorkbookPart {
 impl WorkbookPart {
     fn load_sheet_names(
         xml_document: &mut Weak<RefCell<XmlDocument>>,
-    ) -> AnyResult<Vec<(String, String)>, AnyError> {
-        let mut sheet_names: Vec<(String, String)> = Vec::new();
+    ) -> AnyResult<Vec<(String, String, bool, bool)>, AnyError> {
+        let mut sheet_names: Vec<(String, String, bool, bool)> = Vec::new();
         if let Some(xml_doc) = xml_document.upgrade() {
             let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
             if let Some(mut sheets_vec) = xml_doc_mut.pop_elements_by_tag_mut("sheets", None) {
@@ -196,7 +199,17 @@ impl WorkbookPart {
                                     let r_id = attributes.get("r:id").ok_or(anyhow!(
                                         "Error When Trying to read Sheet Details."
                                     ))?;
-                                    sheet_names.push((name.to_string(), r_id.to_string()));
+                                    let state = attributes.get("state");
+                                    sheet_names.push((
+                                        name.to_string(),
+                                        r_id.to_string(),
+                                        false,
+                                        if let Some(state) = state {
+                                            state == "hidden"
+                                        } else {
+                                            false
+                                        },
+                                    ));
                                 }
                             }
                         } else {
@@ -217,25 +230,16 @@ impl WorkbookPart {
     ) -> AnyResult<String, AnyError> {
         let relationship_content = EXCEL_TYPE_COLLECTION.get("workbook").unwrap();
         if let Some(relations_part) = relations_part.upgrade() {
-            let part_path = relations_part
+            Ok(relations_part
                 .try_borrow_mut()
                 .context("Failed to pull relationship connection")?
-                .get_relationship_target_by_type(&relationship_content.schemas_type);
-            Ok(if let Some(part_path) = part_path {
-                part_path
-            } else {
-                relations_part
-                    .try_borrow_mut()
-                    .context("Failed to pull relationship handle")?
-                    .set_new_relationship_mut(relationship_content, None, None)
-                    .context("Setting New Theme Relationship Failed.")?;
-                format!(
-                    "{}/{}.{}",
-                    relationship_content.default_path,
-                    relationship_content.default_name,
-                    relationship_content.extension
+                .get_relationship_target_by_type_mut(
+                    &relationship_content.schemas_type,
+                    relationship_content,
+                    None,
+                    None,
                 )
-            })
+                .context("Pull Path From Existing File Failed")?)
         } else {
             Err(anyhow!("Failed to upgrade relation part"))
         }
@@ -245,7 +249,10 @@ impl WorkbookPart {
 // ############################# Feature Function ######################################
 // ############################# mut Function ######################################
 impl WorkbookPart {
-    pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
+    pub(crate) fn add_sheet_mut(
+        &mut self,
+        sheet_name: Option<String>,
+    ) -> AnyResult<WorkSheet, AnyError> {
         Ok(WorkSheet::new(
             self.office_document.clone(),
             Rc::downgrade(&self.sheet_collection),
@@ -256,7 +263,7 @@ impl WorkbookPart {
         .context("Worksheet Creation Failed")?)
     }
 
-    pub fn get_worksheet(&mut self, sheet_name: &str) -> AnyResult<WorkSheet, AnyError> {
+    pub(crate) fn get_worksheet_mut(&mut self, sheet_name: &str) -> AnyResult<WorkSheet, AnyError> {
         WorkSheet::new(
             self.office_document.clone(),
             Rc::downgrade(&self.sheet_collection),
@@ -267,9 +274,41 @@ impl WorkbookPart {
         .context("Worksheet Creation Failed")
     }
 
-    pub fn set_active_sheet(&mut self, sheet_name: &str) {}
+    /// Set Active sheet on opening the excel
+    pub(crate) fn set_active_sheet_mut(&mut self, sheet_name: &str) -> AnyResult<(), AnyError> {
+        for (current_sheet_name, _, active_sheet, _) in self
+            .sheet_collection
+            .try_borrow_mut()
+            .context("Failed to pull Sheet Collection Handle")?
+            .iter_mut()
+        {
+            if current_sheet_name == sheet_name {
+                *active_sheet = true
+            } else {
+                *active_sheet = false
+            }
+        }
+        Ok(())
+    }
 
-    pub fn rename_sheet_name(
+    /// Set Active sheet on opening the excel
+    pub(crate) fn hide_sheet_mut(&mut self, sheet_name: &str) -> AnyResult<(), AnyError> {
+        for (current_sheet_name, _, _, hide_sheet) in self
+            .sheet_collection
+            .try_borrow_mut()
+            .context("Failed to pull Sheet Collection Handle")?
+            .iter_mut()
+        {
+            if current_sheet_name == sheet_name {
+                *hide_sheet = true
+            } else {
+                *hide_sheet = false
+            }
+        }
+        Ok(())
+    }
+
+    pub(crate) fn rename_sheet_name_mut(
         &mut self,
         old_sheet_name: &str,
         new_sheet_name: &str,
@@ -302,13 +341,13 @@ impl WorkbookPart {
 
 // ############################# im-mut Function ######################################
 impl WorkbookPart {
-    pub fn list_sheet_names(&self) -> AnyResult<Vec<String>, AnyError> {
+    pub(crate) fn list_sheet_names(&self) -> AnyResult<Vec<String>, AnyError> {
         Ok(self
             .sheet_collection
             .try_borrow()
             .context("Failed to pull Sheet Name Collection")?
             .iter()
-            .map(|(sheet_name, _)| sheet_name.to_string())
+            .map(|(sheet_name, _, _, _)| sheet_name.to_string())
             .collect::<Vec<String>>())
     }
 }

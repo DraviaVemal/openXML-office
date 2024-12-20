@@ -29,32 +29,6 @@ impl Drop for ShareStringPart {
 }
 
 impl XmlDocumentPartCommon for ShareStringPart {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
-        let content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
-        let mut attributes: HashMap<String, String> = HashMap::new();
-        attributes.insert(
-            "xmlns".to_string(),
-            EXCEL_TYPE_COLLECTION
-                .get("share_string")
-                .unwrap()
-                .schemas_namespace
-                .to_string(),
-        );
-        let mut xml_document = XmlDocument::new();
-        xml_document
-            .create_root_mut("sst")
-            .context("Create Root Element Failed")?
-            .set_attribute_mut(attributes)
-            .context("Set Attribute Failed")?;
-        Ok((
-            xml_document,
-            Some(content.content_type.to_string()),
-            Some(content.extension.to_string()),
-            Some(content.extension_type.to_string()),
-        ))
-    }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where
         Self: Sized,
@@ -95,7 +69,10 @@ impl XmlDocumentPartCommon for ShareStringPart {
                         }
                     }
                     for string in string_collection {
-                        let parent_id = doc.append_child_mut("si", None).unwrap().get_id();
+                        let parent_id = doc
+                            .append_child_mut("si", None)
+                            .context("Failed to Add Child")?
+                            .get_id();
                         doc.append_child_mut("t", Some(&parent_id))
                             .context("Creating Share String Child Failed")?
                             .set_value_mut(string);
@@ -121,6 +98,32 @@ impl XmlDocumentPartCommon for ShareStringPart {
             }
         }
         Ok(())
+    }
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
+        let mut attributes: HashMap<String, String> = HashMap::new();
+        attributes.insert(
+            "xmlns".to_string(),
+            EXCEL_TYPE_COLLECTION
+                .get("share_string")
+                .unwrap()
+                .schemas_namespace
+                .to_string(),
+        );
+        let mut xml_document = XmlDocument::new();
+        xml_document
+            .create_root_mut("sst")
+            .context("Create Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Set Attribute Failed")?;
+        Ok((
+            xml_document,
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
+        ))
     }
 }
 
@@ -151,37 +154,16 @@ impl ShareStringPart {
     ) -> AnyResult<String, AnyError> {
         let share_string_content = EXCEL_TYPE_COLLECTION.get("share_string").unwrap();
         if let Some(relations_part) = relations_part.upgrade() {
-            let part_path = relations_part
+            Ok(relations_part
                 .try_borrow_mut()
                 .context("Failed to pull relationship connection")?
-                .get_relationship_target_by_type(&share_string_content.schemas_type);
-            Ok(if let Some(part_path) = part_path {
-                if part_path.starts_with("/") {
-                    part_path.strip_prefix("/").unwrap().to_string()
-                } else {
-                    format!(
-                        "{}/{}",
-                        relations_part
-                            .try_borrow_mut()
-                            .context("Failed to pull relationship connection")?
-                            .get_relative_path()
-                            .context("Get Relative Path for Part File")?,
-                        &part_path
-                    )
-                }
-            } else {
-                relations_part
-                    .try_borrow_mut()
-                    .context("Failed to Get Relationship Handle")?
-                    .set_new_relationship_mut(share_string_content, None, None)
-                    .context("Setting New Share String Relationship Failed.")?;
-                format!(
-                    "{}/{}.{}",
-                    share_string_content.default_path,
-                    share_string_content.default_name,
-                    share_string_content.extension
+                .get_relationship_target_by_type_mut(
+                    &share_string_content.schemas_type,
+                    share_string_content,
+                    None,
+                    None,
                 )
-            })
+                .context("Pull Path From Existing File Failed")?)
         } else {
             Err(anyhow!("Failed to upgrade relation part"))
         }

@@ -79,7 +79,7 @@ pub extern "C" fn excel_add_sheet(
     let excel_ptr = excel_ptr as *mut Excel;
     let mut excel = unsafe { ManuallyDrop::new(Box::from_raw(excel_ptr)) };
     if sheet_name.is_null() {
-        match excel.add_sheet(None) {
+        match excel.add_sheet_mut(None) {
             Result::Ok(worksheet) => {
                 unsafe {
                     *out_worksheet = Box::into_raw(Box::new(worksheet)) as *mut c_void;
@@ -101,7 +101,7 @@ pub extern "C" fn excel_add_sheet(
         let sheet_name = unsafe { CStr::from_ptr(sheet_name) }
             .to_string_lossy()
             .into_owned();
-        match excel.add_sheet(Some(sheet_name)) {
+        match excel.add_sheet_mut(Some(sheet_name)) {
             Result::Ok(worksheet) => {
                 unsafe {
                     *out_worksheet = Box::into_raw(Box::new(worksheet)) as *mut c_void;
@@ -142,7 +142,7 @@ pub extern "C" fn excel_rename_sheet(
     let new_sheet_name = unsafe { CStr::from_ptr(new_sheet_name) }
         .to_string_lossy()
         .into_owned();
-    match excel.rename_sheet_name(old_sheet_name, new_sheet_name) {
+    match excel.rename_sheet_name_mut(old_sheet_name, new_sheet_name) {
         Result::Ok(()) => StatusCode::Success as i8,
         Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
             Result::Ok(str) => {
@@ -174,7 +174,7 @@ pub extern "C" fn excel_get_sheet(
     let sheet_name = unsafe { CStr::from_ptr(sheet_name) }
         .to_string_lossy()
         .into_owned();
-    match excel.get_worksheet(sheet_name) {
+    match excel.get_worksheet_mut(sheet_name) {
         Result::Ok(worksheet) => {
             unsafe {
                 *out_worksheet = Box::into_raw(Box::new(worksheet)) as *mut c_void;

@@ -97,29 +97,15 @@ impl CorePropertiesPart {
     ) -> AnyResult<String, AnyError> {
         let relationship_content = COMMON_TYPE_COLLECTION.get("docProps_core").unwrap();
         if let Some(relations_part) = relations_part.upgrade() {
-            let core_properties_path = relations_part
+            relations_part
                 .try_borrow_mut()
                 .context("Failed to pull relationship connection")?
-                .get_relationship_target_by_type(&relationship_content.schemas_type);
-            Ok(if let Some(part_path) = core_properties_path {
-                if part_path.starts_with("/") {
-                    part_path.strip_prefix("/").unwrap().to_string()
-                } else {
-                    part_path
-                }
-            } else {
-                relations_part
-                    .try_borrow_mut()
-                    .context("Failed to pull relationship handle")?
-                    .set_new_relationship_mut(relationship_content, None, None)
-                    .context("Setting New Theme Relationship Failed.")?;
-                format!(
-                    "{}/{}.{}",
-                    relationship_content.default_path,
-                    relationship_content.default_name,
-                    relationship_content.extension
+                .get_relationship_target_by_type_mut(
+                    &relationship_content.schemas_type,
+                    relationship_content,
+                    None,
+                    None,
                 )
-            })
         } else {
             Err(anyhow!("Failed to upgrade relation part"))
         }

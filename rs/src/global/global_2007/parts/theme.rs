@@ -23,18 +23,6 @@ impl Drop for ThemePart {
 }
 
 impl XmlDocumentPartCommon for ThemePart {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
-        let content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
-        Ok((
-            XmlSerializer::vec_to_xml_doc_tree(include_str!("theme.xml").as_bytes().to_vec())
-                .context("Initializing Theme Failed")?,
-            Some(content.content_type.to_string()),
-            Some(content.extension.to_string()),
-            Some(content.extension_type.to_string()),
-        ))
-    }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where
         Self: Sized,
@@ -46,6 +34,18 @@ impl XmlDocumentPartCommon for ThemePart {
                 .close_xml_document(&self.file_path)?;
         }
         Ok(())
+    }
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
+        Ok((
+            XmlSerializer::vec_to_xml_doc_tree(include_str!("theme.xml").as_bytes().to_vec())
+                .context("Initializing Theme Failed")?,
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
+        ))
     }
 }
 
@@ -74,39 +74,16 @@ impl ThemePart {
     ) -> AnyResult<String, AnyError> {
         let theme_content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
         if let Some(relations_part) = relations_part.upgrade() {
-            let part_path = relations_part
+            Ok(relations_part
                 .try_borrow_mut()
                 .context("Failed to pull relationship connection")?
-                .get_relationship_target_by_type(&theme_content.schemas_type);
-            Ok(if let Some(part_path) = part_path {
-                if part_path.starts_with("/") {
-                    part_path.strip_prefix("/").unwrap().to_string()
-                } else {
-                    format!(
-                        "{}/{}",
-                        relations_part
-                            .try_borrow_mut()
-                            .context("Failed to pull relationship connection")?
-                            .get_relative_path()
-                            .context("Get Relative Path for Part File")?,
-                        &part_path
-                    )
-                }
-            } else {
-                relations_part
-                    .try_borrow_mut()
-                    .context("Failed to Get Relationship Handle")?
-                    .set_new_relationship_mut(
-                        theme_content,
-                        Some(format!("xl/{}", theme_content.default_path)),
-                        None,
-                    )
-                    .context("Setting New Theme Relationship Failed.")?;
-                format!(
-                    "xl/{}/{}.{}",
-                    theme_content.default_path, theme_content.default_name, theme_content.extension
+                .get_relationship_target_by_type_mut(
+                    &theme_content.schemas_type,
+                    theme_content,
+                    Some(format!("xl/{}", theme_content.default_path)),
+                    None,
                 )
-            })
+                .context("Pull Path From Existing File Failed")?)
         } else {
             Err(anyhow!("Failed to upgrade relation part"))
         }
