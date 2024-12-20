@@ -12,9 +12,9 @@ layout:
     visible: true
 ---
 
-# Introduction
+# Introduction🚧🛠️
 
-Repository URL [https://github.com/DraviaVemal/OpenXML-Office](https://github.com/DraviaVemal/OpenXML-Office)
+Repository URL [https://github.com/DraviaVemal/openxml-office](https://github.com/DraviaVemal/OpenXML-Office)
 
 Create Presentation (pptx), Spreadsheet (xlsx) & Word (docx) file with ease.
 
