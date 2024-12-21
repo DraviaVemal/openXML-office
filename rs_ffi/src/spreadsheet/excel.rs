@@ -2,6 +2,7 @@ use crate::{chain_error, openxml_office_ffi, StatusCode};
 use draviavemal_openxml_office::spreadsheet_2007::{Excel, ExcelPropertiesModel};
 use std::{
     ffi::{c_char, c_void, CStr, CString},
+    mem::ManuallyDrop,
     slice::from_raw_parts,
 };
 
@@ -74,9 +75,9 @@ pub extern "C" fn excel_add_sheet(
     if excel_ptr.is_null() {
         eprintln!("Received null pointer");
         return StatusCode::InvalidArgument as i8;
-    }
+    } 
     let excel_ptr = excel_ptr as *mut Excel;
-    let mut excel = unsafe { Box::from_raw(excel_ptr) };
+    let mut excel = unsafe { ManuallyDrop::new(Box::from_raw(excel_ptr)) };
     if sheet_name.is_null() {
         match excel.add_sheet(None) {
             Result::Ok(worksheet) => {
@@ -88,7 +89,7 @@ pub extern "C" fn excel_add_sheet(
             Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
                 Result::Ok(str) => {
                     unsafe { *out_error = str.into_raw() };
-                    StatusCode::Success as i8
+                    StatusCode::IoError as i8
                 }
                 Err(e) => {
                     eprintln!("Error String send Error. {}", e);
@@ -110,7 +111,7 @@ pub extern "C" fn excel_add_sheet(
             Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
                 Result::Ok(str) => {
                     unsafe { *out_error = str.into_raw() };
-                    StatusCode::Success as i8
+                    StatusCode::IoError as i8
                 }
                 Err(e) => {
                     eprintln!("Error String send Error. {}", e);
@@ -134,7 +135,7 @@ pub extern "C" fn excel_rename_sheet(
         return StatusCode::InvalidArgument as i8;
     }
     let excel_ptr = excel_ptr as *mut Excel;
-    let mut excel = unsafe { Box::from_raw(excel_ptr) };
+    let mut excel = unsafe { ManuallyDrop::new(Box::from_raw(excel_ptr)) };
     let old_sheet_name = unsafe { CStr::from_ptr(old_sheet_name) }
         .to_string_lossy()
         .into_owned();
@@ -169,7 +170,7 @@ pub extern "C" fn excel_get_sheet(
         return StatusCode::InvalidArgument as i8;
     }
     let excel_ptr = excel_ptr as *mut Excel;
-    let mut excel = unsafe { Box::from_raw(excel_ptr) };
+    let mut excel = unsafe { ManuallyDrop::new(Box::from_raw(excel_ptr)) };
     let sheet_name = unsafe { CStr::from_ptr(sheet_name) }
         .to_string_lossy()
         .into_owned();
@@ -183,7 +184,7 @@ pub extern "C" fn excel_get_sheet(
         Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
             Result::Ok(str) => {
                 unsafe { *out_error = str.into_raw() };
-                StatusCode::Success as i8
+                StatusCode::IoError as i8
             }
             Err(e) => {
                 eprintln!("Error String send Error. {}", e);
@@ -204,7 +205,7 @@ pub extern "C" fn excel_list_sheet_name(
         return StatusCode::InvalidArgument as i8;
     }
     let excel_ptr = excel_ptr as *mut Excel;
-    let mut excel = unsafe { Box::from_raw(excel_ptr) };
+    let mut excel = unsafe { ManuallyDrop::new(Box::from_raw(excel_ptr)) };
     let sheet_names = excel.list_sheet_names();
     return StatusCode::InvalidArgument as i8;
 }
@@ -230,7 +231,7 @@ pub extern "C" fn excel_save_as(
         Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
             Result::Ok(str) => {
                 unsafe { *out_error = str.into_raw() };
-                StatusCode::Success as i8
+                StatusCode::IoError as i8
             }
             Err(e) => {
                 eprintln!("Error String send Error. {}", e);
