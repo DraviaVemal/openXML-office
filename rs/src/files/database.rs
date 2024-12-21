@@ -155,13 +155,6 @@ impl SqliteDatabases {
             .context("Failed to Run Create Table Query")
     }
 
-    /// Insert Default Record
-    pub(crate) fn insert_default(&self, query: &str) -> AnyResult<usize, AnyError> {
-        self.connection
-            .execute(&query, ())
-            .context("Failed to Run Create Table Query")
-    }
-
     /// Execute sent query directly without classification
     /// Try to avoid using this for code consistency
     pub(crate) fn execute_query(

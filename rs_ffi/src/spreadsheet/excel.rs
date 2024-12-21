@@ -36,6 +36,7 @@ pub extern "C" fn excel_create(
         Ok(fbs_excel_properties) => {
             let excel_properties = ExcelPropertiesModel {
                 is_in_memory: fbs_excel_properties.is_in_memory(),
+                is_editable: fbs_excel_properties.is_editable(),
             };
             let excel = if let Some(file_name) = file_name {
                 Excel::new(Some(file_name), excel_properties)
@@ -140,7 +141,7 @@ pub extern "C" fn excel_rename_sheet(
     let new_sheet_name = unsafe { CStr::from_ptr(new_sheet_name) }
         .to_string_lossy()
         .into_owned();
-    match excel.rename_sheet_name(&old_sheet_name, &new_sheet_name) {
+    match excel.rename_sheet_name(old_sheet_name, new_sheet_name) {
         Result::Ok(()) => StatusCode::Success as i8,
         Err(e) => match CString::new(format!("Flat Buffer Parse Error. {}", e)) {
             Result::Ok(str) => {
@@ -172,7 +173,7 @@ pub extern "C" fn excel_get_sheet(
     let sheet_name = unsafe { CStr::from_ptr(sheet_name) }
         .to_string_lossy()
         .into_owned();
-    match excel.get_worksheet(&sheet_name) {
+    match excel.get_worksheet(sheet_name) {
         Result::Ok(worksheet) => {
             unsafe {
                 *out_worksheet = Box::into_raw(Box::new(worksheet)) as *mut c_void;
