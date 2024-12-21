@@ -240,41 +240,6 @@ impl WorkbookPart {
             Err(anyhow!("Failed to upgrade relation part"))
         }
     }
-    /// Get File path of given sheet name
-    fn get_sheet_path(&self, sheet_name: &str) -> AnyResult<String, AnyError> {
-        if let Some(sheet_pos) = self
-            .sheet_collection
-            .try_borrow()
-            .context("Failed to pull Sheet Name Collection")?
-            .iter()
-            .position(|item| item.0 == sheet_name)
-        {
-            let (_, relationship_id) = self
-                .sheet_collection
-                .try_borrow()
-                .context("Failed to pull Sheet Name Collection")?[sheet_pos]
-                .clone();
-            let relative_path = self
-                .workbook_relationship_part
-                .try_borrow_mut()
-                .context("Failed to pull relationship connection")?
-                .get_relative_path()
-                .context("Get Relative Path for Part File")?;
-            if let Some(file_path) = self
-                .workbook_relationship_part
-                .try_borrow_mut()
-                .context("Failed to pull Parent Relationship Handle")?
-                .get_target_by_id(&relationship_id)
-            {
-                if file_path.starts_with("/") {
-                    return Ok(file_path.strip_prefix("/").unwrap().to_string());
-                } else {
-                    return Ok(format!("{}/{}", relative_path, file_path));
-                }
-            }
-        }
-        Err(anyhow!("Unable to find or get file path for the Id"))
-    }
 }
 
 // ############################# Feature Function ######################################
