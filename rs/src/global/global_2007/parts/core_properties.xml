@@ -6,6 +6,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <dc:creator>OpenXML-Office</dc:creator>
     <cp:lastModifiedBy>OpenXML-Office</cp:lastModifiedBy>
-    <dcterms:created xsi:type="dcterms:W3CDTF"></dcterms:created>
-    <dcterms:modified xsi:type="dcterms:W3CDTF"></dcterms:modified>
+    <dcterms:created xsi:type="dcterms:W3CDTF"/>
+    <dcterms:modified xsi:type="dcterms:W3CDTF"/>
 </cp:coreProperties>

@@ -68,30 +68,74 @@ impl Excel {
         };
         if file_name.is_none() {
             excel
-                .add_sheet(None)
+                .add_sheet_mut(None)
                 .context("Failed To Add Default Sheet to excel")?;
         }
         Ok(excel)
     }
 
     /// Add sheet to the current excel
-    pub fn add_sheet(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook_mut().add_sheet(sheet_name)
+    pub fn add_sheet_mut(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
+        self.get_workbook_mut().add_sheet_mut(sheet_name)
     }
 
     /// Add sheet to the current excel
-    pub fn rename_sheet_name(
+    pub fn rename_sheet_name_mut(
         &mut self,
         old_sheet_name: String,
         new_sheet_name: String,
     ) -> AnyResult<(), AnyError> {
         self.get_workbook_mut()
-            .rename_sheet_name(&old_sheet_name, &new_sheet_name)
+            .rename_sheet_name_mut(&old_sheet_name, &new_sheet_name)
+    }
+
+    pub fn set_active_sheet_mut(&mut self, sheet_name: String) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut().set_active_sheet_mut(&sheet_name)
+    }
+
+    // pub fn set_visibility_mut(&mut self, is_visible: bool) -> AnyResult<(), AnyError> {
+    //     self.get_workbook_mut().set_visibility_mut(is_visible)
+    // }
+
+    // pub fn minimize_workbook_mut(&mut self, is_minimized: bool) -> AnyResult<(), AnyError> {
+    //     self.get_workbook_mut().minimize_workbook_mut(is_minimized)
+    // }
+
+    pub fn hide_sheet_tabs_mut(&mut self, hide_tab: bool) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut().hide_sheet_tabs_mut(hide_tab)
+    }
+
+    pub fn hide_ruler_mut(&mut self, hide_ruler: bool) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut().hide_ruler_mut(hide_ruler)
+    }
+
+    pub fn hide_grid_lines_mut(&mut self, hide_grid_line: bool) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut().hide_grid_lines_mut(hide_grid_line)
+    }
+
+    pub fn hide_vertical_scroll_mut(
+        &mut self,
+        hide_vertical_scroll: bool,
+    ) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut()
+            .hide_vertical_scroll_mut(hide_vertical_scroll)
+    }
+
+    pub fn hide_horizontal_scroll_mut(
+        &mut self,
+        hide_horizontal_scroll: bool,
+    ) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut()
+            .hide_horizontal_scroll_mut(hide_horizontal_scroll)
+    }
+
+    pub fn hide_sheet_mut(&mut self, sheet_name: String) -> AnyResult<(), AnyError> {
+        self.get_workbook_mut().hide_sheet_mut(&sheet_name)
     }
 
     /// Get Worksheet handle by sheet name
-    pub fn get_worksheet(&mut self, sheet_name: String) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook_mut().get_worksheet(&sheet_name)
+    pub fn get_worksheet_mut(&mut self, sheet_name: String) -> AnyResult<WorkSheet, AnyError> {
+        self.get_workbook_mut().get_worksheet_mut(&sheet_name)
     }
 
     /// Save/Replace the current file into target destination

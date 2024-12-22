@@ -288,7 +288,7 @@ impl OfficeDocument {
         zip_writer
             .start_file("[Content_Types].xml", zip_option)
             .context("Zip File Write Start Fail")?;
-        let content_type_file: Vec<u8> = ContentTypesPart::create_xml_file(extensions, overrides)
+        let content_type_file = ContentTypesPart::create_xml_file(extensions, overrides)
             .context("Creating Content Type XML Failed")?;
         zip_writer
             .write_all(&content_type_file)

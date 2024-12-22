@@ -25,32 +25,6 @@ impl Drop for CalculationChainPart {
 }
 
 impl XmlDocumentPartCommon for CalculationChainPart {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
-        let content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
-        let mut attributes: HashMap<String, String> = HashMap::new();
-        attributes.insert(
-            "xmlns".to_string(),
-            EXCEL_TYPE_COLLECTION
-                .get("calc_chain")
-                .unwrap()
-                .schemas_namespace
-                .to_string(),
-        );
-        let mut xml_document = XmlDocument::new();
-        xml_document
-            .create_root_mut("calcChain")
-            .context("Create XML Root Element Failed")?
-            .set_attribute_mut(attributes)
-            .context("Set Attribute Failed")?;
-        Ok((
-            xml_document,
-            Some(content.content_type.to_string()),
-            Some(content.extension.to_string()),
-            Some(content.extension_type.to_string()),
-        ))
-    }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where
         Self: Sized,
@@ -61,7 +35,7 @@ impl XmlDocumentPartCommon for CalculationChainPart {
                 .unwrap()
                 .to_owned();
             fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
-                Result::Ok((row.get(0)?, row.get(1)?))
+                Ok((row.get(0)?, row.get(1)?))
             }
             let string_collection = office_doc_ref
                 .try_borrow()
@@ -102,6 +76,32 @@ impl XmlDocumentPartCommon for CalculationChainPart {
         }
         Ok(())
     }
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
+        let mut attributes: HashMap<String, String> = HashMap::new();
+        attributes.insert(
+            "xmlns".to_string(),
+            EXCEL_TYPE_COLLECTION
+                .get("calc_chain")
+                .unwrap()
+                .schemas_namespace
+                .to_string(),
+        );
+        let mut xml_document = XmlDocument::new();
+        xml_document
+            .create_root_mut("calcChain")
+            .context("Create XML Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Set Attribute Failed")?;
+        Ok((
+            xml_document,
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
+        ))
+    }
 }
 
 impl XmlDocumentPart for CalculationChainPart {
@@ -131,37 +131,16 @@ impl CalculationChainPart {
     ) -> AnyResult<String, AnyError> {
         let calc_chain_content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
         if let Some(relations_part) = relations_part.upgrade() {
-            let part_path = relations_part
+            Ok(relations_part
                 .try_borrow_mut()
                 .context("Failed to pull relationship connection")?
-                .get_relationship_target_by_type(&calc_chain_content.schemas_type);
-            Ok(if let Some(part_path) = part_path {
-                if part_path.starts_with("/") {
-                    part_path.strip_prefix("/").unwrap().to_string()
-                } else {
-                    format!(
-                        "{}/{}",
-                        relations_part
-                            .try_borrow_mut()
-                            .context("Failed to pull relationship connection")?
-                            .get_relative_path()
-                            .context("Get Relative Path for Part File")?,
-                        &part_path
-                    )
-                }
-            } else {
-                relations_part
-                    .try_borrow_mut()
-                    .context("Failed to Get Relationship Handle")?
-                    .set_new_relationship_mut(calc_chain_content, None, None)
-                    .context("Setting New Calculation Chain Relationship Failed.")?;
-                format!(
-                    "{}/{}.{}",
-                    calc_chain_content.default_path,
-                    calc_chain_content.default_name,
-                    calc_chain_content.extension
+                .get_relationship_target_by_type_mut(
+                    &calc_chain_content.schemas_type,
+                    calc_chain_content,
+                    None,
+                    None,
                 )
-            })
+                .context("Pull Path From Existing File Failed")?)
         } else {
             Err(anyhow!("Failed to upgrade relation part"))
         }

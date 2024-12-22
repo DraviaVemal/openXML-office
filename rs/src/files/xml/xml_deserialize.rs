@@ -9,12 +9,15 @@ impl XmlDeSerializer {
         #[cfg(debug_assertions)]
         {
             xml_content.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>"#);
+            xml_content.push_str("\n");
         }
         #[cfg(not(debug_assertions))]
         {
             use chrono::Utc;
+            xml_content.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>"#);
+            xml_content.push_str("\n");
             xml_content.push_str(
-                format!(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!--<dvmo:office><dvmo:appName>{}</dvmo:appName><dvmo:repo>{}</dvmo:repo><dvmo:version>{}</dvmo:version><dvmo:modified>{}</dvmo:modified></dvmo:office>-->"#,
+                format!(r#"<!--<dvmo:office><dvmo:appName>{}</dvmo:appName><dvmo:repo>{}</dvmo:repo><dvmo:version>{}</dvmo:version><dvmo:modified>{}</dvmo:modified></dvmo:office>-->"#,
                     env!("CARGO_PKG_NAME"),
                     env!("CARGO_PKG_REPOSITORY"),
                     env!("CARGO_PKG_VERSION"),

@@ -19,7 +19,7 @@ pub struct WorkSheet {
     xml_document: Weak<RefCell<XmlDocument>>,
     common_service: Weak<RefCell<CommonServices>>,
     workbook_relationship_part: Weak<RefCell<RelationsPart>>,
-    sheet_collection: Weak<RefCell<Vec<(String, String)>>>,
+    sheet_collection: Weak<RefCell<Vec<(String, String, bool, bool)>>>,
     sheet_relationship_part: Rc<RefCell<RelationsPart>>,
     file_path: String,
     sheet_name: String,
@@ -64,7 +64,7 @@ impl WorkSheet {
     /// Create New object for the group
     pub(crate) fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
-        sheet_collection: Weak<RefCell<Vec<(String, String)>>>,
+        sheet_collection: Weak<RefCell<Vec<(String, String, bool, bool)>>>,
         workbook_relationship_part: Weak<RefCell<RelationsPart>>,
         common_service: Weak<RefCell<CommonServices>>,
         sheet_name: Option<String>,
@@ -105,7 +105,7 @@ impl WorkSheet {
     fn get_sheet_file_name(
         sheet_name: Option<String>,
         office_document: &Weak<RefCell<OfficeDocument>>,
-        sheet_collection: &Weak<RefCell<Vec<(String, String)>>>,
+        sheet_collection: &Weak<RefCell<Vec<(String, String, bool, bool)>>>,
         workbook_relationship_part: &Weak<RefCell<RelationsPart>>,
     ) -> AnyResult<(String, String), AnyError> {
         let worksheet_content = EXCEL_TYPE_COLLECTION.get("worksheet").unwrap();
@@ -113,7 +113,7 @@ impl WorkSheet {
             if let Some(workbook_relationship_part) = workbook_relationship_part.upgrade() {
                 if let Some(sheet_name) = sheet_name.clone() {
                     // If the Sheet name already exist get the path of sheet name
-                    if let Some((_, rel_id)) = sheet_collection
+                    if let Some((_, rel_id, _, _)) = sheet_collection
                         .try_borrow()
                         .context("Failed to Get Sheet Collection")?
                         .iter()
@@ -185,7 +185,7 @@ impl WorkSheet {
                 sheet_collection
                     .try_borrow_mut()
                     .context("Failed To pull Sheet Collection Handle")?
-                    .push((sheet_name.clone(), relationship_id));
+                    .push((sheet_name.clone(), relationship_id, false, false));
                 return Ok((
                     format!(
                         "{}/{}{}.{}",
@@ -207,9 +207,6 @@ impl WorkSheet {
     /// Set Column property
     pub fn set_column_mut(&mut self, column_id: &usize, column_properties: ColumnProperties) -> () {
     }
-
-    /// Set Active sheet internal
-    pub(crate) fn set_active_sheet_mut(&mut self) {}
 
     /// Set Active cell of the current sheet
     pub fn set_active_cell_mut(&mut self) {}

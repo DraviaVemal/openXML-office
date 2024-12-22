@@ -8,7 +8,7 @@ use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
 pub(crate) struct RelationsPart {
-    /// Holds Id,Target,Type
+    /// Holds ID,Target,Type
     relationships: Vec<(String, String, String)>,
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
@@ -22,28 +22,6 @@ impl Drop for RelationsPart {
 }
 
 impl XmlDocumentPartCommon for RelationsPart {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
-        let relationship_content = COMMON_TYPE_COLLECTION.get("rels").unwrap();
-        let mut attributes = HashMap::new();
-        attributes.insert(
-            "xmlns".to_string(),
-            relationship_content.schemas_namespace.to_string(),
-        );
-        let mut xml_document = XmlDocument::new();
-        xml_document
-            .create_root_mut("Relationships")
-            .context("Create XML Root Element Failed")?
-            .set_attribute_mut(attributes)
-            .context("Updating Attribute Failed")?;
-        Ok((
-            xml_document,
-            None,
-            Some(relationship_content.extension.to_string()),
-            Some(relationship_content.extension_type.to_string()),
-        ))
-    }
     /// Close the Current Relation Document
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where
@@ -68,6 +46,28 @@ impl XmlDocumentPartCommon for RelationsPart {
             }
         }
         Ok(())
+    }
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let relationship_content = COMMON_TYPE_COLLECTION.get("rels").unwrap();
+        let mut attributes = HashMap::new();
+        attributes.insert(
+            "xmlns".to_string(),
+            relationship_content.schemas_namespace.to_string(),
+        );
+        let mut xml_document = XmlDocument::new();
+        xml_document
+            .create_root_mut("Relationships")
+            .context("Create XML Root Element Failed")?
+            .set_attribute_mut(attributes)
+            .context("Updating Attribute Failed")?;
+        Ok((
+            xml_document,
+            None,
+            Some(relationship_content.extension.to_string()),
+            Some(relationship_content.extension_type.to_string()),
+        ))
     }
 }
 
@@ -149,9 +149,9 @@ impl RelationsPart {
                 .get_relative_path()
                 .context("Get Relative Path for Part File")?;
             if file_path.starts_with("/") {
-                return Ok(Some(file_path.strip_prefix("/").unwrap().to_string()));
+                Ok(Some(file_path.strip_prefix("/").unwrap().to_string()))
             } else {
-                return Ok(Some(format!("{}/{}", relative_path, file_path)));
+                Ok(Some(format!("{}/{}", relative_path, file_path)))
             }
         } else {
             Ok(None)
@@ -160,19 +160,40 @@ impl RelationsPart {
 
     /// Get Relation Target based on Type
     /// Note: This will get the first element match the criteria
-    pub(crate) fn get_relationship_target_by_type(&self, content_type: &str) -> Option<String> {
+    pub(crate) fn get_relationship_target_by_type_mut(
+        &mut self,
+        content_type: &str,
+        content: &Content,
+        file_path: Option<String>,
+        file_name: Option<String>,
+    ) -> AnyResult<String, AnyError> {
         if let Some(relationship) = self
             .relationships
             .iter()
             .find(|item| item.2 == content_type)
         {
-            Some(relationship.1.to_string())
+            let file_path = relationship.1.clone();
+            let relative_path = self
+                .get_relative_path()
+                .context("Get Relative Path for Part File")?;
+            if file_path.starts_with("/") {
+                Ok(file_path.strip_prefix("/").unwrap().to_string())
+            } else {
+                Ok(format!("{}/{}", relative_path, file_path))
+            }
         } else {
-            None
+            self.set_new_relationship_mut(content, file_path.clone(), file_name.clone())
+                .context("Setting New Theme Relationship Failed.")?;
+            Ok(format!(
+                "{}/{}.{}",
+                file_path.unwrap_or(content.default_path.to_string()),
+                file_name.unwrap_or(content.default_name.to_string()),
+                content.extension
+            ))
         }
     }
 
-    /// Generate Next Relationship Id to add
+    /// Generate Next Relationship ID to add
     fn get_next_relationship_id(&self) -> String {
         let mut children = self.relationships.len() + 1;
         loop {

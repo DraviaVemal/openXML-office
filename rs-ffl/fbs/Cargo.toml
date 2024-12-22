@@ -1,7 +1,0 @@
-[package]
-name = "openxmloffice_fbs"
-version = "4.0.0"
-edition = "2021"
-
-[dependencies]
-flatbuffers = "24.3.25"

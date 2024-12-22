@@ -31,18 +31,6 @@ impl Drop for StylePart {
 }
 
 impl XmlDocumentPartCommon for StylePart {
-    /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
-        let content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
-        Ok((
-            XmlSerializer::vec_to_xml_doc_tree(include_str!("style.xml").as_bytes().to_vec())
-                .context("Initializing Theme Failed")?,
-            Some(content.content_type.to_string()),
-            Some(content.extension.to_string()),
-            Some(content.extension_type.to_string()),
-        ))
-    }
     fn close_document(&mut self) -> AnyResult<(), AnyError>
     where
         Self: Sized,
@@ -56,6 +44,18 @@ impl XmlDocumentPartCommon for StylePart {
                 .close_xml_document(&self.file_path)?;
         }
         Ok(())
+    }
+    /// Initialize xml content for this part from base template
+    fn initialize_content_xml(
+    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+        let content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
+        Ok((
+            XmlSerializer::vec_to_xml_doc_tree(include_str!("style.xml").as_bytes().to_vec())
+                .context("Initializing Theme Failed")?,
+            Some(content.content_type.to_string()),
+            Some(content.extension.to_string()),
+            Some(content.extension_type.to_string()),
+        ))
     }
 }
 
@@ -85,35 +85,16 @@ impl StylePart {
     ) -> AnyResult<String, AnyError> {
         let style_content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
         if let Some(relations_part) = relations_part.upgrade() {
-            let part_path = relations_part
+            Ok(relations_part
                 .try_borrow_mut()
                 .context("Failed to pull relationship connection")?
-                .get_relationship_target_by_type(&style_content.schemas_type);
-            Ok(if let Some(part_path) = part_path {
-                if part_path.starts_with("/") {
-                    part_path.strip_prefix("/").unwrap().to_string()
-                } else {
-                    format!(
-                        "{}/{}",
-                        relations_part
-                            .try_borrow_mut()
-                            .context("Failed to pull relationship connection")?
-                            .get_relative_path()
-                            .context("Get Relative Path for Part File")?,
-                        &part_path
-                    )
-                }
-            } else {
-                relations_part
-                    .try_borrow_mut()
-                    .context("Failed to Get Relationship Handle")?
-                    .set_new_relationship_mut(style_content, None, None)
-                    .context("Setting New Style Relationship Failed.")?;
-                format!(
-                    "{}/{}.{}",
-                    style_content.default_path, style_content.default_name, style_content.extension
+                .get_relationship_target_by_type_mut(
+                    &style_content.schemas_type,
+                    style_content,
+                    None,
+                    None,
                 )
-            })
+                .context("Pull Path From Existing File Failed")?)
         } else {
             Err(anyhow!("Failed to upgrade relation part"))
         }
