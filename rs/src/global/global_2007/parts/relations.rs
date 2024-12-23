@@ -182,11 +182,13 @@ impl RelationsPart {
                 Ok(format!("{}/{}", relative_path, file_path))
             }
         } else {
-            self.set_new_relationship_mut(content, file_path, file_name)
+            self.set_new_relationship_mut(content, file_path.clone(), file_name.clone())
                 .context("Setting New Theme Relationship Failed.")?;
             Ok(format!(
                 "{}/{}.{}",
-                content.default_path, content.default_name, content.extension
+                file_path.unwrap_or(content.default_path.to_string()),
+                file_name.unwrap_or(content.default_name.to_string()),
+                content.extension
             ))
         }
     }
