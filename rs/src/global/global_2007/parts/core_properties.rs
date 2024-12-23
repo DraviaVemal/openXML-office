@@ -60,6 +60,20 @@ impl XmlDocumentPartCommon for CorePropertiesPart {
                 }
                 Err(_) => (),
             }
+            match xml_document
+                .get_first_element_mut(vec!["cp:coreProperties", "dcterms:created"], None)
+            {
+                Ok(result) => {
+                    if let Some(element) = result {
+                        if !element.has_value() {
+                            element.set_value_mut(
+                                Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+                            );
+                        }
+                    }
+                }
+                Err(_) => (),
+            }
         }
         // Update the current state to DB before dropping the object
         if let Some(xml_tree) = self.office_document.upgrade() {
