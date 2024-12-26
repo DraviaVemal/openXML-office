@@ -123,39 +123,39 @@ impl XmlDocumentPartCommon for WorkbookPart {
                         workbook_view.first_sheet.to_string(),
                     );
                 }
-                if workbook_view.visibility != "visible" {
-                    attributes.insert(
-                        "visibility".to_string(),
-                        workbook_view.visibility.to_string(),
-                    );
-                }
-                attributes.insert(
-                    "minimized".to_string(),
-                    if workbook_view.minimize {
-                        "1".to_string()
-                    } else {
-                        "0".to_string()
-                    },
-                );
+                // attributes.insert(
+                //     "minimized".to_string(),
+                //     if workbook_view.minimize {
+                //         "true".to_string()
+                //     } else {
+                //         "false".to_string()
+                //     },
+                // );
+                // if workbook_view.visibility != "visible" {
+                //     attributes.insert(
+                //         "visibility".to_string(),
+                //         workbook_view.visibility.to_string(),
+                //     );
+                // }
+                // attributes.insert(
+                //     "showGridlines".to_string(),
+                //     if workbook_view.hide_grid_line {
+                //         "false".to_string()
+                //     } else {
+                //         "true".to_string()
+                //     },
+                // );
+                // attributes.insert(
+                //     "showRuler".to_string(),
+                //     if workbook_view.hide_ruler {
+                //         "0".to_string()
+                //     } else {
+                //         "1".to_string()
+                //     },
+                // );
                 attributes.insert(
                     "showSheetTabs".to_string(),
                     if workbook_view.hide_sheet_tab {
-                        "0".to_string()
-                    } else {
-                        "1".to_string()
-                    },
-                );
-                attributes.insert(
-                    "showRuler".to_string(),
-                    if workbook_view.hide_ruler {
-                        "0".to_string()
-                    } else {
-                        "1".to_string()
-                    },
-                );
-                attributes.insert(
-                    "showGridlines".to_string(),
-                    if workbook_view.hide_grid_line {
                         "0".to_string()
                     } else {
                         "1".to_string()
@@ -323,19 +323,19 @@ impl WorkbookPart {
                                         } else {
                                             "1".to_string()
                                         },
-                                        visibility: if let Some(visibility) =
-                                            attributes.get("visibility")
-                                        {
-                                            visibility.to_string()
-                                        } else {
-                                            "visible".to_string()
-                                        },
                                         hide_sheet_tab: if let Some(hide_sheet_tab) =
                                             attributes.get("showSheetTabs")
                                         {
                                             hide_sheet_tab == "1"
                                         } else {
                                             false
+                                        },
+                                        visibility: if let Some(visibility) =
+                                            attributes.get("visibility")
+                                        {
+                                            visibility.to_string()
+                                        } else {
+                                            "visible".to_string()
                                         },
                                         minimize: if let Some(minimize) =
                                             attributes.get("minimized")
@@ -344,17 +344,17 @@ impl WorkbookPart {
                                         } else {
                                             false
                                         },
-                                        hide_ruler: if let Some(hide_ruler) =
-                                            attributes.get("showRuler")
-                                        {
-                                            hide_ruler == "0"
-                                        } else {
-                                            false
-                                        },
                                         hide_grid_line: if let Some(hide_grid_line) =
                                             attributes.get("showGridlines")
                                         {
                                             hide_grid_line == "0"
+                                        } else {
+                                            false
+                                        },
+                                        hide_ruler: if let Some(hide_ruler) =
+                                            attributes.get("showRuler")
+                                        {
+                                            hide_ruler == "0"
                                         } else {
                                             false
                                         },
