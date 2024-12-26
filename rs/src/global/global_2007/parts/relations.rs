@@ -132,7 +132,11 @@ impl RelationsPart {
             .file_path
             .find("_rels")
             .ok_or(anyhow!("Failed to string Prefix path from relation"))?;
-        Ok(self.file_path[..rels_position - 1].to_string())
+        if rels_position > 0 {
+            Ok(format!("{}/", &self.file_path[..rels_position - 1]))
+        } else {
+            Ok("".to_string())
+        }
     }
 
     pub(crate) fn get_target_by_id(
@@ -151,7 +155,7 @@ impl RelationsPart {
             if file_path.starts_with("/") {
                 Ok(Some(file_path.strip_prefix("/").unwrap().to_string()))
             } else {
-                Ok(Some(format!("{}/{}", relative_path, file_path)))
+                Ok(Some(format!("{}{}", relative_path, file_path)))
             }
         } else {
             Ok(None)
@@ -179,7 +183,7 @@ impl RelationsPart {
             if file_path.starts_with("/") {
                 Ok(file_path.strip_prefix("/").unwrap().to_string())
             } else {
-                Ok(format!("{}/{}", relative_path, file_path))
+                Ok(format!("{}{}", relative_path, file_path))
             }
         } else {
             self.set_new_relationship_mut(content, file_path.clone(), file_name.clone())

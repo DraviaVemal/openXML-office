@@ -41,7 +41,7 @@ impl XmlDocumentPartCommon for CalculationChainPart {
                 .try_borrow()
                 .context("Failed to get office handle")?
                 .get_connection()
-                .find_many(&select_query, params![], row_mapper)
+                .find_many(&select_query, params![], row_mapper, None)
                 .context("Failed to Pull All Calculation Chain Items")?;
             if string_collection.len() > 0 {
                 if let Some(xml_doc) = self.xml_document.upgrade() {
@@ -158,7 +158,7 @@ impl CalculationChainPart {
                         .context("Pulling Office Doc Failed")?;
                     office_doc
                         .get_connection()
-                        .create_table(&create_query)
+                        .create_table(&create_query, None)
                         .context("Create Share String Table Failed")?;
                     if let Some(xml_doc) = xml_document.upgrade() {
                         let mut xml_doc_mut =
@@ -171,6 +171,7 @@ impl CalculationChainPart {
                                         .insert_record(
                                             &insert_query,
                                             params![attributes["r"], attributes["i"]],
+                                            None,
                                         )
                                         .context("Create Share String Table Failed")?;
                                 }

@@ -130,27 +130,27 @@ impl StylePart {
                 .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
             office_doc
                 .get_connection()
-                .create_table(&create_query_num_format)
+                .create_table(&create_query_num_format, None)
                 .context("Create Number Format Table Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query_font_style)
+                .create_table(&create_query_font_style, None)
                 .context("Create Font Style Table Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query_fill_style)
+                .create_table(&create_query_fill_style, None)
                 .context("Create Query Fill Table Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query_border_style)
+                .create_table(&create_query_border_style, None)
                 .context("Create Border Style Table Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query_cell_style_xfs)
+                .create_table(&create_query_cell_style_xfs, None)
                 .context("Create Cell Style Table Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query_cell_xfs)
+                .create_table(&create_query_cell_xfs, None)
                 .context("Create Cell Style Table Failed")?;
         }
         Ok(())
@@ -205,6 +205,7 @@ impl StylePart {
                                                 number_format.format_id,
                                                 number_format.format_code
                                             ],
+                                            None,
                                         )
                                         .context("Number Format Data Insert Failed")?;
                                 }
@@ -344,6 +345,7 @@ impl StylePart {
                                             font_style.is_underline,
                                             font_style.is_double_underline
                                         ],
+                                        None,
                                     )
                                     .context("Insert Font Style Failed")?;
                             } else {
@@ -490,6 +492,7 @@ impl StylePart {
                                                 .context("Foreground Fill Parse Failed")?,
                                             PatternTypeValues::get_string(fill_style.pattern_type)
                                         ],
+                                        None,
                                     )
                                     .context("Insert Fill Style Failed")?;
                             } else {
@@ -581,6 +584,7 @@ impl StylePart {
                                                 to_string(&border_style.diagonal)
                                                     .context("diagonal Border Parsing Failed")?
                                             ],
+                                            None,
                                         )
                                         .context("Insert border Style Failed")?;
                                 }
@@ -651,7 +655,7 @@ impl StylePart {
                         }
                         let num_format_data = office_doc
                             .get_connection()
-                            .find_many(num_format_query, params![], row_mapper)
+                            .find_many(num_format_query, params![], row_mapper, None)
                             .context("Num Format Query Results Failed")?;
                         let mut attributes = HashMap::new();
                         attributes.insert("count".to_string(), num_format_data.len().to_string());
@@ -702,7 +706,7 @@ impl StylePart {
                         }
                         let fonts_data = office_doc
                             .get_connection()
-                            .find_many(fonts_query, params![], row_mapper)
+                            .find_many(fonts_query, params![], row_mapper, None)
                             .context("Fonts Query Results Failed")?;
                         let mut attributes = HashMap::new();
                         attributes.insert("count".to_string(), fonts_data.len().to_string());
@@ -814,7 +818,7 @@ impl StylePart {
                         }
                         let fills_data = office_doc
                             .get_connection()
-                            .find_many(fills_query, params![], row_mapper)
+                            .find_many(fills_query, params![], row_mapper, None)
                             .context("Fills Data Pull Failed")?;
                         // .context("Fills Query Results Failed")?;
                         let mut attributes = HashMap::new();
@@ -915,7 +919,7 @@ impl StylePart {
                         }
                         let borders_data = office_doc
                             .get_connection()
-                            .find_many(borders_query, params![], row_mapper)
+                            .find_many(borders_query, params![], row_mapper, None)
                             .context("Border Style Query Results Failed")?;
                         let mut attributes = HashMap::new();
                         attributes.insert("count".to_string(), borders_data.len().to_string());
@@ -1110,6 +1114,7 @@ impl StylePart {
                                 HorizontalAlignmentValues::get_string(cell_xf.horizontal_alignment),
                                 VerticalAlignmentValues::get_string(cell_xf.vertical_alignment),
                             ],
+                            None,
                         )
                         .context("Insert border Style Failed")?;
                 }
@@ -1244,7 +1249,7 @@ impl StylePart {
             }
             let cell_style_xfs_data = office_doc
                 .get_connection()
-                .find_many(cell_style_xfs_query, params![], row_mapper)
+                .find_many(cell_style_xfs_query, params![], row_mapper, None)
                 .context("Num Format Query Results Failed")?;
             let mut attributes = HashMap::new();
             attributes.insert("count".to_string(), cell_style_xfs_data.len().to_string());

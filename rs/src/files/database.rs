@@ -54,17 +54,53 @@ impl SqliteDatabases {
         Ok(archive_db)
     }
 
+    /// Create Table
+    pub(crate) fn create_table(
+        &self,
+        query: &str,
+        table_name: Option<String>,
+    ) -> AnyResult<usize, AnyError> {
+        let mut execute_query = query.to_owned();
+        if let Some(table_name) = table_name {
+            execute_query = execute_query.replace("{}", &table_name);
+        }
+        self.connection
+            .execute(&execute_query, ())
+            .context("Failed to Run Create Table Query")
+    }
+
+    /// Insert Record Into Database
+    pub(crate) fn insert_record(
+        &self,
+        query: &str,
+        params: &[&(dyn ToSql)],
+        table_name: Option<String>,
+    ) -> AnyResult<usize, AnyError> {
+        let mut execute_query = query.to_owned();
+        if let Some(table_name) = table_name {
+            execute_query = execute_query.replace("{}", &table_name);
+        }
+        self.connection
+            .execute(&execute_query, params)
+            .context("Failed to Run Insert Record Query")
+    }
+
     pub(crate) fn get_count(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
+        table_name: Option<String>,
     ) -> AnyResult<Option<usize>, AnyError> {
         fn row_mapper(row: &Row) -> Result<usize, rusqlite::Error> {
             Ok(row.get(0)?)
         }
+        let mut execute_query = query.to_owned();
+        if let Some(table_name) = table_name {
+            execute_query = execute_query.replace("{}", &table_name);
+        }
         let mut stmt = self
             .connection
-            .prepare(query)
+            .prepare(&execute_query)
             .map_err(|e| anyhow!("Failed to Run Get Count Query {}", e))?;
         match stmt.query_row(params, row_mapper) {
             Result::Ok(result) => Ok(Some(result)),
@@ -79,13 +115,18 @@ impl SqliteDatabases {
         query: &str,
         params: &[&(dyn ToSql)],
         row_mapper: F,
+        table_name: Option<String>,
     ) -> AnyResult<Option<T>, AnyError>
     where
         F: Fn(&Row) -> AnyResult<T, rusqlite::Error>,
     {
+        let mut execute_query = query.to_owned();
+        if let Some(table_name) = table_name {
+            execute_query = execute_query.replace("{}", &table_name);
+        }
         let mut stmt = self
             .connection
-            .prepare(query)
+            .prepare(&execute_query)
             .map_err(|e| anyhow!("Failed to Run Find One Query {}", e))?;
         match stmt.query_row(params, row_mapper) {
             Result::Ok(result) => Ok(Some(result)),
@@ -94,29 +135,24 @@ impl SqliteDatabases {
         }
     }
 
-    pub(crate) fn delete_record(
-        &self,
-        query: &str,
-        params: &[&(dyn ToSql)],
-    ) -> AnyResult<usize, AnyError> {
-        self.connection
-            .execute(query, params)
-            .context("Failed to remove Record From DB")
-    }
-
     /// Find multiple results and map each row to a specific type using the closure.
     pub(crate) fn find_many<F, T>(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
         row_mapper: F,
+        table_name: Option<String>,
     ) -> AnyResult<Vec<T>, AnyError>
     where
         F: Fn(&Row) -> AnyResult<T, rusqlite::Error>,
     {
+        let mut execute_query = query.to_owned();
+        if let Some(table_name) = table_name {
+            execute_query = execute_query.replace("{}", &table_name);
+        }
         let mut stmt = self
             .connection
-            .prepare(query)
+            .prepare(&execute_query)
             .map_err(|e| anyhow!("Failed to Run Find Many Query {}", e))?;
         let mut results = Vec::new();
         for row in stmt.query_map(params, row_mapper)? {
@@ -126,38 +162,30 @@ impl SqliteDatabases {
         Ok(results)
     }
 
-    /// Insert Record Into Database
-    pub(crate) fn insert_record(
+    pub(crate) fn delete_record(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
+        table_name: Option<String>,
     ) -> AnyResult<usize, AnyError> {
+        let mut execute_query = query.to_owned();
+        if let Some(table_name) = table_name {
+            execute_query = execute_query.replace("{}", &table_name);
+        }
         self.connection
-            .execute(&query, params)
-            .context("Failed to Run Insert Record Query")
+            .execute(&execute_query, params)
+            .context("Failed to remove Record From DB")
     }
 
-    /// Insert Record Into Database
-    pub(crate) fn update_record(
-        &self,
-        query: &str,
-        params: &[&(dyn ToSql)],
-    ) -> AnyResult<usize, AnyError> {
+    pub(crate) fn drop_table(&self, table_name: String) -> AnyResult<usize, AnyError> {
         self.connection
-            .execute(&query, params)
-            .context("Failed to Run Update Record Query")
-    }
-
-    /// Create Table
-    pub(crate) fn create_table(&self, query: &str) -> AnyResult<usize, AnyError> {
-        self.connection
-            .execute(&query, ())
-            .context("Failed to Run Create Table Query")
+            .execute(&format!("DROP TABLE IF EXISTS {};", table_name), ())
+            .context("Failed to Drop Table")
     }
 
     /// Execute sent query directly without classification
     /// Try to avoid using this for code consistency
-    pub(crate) fn execute_query(
+    pub(crate) fn _execute_query(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],

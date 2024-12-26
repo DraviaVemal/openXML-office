@@ -1,7 +1,7 @@
-use crate::global_2007::traits::XmlDocumentPartCommon;
-use anyhow::Context;
 use chrono::Utc;
 use std::fs::{create_dir, exists};
+
+use crate::global_2007::traits::XmlDocumentPartCommon;
 
 fn get_save_file(dynamic_path: Option<&str>) -> String {
     let result_path = "test_results";
@@ -26,6 +26,32 @@ fn blank_excel() {
         },
     )
     .expect("Create New File Failed");
+    file.save_as(&get_save_file(None))
+        .expect("File Save Failed");
+    assert_eq!(true, true);
+}
+
+#[test]
+fn excel_handling() {
+    let mut file = crate::spreadsheet_2007::Excel::new(
+        None,
+        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+    )
+    .expect("Create New File Failed");
+    file.add_sheet_mut(Some("Test".to_string()))
+        .expect("Failed to add static Sheet");
+    file.add_sheet_mut(Some("bust".to_string()))
+        .expect("Failed to add static Sheet");
+    file.add_sheet_mut(None)
+        .expect("Failed to add static Sheet");
+    file.add_sheet_mut(Some("Active".to_string()))
+        .expect("Failed to add static Sheet");
+    file.set_active_sheet_mut("Active".to_string())
+        .expect("Failed To Set Active Sheet");
+    file.add_sheet_mut(Some("hideSheet".to_string()))
+        .expect("Failed to add static Sheet");
+    file.hide_sheet_mut("hideSheet".to_string())
+        .expect("Failed to hide the sheet");
     file.save_as(&get_save_file(None))
         .expect("File Save Failed");
     assert_eq!(true, true);
@@ -58,32 +84,6 @@ fn sheet_handling() {
         .expect("Failed to Delete Sheet");
     file.rename_sheet_name_mut("RenameThisSheet".to_string(), "RenamedSheet".to_string())
         .expect("Failed to rename the sheet");
-    file.save_as(&get_save_file(None))
-        .expect("File Save Failed");
-    assert_eq!(true, true);
-}
-
-#[test]
-fn excel_handling() {
-    let mut file = crate::spreadsheet_2007::Excel::new(
-        None,
-        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    )
-    .expect("Create New File Failed");
-    file.add_sheet_mut(Some("Test".to_string()))
-        .expect("Failed to add static Sheet");
-    file.add_sheet_mut(Some("bust".to_string()))
-        .expect("Failed to add static Sheet");
-    file.add_sheet_mut(None)
-        .expect("Failed to add static Sheet");
-    file.add_sheet_mut(Some("Active".to_string()))
-        .expect("Failed to add static Sheet");
-    file.set_active_sheet_mut("Active".to_string())
-        .expect("Failed To Set Active Sheet");
-    file.add_sheet_mut(Some("hideSheet".to_string()))
-        .expect("Failed to add static Sheet");
-    file.hide_sheet_mut("hideSheet".to_string())
-        .expect("Failed to hide the sheet");
     file.save_as(&get_save_file(None))
         .expect("File Save Failed");
     assert_eq!(true, true);
@@ -160,7 +160,7 @@ fn excel_view() {
 
 #[test]
 fn edit_excel() {
-    let file = crate::spreadsheet_2007::Excel::new(
+    let mut file = crate::spreadsheet_2007::Excel::new(
         Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
         crate::spreadsheet_2007::ExcelPropertiesModel {
             is_in_memory: false,
@@ -168,7 +168,8 @@ fn edit_excel() {
         },
     )
     .expect("Open Existing File Failed");
-    // file.add_sheet(&"Test".to_string());
+    file.get_worksheet_mut("formula".to_string())
+        .expect("Failed to find the worksheet");
     file.save_as(&get_save_file(None))
         .expect("Save File Failed");
     assert_eq!(true, true);
