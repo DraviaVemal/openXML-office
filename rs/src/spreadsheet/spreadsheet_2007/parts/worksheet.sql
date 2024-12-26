@@ -108,8 +108,8 @@ SELECT
 FROM
     {}
 ORDER BY
-    row_id,
-    col_id;
+    row_id DESC,
+    col_id DESC;
 
 -- query : select_range_dynamic_sheet# 
 SELECT
@@ -139,5 +139,5 @@ WHERE
     AND row_id <= ?
     AND col_id <= ?
 ORDER BY
-    row_id,
-    col_id;
+    row_id DESC,
+    col_id DESC;

@@ -82,7 +82,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                                 attribute.insert("min".to_string(), item.min.to_string());
                                 attribute.insert("max".to_string(), item.max.to_string());
                                 if let Some(width) = item.width {
-                                    attribute.insert("customWidth".to_string(), "true".to_string());
+                                    attribute.insert("customWidth".to_string(), "1".to_string());
                                     attribute.insert("width".to_string(), width.to_string());
                                 }
                                 if let Some(style_id) = item.style_id {
@@ -217,8 +217,15 @@ impl XmlDocumentPartCommon for WorkSheet {
                                         .context("Failed to insert row element")?;
                                     cell_id = cell_element.get_id();
                                     let mut cell_attribute = HashMap::new();
-                                    cell_attribute
-                                        .insert("r".to_string(), db_row.col_id.to_string());
+                                    cell_attribute.insert(
+                                        "r".to_string(),
+                                        format!(
+                                            "{}{}",
+                                            ConverterUtil::get_column_key(db_row.col_id)
+                                                .context("Failed to get Char Id from Int")?,
+                                            db_row.row_id
+                                        ),
+                                    );
                                     if let Some(col_style_id) = db_row.col_style_id {
                                         cell_attribute
                                             .insert("s".to_string(), col_style_id.to_string());
@@ -245,66 +252,44 @@ impl XmlDocumentPartCommon for WorkSheet {
                                         .context("Failed to Set Attribute for cell")?;
                                 }
                                 // Create cell's child element
-                                if let Some(cell_type) = db_row.cell_type {
-                                    match cell_type {
-                                        CellDataType::InlineString => {
-                                            let inline_string_id = xml_doc
-                                                .append_child_mut("is", Some(&cell_id))
-                                                .context("Failed to insert Inline string element")?
-                                                .get_id();
-                                            let text_element = xml_doc
-                                                .append_child_mut("t", Some(&inline_string_id))
-                                                .context(
-                                                    "Failed To insert Text Value to inline string",
-                                                )?;
-                                            text_element.set_value_mut(
-                                                if let Some(value) = db_row.cell_value {
-                                                    value
-                                                } else {
-                                                    "".to_string()
-                                                },
-                                            );
-                                        }
-                                        CellDataType::FORMULA => {
+                                match db_row.cell_type.unwrap_or(CellDataType::Number) {
+                                    CellDataType::InlineString => {
+                                        let inline_string_id = xml_doc
+                                            .append_child_mut("is", Some(&cell_id))
+                                            .context("Failed to insert Inline string element")?
+                                            .get_id();
+                                        let text_element = xml_doc
+                                            .append_child_mut("t", Some(&inline_string_id))
+                                            .context(
+                                                "Failed To insert Text Value to inline string",
+                                            )?;
+                                        text_element.set_value_mut(
+                                            if let Some(value) = db_row.cell_value {
+                                                value
+                                            } else {
+                                                "".to_string()
+                                            },
+                                        );
+                                    }
+                                    _ => {
+                                        if let Some(formula) = db_row.cell_formula {
                                             let formula_element = xml_doc
                                                 .append_child_mut("f", Some(&cell_id))
                                                 .context(
                                                     "Failed to insert Inline string element",
                                                 )?;
-                                            formula_element.set_value_mut(
-                                                if let Some(formula) = db_row.cell_formula {
-                                                    formula
-                                                } else {
-                                                    "".to_string()
-                                                },
-                                            );
-                                            let value_element = xml_doc
-                                                .append_child_mut("v", Some(&cell_id))
-                                                .context(
-                                                    "Failed to insert Inline string element",
-                                                )?;
-                                            value_element.set_value_mut(
-                                                if let Some(value) = db_row.cell_value {
-                                                    value
-                                                } else {
-                                                    "".to_string()
-                                                },
-                                            );
+                                            formula_element.set_value_mut(formula);
                                         }
-                                        _ => {
-                                            let value_element = xml_doc
-                                                .append_child_mut("v", Some(&cell_id))
-                                                .context(
-                                                    "Failed to insert Inline string element",
-                                                )?;
-                                            value_element.set_value_mut(
-                                                if let Some(value) = db_row.cell_value {
-                                                    value
-                                                } else {
-                                                    "".to_string()
-                                                },
-                                            );
-                                        }
+                                        let value_element = xml_doc
+                                            .append_child_mut("v", Some(&cell_id))
+                                            .context("Failed to insert Inline string element")?;
+                                        value_element.set_value_mut(
+                                            if let Some(value) = db_row.cell_value {
+                                                value
+                                            } else {
+                                                "".to_string()
+                                            },
+                                        );
                                     }
                                 }
                             } else {
@@ -430,11 +415,11 @@ impl WorkSheet {
                                         }
                                         if let Some(best_fit) = attributes.get("bestFit") {
                                             column_properties.best_fit =
-                                                if best_fit == "true" { Some(()) } else { None }
+                                                if best_fit == "1" { Some(()) } else { None }
                                         }
                                         if let Some(hidden) = attributes.get("hidden") {
                                             column_properties.hide =
-                                                if hidden == "true" { Some(()) } else { None }
+                                                if hidden == "1" { Some(()) } else { None }
                                         }
                                         if let Some(style) = attributes.get("style") {
                                             column_properties.style_id = Some(
@@ -451,7 +436,7 @@ impl WorkSheet {
                                                     .context("Failed to parse style ID")?;
                                         }
                                         if let Some(custom_width) = attributes.get("customWidth") {
-                                            if custom_width == "true" {
+                                            if custom_width == "1" {
                                                 column_properties.width = Some(
                                                     attributes
                                                         .get("width")
@@ -465,7 +450,7 @@ impl WorkSheet {
                                         }
                                         if let Some(collapsed) = attributes.get("collapsed") {
                                             column_properties.collapsed =
-                                                if collapsed == "true" { Some(()) } else { None }
+                                                if collapsed == "1" { Some(()) } else { None }
                                         }
                                         column_collection.push(column_properties);
                                     }
@@ -660,7 +645,7 @@ impl WorkSheet {
                                                                         }
                                                                     }
                                                                     _ => {
-                                                                        return Err(anyhow!("Found un know element cell child"));
+                                                                        return Err(anyhow!("Found un-know element cell child"));
                                                                     }
                                                                 }
                                                             }

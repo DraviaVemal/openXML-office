@@ -29,7 +29,7 @@ impl Drop for SqliteDatabases {
 
 impl SqliteDatabases {
     pub(crate) fn new(is_in_memory: bool) -> AnyResult<Self, AnyError> {
-        let db_path: PathBuf = temp_dir().join(format!("{}.db", uuid::Uuid::new_v4()));
+        let db_path = temp_dir().join(format!("{}.db", uuid::Uuid::new_v4()));
         let archive_db = Self::database_initialization(&db_path, is_in_memory)
             .context("Create Database Connection Fail")?;
         Ok(Self {

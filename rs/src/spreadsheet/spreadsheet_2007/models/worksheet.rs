@@ -3,39 +3,33 @@ use crate::global_2007::traits::Enum;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CellDataType {
-    DATE,
-    NUMBER,
-    BOOLEAN,
-    STRING,
+    Number,
+    Boolean,
+    String,
     ShareString,
     InlineString,
-    ERROR,
-    FORMULA,
+    Error,
 }
 
 impl Enum<CellDataType> for CellDataType {
     fn get_string(input_enum: CellDataType) -> String {
         match input_enum {
-            CellDataType::DATE => "d".to_string(),
-            CellDataType::NUMBER => "n".to_string(),
-            CellDataType::BOOLEAN => "b".to_string(),
-            CellDataType::STRING => "str".to_string(),
+            CellDataType::Number => "n".to_string(),
+            CellDataType::Boolean => "b".to_string(),
+            CellDataType::String => "str".to_string(),
             CellDataType::ShareString => "s".to_string(),
             CellDataType::InlineString => "inlineStr".to_string(),
-            CellDataType::ERROR => "e".to_string(),
-            CellDataType::FORMULA => "".to_string(),
+            CellDataType::Error => "e".to_string(),
         }
     }
     fn get_enum(input_string: &str) -> CellDataType {
         match input_string {
-            "d" => CellDataType::DATE,
-            "n" => CellDataType::NUMBER,
-            "b" => CellDataType::BOOLEAN,
-            "str" => CellDataType::STRING,
+            "b" => CellDataType::Boolean,
+            "str" => CellDataType::String,
             "s" => CellDataType::ShareString,
             "inlineStr" => CellDataType::InlineString,
-            "e" => CellDataType::ERROR,
-            _ => CellDataType::FORMULA,
+            "e" => CellDataType::Error,
+            _ => CellDataType::Number,
         }
     }
 }
@@ -109,7 +103,7 @@ impl RowProperties {
 #[derive(Debug)]
 pub struct ColumnCell {
     pub value: Option<String>,
-    pub data_type: CellDataType,
+    pub data_type: Option<CellDataType>,
     pub hyperlink_properties: Option<HyperlinkProperties>,
     pub style_id: Option<usize>,
     pub(crate) comment_id: Option<usize>,
@@ -120,7 +114,7 @@ impl ColumnCell {
     pub fn default() -> Self {
         Self {
             value: None,
-            data_type: CellDataType::STRING,
+            data_type: None,
             hyperlink_properties: None,
             style_id: None,
             comment_id: None,
