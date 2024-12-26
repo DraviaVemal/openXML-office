@@ -1,6 +1,5 @@
 use crate::files::{OfficeDocument, XmlDocument};
 use crate::global_2007::parts::RelationsPart;
-use crate::spreadsheet_2007::services::CommonServices;
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Weak};
 
@@ -53,19 +52,6 @@ pub(crate) trait XmlDocumentPartCommon {
     /// Initialize the content if not already exist . // File Content , Content Type, File Extension, Extension Type
     fn initialize_content_xml(
     ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError>;
-}
-
-#[warn(drop_bounds)]
-pub(crate) trait XmlDocumentServicePart: XmlDocumentPartCommon {
-    /// Create new object with file connector handle
-    fn new(
-        office_document: Weak<RefCell<OfficeDocument>>,
-        parent_relationship_part: Weak<RefCell<RelationsPart>>,
-        common_service: Weak<RefCell<CommonServices>>,
-        file_path: &str,
-    ) -> AnyResult<Self, AnyError>
-    where
-        Self: Sized;
 }
 
 #[warn(drop_bounds)]

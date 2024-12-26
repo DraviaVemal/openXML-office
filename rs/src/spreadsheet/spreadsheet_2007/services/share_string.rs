@@ -45,7 +45,7 @@ impl XmlDocumentPartCommon for ShareStringPart {
                 .try_borrow()
                 .context("Failed to borrow Doc Handle")?
                 .get_connection()
-                .find_many(&select_query, params![], row_mapper)
+                .find_many(&select_query, params![], row_mapper,None)
                 .context("Getting Share String Records Failed")?;
             if string_collection.len() > 0 {
                 if let Some(xml_doc) = self.xml_document.upgrade() {
@@ -186,7 +186,7 @@ impl ShareStringPart {
                 .context("Pulling Office Doc Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query)
+                .create_table(&create_query, None)
                 .context("Create Share String Table Failed")?;
             if let Some(xml_doc) = xml_document.upgrade() {
                 let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
@@ -198,7 +198,7 @@ impl ShareStringPart {
                                     text_element.get_value().clone().unwrap_or("".to_string());
                                 office_doc
                                     .get_connection()
-                                    .insert_record(&insert_query, params![value])
+                                    .insert_record(&insert_query, params![value], None)
                                     .context("Create Share String Table Failed")?;
                             }
                         }
