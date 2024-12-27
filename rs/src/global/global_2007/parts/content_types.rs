@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     files::{XmlDeSerializer, XmlDocument, XmlSerializer},
-    reference_dictionary::COMMON_TYPE_COLLECTION,
+    element_dictionary::COMMON_TYPE_COLLECTION,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 

@@ -1,7 +1,7 @@
 use crate::{
+    element_dictionary::{Content, COMMON_TYPE_COLLECTION},
     files::{OfficeDocument, XmlDocument},
     global_2007::traits::XmlDocumentPartCommon,
-    reference_dictionary::{Content, COMMON_TYPE_COLLECTION},
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
@@ -96,12 +96,12 @@ impl RelationsPart {
     ) -> AnyResult<Vec<(String, String, String)>, AnyError> {
         let mut relationships = Vec::new();
         if let Some(xml_document) = xml_document.upgrade() {
-            let mut xml_doc = xml_document
+            let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("Failed for get XML Handle")?;
-            if let Some(ids) = xml_doc.get_element_ids_by_tag("Relationship", None) {
+            if let Some(ids) = xml_doc_mut.get_element_ids_by_tag("Relationship", None) {
                 for element_id in ids {
-                    let relationship = xml_doc
+                    let relationship = xml_doc_mut
                         .pop_element_mut(&element_id)
                         .ok_or(anyhow!("Failed to Get Target Element"))?;
                     let attributes = relationship

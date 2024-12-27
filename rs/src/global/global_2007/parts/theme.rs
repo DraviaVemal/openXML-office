@@ -1,4 +1,4 @@
-use crate::reference_dictionary::COMMON_TYPE_COLLECTION;
+use crate::element_dictionary::COMMON_TYPE_COLLECTION;
 use crate::{
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::{

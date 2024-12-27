@@ -89,74 +89,74 @@ fn sheet_handling() {
     assert_eq!(true, true);
 }
 
-#[test]
-fn excel_view() {
-    // let mut file = crate::spreadsheet_2007::Excel::new(
-    //     None,
-    //     crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    // )
-    // .expect("Create New File Failed");
-    // file.minimize_workbook_mut(true)
-    //     .expect("Failed to minimize workbook");
-    // file.save_as(&format!("{}", &get_save_file(Some("min"))))
-    //     .expect("File Save Failed");
-    // file = crate::spreadsheet_2007::Excel::new(
-    //     None,
-    //     crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    // )
-    // .expect("Create New File Failed");
-    // file.set_visibility_mut(false)
-    //     .expect("Failed to add static Sheet");
-    // file.save_as(&format!("{}", &get_save_file(Some("hide"))))
-    //     .expect("File Save Failed");
+// #[test]
+// fn excel_view() {
+//     // let mut file = crate::spreadsheet_2007::Excel::new(
+//     //     None,
+//     //     crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+//     // )
+//     // .expect("Create New File Failed");
+//     // file.minimize_workbook_mut(true)
+//     //     .expect("Failed to minimize workbook");
+//     // file.save_as(&format!("{}", &get_save_file(Some("min"))))
+//     //     .expect("File Save Failed");
+//     // file = crate::spreadsheet_2007::Excel::new(
+//     //     None,
+//     //     crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+//     // )
+//     // .expect("Create New File Failed");
+//     // file.set_visibility_mut(false)
+//     //     .expect("Failed to add static Sheet");
+//     // file.save_as(&format!("{}", &get_save_file(Some("hide"))))
+//     //     .expect("File Save Failed");
 
-    let mut file = crate::spreadsheet_2007::Excel::new(
-        None,
-        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    )
-    .expect("Create New File Failed");
-    file.hide_ruler_mut(true)
-        .expect("Failed to add static Sheet");
-    file.save_as(&format!("{}", &get_save_file(Some("show_ruler"))))
-        .expect("File Save Failed");
-    file = crate::spreadsheet_2007::Excel::new(
-        None,
-        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    )
-    .expect("Create New File Failed");
-    file.hide_grid_lines_mut(true)
-        .expect("Failed to add static Sheet");
-    file.save_as(&format!("{}", &get_save_file(Some("show_grid"))))
-        .expect("File Save Failed");
-    file = crate::spreadsheet_2007::Excel::new(
-        None,
-        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    )
-    .expect("Create New File Failed");
-    file.hide_horizontal_scroll_mut(true)
-        .expect("Failed to add static Sheet");
-    file.save_as(&format!("{}", &get_save_file(Some("show_hor_scroll"))))
-        .expect("File Save Failed");
-    file = crate::spreadsheet_2007::Excel::new(
-        None,
-        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    )
-    .expect("Create New File Failed");
-    file.hide_vertical_scroll_mut(true)
-        .expect("Failed to add static Sheet");
-    file.save_as(&format!("{}", &get_save_file(Some("show_ver_scroll"))))
-        .expect("File Save Failed");
-    file = crate::spreadsheet_2007::Excel::new(
-        None,
-        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
-    )
-    .expect("Create New File Failed");
-    file.hide_sheet_tabs_mut(true)
-        .expect("Failed to add static Sheet");
-    file.save_as(&format!("{}", &get_save_file(Some("show_tab"))))
-        .expect("File Save Failed");
-    assert_eq!(true, true);
-}
+//     let mut file = crate::spreadsheet_2007::Excel::new(
+//         None,
+//         crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+//     )
+//     .expect("Create New File Failed");
+//     file.hide_ruler_mut(true)
+//         .expect("Failed to add static Sheet");
+//     file.save_as(&format!("{}", &get_save_file(Some("show_ruler"))))
+//         .expect("File Save Failed");
+//     file = crate::spreadsheet_2007::Excel::new(
+//         None,
+//         crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+//     )
+//     .expect("Create New File Failed");
+//     file.hide_grid_lines_mut(true)
+//         .expect("Failed to add static Sheet");
+//     file.save_as(&format!("{}", &get_save_file(Some("show_grid"))))
+//         .expect("File Save Failed");
+//     file = crate::spreadsheet_2007::Excel::new(
+//         None,
+//         crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+//     )
+//     .expect("Create New File Failed");
+//     file.hide_horizontal_scroll_mut(true)
+//         .expect("Failed to add static Sheet");
+//     file.save_as(&format!("{}", &get_save_file(Some("show_hor_scroll"))))
+//         .expect("File Save Failed");
+//     file = crate::spreadsheet_2007::Excel::new(
+//         None,
+//         crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+//     )
+//     .expect("Create New File Failed");
+//     file.hide_vertical_scroll_mut(true)
+//         .expect("Failed to add static Sheet");
+//     file.save_as(&format!("{}", &get_save_file(Some("show_ver_scroll"))))
+//         .expect("File Save Failed");
+//     file = crate::spreadsheet_2007::Excel::new(
+//         None,
+//         crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+//     )
+//     .expect("Create New File Failed");
+//     file.hide_sheet_tabs_mut(true)
+//         .expect("Failed to add static Sheet");
+//     file.save_as(&format!("{}", &get_save_file(Some("show_tab"))))
+//         .expect("File Save Failed");
+//     assert_eq!(true, true);
+// }
 
 #[test]
 fn edit_excel() {

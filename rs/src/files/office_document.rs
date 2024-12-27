@@ -173,10 +173,10 @@ impl OfficeDocument {
         if let Some((xml_document, content_type, file_extension, extension_type)) =
             self.xml_document_collection.remove(file_path)
         {
-            let mut xml_doc = xml_document
+            let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("Failed to get document handle")?;
-            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc)
+            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc_mut)
                 .context("Xml Tree to String content")?;
             Self::insert_update_archive_record(
                 &self.sqlite_database,

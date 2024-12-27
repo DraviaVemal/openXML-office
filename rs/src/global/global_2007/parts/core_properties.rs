@@ -4,7 +4,7 @@ use crate::{
         parts::RelationsPart,
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
-    reference_dictionary::COMMON_TYPE_COLLECTION,
+    element_dictionary::COMMON_TYPE_COLLECTION,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;

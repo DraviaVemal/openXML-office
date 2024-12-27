@@ -460,79 +460,24 @@ impl XmlElement {
         }
     }
 
-    fn append_children_mut(&mut self, child_id: usize, tag: &str) {
-        let mut child_element = self.children.borrow_mut();
-        child_element.push(XmlElementChild {
-            id: child_id,
-            tag: tag.to_string(),
-        });
-    }
-
-    fn insert_children_before_tag_mut(&mut self, child_id: usize, tag: &str, find_tag: &str) {
-        let mut children = self.children.borrow_mut();
-        if let Some(index) = children.iter().position(|item| item.tag == find_tag) {
-            children.insert(
-                index,
-                XmlElementChild {
-                    id: child_id,
-                    tag: tag.to_string(),
-                },
-            );
-        } else {
-            children.insert(
-                0,
-                XmlElementChild {
-                    id: child_id,
-                    tag: tag.to_string(),
-                },
-            );
-        }
-    }
-
-    fn insert_children_after_tag_mut(&mut self, child_id: usize, tag: &str, find_tag: &str) {
-        let mut children = self.children.borrow_mut();
-        if let Some(index) = children.iter().rposition(|item| item.tag == find_tag) {
-            children.insert(
-                index + 1,
-                XmlElementChild {
-                    id: child_id,
-                    tag: tag.to_string(),
-                },
-            );
-        } else {
-            children.push(XmlElementChild {
-                id: child_id,
-                tag: tag.to_string(),
-            });
-        }
-    }
-
-    fn insert_children_at_mut(&mut self, child_id: usize, position: usize, tag: &str) {
-        self.children.borrow_mut().insert(
-            position,
-            XmlElementChild {
-                id: child_id,
-                tag: tag.to_string(),
-            },
-        );
-    }
-
     pub(crate) fn get_attribute_mut(&mut self) -> Option<&mut HashMap<String, String>> {
         self.attributes.as_mut()
     }
 
-    fn set_id_mut(&mut self, id: usize) {
-        self.id = id;
-    }
-
-    fn set_parent_id_mut(&mut self, parent_id: usize) {
-        self.parent_id = parent_id;
-    }
-
-    fn validate_namespace(
-        &mut self,
-        attributes: &HashMap<String, String>,
-    ) -> AnyResult<(), AnyError> {
+    pub(crate) fn order_child_mut(&mut self, order_skeleton: &[&str]) -> AnyResult<(), AnyError> {
+        if self.children.borrow_mut().len() > 0 && order_skeleton.len() > 0 {
+            let order_map: std::collections::HashMap<&str, usize> = order_skeleton
+                .iter()
+                .enumerate()
+                .map(|(index, &tag)| (tag, index))
+                .collect();
+            self.children.borrow_mut().sort_by_key(|item| {
+                order_map
+                    .get(item.tag.as_str())
+                    .cloned()
+                    .unwrap_or(usize::MAX)
+            });
+        }
         Ok(())
     }
 
@@ -591,5 +536,77 @@ impl XmlElement {
     pub(crate) fn set_value_mut(&mut self, text: String) -> &mut Self {
         self.value = Some(text);
         self
+    }
+
+    fn append_children_mut(&mut self, child_id: usize, tag: &str) {
+        let mut child_element = self.children.borrow_mut();
+        child_element.push(XmlElementChild {
+            id: child_id,
+            tag: tag.to_string(),
+        });
+    }
+
+    fn insert_children_before_tag_mut(&mut self, child_id: usize, tag: &str, find_tag: &str) {
+        let mut children = self.children.borrow_mut();
+        if let Some(index) = children.iter().position(|item| item.tag == find_tag) {
+            children.insert(
+                index,
+                XmlElementChild {
+                    id: child_id,
+                    tag: tag.to_string(),
+                },
+            );
+        } else {
+            children.insert(
+                0,
+                XmlElementChild {
+                    id: child_id,
+                    tag: tag.to_string(),
+                },
+            );
+        }
+    }
+
+    fn insert_children_after_tag_mut(&mut self, child_id: usize, tag: &str, find_tag: &str) {
+        let mut children = self.children.borrow_mut();
+        if let Some(index) = children.iter().rposition(|item| item.tag == find_tag) {
+            children.insert(
+                index + 1,
+                XmlElementChild {
+                    id: child_id,
+                    tag: tag.to_string(),
+                },
+            );
+        } else {
+            children.push(XmlElementChild {
+                id: child_id,
+                tag: tag.to_string(),
+            });
+        }
+    }
+
+    fn insert_children_at_mut(&mut self, child_id: usize, position: usize, tag: &str) {
+        self.children.borrow_mut().insert(
+            position,
+            XmlElementChild {
+                id: child_id,
+                tag: tag.to_string(),
+            },
+        );
+    }
+
+    fn set_id_mut(&mut self, id: usize) {
+        self.id = id;
+    }
+
+    fn set_parent_id_mut(&mut self, parent_id: usize) {
+        self.parent_id = parent_id;
+    }
+
+    fn validate_namespace(
+        &mut self,
+        attributes: &HashMap<String, String>,
+    ) -> AnyResult<(), AnyError> {
+        Ok(())
     }
 }

@@ -1,6 +1,6 @@
+use crate::element_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
-use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     get_all_queries,
@@ -44,15 +44,16 @@ impl XmlDocumentPartCommon for CalculationChainPart {
                 .find_many(&select_query, params![], row_mapper, None)
                 .context("Failed to Pull All Calculation Chain Items")?;
             if string_collection.len() > 0 {
-                if let Some(xml_doc) = self.xml_document.upgrade() {
-                    let mut doc = xml_doc
+                if let Some(xml_document) = self.xml_document.upgrade() {
+                    let mut xml_doc_mut = xml_document
                         .try_borrow_mut()
                         .context("Failed to pull document handle")?;
                     for (cell_id, sheet_id) in string_collection {
                         let mut attributes = HashMap::new();
                         attributes.insert("r".to_string(), cell_id);
                         attributes.insert("i".to_string(), sheet_id);
-                        doc.append_child_mut("c", None)
+                        xml_doc_mut
+                            .append_child_mut("c", None)
                             .context("Failed To Add Child Item")?
                             .set_attribute_mut(attributes)?;
                     }
@@ -160,9 +161,10 @@ impl CalculationChainPart {
                         .get_connection()
                         .create_table(&create_query, None)
                         .context("Create Share String Table Failed")?;
-                    if let Some(xml_doc) = xml_document.upgrade() {
-                        let mut xml_doc_mut =
-                            xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+                    if let Some(xml_document) = xml_document.upgrade() {
+                        let mut xml_doc_mut = xml_document
+                            .try_borrow_mut()
+                            .context("xml doc borrow failed")?;
                         if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("c", None) {
                             for element in elements {
                                 if let Some(attributes) = element.get_attribute() {
