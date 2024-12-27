@@ -14,12 +14,12 @@ pub enum CellDataType {
 impl Enum<CellDataType> for CellDataType {
     fn get_string(input_enum: CellDataType) -> String {
         match input_enum {
-            CellDataType::Number => "n".to_string(),
             CellDataType::Boolean => "b".to_string(),
             CellDataType::String => "str".to_string(),
             CellDataType::ShareString => "s".to_string(),
             CellDataType::InlineString => "inlineStr".to_string(),
             CellDataType::Error => "e".to_string(),
+            _ => "n".to_string(),
         }
     }
     fn get_enum(input_string: &str) -> CellDataType {
@@ -74,51 +74,53 @@ pub struct RowProperties {
     // Set Custom height for the row
     pub height: Option<usize>,
     // Hide The Specific Row
-    pub hidden: bool,
     pub style_id: Option<usize>,
-    pub thick_top: bool,
-    pub thick_bottom: bool,
+    pub hidden: Option<bool>,
+    pub thick_top: Option<bool>,
+    pub thick_bottom: Option<bool>,
     // Column group to use with collapse expand
-    pub(crate) group_level: usize,
+    pub(crate) group_level: Option<usize>,
     // Collapse the current column
-    pub(crate) collapsed: bool,
-    pub(crate) place_holder: bool,
+    pub(crate) collapsed: Option<bool>,
+    pub(crate) place_holder: Option<bool>,
 }
 
 impl RowProperties {
     pub fn default() -> Self {
         Self {
             height: None,
-            hidden: false,
+            hidden: None,
             style_id: None,
-            group_level: 0,
-            collapsed: false,
-            thick_top: false,
-            thick_bottom: false,
-            place_holder: false,
+            group_level: None,
+            collapsed: None,
+            thick_top: None,
+            thick_bottom: None,
+            place_holder: None,
         }
     }
 }
 
 #[derive(Debug)]
 pub struct ColumnCell {
+    pub formula: Option<String>,
     pub value: Option<String>,
-    pub data_type: Option<CellDataType>,
+    pub data_type: CellDataType,
     pub hyperlink_properties: Option<HyperlinkProperties>,
     pub style_id: Option<usize>,
     pub(crate) comment_id: Option<usize>,
-    pub(crate) place_holder: bool,
+    pub(crate) place_holder: Option<bool>,
 }
 
 impl ColumnCell {
     pub fn default() -> Self {
         Self {
+            formula: None,
             value: None,
-            data_type: None,
+            data_type: CellDataType::Number,
             hyperlink_properties: None,
             style_id: None,
             comment_id: None,
-            place_holder: false,
+            place_holder: None,
         }
     }
 }
@@ -135,8 +137,13 @@ pub(crate) struct RowRecord {
     pub(crate) row_group_level: Option<usize>,
     pub(crate) row_collapsed: Option<bool>,
     pub(crate) row_place_holder: Option<bool>,
+}
+
+#[derive(Debug, Default, Clone)]
+pub(crate) struct CellRecord {
+    pub(crate) row_id: usize,
     pub(crate) col_id: usize,
-    pub(crate) col_style_id: Option<usize>,
+    pub(crate) cell_style_id: Option<usize>,
     pub(crate) cell_value: Option<String>,
     pub(crate) cell_formula: Option<String>,
     pub(crate) cell_type: Option<CellDataType>,

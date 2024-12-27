@@ -9,7 +9,9 @@ use crate::{
     },
     order_dictionary::EXCEL_ORDER_COLLECTION,
     spreadsheet_2007::{
-        models::{CellDataType, ColumnCell, ColumnProperties, RowProperties, RowRecord},
+        models::{
+            CellDataType, CellRecord, ColumnCell, ColumnProperties, RowProperties, RowRecord,
+        },
         services::CommonServices,
     },
 };
@@ -31,7 +33,6 @@ pub struct WorkSheet {
     sheet_collection: Weak<RefCell<Vec<(String, String, bool, bool)>>>,
     sheet_relationship_part: Rc<RefCell<RelationsPart>>,
     // sheet_property: Option<_>,
-    // dimension: Option<_>,
     // sheet_view: Option<_>,
     // sheet_format_property: Option<_>,
     column_collection: Option<Vec<ColumnProperties>>,
@@ -68,7 +69,7 @@ impl XmlDocumentPartCommon for WorkSheet {
         Self: Sized,
     {
         if let Some(office_document) = self.office_document.upgrade() {
-            let mut office_doc = office_document
+            let mut office_doc_mut = office_document
                 .try_borrow_mut()
                 .context("Failed to pull office document")?;
             if let Some(xml_document) = self.xml_document.upgrade() {
@@ -115,37 +116,44 @@ impl XmlDocumentPartCommon for WorkSheet {
                         .queries
                         .get("select_all_dynamic_sheet")
                         .ok_or(anyhow!("Failed to Get Select All Query"))?;
-                    fn row_mapper(row: &Row) -> AnyResult<RowRecord, rusqlite::Error> {
-                        Ok(RowRecord {
-                            row_id: row.get(0)?,
-                            row_hide: row.get(1)?,
-                            row_span: row.get(2)?,
-                            row_height: row.get(3)?,
-                            row_style_id: row.get(4)?,
-                            row_thick_top: row.get(5)?,
-                            row_thick_bottom: row.get(6)?,
-                            row_group_level: row.get(7)?,
-                            row_collapsed: row.get(8)?,
-                            row_place_holder: row.get(9)?,
-                            col_id: row.get(10)?,
-                            col_style_id: row.get(11)?,
-                            cell_value: row.get(12)?,
-                            cell_formula: row.get(13)?,
-                            cell_type: if let Some(value) = row.get(14)? {
-                                let type_text: String = value;
-                                Some(CellDataType::get_enum(&type_text))
-                            } else {
-                                None
+                    fn row_mapper(
+                        row: &Row,
+                    ) -> AnyResult<(RowRecord, CellRecord), rusqlite::Error> {
+                        Ok((
+                            RowRecord {
+                                row_id: row.get(0)?,
+                                row_hide: row.get(1)?,
+                                row_span: row.get(2)?,
+                                row_height: row.get(3)?,
+                                row_style_id: row.get(4)?,
+                                row_thick_top: row.get(5)?,
+                                row_thick_bottom: row.get(6)?,
+                                row_group_level: row.get(7)?,
+                                row_collapsed: row.get(8)?,
+                                row_place_holder: row.get(9)?,
                             },
-                            cell_metadata: row.get(15)?,
-                            cell_place_holder: row.get(16)?,
-                            cell_comment_id: row.get(17)?,
-                        })
+                            CellRecord {
+                                row_id: row.get(0)?,
+                                col_id: row.get(10)?,
+                                cell_style_id: row.get(11)?,
+                                cell_value: row.get(12)?,
+                                cell_formula: row.get(13)?,
+                                cell_type: if let Some(value) = row.get(14)? {
+                                    let type_text: String = value;
+                                    Some(CellDataType::get_enum(&type_text))
+                                } else {
+                                    None
+                                },
+                                cell_metadata: row.get(15)?,
+                                cell_place_holder: row.get(16)?,
+                                cell_comment_id: row.get(17)?,
+                            },
+                        ))
                     }
-                    let mut sheet_data = office_doc
+                    let mut sheet_data = office_doc_mut
                         .get_connection()
                         .find_many(
-                            &select_all_query,
+                            &select_all_query.replace("{0}", "{}_row"),
                             params![],
                             row_mapper,
                             Some(
@@ -166,7 +174,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                         let mut row_element_id = 0;
                         let mut row_id = 0;
                         loop {
-                            if let Some(db_row) = sheet_data.pop() {
+                            if let Some((db_row, db_cell)) = sheet_data.pop() {
                                 // Create row element
                                 if row_id != db_row.row_id {
                                     let row_element = xml_doc_mut
@@ -232,30 +240,30 @@ impl XmlDocumentPartCommon for WorkSheet {
                                         "r".to_string(),
                                         format!(
                                             "{}{}",
-                                            ConverterUtil::get_column_key(db_row.col_id)
+                                            ConverterUtil::get_column_key(db_cell.col_id)
                                                 .context("Failed to get Char Id from Int")?,
                                             db_row.row_id
                                         ),
                                     );
-                                    if let Some(col_style_id) = db_row.col_style_id {
+                                    if let Some(cell_style_id) = db_cell.cell_style_id {
                                         cell_attribute
-                                            .insert("s".to_string(), col_style_id.to_string());
+                                            .insert("s".to_string(), cell_style_id.to_string());
                                     }
-                                    if let Some(cell_type) = db_row.cell_type {
+                                    if let Some(cell_type) = db_cell.cell_type {
                                         cell_attribute.insert(
                                             "t".to_string(),
                                             CellDataType::get_string(cell_type),
                                         );
                                     }
-                                    if let Some(cell_comment_id) = db_row.cell_comment_id {
+                                    if let Some(cell_comment_id) = db_cell.cell_comment_id {
                                         cell_attribute
                                             .insert("cm".to_string(), cell_comment_id.to_string());
                                     }
-                                    if let Some(cell_metadata) = db_row.cell_metadata {
+                                    if let Some(cell_metadata) = db_cell.cell_metadata {
                                         cell_attribute
                                             .insert("vm".to_string(), cell_metadata.to_string());
                                     }
-                                    if let Some(_) = db_row.cell_place_holder {
+                                    if let Some(_) = db_cell.cell_place_holder {
                                         cell_attribute.insert("ph".to_string(), "1".to_string());
                                     }
                                     cell_element
@@ -263,7 +271,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                                         .context("Failed to Set Attribute for cell")?;
                                 }
                                 // Create cell's child element
-                                match db_row.cell_type.unwrap_or(CellDataType::Number) {
+                                match db_cell.cell_type.unwrap_or(CellDataType::Number) {
                                     CellDataType::InlineString => {
                                         let inline_string_id = xml_doc_mut
                                             .append_child_mut("is", Some(&cell_id))
@@ -275,7 +283,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                                                 "Failed To insert Text Value to inline string",
                                             )?;
                                         text_element.set_value_mut(
-                                            if let Some(value) = db_row.cell_value {
+                                            if let Some(value) = db_cell.cell_value {
                                                 value
                                             } else {
                                                 "".to_string()
@@ -283,7 +291,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                                         );
                                     }
                                     _ => {
-                                        if let Some(formula) = db_row.cell_formula {
+                                        if let Some(formula) = db_cell.cell_formula {
                                             let formula_element = xml_doc_mut
                                                 .append_child_mut("f", Some(&cell_id))
                                                 .context(
@@ -295,7 +303,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                                             .append_child_mut("v", Some(&cell_id))
                                             .context("Failed to insert Inline string element")?;
                                         value_element.set_value_mut(
-                                            if let Some(value) = db_row.cell_value {
+                                            if let Some(value) = db_cell.cell_value {
                                                 value
                                             } else {
                                                 "".to_string()
@@ -309,6 +317,61 @@ impl XmlDocumentPartCommon for WorkSheet {
                         }
                     }
                 }
+                // Add dimension
+                {
+                    let root_id = xml_doc_mut
+                        .get_root()
+                        .context("Failed to Get Root Element")?
+                        .get_id();
+                    let dim_query = self
+                        .queries
+                        .get("select_dimension_dynamic_sheet")
+                        .ok_or(anyhow!("Failed to get query"))?;
+                    fn row_mapper(
+                        row: &Row,
+                    ) -> Result<(usize, usize, usize, usize), rusqlite::Error> {
+                        Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
+                    }
+                    let mut dim_range = office_doc_mut
+                        .get_connection()
+                        .find_many(
+                            dim_query,
+                            params![],
+                            row_mapper,
+                            Some(
+                                self.file_path
+                                    .rsplit("/")
+                                    .next()
+                                    .unwrap()
+                                    .to_string()
+                                    .replace(".xml", ""),
+                            ),
+                        )
+                        .context("Failed to pull Dim Range Query Results")?;
+                    if let Some((start_row_id, start_col_id, end_row_id, end_col_id)) =
+                        dim_range.pop()
+                    {
+                        let dim_element = xml_doc_mut
+                            .append_child_mut("dimension", Some(&root_id))
+                            .context("Failed to Add Dimension node to worksheet")?;
+                        let mut dimension_attribute = HashMap::new();
+                        dimension_attribute.insert(
+                            "ref".to_string(),
+                            format!(
+                                "{}{}:{}{}",
+                                ConverterUtil::get_column_key(start_col_id)
+                                    .context("Failed to convert dim col start")?,
+                                start_row_id,
+                                ConverterUtil::get_column_key(end_col_id)
+                                    .context("Failed to convert dim col end")?,
+                                end_row_id
+                            ),
+                        );
+                        dim_element
+                            .set_attribute_mut(dimension_attribute)
+                            .context("Failed to set attribute value to dimension")?;
+                    }
+                }
                 if let Some(root_element) = xml_doc_mut.get_root_mut() {
                     root_element
                         .order_child_mut(
@@ -319,10 +382,10 @@ impl XmlDocumentPartCommon for WorkSheet {
                         .context("Failed Reorder the element child's")?;
                 }
             }
-            office_doc
+            office_doc_mut
                 .close_xml_document(&self.file_path)
                 .context("Failed to close the current tree document")?;
-            office_doc.get_connection().drop_table(
+            office_doc_mut.get_connection().drop_table(
                 self.file_path
                     .rsplit("/")
                     .next()
@@ -330,6 +393,15 @@ impl XmlDocumentPartCommon for WorkSheet {
                     .to_string()
                     .replace(".xml", ""),
             )?;
+            office_doc_mut.get_connection().drop_table(format!(
+                "{}_row",
+                self.file_path
+                    .rsplit("/")
+                    .next()
+                    .unwrap()
+                    .to_string()
+                    .replace(".xml", "")
+            ))?;
         }
         Ok(())
     }
@@ -403,16 +475,23 @@ impl WorkSheet {
                 let mut xml_doc_mut = xml_document
                     .try_borrow_mut()
                     .context("Failed to get XML doc handle")?;
-                let office_doc = office_document
+                let office_doc_mut = office_document
                     .try_borrow_mut()
-                    .context("Falied to Get office doc handle")?;
+                    .context("Failed to Get office doc handle")?;
                 let create_query = queries.get("create_dynamic_sheet").ok_or(anyhow!(
                     "Failed to Get the create query at sheet data parser"
                 ))?;
-                office_doc
+                let create_query_row = queries.get("create_dynamic_sheet_row").ok_or(anyhow!(
+                    "Failed to Get the create query at sheet data parser"
+                ))?;
+                office_doc_mut
                     .get_connection()
                     .create_table(&create_query, Some(table_name.clone()))
                     .context("Failed to create sheet data table")?;
+                office_doc_mut
+                    .get_connection()
+                    .create_table(&create_query_row, Some(format!("{}_row", table_name)))
+                    .context("Failed to create sheet data row table")?;
                 // unwrap columns to local collection
                 {
                     if let Some(mut cols_element) =
@@ -574,9 +653,33 @@ impl WorkSheet {
                                                 None
                                             };
                                         }
+                                        // Insert record to the Database
+                                        let insert_query_row = queries.get("insert_dynamic_sheet_row")
+                                                    .ok_or(anyhow!("Failed to Get the insert Row Query at sheet data parser"))?;
+                                        office_doc_mut
+                                            .get_connection()
+                                            .insert_record(
+                                                insert_query_row,
+                                                params![
+                                                    db_row_record.row_id,
+                                                    db_row_record.row_hide,
+                                                    db_row_record.row_span,
+                                                    db_row_record.row_height,
+                                                    db_row_record.row_style_id,
+                                                    db_row_record.row_thick_top,
+                                                    db_row_record.row_thick_bottom,
+                                                    db_row_record.row_group_level,
+                                                    db_row_record.row_collapsed,
+                                                    db_row_record.row_place_holder,
+                                                ],
+                                                Some(format!("{}_row", table_name)),
+                                            )
+                                            .context(
+                                                "Failed to insert Cell Data record into Sheet DB",
+                                            )?;
                                         // Loop All Columns of row
                                         loop {
-                                            let mut db_cell_record = db_row_record.clone();
+                                            let mut db_cell_record = CellRecord::default();
                                             if let Some(col_id) = row_element.pop_child_id_mut() {
                                                 if let Some(col_element) =
                                                     xml_doc_mut.pop_element_mut(&col_id)
@@ -586,6 +689,8 @@ impl WorkSheet {
                                                         .ok_or(anyhow!(
                                                             "Failed to pull attribute for Column"
                                                         ))?;
+                                                    db_cell_record.row_id =
+                                                        db_row_record.row_id.clone();
                                                     // Get Col Id
                                                     db_cell_record.col_id =
                                                         ConverterUtil::get_column_int(
@@ -595,7 +700,7 @@ impl WorkSheet {
                                                         ).context("Failed to Convert col worksheet initialize")?;
                                                     if let Some(style_id) = cell_attribute.get("s")
                                                     {
-                                                        db_cell_record.col_style_id =
+                                                        db_cell_record.cell_style_id =
                                                             Some(style_id.parse().context(
                                                                 "Failed to parse the col style id",
                                                             )?);
@@ -684,21 +789,12 @@ impl WorkSheet {
                                                 // Insert record to the Database
                                                 let insert_query = queries.get("insert_dynamic_sheet")
                                                     .ok_or(anyhow!("Failed to Get the insert Query at sheet data parser"))?;
-                                                office_doc
+                                                office_doc_mut
                                                     .get_connection()
                                                     .insert_record(insert_query, params![
                                                         db_cell_record.row_id,
-                                                        db_cell_record.row_hide,
-                                                        db_cell_record.row_span,
-                                                        db_cell_record.row_height,
-                                                        db_cell_record.row_style_id,
-                                                        db_cell_record.row_thick_top,
-                                                        db_cell_record.row_thick_bottom,
-                                                        db_cell_record.row_group_level,
-                                                        db_cell_record.row_collapsed,
-                                                        db_cell_record.row_place_holder,
                                                         db_cell_record.col_id,
-                                                        db_cell_record.col_style_id,
+                                                        db_cell_record.cell_style_id,
                                                         db_cell_record.cell_value,
                                                         db_cell_record.cell_formula,
                                                         if let Some(cell_type) = db_cell_record.cell_type{Some(CellDataType::get_string(cell_type))}else{None},
@@ -706,7 +802,7 @@ impl WorkSheet {
                                                         db_cell_record.cell_place_holder,
                                                         db_cell_record.cell_comment_id
                                                     ],Some(table_name.clone()))
-                                                    .context("Failed to insert Cell Data record into Sheet DB")?;
+                                                    .context("Failed to insert row Data record into Sheet DB")?;
                                             } else {
                                                 break;
                                             }
@@ -716,6 +812,16 @@ impl WorkSheet {
                                     break;
                                 }
                             }
+                        }
+                    }
+                }
+                // unwrap dimension
+                {
+                    if let Some(mut dimension_id) =
+                        xml_doc_mut.get_element_ids_by_tag("dimension", None)
+                    {
+                        if let Some(dimension_id) = dimension_id.pop() {
+                            xml_doc_mut.pop_element_mut(&dimension_id);
                         }
                     }
                 }
@@ -836,20 +942,85 @@ impl WorkSheet {
     /// Set Active cell of the current sheet
     pub fn set_active_cell_mut(&mut self, cell_id: &str) {}
     /// Set Column property
-    pub fn set_column_mut(&mut self, column_id: &usize, column_properties: ColumnProperties) -> () {
+    pub fn set_column_properties_mut(
+        &mut self,
+        column_id: &usize,
+        column_properties: ColumnProperties,
+    ) -> () {
         // Check if the target column has setting
-
+        // Create new record
+        // Update old record
+    }
+    pub fn set_row_properties_mut(
+        &mut self,
+        column_id: &usize,
+        row_properties: RowProperties,
+    ) -> () {
+        // Check if the target column has setting
         // Create new record
         // Update old record
     }
 
     /// Set data for same row multiple columns along with row property
-    pub fn set_row_mut(
+    pub fn set_row_value_mut(
         &mut self,
-        cell_id: &usize,
+        cell_key: &str,
         column_cell: Vec<ColumnCell>,
-        row_properties: RowProperties,
-    ) -> () {
+    ) -> AnyResult<(), AnyError> {
+        let (row_id, col_id) =
+            ConverterUtil::get_cell_int(cell_key).context("Failed to extract cell key")?;
+        self.set_row_value_id_mut(row_id, col_id, column_cell)
+    }
+
+    /// Set data for same row multiple columns along with row property
+    pub fn set_row_value_id_mut(
+        &mut self,
+        row_id: usize,
+        mut col_id: usize,
+        mut column_cell: Vec<ColumnCell>,
+    ) -> AnyResult<(), AnyError> {
+        if let Some(office_document) = self.office_document.upgrade() {
+            let office_doc_mut = office_document
+                .try_borrow_mut()
+                .context("Failed to get office doc handle")?;
+            let insert_query = self
+                .queries
+                .get("insert_dynamic_sheet")
+                .ok_or(anyhow!("Failed to Get Insert Query"))?;
+            loop {
+                if let Some(cell_data) = column_cell.pop() {
+                    office_doc_mut
+                        .get_connection()
+                        .insert_record(
+                            insert_query,
+                            params![
+                                row_id,
+                                col_id,
+                                cell_data.style_id,
+                                cell_data.value,
+                                cell_data.formula,
+                                CellDataType::get_string(cell_data.data_type),
+                                None::<String>,
+                                None::<bool>,
+                                None::<usize>
+                            ],
+                            Some(
+                                self.file_path
+                                    .rsplit("/")
+                                    .next()
+                                    .unwrap()
+                                    .to_string()
+                                    .replace(".xml", ""),
+                            ),
+                        )
+                        .context("Failed to insert New record to the DB")?;
+                    col_id += 1;
+                } else {
+                    break;
+                }
+            }
+        }
+        Ok(())
     }
 
     /// Add hyper link to current document
