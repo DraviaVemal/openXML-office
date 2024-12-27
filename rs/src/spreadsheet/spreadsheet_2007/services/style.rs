@@ -1,11 +1,11 @@
 use crate::{
+    element_dictionary::EXCEL_TYPE_COLLECTION,
     files::{OfficeDocument, XmlDocument, XmlElement, XmlSerializer},
     get_all_queries,
     global_2007::{
         parts::RelationsPart,
         traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon},
     },
-    reference_dictionary::EXCEL_TYPE_COLLECTION,
     spreadsheet_2007::models::{
         BorderSetting, BorderStyle, BorderStyleValues, CellXfs, ColorSetting,
         ColorSettingTypeValues, FillStyle, FontSchemeValues, FontStyle, HorizontalAlignmentValues,
@@ -170,8 +170,10 @@ impl StylePart {
             let queries = get_all_queries!("style.sql");
             Self::initialize_database(office_document, &queries)
                 .context("Database Initialization Failed")?;
-            if let Some(xml_doc) = xml_document.upgrade() {
-                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+            if let Some(xml_document) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_document
+                    .try_borrow_mut()
+                    .context("xml doc borrow failed")?;
                 // Load Number Format Region
                 if let Some(mut number_formats_vec) =
                     xml_doc_mut.pop_elements_by_tag_mut("numFmts", None)
@@ -637,8 +639,10 @@ impl StylePart {
                 .try_borrow()
                 .context("Pulling Office Doc Failed")?;
             let queries = get_all_queries!("style.sql");
-            if let Some(xml_doc) = xml_document.upgrade() {
-                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+            if let Some(xml_document) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_document
+                    .try_borrow_mut()
+                    .context("xml doc borrow failed")?;
                 // Create Number Formats Elements
                 {
                     let num_formats = xml_doc_mut

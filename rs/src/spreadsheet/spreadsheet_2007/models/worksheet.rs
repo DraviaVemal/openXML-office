@@ -123,7 +123,7 @@ impl ColumnCell {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub(crate) struct RowRecord {
     pub(crate) row_id: usize,
     pub(crate) row_hide: Option<bool>,

@@ -1,12 +1,13 @@
 use crate::{
     converters::ConverterUtil,
+    element_dictionary::EXCEL_TYPE_COLLECTION,
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     get_all_queries,
     global_2007::{
         parts::RelationsPart,
         traits::{Enum, XmlDocumentPartCommon},
     },
-    reference_dictionary::EXCEL_TYPE_COLLECTION,
+    order_dictionary::EXCEL_ORDER_COLLECTION,
     spreadsheet_2007::{
         models::{CellDataType, ColumnCell, ColumnProperties, RowProperties, RowRecord},
         services::CommonServices,
@@ -29,7 +30,15 @@ pub struct WorkSheet {
     workbook_relationship_part: Weak<RefCell<RelationsPart>>,
     sheet_collection: Weak<RefCell<Vec<(String, String, bool, bool)>>>,
     sheet_relationship_part: Rc<RefCell<RelationsPart>>,
+    // sheet_property: Option<_>,
+    // dimension: Option<_>,
+    // sheet_view: Option<_>,
+    // sheet_format_property: Option<_>,
     column_collection: Option<Vec<ColumnProperties>>,
+    // sheet_calculation_property:Option<_>
+    // protected_range:Option<_>
+    // merge_cells:Option<_>
+    // hyperlinks:Option<_>
     file_path: String,
     sheet_name: String,
 }
@@ -63,19 +72,19 @@ impl XmlDocumentPartCommon for WorkSheet {
                 .try_borrow_mut()
                 .context("Failed to pull office document")?;
             if let Some(xml_document) = self.xml_document.upgrade() {
-                let mut xml_doc = xml_document
+                let mut xml_doc_mut = xml_document
                     .try_borrow_mut()
                     .context("Failed to Pull XML Handle")?;
                 // Add Cols Record to Document
                 {
                     if let Some(mut column_collection) = self.column_collection.take() {
-                        let cols_id = xml_doc
+                        let cols_id = xml_doc_mut
                             .insert_children_after_tag_mut("cols", "sheetViews", None)
                             .context("Failed to Insert Cols Element")?
                             .get_id();
                         loop {
                             if let Some(item) = column_collection.pop() {
-                                let col_element = xml_doc
+                                let col_element = xml_doc_mut
                                     .append_child_mut("col", Some(&cols_id))
                                     .context("Failed to insert col record")?;
                                 let mut attribute = HashMap::new();
@@ -89,7 +98,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                                     attribute.insert("style".to_string(), style_id.to_string());
                                 }
                                 if let Some(_) = item.best_fit {
-                                    attribute.insert("hidden".to_string(), "1".to_string());
+                                    attribute.insert("bestFit".to_string(), "1".to_string());
                                 }
                                 col_element
                                     .set_attribute_mut(attribute)
@@ -149,20 +158,22 @@ impl XmlDocumentPartCommon for WorkSheet {
                             ),
                         )
                         .context("Failed to Get Sheet Data Records")?;
-                    let sheet_data_id = xml_doc
+                    let sheet_data_id = xml_doc_mut
                         .insert_children_after_tag_mut("sheetData", "cols", None)
                         .context("Failed to Insert Cols Element")?
                         .get_id();
                     if sheet_data.len() > 0 {
                         let mut row_element_id = 0;
+                        let mut row_id = 0;
                         loop {
                             if let Some(db_row) = sheet_data.pop() {
                                 // Create row element
-                                if row_element_id != db_row.row_id {
-                                    let row_element = xml_doc
+                                if row_id != db_row.row_id {
+                                    let row_element = xml_doc_mut
                                         .append_child_mut("row", Some(&sheet_data_id))
                                         .context("Failed to insert row element")?;
                                     row_element_id = row_element.get_id();
+                                    row_id = db_row.row_id;
                                     let mut row_attribute = HashMap::new();
                                     row_attribute
                                         .insert("r".to_string(), db_row.row_id.to_string());
@@ -212,7 +223,7 @@ impl XmlDocumentPartCommon for WorkSheet {
                                 let cell_id;
                                 // Create cell element
                                 {
-                                    let cell_element = xml_doc
+                                    let cell_element = xml_doc_mut
                                         .append_child_mut("c", Some(&row_element_id))
                                         .context("Failed to insert row element")?;
                                     cell_id = cell_element.get_id();
@@ -254,11 +265,11 @@ impl XmlDocumentPartCommon for WorkSheet {
                                 // Create cell's child element
                                 match db_row.cell_type.unwrap_or(CellDataType::Number) {
                                     CellDataType::InlineString => {
-                                        let inline_string_id = xml_doc
+                                        let inline_string_id = xml_doc_mut
                                             .append_child_mut("is", Some(&cell_id))
                                             .context("Failed to insert Inline string element")?
                                             .get_id();
-                                        let text_element = xml_doc
+                                        let text_element = xml_doc_mut
                                             .append_child_mut("t", Some(&inline_string_id))
                                             .context(
                                                 "Failed To insert Text Value to inline string",
@@ -273,14 +284,14 @@ impl XmlDocumentPartCommon for WorkSheet {
                                     }
                                     _ => {
                                         if let Some(formula) = db_row.cell_formula {
-                                            let formula_element = xml_doc
+                                            let formula_element = xml_doc_mut
                                                 .append_child_mut("f", Some(&cell_id))
                                                 .context(
                                                     "Failed to insert Inline string element",
                                                 )?;
                                             formula_element.set_value_mut(formula);
                                         }
-                                        let value_element = xml_doc
+                                        let value_element = xml_doc_mut
                                             .append_child_mut("v", Some(&cell_id))
                                             .context("Failed to insert Inline string element")?;
                                         value_element.set_value_mut(
@@ -297,6 +308,15 @@ impl XmlDocumentPartCommon for WorkSheet {
                             }
                         }
                     }
+                }
+                if let Some(root_element) = xml_doc_mut.get_root_mut() {
+                    root_element
+                        .order_child_mut(
+                            EXCEL_ORDER_COLLECTION
+                                .get("worksheet")
+                                .ok_or(anyhow!("Failed to get worksheet default order"))?,
+                        )
+                        .context("Failed Reorder the element child's")?;
                 }
             }
             office_doc
@@ -380,7 +400,7 @@ impl WorkSheet {
         let mut column_collection = Vec::new();
         if let Some(office_document) = office_document.upgrade() {
             if let Some(xml_document) = xml_document.upgrade() {
-                let mut xml_doc = xml_document
+                let mut xml_doc_mut = xml_document
                     .try_borrow_mut()
                     .context("Failed to get XML doc handle")?;
                 let office_doc = office_document
@@ -395,12 +415,14 @@ impl WorkSheet {
                     .context("Failed to create sheet data table")?;
                 // unwrap columns to local collection
                 {
-                    if let Some(mut cols_element) = xml_doc.pop_elements_by_tag_mut("cols", None) {
+                    if let Some(mut cols_element) =
+                        xml_doc_mut.pop_elements_by_tag_mut("cols", None)
+                    {
                         // Process the columns record if parent node exist
                         if let Some(cols) = cols_element.pop() {
                             loop {
                                 if let Some(col_elements) = cols.pop_child_id_mut() {
-                                    if let Some(col) = xml_doc.pop_element_mut(&col_elements) {
+                                    if let Some(col) = xml_doc_mut.pop_element_mut(&col_elements) {
                                         let mut column_properties = ColumnProperties::default();
                                         let attributes = col
                                             .get_attribute()
@@ -464,48 +486,50 @@ impl WorkSheet {
                 // unwrap sheet data into database
                 {
                     if let Some(mut sheet_data_element) =
-                        xml_doc.pop_elements_by_tag_mut("sheetData", None)
+                        xml_doc_mut.pop_elements_by_tag_mut("sheetData", None)
                     {
                         if let Some(sheet_data) = sheet_data_element.pop() {
                             // Loop All rows of sheet data
                             loop {
                                 if let Some(row_id) = sheet_data.pop_child_id_mut() {
-                                    if let Some(row_element) = xml_doc.pop_element_mut(&row_id) {
-                                        let mut db_record = RowRecord::default();
+                                    if let Some(row_element) = xml_doc_mut.pop_element_mut(&row_id)
+                                    {
+                                        let mut db_row_record = RowRecord::default();
                                         let row_attribute = row_element
                                             .get_attribute()
                                             .ok_or(anyhow!("Failed to pull Row Attribute."))?;
                                         // Get Row Id
-                                        db_record.row_id = row_attribute
+                                        db_row_record.row_id = row_attribute
                                             .get("r")
                                             .ok_or(anyhow!("Missing mandatory row id attribute"))?
                                             .parse()
                                             .context("Failed to parse row id")?;
                                         if let Some(row_span) = row_attribute.get("spans") {
-                                            db_record.row_span = Some(row_span.to_string());
+                                            db_row_record.row_span = Some(row_span.to_string());
                                         }
                                         if let Some(style_id) = row_attribute.get("s") {
                                             if let Some(custom_formant) =
                                                 row_attribute.get("customFormat")
                                             {
-                                                db_record.row_style_id = if custom_formant == "1" {
-                                                    Some(style_id.parse().context(
-                                                        "Failed to parse the row style id",
-                                                    )?)
-                                                } else {
-                                                    None
-                                                };
+                                                db_row_record.row_style_id =
+                                                    if custom_formant == "1" {
+                                                        Some(style_id.parse().context(
+                                                            "Failed to parse the row style id",
+                                                        )?)
+                                                    } else {
+                                                        None
+                                                    };
                                             }
                                         }
                                         if let Some(hidden) = row_attribute.get("hidden") {
-                                            db_record.row_hide =
+                                            db_row_record.row_hide =
                                                 if hidden == "1" { Some(true) } else { None };
                                         }
                                         if let Some(height) = row_attribute.get("ht") {
                                             if let Some(custom_height) =
                                                 row_attribute.get("customHeight")
                                             {
-                                                db_record.row_height = if custom_height == "1" {
+                                                db_row_record.row_height = if custom_height == "1" {
                                                     Some(height.parse().context(
                                                         "Failed to parse the row height",
                                                     )?)
@@ -520,29 +544,31 @@ impl WorkSheet {
                                             let outline_level = row_group_level
                                                 .parse()
                                                 .context("Failed to parse the row group level")?;
-                                            db_record.row_group_level = if outline_level > 0 {
+                                            db_row_record.row_group_level = if outline_level > 0 {
                                                 Some(outline_level)
                                             } else {
                                                 None
                                             };
                                         }
                                         if let Some(collapsed) = row_attribute.get("collapsed") {
-                                            db_record.row_collapsed =
+                                            db_row_record.row_collapsed =
                                                 if collapsed == "1" { Some(true) } else { None };
                                         }
                                         if let Some(thick_top) = row_attribute.get("thickTop") {
-                                            db_record.row_thick_top =
+                                            db_row_record.row_thick_top =
                                                 if thick_top == "1" { Some(true) } else { None };
                                         }
                                         if let Some(thick_bottom) = row_attribute.get("thickBot") {
-                                            db_record.row_thick_bottom = if thick_bottom == "1" {
+                                            db_row_record.row_thick_bottom = if thick_bottom == "1"
+                                            {
                                                 Some(true)
                                             } else {
                                                 None
                                             };
                                         }
                                         if let Some(place_holder) = row_attribute.get("ph") {
-                                            db_record.row_place_holder = if place_holder == "1" {
+                                            db_row_record.row_place_holder = if place_holder == "1"
+                                            {
                                                 Some(true)
                                             } else {
                                                 None
@@ -550,9 +576,10 @@ impl WorkSheet {
                                         }
                                         // Loop All Columns of row
                                         loop {
+                                            let mut db_cell_record = db_row_record.clone();
                                             if let Some(col_id) = row_element.pop_child_id_mut() {
                                                 if let Some(col_element) =
-                                                    xml_doc.pop_element_mut(&col_id)
+                                                    xml_doc_mut.pop_element_mut(&col_id)
                                                 {
                                                     let cell_attribute = col_element
                                                         .get_attribute()
@@ -560,7 +587,7 @@ impl WorkSheet {
                                                             "Failed to pull attribute for Column"
                                                         ))?;
                                                     // Get Col Id
-                                                    db_record.col_id =
+                                                    db_cell_record.col_id =
                                                         ConverterUtil::get_column_int(
                                                             cell_attribute.get("r").ok_or(
                                                                 anyhow!("Missing mandatory col id attribute"),
@@ -568,20 +595,20 @@ impl WorkSheet {
                                                         ).context("Failed to Convert col worksheet initialize")?;
                                                     if let Some(style_id) = cell_attribute.get("s")
                                                     {
-                                                        db_record.col_style_id =
+                                                        db_cell_record.col_style_id =
                                                             Some(style_id.parse().context(
                                                                 "Failed to parse the col style id",
                                                             )?);
                                                     }
                                                     if let Some(cell_type) = cell_attribute.get("t")
                                                     {
-                                                        db_record.cell_type =
+                                                        db_cell_record.cell_type =
                                                             Some(CellDataType::get_enum(&cell_type))
                                                     };
                                                     if let Some(comment_id) =
                                                         cell_attribute.get("cm")
                                                     {
-                                                        db_record.cell_comment_id =
+                                                        db_cell_record.cell_comment_id =
                                                             Some(comment_id.parse().context(
                                                                 "Failed to parse the col comment id",
                                                             )?);
@@ -589,7 +616,7 @@ impl WorkSheet {
                                                     if let Some(value_meta_id) =
                                                         cell_attribute.get("vm")
                                                     {
-                                                        db_record.cell_metadata =
+                                                        db_cell_record.cell_metadata =
                                                             Some(value_meta_id.parse().context(
                                                                 "Failed to parse the col value meta id",
                                                             )?);
@@ -597,7 +624,7 @@ impl WorkSheet {
                                                     if let Some(place_holder) =
                                                         cell_attribute.get("ph")
                                                     {
-                                                        db_record.cell_place_holder =
+                                                        db_cell_record.cell_place_holder =
                                                             if place_holder == "1" {
                                                                 Some(true)
                                                             } else {
@@ -608,21 +635,21 @@ impl WorkSheet {
                                                         if let Some(cell_child_id) =
                                                             col_element.pop_child_id_mut()
                                                         {
-                                                            if let Some(element) = xml_doc
+                                                            if let Some(element) = xml_doc_mut
                                                                 .pop_element_mut(&cell_child_id)
                                                             {
                                                                 match element.get_tag() {
                                                                     "v" => {
-                                                                        db_record.cell_value =
+                                                                        db_cell_record.cell_value =
                                                                             element
                                                                                 .get_value()
                                                                                 .clone();
                                                                     }
                                                                     "f" => {
-                                                                        db_record.cell_formula =
-                                                                            element
-                                                                                .get_value()
-                                                                                .clone();
+                                                                        db_cell_record
+                                                                            .cell_formula = element
+                                                                            .get_value()
+                                                                            .clone();
                                                                     }
                                                                     "is" => {
                                                                         if let Some(text_id) =
@@ -631,12 +658,12 @@ impl WorkSheet {
                                                                         {
                                                                             if let Some(
                                                                                 text_element,
-                                                                            ) = xml_doc
+                                                                            ) = xml_doc_mut
                                                                                 .pop_element_mut(
                                                                                     &text_id,
                                                                                 )
                                                                             {
-                                                                                db_record
+                                                                                db_cell_record
                                                                                     .cell_value =
                                                                                     text_element
                                                                                         .get_value()
@@ -660,24 +687,24 @@ impl WorkSheet {
                                                 office_doc
                                                     .get_connection()
                                                     .insert_record(insert_query, params![
-                                                        db_record.row_id,
-                                                        db_record.row_hide,
-                                                        db_record.row_span,
-                                                        db_record.row_height,
-                                                        db_record.row_style_id,
-                                                        db_record.row_thick_top,
-                                                        db_record.row_thick_bottom,
-                                                        db_record.row_group_level,
-                                                        db_record.row_collapsed,
-                                                        db_record.row_place_holder,
-                                                        db_record.col_id,
-                                                        db_record.col_style_id,
-                                                        db_record.cell_value,
-                                                        db_record.cell_formula,
-                                                        if let Some(cell_type) = db_record.cell_type{Some(CellDataType::get_string(cell_type))}else{None},
-                                                        db_record.cell_metadata,
-                                                        db_record.cell_place_holder,
-                                                        db_record.cell_comment_id
+                                                        db_cell_record.row_id,
+                                                        db_cell_record.row_hide,
+                                                        db_cell_record.row_span,
+                                                        db_cell_record.row_height,
+                                                        db_cell_record.row_style_id,
+                                                        db_cell_record.row_thick_top,
+                                                        db_cell_record.row_thick_bottom,
+                                                        db_cell_record.row_group_level,
+                                                        db_cell_record.row_collapsed,
+                                                        db_cell_record.row_place_holder,
+                                                        db_cell_record.col_id,
+                                                        db_cell_record.col_style_id,
+                                                        db_cell_record.cell_value,
+                                                        db_cell_record.cell_formula,
+                                                        if let Some(cell_type) = db_cell_record.cell_type{Some(CellDataType::get_string(cell_type))}else{None},
+                                                        db_cell_record.cell_metadata,
+                                                        db_cell_record.cell_place_holder,
+                                                        db_cell_record.cell_comment_id
                                                     ],Some(table_name.clone()))
                                                     .context("Failed to insert Cell Data record into Sheet DB")?;
                                             } else {
@@ -695,6 +722,7 @@ impl WorkSheet {
             }
         }
         if column_collection.len() > 0 {
+            column_collection.reverse();
             Ok(Some(column_collection))
         } else {
             Ok(None)

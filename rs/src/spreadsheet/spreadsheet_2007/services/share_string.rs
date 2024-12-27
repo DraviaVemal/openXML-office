@@ -1,6 +1,6 @@
+use crate::element_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
-use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     get_all_queries,
@@ -45,15 +45,15 @@ impl XmlDocumentPartCommon for ShareStringPart {
                 .try_borrow()
                 .context("Failed to borrow Doc Handle")?
                 .get_connection()
-                .find_many(&select_query, params![], row_mapper,None)
+                .find_many(&select_query, params![], row_mapper, None)
                 .context("Getting Share String Records Failed")?;
             if string_collection.len() > 0 {
-                if let Some(xml_doc) = self.xml_document.upgrade() {
-                    let mut doc = xml_doc
+                if let Some(xml_document) = self.xml_document.upgrade() {
+                    let mut xml_doc_mut = xml_document
                         .try_borrow_mut()
                         .context("Failed to Pull Doc Reference")?;
                     // Update count & uniqueCount in root
-                    if let Some(root) = doc.get_root_mut() {
+                    if let Some(root) = xml_doc_mut.get_root_mut() {
                         if let Some(attributes) = root.get_attribute_mut() {
                             attributes
                                 .insert("count".to_string(), string_collection.len().to_string());
@@ -69,11 +69,12 @@ impl XmlDocumentPartCommon for ShareStringPart {
                         }
                     }
                     for string in string_collection {
-                        let parent_id = doc
+                        let parent_id = xml_doc_mut
                             .append_child_mut("si", None)
                             .context("Failed to Add Child")?
                             .get_id();
-                        doc.append_child_mut("t", Some(&parent_id))
+                        xml_doc_mut
+                            .append_child_mut("t", Some(&parent_id))
                             .context("Creating Share String Child Failed")?
                             .set_value_mut(string);
                     }
@@ -188,8 +189,10 @@ impl ShareStringPart {
                 .get_connection()
                 .create_table(&create_query, None)
                 .context("Create Share String Table Failed")?;
-            if let Some(xml_doc) = xml_document.upgrade() {
-                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+            if let Some(xml_document) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_document
+                    .try_borrow_mut()
+                    .context("xml doc borrow failed")?;
                 if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("si", None) {
                     for element in elements {
                         if let Some(child_id) = element.get_first_child_id() {
