@@ -1,10 +1,10 @@
 use crate::{
+    element_dictionary::COMMON_TYPE_COLLECTION,
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::{
         parts::RelationsPart,
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
-    element_dictionary::COMMON_TYPE_COLLECTION,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;

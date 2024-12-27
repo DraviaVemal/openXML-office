@@ -1,8 +1,9 @@
-use anyhow::{anyhow, Error as AnyError, Result as AnyResult};
+use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
 
 pub struct ConverterUtil;
 
 impl ConverterUtil {
+    /// Return int Id of the column
     pub fn get_column_int(cell_key: &str) -> AnyResult<usize, AnyError> {
         let column_part: String = cell_key.chars().take_while(|c| c.is_alphabetic()).collect();
         if column_part.is_empty() {
@@ -15,7 +16,7 @@ impl ConverterUtil {
         }
         Ok(index)
     }
-
+    /// Return String Key of the column
     pub fn get_column_key(cell_id: usize) -> AnyResult<String, AnyError> {
         if cell_id == 0 {
             return Err(anyhow!("Index must be greater than 0"));
@@ -31,5 +32,22 @@ impl ConverterUtil {
         }
 
         Ok(column_name)
+    }
+
+    /// Return
+    pub fn get_cell_int(cell_key: &str) -> AnyResult<(usize, usize), AnyError> {
+        Ok((
+            Self::get_column_int(cell_key).context("Failed to Convert to int key")?,
+            Self::extract_digits(cell_key).context("Failed to extract int key")?,
+        ))
+    }
+
+    fn extract_digits(input: &str) -> AnyResult<usize> {
+        input
+            .chars()
+            .filter(|c| c.is_digit(10))
+            .collect::<String>()
+            .parse()
+            .context("Failed to Extract Digits")
     }
 }
