@@ -64,22 +64,7 @@ impl XmlDocument {
         element_ids
     }
 
-    pub(crate) fn get_first_element_by_attribute(
-        &self,
-        attribute_key: &str,
-        attribute_value: &str,
-        parent_id: Option<&usize>,
-    ) -> Option<&XmlElement> {
-        if let Some(ids) =
-            self.get_element_ids_by_attribute(attribute_key, attribute_value, parent_id)
-        {
-            self.xml_element_collection.get(&ids[0])
-        } else {
-            None
-        }
-    }
-
-    pub(crate) fn get_element_ids_by_tag(
+    fn get_element_ids_by_tag(
         &self,
         filter_tag: &str,
         parent_id: Option<&usize>,
@@ -228,10 +213,12 @@ impl XmlDocument {
         if let Some(parent_element) = self.xml_element_collection.get_mut(id) {
             let mut element = XmlElement::new(Rc::downgrade(&self.namespace_collection), tag)
                 .context("Create XML Element Failed append")?;
-            element.set_parent_id_mut(*id);
+            element.set_parent_id_mut(id.to_owned());
             self.running_id += 1;
             element.set_id_mut(self.running_id);
-            parent_element.append_children_mut(self.running_id, tag);
+            parent_element
+                .append_children_mut(self.running_id, tag)
+                .context("Failed to add Child Relation")?;
             self.xml_element_collection.insert(self.running_id, element);
             Ok(self
                 .xml_element_collection
@@ -435,7 +422,7 @@ impl XmlElement {
     pub(crate) fn get_id(&self) -> usize {
         self.id
     }
-
+    /// Use with caution
     pub(crate) fn get_first_child_id(&self) -> Option<usize> {
         if let Some(child_element) = self.children.borrow().get(0) {
             Some(child_element.id)
@@ -452,9 +439,10 @@ impl XmlElement {
 // ########################## Data Write Methods ###########################
 impl XmlElement {
     /// Remove the child reference irreversible
-    pub(crate) fn pop_child_id_mut(&self) -> Option<usize> {
+    pub(crate) fn pop_child_mut(&self) -> Option<(usize, String)> {
         if self.children.borrow_mut().len() > 0 {
-            Some(self.children.borrow_mut().remove(0).id)
+            let child_element = self.children.borrow_mut().remove(0);
+            Some((child_element.id, child_element.tag))
         } else {
             None
         }
@@ -538,12 +526,15 @@ impl XmlElement {
         self
     }
 
-    fn append_children_mut(&mut self, child_id: usize, tag: &str) {
-        let mut child_element = self.children.borrow_mut();
-        child_element.push(XmlElementChild {
-            id: child_id,
-            tag: tag.to_string(),
-        });
+    fn append_children_mut(&mut self, child_id: usize, tag: &str) -> AnyResult<(), AnyError> {
+        self.children
+            .try_borrow_mut()
+            .context("Failed to Pull children handle")?
+            .push(XmlElementChild {
+                id: child_id,
+                tag: tag.to_string(),
+            });
+        Ok(())
     }
 
     fn insert_children_before_tag_mut(&mut self, child_id: usize, tag: &str, find_tag: &str) {

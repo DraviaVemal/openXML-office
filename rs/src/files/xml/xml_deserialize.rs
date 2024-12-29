@@ -49,7 +49,8 @@ impl XmlDeSerializer {
                             return Err(anyhow!("Loop Safety Error Triggered at XML Deserialized"));
                         }
                         if let Some(current_element) = xml_document.get_element(&parent_id) {
-                            if let Some(current_id) = current_element.pop_child_id_mut() {
+                            if let Some((current_id, element_tag)) = current_element.pop_child_mut()
+                            {
                                 // Pop Next Valid Child From the tree
                                 if let Some(element) = xml_document.get_element(&current_id) {
                                     if element.is_empty_tag() {
@@ -70,6 +71,11 @@ impl XmlDeSerializer {
                                             parent_id = current_id
                                         }
                                     }
+                                } else {
+                                    return Err(anyhow!(
+                                        "Un know element ID is Pull failed : {}",
+                                        element_tag
+                                    ));
                                 }
                             } else {
                                 if parent_id == 0 {

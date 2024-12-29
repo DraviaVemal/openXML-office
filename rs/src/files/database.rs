@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{Connection, Row, ToSql};
+use rusqlite::{Connection, OpenFlags, Row, ToSql};
 use std::{fs::remove_file, path::PathBuf};
 use tempfile::env::temp_dir;
 
@@ -46,11 +46,31 @@ impl SqliteDatabases {
         let archive_db;
         if is_in_memory {
             // In memory operation
-            archive_db = Connection::open_in_memory()
-                .map_err(|e| anyhow!("Open in memory DB failed. {}", e))?;
+            archive_db = Connection::open_in_memory_with_flags(
+                OpenFlags::SQLITE_OPEN_READ_WRITE
+                    | OpenFlags::SQLITE_OPEN_CREATE
+                    | OpenFlags::SQLITE_OPEN_FULL_MUTEX,
+            )
+            .map_err(|e| anyhow!("Open in memory DB failed. {}", e))?;
         } else {
-            archive_db = Connection::open(db_path).context("Open File Based DB failed")?;
+            archive_db = Connection::open_with_flags(
+                db_path,
+                OpenFlags::SQLITE_OPEN_READ_WRITE
+                    | OpenFlags::SQLITE_OPEN_CREATE
+                    | OpenFlags::SQLITE_OPEN_FULL_MUTEX,
+            )
+            .context("Open File Based DB failed")?;
         }
+        archive_db.execute_batch(
+            "
+                PRAGMA journal_mode = WAL;
+                PRAGMA synchronous = OFF;
+                PRAGMA cache_size = 204800;
+                PRAGMA temp_store = MEMORY;
+                PRAGMA locking_mode = EXCLUSIVE;
+                PRAGMA foreign_keys = OFF;
+            ",
+        )?;
         Ok(archive_db)
     }
 
@@ -69,20 +89,38 @@ impl SqliteDatabases {
             .context("Failed to Run Create Table Query")
     }
 
+    pub(crate) fn insert_records(
+        &self,
+        query: &str,
+        params_list: &[&[&(dyn ToSql)]],
+        table_name: Option<String>,
+    ) -> AnyResult<(), AnyError> {
+        let mut execute_query = query.to_owned();
+        if let Some(table_name) = table_name {
+            execute_query = execute_query.replace("{}", &table_name);
+        }
+        let mut stmt = self.connection.prepare(&execute_query)?;
+        for params in params_list {
+            stmt.execute(params.to_owned())?;
+        }
+        Ok(())
+    }
+
     /// Insert Record Into Database
     pub(crate) fn insert_record(
         &self,
         query: &str,
         params: &[&(dyn ToSql)],
         table_name: Option<String>,
-    ) -> AnyResult<usize, AnyError> {
+    ) -> AnyResult<(), AnyError> {
         let mut execute_query = query.to_owned();
         if let Some(table_name) = table_name {
             execute_query = execute_query.replace("{}", &table_name);
         }
         self.connection
             .execute(&execute_query, params)
-            .context("Failed to Run Insert Record Query")
+            .context("Failed to Run Insert Record Query")?;
+        Ok(())
     }
 
     pub(crate) fn get_count(

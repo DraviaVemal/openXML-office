@@ -1,4 +1,5 @@
 use crate::{
+    converters::ConverterUtil,
     element_dictionary::EXCEL_TYPE_COLLECTION,
     files::{OfficeDocument, XmlDocument, XmlElement, XmlSerializer},
     get_all_queries,
@@ -181,7 +182,7 @@ impl StylePart {
                     if let Some(number_formats) = number_formats_vec.pop() {
                         // Load Number Format from File if exist
                         loop {
-                            if let Some(element_id) = number_formats.pop_child_id_mut() {
+                            if let Some((element_id, _)) = number_formats.pop_child_mut() {
                                 let num_fmt = xml_doc_mut
                                     .pop_element_mut(&element_id)
                                     .ok_or(anyhow!("Element not Found Error"))?;
@@ -222,14 +223,14 @@ impl StylePart {
                         // fonts
                         loop {
                             // Loop every font element
-                            if let Some(font_id) = fonts.pop_child_id_mut() {
+                            if let Some((font_id, _)) = fonts.pop_child_mut() {
                                 // font
                                 let font = xml_doc_mut
                                     .pop_element_mut(&font_id)
                                     .ok_or(anyhow!("Element not Found Error"))?;
                                 let mut font_style = FontStyle::default();
                                 loop {
-                                    if let Some(item_id) = font.pop_child_id_mut() {
+                                    if let Some((item_id, _)) = font.pop_child_mut() {
                                         let current_element = xml_doc_mut
                                             .pop_element_mut(&item_id)
                                             .ok_or(anyhow!("Failed to pull child element"))?;
@@ -359,12 +360,13 @@ impl StylePart {
                 if let Some(mut fills_vec) = xml_doc_mut.pop_elements_by_tag_mut("fills", None) {
                     if let Some(fills) = fills_vec.pop() {
                         loop {
-                            if let Some(fill_id) = fills.pop_child_id_mut() {
+                            if let Some((fill_id, _)) = fills.pop_child_mut() {
                                 let current_element = xml_doc_mut
                                     .pop_element_mut(&fill_id)
                                     .ok_or(anyhow!("Failed to pull child element"))?;
                                 let mut fill_style = FillStyle::default();
-                                if let Some(pattern_fill_id) = current_element.pop_child_id_mut() {
+                                if let Some((pattern_fill_id, _)) = current_element.pop_child_mut()
+                                {
                                     if let Some(pattern_fill) =
                                         xml_doc_mut.pop_element_mut(&pattern_fill_id)
                                     {
@@ -377,8 +379,8 @@ impl StylePart {
                                                 fill_style.pattern_type =
                                                     PatternTypeValues::get_enum(pattern_type);
                                                 loop {
-                                                    if let Some(child_id) =
-                                                        pattern_fill.pop_child_id_mut()
+                                                    if let Some((child_id, _)) =
+                                                        pattern_fill.pop_child_mut()
                                                     {
                                                         if let Some(pop_child) =
                                                             xml_doc_mut.pop_element_mut(&child_id)
@@ -507,11 +509,11 @@ impl StylePart {
                 {
                     if let Some(borders) = borders_vec.pop() {
                         loop {
-                            if let Some(border_id) = borders.pop_child_id_mut() {
+                            if let Some((border_id, _)) = borders.pop_child_mut() {
                                 if let Some(border) = xml_doc_mut.pop_element_mut(&border_id) {
                                     let mut border_style = BorderStyle::default();
                                     loop {
-                                        if let Some(border_child_id) = border.pop_child_id_mut() {
+                                        if let Some((border_child_id, _)) = border.pop_child_mut() {
                                             if let Some(current_element) =
                                                 xml_doc_mut.pop_element_mut(&border_child_id)
                                             {
@@ -1008,7 +1010,7 @@ impl StylePart {
         query_target: &str,
     ) -> Result<(), AnyError> {
         loop {
-            if let Some(xf_id) = style_xfs.pop_child_id_mut() {
+            if let Some((xf_id, _)) = style_xfs.pop_child_mut() {
                 let mut cell_xf = CellXfs::default();
                 if let Some(current_element) = xml_doc_mut.pop_element_mut(&xf_id) {
                     if let Some(attributes) = current_element.get_attribute() {
@@ -1034,37 +1036,29 @@ impl StylePart {
                                 format_id.parse().context("Number Format Id Parse Failed")?;
                         }
                         if let Some(apply_protection) = attributes.get("applyProtection") {
-                            cell_xf.apply_protection = apply_protection
-                                .parse()
-                                .context("Number Apply Protection Parse Failed")?;
+                            cell_xf.apply_protection =
+                                ConverterUtil::normalize_bool_property(apply_protection);
                         }
                         if let Some(apply_alignment) = attributes.get("applyAlignment") {
-                            cell_xf.apply_alignment = apply_alignment
-                                .parse()
-                                .context("Number Apply Alignment Parse Failed")?;
+                            cell_xf.apply_alignment =
+                                ConverterUtil::normalize_bool_property(apply_alignment);
                         }
                         if let Some(apply_border) = attributes.get("applyBorder") {
-                            cell_xf.apply_border = apply_border
-                                .parse()
-                                .context("Number Apply Border Parse Failed")?;
+                            cell_xf.apply_border =
+                                ConverterUtil::normalize_bool_property(apply_border);
                         }
                         if let Some(apply_fill) = attributes.get("applyFill") {
-                            cell_xf.apply_fill = apply_fill
-                                .parse()
-                                .context("Number Apply Fill Parse Failed")?;
+                            cell_xf.apply_fill = ConverterUtil::normalize_bool_property(apply_fill);
                         }
                         if let Some(apply_font) = attributes.get("applyFont") {
-                            cell_xf.apply_font = apply_font
-                                .parse()
-                                .context("Number Apply Font Parse Failed")?;
+                            cell_xf.apply_font = ConverterUtil::normalize_bool_property(apply_font);
                         }
                         if let Some(apply_number_format) = attributes.get("applyNumberFormat") {
-                            cell_xf.apply_number_format = apply_number_format
-                                .parse()
-                                .context("Number Apply Number Format Parse Failed")?;
+                            cell_xf.apply_number_format =
+                                ConverterUtil::normalize_bool_property(apply_number_format);
                         }
                         // Load Alignment Values if exist
-                        if let Some(alignment_id) = current_element.pop_child_id_mut() {
+                        if let Some((alignment_id, _)) = current_element.pop_child_mut() {
                             if let Some(alignment_element) =
                                 xml_doc_mut.pop_element_mut(&alignment_id)
                             {
@@ -1073,9 +1067,8 @@ impl StylePart {
                                 {
                                     if let Some(is_wrap_text) = alignment_attributes.get("wrapText")
                                     {
-                                        cell_xf.is_wrap_text = is_wrap_text
-                                            .parse()
-                                            .context("Number Wrap Text Parse Failed")?;
+                                        cell_xf.is_wrap_text =
+                                            ConverterUtil::normalize_bool_property(is_wrap_text);
                                     }
                                     if let Some(vertical_alignment) =
                                         alignment_attributes.get("vertical")
@@ -1138,7 +1131,7 @@ impl StylePart {
             if let Some(style) = attributes.get("style") {
                 border.style = BorderStyleValues::get_enum(&style);
                 if border.style != BorderStyleValues::None {
-                    if let Some(color_id) = current_element.pop_child_id_mut() {
+                    if let Some((color_id, _)) = current_element.pop_child_mut() {
                         if let Some(color_element) = xml_doc_mut.pop_element_mut(&color_id) {
                             if let Some(attributes) = color_element.get_attribute() {
                                 if let Some(theme) = attributes.get("theme") {

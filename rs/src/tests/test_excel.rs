@@ -1,7 +1,7 @@
 use chrono::Utc;
 use std::fs::{create_dir, exists};
 
-use crate::global_2007::traits::XmlDocumentPartCommon;
+use crate::{global_2007::traits::XmlDocumentPartCommon, spreadsheet_2007::models::ColumnCell};
 
 fn get_save_file(dynamic_path: Option<&str>) -> String {
     let result_path = "test_results";
@@ -168,8 +168,28 @@ fn edit_excel() {
         },
     )
     .expect("Open Existing File Failed");
-    file.get_worksheet_mut("formula".to_string())
-        .expect("Failed to find the worksheet");
+    {
+        let mut formula = file
+            .get_worksheet_mut("formula".to_string())
+            .expect("Failed to find the worksheet");
+        formula
+            .set_row_value_mut(
+                "V3",
+                vec![
+                    ColumnCell {
+                        value: Some("Dravia".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::InlineString,
+                        ..ColumnCell::default()
+                    },
+                    ColumnCell {
+                        value: Some("Vemal".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::InlineString,
+                        ..ColumnCell::default()
+                    },
+                ],
+            )
+            .expect("Failed To Set Row Value");
+    }
     file.get_worksheet_mut("Style".to_string())
         .expect("Failed to find the worksheet");
     file.save_as(&get_save_file(None))

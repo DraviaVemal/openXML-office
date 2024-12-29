@@ -54,6 +54,32 @@ VALUES
         ?,
         ?,
         ?
+    );
+
+-- query : insert_conflict_dynamic_sheet# 
+INSERT INTO
+    {} (
+        row_id,
+        col_id,
+        cell_style_id,
+        cell_value,
+        cell_formula,
+        cell_type,
+        cell_metadata,
+        cell_place_holder,
+        cell_comment_id
+    )
+VALUES
+    (
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?
     ) ON CONFLICT (row_id, col_id) DO
 UPDATE
 SET
@@ -91,6 +117,34 @@ VALUES
         ?,
         ?,
         ?
+    );
+
+-- query : insert_conflict_dynamic_sheet_row# 
+INSERT INTO
+    {} (
+        row_id,
+        row_hide,
+        row_span,
+        row_height,
+        row_style_id,
+        row_thick_top,
+        row_thick_bottom,
+        row_group_level,
+        row_collapsed,
+        row_place_holder
+    )
+VALUES
+    (
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?
     ) ON CONFLICT (row_id) DO
 UPDATE
 SET
@@ -102,7 +156,7 @@ SET
     row_thick_bottom = excluded.row_thick_bottom,
     row_group_level = excluded.row_group_level,
     row_collapsed = excluded.row_collapsed,
-    row_place_holder = excluded.row_place_holder
+    row_place_holder = excluded.row_place_holder;
 
 -- query : select_all_dynamic_sheet# 
 SELECT

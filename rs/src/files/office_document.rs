@@ -103,7 +103,6 @@ impl OfficeDocument {
     ) -> AnyResult<Weak<RefCell<XmlDocument>>, AnyError> {
         let ref_xml_document = Rc::new(RefCell::new(xml_tree));
         let weak_xml_document = Rc::downgrade(&ref_xml_document);
-        // TODO : Did as quick fix to maintain the order. Refactor on next pass
         self.xml_document_collection.insert(
             file_name.to_string(),
             (
@@ -177,7 +176,10 @@ impl OfficeDocument {
                 .try_borrow_mut()
                 .context("Failed to get document handle")?;
             let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc_mut)
-                .context("Xml Tree to String content")?;
+                .context(format!(
+                    "Failed Xml Tree to String content, File : {}",
+                    file_path
+                ))?;
             Self::insert_update_archive_record(
                 &self.sqlite_database,
                 &self.queries,
