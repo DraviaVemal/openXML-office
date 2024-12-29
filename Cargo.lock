@@ -553,8 +553,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "draviavemal_openxml_office"
-version = "4.0.0"
+name = "draviavemal-openxml_office"
+version = "4.0.0-alpha.1"
 dependencies = [
  "anyhow",
  "bincode",
@@ -571,6 +571,16 @@ dependencies = [
  "tokio",
  "uuid",
  "zip",
+]
+
+[[package]]
+name = "draviavemal-openxml_office_ffi"
+version = "4.0.0-alpha.1"
+dependencies = [
+ "anyhow",
+ "cbindgen",
+ "draviavemal-openxml_office",
+ "flatbuffers",
 ]
 
 [[package]]
@@ -953,16 +963,6 @@ name = "oorandom"
 version = "11.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b410bbe7e14ab526a0e86877eb47c6996a2bd7746f027ba551028c925390e4e9"
-
-[[package]]
-name = "openxmloffice_ffi"
-version = "4.0.0"
-dependencies = [
- "anyhow",
- "cbindgen",
- "draviavemal_openxml_office",
- "flatbuffers",
-]
 
 [[package]]
 name = "os_str_bytes"
