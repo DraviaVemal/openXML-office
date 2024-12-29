@@ -400,7 +400,7 @@ impl WorkbookPart {
                 if let Some(sheets) = sheets_vec.pop() {
                     // Load Sheet from File if exist
                     loop {
-                        if let Some(sheet_id) = sheets.pop_child_id_mut() {
+                        if let Some((sheet_id, _)) = sheets.pop_child_mut() {
                             if let Some(sheet) = xml_doc_mut.pop_element_mut(&sheet_id) {
                                 if let Some(attributes) = sheet.get_attribute() {
                                     let name = attributes.get("name").ok_or(anyhow!(

@@ -99,12 +99,11 @@ impl RelationsPart {
             let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("Failed for get XML Handle")?;
-            if let Some(ids) = xml_doc_mut.get_element_ids_by_tag("Relationship", None) {
-                for element_id in ids {
-                    let relationship = xml_doc_mut
-                        .pop_element_mut(&element_id)
-                        .ok_or(anyhow!("Failed to Get Target Element"))?;
-                    let attributes = relationship
+            if let Some(relationship_elements) =
+                xml_doc_mut.pop_elements_by_tag_mut("Relationship", None)
+            {
+                for relationship_element in relationship_elements {
+                    let attributes = relationship_element
                         .get_attribute()
                         .ok_or(anyhow!("Failed! Relationship attributes missing"))?;
                     relationships.push((

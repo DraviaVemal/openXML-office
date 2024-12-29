@@ -37,9 +37,17 @@ impl ConverterUtil {
     /// Return
     pub fn get_cell_int(cell_key: &str) -> AnyResult<(usize, usize), AnyError> {
         Ok((
-            Self::get_column_int(cell_key).context("Failed to Convert to int key")?,
             Self::extract_digits(cell_key).context("Failed to extract int key")?,
+            Self::get_column_int(cell_key).context("Failed to Convert to int key")?,
         ))
+    }
+
+    /// convert open-xml bool flag property
+    pub(crate) fn normalize_bool_property(value: &str) -> u8 {
+        match value.trim() {
+            "true" | "1" => 1,
+            _ => 0,
+        }
     }
 
     fn extract_digits(input: &str) -> AnyResult<usize> {

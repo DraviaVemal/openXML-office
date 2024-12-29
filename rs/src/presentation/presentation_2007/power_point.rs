@@ -5,7 +5,7 @@ use crate::{
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
 };
-use anyhow::{Context, Error as AnyError, Ok, Result as AnyResult};
+use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
 #[derive(Debug)]

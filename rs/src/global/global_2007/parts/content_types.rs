@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use crate::{
-    files::{XmlDeSerializer, XmlDocument, XmlSerializer},
     element_dictionary::COMMON_TYPE_COLLECTION,
+    files::{XmlDeSerializer, XmlDocument, XmlSerializer},
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 
@@ -19,13 +19,9 @@ impl ContentTypesPart {
     }
     pub(crate) fn get_extensions(&mut self) -> AnyResult<Option<Vec<(String, String)>>, AnyError> {
         let mut elements: Vec<(String, String)> = Vec::new();
-        if let Some(element_ids) = self.xml_document.get_element_ids_by_tag("Default", None) {
-            for element_id in element_ids {
-                let element = self
-                    .xml_document
-                    .pop_element_mut(&element_id)
-                    .ok_or(anyhow!("Element Id not Found"))?;
-                let attributes = element
+        if let Some(default_elements) = self.xml_document.pop_elements_by_tag_mut("Default", None) {
+            for default_element in default_elements {
+                let attributes = default_element
                     .get_attribute()
                     .ok_or(anyhow!("Element Attribute not Found"))?;
                 elements.push((

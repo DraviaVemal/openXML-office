@@ -195,7 +195,7 @@ impl ShareStringPart {
                     .context("xml doc borrow failed")?;
                 if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("si", None) {
                     for element in elements {
-                        if let Some(child_id) = element.get_first_child_id() {
+                        if let Some((child_id, _)) = element.pop_child_mut() {
                             if let Some(text_element) = xml_doc_mut.pop_element_mut(&child_id) {
                                 let value =
                                     text_element.get_value().clone().unwrap_or("".to_string());

@@ -500,7 +500,7 @@ impl WorkSheet {
                         // Process the columns record if parent node exist
                         if let Some(cols) = cols_element.pop() {
                             loop {
-                                if let Some(col_elements) = cols.pop_child_id_mut() {
+                                if let Some((col_elements, _)) = cols.pop_child_mut() {
                                     if let Some(col) = xml_doc_mut.pop_element_mut(&col_elements) {
                                         let mut column_properties = ColumnProperties::default();
                                         let attributes = col
@@ -570,7 +570,7 @@ impl WorkSheet {
                         if let Some(sheet_data) = sheet_data_element.pop() {
                             // Loop All rows of sheet data
                             loop {
-                                if let Some(row_id) = sheet_data.pop_child_id_mut() {
+                                if let Some((row_id, _)) = sheet_data.pop_child_mut() {
                                     if let Some(row_element) = xml_doc_mut.pop_element_mut(&row_id)
                                     {
                                         let mut db_row_record = RowRecord::default();
@@ -680,7 +680,7 @@ impl WorkSheet {
                                         // Loop All Columns of row
                                         loop {
                                             let mut db_cell_record = CellRecord::default();
-                                            if let Some(col_id) = row_element.pop_child_id_mut() {
+                                            if let Some((col_id, _)) = row_element.pop_child_mut() {
                                                 if let Some(col_element) =
                                                     xml_doc_mut.pop_element_mut(&col_id)
                                                 {
@@ -737,8 +737,8 @@ impl WorkSheet {
                                                             };
                                                     };
                                                     loop {
-                                                        if let Some(cell_child_id) =
-                                                            col_element.pop_child_id_mut()
+                                                        if let Some((cell_child_id, _)) =
+                                                            col_element.pop_child_mut()
                                                         {
                                                             if let Some(element) = xml_doc_mut
                                                                 .pop_element_mut(&cell_child_id)
@@ -757,9 +757,8 @@ impl WorkSheet {
                                                                             .clone();
                                                                     }
                                                                     "is" => {
-                                                                        if let Some(text_id) =
-                                                                            element
-                                                                                .pop_child_id_mut()
+                                                                        if let Some((text_id, _)) =
+                                                                            element.pop_child_mut()
                                                                         {
                                                                             if let Some(
                                                                                 text_element,
@@ -817,13 +816,7 @@ impl WorkSheet {
                 }
                 // unwrap dimension
                 {
-                    if let Some(mut dimension_id) =
-                        xml_doc_mut.get_element_ids_by_tag("dimension", None)
-                    {
-                        if let Some(dimension_id) = dimension_id.pop() {
-                            xml_doc_mut.pop_element_mut(&dimension_id);
-                        }
-                    }
+                    xml_doc_mut.pop_elements_by_tag_mut("dimension", None);
                 }
             }
         }
@@ -985,7 +978,7 @@ impl WorkSheet {
                 .context("Failed to get office doc handle")?;
             let insert_query = self
                 .queries
-                .get("insert_dynamic_sheet")
+                .get("insert_conflict_dynamic_sheet")
                 .ok_or(anyhow!("Failed to Get Insert Query"))?;
             loop {
                 if let Some(cell_data) = column_cell.pop() {
