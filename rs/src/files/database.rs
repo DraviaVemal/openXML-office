@@ -173,7 +173,7 @@ impl SqliteDatabases {
         }
     }
 
-    /// Find multiple results and map each row to a specific type using the closure.
+    /// Find results and map each row to a specific type using the closure.
     pub(crate) fn find_many<F, T>(
         &self,
         query: &str,
