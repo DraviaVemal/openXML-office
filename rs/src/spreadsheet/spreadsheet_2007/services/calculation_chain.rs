@@ -39,7 +39,7 @@ impl XmlDocumentPartCommon for CalculationChainPart {
             }
             let string_collection = office_doc_ref
                 .try_borrow()
-                .context("Failed to get office handle")?
+                .context("Failed to get office handle at Calculation Chain")?
                 .get_connection()
                 .find_many(&select_query, params![], row_mapper, None)
                 .context("Failed to Pull All Calculation Chain Items")?;

@@ -18,7 +18,7 @@ use crate::{
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::{params, Row};
 use std::{
-    cell::RefCell,
+    cell::{self, RefCell},
     collections::HashMap,
     rc::{Rc, Weak},
 };
@@ -973,19 +973,51 @@ impl WorkSheet {
         mut column_cell: Vec<ColumnCell>,
     ) -> AnyResult<(), AnyError> {
         if let Some(office_document) = self.office_document.upgrade() {
-            let office_doc_mut = office_document
-                .try_borrow_mut()
-                .context("Failed to get office doc handle")?;
             let insert_query = self
                 .queries
                 .get("insert_conflict_dynamic_sheet")
-                .ok_or(anyhow!("Failed to Get Insert Query"))?;
+                .ok_or(anyhow!("Failed to Get Insert Query"))?
+                .to_owned();
             loop {
-                if let Some(cell_data) = column_cell.pop() {
+                if let Some(mut cell_data) = column_cell.pop() {
+                    if let Some(cell_value) = cell_data.value.as_ref() {
+                        match cell_data.data_type {
+                            CellDataType::Auto => {
+                                if cell_value.parse::<f64>().is_ok() {
+                                    cell_data.data_type = CellDataType::Number;
+                                } else if cell_value.parse::<bool>().is_ok() {
+                                    cell_data.data_type = CellDataType::Boolean;
+                                    if cell_value.parse::<bool>().context("Parse Fail")? {
+                                        cell_data.value = Some("1".to_string());
+                                    } else {
+                                        cell_data.value = Some("0".to_string());
+                                    }
+                                } else {
+                                    cell_data.data_type = CellDataType::ShareString;
+                                    cell_data.value = Some(self.update_share_string(cell_value)?);
+                                }
+                            }
+                            CellDataType::ShareString => {
+                                cell_data.value = Some(self.update_share_string(cell_value)?);
+                            }
+                            CellDataType::Boolean => {
+                                cell_data.value = match cell_value.to_lowercase().as_str() {
+                                    "false" | "0" | "" => Some("0".to_string()),
+                                    _ => Some("1".to_string()),
+                                }
+                            }
+                            _ => {}
+                        }
+                    } else {
+                        cell_data.data_type = CellDataType::Number;
+                    }
+                    let office_doc_mut = office_document
+                        .try_borrow_mut()
+                        .context("Failed to get office doc handle")?;
                     office_doc_mut
                         .get_connection()
                         .insert_record(
-                            insert_query,
+                            &insert_query,
                             params![
                                 row_id,
                                 col_id,
@@ -993,9 +1025,9 @@ impl WorkSheet {
                                 cell_data.value,
                                 cell_data.formula,
                                 CellDataType::get_string(cell_data.data_type),
-                                None::<String>,
-                                None::<bool>,
-                                None::<usize>
+                                cell_data.metadata,
+                                cell_data.place_holder,
+                                cell_data.comment_id
                             ],
                             Some(
                                 self.file_path
@@ -1014,6 +1046,18 @@ impl WorkSheet {
             }
         }
         Ok(())
+    }
+
+    fn update_share_string(&mut self, cell_value: &String) -> AnyResult<String, AnyError> {
+        if let Some(common_service) = self.common_service.upgrade() {
+            common_service
+                .try_borrow_mut()
+                .context("Failed to Get Share String Handle")?
+                .get_string_id(cell_value.to_owned())
+                .context("Failed to get share string id")
+        } else {
+            Err(anyhow!("Failed to update Share String Record"))
+        }
     }
 
     /// Add hyper link to current document

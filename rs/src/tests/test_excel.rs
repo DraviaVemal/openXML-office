@@ -178,12 +178,12 @@ fn edit_excel() {
                 vec![
                     ColumnCell {
                         value: Some("Dravia".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::InlineString,
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         ..ColumnCell::default()
                     },
                     ColumnCell {
                         value: Some("Vemal".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::InlineString,
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         ..ColumnCell::default()
                     },
                 ],

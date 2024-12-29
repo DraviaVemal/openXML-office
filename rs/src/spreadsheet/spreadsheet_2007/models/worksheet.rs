@@ -3,6 +3,8 @@ use crate::global_2007::traits::Enum;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CellDataType {
+    /// Use if you want the package to auto detect best fit
+    Auto,
     Number,
     Boolean,
     String,
@@ -19,7 +21,8 @@ impl Enum<CellDataType> for CellDataType {
             CellDataType::ShareString => "s".to_string(),
             CellDataType::InlineString => "inlineStr".to_string(),
             CellDataType::Error => "e".to_string(),
-            _ => "n".to_string(),
+            CellDataType::Number => "n".to_string(),
+            _ => "a".to_string(),
         }
     }
     fn get_enum(input_string: &str) -> CellDataType {
@@ -28,8 +31,9 @@ impl Enum<CellDataType> for CellDataType {
             "str" => CellDataType::String,
             "s" => CellDataType::ShareString,
             "inlineStr" => CellDataType::InlineString,
+            "n" => CellDataType::Number,
             "e" => CellDataType::Error,
-            _ => CellDataType::Number,
+            _ => CellDataType::Auto,
         }
     }
 }
@@ -107,6 +111,8 @@ pub struct ColumnCell {
     pub data_type: CellDataType,
     pub hyperlink_properties: Option<HyperlinkProperties>,
     pub style_id: Option<usize>,
+    // TODO: Future Items
+    pub(crate) metadata: Option<String>,
     pub(crate) comment_id: Option<usize>,
     pub(crate) place_holder: Option<bool>,
 }
@@ -116,9 +122,10 @@ impl ColumnCell {
         Self {
             formula: None,
             value: None,
-            data_type: CellDataType::Number,
+            data_type: CellDataType::Auto,
             hyperlink_properties: None,
             style_id: None,
+            metadata: None,
             comment_id: None,
             place_holder: None,
         }
