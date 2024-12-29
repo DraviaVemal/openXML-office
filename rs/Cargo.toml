@@ -5,9 +5,21 @@ description = "Crate to create and manipulate excel,power point and word documen
 license = "MIT"
 repository = "https://github.com/DraviaVemal/openxml-office"
 documentation = "https://openxml-office.draviavemal.com/"
-version = "4.0.0"
+homepage = "https://openxml-office.draviavemal.com/"
+readme = "./README.md"
+keywords = [
+    "Excel",
+    "Spreadsheet",
+    "Power Point",
+    "Presentation",
+    "xlsx",
+    "pptx",
+]
+categories = ["filesystem", "development-tools"]
+version = "4.0.0-alpha.1"
 edition = "2021"
 msrv = "1.32.0"
+exclude = ["src/tests"]
 
 [dependencies]
 uuid = { version = "1.11.0", features = [
