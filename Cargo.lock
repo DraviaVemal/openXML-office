@@ -553,8 +553,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "draviavemal_openxml_office"
-version = "4.0.0"
+name = "draviavemal-openxml_office"
+version = "4.0.0-alpha.1"
 dependencies = [
  "anyhow",
  "bincode",
@@ -571,6 +571,16 @@ dependencies = [
  "tokio",
  "uuid",
  "zip",
+]
+
+[[package]]
+name = "draviavemal-openxml_office_ffi"
+version = "4.0.0-alpha.1"
+dependencies = [
+ "anyhow",
+ "cbindgen",
+ "draviavemal-openxml_office",
+ "flatbuffers",
 ]
 
 [[package]]
@@ -955,16 +965,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b410bbe7e14ab526a0e86877eb47c6996a2bd7746f027ba551028c925390e4e9"
 
 [[package]]
-name = "openxmloffice_ffi"
-version = "4.0.0"
-dependencies = [
- "anyhow",
- "cbindgen",
- "draviavemal_openxml_office",
- "flatbuffers",
-]
-
-[[package]]
 name = "os_str_bytes"
 version = "6.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1102,9 +1102,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.89"
+version = "1.0.92"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f139b0662de085916d1fb67d2b4169d1addddda1919e696f3252b740b629986e"
+checksum = "37d3544b3f2748c54e147655edb5025752e2303145b5aefb3c3ea2c78b973bb0"
 dependencies = [
  "unicode-ident",
 ]
@@ -1393,9 +1393,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "2.0.85"
+version = "2.0.93"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5023162dfcd14ef8f32034d8bcd4cc5ddc61ef7a247c024a33e24e1f24d21b56"
+checksum = "9c786062daee0d6db1132800e623df74274a0a87322d8e183338e01b3d98d058"
 dependencies = [
  "proc-macro2",
  "quote",

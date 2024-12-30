@@ -64,6 +64,7 @@ impl OfficeDocument {
                     .get("count_archive_content")
                     .ok_or(anyhow!("Reading Query Failed"))?,
                 params![file_path],
+                None,
             )
             .context("Get count DB Execution Failed")?
         {
@@ -87,7 +88,7 @@ impl OfficeDocument {
             .unwrap()
             .to_owned();
         self.get_connection()
-            .delete_record(&query, params![file_path])
+            .delete_record(&query, params![file_path], None)
             .context("Delete File Record Failed")?;
         Ok(())
     }
@@ -102,7 +103,6 @@ impl OfficeDocument {
     ) -> AnyResult<Weak<RefCell<XmlDocument>>, AnyError> {
         let ref_xml_document = Rc::new(RefCell::new(xml_tree));
         let weak_xml_document = Rc::downgrade(&ref_xml_document);
-        // TODO : Did as quick fix to maintain the order. Refactor on next pass
         self.xml_document_collection.insert(
             file_name.to_string(),
             (
@@ -149,7 +149,7 @@ impl OfficeDocument {
         }
         let result = self
             .get_connection()
-            .find_one(&query, params![file_path], row_mapper)
+            .find_one(&query, params![file_path], row_mapper, None)
             .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
         if let Some((filet_content, content_type, file_extension, extension_type)) = result {
             let decompressed_data: Vec<u8> =
@@ -169,13 +169,17 @@ impl OfficeDocument {
 
     /// Update the XML tree data to database and close the refCell
     pub(crate) fn close_xml_document(&mut self, file_path: &str) -> AnyResult<(), AnyError> {
-        let xml_tree_option = self.xml_document_collection.remove(file_path);
-        if let Some((xml_tree, content_type, file_extension, extension_type)) = xml_tree_option {
-            let mut xml_document = xml_tree
+        if let Some((xml_document, content_type, file_extension, extension_type)) =
+            self.xml_document_collection.remove(file_path)
+        {
+            let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("Failed to get document handle")?;
-            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_document)
-                .context("Xml Tree to String content")?;
+            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc_mut)
+                .context(format!(
+                    "Failed Xml Tree to String content, File : {}",
+                    file_path
+                ))?;
             Self::insert_update_archive_record(
                 &self.sqlite_database,
                 &self.queries,
@@ -222,7 +226,7 @@ impl OfficeDocument {
             .get("create_archive_table")
             .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
         sqlite_databases
-            .create_table(&archive_create)
+            .create_table(&archive_create, None)
             .context("Initialize Database Failed for Office Document")
     }
 
@@ -246,7 +250,7 @@ impl OfficeDocument {
             }
             let files = self
                 .sqlite_database
-                .find_many(&query, params![], row_mapper)
+                .find_many(&query, params![], row_mapper, None)
                 .context("Query Get Many Failed")?;
             for (file_name, content_type, file_content) in files {
                 if let Some(content_type) = content_type {
@@ -275,7 +279,7 @@ impl OfficeDocument {
             }
             let rows = self
                 .sqlite_database
-                .find_many(&query, params![], row_mapper)
+                .find_many(&query, params![], row_mapper, None)
                 .context("Query Get Many Failed")?;
             extensions = rows
                 .iter()
@@ -387,6 +391,7 @@ impl OfficeDocument {
                     compression_level,
                     compressed
                 ],
+                None,
             )
             .context("Archive content load failed.")?;
         Ok(())

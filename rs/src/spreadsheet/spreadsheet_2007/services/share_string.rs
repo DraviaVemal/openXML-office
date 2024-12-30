@@ -1,6 +1,6 @@
+use crate::element_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
-use crate::reference_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     get_all_queries,
@@ -19,6 +19,7 @@ pub struct ShareStringPart {
     office_document: Weak<RefCell<OfficeDocument>>,
     parent_relationship_part: Weak<RefCell<RelationsPart>>,
     xml_document: Weak<RefCell<XmlDocument>>,
+    queries: HashMap<String, String>,
     file_path: String,
 }
 
@@ -34,7 +35,8 @@ impl XmlDocumentPartCommon for ShareStringPart {
         Self: Sized,
     {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
-            let select_query = get_all_queries!("share_string.sql")
+            let select_query = self
+                .queries
                 .get("select_share_string_table")
                 .unwrap()
                 .to_owned();
@@ -45,15 +47,15 @@ impl XmlDocumentPartCommon for ShareStringPart {
                 .try_borrow()
                 .context("Failed to borrow Doc Handle")?
                 .get_connection()
-                .find_many(&select_query, params![], row_mapper)
+                .find_many(&select_query, params![], row_mapper, None)
                 .context("Getting Share String Records Failed")?;
             if string_collection.len() > 0 {
-                if let Some(xml_doc) = self.xml_document.upgrade() {
-                    let mut doc = xml_doc
+                if let Some(xml_document) = self.xml_document.upgrade() {
+                    let mut xml_doc_mut = xml_document
                         .try_borrow_mut()
                         .context("Failed to Pull Doc Reference")?;
                     // Update count & uniqueCount in root
-                    if let Some(root) = doc.get_root_mut() {
+                    if let Some(root) = xml_doc_mut.get_root_mut() {
                         if let Some(attributes) = root.get_attribute_mut() {
                             attributes
                                 .insert("count".to_string(), string_collection.len().to_string());
@@ -69,11 +71,12 @@ impl XmlDocumentPartCommon for ShareStringPart {
                         }
                     }
                     for string in string_collection {
-                        let parent_id = doc
+                        let parent_id = xml_doc_mut
                             .append_child_mut("si", None)
                             .context("Failed to Add Child")?
                             .get_id();
-                        doc.append_child_mut("t", Some(&parent_id))
+                        xml_doc_mut
+                            .append_child_mut("t", Some(&parent_id))
                             .context("Creating Share String Child Failed")?
                             .set_value_mut(string);
                     }
@@ -133,16 +136,18 @@ impl XmlDocumentPart for ShareStringPart {
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
         _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
+        let queries = get_all_queries!("share_string.sql");
         let file_name = Self::get_share_string_file_name(&parent_relationship_part)
             .context("Failed to pull share string file name")?
             .to_string();
         let mut xml_document = Self::get_xml_document(&office_document, &file_name)?;
-        Self::load_content_to_database(&office_document, &mut xml_document)
+        Self::load_content_to_database(&office_document, &mut xml_document, &queries)
             .context("Load Share String To DB Failed")?;
         Ok(Self {
             office_document,
             parent_relationship_part,
             xml_document,
+            queries,
             file_path: file_name,
         })
     }
@@ -172,9 +177,9 @@ impl ShareStringPart {
     fn load_content_to_database(
         office_document: &Weak<RefCell<OfficeDocument>>,
         xml_document: &mut Weak<RefCell<XmlDocument>>,
+        queries: &HashMap<String, String>,
     ) -> AnyResult<(), AnyError> {
         if let Some(office_doc_ref) = office_document.upgrade() {
-            let queries = get_all_queries!("share_string.sql");
             let create_query = queries
                 .get("create_share_string_table")
                 .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
@@ -186,19 +191,21 @@ impl ShareStringPart {
                 .context("Pulling Office Doc Failed")?;
             office_doc
                 .get_connection()
-                .create_table(&create_query)
+                .create_table(&create_query, None)
                 .context("Create Share String Table Failed")?;
-            if let Some(xml_doc) = xml_document.upgrade() {
-                let mut xml_doc_mut = xml_doc.try_borrow_mut().context("xml doc borrow failed")?;
+            if let Some(xml_document) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_document
+                    .try_borrow_mut()
+                    .context("xml doc borrow failed")?;
                 if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("si", None) {
                     for element in elements {
-                        if let Some(child_id) = element.get_first_child_id() {
+                        if let Some((child_id, _)) = element.pop_child_mut() {
                             if let Some(text_element) = xml_doc_mut.pop_element_mut(&child_id) {
                                 let value =
                                     text_element.get_value().clone().unwrap_or("".to_string());
                                 office_doc
                                     .get_connection()
-                                    .insert_record(&insert_query, params![value])
+                                    .insert_record(&insert_query, params![value], None)
                                     .context("Create Share String Table Failed")?;
                             }
                         }
@@ -207,5 +214,43 @@ impl ShareStringPart {
             }
         }
         Ok(())
+    }
+}
+
+impl ShareStringPart {
+    pub(crate) fn get_string_id(&self, value: String) -> AnyResult<String, AnyError> {
+        if let Some(office_doc_ref) = self.office_document.upgrade() {
+            let office_doc = office_doc_ref
+                .try_borrow_mut()
+                .context("Failed to get office handle Share String")?;
+            let insert_query = self
+                .queries
+                .get("insert_ignore_share_string_table")
+                .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+            office_doc
+                .get_connection()
+                .insert_record(&insert_query, params![value], None)
+                .context("Create Share String Table Failed")?;
+            let find_query = self
+                .queries
+                .get("select_find_share_string_table")
+                .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+            fn row_mapper(row: &Row) -> AnyResult<usize, rusqlite::Error> {
+                Ok(row.get(0)?)
+            }
+            let result = office_doc.get_connection().find_one(
+                &find_query,
+                params![value],
+                row_mapper,
+                None,
+            )?;
+            if let Some(id) = result {
+                Ok((id - 1).to_string())
+            } else {
+                Err(anyhow!("Failed to Get Share String id"))
+            }
+        } else {
+            Err(anyhow!("Failed to Get Office Doc Handle"))
+        }
     }
 }

@@ -8,14 +8,12 @@ impl XmlDeSerializer {
         let mut xml_content = String::new();
         #[cfg(debug_assertions)]
         {
-            xml_content.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>"#);
-            xml_content.push_str("\n");
+            xml_content.push_str(r#"<?xml version="1.0" encoding="utf-8"?>"#);
         }
         #[cfg(not(debug_assertions))]
         {
             use chrono::Utc;
-            xml_content.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>"#);
-            xml_content.push_str("\n");
+            xml_content.push_str(r#"<?xml version="1.0" encoding="utf-8"?>"#);
             xml_content.push_str(
                 format!(r#"<!--<dvmo:office><dvmo:appName>{}</dvmo:appName><dvmo:repo>{}</dvmo:repo><dvmo:version>{}</dvmo:version><dvmo:modified>{}</dvmo:modified></dvmo:office>-->"#,
                     env!("CARGO_PKG_NAME"),
@@ -51,7 +49,8 @@ impl XmlDeSerializer {
                             return Err(anyhow!("Loop Safety Error Triggered at XML Deserialized"));
                         }
                         if let Some(current_element) = xml_document.get_element(&parent_id) {
-                            if let Some(current_id) = current_element.pop_child_id_mut() {
+                            if let Some((current_id, element_tag)) = current_element.pop_child_mut()
+                            {
                                 // Pop Next Valid Child From the tree
                                 if let Some(element) = xml_document.get_element(&current_id) {
                                     if element.is_empty_tag() {
@@ -72,6 +71,11 @@ impl XmlDeSerializer {
                                             parent_id = current_id
                                         }
                                     }
+                                } else {
+                                    return Err(anyhow!(
+                                        "Un know element ID is Pull failed : {}",
+                                        element_tag
+                                    ));
                                 }
                             } else {
                                 if parent_id == 0 {

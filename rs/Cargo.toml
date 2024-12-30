@@ -1,11 +1,21 @@
 [package]
-name = "draviavemal_openxml_office"
+name = "draviavemal-openxml_office"
 authors = ["Dravia Vemal"]
 description = "Crate to create and manipulate excel,power point and word documents"
 license = "MIT"
 repository = "https://github.com/DraviaVemal/openxml-office"
 documentation = "https://openxml-office.draviavemal.com/"
-version = "4.0.0"
+homepage = "https://openxml-office.draviavemal.com/"
+readme = "./README.md"
+keywords = [
+    "office",
+    "openxml",
+    "xlsx",
+    "pptx",
+    "docx"
+]
+categories = ["filesystem", "development-tools"]
+version = "4.0.0-alpha.1"
 edition = "2021"
 msrv = "1.32.0"
 

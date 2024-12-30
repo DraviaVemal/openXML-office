@@ -1,7 +1,7 @@
 use crate::{
+    element_dictionary::{Content, COMMON_TYPE_COLLECTION},
     files::{OfficeDocument, XmlDocument},
     global_2007::traits::XmlDocumentPartCommon,
-    reference_dictionary::{Content, COMMON_TYPE_COLLECTION},
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
@@ -96,15 +96,14 @@ impl RelationsPart {
     ) -> AnyResult<Vec<(String, String, String)>, AnyError> {
         let mut relationships = Vec::new();
         if let Some(xml_document) = xml_document.upgrade() {
-            let mut xml_doc = xml_document
+            let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("Failed for get XML Handle")?;
-            if let Some(ids) = xml_doc.get_element_ids_by_tag("Relationship", None) {
-                for element_id in ids {
-                    let relationship = xml_doc
-                        .pop_element_mut(&element_id)
-                        .ok_or(anyhow!("Failed to Get Target Element"))?;
-                    let attributes = relationship
+            if let Some(relationship_elements) =
+                xml_doc_mut.pop_elements_by_tag_mut("Relationship", None)
+            {
+                for relationship_element in relationship_elements {
+                    let attributes = relationship_element
                         .get_attribute()
                         .ok_or(anyhow!("Failed! Relationship attributes missing"))?;
                     relationships.push((
@@ -132,7 +131,11 @@ impl RelationsPart {
             .file_path
             .find("_rels")
             .ok_or(anyhow!("Failed to string Prefix path from relation"))?;
-        Ok(self.file_path[..rels_position - 1].to_string())
+        if rels_position > 0 {
+            Ok(format!("{}/", &self.file_path[..rels_position - 1]))
+        } else {
+            Ok("".to_string())
+        }
     }
 
     pub(crate) fn get_target_by_id(
@@ -151,7 +154,7 @@ impl RelationsPart {
             if file_path.starts_with("/") {
                 Ok(Some(file_path.strip_prefix("/").unwrap().to_string()))
             } else {
-                Ok(Some(format!("{}/{}", relative_path, file_path)))
+                Ok(Some(format!("{}{}", relative_path, file_path)))
             }
         } else {
             Ok(None)
@@ -179,7 +182,7 @@ impl RelationsPart {
             if file_path.starts_with("/") {
                 Ok(file_path.strip_prefix("/").unwrap().to_string())
             } else {
-                Ok(format!("{}/{}", relative_path, file_path))
+                Ok(format!("{}{}", relative_path, file_path))
             }
         } else {
             self.set_new_relationship_mut(content, file_path.clone(), file_name.clone())

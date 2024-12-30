@@ -101,33 +101,33 @@ impl Excel {
     //     self.get_workbook_mut().minimize_workbook_mut(is_minimized)
     // }
 
-    pub fn hide_sheet_tabs_mut(&mut self, hide_tab: bool) -> AnyResult<(), AnyError> {
-        self.get_workbook_mut().hide_sheet_tabs_mut(hide_tab)
-    }
+    // pub fn hide_sheet_tabs_mut(&mut self, hide_tab: bool) -> AnyResult<(), AnyError> {
+    //     self.get_workbook_mut().hide_sheet_tabs_mut(hide_tab)
+    // }
 
-    pub fn hide_ruler_mut(&mut self, hide_ruler: bool) -> AnyResult<(), AnyError> {
-        self.get_workbook_mut().hide_ruler_mut(hide_ruler)
-    }
+    // pub fn hide_ruler_mut(&mut self, hide_ruler: bool) -> AnyResult<(), AnyError> {
+    //     self.get_workbook_mut().hide_ruler_mut(hide_ruler)
+    // }
 
-    pub fn hide_grid_lines_mut(&mut self, hide_grid_line: bool) -> AnyResult<(), AnyError> {
-        self.get_workbook_mut().hide_grid_lines_mut(hide_grid_line)
-    }
+    // pub fn hide_grid_lines_mut(&mut self, hide_grid_line: bool) -> AnyResult<(), AnyError> {
+    //     self.get_workbook_mut().hide_grid_lines_mut(hide_grid_line)
+    // }
 
-    pub fn hide_vertical_scroll_mut(
-        &mut self,
-        hide_vertical_scroll: bool,
-    ) -> AnyResult<(), AnyError> {
-        self.get_workbook_mut()
-            .hide_vertical_scroll_mut(hide_vertical_scroll)
-    }
+    // pub fn hide_vertical_scroll_mut(
+    //     &mut self,
+    //     hide_vertical_scroll: bool,
+    // ) -> AnyResult<(), AnyError> {
+    //     self.get_workbook_mut()
+    //         .hide_vertical_scroll_mut(hide_vertical_scroll)
+    // }
 
-    pub fn hide_horizontal_scroll_mut(
-        &mut self,
-        hide_horizontal_scroll: bool,
-    ) -> AnyResult<(), AnyError> {
-        self.get_workbook_mut()
-            .hide_horizontal_scroll_mut(hide_horizontal_scroll)
-    }
+    // pub fn hide_horizontal_scroll_mut(
+    //     &mut self,
+    //     hide_horizontal_scroll: bool,
+    // ) -> AnyResult<(), AnyError> {
+    //     self.get_workbook_mut()
+    //         .hide_horizontal_scroll_mut(hide_horizontal_scroll)
+    // }
 
     pub fn hide_sheet_mut(&mut self, sheet_name: String) -> AnyResult<(), AnyError> {
         self.get_workbook_mut().hide_sheet_mut(&sheet_name)

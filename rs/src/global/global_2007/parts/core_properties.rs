@@ -1,10 +1,10 @@
 use crate::{
+    element_dictionary::COMMON_TYPE_COLLECTION,
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::{
         parts::RelationsPart,
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
-    reference_dictionary::COMMON_TYPE_COLLECTION,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use chrono::Utc;
@@ -56,6 +56,20 @@ impl XmlDocumentPartCommon for CorePropertiesPart {
                         element.set_value_mut(
                             Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
                         );
+                    }
+                }
+                Err(_) => (),
+            }
+            match xml_document
+                .get_first_element_mut(vec!["cp:coreProperties", "dcterms:created"], None)
+            {
+                Ok(result) => {
+                    if let Some(element) = result {
+                        if !element.has_value() {
+                            element.set_value_mut(
+                                Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+                            );
+                        }
                     }
                 }
                 Err(_) => (),

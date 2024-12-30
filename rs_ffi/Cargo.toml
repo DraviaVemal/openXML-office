@@ -1,11 +1,11 @@
 [package]
-name = "openxmloffice_ffi"
+name = "draviavemal-openxml_office_ffi"
 authors = ["Dravia Vemal"]
 description = "FFI Interface crate for multi language support expansion"
 license = "MIT"
 repository = "https://github.com/DraviaVemal/openxml-office"
 documentation = "https://openxml-office.draviavemal.com/"
-version = "4.0.0"
+version = "4.0.0-alpha.1"
 edition = "2021"
 msrv = "1.32.0"
 
@@ -13,7 +13,7 @@ msrv = "1.32.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-draviavemal_openxml_office = { path = "../rs", version = ">= 4.0.0" }
+draviavemal-openxml_office = { path = "../rs", version = ">= 4.0.0-alpha.1" }
 flatbuffers = "24.3.25"
 anyhow = "1.0.90"
 
