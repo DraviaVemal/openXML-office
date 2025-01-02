@@ -12,17 +12,20 @@ layout:
     visible: true
 ---
 
-# Introduction🚧🛠️
+# Introduction
 
 Repository URL [https://github.com/DraviaVemal/openxml-office](https://github.com/DraviaVemal/OpenXML-Office)
 
 Create Presentation (pptx), Spreadsheet (xlsx) & Word (docx) file with ease.
 
-1. **Advanced .NET Library**: OpenXMLOffice utilizes the power of OpenXML SDK 3.0, focusing on PowerPoint, Excel, and Word files to streamline document creation and manipulation.
-2. **Developer-Centric Mission**: Our mission is to enhance the document creation experience for developers by providing intuitive namespaces, classes, and utilities.
-3. **Efficient and User-Friendly**: The library is designed for maximum efficiency and ease of use, ensuring a seamless workflow for developers.
-4. **Microsoft Office Support**: A minimum Microsoft Office support version of 2007 is required for optimal compatibility.
-5. **Multi-Language Support (Roadmap)**: The foundation DLL is developed in .NET, with capabilities seamlessly extended to languages such as C#, Go, NodeJS, and Python.
-6. **Language-Specific DLL Interface Wrappers (Roadmap)**: We distribute language-specific DLL interface wrappers, facilitating effortless integration into each language's major package management system.
-7. **Streamlined Development**: Developers can leverage these packages for streamlined code IDE auto-completion and in-process execution without additional dependencies.
-8. **Consistent Functionality and Performance**: This approach ensures a consistent level of functionality and performance across different languages, making development a smooth and efficient experience.
+**A Complete Rewrite in Rust for Seamless Document Creation**\
+openxml-office offers a modern, high-performance solution for creating and manipulating Office files (PowerPoint, Excel, and Word) with ease, now written entirely in Rust. This project eliminates the reliance on the OpenXML SDK and provides a developer-centric approach for efficient document creation.
+
+**Stage 1: Cross-Language Support**\
+The Rust core crate is complemented by a Rust FFI crate, generating shared libraries (.so, .dll, .dylib) for easy integration with C#, Python, and other languages. Stage 1 is progressing steadily, focusing on core XLSX, PPTX, and DOCX functionalities. The package is available for direct use in C# and Python, while further language support is underway.
+
+**Stage 2: Extending to More Languages**\
+Stage 2 of the roadmap will introduce official wrappers for Go, TypeScript, and Java. These wrappers will seamlessly integrate with each language’s package management system, enabling streamlined development and smooth IDE auto-completion.
+
+**Future-Proof and Efficient**\
+The openxml-office library is designed to be efficient, user-friendly, and compatible with Microsoft Office versions 2007 and beyond. Developers can expect a consistent level of functionality across languages, ensuring a smooth workflow with minimal dependencies.

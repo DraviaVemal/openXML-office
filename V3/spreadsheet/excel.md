@@ -12,7 +12,7 @@ layout:
     visible: true
 ---
 
-# Excel
+# Excel🚧🛠️
 
 The `Excel` class, an integral part of the `OpenXMLOffice.Spreadsheet` library, facilitates seamless interaction with Excel workbooks. Designed to simplify the creation and manipulation of Excel (.xlsx) files, this class provides a user-friendly interface for developers to efficiently handle data, worksheets, and formatting.
 
@@ -26,11 +26,31 @@ The `Excel` class, an integral part of the `OpenXMLOffice.Spreadsheet` library, 
 ### Basic Code Samples
 
 {% tabs %}
-{% tab title="C#" %}
+{% tab title="Rust🚧🛠️" %}
+
+{% endtab %}
+
+{% tab title="C#🚧🛠️" %}
 ```csharp
 Excel excel = new();
 Worksheet worksheet = excel.AddSheet();
 excel.SaveAs(string.Format("../../test-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
 ```
+{% endtab %}
+
+{% tab title="Python🚧🛠️" %}
+
+{% endtab %}
+
+{% tab title="Go🚧🛠️" %}
+
+{% endtab %}
+
+{% tab title="Java🚧🛠️" %}
+
+{% endtab %}
+
+{% tab title="TS🚧🛠️" %}
+
 {% endtab %}
 {% endtabs %}
