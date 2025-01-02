@@ -20,7 +20,17 @@ Feel free to start discussion for any new feature requirement. [Discussion Chann
 
 {% tabs %}
 {% tab title="Rust🚧🛠️" %}
+The library is available on crates.io. You can install it using the following command
 
+```bash
+#Using Package Manager
+cargo add draviavemal-openxml_office
+```
+
+```bash
+# Cargo.toml add below details
+draviavemal-openxml_office = "4.0.0-alpha.1"
+```
 {% endtab %}
 
 {% tab title="C#🚧🛠️" %}
@@ -68,25 +78,25 @@ Phase 2
 {% endtab %}
 {% endtabs %}
 
-### Package Quality
-
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh\&utm_medium=referral\&utm_content=\&utm_campaign=Badge_grade) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh\&utm_medium=referral\&utm_content=\&utm_campaign=Badge_coverage)
-
 ### Package Version Details
 
 {% tabs %}
 {% tab title="Rust🚧🛠️" %}
+The official release Crate package for openxml-office on Crates.io:
 
+<table><thead><tr><th width="264">Package</th><th width="117" align="center">Maintenance</th><th width="145" align="center">Current Stable Release</th><th align="center">Current Alpha Release</th></tr></thead><tbody><tr><td>draviavemal-openxml_office</td><td align="center">Active</td><td align="center"><img src="https://img.shields.io/crates/v/draviavemal-openxml_office?style=flat&#x26;link=https%3A%2F%2Fopenxml-office.draviavemal.com%2Fv4.x-alpha" alt="Crates.io Version" data-size="original"></td><td align="center"><img src="https://img.shields.io/crates/v/draviavemal-openxml_office?style=flat&#x26;link=https%3A%2F%2Fopenxml-office.draviavemal.com%2Fv4.x-alpha" alt="Crates.io Version" data-size="original"></td></tr></tbody></table>
 {% endtab %}
 
 {% tab title="C#🚧🛠️" %}
-The official release NuGet packages for OpenXMLOffice on NuGet.org:
+The official release NuGet packages for openxml-office on NuGet.org:
 
-<table><thead><tr><th width="264">Package</th><th width="117" align="center">Maintenance</th><th width="145" align="center">Current Stable Release</th><th align="center">Current Alpha Release</th></tr></thead><tbody><tr><td>OpenXMLOffice.Presentation</td><td align="center">Active</td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/v/OpenXMLOffice.Presentation.svg" alt="NuGet"></a></td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/vpre/OpenXMLOffice.Presentation.svg" alt="NuGet"></a></td></tr><tr><td>OpenXMLOffice.Spreadsheet</td><td align="center">Active</td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/v/OpenXMLOffice.Spreadsheet.svg" alt="NuGet"></a></td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/vpre/OpenXMLOffice.Spreadsheet.svg" alt="NuGet"></a></td></tr><tr><td>OpenXMLOffice.Document</td><td align="center">Active</td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Document"><img src="https://img.shields.io/nuget/v/OpenXMLOffice.Document.svg" alt="NuGet"></a></td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Document"><img src="https://img.shields.io/nuget/vpre/OpenXMLOffice.Document.svg" alt="NuGet"></a></td></tr></tbody></table>
+<table><thead><tr><th width="264">Package</th><th width="117" align="center">Maintenance</th><th width="145" align="center">Current Stable Release</th><th align="center">Current Alpha Release</th></tr></thead><tbody><tr><td>draviavemal.openxml-office</td><td align="center">Active</td><td align="center"></td><td align="center"></td></tr><tr><td>OpenXMLOffice.Presentation</td><td align="center">InActive</td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/v/OpenXMLOffice.Presentation.svg" alt="NuGet"></a></td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/vpre/OpenXMLOffice.Presentation.svg" alt="NuGet"></a></td></tr><tr><td>OpenXMLOffice.Spreadsheet</td><td align="center">InActive</td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/v/OpenXMLOffice.Spreadsheet.svg" alt="NuGet"></a></td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Presentation"><img src="https://img.shields.io/nuget/vpre/OpenXMLOffice.Spreadsheet.svg" alt="NuGet"></a></td></tr><tr><td>OpenXMLOffice.Document</td><td align="center">InActive</td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Document"><img src="https://img.shields.io/nuget/v/OpenXMLOffice.Document.svg" alt="NuGet"></a></td><td align="center"><a href="https://www.nuget.org/packages/OpenXMLOffice.Document"><img src="https://img.shields.io/nuget/vpre/OpenXMLOffice.Document.svg" alt="NuGet"></a></td></tr></tbody></table>
 {% endtab %}
 
 {% tab title="Python🚧🛠️" %}
 
+
+<table><thead><tr><th width="264">Package</th><th width="117" align="center">Maintenance</th><th width="145" align="center">Current Stable Release</th><th align="center">Current Alpha Release</th></tr></thead><tbody><tr><td>draviavemal-openxml_office</td><td align="center">Active</td><td align="center"><img src="https://img.shields.io/crates/v/draviavemal-openxml_office?style=flat&#x26;link=https%3A%2F%2Fopenxml-office.draviavemal.com%2Fv4.x-alpha" alt="Crates.io Version" data-size="original"></td><td align="center"><img src="https://img.shields.io/crates/v/draviavemal-openxml_office?style=flat&#x26;link=https%3A%2F%2Fopenxml-office.draviavemal.com%2Fv4.x-alpha" alt="Crates.io Version" data-size="original"></td></tr></tbody></table>
 {% endtab %}
 
 {% tab title="Go🚧🛠️" %}

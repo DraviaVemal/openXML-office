@@ -4,6 +4,8 @@
 
 * [Getting Started🚧🛠️](README.md)
 * [Introduction🚧🛠️](welcome/introduction.md)
+* [Benchmark🚧🛠️](welcome/benchmark.md)
+* [Status Badge 🚧🛠️](welcome/status-badge.md)
 * [Privacy Policy](welcome/privacy-policy.md)
 * [License](welcome/license.md)
 
