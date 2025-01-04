@@ -1,7 +1,6 @@
+use crate::global_2007::traits::XmlDocumentPartCommon;
 use chrono::Utc;
 use std::fs::{create_dir, exists};
-
-use crate::{global_2007::traits::XmlDocumentPartCommon, spreadsheet_2007::models::ColumnCell};
 
 fn get_save_file(dynamic_path: Option<&str>) -> String {
     let result_path = "test_results";
@@ -61,7 +60,10 @@ fn excel_handling() {
 fn sheet_handling() {
     let mut file = crate::spreadsheet_2007::Excel::new(
         None,
-        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+        crate::spreadsheet_2007::ExcelPropertiesModel {
+            is_in_memory: false,
+            ..crate::spreadsheet_2007::ExcelPropertiesModel::default()
+        },
     )
     .expect("Create New File Failed");
     file.add_sheet_mut(Some("Test".to_string()))
@@ -159,6 +161,107 @@ fn sheet_handling() {
 // }
 
 #[test]
+fn set_row_property() {
+    let mut file = crate::spreadsheet_2007::Excel::new(
+        Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
+        crate::spreadsheet_2007::ExcelPropertiesModel {
+            is_in_memory: false,
+            is_editable: true,
+        },
+    )
+    .expect("Open Existing File Failed");
+    let mut row_prop = file
+        .add_sheet_mut(Some("row_property".to_string()))
+        .expect("failed to add Sheet");
+    row_prop
+        .set_row_index_properties_mut(
+            &1,
+            Some(crate::spreadsheet_2007::models::RowProperties {
+                height: Some(100 as f32),
+                ..crate::spreadsheet_2007::models::RowProperties::default()
+            }),
+        )
+        .expect("Failed to set row height");
+    row_prop
+        .set_row_index_properties_mut(
+            &3,
+            Some(crate::spreadsheet_2007::models::RowProperties {
+                hidden: Some(true),
+                ..crate::spreadsheet_2007::models::RowProperties::default()
+            }),
+        )
+        .expect("Failed to set row height");
+    row_prop
+        .set_row_index_properties_mut(
+            &5,
+            Some(crate::spreadsheet_2007::models::RowProperties {
+                thick_bottom: Some(true),
+                ..crate::spreadsheet_2007::models::RowProperties::default()
+            }),
+        )
+        .expect("Failed to set row height");
+    row_prop
+        .set_row_index_properties_mut(
+            &7,
+            Some(crate::spreadsheet_2007::models::RowProperties {
+                thick_top: Some(true),
+                ..crate::spreadsheet_2007::models::RowProperties::default()
+            }),
+        )
+        .expect("Failed to set row height");
+    row_prop.flush().expect("Failed to write Data");
+    file.save_as(&get_save_file(None))
+        .expect("Save File Failed");
+    assert_eq!(true, true);
+}
+
+#[test]
+fn set_column_property() {
+    let mut file = crate::spreadsheet_2007::Excel::new(
+        Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
+        crate::spreadsheet_2007::ExcelPropertiesModel {
+            is_in_memory: false,
+            is_editable: true,
+        },
+    )
+    .expect("Open Existing File Failed");
+    let mut col_prop = file
+        .add_sheet_mut(Some("col_property".to_string()))
+        .expect("failed to add Sheet");
+    col_prop
+        .set_column_index_properties_mut(
+            &1,
+            Some(crate::spreadsheet_2007::models::ColumnProperties {
+                width: Some(200 as f32),
+                ..crate::spreadsheet_2007::models::ColumnProperties::default()
+            }),
+        )
+        .expect("Failed to Set Column prop");
+    col_prop
+        .set_column_index_properties_mut(
+            &3,
+            Some(crate::spreadsheet_2007::models::ColumnProperties {
+                hidden: Some(true),
+                ..crate::spreadsheet_2007::models::ColumnProperties::default()
+            }),
+        )
+        .expect("Failed to Set Column prop");
+    col_prop
+        .set_column_index_properties_mut(
+            &5,
+            Some(crate::spreadsheet_2007::models::ColumnProperties {
+                best_fit: Some(true),
+                ..crate::spreadsheet_2007::models::ColumnProperties::default()
+            }),
+        )
+        .expect("Failed to Set Column prop");
+    col_prop.flush().expect("Failed to write Data");
+    file.save_as(&get_save_file(None))
+        .expect("Save File Failed");
+    assert_eq!(true, true);
+}
+
+#[test]
 fn edit_excel() {
     let mut file = crate::spreadsheet_2007::Excel::new(
         Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
@@ -173,18 +276,18 @@ fn edit_excel() {
             .get_worksheet_mut("formula".to_string())
             .expect("Failed to find the worksheet");
         formula
-            .set_row_value_mut(
+            .set_row_value_ref_mut(
                 "V3",
                 vec![
-                    ColumnCell {
+                    crate::spreadsheet_2007::models::ColumnCell {
                         value: Some("Dravia".to_string()),
                         data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
-                        ..ColumnCell::default()
+                        ..crate::spreadsheet_2007::models::ColumnCell::default()
                     },
-                    ColumnCell {
+                    crate::spreadsheet_2007::models::ColumnCell {
                         value: Some("Vemal".to_string()),
                         data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
-                        ..ColumnCell::default()
+                        ..crate::spreadsheet_2007::models::ColumnCell::default()
                     },
                 ],
             )

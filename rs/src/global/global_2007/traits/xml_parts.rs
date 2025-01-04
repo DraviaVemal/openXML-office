@@ -60,7 +60,6 @@ pub(crate) trait XmlDocumentPart: XmlDocumentPartCommon {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
-        file_path: Option<&str>,
     ) -> AnyResult<Self, AnyError>
     where
         Self: Sized;

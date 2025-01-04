@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <PackageId>DraviaVemal.openxmloffice</PackageId>
+    <PackageId>draviavemal.openxml-office</PackageId>
     <WeaverCosturaOutputInProjectFolder>true</WeaverCosturaOutputInProjectFolder>
     <PackageDescription></PackageDescription>
     <PackageTags>OpenXML;Excel;SpreadSheet;Office;xls;xlsx;Document;Word;doc;docx;Power Point;Presentation;ppt;pptx</PackageTags>

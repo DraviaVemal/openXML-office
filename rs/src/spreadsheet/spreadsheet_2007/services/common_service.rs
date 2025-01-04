@@ -1,4 +1,5 @@
 use crate::global_2007::traits::XmlDocumentPartCommon;
+use crate::spreadsheet_2007::models::{StyleId, StyleSetting};
 use crate::spreadsheet_2007::services::{CalculationChainPart, ShareStringPart, StylePart};
 use anyhow::{Context, Error as AnyError, Result as AnyResult};
 
@@ -39,5 +40,15 @@ impl CommonServices {
 impl CommonServices {
     pub(crate) fn get_string_id(&self, value: String) -> AnyResult<String, AnyError> {
         self.share_string.get_string_id(value)
+    }
+}
+
+// ########################### Style ########################
+impl CommonServices {
+    pub(crate) fn get_style_id_mut(
+        &mut self,
+        style_setting: StyleSetting,
+    ) -> AnyResult<StyleId, AnyError> {
+        self.style.get_style_id_mut(style_setting)
     }
 }

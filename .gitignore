@@ -91,6 +91,7 @@ Desktop.ini
 **/test_results
 
 # Rust
+target
 
 # CS
 !cd/test/test_files/**

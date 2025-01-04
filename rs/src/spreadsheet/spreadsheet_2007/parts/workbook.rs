@@ -7,6 +7,7 @@ use crate::{
     },
     order_dictionary::EXCEL_ORDER_COLLECTION,
     spreadsheet_2007::{
+        models::{StyleId, StyleSetting},
         parts::WorkSheet,
         services::{CalculationChainPart, CommonServices, ShareStringPart, StylePart},
     },
@@ -228,13 +229,12 @@ impl XmlDocumentPartCommon for WorkbookPart {
     }
 }
 
-/// ######################### Train implementation of XML Part - Only accessible within crate ##############
+/// ######################### Trait implementation of XML Part - Only accessible within crate ##############
 impl XmlDocumentPart for WorkbookPart {
     /// Create workbook
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
-        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
         let file_name = Self::get_workbook_file_name(&parent_relationship_part)
             .context("Failed to pull workbook file name")?
@@ -254,28 +254,24 @@ impl XmlDocumentPart for WorkbookPart {
         let theme_part = ThemePart::new(
             office_document.clone(),
             Rc::downgrade(&workbook_relationship_part),
-            None,
         )
         .context("Loading Theme Part Failed")?;
         // Share String
         let share_string = ShareStringPart::new(
             office_document.clone(),
             Rc::downgrade(&workbook_relationship_part),
-            None,
         )
         .context("Loading Share String Failed")?;
         // Calculation chain
         let calculation_chain = CalculationChainPart::new(
             office_document.clone(),
             Rc::downgrade(&workbook_relationship_part),
-            None,
         )
         .context("Loading Calculation Chain Failed")?;
         // Style
         let style = StylePart::new(
             office_document.clone(),
             Rc::downgrade(&workbook_relationship_part),
-            None,
         )
         .context("Loading Style Part Failed")?;
         let common_service = Rc::new(RefCell::new(CommonServices::new(
@@ -433,6 +429,8 @@ impl WorkbookPart {
     }
 }
 
+// ############################# Feature Function ######################################
+
 // ############################# im-mut Function ######################################
 impl WorkbookPart {
     fn get_workbook_file_name(
@@ -454,9 +452,17 @@ impl WorkbookPart {
             Err(anyhow!("Failed to upgrade relation part"))
         }
     }
+    pub(crate) fn list_sheet_names(&self) -> AnyResult<Vec<String>, AnyError> {
+        Ok(self
+            .sheet_collection
+            .try_borrow()
+            .context("Failed to pull Sheet Name Collection")?
+            .iter()
+            .map(|(sheet_name, _, _, _)| sheet_name.to_string())
+            .collect::<Vec<String>>())
+    }
 }
 
-// ############################# Feature Function ######################################
 // ############################# mut Function ######################################
 impl WorkbookPart {
     pub(crate) fn add_sheet_mut(
@@ -606,7 +612,7 @@ impl WorkbookPart {
     //     Ok(())
     // }
 
-    /// Set Active sheet on opening the excel
+    /// Hide sheet on opening the excel
     pub(crate) fn hide_sheet_mut(&mut self, sheet_name: &str) -> AnyResult<(), AnyError> {
         for (current_sheet_name, _, _, hide_sheet) in self
             .sheet_collection
@@ -652,17 +658,15 @@ impl WorkbookPart {
             }
         }
     }
-}
 
-// ############################# im-mut Function ######################################
-impl WorkbookPart {
-    pub(crate) fn list_sheet_names(&self) -> AnyResult<Vec<String>, AnyError> {
-        Ok(self
-            .sheet_collection
-            .try_borrow()
-            .context("Failed to pull Sheet Name Collection")?
-            .iter()
-            .map(|(sheet_name, _, _, _)| sheet_name.to_string())
-            .collect::<Vec<String>>())
+    /// Return Style Id for the said combination
+    pub(crate) fn get_style_id_mut(
+        &mut self,
+        style_setting: StyleSetting,
+    ) -> AnyResult<StyleId, AnyError> {
+        self.common_service
+            .try_borrow_mut()
+            .context("Failed to get Style Handle")?
+            .get_style_id_mut(style_setting)
     }
 }

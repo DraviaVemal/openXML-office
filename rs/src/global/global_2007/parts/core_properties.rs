@@ -91,7 +91,6 @@ impl XmlDocumentPart for CorePropertiesPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
-        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
         let file_name = Self::get_core_properties_file_name(&parent_relationship_part)
             .context("Failed to pull Core Property file name")?

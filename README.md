@@ -15,26 +15,26 @@ Please refer [stable branch](https://github.com/DraviaVemal/OpenXML-Office/tree/
 | Code Coverage     | [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5b420a599805426ab8a990a1a741247a)](https://app.codacy.com/gh/DraviaVemal/OpenXML-Office/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage) | Excel Files Generated | [![Generated](https://draviavemal.com/openxml-office/excel-count.svg)](https://openxml-office.draviavemal.com/)                                                                                                                                   |
 | Package Downloads | [![Downloads](https://img.shields.io/nuget/dt/openxmloffice.Presentation.svg)](https://www.nuget.org/packages/openxmloffice.Presentation)                                                                                                    | Word Files Generated  | [![Generated](https://draviavemal.com/openxml-office/word-count.svg)](https://openxml-office.draviavemal.com/)                                                                                                                                    |
 
-## Important Note about V3 (Discontinued)
+## Important Note about V3 (Discontinued) 🚫
 
 After thorough analysis, I have concluded that the full OpenXML format relations and connections are adequately addressed. Therefore, to eliminate duplicate work, V3 is no longer under development. Please follow V4 updates for final results.
 
-# V4 Release and Targets
+# V4 Release and Targets 🚧🛠️
 
 Docs - [Will Try to keep the alpha release documents updated as much possible](https://openxml-office.draviavemal.com/v4.x-alpha)
 
-| Supported Languages | Min.Support Version | Readme link                                                                         | Packages   | package link                                             | Description                                                      |
-| ------------------- | ------------------- | ----------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------- | ---------------------------------------------------------------- |
-| Rust                | 1.32                | [README](https://github.com/DraviaVemal/openxml-office/blob/alpha/rs/README.md)     | Rust       | [Crates](https://crates.io/)                             | Rust crate directly connecting to core lib                       |
-| C#                  | .net6.0             | [README](https://github.com/DraviaVemal/openxml-office/blob/alpha/cs/README.md)     | C#         | [Nuget](https://www.nuget.org/)                          | C# wrapper package wrote around FFI layer of rust                |
-| Python              | 3.8                 | [README](https://github.com/DraviaVemal/openxml-office/blob/alpha/python/README.md) | Python     | [PyPi](https://pypi.org/)                                | Python Wrapper package wrote around FFI layer of rust using cffi |
-| ----------------    | ----------          | ---------                                                                           | --------   | ---------                                                | -------                                                          |
-| PHASE 2             | PHASE 2             | PHASE 2                                                                             | PHASE 2    | PHASE 2                                                  | PHASE 2                                                          |
-| ---------------     | -----------         | ---------                                                                           | --------   | ----------                                               | -------                                                          |
-| Java                | 1.8                 | TODO                                                                                | Java       | [Maven Central](https://mvnrepository.com/)              | Java wrapper package wrote around FFI layer of rust              |
-| Go                  | 1.22                | TODO                                                                                | Go         | [Github](https://github.com/DraviaVemal/OpenXML-Office/) | Go wrapper package wrote around FFI layer of rust                |
-| TypeScript          |                     | TODO                                                                                | TypeScript | [npm](https://www.npmjs.com/)                            | NAPI-RS is used to expose the core lib as node addon             |
-|                     |                     |                                                                                     | Rust-API   | [Docker Hub](https://hub.docker.com/)                    | API container running rust crate for HTTP support                |
+| Supported Languages | Min.Support Version | Readme link                                                                         | Packages                   | package link                                                      | Description                                                               |
+| ------------------- | ------------------- | ----------------------------------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Rust                | 1.32                | [README](https://github.com/DraviaVemal/openxml-office/blob/alpha/rs/README.md)     | draviavemal-openxml_office | [Crates](https://crates.io/crates/draviavemal-openxml_office)     | Rust crate directly connecting to core lib                                |
+| C#                  | .net6.0             | [README](https://github.com/DraviaVemal/openxml-office/blob/alpha/cs/README.md)     | draviavemal.openxmloffice  | [Nuget](https://www.nuget.org/packages/draviavemal.openxmloffice) | C# wrapper package wrote around FFI layer of rust                         |
+| Python              | 3.8                 | [README](https://github.com/DraviaVemal/openxml-office/blob/alpha/python/README.md) | Python                     | [PyPi](https://pypi.org/)                                         | Python Wrapper package wrote around FFI layer of rust using cffi          |
+| ----------------    | ----------          | ---------                                                                           | --------                   | ---------                                                         | -------                                                                   |
+| PHASE 2             | PHASE 2             | PHASE 2                                                                             | PHASE 2                    | PHASE 2                                                           | PHASE 2                                                                   |
+| ---------------     | -----------         | ---------                                                                           | --------                   | ----------                                                        | -------                                                                   |
+| Java                | 1.8                 | TODO                                                                                | Java                       | [Maven Central](https://mvnrepository.com/)                       | Java wrapper package wrote around FFI layer of rust                       |
+| Go                  | 1.22                | TODO                                                                                | Go                         | [Github](https://github.com/DraviaVemal/OpenXML-Office/)          | Go wrapper package wrote around FFI layer of rust                         |
+| TypeScript          |                     | TODO                                                                                | TypeScript                 | [npm](https://www.npmjs.com/)                                     | NAPI-RS is used to expose the core lib as node addon                      |
+|                     |                     |                                                                                     | Rust-API                   | [Docker Hub](https://hub.docker.com/)                             | API container running rust crate for HTTP support along with quic support |
 
 ## V4 Development Status
 
@@ -44,7 +44,7 @@ Docs - [Will Try to keep the alpha release documents updated as much possible](h
 | Rust        | fbs          | 🟩⬜⬜⬜⬜    |
 | Rust        | xml          | 🟩🟩🟩🟩⬜    |
 | Rust        | global       | 🟩🟩⬜⬜⬜    |
-| Rust        | spreadsheet  | 🟩🟩🟩⬜⬜    |
+| Rust        | spreadsheet  | 🟩🟩🟩🟩⬜    |
 | Rust        | presentation | 🟩⬜⬜⬜⬜    |
 | Rust        | document     | 🟩⬜⬜⬜⬜    |
 | Rust        | FFI          | 🟩⬜⬜⬜⬜    |
@@ -86,7 +86,7 @@ This project has been in the works for nearly a year, driven by a desire to expl
 
 ### Architecture
 
-The core system is written in Rust, ensuring optimal performance and memory usage. This system is then exposed as a "C" extern FFI, facilitating interaction with other languages. Wrappers for each supported language have been created, and the package is published in the respective package managers. For TypeScript, `napi-rs` is utilized to create a Node.js addon, preserving performance advantages. The data transmission is handled using FlatBuffer, following a central schema that ensures consistent patterns across all supported languages and facilitates code organization and documentation maintenance.
+The core system is written in Rust, ensuring optimal performance and memory usage. This system is then exposed as a "C" extern FFI, facilitating interaction with other languages. Wrappers for each supported language have been created, and the package is published in the respective package managers. For TypeScript/Javascript, `wasm` is utilized to create a Node.js package, preserving performance advantages. The data transmission is handled using FlatBuffer, following a central schema that ensures consistent patterns across all supported languages and facilitates code organization and documentation maintenance.
 
 ## Support Scope
 

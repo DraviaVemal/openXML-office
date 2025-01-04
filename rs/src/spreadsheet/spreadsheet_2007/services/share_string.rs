@@ -46,7 +46,7 @@ impl XmlDocumentPartCommon for ShareStringPart {
             let string_collection = office_doc_ref
                 .try_borrow()
                 .context("Failed to borrow Doc Handle")?
-                .get_connection()
+                .get_database()
                 .find_many(&select_query, params![], row_mapper, None)
                 .context("Getting Share String Records Failed")?;
             if string_collection.len() > 0 {
@@ -134,7 +134,6 @@ impl XmlDocumentPart for ShareStringPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
-        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
         let queries = get_all_queries!("share_string.sql");
         let file_name = Self::get_share_string_file_name(&parent_relationship_part)
@@ -190,7 +189,7 @@ impl ShareStringPart {
                 .try_borrow()
                 .context("Pulling Office Doc Failed")?;
             office_doc
-                .get_connection()
+                .get_database()
                 .create_table(&create_query, None)
                 .context("Create Share String Table Failed")?;
             if let Some(xml_document) = xml_document.upgrade() {
@@ -204,7 +203,7 @@ impl ShareStringPart {
                                 let value =
                                     text_element.get_value().clone().unwrap_or("".to_string());
                                 office_doc
-                                    .get_connection()
+                                    .get_database()
                                     .insert_record(&insert_query, params![value], None)
                                     .context("Create Share String Table Failed")?;
                             }
@@ -228,7 +227,7 @@ impl ShareStringPart {
                 .get("insert_ignore_share_string_table")
                 .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
             office_doc
-                .get_connection()
+                .get_database()
                 .insert_record(&insert_query, params![value], None)
                 .context("Create Share String Table Failed")?;
             let find_query = self
@@ -238,7 +237,7 @@ impl ShareStringPart {
             fn row_mapper(row: &Row) -> AnyResult<usize, rusqlite::Error> {
                 Ok(row.get(0)?)
             }
-            let result = office_doc.get_connection().find_one(
+            let result = office_doc.get_database().find_one(
                 &find_query,
                 params![value],
                 row_mapper,

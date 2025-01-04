@@ -9,6 +9,8 @@ use crate::{
 use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
 
+use super::models::{StyleId, StyleSetting};
+
 #[derive(Debug)]
 pub struct Excel {
     office_document: Rc<RefCell<OfficeDocument>>,
@@ -51,13 +53,11 @@ impl Excel {
         let core_properties = CorePropertiesPart::new(
             Rc::downgrade(&office_document),
             Rc::downgrade(&root_relations),
-            None,
         )
         .context("Creating Core Property Part Failed.")?;
         let workbook = WorkbookPart::new(
             Rc::downgrade(&office_document),
             Rc::downgrade(&root_relations),
-            None,
         )
         .context("Creating Workbook part Failed")?;
         let mut excel = Self {
@@ -136,6 +136,14 @@ impl Excel {
     /// Get Worksheet handle by sheet name
     pub fn get_worksheet_mut(&mut self, sheet_name: String) -> AnyResult<WorkSheet, AnyError> {
         self.get_workbook_mut().get_worksheet_mut(&sheet_name)
+    }
+
+    /// Return Style Id for the said combination
+    pub fn get_style_id_mut(
+        &mut self,
+        style_setting: StyleSetting,
+    ) -> AnyResult<StyleId, AnyError> {
+        self.get_workbook_mut().get_style_id_mut(style_setting)
     }
 
     /// Save/Replace the current file into target destination

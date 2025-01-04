@@ -2,8 +2,8 @@
 CREATE TABLE
     {} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        row_id INTEGER NOT NULL,
-        col_id INTEGER NOT NULL,
+        row_index INTEGER NOT NULL,
+        col_index INTEGER NOT NULL,
         cell_style_id INTEGER,
         cell_value TEXT,
         cell_formula TEXT,
@@ -11,14 +11,14 @@ CREATE TABLE
         cell_metadata TEXT,
         cell_place_holder TEXT,
         cell_comment_id INTEGER,
-        UNIQUE (row_id, col_id)
+        UNIQUE (row_index, col_index)
     );
 
 -- query : create_dynamic_sheet_row# 
 CREATE TABLE
     {} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        row_id INTEGER NOT NULL UNIQUE,
+        row_index INTEGER NOT NULL UNIQUE,
         row_hide INTEGER,
         row_span TEXT,
         row_height INTEGER,
@@ -33,8 +33,8 @@ CREATE TABLE
 -- query : insert_dynamic_sheet# 
 INSERT INTO
     {} (
-        row_id,
-        col_id,
+        row_index,
+        col_index,
         cell_style_id,
         cell_value,
         cell_formula,
@@ -59,8 +59,8 @@ VALUES
 -- query : insert_conflict_dynamic_sheet# 
 INSERT INTO
     {} (
-        row_id,
-        col_id,
+        row_index,
+        col_index,
         cell_style_id,
         cell_value,
         cell_formula,
@@ -80,7 +80,7 @@ VALUES
         ?,
         ?,
         ?
-    ) ON CONFLICT (row_id, col_id) DO
+    ) ON CONFLICT (row_index, col_index) DO
 UPDATE
 SET
     cell_style_id = excluded.cell_style_id,
@@ -94,7 +94,7 @@ SET
 -- query : insert_dynamic_sheet_row# 
 INSERT INTO
     {} (
-        row_id,
+        row_index,
         row_hide,
         row_span,
         row_height,
@@ -122,7 +122,7 @@ VALUES
 -- query : insert_conflict_dynamic_sheet_row# 
 INSERT INTO
     {} (
-        row_id,
+        row_index,
         row_hide,
         row_span,
         row_height,
@@ -145,7 +145,7 @@ VALUES
         ?,
         ?,
         ?
-    ) ON CONFLICT (row_id) DO
+    ) ON CONFLICT (row_index) DO
 UPDATE
 SET
     row_hide = excluded.row_hide,
@@ -158,9 +158,14 @@ SET
     row_collapsed = excluded.row_collapsed,
     row_place_holder = excluded.row_place_holder;
 
+-- query : delete_row_record# 
+
+DELETE FROM {}
+WHERE row_index = ?;
+
 -- query : select_all_dynamic_sheet# 
 SELECT
-    b.row_id,
+    a.row_index,
     a.row_hide,
     a.row_span,
     a.row_height,
@@ -170,7 +175,7 @@ SELECT
     a.row_group_level,
     a.row_collapsed,
     a.row_place_holder,
-    b.col_id,
+    b.col_index,
     b.cell_style_id,
     b.cell_value,
     b.cell_formula,
@@ -179,14 +184,14 @@ SELECT
     b.cell_place_holder,
     b.cell_comment_id
 FROM
-    {} as b
-LEFT JOIN
     {0} as a
+LEFT JOIN
+    {} as b
 ON
-    a.row_id = b.row_id
+    a.row_index = b.row_index
 ORDER BY
-    b.row_id DESC,
-    b.col_id DESC;
+    a.row_index DESC,
+    b.col_index DESC;
 
 -- query : select_range_dynamic_sheet# 
 SELECT
@@ -194,20 +199,20 @@ SELECT
 FROM
     {}
 WHERE
-    row_id >= ?
-    AND col_id >= ?
-    AND row_id <= ?
-    AND col_id <= ?
+    row_index >= ?
+    AND col_index >= ?
+    AND row_index <= ?
+    AND col_index <= ?
 ORDER BY
-    row_id DESC,
-    col_id DESC;
+    row_index DESC,
+    col_index DESC;
 
 
 -- query : select_dimension_dynamic_sheet# 
 SELECT 
-    MIN(row_id) as start_row_id,
-    MIN(col_id) as start_col_id,
-    MAX(row_id) as end_row_id,
-    MAX(col_id) as end_col_id
+    MIN(row_index) as start_row_id,
+    MIN(col_index) as start_col_id,
+    MAX(row_index) as end_row_id,
+    MAX(col_index) as end_col_id
 FROM
     {};

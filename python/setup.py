@@ -3,13 +3,10 @@ from cffi import FFI
 
 ffi = FFI()
 
-with open('cdefs/spreadsheet_2007/Excel.cdef', 'r') as f:
-    ffi.cdef(f.read())
-
 ffi.set_source(
     "openxmloffice_c_ffi",
     """
-    // No header file needed since the function signatures are defined in cdef.
+    TODO : Load c header herer.
     """,
     libraries=["openxmloffice_ffi"],
     library_dirs=["lib"]

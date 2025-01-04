@@ -1,4 +1,8 @@
 use crate::global_2007::traits::Enum;
+use rusqlite::{
+    types::{FromSql, FromSqlError, ToSqlOutput, ValueRef},
+    ToSql,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -50,7 +54,7 @@ impl Enum<PatternTypeValues> for PatternTypeValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Hash)]
 pub enum BorderStyleValues {
     None,
     Thin,
@@ -107,7 +111,7 @@ impl Enum<BorderStyleValues> for BorderStyleValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Hash)]
 pub enum ColorSettingTypeValues {
     Indexed,
     Theme,
@@ -131,7 +135,7 @@ impl Enum<ColorSettingTypeValues> for ColorSettingTypeValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Hash)]
 pub struct ColorSetting {
     pub color_setting_type: ColorSettingTypeValues,
     pub value: String,
@@ -146,7 +150,7 @@ impl Default for ColorSetting {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Hash)]
 pub struct BorderSetting {
     pub border_color: Option<ColorSetting>,
     pub style: BorderStyleValues,
@@ -184,7 +188,7 @@ impl Default for BorderStyle {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Hash)]
 pub enum HorizontalAlignmentValues {
     None,
     LEFT,
@@ -214,7 +218,7 @@ impl Enum<HorizontalAlignmentValues> for HorizontalAlignmentValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Hash)]
 pub enum VerticalAlignmentValues {
     None,
     TOP,
@@ -237,33 +241,6 @@ impl Enum<VerticalAlignmentValues> for VerticalAlignmentValues {
             "center" => VerticalAlignmentValues::MIDDLE,
             "bottom" => VerticalAlignmentValues::BOTTOM,
             _ => VerticalAlignmentValues::None,
-        }
-    }
-}
-
-impl Default for CellStyleSetting {
-    fn default() -> Self {
-        Self {
-            background_color: None,
-            border_bottom: BorderSetting::default(),
-            border_left: BorderSetting::default(),
-            border_right: BorderSetting::default(),
-            border_top: BorderSetting::default(),
-            font_family: "Calibri".to_string(),
-            font_size: 11,
-            foreground_color: None,
-            horizontal_alignment: HorizontalAlignmentValues::None,
-            is_bold: false,
-            is_double_underline: false,
-            is_italic: false,
-            is_underline: false,
-            is_wrap_text: false,
-            number_format: "General".to_string(),
-            text_color: ColorSetting {
-                color_setting_type: ColorSettingTypeValues::Rgb,
-                value: "000000".to_string(),
-            },
-            vertical_alignment: VerticalAlignmentValues::None,
         }
     }
 }
@@ -380,8 +357,8 @@ impl Default for NumberFormat {
 }
 
 /// Get Column Cell Input Combined for styling
-#[derive(Debug, Deserialize, Serialize)]
-pub struct CellStyleSetting {
+#[derive(Debug, Deserialize, Serialize, Hash)]
+pub struct StyleSetting {
     pub background_color: Option<String>,
     pub border_bottom: BorderSetting,
     pub border_left: BorderSetting,
@@ -399,4 +376,57 @@ pub struct CellStyleSetting {
     pub number_format: String,
     pub text_color: ColorSetting,
     pub vertical_alignment: VerticalAlignmentValues,
+}
+
+impl Default for StyleSetting {
+    fn default() -> Self {
+        Self {
+            background_color: None,
+            border_bottom: BorderSetting::default(),
+            border_left: BorderSetting::default(),
+            border_right: BorderSetting::default(),
+            border_top: BorderSetting::default(),
+            font_family: "Calibri".to_string(),
+            font_size: 11,
+            foreground_color: None,
+            horizontal_alignment: HorizontalAlignmentValues::None,
+            is_bold: false,
+            is_double_underline: false,
+            is_italic: false,
+            is_underline: false,
+            is_wrap_text: false,
+            number_format: "General".to_string(),
+            text_color: ColorSetting {
+                color_setting_type: ColorSettingTypeValues::Rgb,
+                value: "000000".to_string(),
+            },
+            vertical_alignment: VerticalAlignmentValues::None,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct StyleId {
+    pub(crate) id: usize,
+}
+
+impl StyleId {
+    pub(crate) fn new(id: usize) -> Self {
+        Self { id }
+    }
+}
+
+impl ToSql for StyleId {
+    fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
+        Ok(ToSqlOutput::from(self.id as i64))
+    }
+}
+
+impl FromSql for StyleId {
+    fn column_result(value: ValueRef<'_>) -> Result<Self, FromSqlError> {
+        match value.as_i64() {
+            Ok(id) if id >= 0 => Ok(StyleId { id: id as usize }),
+            _ => Err(FromSqlError::InvalidType),
+        }
+    }
 }
