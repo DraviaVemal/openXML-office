@@ -61,17 +61,17 @@ impl SqliteDatabases {
             )
             .context("Open File Based DB failed")?;
         }
-        // #[cfg(debug_assertions)]
-        // archive_db.execute_batch(
-        //     "
-        //         PRAGMA journal_mode = WAL;
-        //         PRAGMA synchronous = NORMAL;
-        //         PRAGMA cache_size = 204800;
-        //         PRAGMA temp_store = MEMORY;
-        //         PRAGMA locking_mode = EXCLUSIVE;
-        //         PRAGMA foreign_keys = OFF;
-        //     ",
-        // )?;
+        #[cfg(debug_assertions)]
+        archive_db.execute_batch(
+            "
+                PRAGMA journal_mode = WAL;
+                PRAGMA synchronous = NORMAL;
+                PRAGMA cache_size = 204800;
+                PRAGMA temp_store = MEMORY;
+                PRAGMA locking_mode = EXCLUSIVE;
+                PRAGMA foreign_keys = OFF;
+            ",
+        )?;
         #[cfg(not(debug_assertions))]
         archive_db.execute_batch(
             "

@@ -119,7 +119,7 @@ impl RelationsPart {
                             .get("Type")
                             .ok_or(anyhow!("Failed. Type in relationship Not Fount!"))?
                             .to_string(),
-                        attributes.get("Type").cloned(),
+                        attributes.get("TargetMode").cloned(),
                     ));
                 }
             }
