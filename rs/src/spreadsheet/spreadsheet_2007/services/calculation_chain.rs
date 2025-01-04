@@ -40,7 +40,7 @@ impl XmlDocumentPartCommon for CalculationChainPart {
             let string_collection = office_doc_ref
                 .try_borrow()
                 .context("Failed to get office handle at Calculation Chain")?
-                .get_connection()
+                .get_database()
                 .find_many(&select_query, params![], row_mapper, None)
                 .context("Failed to Pull All Calculation Chain Items")?;
             if string_collection.len() > 0 {
@@ -109,7 +109,6 @@ impl XmlDocumentPart for CalculationChainPart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
-        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
         let file_name = Self::get_calc_chain_file_name(&parent_relationship_part)
             .context("Failed to pull calc chain file name")?
@@ -158,7 +157,7 @@ impl CalculationChainPart {
                         .try_borrow()
                         .context("Pulling Office Doc Failed")?;
                     office_doc
-                        .get_connection()
+                        .get_database()
                         .create_table(&create_query, None)
                         .context("Create Share String Table Failed")?;
                     if let Some(xml_document) = xml_document.upgrade() {
@@ -169,7 +168,7 @@ impl CalculationChainPart {
                             for element in elements {
                                 if let Some(attributes) = element.get_attribute() {
                                     office_doc
-                                        .get_connection()
+                                        .get_database()
                                         .insert_record(
                                             &insert_query,
                                             params![attributes["r"], attributes["i"]],

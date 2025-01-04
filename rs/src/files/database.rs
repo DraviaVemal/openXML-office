@@ -49,7 +49,7 @@ impl SqliteDatabases {
             archive_db = Connection::open_in_memory_with_flags(
                 OpenFlags::SQLITE_OPEN_READ_WRITE
                     | OpenFlags::SQLITE_OPEN_CREATE
-                    | OpenFlags::SQLITE_OPEN_FULL_MUTEX,
+                    | OpenFlags::SQLITE_OPEN_NO_MUTEX,
             )
             .map_err(|e| anyhow!("Open in memory DB failed. {}", e))?;
         } else {
@@ -57,10 +57,22 @@ impl SqliteDatabases {
                 db_path,
                 OpenFlags::SQLITE_OPEN_READ_WRITE
                     | OpenFlags::SQLITE_OPEN_CREATE
-                    | OpenFlags::SQLITE_OPEN_FULL_MUTEX,
+                    | OpenFlags::SQLITE_OPEN_NO_MUTEX,
             )
             .context("Open File Based DB failed")?;
         }
+        // #[cfg(debug_assertions)]
+        // archive_db.execute_batch(
+        //     "
+        //         PRAGMA journal_mode = WAL;
+        //         PRAGMA synchronous = NORMAL;
+        //         PRAGMA cache_size = 204800;
+        //         PRAGMA temp_store = MEMORY;
+        //         PRAGMA locking_mode = EXCLUSIVE;
+        //         PRAGMA foreign_keys = OFF;
+        //     ",
+        // )?;
+        #[cfg(not(debug_assertions))]
         archive_db.execute_batch(
             "
                 PRAGMA journal_mode = WAL;
@@ -99,10 +111,20 @@ impl SqliteDatabases {
         if let Some(table_name) = table_name {
             execute_query = execute_query.replace("{}", &table_name);
         }
-        let mut stmt = self.connection.prepare(&execute_query)?;
+        let mut statement = self
+            .connection
+            .prepare_cached(&execute_query)
+            .context("Failed to Prepare SQL Query")?;
+        let transaction = self
+            .connection
+            .unchecked_transaction()
+            .context("Failed to set Transaction Handle")?;
         for params in params_list {
-            stmt.execute(params.to_owned())?;
+            statement.execute(params.to_owned())?;
         }
+        transaction
+            .commit()
+            .context("Failed to Commit ongoing transaction")?;
         Ok(())
     }
 

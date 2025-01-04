@@ -41,7 +41,6 @@ impl Word {
         let core_properties = CorePropertiesPart::new(
             Rc::downgrade(&office_document),
             Rc::downgrade(&root_relations),
-            None,
         )
         .context("Creating Core Property Part Failed.")?;
         Ok(Self {

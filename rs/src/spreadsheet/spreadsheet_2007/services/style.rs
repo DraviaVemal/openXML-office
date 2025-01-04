@@ -1,7 +1,7 @@
 use crate::{
     converters::ConverterUtil,
     element_dictionary::EXCEL_TYPE_COLLECTION,
-    files::{OfficeDocument, XmlDocument, XmlElement, XmlSerializer},
+    files::{office_document, OfficeDocument, XmlDocument, XmlElement, XmlSerializer},
     get_all_queries,
     global_2007::{
         parts::RelationsPart,
@@ -10,19 +10,27 @@ use crate::{
     spreadsheet_2007::models::{
         BorderSetting, BorderStyle, BorderStyleValues, CellXfs, ColorSetting,
         ColorSettingTypeValues, FillStyle, FontSchemeValues, FontStyle, HorizontalAlignmentValues,
-        NumberFormat, PatternTypeValues, VerticalAlignmentValues,
+        NumberFormat, PatternTypeValues, StyleId, StyleSetting, VerticalAlignmentValues,
     },
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use rusqlite::{params, Row};
 use serde_json::{from_str, to_string};
-use std::{cell::RefCell, collections::HashMap, rc::Weak};
+use std::{
+    cell::RefCell,
+    collections::{HashMap, VecDeque},
+    hash::{DefaultHasher, Hash, Hasher},
+    rc::Weak,
+};
 
 #[derive(Debug)]
 pub struct StylePart {
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
+    cache_id: HashMap<u64, usize>,
+    cache_order: VecDeque<usize>,
+    cache_capacity: usize,
 }
 
 impl Drop for StylePart {
@@ -64,7 +72,6 @@ impl XmlDocumentPart for StylePart {
     fn new(
         office_document: Weak<RefCell<OfficeDocument>>,
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
-        _: Option<&str>,
     ) -> AnyResult<Self, AnyError> {
         let file_name = Self::get_style_file_name(&parent_relationship_part)
             .context("Failed to pull style file name")?
@@ -76,10 +83,14 @@ impl XmlDocumentPart for StylePart {
             office_document,
             xml_document,
             file_path: file_name,
+            cache_id: HashMap::new(),
+            cache_order: VecDeque::new(),
+            cache_capacity: 25,
         })
     }
 }
 
+// ################################# Load / Save Functions ################
 impl StylePart {
     fn get_style_file_name(
         relations_part: &Weak<RefCell<RelationsPart>>,
@@ -130,27 +141,27 @@ impl StylePart {
                 .get("create_cell_xfs_table")
                 .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
             office_doc
-                .get_connection()
+                .get_database()
                 .create_table(&create_query_num_format, None)
                 .context("Create Number Format Table Failed")?;
             office_doc
-                .get_connection()
+                .get_database()
                 .create_table(&create_query_font_style, None)
                 .context("Create Font Style Table Failed")?;
             office_doc
-                .get_connection()
+                .get_database()
                 .create_table(&create_query_fill_style, None)
                 .context("Create Query Fill Table Failed")?;
             office_doc
-                .get_connection()
+                .get_database()
                 .create_table(&create_query_border_style, None)
                 .context("Create Border Style Table Failed")?;
             office_doc
-                .get_connection()
+                .get_database()
                 .create_table(&create_query_cell_style_xfs, None)
                 .context("Create Cell Style Table Failed")?;
             office_doc
-                .get_connection()
+                .get_database()
                 .create_table(&create_query_cell_xfs, None)
                 .context("Create Cell Style Table Failed")?;
         }
@@ -201,7 +212,7 @@ impl StylePart {
                                         .ok_or(anyhow!("formatCode Attribute Not Found!"))?
                                         .to_string();
                                     office_doc
-                                        .get_connection()
+                                        .get_database()
                                         .insert_record(
                                             &insert_query_num_format,
                                             params![
@@ -331,7 +342,7 @@ impl StylePart {
                                     .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
 
                                 office_doc
-                                    .get_connection()
+                                    .get_database()
                                     .insert_record(
                                         &insert_query_font_style,
                                         params![
@@ -486,7 +497,7 @@ impl StylePart {
                                     .get("insert_fill_style_table")
                                     .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
                                 office_doc
-                                    .get_connection()
+                                    .get_database()
                                     .insert_record(
                                         &insert_query_fill_style,
                                         params![
@@ -573,7 +584,7 @@ impl StylePart {
                                         .get("insert_border_style_table")
                                         .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
                                     office_doc
-                                        .get_connection()
+                                        .get_database()
                                         .insert_record(
                                             &insert_query_border_style,
                                             params![
@@ -660,7 +671,7 @@ impl StylePart {
                             })
                         }
                         let num_format_data = office_doc
-                            .get_connection()
+                            .get_database()
                             .find_many(num_format_query, params![], row_mapper, None)
                             .context("Num Format Query Results Failed")?;
                         let mut attributes = HashMap::new();
@@ -711,7 +722,7 @@ impl StylePart {
                             })
                         }
                         let fonts_data = office_doc
-                            .get_connection()
+                            .get_database()
                             .find_many(fonts_query, params![], row_mapper, None)
                             .context("Fonts Query Results Failed")?;
                         let mut attributes = HashMap::new();
@@ -823,7 +834,7 @@ impl StylePart {
                             Ok(fill_style)
                         }
                         let fills_data = office_doc
-                            .get_connection()
+                            .get_database()
                             .find_many(fills_query, params![], row_mapper, None)
                             .context("Fills Data Pull Failed")?;
                         // .context("Fills Query Results Failed")?;
@@ -924,7 +935,7 @@ impl StylePart {
                             Ok(border_style)
                         }
                         let borders_data = office_doc
-                            .get_connection()
+                            .get_database()
                             .find_many(borders_query, params![], row_mapper, None)
                             .context("Border Style Query Results Failed")?;
                         let mut attributes = HashMap::new();
@@ -1092,7 +1103,7 @@ impl StylePart {
                         .get(query_target)
                         .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
                     office_doc
-                        .get_connection()
+                        .get_database()
                         .insert_record(
                             &insert_query_style_xfs,
                             params![
@@ -1245,7 +1256,7 @@ impl StylePart {
                 Ok(cell_style)
             }
             let cell_style_xfs_data = office_doc
-                .get_connection()
+                .get_database()
                 .find_many(cell_style_xfs_query, params![], row_mapper, None)
                 .context("Num Format Query Results Failed")?;
             let mut attributes = HashMap::new();
@@ -1341,5 +1352,45 @@ impl StylePart {
                 }
             }
         })
+    }
+}
+
+// ################################## mut feature ########################
+impl StylePart {
+    fn generate_setting_hash<T: Hash>(&mut self, item: &T) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        item.hash(&mut hasher);
+        hasher.finish()
+    }
+
+    pub(crate) fn get_style_id_mut(
+        &mut self,
+        style_setting: StyleSetting,
+    ) -> AnyResult<StyleId, AnyError> {
+        let style_hash = self.generate_setting_hash(&style_setting);
+        if let Some((_, id)) = self.cache_id.get_key_value(&style_hash) {
+            Ok(StyleId::new(*id))
+        } else {
+            if let Some(office_document) = self.office_document.upgrade() {
+                let office_doc = office_document
+                    .try_borrow_mut()
+                    .context("Failed to get Office Handle")?;
+                // Get Number Format ID
+                {
+                    
+                }
+                // Get Font Style ID
+                {}
+                // Get Fill Style ID
+                {}
+                // Get Border Style ID
+                {}
+                // Get Cell Style xfs
+                {}
+                // Get Cell xfs
+                {}
+            }
+            Ok(StyleId::new(0))
+        }
     }
 }

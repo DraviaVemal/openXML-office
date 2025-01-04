@@ -8,8 +8,8 @@ use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
 pub(crate) struct RelationsPart {
-    /// Holds ID,Target,Type
-    relationships: Vec<(String, String, String)>,
+    /// Holds ID, Target, Type, Target Mode
+    relationships: Vec<(String, String, String, Option<String>)>,
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
@@ -93,7 +93,7 @@ impl RelationsPart {
 impl RelationsPart {
     pub(crate) fn load_relations(
         xml_document: &mut Weak<RefCell<XmlDocument>>,
-    ) -> AnyResult<Vec<(String, String, String)>, AnyError> {
+    ) -> AnyResult<Vec<(String, String, String, Option<String>)>, AnyError> {
         let mut relationships = Vec::new();
         if let Some(xml_document) = xml_document.upgrade() {
             let mut xml_doc_mut = xml_document
@@ -119,6 +119,7 @@ impl RelationsPart {
                             .get("Type")
                             .ok_or(anyhow!("Failed. Type in relationship Not Fount!"))?
                             .to_string(),
+                        attributes.get("Type").cloned(),
                     ));
                 }
             }
@@ -235,6 +236,9 @@ impl RelationsPart {
                 attributes.insert("Id".to_string(), relationship.0);
                 attributes.insert("Target".to_string(), relationship.1);
                 attributes.insert("Type".to_string(), relationship.2);
+                if let Some(target_mode) = relationship.3 {
+                    attributes.insert("TargetMode".to_string(), target_mode);
+                }
                 relationship_element
                     .set_attribute_mut(attributes)
                     .context("Failed to set Relationship attributes")?;
@@ -262,6 +266,7 @@ impl RelationsPart {
                 content.extension
             ),
             content.schemas_type.to_string(),
+            None,
         ));
         Ok(next_id)
     }

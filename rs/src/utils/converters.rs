@@ -4,8 +4,8 @@ pub struct ConverterUtil;
 
 impl ConverterUtil {
     /// Return int Id of the column
-    pub fn get_column_int(cell_key: &str) -> AnyResult<usize, AnyError> {
-        let column_part: String = cell_key.chars().take_while(|c| c.is_alphabetic()).collect();
+    pub fn get_column_index(cell_ref: &str) -> AnyResult<usize, AnyError> {
+        let column_part: String = cell_ref.chars().take_while(|c| c.is_alphabetic()).collect();
         if column_part.is_empty() {
             return Err(anyhow!("Failed to Convert to Column Key Id"));
         }
@@ -16,8 +16,8 @@ impl ConverterUtil {
         }
         Ok(index)
     }
-    /// Return String Key of the column
-    pub fn get_column_key(cell_id: usize) -> AnyResult<String, AnyError> {
+    /// Return String ref of the column
+    pub fn get_column_ref(cell_id: usize) -> AnyResult<String, AnyError> {
         if cell_id == 0 {
             return Err(anyhow!("Index must be greater than 0"));
         }
@@ -35,10 +35,10 @@ impl ConverterUtil {
     }
 
     /// Return
-    pub fn get_cell_int(cell_key: &str) -> AnyResult<(usize, usize), AnyError> {
+    pub fn get_cell_index(cell_ref: &str) -> AnyResult<(usize, usize), AnyError> {
         Ok((
-            Self::extract_digits(cell_key).context("Failed to extract int key")?,
-            Self::get_column_int(cell_key).context("Failed to Convert to int key")?,
+            Self::extract_digits(cell_ref).context("Failed to extract int key")?,
+            Self::get_column_index(cell_ref).context("Failed to Convert to int key")?,
         ))
     }
 

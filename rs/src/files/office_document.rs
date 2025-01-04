@@ -52,13 +52,13 @@ impl OfficeDocument {
     }
 
     /// Get DB Options
-    pub(crate) fn get_connection(&self) -> &SqliteDatabases {
+    pub(crate) fn get_database(&self) -> &SqliteDatabases {
         &self.sqlite_database
     }
 
     pub(crate) fn check_file_exist(&self, file_path: String) -> AnyResult<bool, AnyError> {
         if let Some(count) = self
-            .get_connection()
+            .get_database()
             .get_count(
                 self.queries
                     .get("count_archive_content")
@@ -87,7 +87,7 @@ impl OfficeDocument {
             .get("delete_archive_content")
             .unwrap()
             .to_owned();
-        self.get_connection()
+        self.get_database()
             .delete_record(&query, params![file_path], None)
             .context("Delete File Record Failed")?;
         Ok(())
@@ -148,7 +148,7 @@ impl OfficeDocument {
             Result::Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
         }
         let result = self
-            .get_connection()
+            .get_database()
             .find_one(&query, params![file_path], row_mapper, None)
             .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
         if let Some((filet_content, content_type, file_extension, extension_type)) = result {

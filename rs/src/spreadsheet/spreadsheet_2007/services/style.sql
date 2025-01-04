@@ -258,3 +258,92 @@ FROM
     cell_xfs
 ORDER BY
     id;
+
+-- query : find_number_formats_table# 
+SELECT
+    id,
+    format_id
+FROM
+    number_formats
+WHERE
+    format_code = ?
+    -- query : find_fonts_table# 
+SELECT
+    id
+FROM
+    font_style
+WHERE
+    font_name = ?
+    AND color_type = ?
+    AND color_value = ?
+    AND family_id = ?
+    AND font_size = ?
+    AND font_scheme = ?
+    AND is_bold = ?
+    AND is_italic = ?
+    AND is_underline = ?
+    AND is_double_underline = ?;
+
+-- query : find_fill_style_table# 
+SELECT
+    id
+FROM
+    fill_style
+WHERE
+    background_color_setting = ?
+    AND foreground_color_setting = ?
+    AND pattern_type = ?;
+
+-- query : find_border_style_table# 
+SELECT
+    id
+FROM
+    border_style
+WHERE
+    left_border = ?
+    AND top_border = ?
+    AND right_border = ?
+    AND bottom_border = ?
+    AND diagonal_border = ?;
+
+-- query : find_cell_style_xfs_table# 
+SELECT
+    *
+FROM
+    cell_style_xfs
+WHERE
+    format_id = ?
+    AND number_format_id = ?
+    AND font_id = ?
+    AND fill_id = ?
+    AND border_id = ?
+    AND is_apply_font = ?
+    AND is_apply_alignment = ?
+    AND is_apply_fill = ?
+    AND is_apply_border = ?
+    AND is_apply_number_format = ?
+    AND is_apply_protection = ?
+    AND is_wrap_text = ?
+    AND horizontal_alignment = ?
+    AND vertical_alignment = ?;
+
+-- query : find_cell_xfs_table# 
+SELECT
+    id
+FROM
+    cell_xfs
+WHERE
+    format_id = ?
+    AND number_format_id = ?
+    AND font_id = ?
+    AND fill_id = ?
+    AND border_id = ?
+    AND is_apply_font = ?
+    AND is_apply_alignment = ?
+    AND is_apply_fill = ?
+    AND is_apply_border = ?
+    AND is_apply_number_format = ?
+    AND is_apply_protection = ?
+    AND is_wrap_text = ?
+    AND horizontal_alignment = ?
+    AND vertical_alignment = ?;
