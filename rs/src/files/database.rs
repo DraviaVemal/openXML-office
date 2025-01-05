@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{Connection, OpenFlags, Row, ToSql};
+use rusqlite::{params, Connection, OpenFlags, Row, ToSql};
 use std::{fs::remove_file, path::PathBuf};
 use tempfile::env::temp_dir;
 
@@ -101,12 +101,16 @@ impl SqliteDatabases {
             .context("Failed to Run Create Table Query")
     }
 
-    pub(crate) fn insert_records(
+    pub(crate) fn insert_records<T, F>(
         &self,
         query: &str,
-        params_list: &[&[&(dyn ToSql)]],
+        rows: Vec<T>,
+        row_parser: F,
         table_name: Option<String>,
-    ) -> AnyResult<(), AnyError> {
+    ) -> AnyResult<(), AnyError>
+    where
+        F: Fn(T) -> Vec<Box<dyn ToSql>>,
+    {
         let mut execute_query = query.to_owned();
         if let Some(table_name) = table_name {
             execute_query = execute_query.replace("{}", &table_name);
@@ -119,8 +123,10 @@ impl SqliteDatabases {
             .connection
             .unchecked_transaction()
             .context("Failed to set Transaction Handle")?;
-        for params in params_list {
-            statement.execute(params.to_owned())?;
+        for row in rows {
+            let params: Vec<Box<dyn ToSql>> = row_parser(row);
+            let mapped: Vec<&dyn ToSql> = params.iter().map(|x| x.as_ref()).collect();
+            statement.execute(&mapped[..])?;
         }
         transaction
             .commit()

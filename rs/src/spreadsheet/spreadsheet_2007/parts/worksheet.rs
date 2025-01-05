@@ -17,7 +17,7 @@ use crate::{
     },
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{params, Row};
+use rusqlite::{params, Row, ToSql};
 use std::{
     cell::RefCell,
     collections::{HashMap, VecDeque},
@@ -1056,77 +1056,79 @@ impl WorkSheet {
         mut column_cell: Vec<ColumnCell>,
     ) -> AnyResult<(), AnyError> {
         if let Some(office_document) = self.office_document.upgrade() {
+            for cell_data in column_cell.iter_mut() {
+                if let Some(cell_value) = cell_data.value.as_ref() {
+                    match cell_data.data_type {
+                        CellDataType::Auto => {
+                            if cell_value.parse::<f64>().is_ok() {
+                                cell_data.data_type = CellDataType::Number;
+                            } else if cell_value.parse::<bool>().is_ok() {
+                                cell_data.data_type = CellDataType::Boolean;
+                                if cell_value.parse::<bool>().context("Parse Fail")? {
+                                    cell_data.value = Some("1".to_string());
+                                } else {
+                                    cell_data.value = Some("0".to_string());
+                                }
+                            } else {
+                                cell_data.data_type = CellDataType::ShareString;
+                                cell_data.value = Some(self.update_share_string(cell_value)?);
+                            }
+                        }
+                        CellDataType::ShareString => {
+                            cell_data.value = Some(self.update_share_string(cell_value)?);
+                        }
+                        CellDataType::Boolean => {
+                            cell_data.value = match cell_value.to_lowercase().as_str() {
+                                "false" | "0" | "" => Some("0".to_string()),
+                                _ => Some("1".to_string()),
+                            }
+                        }
+                        _ => {}
+                    }
+                } else {
+                    cell_data.data_type = CellDataType::Number;
+                }
+                cell_data.row_index = row_index;
+                cell_data.col_index = col_index;
+                col_index += 1;
+            }
             let insert_query = self
                 .queries
                 .get("insert_conflict_dynamic_sheet")
                 .ok_or(anyhow!("Failed to Get Insert Query"))?
                 .to_owned();
-            loop {
-                if let Some(mut cell_data) = column_cell.pop() {
-                    if let Some(cell_value) = cell_data.value.as_ref() {
-                        match cell_data.data_type {
-                            CellDataType::Auto => {
-                                if cell_value.parse::<f64>().is_ok() {
-                                    cell_data.data_type = CellDataType::Number;
-                                } else if cell_value.parse::<bool>().is_ok() {
-                                    cell_data.data_type = CellDataType::Boolean;
-                                    if cell_value.parse::<bool>().context("Parse Fail")? {
-                                        cell_data.value = Some("1".to_string());
-                                    } else {
-                                        cell_data.value = Some("0".to_string());
-                                    }
-                                } else {
-                                    cell_data.data_type = CellDataType::ShareString;
-                                    cell_data.value = Some(self.update_share_string(cell_value)?);
-                                }
-                            }
-                            CellDataType::ShareString => {
-                                cell_data.value = Some(self.update_share_string(cell_value)?);
-                            }
-                            CellDataType::Boolean => {
-                                cell_data.value = match cell_value.to_lowercase().as_str() {
-                                    "false" | "0" | "" => Some("0".to_string()),
-                                    _ => Some("1".to_string()),
-                                }
-                            }
-                            _ => {}
-                        }
-                    } else {
-                        cell_data.data_type = CellDataType::Number;
-                    }
-                    let office_doc_mut = office_document
-                        .try_borrow_mut()
-                        .context("Failed to get office doc handle")?;
-                    office_doc_mut
-                        .get_database()
-                        .insert_record(
-                            &insert_query,
-                            params![
-                                row_index,
-                                col_index,
-                                cell_data.style_id,
-                                cell_data.value,
-                                cell_data.formula,
-                                CellDataType::get_string(cell_data.data_type),
-                                cell_data.metadata,
-                                cell_data.place_holder,
-                                cell_data.comment_id
-                            ],
-                            Some(
-                                self.file_path
-                                    .rsplit("/")
-                                    .next()
-                                    .unwrap()
-                                    .to_string()
-                                    .replace(".xml", ""),
-                            ),
-                        )
-                        .context("Failed to insert New record to the DB")?;
-                    col_index += 1;
-                } else {
-                    break;
-                }
+            let office_doc_mut = office_document
+                .try_borrow_mut()
+                .context("Failed to get office doc handle")?;
+            fn row_parser(cell_data: ColumnCell) -> Vec<Box<dyn ToSql>> {
+                vec![
+                    Box::new(cell_data.row_index),
+                    Box::new(cell_data.col_index),
+                    Box::new(cell_data.style_id),
+                    Box::new(cell_data.value),
+                    Box::new(cell_data.formula),
+                    Box::new(CellDataType::get_string(cell_data.data_type)),
+                    Box::new(cell_data.metadata),
+                    Box::new(cell_data.place_holder),
+                    Box::new(cell_data.comment_id),
+                ]
             }
+            office_doc_mut
+                .get_database()
+                .insert_records(
+                    &insert_query,
+                    column_cell,
+                    row_parser,
+                    Some(
+                        self.file_path
+                            .rsplit("/")
+                            .next()
+                            .unwrap()
+                            .to_string()
+                            .replace(".xml", ""),
+                    ),
+                )
+                .context("Failed to insert New record to the DB")?;
         }
         Ok(())
     }
