@@ -119,6 +119,8 @@ impl Default for ColumnProperties {
 
 #[derive(Debug)]
 pub struct ColumnCell {
+    pub(crate) row_index: usize,
+    pub(crate) col_index: usize,
     pub formula: Option<String>,
     pub value: Option<String>,
     pub data_type: CellDataType,
@@ -133,6 +135,8 @@ pub struct ColumnCell {
 impl Default for ColumnCell {
     fn default() -> Self {
         Self {
+            row_index: 1,
+            col_index: 1,
             formula: None,
             value: None,
             data_type: CellDataType::Auto,
