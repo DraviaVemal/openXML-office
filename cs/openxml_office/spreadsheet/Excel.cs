@@ -17,7 +17,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lib/draviavemal_openxml_office_ffi", CallingConvention = CallingConvention.Cdecl)]
         public static extern sbyte excel_create(
             [MarshalAs(UnmanagedType.LPStr)] string optional_file_path,
             IntPtr buffer,
@@ -29,7 +29,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lib/draviavemal_openxml_office_ffi", CallingConvention = CallingConvention.Cdecl)]
         public static extern sbyte excel_add_sheet(
             IntPtr excelPtr,
             [MarshalAs(UnmanagedType.LPStr)] string optional_sheet_name,
@@ -40,7 +40,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lib/draviavemal_openxml_office_ffi", CallingConvention = CallingConvention.Cdecl)]
         public static extern sbyte excel_get_sheet(
             IntPtr excelPtr,
             [MarshalAs(UnmanagedType.LPStr)] string sheet_name,
@@ -51,7 +51,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lib/draviavemal_openxml_office_ffi", CallingConvention = CallingConvention.Cdecl)]
         public static extern sbyte excel_rename_sheet(
             IntPtr excelPtr,
             [MarshalAs(UnmanagedType.LPStr)] string old_sheet_name,
@@ -62,7 +62,7 @@ namespace draviavemal.openxml_office.spreadsheet_2007
         /// <summary>
         /// 
         /// </summary>
-        [DllImport("lib/openxmloffice_ffi", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lib/draviavemal_openxml_office_ffi", CallingConvention = CallingConvention.Cdecl)]
         public static extern sbyte excel_save_as(
             IntPtr excelPtr,
             [MarshalAs(UnmanagedType.LPStr)] string file_name,

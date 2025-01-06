@@ -9,5 +9,5 @@ fn main() {
         .with_crate(crate_dir)
         .generate()
         .unwrap();
-    bindings.write_to_file(Path::new("../target").join("header.h"));
+    bindings.write_to_file(Path::new("../target").join("bindings.h"));
 }

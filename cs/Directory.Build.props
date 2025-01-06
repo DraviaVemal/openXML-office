@@ -12,7 +12,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <OutputPath>.\bin\</OutputPath>
         <Authors>DraviaVemal</Authors>
-        <Version>4.0.0-alpha.2</Version>
+        <Version>4.0.0-alpha.4</Version>
         <TargetFrameworks>net6.0;netstandard2.1</TargetFrameworks>
         <LangVersion>10.0</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -40,7 +40,6 @@
         </Copyright>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="../README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
-  

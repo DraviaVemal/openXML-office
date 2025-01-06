@@ -1,4 +1,4 @@
 language = "C"
 include_guard = "OPENXML_OFFICE_H"
-namespace = "openxmloffice_ffi"
+namespace = "draviavemal_openxml_office_ffi"
 export = ["public_function"]
