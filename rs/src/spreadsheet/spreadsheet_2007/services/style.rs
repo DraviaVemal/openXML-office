@@ -14,7 +14,7 @@ use crate::{
     },
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{params, Row};
+use rusqlite::{params, Row, ToSql};
 use serde_json::{from_str, to_string};
 use std::{
     cell::RefCell,
@@ -190,6 +190,10 @@ impl StylePart {
                 if let Some(mut number_formats_vec) =
                     xml_doc_mut.pop_elements_by_tag_mut("numFmts", None)
                 {
+                    let insert_query_num_format = queries
+                        .get("insert_number_format_table")
+                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+                    let mut num_format_records = Vec::new();
                     if let Some(number_formats) = number_formats_vec.pop() {
                         // Load Number Format from File if exist
                         loop {
@@ -199,9 +203,6 @@ impl StylePart {
                                     .ok_or(anyhow!("Element not Found Error"))?;
                                 if let Some(attributes) = num_fmt.get_attribute() {
                                     let mut number_format = NumberFormat::default();
-                                    let insert_query_num_format = queries
-                                        .get("insert_number_format_table")
-                                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
                                     number_format.format_id = attributes
                                         .get("numFmtId")
                                         .ok_or(anyhow!("numFmtId Attribute Not Found!"))?
@@ -211,25 +212,31 @@ impl StylePart {
                                         .get("formatCode")
                                         .ok_or(anyhow!("formatCode Attribute Not Found!"))?
                                         .to_string();
-                                    office_doc
-                                        .get_database()
-                                        .insert_record(
-                                            &insert_query_num_format,
-                                            params![
-                                                number_format.format_id,
-                                                number_format.format_code
-                                            ],
-                                            None,
-                                        )
-                                        .context("Number Format Data Insert Failed")?;
+                                    num_format_records.push(number_format);
                                 }
                             } else {
                                 break;
                             }
                         }
                     }
+                    fn row_parser(number_format: NumberFormat) -> Vec<Box<dyn ToSql>> {
+                        vec![
+                            Box::new(number_format.format_id),
+                            Box::new(number_format.format_code),
+                        ]
+                    }
+                    office_doc
+                        .get_database()
+                        .insert_records(
+                            &insert_query_num_format,
+                            num_format_records,
+                            row_parser,
+                            None,
+                        )
+                        .context("Number Format Data Insert Failed")?;
                 }
                 if let Some(mut fonts_vec) = xml_doc_mut.pop_elements_by_tag_mut("fonts", None) {
+                    let mut font_records = Vec::new();
                     if let Some(fonts) = fonts_vec.pop() {
                         // fonts
                         loop {
@@ -336,39 +343,39 @@ impl StylePart {
                                         break;
                                     }
                                 }
-                                // Insert Data into Database
-                                let insert_query_font_style = queries
-                                    .get("insert_font_style_table")
-                                    .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-
-                                office_doc
-                                    .get_database()
-                                    .insert_record(
-                                        &insert_query_font_style,
-                                        params![
-                                            font_style.name,
-                                            ColorSettingTypeValues::get_string(
-                                                font_style.color.color_setting_type
-                                            ),
-                                            font_style.color.value,
-                                            font_style.family,
-                                            font_style.size,
-                                            FontSchemeValues::get_string(font_style.font_scheme),
-                                            font_style.is_bold,
-                                            font_style.is_italic,
-                                            font_style.is_underline,
-                                            font_style.is_double_underline
-                                        ],
-                                        None,
-                                    )
-                                    .context("Insert Font Style Failed")?;
+                                font_records.push(font_style);
                             } else {
                                 break;
                             }
                         }
                     }
+                    // Insert Data into Database
+                    let insert_query_font_style = queries
+                        .get("insert_font_style_table")
+                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+                    fn row_parser(font_style: FontStyle) -> Vec<Box<dyn ToSql>> {
+                        vec![
+                            Box::new(font_style.name),
+                            Box::new(ColorSettingTypeValues::get_string(
+                                font_style.color.color_setting_type,
+                            )),
+                            Box::new(font_style.color.value),
+                            Box::new(font_style.family),
+                            Box::new(font_style.size),
+                            Box::new(FontSchemeValues::get_string(font_style.font_scheme)),
+                            Box::new(font_style.is_bold),
+                            Box::new(font_style.is_italic),
+                            Box::new(font_style.is_underline),
+                            Box::new(font_style.is_double_underline),
+                        ]
+                    }
+                    office_doc
+                        .get_database()
+                        .insert_records(&insert_query_font_style, font_records, row_parser, None)
+                        .context("Insert Font Style Failed")?;
                 }
                 if let Some(mut fills_vec) = xml_doc_mut.pop_elements_by_tag_mut("fills", None) {
+                    let mut fill_records = Vec::new();
                     if let Some(fills) = fills_vec.pop() {
                         loop {
                             if let Some((fill_id, _)) = fills.pop_child_mut() {
@@ -492,37 +499,44 @@ impl StylePart {
                                         }
                                     }
                                 }
-                                // Insert Tables Queries
-                                let insert_query_fill_style = queries
-                                    .get("insert_fill_style_table")
-                                    .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                                office_doc
-                                    .get_database()
-                                    .insert_record(
-                                        &insert_query_fill_style,
-                                        params![
-                                            to_string(&fill_style.background_color)
-                                                .context("Background Fill Parse Failed")?,
-                                            to_string(&fill_style.foreground_color)
-                                                .context("Foreground Fill Parse Failed")?,
-                                            PatternTypeValues::get_string(fill_style.pattern_type)
-                                        ],
-                                        None,
-                                    )
-                                    .context("Insert Fill Style Failed")?;
+                                fill_records.push((
+                                    to_string(&fill_style.background_color)
+                                        .context("Background Fill Parse Failed")?,
+                                    to_string(&fill_style.foreground_color)
+                                        .context("Foreground Fill Parse Failed")?,
+                                    PatternTypeValues::get_string(fill_style.pattern_type),
+                                ));
                             } else {
                                 break;
                             }
                         }
                     }
+                    // Insert Tables Queries
+                    let insert_query_fill_style = queries
+                        .get("insert_fill_style_table")
+                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+                    fn row_parser(fill_style: (String, String, String)) -> Vec<Box<dyn ToSql>> {
+                        vec![
+                            Box::new(fill_style.0),
+                            Box::new(fill_style.1),
+                            Box::new(fill_style.2),
+                        ]
+                    }
+                    office_doc
+                        .get_database()
+                        .insert_records(&insert_query_fill_style, fill_records, row_parser, None)
+                        .context("Insert Fill Style Failed")?;
                 }
                 if let Some(mut borders_vec) = xml_doc_mut.pop_elements_by_tag_mut("borders", None)
                 {
+                    let mut border_records = Vec::new();
                     if let Some(borders) = borders_vec.pop() {
+                        // Loop Each Border Style
                         loop {
                             if let Some((border_id, _)) = borders.pop_child_mut() {
                                 if let Some(border) = xml_doc_mut.pop_element_mut(&border_id) {
                                     let mut border_style = BorderStyle::default();
+                                    // Loop Details of current border
                                     loop {
                                         if let Some((border_child_id, _)) = border.pop_child_mut() {
                                             if let Some(current_element) =
@@ -580,34 +594,47 @@ impl StylePart {
                                             break;
                                         }
                                     }
-                                    let insert_query_border_style = queries
-                                        .get("insert_border_style_table")
-                                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                                    office_doc
-                                        .get_database()
-                                        .insert_record(
-                                            &insert_query_border_style,
-                                            params![
-                                                to_string(&border_style.left)
-                                                    .context("Left Border Parsing Failed")?,
-                                                to_string(&border_style.top)
-                                                    .context("Top Border Parsing Failed")?,
-                                                to_string(&border_style.right)
-                                                    .context("Right Border Parsing Failed")?,
-                                                to_string(&border_style.bottom)
-                                                    .context("Bottom Border Parsing Failed")?,
-                                                to_string(&border_style.diagonal)
-                                                    .context("diagonal Border Parsing Failed")?
-                                            ],
-                                            None,
-                                        )
-                                        .context("Insert border Style Failed")?;
+                                    border_records.push((
+                                        to_string(&border_style.left)
+                                            .context("Left Border Parsing Failed")?,
+                                        to_string(&border_style.top)
+                                            .context("Top Border Parsing Failed")?,
+                                        to_string(&border_style.right)
+                                            .context("Right Border Parsing Failed")?,
+                                        to_string(&border_style.bottom)
+                                            .context("Bottom Border Parsing Failed")?,
+                                        to_string(&border_style.diagonal)
+                                            .context("diagonal Border Parsing Failed")?,
+                                    ));
                                 }
                             } else {
                                 break;
                             }
                         }
                     }
+                    let insert_query_border_style = queries
+                        .get("insert_border_style_table")
+                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+                    fn row_parser(
+                        fill_style: (String, String, String, String, String),
+                    ) -> Vec<Box<dyn ToSql>> {
+                        vec![
+                            Box::new(fill_style.0),
+                            Box::new(fill_style.1),
+                            Box::new(fill_style.2),
+                            Box::new(fill_style.3),
+                            Box::new(fill_style.4),
+                        ]
+                    }
+                    office_doc
+                        .get_database()
+                        .insert_records(
+                            &insert_query_border_style,
+                            border_records,
+                            row_parser,
+                            None,
+                        )
+                        .context("Insert border Style Failed")?;
                 }
                 if let Some(mut cell_style_xfs_vec) =
                     xml_doc_mut.pop_elements_by_tag_mut("cellStyleXfs", None)
@@ -1020,6 +1047,7 @@ impl StylePart {
         queries: &HashMap<String, String>,
         query_target: &str,
     ) -> Result<(), AnyError> {
+        let mut style_records = Vec::new();
         loop {
             if let Some((xf_id, _)) = style_xfs.pop_child_mut() {
                 let mut cell_xf = CellXfs::default();
@@ -1099,37 +1127,41 @@ impl StylePart {
                             }
                         }
                     }
-                    let insert_query_style_xfs = queries
-                        .get(query_target)
-                        .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-                    office_doc
-                        .get_database()
-                        .insert_record(
-                            &insert_query_style_xfs,
-                            params![
-                                cell_xf.format_id,
-                                cell_xf.number_format_id,
-                                cell_xf.font_id,
-                                cell_xf.fill_id,
-                                cell_xf.border_id,
-                                cell_xf.apply_font,
-                                cell_xf.apply_alignment,
-                                cell_xf.apply_fill,
-                                cell_xf.apply_border,
-                                cell_xf.apply_number_format,
-                                cell_xf.apply_protection,
-                                cell_xf.is_wrap_text,
-                                HorizontalAlignmentValues::get_string(cell_xf.horizontal_alignment),
-                                VerticalAlignmentValues::get_string(cell_xf.vertical_alignment),
-                            ],
-                            None,
-                        )
-                        .context("Insert border Style Failed")?;
+                    style_records.push(cell_xf);
                 }
             } else {
                 break;
             }
         }
+        let insert_query_style_xfs = queries
+            .get(query_target)
+            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
+        fn row_parser(cell_xf: CellXfs) -> Vec<Box<dyn ToSql>> {
+            vec![
+                Box::new(cell_xf.format_id),
+                Box::new(cell_xf.number_format_id),
+                Box::new(cell_xf.font_id),
+                Box::new(cell_xf.fill_id),
+                Box::new(cell_xf.border_id),
+                Box::new(cell_xf.apply_font),
+                Box::new(cell_xf.apply_alignment),
+                Box::new(cell_xf.apply_fill),
+                Box::new(cell_xf.apply_border),
+                Box::new(cell_xf.apply_number_format),
+                Box::new(cell_xf.apply_protection),
+                Box::new(cell_xf.is_wrap_text),
+                Box::new(HorizontalAlignmentValues::get_string(
+                    cell_xf.horizontal_alignment,
+                )),
+                Box::new(VerticalAlignmentValues::get_string(
+                    cell_xf.vertical_alignment,
+                )),
+            ]
+        }
+        office_doc
+            .get_database()
+            .insert_records(&insert_query_style_xfs, style_records, row_parser, None)
+            .context("Insert border Style Failed")?;
         Ok(())
     }
 
@@ -1376,9 +1408,7 @@ impl StylePart {
                     .try_borrow_mut()
                     .context("Failed to get Office Handle")?;
                 // Get Number Format ID
-                {
-                    
-                }
+                {}
                 // Get Font Style ID
                 {}
                 // Get Fill Style ID

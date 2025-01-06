@@ -7,7 +7,7 @@ use crate::{
     global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{params, Row};
+use rusqlite::{params, Row, ToSql};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
@@ -151,40 +151,40 @@ impl CalculationChainPart {
     ) -> AnyResult<(), AnyError> {
         if let Some(office_doc_ref) = office_document.upgrade() {
             let queries = get_all_queries!("calculation_chain.sql");
-            if let Some(create_query) = queries.get("create_calculation_chain_table") {
-                if let Some(insert_query) = queries.get("insert_calculation_chain_table") {
-                    let office_doc = office_doc_ref
-                        .try_borrow()
-                        .context("Pulling Office Doc Failed")?;
-                    office_doc
-                        .get_database()
-                        .create_table(&create_query, None)
-                        .context("Create Share String Table Failed")?;
-                    if let Some(xml_document) = xml_document.upgrade() {
-                        let mut xml_doc_mut = xml_document
-                            .try_borrow_mut()
-                            .context("xml doc borrow failed")?;
-                        if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("c", None) {
-                            for element in elements {
-                                if let Some(attributes) = element.get_attribute() {
-                                    office_doc
-                                        .get_database()
-                                        .insert_record(
-                                            &insert_query,
-                                            params![attributes["r"], attributes["i"]],
-                                            None,
-                                        )
-                                        .context("Create Share String Table Failed")?;
-                                }
-                            }
+            let mut calc_chain_records = Vec::new();
+            let create_query = queries
+                .get("create_calculation_chain_table")
+                .ok_or(anyhow!("Getting Create Table Query Failed"))?;
+            let insert_query = queries
+                .get("insert_calculation_chain_table")
+                .ok_or(anyhow!("Getting Insert Query Failed"))?;
+            let office_doc = office_doc_ref
+                .try_borrow()
+                .context("Pulling Office Doc Failed")?;
+            office_doc
+                .get_database()
+                .create_table(&create_query, None)
+                .context("Create Share String Table Failed")?;
+            if let Some(xml_document) = xml_document.upgrade() {
+                let mut xml_doc_mut = xml_document
+                    .try_borrow_mut()
+                    .context("xml doc borrow failed")?;
+                if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("c", None) {
+                    for element in elements {
+                        if let Some(attributes) = element.get_attribute() {
+                            calc_chain_records
+                                .push((attributes["r"].clone(), attributes["i"].clone()));
                         }
                     }
-                } else {
-                    return Err(anyhow!("Insert Query Failed"));
                 }
-            } else {
-                return Err(anyhow!("Create Table Failed"));
             }
+            fn row_parser(calc_chain: (String, String)) -> Vec<Box<dyn ToSql>> {
+                vec![Box::new(calc_chain.0), Box::new(calc_chain.1)]
+            }
+            office_doc
+                .get_database()
+                .insert_records(&insert_query, calc_chain_records, row_parser, None)
+                .context("Create Share String Table Failed")?;
         }
         Ok(())
     }
