@@ -7,7 +7,7 @@ use crate::{
     global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{params, Row};
+use rusqlite::{params, Row, ToSql};
 use std::{
     cell::RefCell,
     collections::{HashMap, HashSet},
@@ -179,6 +179,7 @@ impl ShareStringPart {
         queries: &HashMap<String, String>,
     ) -> AnyResult<(), AnyError> {
         if let Some(office_doc_ref) = office_document.upgrade() {
+            let mut share_string_record = Vec::new();
             let create_query = queries
                 .get("create_share_string_table")
                 .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
@@ -202,15 +203,19 @@ impl ShareStringPart {
                             if let Some(text_element) = xml_doc_mut.pop_element_mut(&child_id) {
                                 let value =
                                     text_element.get_value().clone().unwrap_or("".to_string());
-                                office_doc
-                                    .get_database()
-                                    .insert_record(&insert_query, params![value], None)
-                                    .context("Create Share String Table Failed")?;
+                                share_string_record.push(value);
                             }
                         }
                     }
                 }
             }
+            fn row_parser(share_string: String) -> Vec<Box<dyn ToSql>> {
+                vec![Box::new(share_string)]
+            }
+            office_doc
+                .get_database()
+                .insert_records(&insert_query, share_string_record, row_parser, None)
+                .context("Create Share String Table Failed")?;
         }
         Ok(())
     }

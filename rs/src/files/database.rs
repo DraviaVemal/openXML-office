@@ -76,7 +76,7 @@ impl SqliteDatabases {
         archive_db.execute_batch(
             "
                 PRAGMA journal_mode = WAL;
-                PRAGMA synchronous = OFF;
+                PRAGMA synchronous = NORMAL;
                 PRAGMA cache_size = 204800;
                 PRAGMA temp_store = MEMORY;
                 PRAGMA locking_mode = EXCLUSIVE;
