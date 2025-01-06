@@ -293,8 +293,10 @@ fn edit_excel() {
             )
             .expect("Failed To Set Row Value");
     }
-    file.get_worksheet_mut("Style".to_string())
-        .expect("Failed to find the worksheet");
+    {
+        file.get_worksheet_mut("Style".to_string())
+            .expect("Failed to find the worksheet");
+    }
     file.save_as(&get_save_file(None))
         .expect("Save File Failed");
     assert_eq!(true, true);
