@@ -15,7 +15,7 @@ keywords = [
     "docx"
 ]
 categories = ["filesystem", "development-tools"]
-version = "4.0.0-alpha.2"
+version = "4.0.0-alpha.4"
 edition = "2021"
 
 [dependencies]

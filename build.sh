@@ -4,10 +4,12 @@
 release_flag=""
 win_binary_dir="target/x86_64-pc-windows-gnu/debug"
 linux_binary_dir="target/x86_64-unknown-linux-gnu/debug"
+target_dir="target"
 
 # Check if --release is passed as an argument
 for arg in "$@"; do
-  if [ "$arg" == "--release" ]; then
+  if [ "$arg" = "--release" ]; then
+    echo "Running Release Build"
     release_flag="--release"
     win_binary_dir="target/x86_64-pc-windows-gnu/release"
     linux_binary_dir="target/x86_64-unknown-linux-gnu/release"
@@ -72,31 +74,25 @@ cargo build $release_flag --target x86_64-pc-windows-gnu
 # Linux
 cargo build $release_flag --target x86_64-unknown-linux-gnu
 
-# Python wheel
-cd rs_ffi
-
-maturin build $release_flag -b cffi
-
-cd ..
-
 # Mac osX
 # cargo build --release --target x86_64-apple-darwin
 
 # Copy Result binary to CS targets
-cp $win_binary_dir/openxmloffice_ffi.dll cs/openxml_office/lib/openxmloffice_ffi.dll
-cp $linux_binary_dir/libopenxmloffice_ffi.so cs/openxml_office/lib/openxmloffice_ffi.so
+cp $win_binary_dir/draviavemal_openxml_office_ffi.dll cs/openxml_office/lib/draviavemal_openxml_office_ffi.dll
+cp $linux_binary_dir/libdraviavemal_openxml_office_ffi.so cs/openxml_office/lib/draviavemal_openxml_office_ffi.so
 
 # Copy Result binary to Python targets
-cp $win_binary_dir/openxmloffice_ffi.dll python/lib/openxmloffice_ffi.dll
-cp $linux_binary_dir/libopenxmloffice_ffi.so python/lib/libopenxmloffice_ffi.so
+cp $win_binary_dir/draviavemal_openxml_office_ffi.dll python/lib/draviavemal_openxml_office_ffi.dll
+cp $linux_binary_dir/libdraviavemal_openxml_office_ffi.so python/lib/libdraviavemal_openxml_office_ffi.so
+cp $target_dir/bindings.h python/lib/bindings.h
 
 # Copy Result binary to Java targets
-cp $win_binary_dir/openxmloffice_ffi.dll java/draviavemal_openxml_office/src/main/resources/lib/openxmloffice_ffi.dll
-cp $linux_binary_dir/libopenxmloffice_ffi.so java/draviavemal_openxml_office/src/main/resources/lib/openxmloffice_ffi.so
+cp $win_binary_dir/draviavemal_openxml_office_ffi.dll java/draviavemal_openxml_office/src/main/resources/lib/draviavemal_openxml_office_ffi.dll
+cp $linux_binary_dir/libdraviavemal_openxml_office_ffi.so java/draviavemal_openxml_office/src/main/resources/lib/libdraviavemal_openxml_office_ffi.so
 
 # Copy Result binary to Go targets
-cp $win_binary_dir/openxmloffice_ffi.dll go/openxml_office/src/lib/openxmloffice_ffi.dll
-cp $linux_binary_dir/libopenxmloffice_ffi.so go/openxml_office/src/lib/openxmloffice_ffi.so
+cp $win_binary_dir/draviavemal_openxml_office_ffi.dll go/openxml_office/src/lib/draviavemal_openxml_office_ffi.dll
+cp $linux_binary_dir/libdraviavemal_openxml_office_ffi.so go/openxml_office/src/lib/libdraviavemal_openxml_office_ffi.so
 
 # Build wrapper library using link files
 
@@ -104,11 +100,20 @@ cp $linux_binary_dir/libopenxmloffice_ffi.so go/openxml_office/src/lib/openxmlof
 
 cd cs
 
-dotnet build
+if [ "$release_flag" = "--release" ]; then
+  dotnet build --configuration Release
+else
+  dotnet build
+fi
 
 cd ..
 
 # Python Build
+cd python
+
+python3 setup.py bdist_wheel
+
+cd ..
 
 # cd python
 
