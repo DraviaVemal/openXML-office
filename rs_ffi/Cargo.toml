@@ -8,6 +8,7 @@ documentation = "https://openxml-office.draviavemal.com/"
 version = "4.0.0-alpha.2"
 edition = "2021"
 msrv = "1.32.0"
+include = ["src/**", "Cargo.toml", "Cargo.lock", "README.md"]
 
 [lib]
 crate-type = ["cdylib"]
