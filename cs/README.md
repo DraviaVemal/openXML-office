@@ -1,6 +1,6 @@
 # OpenXML Office (C# Wrapper)
 
-[![NuGet](https://img.shields.io/nuget/v/draviavemal.openxmloffice.svg)](https://www.nuget.org/packages/draviavemal.openxmloffice)
+[![NuGet](https://img.shields.io/nuget/v/draviavemal.openxml-office.svg)](https://www.nuget.org/packages/draviavemal.openxml-office)
 
 ## Short Description
 OpenXML Office is a C# wrapper built around the Rust-based core implementation of OpenXML Office. It facilitates creating, manipulating, and managing OpenXML documents such as **Word documents (.docx)**, **Excel spreadsheets (.xlsx)**, and **PowerPoint presentations (.pptx)**, while leveraging the high performance of the Rust core through a C FFI layer.
