@@ -1395,7 +1395,8 @@ impl StylePart {
         hasher.finish()
     }
 
-    pub(crate) fn get_style_id_mut(
+    pub(crate) fn 
+    get_style_id_mut(
         &mut self,
         style_setting: StyleSetting,
     ) -> AnyResult<StyleId, AnyError> {
@@ -1408,7 +1409,9 @@ impl StylePart {
                     .try_borrow_mut()
                     .context("Failed to get Office Handle")?;
                 // Get Number Format ID
-                {}
+                {
+                    
+                }
                 // Get Font Style ID
                 {}
                 // Get Fill Style ID
