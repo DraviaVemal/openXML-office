@@ -1,4 +1,4 @@
-use crate::{chain_error, openxml_office_ffi, StatusCode};
+use crate::{chain_error, openxml_office_fbs, StatusCode};
 use draviavemal_openxml_office::presentation_2007::{PowerPoint, PowerPointPropertiesModel};
 use std::{
     ffi::{c_char, c_void, CStr, CString},
@@ -30,7 +30,7 @@ pub extern "C" fn power_point_create(
         return StatusCode::InvalidArgument as i8;
     }
     let buffer_slice = unsafe { from_raw_parts(buffer, buffer_size) };
-    match flatbuffers::root::<openxml_office_ffi::presentation_2007::PresentationPropertiesModel>(
+    match flatbuffers::root::<openxml_office_fbs::presentation_2007::PresentationPropertiesModel>(
         buffer_slice,
     ) {
         Ok(fbs_power_point_properties) => {

@@ -38,33 +38,6 @@ impl Enum<CellDataType> for CellDataType {
     }
 }
 
-#[derive(Debug, Default, Clone)]
-pub(crate) struct RowRecord {
-    pub(crate) index: usize,
-    pub(crate) hide: Option<bool>,
-    pub(crate) span: Option<String>,
-    pub(crate) height: Option<f32>,
-    pub(crate) style_id: Option<StyleId>,
-    pub(crate) thick_top: Option<bool>,
-    pub(crate) thick_bottom: Option<bool>,
-    pub(crate) group_level: Option<usize>,
-    pub(crate) collapsed: Option<bool>,
-    pub(crate) place_holder: Option<bool>,
-}
-
-#[derive(Debug, Default, Clone)]
-pub(crate) struct CellRecord {
-    pub(crate) row_index: usize,
-    pub(crate) col_index: Option<usize>,
-    pub(crate) style_id: Option<StyleId>,
-    pub(crate) value: Option<String>,
-    pub(crate) formula: Option<String>,
-    pub(crate) data_type: Option<CellDataType>,
-    pub(crate) metadata: Option<String>,
-    pub(crate) place_holder: Option<bool>,
-    pub(crate) comment_id: Option<usize>,
-}
-
 #[derive(Debug, Default)]
 pub struct RowProperties {
     // Set Custom height for the row
@@ -75,7 +48,7 @@ pub struct RowProperties {
     pub thick_top: Option<bool>,
     pub thick_bottom: Option<bool>,
     // Column group to use with collapse expand
-    pub(crate) group_level: Option<usize>,
+    pub(crate) group_level: Option<u8>,
     // Collapse the current column
     pub(crate) collapsed: Option<bool>,
     pub(crate) place_holder: Option<bool>,
@@ -85,9 +58,9 @@ pub struct RowProperties {
 #[derive(Debug)]
 pub struct ColumnProperties {
     // Start Column index
-    pub(crate) min: usize,
+    pub(crate) min: u16,
     // End Column Index
-    pub(crate) max: usize,
+    pub(crate) max: u16,
     // width value
     pub width: Option<f32>,
     // hide the specific column
@@ -117,10 +90,8 @@ impl Default for ColumnProperties {
     }
 }
 
-#[derive(Debug)]
-pub struct ColumnCell {
-    pub(crate) row_index: usize,
-    pub(crate) col_index: usize,
+#[derive(Debug, Clone)]
+pub struct CellProperties {
     pub formula: Option<String>,
     pub value: Option<String>,
     pub data_type: CellDataType,
@@ -132,11 +103,9 @@ pub struct ColumnCell {
     pub(crate) place_holder: Option<bool>,
 }
 
-impl Default for ColumnCell {
+impl Default for CellProperties {
     fn default() -> Self {
         Self {
-            row_index: 1,
-            col_index: 1,
             formula: None,
             value: None,
             data_type: CellDataType::Auto,

@@ -38,8 +38,8 @@ impl CommonServices {
 
 // ########################### Share String ########################
 impl CommonServices {
-    pub(crate) fn get_string_id(&self, value: String) -> AnyResult<String, AnyError> {
-        self.share_string.get_string_id(value)
+    pub(crate) fn get_string_id_mut(&mut self, value: String) -> AnyResult<String, AnyError> {
+        self.share_string.get_string_id_mut(value)
     }
 }
 

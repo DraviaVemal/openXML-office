@@ -1174,7 +1174,7 @@ namespace openxmloffice.tests
         [TestMethod]
         public void OpenExistingExcelStyleString()
         {
-            Excel excel1 = new("./TestFiles/basic_test.xlsx");
+            Excel excel1 = new("./test_files/basic_test.xlsx");
             excel1.SaveAs(string.Format("{1}/EditStyle-{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), resultPath));
             Assert.IsTrue(true);
         }

@@ -1,4 +1,4 @@
-from openxml_office_ffi.presentation_2007 import PresentationPropertiesModel;
+from openxml_office_fbs.presentation_2007 import PresentationPropertiesModel;
 from flatbuffers import Builder;
 
 class PowerPoint:

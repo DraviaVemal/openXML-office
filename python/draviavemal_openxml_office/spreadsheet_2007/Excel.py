@@ -1,6 +1,6 @@
 import draviavemal_openxml_office_ffi;
 from cffi import FFI
-from openxml_office_ffi.spreadsheet_2007 import ExcelPropertiesModel;
+from openxml_office_fbs.spreadsheet_2007 import ExcelPropertiesModel;
 from flatbuffers import Builder;
 
 class Excel:

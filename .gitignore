@@ -88,7 +88,7 @@ Desktop.ini
 **/*.d.ts
 
 # Commons
-**/openxml_office_ffi
+**/openxml_office_fbs
 **/target
 **/lib
 **/test_results

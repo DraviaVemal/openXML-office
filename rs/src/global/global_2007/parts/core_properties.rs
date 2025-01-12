@@ -25,8 +25,8 @@ impl Drop for CorePropertiesPart {
 
 impl XmlDocumentPartCommon for CorePropertiesPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>
+    {
         let content = COMMON_TYPE_COLLECTION.get("docProps_core").unwrap();
         Ok((
             XmlSerializer::vec_to_xml_doc_tree(
@@ -34,8 +34,8 @@ impl XmlDocumentPartCommon for CorePropertiesPart {
             )
             .context("Initializing Core Property Failed")?,
             Some(content.content_type.to_string()),
-            Some(content.extension.to_string()),
-            Some(content.extension_type.to_string()),
+            content.extension.to_string(),
+            content.extension_type.to_string(),
         ))
     }
 

@@ -1,5 +1,6 @@
 use crate::files::{XmlDocument, XmlElement};
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
+use quick_xml::escape::escape;
 
 pub struct XmlDeSerializer {}
 
@@ -138,7 +139,7 @@ impl XmlDeSerializer {
                 format!(
                     " {}",
                     keys.iter()
-                        .map(|key| format!("{}=\"{}\"", key, attributes.get(key).unwrap()))
+                        .map(|key| format!("{}=\"{}\"", key, escape(attributes.get(key).unwrap())))
                         .collect::<Vec<String>>()
                         .join(" ")
                 )
@@ -154,6 +155,6 @@ impl XmlDeSerializer {
     }
 
     fn generate_xml_value_close(value: &str, xml_element: &XmlElement) -> String {
-        format!("{}</{}>", value, xml_element.get_tag())
+        format!("{}</{}>", escape(value), xml_element.get_tag())
     }
 }

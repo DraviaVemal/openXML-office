@@ -1,4 +1,4 @@
-from openxml_office_ffi.document_2007 import DocumentPropertiesModel;
+from openxml_office_fbs.document_2007 import DocumentPropertiesModel;
 from flatbuffers import Builder;
 
 class Word:
