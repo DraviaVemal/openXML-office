@@ -1,6 +1,6 @@
 include "../global_2007/consolidated.fbs";
 
-namespace openxml_office_ffi.presentation_2007;
+namespace openxml_office_fbs.presentation_2007;
 
 // Define the PresentationPropertiesModel table with three fields
 table PresentationPropertiesModel {

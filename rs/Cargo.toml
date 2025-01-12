@@ -28,12 +28,10 @@ anyhow = "1.0.90"
 chrono = "0.4.38"
 flate2 = "1.0.34"
 quick-xml = { version = "0.37.0" }
-rusqlite = { version = "0.32.0", features = ["bundled"] }
 tempfile = "3.13.0"
 zip = "2.2.0"
 serde = { version = "1.0.215", features = ["derive"] }
 phf = { version = "0.11.2", features = ["macros"] }
-serde_json = "1.0.133"
 
 [dev-dependencies]
 criterion = "0.5"

@@ -73,13 +73,13 @@ fn sheet_handling() {
     file.add_sheet_mut(Some("RenameThisSheet".to_string()))
         .expect("Failed to add static Sheet");
     let close_sheet = file
-        .add_sheet_mut(Some("deletethis".to_string()))
+        .add_sheet_mut(Some("deleteThis".to_string()))
         .expect("Failed to add static Sheet");
     close_sheet.flush().expect("Failed to Close Work Sheet");
     file.add_sheet_mut(None)
         .expect("Failed to add dynamic Sheet");
     let delete_sheet = file
-        .get_worksheet_mut("deletethis".to_string())
+        .get_worksheet_mut("deleteThis".to_string())
         .expect("Failed to Get the Worksheet");
     delete_sheet
         .delete_sheet_mut()
@@ -176,37 +176,37 @@ fn set_row_property() {
     row_prop
         .set_row_index_properties_mut(
             &1,
-            Some(crate::spreadsheet_2007::models::RowProperties {
+            crate::spreadsheet_2007::models::RowProperties {
                 height: Some(100 as f32),
                 ..crate::spreadsheet_2007::models::RowProperties::default()
-            }),
+            },
         )
         .expect("Failed to set row height");
     row_prop
         .set_row_index_properties_mut(
             &3,
-            Some(crate::spreadsheet_2007::models::RowProperties {
+            crate::spreadsheet_2007::models::RowProperties {
                 hidden: Some(true),
                 ..crate::spreadsheet_2007::models::RowProperties::default()
-            }),
+            },
         )
         .expect("Failed to set row height");
     row_prop
         .set_row_index_properties_mut(
             &5,
-            Some(crate::spreadsheet_2007::models::RowProperties {
+            crate::spreadsheet_2007::models::RowProperties {
                 thick_bottom: Some(true),
                 ..crate::spreadsheet_2007::models::RowProperties::default()
-            }),
+            },
         )
         .expect("Failed to set row height");
     row_prop
         .set_row_index_properties_mut(
             &7,
-            Some(crate::spreadsheet_2007::models::RowProperties {
+            crate::spreadsheet_2007::models::RowProperties {
                 thick_top: Some(true),
                 ..crate::spreadsheet_2007::models::RowProperties::default()
-            }),
+            },
         )
         .expect("Failed to set row height");
     row_prop.flush().expect("Failed to write Data");
@@ -262,6 +262,58 @@ fn set_column_property() {
 }
 
 #[test]
+fn set_cell_style() {
+    let mut file = crate::spreadsheet_2007::Excel::new(
+        Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
+        crate::spreadsheet_2007::ExcelPropertiesModel {
+            is_in_memory: false,
+            is_editable: true,
+        },
+    )
+    .expect("Open Existing File Failed");
+    let style_id = file
+        .get_style_id_mut(crate::spreadsheet_2007::models::StyleSetting {
+            ..Default::default()
+        })
+        .expect("Failed to get Style Id");
+    {
+        let mut formula = file
+            .get_worksheet_mut("formula".to_string())
+            .expect("Failed to find the worksheet");
+        formula
+            .set_row_value_ref_mut(
+                "V3",
+                vec![
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Dravia".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Vemal".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("style".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(style_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                ],
+            )
+            .expect("Failed To Set Row Value");
+    }
+    {
+        file.get_worksheet_mut("Style".to_string())
+            .expect("Failed to find the worksheet");
+    }
+    file.save_as(&get_save_file(None))
+        .expect("Save File Failed");
+    assert_eq!(true, true);
+}
+
+#[test]
 fn edit_excel() {
     let mut file = crate::spreadsheet_2007::Excel::new(
         Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
@@ -279,15 +331,15 @@ fn edit_excel() {
             .set_row_value_ref_mut(
                 "V3",
                 vec![
-                    crate::spreadsheet_2007::models::ColumnCell {
+                    crate::spreadsheet_2007::models::CellProperties {
                         value: Some("Dravia".to_string()),
                         data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
-                        ..crate::spreadsheet_2007::models::ColumnCell::default()
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
-                    crate::spreadsheet_2007::models::ColumnCell {
+                    crate::spreadsheet_2007::models::CellProperties {
                         value: Some("Vemal".to_string()),
                         data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
-                        ..crate::spreadsheet_2007::models::ColumnCell::default()
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
                 ],
             )
@@ -296,6 +348,43 @@ fn edit_excel() {
     {
         file.get_worksheet_mut("Style".to_string())
             .expect("Failed to find the worksheet");
+    }
+    file.save_as(&get_save_file(None))
+        .expect("Save File Failed");
+    assert_eq!(true, true);
+}
+
+#[test]
+fn big_excel() {
+    let mut file = crate::spreadsheet_2007::Excel::new(
+        Some("src/tests/TestFiles/big.xlsx".to_string()),
+        crate::spreadsheet_2007::ExcelPropertiesModel {
+            is_in_memory: false,
+            is_editable: true,
+        },
+    )
+    .expect("Open Existing File Failed");
+    {
+        let mut formula = file
+            .get_worksheet_mut("Data1 - big".to_string())
+            .expect("Failed to find the worksheet");
+        formula
+            .set_row_value_ref_mut(
+                "V3",
+                vec![
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Dravia".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Vemal".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                ],
+            )
+            .expect("Failed To Set Row Value");
     }
     file.save_as(&get_save_file(None))
         .expect("Save File Failed");

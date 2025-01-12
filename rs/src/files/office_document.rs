@@ -1,14 +1,12 @@
 use crate::{
     file_handling::{compress_content, decompress_content},
-    files::{SqliteDatabases, XmlDeSerializer, XmlDocument, XmlSerializer},
-    get_all_queries,
+    files::{XmlDeSerializer, XmlDocument, XmlSerializer},
     global_2007::parts::ContentTypesPart,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{params, Error, Row};
 use std::{
     cell::RefCell,
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     fs::{metadata, remove_file, File},
     io::{Cursor, Read, Write},
     rc::{Rc, Weak},
@@ -17,88 +15,53 @@ use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
 #[derive(Debug)]
 pub(crate) struct OfficeDocument {
-    sqlite_database: SqliteDatabases,
     /// Key : File_Name -> Value : (File Handle, Content Type, File Extension, Extension Type)
-    xml_document_collection: HashMap<
+    xml_document_collection:
+        HashMap<String, (Rc<RefCell<XmlDocument>>, Option<String>, String, String)>,
+    /// Key : File_name -> Value : (File_Extension,Extension_Type,Content_type,Compressed_Size,Uncompressed_Size,Compression_Level,File_Content)
+    archive_collection: HashMap<
         String,
         (
-            Rc<RefCell<XmlDocument>>,
+            String,
+            String,
             Option<String>,
-            Option<String>,
-            Option<String>,
+            usize,
+            usize,
+            usize,
+            Option<Vec<u8>>,
         ),
     >,
-    queries: HashMap<String, String>,
 }
 
 impl OfficeDocument {
     /// Create or Clone existing document to start with
     pub(crate) fn new(file_path: Option<String>, is_in_memory: bool) -> AnyResult<Self, AnyError> {
-        let sqlite_database: SqliteDatabases =
-            SqliteDatabases::new(is_in_memory).context("Sqlite database initialization failed")?;
-        let queries = get_all_queries!("office_document.sql");
-        Self::initialize_database(&sqlite_database, &queries)
-            .context("Initialize Database Failed")?;
+        let mut archive_collection = HashMap::new();
         if let Some(file_path) = file_path {
             // Load existing file to our system
-            Self::load_archive_into_database(&sqlite_database, &queries, &file_path)
+            archive_collection = Self::load_archive_into_database(&file_path)
                 .context("Load OpenXML Archive Into Database Failed")?;
         }
         Ok(Self {
-            sqlite_database,
             xml_document_collection: HashMap::new(),
-            queries,
+            archive_collection,
         })
     }
 
-    /// Get DB Options
-    pub(crate) fn get_database(&self) -> &SqliteDatabases {
-        &self.sqlite_database
+    pub(crate) fn check_file_exist(&self, file_path: String) -> bool {
+        self.archive_collection.contains_key(&file_path)
     }
 
-    pub(crate) fn check_file_exist(&self, file_path: String) -> AnyResult<bool, AnyError> {
-        if let Some(count) = self
-            .get_database()
-            .get_count(
-                self.queries
-                    .get("count_archive_content")
-                    .ok_or(anyhow!("Reading Query Failed"))?,
-                params![file_path],
-                None,
-            )
-            .context("Get count DB Execution Failed")?
-        {
-            Ok(count > 0)
-        } else {
-            Ok(false)
-        }
-    }
-
-    pub(crate) fn delete_document_mut(&mut self, file_name: &str) -> AnyResult<(), AnyError> {
-        let file_path = if file_name.starts_with("/") {
-            file_name.strip_prefix("/").unwrap()
-        } else {
-            file_name
-        };
-        self.xml_document_collection.remove(file_path);
-        // Delete DB Data
-        let query = self
-            .queries
-            .get("delete_archive_content")
-            .unwrap()
-            .to_owned();
-        self.get_database()
-            .delete_record(&query, params![file_path], None)
-            .context("Delete File Record Failed")?;
-        Ok(())
+    pub(crate) fn delete_document_mut(&mut self, file_name: &str) {
+        self.archive_collection.remove(file_name);
     }
 
     pub(crate) fn get_xml_document_ref(
         &mut self,
         file_name: &str,
         content_type: Option<String>,
-        file_extension: Option<String>,
-        extension_type: Option<String>,
+        file_extension: String,
+        extension_type: String,
         xml_tree: XmlDocument,
     ) -> AnyResult<Weak<RefCell<XmlDocument>>, AnyError> {
         let ref_xml_document = Rc::new(RefCell::new(xml_tree));
@@ -112,55 +75,33 @@ impl OfficeDocument {
                 extension_type.clone(),
             ),
         );
-        let mut vec: Vec<u8> = Vec::new();
-        Self::insert_update_archive_record(
-            &self.sqlite_database,
-            &self.queries,
-            file_name,
-            file_extension,
-            extension_type,
-            content_type,
-            &mut vec,
-        )
-        .context("Create or update archive DB record Failed")?;
         Ok(weak_xml_document)
     }
 
     /// Get Xml tree from content if not already open
-    pub(crate) fn get_xml_tree(
-        &self,
+    pub(crate) fn get_xml_tree_mut(
+        &mut self,
         file_path: &str,
-    ) -> AnyResult<Option<(XmlDocument, Option<String>, Option<String>, Option<String>)>, AnyError>
-    {
+    ) -> AnyResult<Option<(XmlDocument, Option<String>, String, String)>, AnyError> {
         // Check is the file path object already exist
         if self.xml_document_collection.get(file_path).is_some() {
             return Err(anyhow!(
                 "Please close the Existing object before creating new handle"
             ));
         }
-        let query = self
-            .queries
-            .get("select_archive_content")
-            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-        fn row_mapper(
-            row: &Row,
-        ) -> AnyResult<(Vec<u8>, Option<String>, Option<String>, Option<String>), Error> {
-            Result::Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
-        }
-        let result = self
-            .get_database()
-            .find_one(&query, params![file_path], row_mapper, None)
-            .map_err(|e| anyhow!("Failed to execute the Find one Query : {}", e))?;
-        if let Some((filet_content, content_type, file_extension, extension_type)) = result {
-            let decompressed_data: Vec<u8> =
-                decompress_content(&filet_content).context("Raw Content Decompression Failed")?;
+        if let Some((file_extension, extension_type, content_type, _, _, _, file_content)) =
+            self.archive_collection.remove(file_path)
+        {
+            let content = file_content.ok_or(anyhow!("Failed To Get content vec"))?;
+            let decompressed_data =
+                decompress_content(&content).context("Raw Content Decompression Failed")?;
             let xml_tree: XmlDocument = XmlSerializer::vec_to_xml_doc_tree(decompressed_data)
                 .context("Xml Serializer Failed")?;
             Ok(Some((
                 xml_tree,
-                content_type,
-                file_extension,
-                extension_type,
+                content_type.clone(),
+                file_extension.clone(),
+                extension_type.clone(),
             )))
         } else {
             Ok(None)
@@ -175,21 +116,32 @@ impl OfficeDocument {
             let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("Failed to get document handle")?;
-            let mut uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc_mut)
-                .context(format!(
-                    "Failed Xml Tree to String content, File : {}",
-                    file_path
-                ))?;
-            Self::insert_update_archive_record(
-                &self.sqlite_database,
-                &self.queries,
-                file_path,
-                file_extension,
-                extension_type,
-                content_type,
-                &mut uncompressed_data,
-            )
-            .context("Create or update archive DB record Failed")?;
+            let uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc_mut).context(
+                format!("Failed Xml Tree to String content, File : {}", file_path),
+            )?;
+            let compression_level = 4;
+            let compressed = compress_content(&uncompressed_data, compression_level)
+                .context("Recompressing in GZip Failed")?;
+            self.archive_collection
+                .entry(file_path.to_string())
+                .and_modify(|value| {
+                    value.0 = file_extension.clone();
+                    value.1 = extension_type.clone();
+                    value.2 = content_type.clone();
+                    value.3 = compressed.len();
+                    value.4 = uncompressed_data.len();
+                    value.5 = compression_level;
+                    value.6 = Some(compressed.clone());
+                })
+                .or_insert((
+                    file_extension,
+                    extension_type,
+                    content_type,
+                    compressed.len(),
+                    uncompressed_data.len(),
+                    compression_level,
+                    Some(compressed),
+                ));
         }
         Ok(())
     }
@@ -217,42 +169,29 @@ impl OfficeDocument {
             .context("Save File Write Failed")
     }
 
-    /// Initialize Local archive Database
-    fn initialize_database(
-        sqlite_databases: &SqliteDatabases,
-        queries: &HashMap<String, String>,
-    ) -> AnyResult<usize, AnyError> {
-        let archive_create = queries
-            .get("create_archive_table")
-            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-        sqlite_databases
-            .create_table(&archive_create, None)
-            .context("Initialize Database Failed for Office Document")
-    }
-
     /// Save the database content into file archive
     fn save_database_into_archive(&self) -> AnyResult<Vec<u8>, AnyError> {
-        let extensions: Vec<(String, String)>;
+        let mut extensions: Vec<(String, String)> = Vec::new();
         let mut overrides: Vec<(String, String)> = Vec::new();
         let mut buffer = Cursor::new(Vec::new());
         let mut zip_writer: ZipWriter<&mut Cursor<Vec<u8>>> = ZipWriter::new(&mut buffer);
         let zip_option = SimpleFileOptions::default().compression_level(Some(4));
         // Load Files into Archive and add Override for content types
         {
-            let query = self
-                .queries
-                .get("select_archive_files")
-                .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-            fn row_mapper(
-                row: &Row,
-            ) -> AnyResult<(String, Option<String>, Option<Vec<u8>>), Error> {
-                Ok((row.get(0)?, row.get(1)?, row.get(2)?))
-            }
-            let files = self
-                .sqlite_database
-                .find_many(&query, params![], row_mapper, None)
-                .context("Query Get Many Failed")?;
-            for (file_name, content_type, file_content) in files {
+            for (
+                file_name,
+                (
+                    file_extension,
+                    extension_type,
+                    content_type,
+                    compress_size,
+                    uncompress_size,
+                    compression_level,
+                    file_content,
+                ),
+            ) in self.archive_collection.to_owned()
+            {
+                extensions.push((file_extension, extension_type));
                 if let Some(content_type) = content_type {
                     overrides.push((format!("/{}", file_name), content_type));
                 }
@@ -268,32 +207,19 @@ impl OfficeDocument {
                 }
             }
         }
-        // Load extensions and prepare for content type
-        {
-            let query = self
-                .queries
-                .get("select_extensions")
-                .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-            fn row_mapper(row: &Row) -> AnyResult<(String, String), Error> {
-                Ok((row.get(0)?, row.get(1)?))
-            }
-            let rows = self
-                .sqlite_database
-                .find_many(&query, params![], row_mapper, None)
-                .context("Query Get Many Failed")?;
-            extensions = rows
-                .iter()
-                .map(|(file_extension, content_type)| {
-                    (file_extension.to_string(), content_type.to_string())
-                })
-                .collect();
-        }
         // Insert Content Type Details into Archive
         zip_writer
             .start_file("[Content_Types].xml", zip_option)
             .context("Zip File Write Start Fail")?;
-        let content_type_file = ContentTypesPart::create_xml_file(extensions, overrides)
-            .context("Creating Content Type XML Failed")?;
+        let content_type_file = ContentTypesPart::create_xml_file(
+            extensions
+                .into_iter()
+                .collect::<HashSet<_>>()
+                .into_iter()
+                .collect::<Vec<_>>(),
+            overrides,
+        )
+        .context("Creating Content Type XML Failed")?;
         zip_writer
             .write_all(&content_type_file)
             .context("Writing compressed data to ZIp")?;
@@ -303,11 +229,24 @@ impl OfficeDocument {
 
     /// Read Zip file and load it into database after compression
     fn load_archive_into_database(
-        sqlite_database: &SqliteDatabases,
-        queries: &HashMap<String, String>,
         file_path: &str,
-    ) -> AnyResult<(), AnyError> {
+    ) -> AnyResult<
+        HashMap<
+            String,
+            (
+                String,
+                String,
+                Option<String>,
+                usize,
+                usize,
+                usize,
+                Option<Vec<u8>>,
+            ),
+        >,
+        AnyError,
+    > {
         let file: File = File::open(file_path).context("Open Existing archive File")?;
+        let mut archive_collection = HashMap::new();
         let mut zip_read: ZipArchive<File> =
             ZipArchive::new(file).context("Archive read Failed")?;
         let mut uncompressed_file = Vec::new();
@@ -328,16 +267,16 @@ impl OfficeDocument {
             .context("Failed to pull extensions list")?;
         // Load File Content To DB
         for file_name in file_names {
-            let mut file_extension = None;
-            let mut extension_type = None;
+            let mut file_extension = String::new();
+            let mut extension_type = String::new();
             let mut uncompressed_data = Vec::new();
             let f_extension = file_name.rsplit(".").next();
             if let Some(f_extension) = f_extension {
                 if let Some(extensions) = extension_collection.clone() {
                     let item = extensions.iter().find(|item| item.0 == f_extension);
                     if let Some(extension) = item {
-                        file_extension = Some(extension.0.to_string());
-                        extension_type = Some(extension.1.to_string());
+                        file_extension = extension.0.to_string();
+                        extension_type = extension.1.to_string();
                     }
                 }
             }
@@ -349,51 +288,22 @@ impl OfficeDocument {
             let content_type = content_types_part
                 .get_override_content_type(&file_name)
                 .context("Failed to extract Content Type")?;
-            Self::insert_update_archive_record(
-                sqlite_database,
-                queries,
-                &file_name,
-                file_extension,
-                extension_type,
-                content_type,
-                &mut uncompressed_data,
-            )
-            .context("Create or update archive DB record Failed")?;
-        }
-        Ok(())
-    }
-
-    fn insert_update_archive_record(
-        sqlite_database: &SqliteDatabases,
-        queries: &HashMap<String, String>,
-        file_path: &str,
-        file_extension: Option<String>,
-        extension_type: Option<String>,
-        content_type: Option<String>,
-        uncompressed_data: &mut Vec<u8>,
-    ) -> AnyResult<(), AnyError> {
-        let insert_archive_query = queries
-            .get("insert_archive_table")
-            .ok_or_else(|| anyhow!("Expected Query Not Found"))?;
-        let compression_level = 4;
-        let compressed = compress_content(&uncompressed_data, compression_level)
-            .context("Recompressing in GZip Failed")?;
-        sqlite_database
-            .insert_record(
-                &insert_archive_query,
-                params![
-                    file_path,
+            let compression_level = 4;
+            let compressed = compress_content(&uncompressed_data, compression_level)
+                .context("Recompressing in GZip Failed")?;
+            archive_collection.insert(
+                file_name,
+                (
                     file_extension,
                     extension_type,
                     content_type,
                     compressed.len(),
                     uncompressed_data.len(),
                     compression_level,
-                    compressed
-                ],
-                None,
-            )
-            .context("Archive content load failed.")?;
-        Ok(())
+                    Some(compressed),
+                ),
+            );
+        }
+        Ok(archive_collection)
     }
 }

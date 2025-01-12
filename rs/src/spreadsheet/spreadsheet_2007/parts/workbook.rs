@@ -69,16 +69,20 @@ impl Drop for WorkbookPart {
 
 impl XmlDocumentPartCommon for WorkbookPart {
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>
+    {
         let content = EXCEL_TYPE_COLLECTION.get("workbook").unwrap();
-        let template_core_properties = include_str!("workbook.xml");
+        let template_core_properties = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+    <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7" />
+</workbook>"#;
         Ok((
             XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
                 .context("Initializing Workbook Failed")?,
             Some(content.content_type.to_string()),
-            Some(content.extension.to_string()),
-            Some(content.extension_type.to_string()),
+            content.extension.to_string(),
+            content.extension_type.to_string(),
         ))
     }
 

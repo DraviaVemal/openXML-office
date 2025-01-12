@@ -26,9 +26,9 @@ pub(crate) trait XmlDocumentPartCommon {
                     .upgrade()
                     .ok_or(anyhow!("Document Upgrade Handled Failed"))
                     .context("XML Document Read Failed")?
-                    .try_borrow()
+                    .try_borrow_mut()
                     .context("Failed to borrow handle")?
-                    .get_xml_tree(file_name)
+                    .get_xml_tree_mut(file_name)
                     .context(format!("XML Tree Parsing Failed for File : {}", file_name))?
             {
                 (xml_document, content_type, file_extension, extension_type)
@@ -50,8 +50,7 @@ pub(crate) trait XmlDocumentPartCommon {
             )
     }
     /// Initialize the content if not already exist . // File Content , Content Type, File Extension, Extension Type
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError>;
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>;
 }
 
 #[warn(drop_bounds)]

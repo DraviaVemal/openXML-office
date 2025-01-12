@@ -3,17 +3,16 @@ use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
 use crate::{
     files::{OfficeDocument, XmlDocument},
-    get_all_queries,
     global_2007::traits::XmlDocumentPart,
 };
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
-use rusqlite::{params, Row, ToSql};
 use std::{cell::RefCell, collections::HashMap, rc::Weak};
 
 #[derive(Debug)]
 pub struct CalculationChainPart {
     office_document: Weak<RefCell<OfficeDocument>>,
     parent_relationship_part: Weak<RefCell<RelationsPart>>,
+    calculation_collection: Vec<(String, String, Option<String>)>,
     xml_document: Weak<RefCell<XmlDocument>>,
     file_path: String,
 }
@@ -30,27 +29,14 @@ impl XmlDocumentPartCommon for CalculationChainPart {
         Self: Sized,
     {
         if let Some(office_doc_ref) = self.office_document.upgrade() {
-            let select_query = get_all_queries!("calculation_chain.sql")
-                .get("select_calculation_chain_table")
-                .unwrap()
-                .to_owned();
-            fn row_mapper(row: &Row) -> AnyResult<(String, String), rusqlite::Error> {
-                Ok((row.get(0)?, row.get(1)?))
-            }
-            let string_collection = office_doc_ref
-                .try_borrow()
-                .context("Failed to get office handle at Calculation Chain")?
-                .get_database()
-                .find_many(&select_query, params![], row_mapper, None)
-                .context("Failed to Pull All Calculation Chain Items")?;
-            if string_collection.len() > 0 {
+            if self.calculation_collection.len() > 0 {
                 if let Some(xml_document) = self.xml_document.upgrade() {
                     let mut xml_doc_mut = xml_document
                         .try_borrow_mut()
                         .context("Failed to pull document handle")?;
-                    for (cell_id, sheet_id) in string_collection {
+                    for (cell_key, sheet_id, _l) in self.calculation_collection.to_owned() {
                         let mut attributes = HashMap::new();
-                        attributes.insert("r".to_string(), cell_id);
+                        attributes.insert("r".to_string(), cell_key);
                         attributes.insert("i".to_string(), sheet_id);
                         xml_doc_mut
                             .append_child_mut("c", None)
@@ -71,15 +57,15 @@ impl XmlDocumentPartCommon for CalculationChainPart {
                     office_doc_ref
                         .try_borrow_mut()
                         .context("Failed to Borrow Share Tree")?
-                        .delete_document_mut(&self.file_path)?;
+                        .delete_document_mut(&self.file_path);
                 }
             }
         }
         Ok(())
     }
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>
+    {
         let content = EXCEL_TYPE_COLLECTION.get("calc_chain").unwrap();
         let mut attributes: HashMap<String, String> = HashMap::new();
         attributes.insert(
@@ -99,8 +85,8 @@ impl XmlDocumentPartCommon for CalculationChainPart {
         Ok((
             xml_document,
             Some(content.content_type.to_string()),
-            Some(content.extension.to_string()),
-            Some(content.extension_type.to_string()),
+            content.extension.to_string(),
+            content.extension_type.to_string(),
         ))
     }
 }
@@ -114,11 +100,12 @@ impl XmlDocumentPart for CalculationChainPart {
             .context("Failed to pull calc chain file name")?
             .to_string();
         let mut xml_document = Self::get_xml_document(&office_document, &file_name)?;
-        Self::load_content_to_database(&office_document, &mut xml_document)
+        let calculation_collection = Self::load_content_to_database(&mut xml_document)
             .context("Load Calculation Chain To DB Failed")?;
         Ok(Self {
             office_document,
             parent_relationship_part,
+            calculation_collection,
             xml_document,
             file_path: file_name,
         })
@@ -146,46 +133,25 @@ impl CalculationChainPart {
         }
     }
     fn load_content_to_database(
-        office_document: &Weak<RefCell<OfficeDocument>>,
         xml_document: &mut Weak<RefCell<XmlDocument>>,
-    ) -> AnyResult<(), AnyError> {
-        if let Some(office_doc_ref) = office_document.upgrade() {
-            let queries = get_all_queries!("calculation_chain.sql");
-            let mut calc_chain_records = Vec::new();
-            let create_query = queries
-                .get("create_calculation_chain_table")
-                .ok_or(anyhow!("Getting Create Table Query Failed"))?;
-            let insert_query = queries
-                .get("insert_calculation_chain_table")
-                .ok_or(anyhow!("Getting Insert Query Failed"))?;
-            let office_doc = office_doc_ref
-                .try_borrow()
-                .context("Pulling Office Doc Failed")?;
-            office_doc
-                .get_database()
-                .create_table(&create_query, None)
-                .context("Create Share String Table Failed")?;
-            if let Some(xml_document) = xml_document.upgrade() {
-                let mut xml_doc_mut = xml_document
-                    .try_borrow_mut()
-                    .context("xml doc borrow failed")?;
-                if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("c", None) {
-                    for element in elements {
-                        if let Some(attributes) = element.get_attribute() {
-                            calc_chain_records
-                                .push((attributes["r"].clone(), attributes["i"].clone()));
-                        }
+    ) -> AnyResult<Vec<(String, String, Option<String>)>, AnyError> {
+        let mut calculation_collection = Vec::new();
+        if let Some(xml_document) = xml_document.upgrade() {
+            let mut xml_doc_mut = xml_document
+                .try_borrow_mut()
+                .context("xml doc borrow failed")?;
+            if let Some(elements) = xml_doc_mut.pop_elements_by_tag_mut("c", None) {
+                for element in elements {
+                    if let Some(attributes) = element.get_attribute() {
+                        calculation_collection.push((
+                            attributes["r"].clone(),
+                            attributes["i"].clone(),
+                            attributes.get("l").cloned(),
+                        ));
                     }
                 }
             }
-            fn row_parser(calc_chain: (String, String)) -> Vec<Box<dyn ToSql>> {
-                vec![Box::new(calc_chain.0), Box::new(calc_chain.1)]
-            }
-            office_doc
-                .get_database()
-                .insert_records(&insert_query, calc_chain_records, row_parser, None)
-                .context("Create Share String Table Failed")?;
         }
-        Ok(())
+        Ok(calculation_collection)
     }
 }

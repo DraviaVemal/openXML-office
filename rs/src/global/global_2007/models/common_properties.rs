@@ -29,5 +29,5 @@ pub enum HyperlinkPropertyTypeValues {
 //     }
 // }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct HyperlinkProperties {}

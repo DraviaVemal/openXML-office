@@ -41,15 +41,14 @@ impl XmlDocumentPartCommon for RelationsPart {
                 xml_document
                     .try_borrow_mut()
                     .context("Failed to Pull Open XML Handle")?
-                    .delete_document_mut(&self.file_path)
-                    .context("Failed to delete document from database")?;
+                    .delete_document_mut(&self.file_path);
             }
         }
         Ok(())
     }
     /// Initialize xml content for this part from base template
-    fn initialize_content_xml(
-    ) -> AnyResult<(XmlDocument, Option<String>, Option<String>, Option<String>), AnyError> {
+    fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>
+    {
         let relationship_content = COMMON_TYPE_COLLECTION.get("rels").unwrap();
         let mut attributes = HashMap::new();
         attributes.insert(
@@ -65,8 +64,8 @@ impl XmlDocumentPartCommon for RelationsPart {
         Ok((
             xml_document,
             None,
-            Some(relationship_content.extension.to_string()),
-            Some(relationship_content.extension_type.to_string()),
+            relationship_content.extension.to_string(),
+            relationship_content.extension_type.to_string(),
         ))
     }
 }

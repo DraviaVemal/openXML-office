@@ -1,11 +1,133 @@
 use crate::global_2007::traits::Enum;
-use rusqlite::{
-    types::{FromSql, FromSqlError, ToSqlOutput, ValueRef},
-    ToSql,
-};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum NumberFormatValues {
+    General,
+    Integer,
+    DecimalTwoPlaces,
+    ThousandsSeparator,
+    ThousandsSeparatorTwoDecimals,
+    CurrencyNoDecimals,
+    CurrencyNoDecimalsRed,
+    CurrencyTwoDecimals,
+    CurrencyTwoDecimalsRed,
+    Percentage,
+    PercentageTwoDecimals,
+    Scientific,
+    FractionOneDigit,
+    FractionTwoDigits,
+    DateMMDDYY,
+    DateDMmmYY,
+    DateDMmm,
+    DateMmmYY,
+    Time12Hour,
+    Time12HourWithSeconds,
+    Time24Hour,
+    Time24HourWithSeconds,
+    DateTimeMMDDYY,
+    AccountingNoDecimals,
+    AccountingNoDecimalsRed,
+    AccountingTwoDecimals,
+    AccountingTwoDecimalsRed,
+    AccountingNegativeInParentheses,
+    AccountingTwoDecimalsNegativeInParentheses,
+    AccountingAlignedSymbols,
+    AccountingAlignedSymbolsTwoDecimals,
+    TimeMinutesSeconds,
+    TimeHoursMinutesSeconds,
+    ElapsedTimeWithFractions,
+    ScientificOneDecimal,
+    TextFormat,
+    Custom,
+}
+
+impl Enum<NumberFormatValues> for NumberFormatValues {
+    fn get_string(input_enum: NumberFormatValues) -> String {
+        match input_enum {
+            NumberFormatValues::General => "0".to_string(),
+            NumberFormatValues::Integer => "1".to_string(),
+            NumberFormatValues::DecimalTwoPlaces => "2".to_string(),
+            NumberFormatValues::ThousandsSeparator => "3".to_string(),
+            NumberFormatValues::ThousandsSeparatorTwoDecimals => "4".to_string(),
+            NumberFormatValues::CurrencyNoDecimals => "5".to_string(),
+            NumberFormatValues::CurrencyNoDecimalsRed => "6".to_string(),
+            NumberFormatValues::CurrencyTwoDecimals => "7".to_string(),
+            NumberFormatValues::CurrencyTwoDecimalsRed => "8".to_string(),
+            NumberFormatValues::Percentage => "9".to_string(),
+            NumberFormatValues::PercentageTwoDecimals => "10".to_string(),
+            NumberFormatValues::Scientific => "11".to_string(),
+            NumberFormatValues::FractionOneDigit => "12".to_string(),
+            NumberFormatValues::FractionTwoDigits => "13".to_string(),
+            NumberFormatValues::DateMMDDYY => "14".to_string(),
+            NumberFormatValues::DateDMmmYY => "15".to_string(),
+            NumberFormatValues::DateDMmm => "16".to_string(),
+            NumberFormatValues::DateMmmYY => "17".to_string(),
+            NumberFormatValues::Time12Hour => "18".to_string(),
+            NumberFormatValues::Time12HourWithSeconds => "19".to_string(),
+            NumberFormatValues::Time24Hour => "20".to_string(),
+            NumberFormatValues::Time24HourWithSeconds => "21".to_string(),
+            NumberFormatValues::DateTimeMMDDYY => "22".to_string(),
+            NumberFormatValues::AccountingNoDecimals => "37".to_string(),
+            NumberFormatValues::AccountingNoDecimalsRed => "38".to_string(),
+            NumberFormatValues::AccountingTwoDecimals => "39".to_string(),
+            NumberFormatValues::AccountingTwoDecimalsRed => "40".to_string(),
+            NumberFormatValues::AccountingNegativeInParentheses => "41".to_string(),
+            NumberFormatValues::AccountingTwoDecimalsNegativeInParentheses => "42".to_string(),
+            NumberFormatValues::AccountingAlignedSymbols => "43".to_string(),
+            NumberFormatValues::AccountingAlignedSymbolsTwoDecimals => "44".to_string(),
+            NumberFormatValues::TimeMinutesSeconds => "45".to_string(),
+            NumberFormatValues::TimeHoursMinutesSeconds => "46".to_string(),
+            NumberFormatValues::ElapsedTimeWithFractions => "47".to_string(),
+            NumberFormatValues::ScientificOneDecimal => "48".to_string(),
+            NumberFormatValues::TextFormat => "49".to_string(),
+            NumberFormatValues::Custom => "164".to_string(),
+        }
+    }
+    fn get_enum(input_string: &str) -> Self {
+        match input_string {
+            "0" => NumberFormatValues::General,
+            "1" => NumberFormatValues::Integer,
+            "2" => NumberFormatValues::DecimalTwoPlaces,
+            "3" => NumberFormatValues::ThousandsSeparator,
+            "4" => NumberFormatValues::ThousandsSeparatorTwoDecimals,
+            "5" => NumberFormatValues::CurrencyNoDecimals,
+            "6" => NumberFormatValues::CurrencyNoDecimalsRed,
+            "7" => NumberFormatValues::CurrencyTwoDecimals,
+            "8" => NumberFormatValues::CurrencyTwoDecimalsRed,
+            "9" => NumberFormatValues::Percentage,
+            "10" => NumberFormatValues::PercentageTwoDecimals,
+            "11" => NumberFormatValues::Scientific,
+            "12" => NumberFormatValues::FractionOneDigit,
+            "13" => NumberFormatValues::FractionTwoDigits,
+            "14" => NumberFormatValues::DateMMDDYY,
+            "15" => NumberFormatValues::DateDMmmYY,
+            "16" => NumberFormatValues::DateDMmm,
+            "17" => NumberFormatValues::DateMmmYY,
+            "18" => NumberFormatValues::Time12Hour,
+            "19" => NumberFormatValues::Time12HourWithSeconds,
+            "20" => NumberFormatValues::Time24Hour,
+            "21" => NumberFormatValues::Time24HourWithSeconds,
+            "22" => NumberFormatValues::DateTimeMMDDYY,
+            "37" => NumberFormatValues::AccountingNoDecimals,
+            "38" => NumberFormatValues::AccountingNoDecimalsRed,
+            "39" => NumberFormatValues::AccountingTwoDecimals,
+            "40" => NumberFormatValues::AccountingTwoDecimalsRed,
+            "41" => NumberFormatValues::AccountingNegativeInParentheses,
+            "42" => NumberFormatValues::AccountingTwoDecimalsNegativeInParentheses,
+            "43" => NumberFormatValues::AccountingAlignedSymbols,
+            "44" => NumberFormatValues::AccountingAlignedSymbolsTwoDecimals,
+            "45" => NumberFormatValues::TimeMinutesSeconds,
+            "46" => NumberFormatValues::TimeHoursMinutesSeconds,
+            "47" => NumberFormatValues::ElapsedTimeWithFractions,
+            "48" => NumberFormatValues::ScientificOneDecimal,
+            "49" => NumberFormatValues::TextFormat,
+            _ => NumberFormatValues::Custom,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum FontSchemeValues {
     None,
     Minor,
@@ -20,7 +142,7 @@ impl Enum<FontSchemeValues> for FontSchemeValues {
             FontSchemeValues::None => "none".to_string(),
         }
     }
-    fn get_enum(input_string: &str) -> FontSchemeValues {
+    fn get_enum(input_string: &str) -> Self {
         match input_string {
             "major" => FontSchemeValues::Major,
             "minor" => FontSchemeValues::Minor,
@@ -29,7 +151,7 @@ impl Enum<FontSchemeValues> for FontSchemeValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum PatternTypeValues {
     None,
     Gray125,
@@ -54,7 +176,7 @@ impl Enum<PatternTypeValues> for PatternTypeValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq, Hash)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Hash)]
 pub enum BorderStyleValues {
     None,
     Thin,
@@ -111,7 +233,7 @@ impl Enum<BorderStyleValues> for BorderStyleValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, Hash)]
+#[derive(Debug, Clone, Deserialize, Serialize, Hash)]
 pub enum ColorSettingTypeValues {
     Indexed,
     Theme,
@@ -135,7 +257,7 @@ impl Enum<ColorSettingTypeValues> for ColorSettingTypeValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, Hash)]
+#[derive(Debug, Clone, Deserialize, Serialize, Hash)]
 pub struct ColorSetting {
     pub color_setting_type: ColorSettingTypeValues,
     pub value: String,
@@ -150,7 +272,7 @@ impl Default for ColorSetting {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, Hash)]
+#[derive(Debug, Clone, Deserialize, Serialize, Hash)]
 pub struct BorderSetting {
     pub border_color: Option<ColorSetting>,
     pub style: BorderStyleValues,
@@ -165,7 +287,7 @@ impl Default for BorderSetting {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct BorderStyle {
     pub id: u32,
     pub bottom: BorderSetting,
@@ -188,7 +310,7 @@ impl Default for BorderStyle {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq, Hash)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Hash)]
 pub enum HorizontalAlignmentValues {
     None,
     LEFT,
@@ -218,41 +340,40 @@ impl Enum<HorizontalAlignmentValues> for HorizontalAlignmentValues {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq, Hash)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Hash)]
 pub enum VerticalAlignmentValues {
     None,
-    TOP,
-    MIDDLE,
-    BOTTOM,
+    Top,
+    Middle,
+    Bottom,
 }
 
 impl Enum<VerticalAlignmentValues> for VerticalAlignmentValues {
     fn get_string(input_enum: VerticalAlignmentValues) -> String {
         match input_enum {
-            VerticalAlignmentValues::TOP => "top".to_string(),
-            VerticalAlignmentValues::MIDDLE => "center".to_string(),
-            VerticalAlignmentValues::BOTTOM => "bottom".to_string(),
+            VerticalAlignmentValues::Top => "top".to_string(),
+            VerticalAlignmentValues::Middle => "center".to_string(),
+            VerticalAlignmentValues::Bottom => "bottom".to_string(),
             VerticalAlignmentValues::None => "none".to_string(),
         }
     }
     fn get_enum(input_string: &str) -> VerticalAlignmentValues {
         match input_string {
-            "top" => VerticalAlignmentValues::TOP,
-            "center" => VerticalAlignmentValues::MIDDLE,
-            "bottom" => VerticalAlignmentValues::BOTTOM,
+            "top" => VerticalAlignmentValues::Top,
+            "center" => VerticalAlignmentValues::Middle,
+            "bottom" => VerticalAlignmentValues::Bottom,
             _ => VerticalAlignmentValues::None,
         }
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct CellXfs {
-    pub id: u32,
-    pub format_id: u8,
-    pub number_format_id: u8,
-    pub font_id: u8,
-    pub fill_id: u8,
-    pub border_id: u8,
+    pub format_id: u16,
+    pub number_format_id: u16,
+    pub font_id: u16,
+    pub fill_id: u16,
+    pub border_id: u16,
     pub apply_font: u8,
     pub apply_alignment: u8,
     pub apply_fill: u8,
@@ -267,7 +388,6 @@ pub struct CellXfs {
 impl Default for CellXfs {
     fn default() -> Self {
         Self {
-            id: 0,
             format_id: 0,
             number_format_id: 0,
             font_id: 0,
@@ -286,9 +406,8 @@ impl Default for CellXfs {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct FillStyle {
-    pub id: u32,
     pub pattern_type: PatternTypeValues,
     pub background_color: Option<ColorSetting>,
     pub foreground_color: Option<ColorSetting>,
@@ -297,7 +416,6 @@ pub struct FillStyle {
 impl Default for FillStyle {
     fn default() -> Self {
         Self {
-            id: 0,
             background_color: None,
             foreground_color: None,
             pattern_type: PatternTypeValues::None,
@@ -305,13 +423,12 @@ impl Default for FillStyle {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct FontStyle {
-    pub id: u32,
     pub name: String,
-    pub size: u32,
+    pub size: u8,
     pub color: ColorSetting,
-    pub family: i32,
+    pub family: u32,
     pub font_scheme: FontSchemeValues,
     pub is_bold: bool,
     pub is_double_underline: bool,
@@ -322,7 +439,8 @@ pub struct FontStyle {
 impl Default for FontStyle {
     fn default() -> Self {
         Self {
-            id: 0,
+            name: "Calibri".to_string(),
+            size: 11,
             color: ColorSetting {
                 value: "1".to_string(),
                 ..Default::default()
@@ -333,31 +451,29 @@ impl Default for FontStyle {
             is_double_underline: false,
             is_italic: false,
             is_underline: false,
-            name: "Calibri".to_string(),
-            size: 11,
         }
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct NumberFormat {
-    pub id: usize,
-    pub format_id: usize,
-    pub format_code: String,
+#[derive(Debug, Hash)]
+pub(crate) struct NumberFormat {
+    pub(crate) format_id: usize,
+    pub(crate) format_type: NumberFormatValues,
+    pub(crate) format_code: String,
 }
 
 impl Default for NumberFormat {
     fn default() -> Self {
         Self {
-            id: 0,
             format_id: 0,
-            format_code: "General".to_string(),
+            format_type: NumberFormatValues::General,
+            format_code: NumberFormatValues::get_string(NumberFormatValues::General),
         }
     }
 }
 
 /// Get Column Cell Input Combined for styling
-#[derive(Debug, Deserialize, Serialize, Hash)]
+#[derive(Debug, Hash)]
 pub struct StyleSetting {
     pub background_color: Option<String>,
     pub border_bottom: BorderSetting,
@@ -373,9 +489,11 @@ pub struct StyleSetting {
     pub is_italic: bool,
     pub is_underline: bool,
     pub is_wrap_text: bool,
-    pub number_format: String,
+    pub number_format: NumberFormatValues,
+    pub custom_number_format: Option<String>,
     pub text_color: ColorSetting,
     pub vertical_alignment: VerticalAlignmentValues,
+    pub(crate) protect: Option<()>,
 }
 
 impl Default for StyleSetting {
@@ -395,38 +513,25 @@ impl Default for StyleSetting {
             is_italic: false,
             is_underline: false,
             is_wrap_text: false,
-            number_format: "General".to_string(),
+            number_format: NumberFormatValues::General,
+            custom_number_format: None,
             text_color: ColorSetting {
                 color_setting_type: ColorSettingTypeValues::Rgb,
                 value: "000000".to_string(),
             },
             vertical_alignment: VerticalAlignmentValues::None,
+            protect: None,
         }
     }
 }
 
 #[derive(Debug, Clone)]
 pub struct StyleId {
-    pub(crate) id: usize,
+    pub(crate) id: u32,
 }
 
 impl StyleId {
-    pub(crate) fn new(id: usize) -> Self {
+    pub(crate) fn new(id: u32) -> Self {
         Self { id }
-    }
-}
-
-impl ToSql for StyleId {
-    fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
-        Ok(ToSqlOutput::from(self.id as i64))
-    }
-}
-
-impl FromSql for StyleId {
-    fn column_result(value: ValueRef<'_>) -> Result<Self, FromSqlError> {
-        match value.as_i64() {
-            Ok(id) if id >= 0 => Ok(StyleId { id: id as usize }),
-            _ => Err(FromSqlError::InvalidType),
-        }
     }
 }

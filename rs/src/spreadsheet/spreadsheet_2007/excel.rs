@@ -4,12 +4,13 @@ use crate::{
         parts::{CorePropertiesPart, RelationsPart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
-    spreadsheet_2007::parts::{WorkSheet, WorkbookPart},
+    spreadsheet_2007::{
+        models::{StyleId, StyleSetting},
+        parts::{WorkSheet, WorkbookPart},
+    },
 };
 use anyhow::{Context, Error as AnyError, Result as AnyResult};
 use std::{cell::RefCell, rc::Rc};
-
-use super::models::{StyleId, StyleSetting};
 
 #[derive(Debug)]
 pub struct Excel {
