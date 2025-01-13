@@ -6,6 +6,7 @@ use crate::{
         parts::RelationsPart,
         traits::{Enum, XmlDocumentPart, XmlDocumentPartCommon},
     },
+    log_elapsed,
     spreadsheet_2007::models::{
         BorderSetting, BorderStyle, BorderStyleValues, CellXfs, ColorSetting,
         ColorSettingTypeValues, FillStyle, FontSchemeValues, FontStyle, HorizontalAlignmentValues,
@@ -48,25 +49,43 @@ impl XmlDocumentPartCommon for StylePart {
     where
         Self: Sized,
     {
-        {
-            self.save_content_to_tree_mut()
-                .context("Style Save Content Failed")?;
-        }
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            xml_tree
-                .try_borrow_mut()
-                .context("Failed To pull XML Handle")?
-                .close_xml_document(&self.file_path)?;
-        }
-        Ok(())
+        log_elapsed!(
+            || {
+                log_elapsed!(
+                    || {
+                        {
+                            self.save_content_to_tree_mut()
+                                .context("Style Save Content Failed")
+                        }
+                    },
+                    "Save Tree"
+                )?;
+                if let Some(xml_tree) = self.office_document.upgrade() {
+                    log_elapsed!(
+                        || {
+                            xml_tree
+                                .try_borrow_mut()
+                                .context("Failed To pull XML Handle")?
+                                .close_xml_document(&self.file_path)
+                        },
+                        "Close Document"
+                    )?;
+                }
+                Ok(())
+            },
+            "Close Style Service"
+        )
     }
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>
     {
         let content = EXCEL_TYPE_COLLECTION.get("style").unwrap();
         Ok((
-            XmlSerializer::vec_to_xml_doc_tree(include_str!("style.xml").as_bytes().to_vec())
-                .context("Initializing Theme Failed")?,
+            XmlSerializer::vec_to_xml_doc_tree(
+                include_str!("style.xml").as_bytes().to_vec(),
+                "Default Style",
+            )
+            .context("Initializing Theme Failed")?,
             Some(content.content_type.to_string()),
             content.extension.to_string(),
             content.extension_type.to_string(),

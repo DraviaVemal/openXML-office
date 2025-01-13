@@ -40,8 +40,11 @@ impl XmlDocumentPartCommon for ThemePart {
     {
         let content = COMMON_TYPE_COLLECTION.get("theme").unwrap();
         Ok((
-            XmlSerializer::vec_to_xml_doc_tree(include_str!("theme.xml").as_bytes().to_vec())
-                .context("Initializing Theme Failed")?,
+            XmlSerializer::vec_to_xml_doc_tree(
+                include_str!("theme.xml").as_bytes().to_vec(),
+                "Default Theme",
+            )
+            .context("Initializing Theme Failed")?,
             Some(content.content_type.to_string()),
             content.extension.to_string(),
             content.extension_type.to_string(),

@@ -1,4 +1,5 @@
 use crate::files::XmlDocument;
+use crate::log_elapsed;
 use anyhow::{anyhow, Context, Error as AnyError, Ok, Result as AnyResult};
 use quick_xml::events::BytesStart;
 use quick_xml::{
@@ -13,12 +14,20 @@ use std::{collections::HashMap, io::Cursor};
 pub struct XmlSerializer {}
 
 impl XmlSerializer {
-    pub(crate) fn vec_to_xml_doc_tree(xml_str: Vec<u8>) -> AnyResult<XmlDocument, AnyError> {
+    pub(crate) fn vec_to_xml_doc_tree(
+        xml_str: Vec<u8>,
+        file_name: &str,
+    ) -> AnyResult<XmlDocument, AnyError> {
         let mut reader: NsReader<Cursor<Vec<u8>>> = NsReader::from_reader(Cursor::new(xml_str));
         let mut xml_document = XmlDocument::new();
         reader.config_mut().trim_text(true);
-        Self::xml_element_parser(&mut reader, &mut xml_document)
-            .context("Xml Element Parser Failed")?;
+        log_elapsed!(
+            || {
+                Self::xml_element_parser(&mut reader, &mut xml_document)
+                    .context("Xml Element Parser Failed")
+            },
+            format!("Serializing : {}", file_name)
+        )?;
         Ok(xml_document)
     }
 

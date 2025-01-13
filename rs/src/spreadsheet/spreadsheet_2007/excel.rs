@@ -4,6 +4,7 @@ use crate::{
         parts::{CorePropertiesPart, RelationsPart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
+    log_elapsed,
     spreadsheet_2007::{
         models::{StyleId, StyleSetting},
         parts::{WorkSheet, WorkbookPart},
@@ -42,42 +43,51 @@ impl Excel {
         file_name: Option<String>,
         excel_setting: ExcelPropertiesModel,
     ) -> AnyResult<Self, AnyError> {
-        let office_document = Rc::new(RefCell::new(
-            OfficeDocument::new(file_name.clone(), excel_setting.is_in_memory)
-                .context("Creating Office Document Struct Failed")?,
-        ));
-        let root_relations = Rc::new(RefCell::new(
-            RelationsPart::new(Rc::downgrade(&office_document), "_rels/.rels")
-                .context("Initialize Root Relation Part failed")?,
-        ));
-        // Load relevant parts from root relations part
-        let core_properties = CorePropertiesPart::new(
-            Rc::downgrade(&office_document),
-            Rc::downgrade(&root_relations),
+        log_elapsed!(
+            || {
+                let office_document = Rc::new(RefCell::new(
+                    OfficeDocument::new(file_name.clone(), excel_setting.is_in_memory)
+                        .context("Creating Office Document Struct Failed")?,
+                ));
+                let root_relations = Rc::new(RefCell::new(
+                    RelationsPart::new(Rc::downgrade(&office_document), "_rels/.rels")
+                        .context("Initialize Root Relation Part failed")?,
+                ));
+                // Load relevant parts from root relations part
+                let core_properties = CorePropertiesPart::new(
+                    Rc::downgrade(&office_document),
+                    Rc::downgrade(&root_relations),
+                )
+                .context("Creating Core Property Part Failed.")?;
+                let workbook = WorkbookPart::new(
+                    Rc::downgrade(&office_document),
+                    Rc::downgrade(&root_relations),
+                )
+                .context("Creating Workbook part Failed")?;
+                let mut excel = Self {
+                    office_document,
+                    root_relations,
+                    core_properties,
+                    workbook,
+                };
+                if file_name.is_none() {
+                    excel
+                        .add_sheet_mut(None)
+                        .context("Failed To Add Default Sheet to excel")?;
+                }
+                Ok(excel)
+            },
+            if file_name.is_some() {
+                "New Excel Edit File Object"
+            } else {
+                "New Excel Blank File Object"
+            }
         )
-        .context("Creating Core Property Part Failed.")?;
-        let workbook = WorkbookPart::new(
-            Rc::downgrade(&office_document),
-            Rc::downgrade(&root_relations),
-        )
-        .context("Creating Workbook part Failed")?;
-        let mut excel = Self {
-            office_document,
-            root_relations,
-            core_properties,
-            workbook,
-        };
-        if file_name.is_none() {
-            excel
-                .add_sheet_mut(None)
-                .context("Failed To Add Default Sheet to excel")?;
-        }
-        Ok(excel)
     }
 
     /// Add sheet to the current excel
     pub fn add_sheet_mut(&mut self, sheet_name: Option<String>) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook_mut().add_sheet_mut(sheet_name)
+        log_elapsed!(self.get_workbook_mut().add_sheet_mut(sheet_name))
     }
 
     /// Add sheet to the current excel
@@ -86,8 +96,9 @@ impl Excel {
         old_sheet_name: String,
         new_sheet_name: String,
     ) -> AnyResult<(), AnyError> {
-        self.get_workbook_mut()
-            .rename_sheet_name_mut(&old_sheet_name, &new_sheet_name)
+        log_elapsed!(self
+            .get_workbook_mut()
+            .rename_sheet_name_mut(&old_sheet_name, &new_sheet_name))
     }
 
     pub fn set_active_sheet_mut(&mut self, sheet_name: String) -> AnyResult<(), AnyError> {
@@ -131,12 +142,12 @@ impl Excel {
     // }
 
     pub fn hide_sheet_mut(&mut self, sheet_name: String) -> AnyResult<(), AnyError> {
-        self.get_workbook_mut().hide_sheet_mut(&sheet_name)
+        log_elapsed!(self.get_workbook_mut().hide_sheet_mut(&sheet_name))
     }
 
     /// Get Worksheet handle by sheet name
     pub fn get_worksheet_mut(&mut self, sheet_name: String) -> AnyResult<WorkSheet, AnyError> {
-        self.get_workbook_mut().get_worksheet_mut(&sheet_name)
+        log_elapsed!(self.get_workbook_mut().get_worksheet_mut(&sheet_name))
     }
 
     /// Return Style Id for the said combination
@@ -144,23 +155,28 @@ impl Excel {
         &mut self,
         style_setting: StyleSetting,
     ) -> AnyResult<StyleId, AnyError> {
-        self.get_workbook_mut().get_style_id_mut(style_setting)
+        log_elapsed!(self.get_workbook_mut().get_style_id_mut(style_setting))
     }
 
     /// Save/Replace the current file into target destination
     pub fn save_as(self, file_name: &str) -> AnyResult<(), AnyError> {
-        self.workbook.flush()?;
-        self.core_properties.flush()?;
-        self.root_relations
-            .try_borrow_mut()
-            .context("Failed To Pull Relation Handle")?
-            .close_document()?;
-        self.office_document
-            .try_borrow_mut()
-            .context("Save Office Document handle Failed")?
-            .save_as(file_name)
-            .context("File Save Failed for the target path.")?;
-        Ok(())
+        log_elapsed!(
+            || {
+                self.workbook.flush()?;
+                self.core_properties.flush()?;
+                self.root_relations
+                    .try_borrow_mut()
+                    .context("Failed To Pull Relation Handle")?
+                    .close_document()?;
+                self.office_document
+                    .try_borrow_mut()
+                    .context("Save Office Document handle Failed")?
+                    .save_as(file_name)
+                    .context("File Save Failed for the target path.")?;
+                Ok(())
+            },
+            "File Save"
+        )
     }
 }
 

@@ -5,6 +5,7 @@ use crate::{
         parts::{RelationsPart, ThemePart},
         traits::{XmlDocumentPart, XmlDocumentPartCommon},
     },
+    log_elapsed,
     order_dictionary::EXCEL_ORDER_COLLECTION,
     spreadsheet_2007::{
         models::{StyleId, StyleSetting},
@@ -78,8 +79,11 @@ impl XmlDocumentPartCommon for WorkbookPart {
     <fileVersion appName="openxml-office" lastEdited="7" lowestEdited="7" />
 </workbook>"#;
         Ok((
-            XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
-                .context("Initializing Workbook Failed")?,
+            XmlSerializer::vec_to_xml_doc_tree(
+                template_core_properties.as_bytes().to_vec(),
+                "Default workbook",
+            )
+            .context("Initializing Workbook Failed")?,
             Some(content.content_type.to_string()),
             content.extension.to_string(),
             content.extension_type.to_string(),
@@ -90,146 +94,151 @@ impl XmlDocumentPartCommon for WorkbookPart {
     where
         Self: Sized,
     {
-        self.theme_part.close_document()?;
-        self.common_service
-            .try_borrow_mut()
-            .context("Failed to pull common Service Handle")?
-            .close_service()
-            .context("Failed to Close Common Service From Workbook")?;
-        self.workbook_relationship_part
-            .try_borrow_mut()
-            .context("Failed to pull relationship handle")?
-            .close_document()
-            .context("Failed to Close work")?;
-        // Write Sheet Records to Workbook
-        if let Some(xml_document_mut) = self.xml_document.upgrade() {
-            let mut xml_doc_mut = xml_document_mut
-                .try_borrow_mut()
-                .context("Borrow XML Document Failed")?;
-            let mut sheet_count = 1;
-            // if let Some(workbook_view) = &self.workbook_view {
-            //     // Create and Set BookViews
-            //     let book_views_id = xml_doc_mut
-            //         .insert_children_after_tag_mut("bookViews", "fileVersion", None)
-            //         .context("Create book viewsD Node Failed")?
-            //         .get_id();
-            //     let workbook_view_element = xml_doc_mut
-            //         .append_child_mut("workbookView", Some(&book_views_id))
-            //         .context("Failed to create workbook view")?;
-            //     let mut attributes = HashMap::new();
-            //     if workbook_view.active_tab != "0" {
-            //         attributes.insert(
-            //             "activeTab".to_string(),
-            //             workbook_view.active_tab.to_string(),
-            //         );
-            //     }
-            //     if workbook_view.first_sheet != "1" {
-            //         attributes.insert(
-            //             "firstSheet".to_string(),
-            //             workbook_view.first_sheet.to_string(),
-            //         );
-            //     }
-            //     // attributes.insert(
-            //     //     "minimized".to_string(),
-            //     //     if workbook_view.minimize {
-            //     //         "true".to_string()
-            //     //     } else {
-            //     //         "false".to_string()
-            //     //     },
-            //     // );
-            //     // if workbook_view.visibility != "visible" {
-            //     //     attributes.insert(
-            //     //         "visibility".to_string(),
-            //     //         workbook_view.visibility.to_string(),
-            //     //     );
-            //     // }
-            //     // attributes.insert(
-            //     //     "showGridlines".to_string(),
-            //     //     if workbook_view.hide_grid_line {
-            //     //         "false".to_string()
-            //     //     } else {
-            //     //         "true".to_string()
-            //     //     },
-            //     // );
-            //     // attributes.insert(
-            //     //     "showRuler".to_string(),
-            //     //     if workbook_view.hide_ruler {
-            //     //         "0".to_string()
-            //     //     } else {
-            //     //         "1".to_string()
-            //     //     },
-            //     // );
-            //     attributes.insert(
-            //         "showSheetTabs".to_string(),
-            //         if workbook_view.hide_sheet_tab {
-            //             "0".to_string()
-            //         } else {
-            //             "1".to_string()
-            //         },
-            //     );
-            //     attributes.insert(
-            //         "showVerticalScroll".to_string(),
-            //         if workbook_view.hide_vertical_scroll {
-            //             "0".to_string()
-            //         } else {
-            //             "1".to_string()
-            //         },
-            //     );
-            //     attributes.insert(
-            //         "showHorizontalScroll".to_string(),
-            //         if workbook_view.hide_horizontal_scroll {
-            //             "0".to_string()
-            //         } else {
-            //             "1".to_string()
-            //         },
-            //     );
-            //     workbook_view_element
-            //         .set_attribute_mut(attributes)
-            //         .context("Failed to set workbook view attributes")?;
-            // }
-            // Create and set Sheets
-            let sheets_id = xml_doc_mut
-                .insert_children_after_tag_mut("sheets", "bookViews", None)
-                .context("Create Sheets Node Failed")?
-                .get_id();
-            for (sheet_display_name, relationship_id, _, hide) in &self
-                .sheet_collection
-                .try_borrow_mut()
-                .context("Failed to pull Sheet Name Collection")?
-                .clone()
-            {
-                let sheet = xml_doc_mut
-                    .append_child_mut("sheet", Some(&sheets_id))
-                    .context("Create Sheet Node Failed")?;
-                let mut attributes = HashMap::new();
-                attributes.insert("name".to_string(), sheet_display_name.to_string());
-                attributes.insert("sheetId".to_string(), sheet_count.to_string());
-                attributes.insert("r:id".to_string(), relationship_id.to_string());
-                if *hide {
-                    attributes.insert("state".to_string(), "hidden".to_string());
+        log_elapsed!(
+            || {
+                self.theme_part.close_document()?;
+                self.common_service
+                    .try_borrow_mut()
+                    .context("Failed to pull common Service Handle")?
+                    .close_service()
+                    .context("Failed to Close Common Service From Workbook")?;
+                self.workbook_relationship_part
+                    .try_borrow_mut()
+                    .context("Failed to pull relationship handle")?
+                    .close_document()
+                    .context("Failed to Close work")?;
+                // Write Sheet Records to Workbook
+                if let Some(xml_document_mut) = self.xml_document.upgrade() {
+                    let mut xml_doc_mut = xml_document_mut
+                        .try_borrow_mut()
+                        .context("Borrow XML Document Failed")?;
+                    let mut sheet_count = 1;
+                    // if let Some(workbook_view) = &self.workbook_view {
+                    //     // Create and Set BookViews
+                    //     let book_views_id = xml_doc_mut
+                    //         .insert_children_after_tag_mut("bookViews", "fileVersion", None)
+                    //         .context("Create book viewsD Node Failed")?
+                    //         .get_id();
+                    //     let workbook_view_element = xml_doc_mut
+                    //         .append_child_mut("workbookView", Some(&book_views_id))
+                    //         .context("Failed to create workbook view")?;
+                    //     let mut attributes = HashMap::new();
+                    //     if workbook_view.active_tab != "0" {
+                    //         attributes.insert(
+                    //             "activeTab".to_string(),
+                    //             workbook_view.active_tab.to_string(),
+                    //         );
+                    //     }
+                    //     if workbook_view.first_sheet != "1" {
+                    //         attributes.insert(
+                    //             "firstSheet".to_string(),
+                    //             workbook_view.first_sheet.to_string(),
+                    //         );
+                    //     }
+                    //     // attributes.insert(
+                    //     //     "minimized".to_string(),
+                    //     //     if workbook_view.minimize {
+                    //     //         "true".to_string()
+                    //     //     } else {
+                    //     //         "false".to_string()
+                    //     //     },
+                    //     // );
+                    //     // if workbook_view.visibility != "visible" {
+                    //     //     attributes.insert(
+                    //     //         "visibility".to_string(),
+                    //     //         workbook_view.visibility.to_string(),
+                    //     //     );
+                    //     // }
+                    //     // attributes.insert(
+                    //     //     "showGridlines".to_string(),
+                    //     //     if workbook_view.hide_grid_line {
+                    //     //         "false".to_string()
+                    //     //     } else {
+                    //     //         "true".to_string()
+                    //     //     },
+                    //     // );
+                    //     // attributes.insert(
+                    //     //     "showRuler".to_string(),
+                    //     //     if workbook_view.hide_ruler {
+                    //     //         "0".to_string()
+                    //     //     } else {
+                    //     //         "1".to_string()
+                    //     //     },
+                    //     // );
+                    //     attributes.insert(
+                    //         "showSheetTabs".to_string(),
+                    //         if workbook_view.hide_sheet_tab {
+                    //             "0".to_string()
+                    //         } else {
+                    //             "1".to_string()
+                    //         },
+                    //     );
+                    //     attributes.insert(
+                    //         "showVerticalScroll".to_string(),
+                    //         if workbook_view.hide_vertical_scroll {
+                    //             "0".to_string()
+                    //         } else {
+                    //             "1".to_string()
+                    //         },
+                    //     );
+                    //     attributes.insert(
+                    //         "showHorizontalScroll".to_string(),
+                    //         if workbook_view.hide_horizontal_scroll {
+                    //             "0".to_string()
+                    //         } else {
+                    //             "1".to_string()
+                    //         },
+                    //     );
+                    //     workbook_view_element
+                    //         .set_attribute_mut(attributes)
+                    //         .context("Failed to set workbook view attributes")?;
+                    // }
+                    // Create and set Sheets
+                    let sheets_id = xml_doc_mut
+                        .insert_children_after_tag_mut("sheets", "bookViews", None)
+                        .context("Create Sheets Node Failed")?
+                        .get_id();
+                    for (sheet_display_name, relationship_id, _, hide) in &self
+                        .sheet_collection
+                        .try_borrow_mut()
+                        .context("Failed to pull Sheet Name Collection")?
+                        .clone()
+                    {
+                        let sheet = xml_doc_mut
+                            .append_child_mut("sheet", Some(&sheets_id))
+                            .context("Create Sheet Node Failed")?;
+                        let mut attributes = HashMap::new();
+                        attributes.insert("name".to_string(), sheet_display_name.to_string());
+                        attributes.insert("sheetId".to_string(), sheet_count.to_string());
+                        attributes.insert("r:id".to_string(), relationship_id.to_string());
+                        if *hide {
+                            attributes.insert("state".to_string(), "hidden".to_string());
+                        }
+                        sheet
+                            .set_attribute_mut(attributes)
+                            .context("Sheet Attributes Failed")?;
+                        sheet_count += 1;
+                    }
+                    if let Some(root_element) = xml_doc_mut.get_root_mut() {
+                        root_element
+                            .order_child_mut(
+                                EXCEL_ORDER_COLLECTION
+                                    .get("workbook")
+                                    .ok_or(anyhow!("Failed to get workbook default order"))?,
+                            )
+                            .context("Failed Reorder the element child's")?;
+                    }
                 }
-                sheet
-                    .set_attribute_mut(attributes)
-                    .context("Sheet Attributes Failed")?;
-                sheet_count += 1;
-            }
-            if let Some(root_element) = xml_doc_mut.get_root_mut() {
-                root_element
-                    .order_child_mut(
-                        EXCEL_ORDER_COLLECTION
-                            .get("workbook")
-                            .ok_or(anyhow!("Failed to get workbook default order"))?,
-                    )
-                    .context("Failed Reorder the element child's")?;
-            }
-        }
-        if let Some(xml_tree) = self.office_document.upgrade() {
-            xml_tree
-                .try_borrow_mut()
-                .context("Failed To Pull XML Handle")?
-                .close_xml_document(&self.file_path)?;
-        }
-        Ok(())
+                if let Some(xml_tree) = self.office_document.upgrade() {
+                    xml_tree
+                        .try_borrow_mut()
+                        .context("Failed To Pull XML Handle")?
+                        .close_xml_document(&self.file_path)?;
+                }
+                Ok(())
+            },
+            "Workbook Closed"
+        )
     }
 }
 
@@ -240,61 +249,66 @@ impl XmlDocumentPart for WorkbookPart {
         office_document: Weak<RefCell<OfficeDocument>>,
         parent_relationship_part: Weak<RefCell<RelationsPart>>,
     ) -> AnyResult<Self, AnyError> {
-        let file_name = Self::get_workbook_file_name(&parent_relationship_part)
-            .context("Failed to pull workbook file name")?
-            .to_string();
-        let mut file_tree = Self::get_xml_document(&office_document, &file_name)?;
-        let workbook_relationship_part = Rc::new(RefCell::new(
-            RelationsPart::new(
-                office_document.clone(),
-                &format!(
-                    "{}/_rels/workbook.xml.rels",
-                    &file_name[..file_name.rfind("/").unwrap()]
-                ),
-            )
-            .context("Creating Relation ship part for workbook failed.")?,
-        ));
-        // Theme
-        let theme_part = ThemePart::new(
-            office_document.clone(),
-            Rc::downgrade(&workbook_relationship_part),
+        log_elapsed!(
+            || {
+                let file_name = Self::get_workbook_file_name(&parent_relationship_part)
+                    .context("Failed to pull workbook file name")?
+                    .to_string();
+                let mut file_tree = Self::get_xml_document(&office_document, &file_name)?;
+                let workbook_relationship_part = Rc::new(RefCell::new(
+                    RelationsPart::new(
+                        office_document.clone(),
+                        &format!(
+                            "{}/_rels/workbook.xml.rels",
+                            &file_name[..file_name.rfind("/").unwrap()]
+                        ),
+                    )
+                    .context("Creating Relation ship part for workbook failed.")?,
+                ));
+                // Theme
+                let theme_part = ThemePart::new(
+                    office_document.clone(),
+                    Rc::downgrade(&workbook_relationship_part),
+                )
+                .context("Loading Theme Part Failed")?;
+                // Share String
+                let share_string = ShareStringPart::new(
+                    office_document.clone(),
+                    Rc::downgrade(&workbook_relationship_part),
+                )
+                .context("Loading Share String Failed")?;
+                // Calculation chain
+                let calculation_chain = CalculationChainPart::new(
+                    office_document.clone(),
+                    Rc::downgrade(&workbook_relationship_part),
+                )
+                .context("Loading Calculation Chain Failed")?;
+                // Style
+                let style = StylePart::new(
+                    office_document.clone(),
+                    Rc::downgrade(&workbook_relationship_part),
+                )
+                .context("Loading Style Part Failed")?;
+                let common_service = Rc::new(RefCell::new(CommonServices::new(
+                    calculation_chain,
+                    share_string,
+                    style,
+                )));
+                let (sheet_collection, workbook_view) =
+                    Self::load_sheet_names(&mut file_tree).context("Loading Sheet Names Failed")?;
+                Ok(Self {
+                    office_document,
+                    xml_document: file_tree,
+                    file_path: file_name,
+                    common_service,
+                    workbook_relationship_part,
+                    theme_part,
+                    sheet_collection: Rc::new(RefCell::new(sheet_collection)),
+                    // workbook_view,
+                })
+            },
+            "Create New Workbook"
         )
-        .context("Loading Theme Part Failed")?;
-        // Share String
-        let share_string = ShareStringPart::new(
-            office_document.clone(),
-            Rc::downgrade(&workbook_relationship_part),
-        )
-        .context("Loading Share String Failed")?;
-        // Calculation chain
-        let calculation_chain = CalculationChainPart::new(
-            office_document.clone(),
-            Rc::downgrade(&workbook_relationship_part),
-        )
-        .context("Loading Calculation Chain Failed")?;
-        // Style
-        let style = StylePart::new(
-            office_document.clone(),
-            Rc::downgrade(&workbook_relationship_part),
-        )
-        .context("Loading Style Part Failed")?;
-        let common_service = Rc::new(RefCell::new(CommonServices::new(
-            calculation_chain,
-            share_string,
-            style,
-        )));
-        let (sheet_collection, workbook_view) =
-            Self::load_sheet_names(&mut file_tree).context("Loading Sheet Names Failed")?;
-        Ok(Self {
-            office_document,
-            xml_document: file_tree,
-            file_path: file_name,
-            common_service,
-            workbook_relationship_part,
-            theme_part,
-            sheet_collection: Rc::new(RefCell::new(sheet_collection)),
-            // workbook_view,
-        })
     }
 }
 
@@ -304,132 +318,139 @@ impl WorkbookPart {
     fn load_sheet_names(
         xml_document: &mut Weak<RefCell<XmlDocument>>,
     ) -> AnyResult<(Vec<(String, String, bool, bool)>, Option<WorkbookView>), AnyError> {
-        let mut sheet_collection = Vec::new();
-        let mut workbook_view = None;
-        if let Some(xml_document) = xml_document.upgrade() {
-            let mut xml_doc_mut = xml_document
-                .try_borrow_mut()
-                .context("xml doc borrow failed")?;
-            // Deconstruct Book View for sheet collection data
-            // if let Some(mut book_views_vec) = xml_doc_mut.pop_elements_by_tag_mut("bookViews", None)
-            // {
-            //     if let Some(book_views) = book_views_vec.pop() {
-            //         loop {
-            //             if let Some(workbook_view_id) = book_views.pop_child_id_mut() {
-            //                 if let Some(workbook_view_element) =
-            //                     xml_doc_mut.pop_element_mut(&workbook_view_id)
-            //                 {
-            //                     if let Some(attributes) = workbook_view_element.get_attribute() {
-            //                         workbook_view = Some(WorkbookView {
-            //                             active_tab: if let Some(active_tab) =
-            //                                 attributes.get("activeTab")
-            //                             {
-            //                                 active_tab.to_string()
-            //                             } else {
-            //                                 "0".to_string()
-            //                             },
-            //                             first_sheet: if let Some(first_sheet) =
-            //                                 attributes.get("firstSheet")
-            //                             {
-            //                                 first_sheet.to_string()
-            //                             } else {
-            //                                 "1".to_string()
-            //                             },
-            //                             hide_sheet_tab: if let Some(hide_sheet_tab) =
-            //                                 attributes.get("showSheetTabs")
-            //                             {
-            //                                 hide_sheet_tab == "1"
-            //                             } else {
-            //                                 false
-            //                             },
-            //                             visibility: if let Some(visibility) =
-            //                                 attributes.get("visibility")
-            //                             {
-            //                                 visibility.to_string()
-            //                             } else {
-            //                                 "visible".to_string()
-            //                             },
-            //                             minimize: if let Some(minimize) =
-            //                                 attributes.get("minimized")
-            //                             {
-            //                                 minimize == "1"
-            //                             } else {
-            //                                 false
-            //                             },
-            //                             hide_grid_line: if let Some(hide_grid_line) =
-            //                                 attributes.get("showGridlines")
-            //                             {
-            //                                 hide_grid_line == "0"
-            //                             } else {
-            //                                 false
-            //                             },
-            //                             hide_ruler: if let Some(hide_ruler) =
-            //                                 attributes.get("showRuler")
-            //                             {
-            //                                 hide_ruler == "0"
-            //                             } else {
-            //                                 false
-            //                             },
-            //                             hide_horizontal_scroll: if let Some(
-            //                                 hide_horizontal_scroll,
-            //                             ) =
-            //                                 attributes.get("showHorizontalScroll")
-            //                             {
-            //                                 hide_horizontal_scroll == "0"
-            //                             } else {
-            //                                 false
-            //                             },
-            //                             hide_vertical_scroll: if let Some(hide_vertical_scroll) =
-            //                                 attributes.get("showVerticalScroll")
-            //                             {
-            //                                 hide_vertical_scroll == "0"
-            //                             } else {
-            //                                 false
-            //                             },
-            //                         })
-            //                     }
-            //                 }
-            //             } else {
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // }
-            // Deconstruct Sheets into collection
-            if let Some(mut sheets_vec) = xml_doc_mut.pop_elements_by_tag_mut("sheets", None) {
-                if let Some(sheets) = sheets_vec.pop() {
-                    // Load Sheet from File if exist
-                    loop {
-                        if let Some((sheet_id, _)) = sheets.pop_child_mut() {
-                            if let Some(sheet) = xml_doc_mut.pop_element_mut(&sheet_id) {
-                                if let Some(attributes) = sheet.get_attribute() {
-                                    let name = attributes.get("name").ok_or(anyhow!(
-                                        "Error When Trying to read Sheet Details."
-                                    ))?;
-                                    let r_id = attributes.get("r:id").ok_or(anyhow!(
-                                        "Error When Trying to read Sheet Details."
-                                    ))?;
-                                    let state = attributes.get("state");
-                                    sheet_collection.push((
-                                        name.to_string(),
-                                        r_id.to_string(),
-                                        false,
-                                        if let Some(state) = state {
-                                            state == "hidden"
-                                        } else {
-                                            false
-                                        },
-                                    ));
+        log_elapsed!(
+            || {
+                let mut sheet_collection = Vec::new();
+                let mut workbook_view = None;
+                if let Some(xml_document) = xml_document.upgrade() {
+                    let mut xml_doc_mut = xml_document
+                        .try_borrow_mut()
+                        .context("xml doc borrow failed")?;
+                    // Deconstruct Book View for sheet collection data
+                    // if let Some(mut book_views_vec) = xml_doc_mut.pop_elements_by_tag_mut("bookViews", None)
+                    // {
+                    //     if let Some(book_views) = book_views_vec.pop() {
+                    //         loop {
+                    //             if let Some(workbook_view_id) = book_views.pop_child_id_mut() {
+                    //                 if let Some(workbook_view_element) =
+                    //                     xml_doc_mut.pop_element_mut(&workbook_view_id)
+                    //                 {
+                    //                     if let Some(attributes) = workbook_view_element.get_attribute() {
+                    //                         workbook_view = Some(WorkbookView {
+                    //                             active_tab: if let Some(active_tab) =
+                    //                                 attributes.get("activeTab")
+                    //                             {
+                    //                                 active_tab.to_string()
+                    //                             } else {
+                    //                                 "0".to_string()
+                    //                             },
+                    //                             first_sheet: if let Some(first_sheet) =
+                    //                                 attributes.get("firstSheet")
+                    //                             {
+                    //                                 first_sheet.to_string()
+                    //                             } else {
+                    //                                 "1".to_string()
+                    //                             },
+                    //                             hide_sheet_tab: if let Some(hide_sheet_tab) =
+                    //                                 attributes.get("showSheetTabs")
+                    //                             {
+                    //                                 hide_sheet_tab == "1"
+                    //                             } else {
+                    //                                 false
+                    //                             },
+                    //                             visibility: if let Some(visibility) =
+                    //                                 attributes.get("visibility")
+                    //                             {
+                    //                                 visibility.to_string()
+                    //                             } else {
+                    //                                 "visible".to_string()
+                    //                             },
+                    //                             minimize: if let Some(minimize) =
+                    //                                 attributes.get("minimized")
+                    //                             {
+                    //                                 minimize == "1"
+                    //                             } else {
+                    //                                 false
+                    //                             },
+                    //                             hide_grid_line: if let Some(hide_grid_line) =
+                    //                                 attributes.get("showGridlines")
+                    //                             {
+                    //                                 hide_grid_line == "0"
+                    //                             } else {
+                    //                                 false
+                    //                             },
+                    //                             hide_ruler: if let Some(hide_ruler) =
+                    //                                 attributes.get("showRuler")
+                    //                             {
+                    //                                 hide_ruler == "0"
+                    //                             } else {
+                    //                                 false
+                    //                             },
+                    //                             hide_horizontal_scroll: if let Some(
+                    //                                 hide_horizontal_scroll,
+                    //                             ) =
+                    //                                 attributes.get("showHorizontalScroll")
+                    //                             {
+                    //                                 hide_horizontal_scroll == "0"
+                    //                             } else {
+                    //                                 false
+                    //                             },
+                    //                             hide_vertical_scroll: if let Some(hide_vertical_scroll) =
+                    //                                 attributes.get("showVerticalScroll")
+                    //                             {
+                    //                                 hide_vertical_scroll == "0"
+                    //                             } else {
+                    //                                 false
+                    //                             },
+                    //                         })
+                    //                     }
+                    //                 }
+                    //             } else {
+                    //                 break;
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    // Deconstruct Sheets into collection
+                    if let Some(mut sheets_vec) =
+                        xml_doc_mut.pop_elements_by_tag_mut("sheets", None)
+                    {
+                        if let Some(sheets) = sheets_vec.pop() {
+                            // Load Sheet from File if exist
+                            loop {
+                                if let Some((sheet_id, _)) = sheets.pop_child_mut() {
+                                    if let Some(sheet) = xml_doc_mut.pop_element_mut(&sheet_id) {
+                                        if let Some(attributes) = sheet.get_attribute() {
+                                            let name = attributes.get("name").ok_or(anyhow!(
+                                                "Error When Trying to read Sheet Details."
+                                            ))?;
+                                            let r_id = attributes.get("r:id").ok_or(anyhow!(
+                                                "Error When Trying to read Sheet Details."
+                                            ))?;
+                                            let state = attributes.get("state");
+                                            sheet_collection.push((
+                                                name.to_string(),
+                                                r_id.to_string(),
+                                                false,
+                                                if let Some(state) = state {
+                                                    state == "hidden"
+                                                } else {
+                                                    false
+                                                },
+                                            ));
+                                        }
+                                    }
+                                } else {
+                                    break;
                                 }
                             }
-                        } else {
-                            break;
                         }
                     }
                 }
-            }
-        }
-        Ok((sheet_collection, workbook_view))
+                Ok((sheet_collection, workbook_view))
+            },
+            "Load Existing Workbook"
+        )
     }
 }
 
@@ -456,6 +477,7 @@ impl WorkbookPart {
             Err(anyhow!("Failed to upgrade relation part"))
         }
     }
+
     pub(crate) fn list_sheet_names(&self) -> AnyResult<Vec<String>, AnyError> {
         Ok(self
             .sheet_collection
@@ -484,14 +506,19 @@ impl WorkbookPart {
     }
 
     pub(crate) fn get_worksheet_mut(&mut self, sheet_name: &str) -> AnyResult<WorkSheet, AnyError> {
-        WorkSheet::new(
-            self.office_document.clone(),
-            Rc::downgrade(&self.sheet_collection),
-            Rc::downgrade(&self.workbook_relationship_part),
-            Rc::downgrade(&self.common_service),
-            Some(sheet_name.to_string()),
+        log_elapsed!(
+            || {
+                WorkSheet::new(
+                    self.office_document.clone(),
+                    Rc::downgrade(&self.sheet_collection),
+                    Rc::downgrade(&self.workbook_relationship_part),
+                    Rc::downgrade(&self.common_service),
+                    Some(sheet_name.to_string()),
+                )
+                .context("Worksheet Creation Failed")
+            },
+            "Get Exiting Workbook"
         )
-        .context("Worksheet Creation Failed")
     }
 
     /// Set Active sheet on opening the excel

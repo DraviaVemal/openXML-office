@@ -95,8 +95,9 @@ impl OfficeDocument {
             let content = file_content.ok_or(anyhow!("Failed To Get content vec"))?;
             let decompressed_data =
                 decompress_content(&content).context("Raw Content Decompression Failed")?;
-            let xml_tree: XmlDocument = XmlSerializer::vec_to_xml_doc_tree(decompressed_data)
-                .context("Xml Serializer Failed")?;
+            let xml_tree: XmlDocument =
+                XmlSerializer::vec_to_xml_doc_tree(decompressed_data, file_path)
+                    .context("Xml Serializer Failed")?;
             Ok(Some((
                 xml_tree,
                 content_type.clone(),
@@ -116,9 +117,11 @@ impl OfficeDocument {
             let mut xml_doc_mut = xml_document
                 .try_borrow_mut()
                 .context("Failed to get document handle")?;
-            let uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc_mut).context(
-                format!("Failed Xml Tree to String content, File : {}", file_path),
-            )?;
+            let uncompressed_data = XmlDeSerializer::xml_tree_to_vec(&mut xml_doc_mut, file_path)
+                .context(format!(
+                "Failed Xml Tree to String content, File : {}",
+                file_path
+            ))?;
             let compression_level = 4;
             let compressed = compress_content(&uncompressed_data, compression_level)
                 .context("Recompressing in GZip Failed")?;
