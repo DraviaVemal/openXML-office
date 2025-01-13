@@ -1,6 +1,7 @@
 use crate::element_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
+use crate::log_elapsed;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     global_2007::traits::XmlDocumentPart,
@@ -32,60 +33,67 @@ impl XmlDocumentPartCommon for ShareStringPart {
     where
         Self: Sized,
     {
-        if let Some(office_doc_ref) = self.office_document.upgrade() {
-            if self.share_string_collection.len() > 0 {
-                if let Some(xml_document) = self.xml_document.upgrade() {
-                    let mut xml_doc_mut = xml_document
-                        .try_borrow_mut()
-                        .context("Failed to Pull Doc Reference")?;
-                    // Update count & uniqueCount in root
-                    if let Some(root) = xml_doc_mut.get_root_mut() {
-                        if let Some(attributes) = root.get_attribute_mut() {
-                            attributes.insert(
-                                "count".to_string(),
-                                self.share_string_collection.len().to_string(),
-                            );
-                            attributes.insert(
-                                "uniqueCount".to_string(),
-                                self.share_string_collection
-                                    .iter()
-                                    .map(|s| s.to_string())
-                                    .collect::<HashSet<String>>()
-                                    .len()
-                                    .to_string(),
-                            );
+        log_elapsed!(
+            || {
+                if let Some(office_doc_ref) = self.office_document.upgrade() {
+                    if self.share_string_collection.len() > 0 {
+                        if let Some(xml_document) = self.xml_document.upgrade() {
+                            let mut xml_doc_mut = xml_document
+                                .try_borrow_mut()
+                                .context("Failed to Pull Doc Reference")?;
+                            // Update count & uniqueCount in root
+                            if let Some(root) = xml_doc_mut.get_root_mut() {
+                                if let Some(attributes) = root.get_attribute_mut() {
+                                    attributes.insert(
+                                        "count".to_string(),
+                                        self.share_string_collection.len().to_string(),
+                                    );
+                                    attributes.insert(
+                                        "uniqueCount".to_string(),
+                                        self.share_string_collection
+                                            .iter()
+                                            .map(|s| s.to_string())
+                                            .collect::<HashSet<String>>()
+                                            .len()
+                                            .to_string(),
+                                    );
+                                }
+                            }
+                            for string in self.share_string_collection.to_owned() {
+                                let parent_id = xml_doc_mut
+                                    .append_child_mut("si", None)
+                                    .context("Failed to Add Child")?
+                                    .get_id();
+                                xml_doc_mut
+                                    .append_child_mut("t", Some(&parent_id))
+                                    .context("Creating Share String Child Failed")?
+                                    .set_value_mut(string);
+                            }
+                        }
+                        office_doc_ref
+                            .try_borrow_mut()
+                            .context("Failed To pull XML Handle")?
+                            .close_xml_document(&self.file_path)
+                            .context("Failed to close XML Document Share String")?;
+                    } else {
+                        if let Some(relationship_part) = self.parent_relationship_part.upgrade() {
+                            relationship_part
+                                .try_borrow_mut()
+                                .context(
+                                    "Failed To pull parent relation ship part of Share String",
+                                )?
+                                .delete_relationship_mut(&self.file_path);
+                            office_doc_ref
+                                .try_borrow_mut()
+                                .context("Failed To pull XML Handle")?
+                                .delete_document_mut(&self.file_path);
                         }
                     }
-                    for string in self.share_string_collection.to_owned() {
-                        let parent_id = xml_doc_mut
-                            .append_child_mut("si", None)
-                            .context("Failed to Add Child")?
-                            .get_id();
-                        xml_doc_mut
-                            .append_child_mut("t", Some(&parent_id))
-                            .context("Creating Share String Child Failed")?
-                            .set_value_mut(string);
-                    }
                 }
-                office_doc_ref
-                    .try_borrow_mut()
-                    .context("Failed To pull XML Handle")?
-                    .close_xml_document(&self.file_path)
-                    .context("Failed to close XML Document Share String")?;
-            } else {
-                if let Some(relationship_part) = self.parent_relationship_part.upgrade() {
-                    relationship_part
-                        .try_borrow_mut()
-                        .context("Failed To pull parent relation ship part of Share String")?
-                        .delete_relationship_mut(&self.file_path);
-                    office_doc_ref
-                        .try_borrow_mut()
-                        .context("Failed To pull XML Handle")?
-                        .delete_document_mut(&self.file_path);
-                }
-            }
-        }
-        Ok(())
+                Ok(())
+            },
+            "Close Share String"
+        )
     }
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>

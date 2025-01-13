@@ -32,6 +32,8 @@ tempfile = "3.13.0"
 zip = "2.2.0"
 serde = { version = "1.0.215", features = ["derive"] }
 phf = { version = "0.11.2", features = ["macros"] }
+rayon = "1.10.0"
+rand = "0.8.5"
 
 [dev-dependencies]
 criterion = "0.5"

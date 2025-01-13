@@ -31,6 +31,7 @@ impl XmlDocumentPartCommon for CorePropertiesPart {
         Ok((
             XmlSerializer::vec_to_xml_doc_tree(
                 include_str!("core_properties.xml").as_bytes().to_vec(),
+                "Default Core Prop",
             )
             .context("Initializing Core Property Failed")?,
             Some(content.content_type.to_string()),

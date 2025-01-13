@@ -13,8 +13,9 @@ pub(crate) struct ContentTypesPart {
 
 impl ContentTypesPart {
     pub(crate) fn new(xml_file_content: Vec<u8>) -> AnyResult<Self, AnyError> {
-        let xml_document = XmlSerializer::vec_to_xml_doc_tree(xml_file_content)
-            .context("Decoding Content Type Failed")?;
+        let xml_document =
+            XmlSerializer::vec_to_xml_doc_tree(xml_file_content, "Default Content Type")
+                .context("Decoding Content Type Failed")?;
         Ok(Self { xml_document })
     }
     pub(crate) fn get_extensions(&mut self) -> AnyResult<Option<Vec<(String, String)>>, AnyError> {
@@ -111,6 +112,6 @@ impl ContentTypesPart {
                     .context("Adding attributes to Default element Failed")?;
             }
         }
-        XmlDeSerializer::xml_tree_to_vec(&mut document)
+        XmlDeSerializer::xml_tree_to_vec(&mut document, "Create Content Type")
     }
 }

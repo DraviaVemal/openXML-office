@@ -1,11 +1,17 @@
-use crate::files::{XmlDocument, XmlElement};
+use crate::{
+    files::{XmlDocument, XmlElement},
+    log_elapsed,
+};
 use anyhow::{anyhow, Context, Error as AnyError, Result as AnyResult};
 use quick_xml::escape::escape;
 
 pub struct XmlDeSerializer {}
 
 impl XmlDeSerializer {
-    pub(crate) fn xml_tree_to_vec(xml_document: &mut XmlDocument) -> AnyResult<Vec<u8>, AnyError> {
+    pub(crate) fn xml_tree_to_vec(
+        xml_document: &mut XmlDocument,
+        file_name: &str,
+    ) -> AnyResult<Vec<u8>, AnyError> {
         let mut xml_content = String::new();
         #[cfg(debug_assertions)]
         {
@@ -24,8 +30,13 @@ impl XmlDeSerializer {
                 )
                 .as_str(),);
         }
-        Self::build_xml_tree(xml_document, &mut xml_content)
-            .context("Create XML Contact String Failed")?;
+        log_elapsed!(
+            || {
+                Self::build_xml_tree(xml_document, &mut xml_content)
+                    .context("Create XML Contact String Failed")
+            },
+            format!("Deserialize File : {}", file_name)
+        )?;
         Ok(xml_content.as_bytes().to_vec())
     }
 

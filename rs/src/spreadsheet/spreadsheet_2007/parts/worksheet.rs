@@ -6,6 +6,7 @@ use crate::{
         parts::RelationsPart,
         traits::{Enum, XmlDocumentPartCommon},
     },
+    log_elapsed,
     order_dictionary::EXCEL_ORDER_COLLECTION,
     spreadsheet_2007::{
         models::{CellDataType, CellProperties, ColumnProperties, RowProperties, StyleId},
@@ -80,8 +81,11 @@ impl XmlDocumentPartCommon for WorkSheet {
     <sheetData />
 </worksheet>"#;
         Ok((
-            XmlSerializer::vec_to_xml_doc_tree(template_core_properties.as_bytes().to_vec())
-                .context("Initializing Worksheet Failed")?,
+            XmlSerializer::vec_to_xml_doc_tree(
+                template_core_properties.as_bytes().to_vec(),
+                "Default Worksheet",
+            )
+            .context("Initializing Worksheet Failed")?,
             Some(content.content_type.to_string()),
             content.extension.to_string(),
             content.extension_type.to_string(),
@@ -91,35 +95,45 @@ impl XmlDocumentPartCommon for WorkSheet {
     where
         Self: Sized,
     {
-        if let Some(office_document) = self.office_document.upgrade() {
-            let mut office_doc_mut = office_document
-                .try_borrow_mut()
-                .context("Failed to pull office document")?;
-            if let Some(xml_document) = self.xml_document.upgrade() {
-                let mut xml_doc_mut = xml_document
-                    .try_borrow_mut()
-                    .context("Failed to Pull XML Handle")?;
-                // Add dimension
-                self.serialize_dimension(&mut xml_doc_mut)?;
-                // Add Cols Record to Document
-                self.serialize_cols(&mut xml_doc_mut)?;
-                // Add Sheet Data to Document
-                self.serialize_sheet_data(&mut xml_doc_mut)?;
-                if let Some(root_element) = xml_doc_mut.get_root_mut() {
-                    root_element
-                        .order_child_mut(
-                            EXCEL_ORDER_COLLECTION
-                                .get("worksheet")
-                                .ok_or(anyhow!("Failed to get worksheet default order"))?,
-                        )
-                        .context("Failed Reorder the element child's")?;
+        log_elapsed!(
+            || {
+                if let Some(office_document) = self.office_document.upgrade() {
+                    let mut office_doc_mut = office_document
+                        .try_borrow_mut()
+                        .context("Failed to pull office document")?;
+                    if let Some(xml_document) = self.xml_document.upgrade() {
+                        let mut xml_doc_mut = xml_document
+                            .try_borrow_mut()
+                            .context("Failed to Pull XML Handle")?;
+                        // Add dimension
+                        log_elapsed!(self.serialize_dimension(&mut xml_doc_mut))?;
+                        // Add Cols Record to Document
+                        log_elapsed!(self.serialize_cols(&mut xml_doc_mut))?;
+                        // Add Sheet Data to Document
+                        log_elapsed!(self.serialize_sheet_data(&mut xml_doc_mut))?;
+                        if let Some(root_element) = xml_doc_mut.get_root_mut() {
+                            log_elapsed!(root_element
+                                .order_child_mut(
+                                    EXCEL_ORDER_COLLECTION
+                                        .get("worksheet")
+                                        .ok_or(anyhow!("Failed to get worksheet default order"),)?,
+                                )
+                                .context("Failed Reorder the element child's"))?;
+                        }
+                    }
+                    log_elapsed!(
+                        || {
+                            office_doc_mut
+                                .close_xml_document(&self.file_path)
+                                .context("Failed to close the current tree document")
+                        },
+                        "Close worksheet document"
+                    )?;
                 }
-            }
-            office_doc_mut
-                .close_xml_document(&self.file_path)
-                .context("Failed to close the current tree document")?;
-        }
-        Ok(())
+                Ok(())
+            },
+            "Close Worksheet"
+        )
     }
 }
 
@@ -152,8 +166,10 @@ impl WorkSheet {
             )
             .context("Creating Relation ship part for workbook failed.")?,
         ));
-        let (column_collection, sheet_data, dimension) =
-            Self::initialize_worksheet(&xml_document).context("Failed to open Worksheet")?;
+        let (column_collection, sheet_data, dimension) = log_elapsed!(
+            || { Self::initialize_worksheet(&xml_document).context("Failed to open Worksheet") },
+            "Worksheet Initialize Time"
+        )?;
         Ok(Self {
             office_document,
             xml_document,
@@ -186,11 +202,18 @@ impl WorkSheet {
             // unwrap dimension
             xml_doc_mut.pop_elements_by_tag_mut("dimension", None);
             // unwrap columns to local collection
-            let column_collection =
-                deserialize_cols(&mut xml_doc_mut).context("Failed To Deserialize Cols")?;
+            let column_collection = log_elapsed!(
+                || { deserialize_cols(&mut xml_doc_mut).context("Failed To Deserialize Cols") },
+                "Column deserialize"
+            )?;
             // unwrap sheet data into database
-            let (sheet_data, dimension) = deserialize_sheet_data(&mut xml_doc_mut)
-                .context("Failed To Deserialize Sheet Data")?;
+            let (sheet_data, dimension) = log_elapsed!(
+                || {
+                    deserialize_sheet_data(&mut xml_doc_mut)
+                        .context("Failed To Deserialize Sheet Data")
+                },
+                "Sheet Data Deserialize"
+            )?;
             Ok((column_collection, sheet_data, dimension))
         } else {
             Ok((None, None, Dimension::default()))

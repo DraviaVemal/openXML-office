@@ -1,6 +1,7 @@
 use crate::element_dictionary::EXCEL_TYPE_COLLECTION;
 use crate::global_2007::parts::RelationsPart;
 use crate::global_2007::traits::XmlDocumentPartCommon;
+use crate::log_elapsed;
 use crate::{
     files::{OfficeDocument, XmlDocument},
     global_2007::traits::XmlDocumentPart,
@@ -28,40 +29,45 @@ impl XmlDocumentPartCommon for CalculationChainPart {
     where
         Self: Sized,
     {
-        if let Some(office_doc_ref) = self.office_document.upgrade() {
-            if self.calculation_collection.len() > 0 {
-                if let Some(xml_document) = self.xml_document.upgrade() {
-                    let mut xml_doc_mut = xml_document
-                        .try_borrow_mut()
-                        .context("Failed to pull document handle")?;
-                    for (cell_key, sheet_id, _l) in self.calculation_collection.to_owned() {
-                        let mut attributes = HashMap::new();
-                        attributes.insert("r".to_string(), cell_key);
-                        attributes.insert("i".to_string(), sheet_id);
-                        xml_doc_mut
-                            .append_child_mut("c", None)
-                            .context("Failed To Add Child Item")?
-                            .set_attribute_mut(attributes)?;
+        log_elapsed!(
+            || {
+                if let Some(office_doc_ref) = self.office_document.upgrade() {
+                    if self.calculation_collection.len() > 0 {
+                        if let Some(xml_document) = self.xml_document.upgrade() {
+                            let mut xml_doc_mut = xml_document
+                                .try_borrow_mut()
+                                .context("Failed to pull document handle")?;
+                            for (cell_key, sheet_id, _l) in self.calculation_collection.to_owned() {
+                                let mut attributes = HashMap::new();
+                                attributes.insert("r".to_string(), cell_key);
+                                attributes.insert("i".to_string(), sheet_id);
+                                xml_doc_mut
+                                    .append_child_mut("c", None)
+                                    .context("Failed To Add Child Item")?
+                                    .set_attribute_mut(attributes)?;
+                            }
+                        }
+                        office_doc_ref
+                            .try_borrow_mut()
+                            .context("Failed to Borrow Share Tree")?
+                            .close_xml_document(&self.file_path)?;
+                    } else {
+                        if let Some(relationship_part) = self.parent_relationship_part.upgrade() {
+                            relationship_part
+                                .try_borrow_mut()
+                                .context("Failed To pull parent relation ship part of Calc Chain")?
+                                .delete_relationship_mut(&self.file_path);
+                            office_doc_ref
+                                .try_borrow_mut()
+                                .context("Failed to Borrow Share Tree")?
+                                .delete_document_mut(&self.file_path);
+                        }
                     }
                 }
-                office_doc_ref
-                    .try_borrow_mut()
-                    .context("Failed to Borrow Share Tree")?
-                    .close_xml_document(&self.file_path)?;
-            } else {
-                if let Some(relationship_part) = self.parent_relationship_part.upgrade() {
-                    relationship_part
-                        .try_borrow_mut()
-                        .context("Failed To pull parent relation ship part of Calc Chain")?
-                        .delete_relationship_mut(&self.file_path);
-                    office_doc_ref
-                        .try_borrow_mut()
-                        .context("Failed to Borrow Share Tree")?
-                        .delete_document_mut(&self.file_path);
-                }
-            }
-        }
-        Ok(())
+                Ok(())
+            },
+            "Close Calculation Chain"
+        )
     }
     /// Initialize xml content for this part from base template
     fn initialize_content_xml() -> AnyResult<(XmlDocument, Option<String>, String, String), AnyError>
