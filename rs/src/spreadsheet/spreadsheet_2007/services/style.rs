@@ -30,12 +30,12 @@ pub struct StylePart {
     cache_id: HashMap<u64, u32>,
     cache_order: VecDeque<u64>,
     cache_capacity: u8,
-    number_format_collection: Vec<NumberFormat>,
-    font_collection: Vec<FontStyle>,
-    fill_collection: Vec<FillStyle>,
-    border_collection: Vec<BorderStyle>,
-    cell_style_collection: Vec<CellXfs>,
-    cell_collection: Vec<CellXfs>,
+    number_format_collection: Vec<(u64, NumberFormat)>,
+    font_collection: Vec<(u64, FontStyle)>,
+    fill_collection: Vec<(u64, FillStyle)>,
+    border_collection: Vec<(u64, BorderStyle)>,
+    cell_style_xfs_collection: Vec<(u64, CellXfs)>,
+    cell_xfs_collection: Vec<(u64, CellXfs)>,
 }
 
 impl Drop for StylePart {
@@ -121,8 +121,8 @@ impl XmlDocumentPart for StylePart {
             font_collection,
             fill_collection,
             border_collection,
-            cell_style_collection,
-            cell_collection,
+            cell_style_xfs_collection: cell_style_collection,
+            cell_xfs_collection: cell_collection,
         })
     }
 }
@@ -154,12 +154,12 @@ impl StylePart {
         xml_document: &mut Weak<RefCell<XmlDocument>>,
     ) -> AnyResult<
         (
-            Vec<NumberFormat>,
-            Vec<FontStyle>,
-            Vec<FillStyle>,
-            Vec<BorderStyle>,
-            Vec<CellXfs>,
-            Vec<CellXfs>,
+            Vec<(u64, NumberFormat)>,
+            Vec<(u64, FontStyle)>,
+            Vec<(u64, FillStyle)>,
+            Vec<(u64, BorderStyle)>,
+            Vec<(u64, CellXfs)>,
+            Vec<(u64, CellXfs)>,
         ),
         AnyError,
     > {
@@ -195,7 +195,9 @@ impl StylePart {
                                     .get("formatCode")
                                     .ok_or(anyhow!("formatCode Attribute Not Found!"))?
                                     .to_string();
-                                num_format_records.push(number_format);
+                                let mut hasher = DefaultHasher::new();
+                                number_format.hash(&mut hasher);
+                                num_format_records.push((hasher.finish(), number_format));
                             }
                         } else {
                             break;
@@ -308,7 +310,9 @@ impl StylePart {
                                     break;
                                 }
                             }
-                            font_records.push(font_style);
+                            let mut hasher = DefaultHasher::new();
+                            font_style.hash(&mut hasher);
+                            font_records.push((hasher.finish(), font_style));
                         } else {
                             break;
                         }
@@ -432,7 +436,9 @@ impl StylePart {
                                     }
                                 }
                             }
-                            fill_records.push(fill_style);
+                            let mut hasher = DefaultHasher::new();
+                            fill_style.hash(&mut hasher);
+                            fill_records.push((hasher.finish(), fill_style));
                         } else {
                             break;
                         }
@@ -504,7 +510,9 @@ impl StylePart {
                                         break;
                                     }
                                 }
-                                border_records.push(border_style);
+                                let mut hasher = DefaultHasher::new();
+                                border_style.hash(&mut hasher);
+                                border_records.push((hasher.finish(), border_style));
                             }
                         } else {
                             break;
@@ -558,7 +566,7 @@ impl StylePart {
                 num_formats
                     .set_attribute_mut(attributes)
                     .context("Updating Number Formats Element Attributes Failed")?;
-                for num_format in self.number_format_collection.as_slice() {
+                for (_, num_format) in self.number_format_collection.as_slice() {
                     let num_format_element = xml_doc_mut
                         .append_child_mut("numFmt", Some(&num_formats_id))
                         .context("Create Number Format Element Failed")?;
@@ -581,7 +589,7 @@ impl StylePart {
                 fonts
                     .set_attribute_mut(attributes)
                     .context("Set attribute failed for fonts style")?;
-                for font_style in self.font_collection.as_slice() {
+                for (_, font_style) in self.font_collection.as_slice() {
                     let font_id = xml_doc_mut
                         .append_child_mut("font", Some(&fonts_id))
                         .context("Adding Font to Fonts Failed")?
@@ -663,7 +671,7 @@ impl StylePart {
                 fills
                     .set_attribute_mut(attributes)
                     .context("Set Fill Attribute Failed")?;
-                for fill_data in self.fill_collection.as_slice() {
+                for (_, fill_data) in self.fill_collection.as_slice() {
                     let fill_id = xml_doc_mut
                         .append_child_mut("fill", Some(&fills_id))
                         .context("Adding Fill Element Failed")?
@@ -722,7 +730,7 @@ impl StylePart {
                 borders
                     .set_attribute_mut(attributes)
                     .context("Updating Number Formats Element Attributes Failed")?;
-                for border_data in self.border_collection.as_slice() {
+                for (_, border_data) in self.border_collection.as_slice() {
                     let border_id = xml_doc_mut
                         .append_child_mut("border", Some(&borders_id))
                         .context("Create Border Failed")?
@@ -766,13 +774,13 @@ impl StylePart {
             }
             // Create Cell Style Elements
             {
-                StylePart::add_cell_style(&mut xml_doc_mut, &mut self.cell_collection, true)?;
+                StylePart::add_cell_style(&mut xml_doc_mut, &mut self.cell_xfs_collection, true)?;
             }
             // Create Defined Cell Style Elements
             {
                 StylePart::add_cell_style(
                     &mut xml_doc_mut,
-                    &mut self.cell_style_collection,
+                    &mut self.cell_style_xfs_collection,
                     false,
                 )?;
             }
@@ -783,7 +791,7 @@ impl StylePart {
     pub(crate) fn deserialize_cell_style(
         style_xfs: XmlElement,
         xml_doc_mut: &mut XmlDocument,
-    ) -> AnyResult<Vec<CellXfs>, AnyError> {
+    ) -> AnyResult<Vec<(u64, CellXfs)>, AnyError> {
         let mut style_records = Vec::new();
         loop {
             if let Some((xf_id, _)) = style_xfs.pop_child_mut() {
@@ -864,7 +872,9 @@ impl StylePart {
                             }
                         }
                     }
-                    style_records.push(cell_xf);
+                    let mut hasher = DefaultHasher::new();
+                    cell_xf.hash(&mut hasher);
+                    style_records.push((hasher.finish(), cell_xf));
                 }
             } else {
                 break;
@@ -960,7 +970,7 @@ impl StylePart {
 
     fn add_cell_style(
         xml_doc_mut: &mut XmlDocument,
-        cell_style_xfs_data: &mut Vec<CellXfs>,
+        xfs_data: &mut Vec<(u64, CellXfs)>,
         enable_format_id: bool,
     ) -> Result<(), AnyError> {
         let cell_style_xfs = xml_doc_mut
@@ -976,92 +986,74 @@ impl StylePart {
             .context("Create Cell Style parents Failed.")?;
         let cell_style_xfs_id = cell_style_xfs.get_id();
         let mut attributes = HashMap::new();
-        attributes.insert("count".to_string(), cell_style_xfs_data.len().to_string());
+        attributes.insert("count".to_string(), xfs_data.len().to_string());
         cell_style_xfs
             .set_attribute_mut(attributes)
             .context("Updating Number Formats Element Attributes Failed")?;
-        for cell_style_xfs in cell_style_xfs_data {
+        for (_, xfs) in xfs_data {
             let xf = xml_doc_mut
                 .append_child_mut("xf", Some(&cell_style_xfs_id))
                 .context("Create Cell Style Config Failed")?;
             let xf_id = xf.get_id();
             let mut attributes: HashMap<String, String> = HashMap::new();
-            attributes.insert(
-                "numFmtId".to_string(),
-                cell_style_xfs.number_format_id.to_string(),
-            );
-            attributes.insert("fontId".to_string(), cell_style_xfs.font_id.to_string());
-            attributes.insert("fillId".to_string(), cell_style_xfs.fill_id.to_string());
-            attributes.insert("borderId".to_string(), cell_style_xfs.border_id.to_string());
+            attributes.insert("numFmtId".to_string(), xfs.number_format_id.to_string());
+            attributes.insert("fontId".to_string(), xfs.font_id.to_string());
+            attributes.insert("fillId".to_string(), xfs.fill_id.to_string());
+            attributes.insert("borderId".to_string(), xfs.border_id.to_string());
             if enable_format_id {
-                attributes.insert("xfId".to_string(), cell_style_xfs.format_id.to_string());
+                attributes.insert("xfId".to_string(), xfs.format_id.to_string());
             }
-            if cell_style_xfs.apply_font > 0 {
-                attributes.insert(
-                    "applyFont".to_string(),
-                    cell_style_xfs.apply_font.to_string(),
-                );
+            if xfs.apply_font > 0 {
+                attributes.insert("applyFont".to_string(), xfs.apply_font.to_string());
             }
-            if cell_style_xfs.apply_alignment > 0 {
+            if xfs.apply_alignment > 0 {
                 attributes.insert(
                     "applyAlignment".to_string(),
-                    cell_style_xfs.apply_alignment.to_string(),
+                    xfs.apply_alignment.to_string(),
                 );
             }
-            if cell_style_xfs.apply_fill > 0 {
-                attributes.insert(
-                    "applyFill".to_string(),
-                    cell_style_xfs.apply_fill.to_string(),
-                );
+            if xfs.apply_fill > 0 {
+                attributes.insert("applyFill".to_string(), xfs.apply_fill.to_string());
             }
-            if cell_style_xfs.apply_border > 0 {
-                attributes.insert(
-                    "applyBorder".to_string(),
-                    cell_style_xfs.apply_border.to_string(),
-                );
+            if xfs.apply_border > 0 {
+                attributes.insert("applyBorder".to_string(), xfs.apply_border.to_string());
             }
-            if cell_style_xfs.apply_number_format > 0 {
+            if xfs.apply_number_format > 0 {
                 attributes.insert(
                     "applyNumberFormat".to_string(),
-                    cell_style_xfs.apply_number_format.to_string(),
+                    xfs.apply_number_format.to_string(),
                 );
             }
-            if cell_style_xfs.apply_protection > 0 {
+            if xfs.apply_protection > 0 {
                 attributes.insert(
                     "applyProtection".to_string(),
-                    cell_style_xfs.apply_protection.to_string(),
+                    xfs.apply_protection.to_string(),
                 );
             }
             xf.set_attribute_mut(attributes)
                 .context("Setting Attributes Failed")?;
-            if cell_style_xfs.is_wrap_text > 0
-                || cell_style_xfs.vertical_alignment != VerticalAlignmentValues::None
-                || cell_style_xfs.horizontal_alignment != HorizontalAlignmentValues::None
+            if xfs.is_wrap_text > 0
+                || xfs.vertical_alignment != VerticalAlignmentValues::None
+                || xfs.horizontal_alignment != HorizontalAlignmentValues::None
             {
                 let alignment = xml_doc_mut
                     .append_child_mut("alignment", Some(&xf_id))
                     .context("Create Cell Alignment Style Config Failed")?;
                 let mut alignment_attributes: HashMap<String, String> = HashMap::new();
-                if cell_style_xfs.is_wrap_text > 0 {
-                    alignment_attributes.insert(
-                        "wrapText".to_string(),
-                        cell_style_xfs.is_wrap_text.to_string(),
-                    );
+                if xfs.is_wrap_text > 0 {
+                    alignment_attributes
+                        .insert("wrapText".to_string(), xfs.is_wrap_text.to_string());
                 }
-                if cell_style_xfs.vertical_alignment != VerticalAlignmentValues::None {
+                if xfs.vertical_alignment != VerticalAlignmentValues::None {
                     alignment_attributes.insert(
                         "vertical".to_string(),
-                        VerticalAlignmentValues::get_string(
-                            cell_style_xfs.vertical_alignment.clone(),
-                        ),
+                        VerticalAlignmentValues::get_string(xfs.vertical_alignment.clone()),
                     );
                 }
-                if cell_style_xfs.horizontal_alignment != HorizontalAlignmentValues::None {
+                if xfs.horizontal_alignment != HorizontalAlignmentValues::None {
                     alignment_attributes.insert(
                         "horizontal".to_string(),
-                        HorizontalAlignmentValues::get_string(
-                            cell_style_xfs.horizontal_alignment.clone(),
-                        ),
+                        HorizontalAlignmentValues::get_string(xfs.horizontal_alignment.clone()),
                     );
                 }
                 alignment
@@ -1089,25 +1081,158 @@ impl StylePart {
         if let Some((_, id)) = self.cache_id.get_key_value(&style_hash) {
             Ok(StyleId::new(*id))
         } else {
-            if let Some(office_document) = self.office_document.upgrade() {
-                let office_doc = office_document
-                    .try_borrow_mut()
-                    .context("Failed to get Office Handle")?;
-                if style_setting.number_format == NumberFormatValues::Custom {
-                    // Get Number Format ID
+            let mut cell_style = CellXfs::default();
+            if style_setting.number_format == NumberFormatValues::Custom {
+                cell_style.apply_number_format = 1;
+                // Get Number Format ID
+                if let Some(custom_format) = style_setting.custom_number_format {
+                    let mut hasher = DefaultHasher::new();
+                    let number_format = NumberFormat {
+                        format_code: custom_format,
+                        format_type: NumberFormatValues::Custom,
+                        ..Default::default()
+                    };
+                    number_format.hash(&mut hasher);
+                    let current_hash = hasher.finish();
+                    if let Some(position) = self
+                        .number_format_collection
+                        .iter()
+                        .position(|(hash, _)| *hash == current_hash)
+                    {
+                        cell_style.number_format_id = position as u16 + 163;
+                    } else {
+                        self.number_format_collection
+                            .push((current_hash, number_format));
+                        cell_style.number_format_id = self.number_format_collection.len() as u16;
+                    }
+                } else {
+                    return Err(anyhow!(
+                        "Custom Format Type is used without providing custom number format."
+                    ));
                 }
-                // Get Font Style ID
-                {}
-                // Get Fill Style ID
-                {}
-                // Get Border Style ID
-                {}
-                // Get Cell Style xfs
-                {}
-                // Get Cell xfs
-                {}
             }
-            Ok(StyleId::new(0))
+            // Get Font Style ID
+            {
+                let mut hasher = DefaultHasher::new();
+                let font_style = FontStyle {
+                    name: style_setting.font_family,
+                    is_bold: style_setting.is_bold,
+                    is_italic: style_setting.is_italic,
+                    is_underline: style_setting.is_underline,
+                    is_double_underline: style_setting.is_double_underline,
+                    color: style_setting.text_color,
+                    size: style_setting.font_size,
+                    ..Default::default()
+                };
+                font_style.hash(&mut hasher);
+                let current_hash = hasher.finish();
+                if let Some(position) = self
+                    .font_collection
+                    .iter()
+                    .position(|(hash, _)| *hash == current_hash)
+                {
+                    cell_style.font_id = position as u16;
+                } else {
+                    self.font_collection.push((current_hash, font_style));
+                    cell_style.font_id = self.font_collection.len() as u16;
+                }
+            }
+            // Get Fill Style ID
+            {
+                let mut hasher = DefaultHasher::new();
+                let fill_style = FillStyle {
+                    background_color: if let Some(background_color) = style_setting.background_color
+                    {
+                        Some(ColorSetting {
+                            color_setting_type: ColorSettingTypeValues::Rgb,
+                            value: background_color,
+                        })
+                    } else {
+                        None
+                    },
+                    foreground_color: if let Some(foreground_color) = style_setting.foreground_color
+                    {
+                        Some(ColorSetting {
+                            color_setting_type: ColorSettingTypeValues::Rgb,
+                            value: foreground_color,
+                        })
+                    } else {
+                        None
+                    },
+                    pattern_type: style_setting.pattern_type,
+                    ..Default::default()
+                };
+                fill_style.hash(&mut hasher);
+                let current_hash = hasher.finish();
+                if let Some(position) = self
+                    .fill_collection
+                    .iter()
+                    .position(|(hash, _)| *hash == current_hash)
+                {
+                    cell_style.fill_id = position as u16;
+                } else {
+                    self.fill_collection.push((current_hash, fill_style));
+                    cell_style.fill_id = self.font_collection.len() as u16;
+                }
+            }
+            // Get Border Style ID
+            {
+                let mut hasher = DefaultHasher::new();
+                let border_style = BorderStyle {
+                    left: style_setting.border_left,
+                    top: style_setting.border_top,
+                    right: style_setting.border_right,
+                    bottom: style_setting.border_bottom,
+                    ..Default::default()
+                };
+                border_style.hash(&mut hasher);
+                let current_hash = hasher.finish();
+                if let Some(position) = self
+                    .border_collection
+                    .iter()
+                    .position(|(hash, _)| *hash == current_hash)
+                {
+                    cell_style.border_id = position as u16;
+                } else {
+                    self.border_collection.push((current_hash, border_style));
+                    cell_style.border_id = self.font_collection.len() as u16;
+                }
+            }
+            // Get Cell Style xfs to find xfId
+            {
+                let mut hasher = DefaultHasher::new();
+                let cell_style_xfs = cell_style.clone();
+                cell_style_xfs.hash(&mut hasher);
+                let current_hash = hasher.finish();
+                if let Some(position) = self
+                    .cell_style_xfs_collection
+                    .iter()
+                    .position(|(hash, _)| *hash == current_hash)
+                {
+                    cell_style.format_id = position as u16;
+                } else {
+                    self.cell_style_xfs_collection
+                        .push((current_hash, cell_style_xfs));
+                    cell_style.format_id = self.font_collection.len() as u16;
+                }
+            }
+            // Get Cell xfs
+            {
+                let mut hasher = DefaultHasher::new();
+                let font_style = cell_style;
+                font_style.hash(&mut hasher);
+                let current_hash = hasher.finish();
+                if let Some(position) = self
+                    .cell_xfs_collection
+                    .iter()
+                    .position(|(hash, _)| *hash == current_hash)
+                {
+                    Ok(StyleId::new(position as u32))
+                } else {
+                    self.cell_xfs_collection.push((current_hash, font_style));
+                    Ok(StyleId::new(self.font_collection.len() as u32))
+                }
+            }
         }
     }
 }

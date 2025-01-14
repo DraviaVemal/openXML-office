@@ -127,8 +127,8 @@ impl Enum<NumberFormatValues> for NumberFormatValues {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub enum FontSchemeValues {
+#[derive(Debug, Clone, Hash, Deserialize, Serialize)]
+pub(crate) enum FontSchemeValues {
     None,
     Minor,
     Major,
@@ -151,8 +151,8 @@ impl Enum<FontSchemeValues> for FontSchemeValues {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub enum PatternTypeValues {
+#[derive(Debug, Clone, Hash, Deserialize, Serialize)]
+pub(crate) enum PatternTypeValues {
     None,
     Gray125,
     Solid,
@@ -287,25 +287,25 @@ impl Default for BorderSetting {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct BorderStyle {
-    pub id: u32,
-    pub bottom: BorderSetting,
-    pub left: BorderSetting,
-    pub right: BorderSetting,
-    pub top: BorderSetting,
-    pub diagonal: BorderSetting,
+#[derive(Debug, Clone, Hash, Deserialize, Serialize)]
+pub(crate) struct BorderStyle {
+    pub(crate) id: u32,
+    pub(crate) bottom: BorderSetting,
+    pub(crate) left: BorderSetting,
+    pub(crate) right: BorderSetting,
+    pub(crate) top: BorderSetting,
+    pub(crate) diagonal: BorderSetting,
 }
 
 impl Default for BorderStyle {
     fn default() -> Self {
         Self {
             id: 0,
-            bottom: BorderSetting::default(),
-            left: BorderSetting::default(),
-            right: BorderSetting::default(),
-            top: BorderSetting::default(),
-            diagonal: BorderSetting::default(),
+            bottom: Default::default(),
+            left: Default::default(),
+            right: Default::default(),
+            top: Default::default(),
+            diagonal: Default::default(),
         }
     }
 }
@@ -367,22 +367,69 @@ impl Enum<VerticalAlignmentValues> for VerticalAlignmentValues {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct CellXfs {
-    pub format_id: u16,
-    pub number_format_id: u16,
-    pub font_id: u16,
-    pub fill_id: u16,
-    pub border_id: u16,
-    pub apply_font: u8,
-    pub apply_alignment: u8,
-    pub apply_fill: u8,
-    pub apply_border: u8,
-    pub apply_number_format: u8,
-    pub apply_protection: u8,
-    pub is_wrap_text: u8,
-    pub horizontal_alignment: HorizontalAlignmentValues,
-    pub vertical_alignment: VerticalAlignmentValues,
+#[derive(Debug, Hash)]
+pub(crate) struct NumberFormat {
+    pub(crate) format_id: usize,
+    pub(crate) format_type: NumberFormatValues,
+    pub(crate) format_code: String,
+}
+
+impl Default for NumberFormat {
+    fn default() -> Self {
+        Self {
+            format_id: 0,
+            format_type: NumberFormatValues::General,
+            format_code: NumberFormatValues::get_string(NumberFormatValues::General),
+        }
+    }
+}
+#[derive(Debug, Clone, Hash, Deserialize, Serialize)]
+pub(crate) struct FontStyle {
+    pub(crate) name: String,
+    pub(crate) size: u8,
+    pub(crate) color: ColorSetting,
+    pub(crate) family: u32,
+    pub(crate) font_scheme: FontSchemeValues,
+    pub(crate) is_bold: bool,
+    pub(crate) is_double_underline: bool,
+    pub(crate) is_italic: bool,
+    pub(crate) is_underline: bool,
+}
+
+impl Default for FontStyle {
+    fn default() -> Self {
+        Self {
+            name: "Calibri".to_string(),
+            size: 11,
+            color: ColorSetting {
+                value: "1".to_string(),
+                ..Default::default()
+            },
+            family: 2,
+            font_scheme: FontSchemeValues::None,
+            is_bold: false,
+            is_double_underline: false,
+            is_italic: false,
+            is_underline: false,
+        }
+    }
+}
+#[derive(Debug, Clone, Hash, Deserialize, Serialize)]
+pub(crate) struct CellXfs {
+    pub(crate) format_id: u16,
+    pub(crate) number_format_id: u16,
+    pub(crate) font_id: u16,
+    pub(crate) fill_id: u16,
+    pub(crate) border_id: u16,
+    pub(crate) apply_font: u8,
+    pub(crate) apply_alignment: u8,
+    pub(crate) apply_fill: u8,
+    pub(crate) apply_border: u8,
+    pub(crate) apply_number_format: u8,
+    pub(crate) apply_protection: u8,
+    pub(crate) is_wrap_text: u8,
+    pub(crate) horizontal_alignment: HorizontalAlignmentValues,
+    pub(crate) vertical_alignment: VerticalAlignmentValues,
 }
 
 impl Default for CellXfs {
@@ -406,11 +453,11 @@ impl Default for CellXfs {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct FillStyle {
-    pub pattern_type: PatternTypeValues,
-    pub background_color: Option<ColorSetting>,
-    pub foreground_color: Option<ColorSetting>,
+#[derive(Debug, Clone, Hash, Deserialize, Serialize)]
+pub(crate) struct FillStyle {
+    pub(crate) pattern_type: PatternTypeValues,
+    pub(crate) background_color: Option<ColorSetting>,
+    pub(crate) foreground_color: Option<ColorSetting>,
 }
 
 impl Default for FillStyle {
@@ -423,103 +470,68 @@ impl Default for FillStyle {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct FontStyle {
-    pub name: String,
-    pub size: u8,
-    pub color: ColorSetting,
-    pub family: u32,
-    pub font_scheme: FontSchemeValues,
-    pub is_bold: bool,
-    pub is_double_underline: bool,
-    pub is_italic: bool,
-    pub is_underline: bool,
-}
-
-impl Default for FontStyle {
-    fn default() -> Self {
-        Self {
-            name: "Calibri".to_string(),
-            size: 11,
-            color: ColorSetting {
-                value: "1".to_string(),
-                ..Default::default()
-            },
-            family: 2,
-            font_scheme: FontSchemeValues::None,
-            is_bold: false,
-            is_double_underline: false,
-            is_italic: false,
-            is_underline: false,
-        }
-    }
-}
-
-#[derive(Debug, Hash)]
-pub(crate) struct NumberFormat {
-    pub(crate) format_id: usize,
-    pub(crate) format_type: NumberFormatValues,
-    pub(crate) format_code: String,
-}
-
-impl Default for NumberFormat {
-    fn default() -> Self {
-        Self {
-            format_id: 0,
-            format_type: NumberFormatValues::General,
-            format_code: NumberFormatValues::get_string(NumberFormatValues::General),
-        }
-    }
-}
-
 /// Get Column Cell Input Combined for styling
 #[derive(Debug, Hash)]
 pub struct StyleSetting {
-    pub background_color: Option<String>,
+    // num format
+    pub number_format: NumberFormatValues,
+    pub custom_number_format: Option<String>,
+    // border
     pub border_bottom: BorderSetting,
     pub border_left: BorderSetting,
     pub border_right: BorderSetting,
     pub border_top: BorderSetting,
+    // font
     pub font_family: String,
-    pub font_size: u32,
-    pub foreground_color: Option<String>,
-    pub horizontal_alignment: HorizontalAlignmentValues,
+    pub font_size: u8,
+    pub text_color: ColorSetting,
     pub is_bold: bool,
-    pub is_double_underline: bool,
     pub is_italic: bool,
     pub is_underline: bool,
+    pub is_double_underline: bool,
     pub is_wrap_text: bool,
-    pub number_format: NumberFormatValues,
-    pub custom_number_format: Option<String>,
-    pub text_color: ColorSetting,
+    // fill
+    pub background_color: Option<String>,
+    pub foreground_color: Option<String>,
+    pub(crate) pattern_type: PatternTypeValues,
+    // xfs
+    pub horizontal_alignment: HorizontalAlignmentValues,
     pub vertical_alignment: VerticalAlignmentValues,
+    // mis
     pub(crate) protect: Option<()>,
 }
 
 impl Default for StyleSetting {
     fn default() -> Self {
         Self {
-            background_color: None,
-            border_bottom: BorderSetting::default(),
-            border_left: BorderSetting::default(),
-            border_right: BorderSetting::default(),
-            border_top: BorderSetting::default(),
-            font_family: "Calibri".to_string(),
-            font_size: 11,
-            foreground_color: None,
-            horizontal_alignment: HorizontalAlignmentValues::None,
-            is_bold: false,
-            is_double_underline: false,
-            is_italic: false,
-            is_underline: false,
-            is_wrap_text: false,
+            // number format
             number_format: NumberFormatValues::General,
             custom_number_format: None,
+            // border
+            border_bottom: Default::default(),
+            border_left: Default::default(),
+            border_right: Default::default(),
+            border_top: Default::default(),
+            // font
+            font_family: "Calibri".to_string(),
+            font_size: 11,
+            is_bold: false,
+            is_italic: false,
+            is_underline: false,
+            is_double_underline: false,
+            is_wrap_text: false,
             text_color: ColorSetting {
                 color_setting_type: ColorSettingTypeValues::Rgb,
                 value: "000000".to_string(),
             },
+            // fill
+            background_color: None,
+            foreground_color: None,
+            pattern_type: PatternTypeValues::Solid,
+            // xfs
+            horizontal_alignment: HorizontalAlignmentValues::None,
             vertical_alignment: VerticalAlignmentValues::None,
+            // mis
             protect: None,
         }
     }
