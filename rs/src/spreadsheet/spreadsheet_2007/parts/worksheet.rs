@@ -600,8 +600,10 @@ fn deserialize_sheet_data(
                                         ));
                                     }
                                     if let Some(cell_type) = cell_attribute.get("t") {
-                                        cell_record.data_type = CellDataType::get_enum(&cell_type)
-                                    };
+                                        cell_record.data_type = CellDataType::get_enum(&cell_type);
+                                    } else {
+                                        cell_record.data_type = CellDataType::Number;
+                                    }
                                     if let Some(comment_id) = cell_attribute.get("cm") {
                                         cell_record.comment_id = Some(
                                             comment_id

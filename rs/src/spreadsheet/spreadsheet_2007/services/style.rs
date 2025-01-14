@@ -1180,7 +1180,7 @@ impl StylePart {
                     }
                 } else {
                     self.fill_collection.push((current_hash, fill_style));
-                    cell_style.fill_id = (self.font_collection.len() - 1) as u16;
+                    cell_style.fill_id = (self.fill_collection.len() - 1) as u16;
                     cell_style.apply_fill = 1;
                 }
             }
@@ -1208,7 +1208,7 @@ impl StylePart {
                     }
                 } else {
                     self.border_collection.push((current_hash, border_style));
-                    cell_style.border_id = (self.font_collection.len() - 1) as u16;
+                    cell_style.border_id = (self.border_collection.len() - 1) as u16;
                     cell_style.apply_border = 1;
                 }
             }
@@ -1238,7 +1238,7 @@ impl StylePart {
                 } else {
                     self.cell_style_xfs_collection
                         .push((current_hash, cell_style_xfs));
-                    cell_style.format_id = (self.font_collection.len() - 1) as u16;
+                    cell_style.format_id = (self.cell_style_xfs_collection.len() - 1) as u16;
                 }
             }
             // Get Cell xfs
@@ -1255,7 +1255,7 @@ impl StylePart {
                     Ok(StyleId::new(position as u32))
                 } else {
                     self.cell_xfs_collection.push((current_hash, font_style));
-                    Ok(StyleId::new((self.font_collection.len() - 1) as u32))
+                    Ok(StyleId::new((self.cell_xfs_collection.len() - 1) as u32))
                 }
             }
         }
