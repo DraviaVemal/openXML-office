@@ -366,35 +366,29 @@ fn blank_style_excel() {
                 vec![
                     crate::spreadsheet_2007::models::CellProperties {
                         value: Some("Dravia".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
                     crate::spreadsheet_2007::models::CellProperties {
                         value: Some("Vemal".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
                     crate::spreadsheet_2007::models::CellProperties {
                         value: Some("Bold".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         style_id: Some(bold_id),
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
                     crate::spreadsheet_2007::models::CellProperties {
                         value: Some("Italic".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         style_id: Some(italic_id),
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
                     crate::spreadsheet_2007::models::CellProperties {
                         value: Some("underline".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         style_id: Some(underline_id),
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
                     crate::spreadsheet_2007::models::CellProperties {
                         value: Some("double underline".to_string()),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         style_id: Some(double_id),
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
@@ -403,7 +397,6 @@ fn blank_style_excel() {
                             "This is a very long line to wrap the column. Test the wrap string"
                                 .to_string(),
                         ),
-                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
                         style_id: Some(wrap_text_id),
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },

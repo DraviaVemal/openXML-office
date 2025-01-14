@@ -523,8 +523,8 @@ impl Default for StyleSetting {
             is_double_underline: false,
             is_wrap_text: false,
             text_color: ColorSetting {
-                color_setting_type: ColorSettingTypeValues::Rgb,
-                value: "000000".to_string(),
+                color_setting_type: ColorSettingTypeValues::Theme,
+                value: "1".to_string(),
             },
             // fill
             background_color: None,

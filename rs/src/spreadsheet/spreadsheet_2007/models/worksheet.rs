@@ -27,13 +27,13 @@ impl Enum<CellDataType> for CellDataType {
     }
     fn get_enum(input_string: &str) -> CellDataType {
         match input_string {
+            "a" => CellDataType::Auto,
             "b" => CellDataType::Boolean,
             "str" => CellDataType::String,
             "s" => CellDataType::ShareString,
             "inlineStr" => CellDataType::InlineString,
-            "n" => CellDataType::Number,
             "e" => CellDataType::Error,
-            _ => CellDataType::Auto,
+            _ => CellDataType::Number,
         }
     }
 }
