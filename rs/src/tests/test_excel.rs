@@ -1,4 +1,6 @@
-use crate::{global_2007::traits::XmlDocumentPartCommon, log_elapsed};
+use crate::{
+    global_2007::traits::XmlDocumentPartCommon, log_elapsed, spreadsheet_2007::models::StyleSetting,
+};
 use chrono::Utc;
 use rand::Rng;
 use std::{
@@ -318,6 +320,102 @@ fn set_cell_style() {
 }
 
 #[test]
+fn blank_style_excel() {
+    let mut file = crate::spreadsheet_2007::Excel::new(
+        None,
+        crate::spreadsheet_2007::ExcelPropertiesModel::default(),
+    )
+    .expect("Open Existing File Failed");
+    let bold_id = file
+        .get_style_id_mut(StyleSetting {
+            is_bold: true,
+            ..Default::default()
+        })
+        .expect("Failed bold ID");
+    let italic_id = file
+        .get_style_id_mut(StyleSetting {
+            is_italic: true,
+            ..Default::default()
+        })
+        .expect("Failed italic ID");
+    let underline_id = file
+        .get_style_id_mut(StyleSetting {
+            is_underline: true,
+            ..Default::default()
+        })
+        .expect("Failed underline ID");
+    let double_id = file
+        .get_style_id_mut(StyleSetting {
+            is_double_underline: true,
+            ..Default::default()
+        })
+        .expect("Failed double underline ID");
+    let wrap_text_id = file
+        .get_style_id_mut(StyleSetting {
+            is_wrap_text: true,
+            ..Default::default()
+        })
+        .expect("Failed wrape ID");
+    {
+        let mut formula = file
+            .add_sheet_mut(None)
+            .expect("Failed to find the worksheet");
+        formula
+            .set_row_value_ref_mut(
+                "V3",
+                vec![
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Dravia".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Vemal".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Bold".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(bold_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Italic".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(italic_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("underline".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(underline_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("double underline".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(double_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some(
+                            "This is a very long line to wrap the column. Test the wrap string"
+                                .to_string(),
+                        ),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(wrap_text_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                ],
+            )
+            .expect("Failed To Set Row Value");
+    }
+    file.save_as(&get_save_file(None))
+        .expect("Save File Failed");
+}
+
+#[test]
 fn edit_excel() {
     let mut file = crate::spreadsheet_2007::Excel::new(
         Some("src/tests/TestFiles/basic_test.xlsx".to_string()),
@@ -327,6 +425,36 @@ fn edit_excel() {
         },
     )
     .expect("Open Existing File Failed");
+    let bold_id = file
+        .get_style_id_mut(StyleSetting {
+            is_bold: true,
+            ..Default::default()
+        })
+        .expect("Failed bold ID");
+    let italic_id = file
+        .get_style_id_mut(StyleSetting {
+            is_italic: true,
+            ..Default::default()
+        })
+        .expect("Failed italic ID");
+    let underline_id = file
+        .get_style_id_mut(StyleSetting {
+            is_underline: true,
+            ..Default::default()
+        })
+        .expect("Failed underline ID");
+    let double_id = file
+        .get_style_id_mut(StyleSetting {
+            is_double_underline: true,
+            ..Default::default()
+        })
+        .expect("Failed double underline ID");
+    let wrap_text_id = file
+        .get_style_id_mut(StyleSetting {
+            is_wrap_text: true,
+            ..Default::default()
+        })
+        .expect("Failed wrape ID");
     {
         let mut formula = file
             .get_worksheet_mut("formula".to_string())
@@ -343,6 +471,39 @@ fn edit_excel() {
                     crate::spreadsheet_2007::models::CellProperties {
                         value: Some("Vemal".to_string()),
                         data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Bold".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(bold_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("Italic".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(italic_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("underline".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(underline_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some("double underline".to_string()),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(double_id),
+                        ..crate::spreadsheet_2007::models::CellProperties::default()
+                    },
+                    crate::spreadsheet_2007::models::CellProperties {
+                        value: Some(
+                            "This is a very long line to wrap the column. Test the wrap string"
+                                .to_string(),
+                        ),
+                        data_type: crate::spreadsheet_2007::models::CellDataType::Auto,
+                        style_id: Some(wrap_text_id),
                         ..crate::spreadsheet_2007::models::CellProperties::default()
                     },
                 ],
