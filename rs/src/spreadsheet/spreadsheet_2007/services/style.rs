@@ -1103,7 +1103,8 @@ impl StylePart {
                     } else {
                         self.number_format_collection
                             .push((current_hash, number_format));
-                        cell_style.number_format_id = self.number_format_collection.len() as u16;
+                        cell_style.number_format_id =
+                            (self.number_format_collection.len() - 1) as u16;
                     }
                 } else {
                     return Err(anyhow!(
@@ -1132,9 +1133,13 @@ impl StylePart {
                     .position(|(hash, _)| *hash == current_hash)
                 {
                     cell_style.font_id = position as u16;
+                    if position > 0 {
+                        cell_style.apply_font = 1;
+                    }
                 } else {
                     self.font_collection.push((current_hash, font_style));
-                    cell_style.font_id = self.font_collection.len() as u16;
+                    cell_style.font_id = (self.font_collection.len() - 1) as u16;
+                    cell_style.apply_font = 1;
                 }
             }
             // Get Fill Style ID
@@ -1170,9 +1175,13 @@ impl StylePart {
                     .position(|(hash, _)| *hash == current_hash)
                 {
                     cell_style.fill_id = position as u16;
+                    if position > 0 {
+                        cell_style.apply_fill = 1;
+                    }
                 } else {
                     self.fill_collection.push((current_hash, fill_style));
-                    cell_style.fill_id = self.font_collection.len() as u16;
+                    cell_style.fill_id = (self.font_collection.len() - 1) as u16;
+                    cell_style.apply_fill = 1;
                 }
             }
             // Get Border Style ID
@@ -1183,6 +1192,7 @@ impl StylePart {
                     top: style_setting.border_top,
                     right: style_setting.border_right,
                     bottom: style_setting.border_bottom,
+                    diagonal: style_setting.border_diagonal,
                     ..Default::default()
                 };
                 border_style.hash(&mut hasher);
@@ -1193,14 +1203,29 @@ impl StylePart {
                     .position(|(hash, _)| *hash == current_hash)
                 {
                     cell_style.border_id = position as u16;
+                    if position > 0 {
+                        cell_style.apply_border = 1;
+                    }
                 } else {
                     self.border_collection.push((current_hash, border_style));
-                    cell_style.border_id = self.font_collection.len() as u16;
+                    cell_style.border_id = (self.font_collection.len() - 1) as u16;
+                    cell_style.apply_border = 1;
                 }
             }
             // Get Cell Style xfs to find xfId
             {
                 let mut hasher = DefaultHasher::new();
+                if style_setting.vertical_alignment != VerticalAlignmentValues::None
+                    || style_setting.horizontal_alignment != HorizontalAlignmentValues::None
+                    || style_setting.is_wrap_text
+                {
+                    cell_style.apply_alignment = 1;
+                }
+                cell_style.vertical_alignment = style_setting.vertical_alignment;
+                cell_style.horizontal_alignment = style_setting.horizontal_alignment;
+                if style_setting.is_wrap_text {
+                    cell_style.is_wrap_text = 1;
+                }
                 let cell_style_xfs = cell_style.clone();
                 cell_style_xfs.hash(&mut hasher);
                 let current_hash = hasher.finish();
@@ -1213,7 +1238,7 @@ impl StylePart {
                 } else {
                     self.cell_style_xfs_collection
                         .push((current_hash, cell_style_xfs));
-                    cell_style.format_id = self.font_collection.len() as u16;
+                    cell_style.format_id = (self.font_collection.len() - 1) as u16;
                 }
             }
             // Get Cell xfs
@@ -1230,7 +1255,7 @@ impl StylePart {
                     Ok(StyleId::new(position as u32))
                 } else {
                     self.cell_xfs_collection.push((current_hash, font_style));
-                    Ok(StyleId::new(self.font_collection.len() as u32))
+                    Ok(StyleId::new((self.font_collection.len() - 1) as u32))
                 }
             }
         }

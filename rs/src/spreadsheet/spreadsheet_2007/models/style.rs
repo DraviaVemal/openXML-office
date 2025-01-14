@@ -477,10 +477,11 @@ pub struct StyleSetting {
     pub number_format: NumberFormatValues,
     pub custom_number_format: Option<String>,
     // border
-    pub border_bottom: BorderSetting,
     pub border_left: BorderSetting,
-    pub border_right: BorderSetting,
     pub border_top: BorderSetting,
+    pub border_right: BorderSetting,
+    pub border_bottom: BorderSetting,
+    pub border_diagonal: BorderSetting,
     // font
     pub font_family: String,
     pub font_size: u8,
@@ -508,10 +509,11 @@ impl Default for StyleSetting {
             number_format: NumberFormatValues::General,
             custom_number_format: None,
             // border
-            border_bottom: Default::default(),
             border_left: Default::default(),
-            border_right: Default::default(),
             border_top: Default::default(),
+            border_right: Default::default(),
+            border_bottom: Default::default(),
+            border_diagonal: Default::default(),
             // font
             font_family: "Calibri".to_string(),
             font_size: 11,
