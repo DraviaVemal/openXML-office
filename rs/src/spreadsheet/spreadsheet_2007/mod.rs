@@ -1,4 +1,4 @@
-pub(crate) mod models;
+pub mod models;
 pub mod parts;
 pub(crate) mod services;
 // Local Class
