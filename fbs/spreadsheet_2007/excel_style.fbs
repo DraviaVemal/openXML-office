@@ -2,78 +2,6 @@ include "../global_2007/consolidated.fbs";
 
 namespace openxml_office_fbs.spreadsheet_2007;
 
-enum NumberFormatValues: byte {
-    General,
-    Integer,
-    DecimalTwoPlaces,
-    ThousandsSeparator,
-    ThousandsSeparatorTwoDecimals,
-    CurrencyNoDecimals,
-    CurrencyNoDecimalsRed,
-    CurrencyTwoDecimals,
-    CurrencyTwoDecimalsRed,
-    Percentage,
-    PercentageTwoDecimals,
-    Scientific,
-    FractionOneDigit,
-    FractionTwoDigits,
-    DateMMDDYY,
-    DateDMmmYY,
-    DateDMmm,
-    DateMmmYY,
-    Time12Hour,
-    Time12HourWithSeconds,
-    Time24Hour,
-    Time24HourWithSeconds,
-    DateTimeMMDDYY,
-    AccountingNoDecimals,
-    AccountingNoDecimalsRed,
-    AccountingTwoDecimals,
-    AccountingTwoDecimalsRed,
-    AccountingNegativeInParentheses,
-    AccountingTwoDecimalsNegativeInParentheses,
-    AccountingAlignedSymbols,
-    AccountingAlignedSymbolsTwoDecimals,
-    TimeMinutesSeconds,
-    TimeHoursMinutesSeconds,
-    ElapsedTimeWithFractions,
-    ScientificOneDecimal,
-    TextFormat,
-    Custom
-}
-
-enum ColorSettingTypeValues: byte {
-    Indexed,
-    Theme,
-    Rgb
-}
-
-enum BorderStyleValues: byte {
-    None,
-    Solid,
-    Dashed,
-    Dotted
-}
-
-enum PatternTypeValues: byte {
-    None,
-    Solid,
-    Striped,
-    Dotted
-}
-
-enum HorizontalAlignmentValues: byte {
-    Left,
-    Center,
-    Right
-}
-
-enum VerticalAlignmentValues: byte {
-    Top,
-    Center,
-    Bottom
-}
-
 table ColorSetting {
     color_setting_type: ColorSettingTypeValues;
     value: string;
@@ -85,7 +13,7 @@ table BorderSetting {
 }
 
 table StyleSetting {
-    number_format: NumberFormatValues;
+    number_format: ushort;
     custom_number_format: string;
     border_left: BorderSetting;
     border_top: BorderSetting;
@@ -93,7 +21,7 @@ table StyleSetting {
     border_bottom: BorderSetting;
     border_diagonal: BorderSetting;
     font_family: string;
-    font_size: byte;
+    font_size: ubyte;
     text_color: ColorSetting;
     is_bold: bool;
     is_italic: bool;

@@ -1,6 +1,10 @@
 use crate::{chain_error, openxml_office_fbs, StatusCode};
-use draviavemal_openxml_office::spreadsheet_2007::{
-    models::StyleSetting, Excel, ExcelPropertiesModel,
+use draviavemal_openxml_office::{
+    global_2007::traits::Enum,
+    spreadsheet_2007::{
+        models::{NumberFormatValues, StyleSetting},
+        Excel, ExcelPropertiesModel,
+    },
 };
 use std::{
     ffi::{c_char, c_void, CStr, CString},
@@ -265,17 +269,20 @@ pub extern "C" fn get_style_id_mut(
         Ok(fbs_style_setting) => {
             let mut style_setting: StyleSetting = Default::default();
             // number format
-            style_setting.number_format = fbs_style_setting.number_format();
+            style_setting.number_format =
+                NumberFormatValues::get_enum(&fbs_style_setting.number_format().to_string());
             style_setting.custom_number_format = fbs_style_setting
                 .custom_number_format()
                 .map(|s| s.to_string());
+            // border
+            style_setting.border_left = fbs_style_setting.border_left();
             // font
             if let Some(font_family) = fbs_style_setting.font_family() {
                 style_setting.font_family = font_family.to_string();
             }
-            style_setting.font_size = fbs_style_setting.font_size() as u8;
+            style_setting.font_size = fbs_style_setting.font_size();
             if let Some(text_color) = fbs_style_setting.text_color() {
-                style_setting.text_color = text_color;
+                // style_setting.text_color = text_color;
             }
             style_setting.is_bold = fbs_style_setting.is_bold();
             style_setting.is_italic = fbs_style_setting.is_bold();

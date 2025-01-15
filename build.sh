@@ -19,7 +19,6 @@ done
 
 # Define the source and target directories
 SOURCE_DIR="fbs"
-RUST_DIR="rs/src"
 RUST_FFI_DIR="rs_ffi/src"
 C_SHARP_DIR="cs/openxml_office"
 JAVA_DIR="java/draviavemal_openxml_office/src/main/java"
@@ -36,11 +35,11 @@ rm -rf "$PYTHON_DIR/openxml_office_fbs"
 rm -rf target
 
 # Create the corresponding output directory in TARGET_DIR
-  mkdir -p "$C_SHARP_DIR"
-  mkdir -p "$GO_DIR"
-  mkdir -p "$JAVA_DIR/openxml_office_fbs"
-  mkdir -p "$PYTHON_DIR/openxml_office_fbs"
-  
+mkdir -p "$C_SHARP_DIR"
+mkdir -p "$GO_DIR"
+mkdir -p "$JAVA_DIR/openxml_office_fbs"
+mkdir -p "$PYTHON_DIR/openxml_office_fbs"
+
 # Find and compile each .fbs file
 find "$SOURCE_DIR" -name "*.fbs" | while read -r fbs_file; do
   # Get the directory of the .fbs file relative to SOURCE_DIR
@@ -53,7 +52,6 @@ done
 # Rust code get complied as one source to maintain the modular hierarchy
 flatc -g --gen-all -o "$GO_DIR" "fbs/consolidated.fbs"
 flatc -p --gen-all -o "$PYTHON_DIR" "fbs/consolidated.fbs"
-flatc -r --gen-all -o "$RUST_DIR" "fbs/consolidated.fbs"
 flatc -r --gen-all -o "$RUST_FFI_DIR" "fbs/consolidated.fbs"
 
 # Build Rust Core Libraries
