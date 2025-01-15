@@ -1,0 +1,111 @@
+include "../global_2007/consolidated.fbs";
+
+namespace openxml_office_fbs.spreadsheet_2007;
+
+enum NumberFormatValues: byte {
+    General,
+    Integer,
+    DecimalTwoPlaces,
+    ThousandsSeparator,
+    ThousandsSeparatorTwoDecimals,
+    CurrencyNoDecimals,
+    CurrencyNoDecimalsRed,
+    CurrencyTwoDecimals,
+    CurrencyTwoDecimalsRed,
+    Percentage,
+    PercentageTwoDecimals,
+    Scientific,
+    FractionOneDigit,
+    FractionTwoDigits,
+    DateMMDDYY,
+    DateDMmmYY,
+    DateDMmm,
+    DateMmmYY,
+    Time12Hour,
+    Time12HourWithSeconds,
+    Time24Hour,
+    Time24HourWithSeconds,
+    DateTimeMMDDYY,
+    AccountingNoDecimals,
+    AccountingNoDecimalsRed,
+    AccountingTwoDecimals,
+    AccountingTwoDecimalsRed,
+    AccountingNegativeInParentheses,
+    AccountingTwoDecimalsNegativeInParentheses,
+    AccountingAlignedSymbols,
+    AccountingAlignedSymbolsTwoDecimals,
+    TimeMinutesSeconds,
+    TimeHoursMinutesSeconds,
+    ElapsedTimeWithFractions,
+    ScientificOneDecimal,
+    TextFormat,
+    Custom
+}
+
+enum ColorSettingTypeValues: byte {
+    Indexed,
+    Theme,
+    Rgb
+}
+
+enum BorderStyleValues: byte {
+    None,
+    Solid,
+    Dashed,
+    Dotted
+}
+
+enum PatternTypeValues: byte {
+    None,
+    Solid,
+    Striped,
+    Dotted
+}
+
+enum HorizontalAlignmentValues: byte {
+    Left,
+    Center,
+    Right
+}
+
+enum VerticalAlignmentValues: byte {
+    Top,
+    Center,
+    Bottom
+}
+
+table ColorSetting {
+    color_setting_type: ColorSettingTypeValues;
+    value: string;
+}
+
+table BorderSetting {
+    border_color: ColorSetting;
+    style: BorderStyleValues;
+}
+
+table StyleSetting {
+    number_format: NumberFormatValues;
+    custom_number_format: string;
+    border_left: BorderSetting;
+    border_top: BorderSetting;
+    border_right: BorderSetting;
+    border_bottom: BorderSetting;
+    border_diagonal: BorderSetting;
+    font_family: string;
+    font_size: byte;
+    text_color: ColorSetting;
+    is_bold: bool;
+    is_italic: bool;
+    is_underline: bool;
+    is_double_underline: bool;
+    is_wrap_text: bool;
+    background_color: string;
+    foreground_color: string;
+    pattern_type: PatternTypeValues;
+    horizontal_alignment: HorizontalAlignmentValues;
+    vertical_alignment: VerticalAlignmentValues;
+    protect: bool;
+}
+
+root_type StyleSetting;

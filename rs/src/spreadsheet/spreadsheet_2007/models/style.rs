@@ -152,7 +152,7 @@ impl Enum<FontSchemeValues> for FontSchemeValues {
 }
 
 #[derive(Debug, Clone, Hash, Deserialize, Serialize)]
-pub(crate) enum PatternTypeValues {
+pub enum PatternTypeValues {
     None,
     Gray125,
     Solid,
@@ -547,5 +547,9 @@ pub struct StyleId {
 impl StyleId {
     pub(crate) fn new(id: u32) -> Self {
         Self { id }
+    }
+
+    pub fn get_id(&self) -> u32 {
+        self.id
     }
 }
