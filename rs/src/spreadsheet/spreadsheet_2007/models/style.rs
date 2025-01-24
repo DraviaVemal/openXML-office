@@ -529,7 +529,7 @@ impl Default for StyleSetting {
             // fill
             background_color: None,
             foreground_color: None,
-            pattern_type: PatternTypeValues::Solid,
+            pattern_type: PatternTypeValues::None,
             // xfs
             horizontal_alignment: HorizontalAlignmentValues::None,
             vertical_alignment: VerticalAlignmentValues::None,
