@@ -43,3 +43,10 @@ Contributions are welcome! Whether it’s reporting bugs, suggesting improvement
 ---
 
 For inquiries, feedback, or contributions, feel free to message me via GitHub or submit an issue. Thank you for supporting the OpenXML Office project!
+
+
+## TODO
+
+[ ] DashMap optimization for parallel construct, update and deconstruct xml
+[ ] Add space to pass custom parsing in current XML deserializer to improve part specific case like SheetData
+[ ] Improve Style Options and lookups

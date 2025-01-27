@@ -1,4 +1,5 @@
 use crate::{
+    converters::ConverterUtil,
     element_dictionary::EXCEL_TYPE_COLLECTION,
     files::{OfficeDocument, XmlDocument, XmlSerializer},
     global_2007::{
@@ -30,34 +31,34 @@ pub struct WorkbookPart {
     theme_part: ThemePart,
     /// This contain the sheet name, relationId, active sheet, hide sheet
     sheet_collection: Rc<RefCell<Vec<(String, String, bool, bool)>>>,
-    // workbook_view: Option<WorkbookView>,
+    workbook_view: Option<WorkbookView>,
 }
 
 #[derive(Debug)]
 pub(crate) struct WorkbookView {
-    first_sheet: String,
-    active_tab: String,
-    visibility: String,
+    active_tab: Option<String>,
+    first_sheet: Option<String>,
+    visibility: Option<String>,
     minimize: bool,
     hide_horizontal_scroll: bool,
     hide_vertical_scroll: bool,
     hide_sheet_tab: bool,
-    hide_ruler: bool,
-    hide_grid_line: bool,
+    sheet_tab_ratio: Option<i16>,
+    auto_filter_date_grouping: Option<bool>,
 }
 
-impl WorkbookView {
-    pub(crate) fn default() -> Self {
+impl Default for WorkbookView {
+    fn default() -> Self {
         WorkbookView {
-            active_tab: "0".to_string(),
-            first_sheet: "1".to_string(),
+            active_tab: None,
+            first_sheet: None,
             minimize: false,
-            hide_grid_line: false,
-            hide_ruler: false,
+            auto_filter_date_grouping: None,
             hide_sheet_tab: false,
             hide_vertical_scroll: false,
             hide_horizontal_scroll: false,
-            visibility: "visible".to_string(),
+            sheet_tab_ratio: None,
+            visibility: None,
         }
     }
 }
@@ -113,86 +114,76 @@ impl XmlDocumentPartCommon for WorkbookPart {
                         .try_borrow_mut()
                         .context("Borrow XML Document Failed")?;
                     let mut sheet_count = 1;
-                    // if let Some(workbook_view) = &self.workbook_view {
-                    //     // Create and Set BookViews
-                    //     let book_views_id = xml_doc_mut
-                    //         .insert_children_after_tag_mut("bookViews", "fileVersion", None)
-                    //         .context("Create book viewsD Node Failed")?
-                    //         .get_id();
-                    //     let workbook_view_element = xml_doc_mut
-                    //         .append_child_mut("workbookView", Some(&book_views_id))
-                    //         .context("Failed to create workbook view")?;
-                    //     let mut attributes = HashMap::new();
-                    //     if workbook_view.active_tab != "0" {
-                    //         attributes.insert(
-                    //             "activeTab".to_string(),
-                    //             workbook_view.active_tab.to_string(),
-                    //         );
-                    //     }
-                    //     if workbook_view.first_sheet != "1" {
-                    //         attributes.insert(
-                    //             "firstSheet".to_string(),
-                    //             workbook_view.first_sheet.to_string(),
-                    //         );
-                    //     }
-                    //     // attributes.insert(
-                    //     //     "minimized".to_string(),
-                    //     //     if workbook_view.minimize {
-                    //     //         "true".to_string()
-                    //     //     } else {
-                    //     //         "false".to_string()
-                    //     //     },
-                    //     // );
-                    //     // if workbook_view.visibility != "visible" {
-                    //     //     attributes.insert(
-                    //     //         "visibility".to_string(),
-                    //     //         workbook_view.visibility.to_string(),
-                    //     //     );
-                    //     // }
-                    //     // attributes.insert(
-                    //     //     "showGridlines".to_string(),
-                    //     //     if workbook_view.hide_grid_line {
-                    //     //         "false".to_string()
-                    //     //     } else {
-                    //     //         "true".to_string()
-                    //     //     },
-                    //     // );
-                    //     // attributes.insert(
-                    //     //     "showRuler".to_string(),
-                    //     //     if workbook_view.hide_ruler {
-                    //     //         "0".to_string()
-                    //     //     } else {
-                    //     //         "1".to_string()
-                    //     //     },
-                    //     // );
-                    //     attributes.insert(
-                    //         "showSheetTabs".to_string(),
-                    //         if workbook_view.hide_sheet_tab {
-                    //             "0".to_string()
-                    //         } else {
-                    //             "1".to_string()
-                    //         },
-                    //     );
-                    //     attributes.insert(
-                    //         "showVerticalScroll".to_string(),
-                    //         if workbook_view.hide_vertical_scroll {
-                    //             "0".to_string()
-                    //         } else {
-                    //             "1".to_string()
-                    //         },
-                    //     );
-                    //     attributes.insert(
-                    //         "showHorizontalScroll".to_string(),
-                    //         if workbook_view.hide_horizontal_scroll {
-                    //             "0".to_string()
-                    //         } else {
-                    //             "1".to_string()
-                    //         },
-                    //     );
-                    //     workbook_view_element
-                    //         .set_attribute_mut(attributes)
-                    //         .context("Failed to set workbook view attributes")?;
-                    // }
+                    if let Some(workbook_view) = &self.workbook_view {
+                        // Create and Set BookViews
+                        let book_views_id = xml_doc_mut
+                            .insert_children_after_tag_mut("bookViews", "fileVersion", None)
+                            .context("Create book viewsD Node Failed")?
+                            .get_id();
+                        let workbook_view_element = xml_doc_mut
+                            .append_child_mut("workbookView", Some(&book_views_id))
+                            .context("Failed to create workbook view")?;
+                        let mut attributes: HashMap<String, String> = HashMap::new();
+                        if let Some(active_tab) = &workbook_view.active_tab {
+                            attributes.insert("activeTab".to_string(), active_tab.clone());
+                        }
+                        if let Some(first_sheet) = &workbook_view.first_sheet {
+                            attributes.insert("firstSheet".to_string(), first_sheet.clone());
+                        }
+                        if let Some(tab_ratio) = &workbook_view.sheet_tab_ratio {
+                            attributes.insert("tabRatio".to_string(), tab_ratio.to_string());
+                        }
+                        if let Some(auto_filter_date_grouping) =
+                            &workbook_view.auto_filter_date_grouping
+                        {
+                            attributes.insert(
+                                "tabRatio".to_string(),
+                                if auto_filter_date_grouping.to_owned() {
+                                    "1".to_string()
+                                } else {
+                                    "0".to_string()
+                                },
+                            );
+                        }
+                        attributes.insert(
+                            "minimized".to_string(),
+                            if workbook_view.minimize {
+                                "1".to_string()
+                            } else {
+                                "0".to_string()
+                            },
+                        );
+                        if let Some(visibility) = &workbook_view.visibility {
+                            attributes.insert("visibility".to_string(), visibility.clone());
+                        }
+                        attributes.insert(
+                            "showSheetTabs".to_string(),
+                            if workbook_view.hide_sheet_tab {
+                                "0".to_string()
+                            } else {
+                                "1".to_string()
+                            },
+                        );
+                        attributes.insert(
+                            "showVerticalScroll".to_string(),
+                            if workbook_view.hide_vertical_scroll {
+                                "0".to_string()
+                            } else {
+                                "1".to_string()
+                            },
+                        );
+                        attributes.insert(
+                            "showHorizontalScroll".to_string(),
+                            if workbook_view.hide_horizontal_scroll {
+                                "0".to_string()
+                            } else {
+                                "1".to_string()
+                            },
+                        );
+                        workbook_view_element
+                            .set_attribute_mut(attributes)
+                            .context("Failed to set workbook view attributes")?;
+                    }
                     // Create and set Sheets
                     let sheets_id = xml_doc_mut
                         .insert_children_after_tag_mut("sheets", "bookViews", None)
@@ -304,7 +295,7 @@ impl XmlDocumentPart for WorkbookPart {
                     workbook_relationship_part,
                     theme_part,
                     sheet_collection: Rc::new(RefCell::new(sheet_collection)),
-                    // workbook_view,
+                    workbook_view,
                 })
             },
             "Create New Workbook"
@@ -327,90 +318,110 @@ impl WorkbookPart {
                         .try_borrow_mut()
                         .context("xml doc borrow failed")?;
                     // Deconstruct Book View for sheet collection data
-                    // if let Some(mut book_views_vec) = xml_doc_mut.pop_elements_by_tag_mut("bookViews", None)
-                    // {
-                    //     if let Some(book_views) = book_views_vec.pop() {
-                    //         loop {
-                    //             if let Some(workbook_view_id) = book_views.pop_child_id_mut() {
-                    //                 if let Some(workbook_view_element) =
-                    //                     xml_doc_mut.pop_element_mut(&workbook_view_id)
-                    //                 {
-                    //                     if let Some(attributes) = workbook_view_element.get_attribute() {
-                    //                         workbook_view = Some(WorkbookView {
-                    //                             active_tab: if let Some(active_tab) =
-                    //                                 attributes.get("activeTab")
-                    //                             {
-                    //                                 active_tab.to_string()
-                    //                             } else {
-                    //                                 "0".to_string()
-                    //                             },
-                    //                             first_sheet: if let Some(first_sheet) =
-                    //                                 attributes.get("firstSheet")
-                    //                             {
-                    //                                 first_sheet.to_string()
-                    //                             } else {
-                    //                                 "1".to_string()
-                    //                             },
-                    //                             hide_sheet_tab: if let Some(hide_sheet_tab) =
-                    //                                 attributes.get("showSheetTabs")
-                    //                             {
-                    //                                 hide_sheet_tab == "1"
-                    //                             } else {
-                    //                                 false
-                    //                             },
-                    //                             visibility: if let Some(visibility) =
-                    //                                 attributes.get("visibility")
-                    //                             {
-                    //                                 visibility.to_string()
-                    //                             } else {
-                    //                                 "visible".to_string()
-                    //                             },
-                    //                             minimize: if let Some(minimize) =
-                    //                                 attributes.get("minimized")
-                    //                             {
-                    //                                 minimize == "1"
-                    //                             } else {
-                    //                                 false
-                    //                             },
-                    //                             hide_grid_line: if let Some(hide_grid_line) =
-                    //                                 attributes.get("showGridlines")
-                    //                             {
-                    //                                 hide_grid_line == "0"
-                    //                             } else {
-                    //                                 false
-                    //                             },
-                    //                             hide_ruler: if let Some(hide_ruler) =
-                    //                                 attributes.get("showRuler")
-                    //                             {
-                    //                                 hide_ruler == "0"
-                    //                             } else {
-                    //                                 false
-                    //                             },
-                    //                             hide_horizontal_scroll: if let Some(
-                    //                                 hide_horizontal_scroll,
-                    //                             ) =
-                    //                                 attributes.get("showHorizontalScroll")
-                    //                             {
-                    //                                 hide_horizontal_scroll == "0"
-                    //                             } else {
-                    //                                 false
-                    //                             },
-                    //                             hide_vertical_scroll: if let Some(hide_vertical_scroll) =
-                    //                                 attributes.get("showVerticalScroll")
-                    //                             {
-                    //                                 hide_vertical_scroll == "0"
-                    //                             } else {
-                    //                                 false
-                    //                             },
-                    //                         })
-                    //                     }
-                    //                 }
-                    //             } else {
-                    //                 break;
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                    if let Some(mut book_views_vec) =
+                        xml_doc_mut.pop_elements_by_tag_mut("bookViews", None)
+                    {
+                        if let Some(book_views) = book_views_vec.pop() {
+                            loop {
+                                if let Some((workbook_view_id, _)) = book_views.pop_child_mut() {
+                                    if let Some(workbook_view_element) =
+                                        xml_doc_mut.pop_element_mut(&workbook_view_id)
+                                    {
+                                        if let Some(attributes) =
+                                            workbook_view_element.get_attribute()
+                                        {
+                                            workbook_view = Some(WorkbookView {
+                                                auto_filter_date_grouping: if let Some(
+                                                    auto_filter_data_group,
+                                                ) =
+                                                    attributes.get("autoFilterDateGrouping")
+                                                {
+                                                    Some(
+                                                        ConverterUtil::normalize_bool_property(
+                                                            auto_filter_data_group,
+                                                        ) == 1,
+                                                    )
+                                                } else {
+                                                    None
+                                                },
+                                                sheet_tab_ratio: if let Some(tab_ratio) =
+                                                    attributes.get("tabRatio")
+                                                {
+                                                    Some(tab_ratio.parse().context(
+                                                        "Failed to Parse Tab Ratio Numeric",
+                                                    )?)
+                                                } else {
+                                                    None
+                                                },
+                                                active_tab: if let Some(active_tab) =
+                                                    attributes.get("activeTab")
+                                                {
+                                                    Some(active_tab.to_string())
+                                                } else {
+                                                    None
+                                                },
+                                                first_sheet: if let Some(first_sheet) =
+                                                    attributes.get("firstSheet")
+                                                {
+                                                    Some(first_sheet.to_string())
+                                                } else {
+                                                    None
+                                                },
+                                                hide_sheet_tab: if let Some(hide_sheet_tab) =
+                                                    attributes.get("showSheetTabs")
+                                                {
+                                                    ConverterUtil::normalize_bool_property(
+                                                        hide_sheet_tab,
+                                                    ) == 1
+                                                } else {
+                                                    false
+                                                },
+                                                visibility: if let Some(visibility) =
+                                                    attributes.get("visibility")
+                                                {
+                                                    Some(visibility.to_string())
+                                                } else {
+                                                    None
+                                                },
+                                                minimize: if let Some(minimize) =
+                                                    attributes.get("minimized")
+                                                {
+                                                    ConverterUtil::normalize_bool_property(minimize)
+                                                        == 1
+                                                } else {
+                                                    false
+                                                },
+                                                hide_horizontal_scroll: if let Some(
+                                                    hide_horizontal_scroll,
+                                                ) =
+                                                    attributes.get("showHorizontalScroll")
+                                                {
+                                                    ConverterUtil::normalize_bool_property(
+                                                        hide_horizontal_scroll,
+                                                    ) == 0
+                                                } else {
+                                                    false
+                                                },
+                                                hide_vertical_scroll: if let Some(
+                                                    hide_vertical_scroll,
+                                                ) =
+                                                    attributes.get("showVerticalScroll")
+                                                {
+                                                    ConverterUtil::normalize_bool_property(
+                                                        hide_vertical_scroll,
+                                                    ) == 0
+                                                } else {
+                                                    false
+                                                },
+                                            })
+                                        }
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     // Deconstruct Sheets into collection
                     if let Some(mut sheets_vec) =
                         xml_doc_mut.pop_elements_by_tag_mut("sheets", None)
@@ -538,110 +549,84 @@ impl WorkbookPart {
         Ok(())
     }
 
-    // /// Set workbook visibility
-    // pub(crate) fn set_visibility_mut(&mut self, is_visible: bool) -> AnyResult<(), AnyError> {
-    //     if let Some(workbook_view) = &mut self.workbook_view {
-    //         workbook_view.visibility = if is_visible {
-    //             "visible".to_string()
-    //         } else {
-    //             "hidden".to_string()
-    //         }
-    //     } else {
-    //         self.workbook_view = Some(WorkbookView {
-    //             visibility: if is_visible {
-    //                 "visible".to_string()
-    //             } else {
-    //                 "hidden".to_string()
-    //             },
-    //             ..WorkbookView::default()
-    //         })
-    //     }
-    //     Ok(())
-    // }
+    /// Set workbook visibility
+    pub(crate) fn set_visibility_mut(&mut self, is_visible: bool) -> AnyResult<(), AnyError> {
+        if let Some(workbook_view) = &mut self.workbook_view {
+            workbook_view.visibility = if is_visible {
+                Some("visible".to_string())
+            } else {
+                Some("hidden".to_string())
+            }
+        } else {
+            self.workbook_view = Some(WorkbookView {
+                visibility: if is_visible {
+                    Some("visible".to_string())
+                } else {
+                    Some("hidden".to_string())
+                },
+                ..WorkbookView::default()
+            })
+        }
+        Ok(())
+    }
 
-    // /// Set workbook minimized
-    // pub(crate) fn minimize_workbook_mut(&mut self, is_minimized: bool) -> AnyResult<(), AnyError> {
-    //     if let Some(workbook_view) = &mut self.workbook_view {
-    //         workbook_view.minimize = is_minimized;
-    //     } else {
-    //         self.workbook_view = Some(WorkbookView {
-    //             minimize: is_minimized,
-    //             ..WorkbookView::default()
-    //         })
-    //     }
-    //     Ok(())
-    // }
+    /// Set workbook minimized
+    pub(crate) fn minimize_workbook_mut(&mut self, is_minimized: bool) -> AnyResult<(), AnyError> {
+        if let Some(workbook_view) = &mut self.workbook_view {
+            workbook_view.minimize = is_minimized;
+        } else {
+            self.workbook_view = Some(WorkbookView {
+                minimize: is_minimized,
+                ..WorkbookView::default()
+            })
+        }
+        Ok(())
+    }
 
-    // /// Set visibility of sheet tabs in workbook
-    // pub(crate) fn hide_sheet_tabs_mut(&mut self, hide_sheet_tab: bool) -> AnyResult<(), AnyError> {
-    //     if let Some(workbook_view) = &mut self.workbook_view {
-    //         workbook_view.hide_sheet_tab = hide_sheet_tab;
-    //     } else {
-    //         self.workbook_view = Some(WorkbookView {
-    //             hide_sheet_tab,
-    //             ..WorkbookView::default()
-    //         })
-    //     }
-    //     Ok(())
-    // }
+    /// Set visibility of sheet tabs in workbook
+    pub(crate) fn hide_sheet_tabs_mut(&mut self, hide_sheet_tab: bool) -> AnyResult<(), AnyError> {
+        if let Some(workbook_view) = &mut self.workbook_view {
+            workbook_view.hide_sheet_tab = hide_sheet_tab;
+        } else {
+            self.workbook_view = Some(WorkbookView {
+                hide_sheet_tab,
+                ..WorkbookView::default()
+            })
+        }
+        Ok(())
+    }
 
-    // /// Set workbook ruler Visibility
-    // pub(crate) fn hide_ruler_mut(&mut self, hide_ruler: bool) -> AnyResult<(), AnyError> {
-    //     if let Some(workbook_view) = &mut self.workbook_view {
-    //         workbook_view.hide_ruler = hide_ruler;
-    //     } else {
-    //         self.workbook_view = Some(WorkbookView {
-    //             hide_ruler,
-    //             ..WorkbookView::default()
-    //         })
-    //     }
-    //     Ok(())
-    // }
+    /// Set workbook Vertical Scroll Visibility
+    pub(crate) fn hide_vertical_scroll_mut(
+        &mut self,
+        hide_vertical_scroll: bool,
+    ) -> AnyResult<(), AnyError> {
+        if let Some(workbook_view) = &mut self.workbook_view {
+            workbook_view.hide_vertical_scroll = hide_vertical_scroll;
+        } else {
+            self.workbook_view = Some(WorkbookView {
+                hide_vertical_scroll,
+                ..WorkbookView::default()
+            })
+        }
+        Ok(())
+    }
 
-    // /// Set workbook grid line Visibility
-    // pub(crate) fn hide_grid_lines_mut(&mut self, hide_grid_line: bool) -> AnyResult<(), AnyError> {
-    //     if let Some(workbook_view) = &mut self.workbook_view {
-    //         workbook_view.hide_grid_line = hide_grid_line;
-    //     } else {
-    //         self.workbook_view = Some(WorkbookView {
-    //             hide_grid_line,
-    //             ..WorkbookView::default()
-    //         })
-    //     }
-    //     Ok(())
-    // }
-
-    // /// Set workbook Vertical Scroll Visibility
-    // pub(crate) fn hide_vertical_scroll_mut(
-    //     &mut self,
-    //     hide_vertical_scroll: bool,
-    // ) -> AnyResult<(), AnyError> {
-    //     if let Some(workbook_view) = &mut self.workbook_view {
-    //         workbook_view.hide_vertical_scroll = hide_vertical_scroll;
-    //     } else {
-    //         self.workbook_view = Some(WorkbookView {
-    //             hide_vertical_scroll,
-    //             ..WorkbookView::default()
-    //         })
-    //     }
-    //     Ok(())
-    // }
-
-    // /// Set workbook Horizontal Scroll Visibility
-    // pub(crate) fn hide_horizontal_scroll_mut(
-    //     &mut self,
-    //     hide_horizontal_scroll: bool,
-    // ) -> AnyResult<(), AnyError> {
-    //     if let Some(workbook_view) = &mut self.workbook_view {
-    //         workbook_view.hide_horizontal_scroll = hide_horizontal_scroll;
-    //     } else {
-    //         self.workbook_view = Some(WorkbookView {
-    //             hide_horizontal_scroll,
-    //             ..WorkbookView::default()
-    //         })
-    //     }
-    //     Ok(())
-    // }
+    /// Set workbook Horizontal Scroll Visibility
+    pub(crate) fn hide_horizontal_scroll_mut(
+        &mut self,
+        hide_horizontal_scroll: bool,
+    ) -> AnyResult<(), AnyError> {
+        if let Some(workbook_view) = &mut self.workbook_view {
+            workbook_view.hide_horizontal_scroll = hide_horizontal_scroll;
+        } else {
+            self.workbook_view = Some(WorkbookView {
+                hide_horizontal_scroll,
+                ..WorkbookView::default()
+            })
+        }
+        Ok(())
+    }
 
     /// Hide sheet on opening the excel
     pub(crate) fn hide_sheet_mut(&mut self, sheet_name: &str) -> AnyResult<(), AnyError> {

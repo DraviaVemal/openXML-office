@@ -43,6 +43,28 @@ impl Default for Dimension {
 }
 
 #[derive(Debug)]
+pub(crate) struct WorkSheetView {
+    tab_color: Option<i16>,
+    default_grid_color: Option<bool>,
+    view_right_to_left: Option<bool>,
+    show_formula_bar: Option<bool>,
+    show_grid_line: Option<bool>,
+    show_outline_symbol: Option<bool>,
+    show_row_col_header: Option<bool>,
+    show_ruler: Option<bool>,
+    show_white_space: Option<bool>,
+    show_zero: Option<bool>,
+    tab_selected: Option<bool>,
+    top_left_cell: Option<String>,
+    view: Option<String>,
+    window_protection: Option<bool>,
+    zoom_scale: Option<i16>,
+    zoom_scale_normal: Option<i16>,
+    zoom_scale_page_layout: Option<i16>,
+    zoom_scale_sheet_layout: Option<i16>,
+}
+
+#[derive(Debug)]
 pub struct WorkSheet {
     office_document: Weak<RefCell<OfficeDocument>>,
     xml_document: Weak<RefCell<XmlDocument>>,
@@ -52,7 +74,7 @@ pub struct WorkSheet {
     sheet_relationship_part: Rc<RefCell<RelationsPart>>,
     dimension: Dimension,
     // sheet_property: Option<_>,
-    // sheet_view: Option<_>,
+    sheet_view: Option<WorkSheetView>,
     // sheet_format_property: Option<_>,
     column_collection: Option<VecDeque<ColumnProperties>>,
     sheet_data: Option<BTreeMap<u32, RowData>>,
@@ -166,7 +188,7 @@ impl WorkSheet {
             )
             .context("Creating Relation ship part for workbook failed.")?,
         ));
-        let (column_collection, sheet_data, dimension) = log_elapsed!(
+        let (column_collection, sheet_data, sheet_view, dimension) = log_elapsed!(
             || { Self::initialize_worksheet(&xml_document).context("Failed to open Worksheet") },
             "Worksheet Initialize Time"
         )?;
@@ -177,6 +199,7 @@ impl WorkSheet {
             workbook_relationship_part,
             sheet_relationship_part,
             dimension,
+            sheet_view,
             sheet_collection,
             column_collection,
             sheet_data,
@@ -191,6 +214,7 @@ impl WorkSheet {
         (
             Option<VecDeque<ColumnProperties>>,
             Option<BTreeMap<u32, RowData>>,
+            Option<WorkSheetView>,
             Dimension,
         ),
         AnyError,
@@ -214,9 +238,16 @@ impl WorkSheet {
                 },
                 "Sheet Data Deserialize"
             )?;
-            Ok((column_collection, sheet_data, dimension))
+            let worksheet_view = log_elapsed!(
+                || {
+                    deserialize_worksheet_view(&mut xml_doc_mut)
+                        .context("Failed to deserialize Worksheet View")
+                },
+                "Worksheet View Deserialization"
+            )?;
+            Ok((column_collection, sheet_data, worksheet_view, dimension))
         } else {
-            Ok((None, None, Dimension::default()))
+            Ok((None, None, None, Dimension::default()))
         }
     }
 
@@ -495,6 +526,11 @@ fn deserialize_cols(
     Ok(None)
 }
 
+fn deserialize_worksheet_view(
+    xml_doc_mut: &mut XmlDocument,
+) -> AnyResult<Option<WorkSheetView>, AnyError> {
+    Ok(None)
+}
 fn deserialize_sheet_data(
     xml_doc_mut: &mut XmlDocument,
 ) -> AnyResult<(Option<BTreeMap<u32, RowData>>, Dimension), AnyError> {
