@@ -337,7 +337,7 @@ impl WorkbookPart {
                                                     attributes.get("autoFilterDateGrouping")
                                                 {
                                                     Some(
-                                                        ConverterUtil::normalize_bool_property(
+                                                        ConverterUtil::normalize_bool_property_u8(
                                                             auto_filter_data_group,
                                                         ) == 1,
                                                     )
@@ -370,7 +370,7 @@ impl WorkbookPart {
                                                 hide_sheet_tab: if let Some(hide_sheet_tab) =
                                                     attributes.get("showSheetTabs")
                                                 {
-                                                    ConverterUtil::normalize_bool_property(
+                                                    ConverterUtil::normalize_bool_property_u8(
                                                         hide_sheet_tab,
                                                     ) == 1
                                                 } else {
@@ -386,7 +386,7 @@ impl WorkbookPart {
                                                 minimize: if let Some(minimize) =
                                                     attributes.get("minimized")
                                                 {
-                                                    ConverterUtil::normalize_bool_property(minimize)
+                                                    ConverterUtil::normalize_bool_property_u8(minimize)
                                                         == 1
                                                 } else {
                                                     false
@@ -396,7 +396,7 @@ impl WorkbookPart {
                                                 ) =
                                                     attributes.get("showHorizontalScroll")
                                                 {
-                                                    ConverterUtil::normalize_bool_property(
+                                                    ConverterUtil::normalize_bool_property_u8(
                                                         hide_horizontal_scroll,
                                                     ) == 0
                                                 } else {
@@ -407,7 +407,7 @@ impl WorkbookPart {
                                                 ) =
                                                     attributes.get("showVerticalScroll")
                                                 {
-                                                    ConverterUtil::normalize_bool_property(
+                                                    ConverterUtil::normalize_bool_property_u8(
                                                         hide_vertical_scroll,
                                                     ) == 0
                                                 } else {

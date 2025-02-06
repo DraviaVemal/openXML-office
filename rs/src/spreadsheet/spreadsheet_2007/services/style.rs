@@ -821,25 +821,25 @@ impl StylePart {
                         }
                         if let Some(apply_protection) = attributes.get("applyProtection") {
                             cell_xf.apply_protection =
-                                ConverterUtil::normalize_bool_property(apply_protection);
+                                ConverterUtil::normalize_bool_property_u8(apply_protection);
                         }
                         if let Some(apply_alignment) = attributes.get("applyAlignment") {
                             cell_xf.apply_alignment =
-                                ConverterUtil::normalize_bool_property(apply_alignment);
+                                ConverterUtil::normalize_bool_property_u8(apply_alignment);
                         }
                         if let Some(apply_border) = attributes.get("applyBorder") {
                             cell_xf.apply_border =
-                                ConverterUtil::normalize_bool_property(apply_border);
+                                ConverterUtil::normalize_bool_property_u8(apply_border);
                         }
                         if let Some(apply_fill) = attributes.get("applyFill") {
-                            cell_xf.apply_fill = ConverterUtil::normalize_bool_property(apply_fill);
+                            cell_xf.apply_fill = ConverterUtil::normalize_bool_property_u8(apply_fill);
                         }
                         if let Some(apply_font) = attributes.get("applyFont") {
-                            cell_xf.apply_font = ConverterUtil::normalize_bool_property(apply_font);
+                            cell_xf.apply_font = ConverterUtil::normalize_bool_property_u8(apply_font);
                         }
                         if let Some(apply_number_format) = attributes.get("applyNumberFormat") {
                             cell_xf.apply_number_format =
-                                ConverterUtil::normalize_bool_property(apply_number_format);
+                                ConverterUtil::normalize_bool_property_u8(apply_number_format);
                         }
                         // Load Alignment Values if exist
                         if let Some((alignment_id, _)) = current_element.pop_child_mut() {
@@ -852,7 +852,7 @@ impl StylePart {
                                     if let Some(is_wrap_text) = alignment_attributes.get("wrapText")
                                     {
                                         cell_xf.is_wrap_text =
-                                            ConverterUtil::normalize_bool_property(is_wrap_text);
+                                            ConverterUtil::normalize_bool_property_u8(is_wrap_text);
                                     }
                                     if let Some(vertical_alignment) =
                                         alignment_attributes.get("vertical")
