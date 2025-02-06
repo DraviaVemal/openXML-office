@@ -43,10 +43,17 @@ impl ConverterUtil {
     }
 
     /// convert open-xml bool flag property
-    pub(crate) fn normalize_bool_property(value: &str) -> u8 {
+    pub(crate) fn normalize_bool_property_u8(value: &str) -> u8 {
         match value.trim() {
             "true" | "1" => 1,
             _ => 0,
+        }
+    }
+    /// convert open-xml bool flag property
+    pub(crate) fn normalize_bool_property_bool(value: &str) -> bool {
+        match value.trim() {
+            "true" | "1" => true,
+            _ => false,
         }
     }
 

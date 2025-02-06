@@ -122,10 +122,17 @@ impl XmlDocument {
                         elements.push(item);
                     }
                 }
-                return Some(elements);
+                if elements.len() > 0 {
+                    Some(elements)
+                } else {
+                    None
+                }
+            } else {
+                None
             }
+        } else {
+            None
         }
-        None
     }
 
     pub(crate) fn pop_element_mut(&mut self, element_id: &usize) -> Option<XmlElement> {

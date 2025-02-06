@@ -43,7 +43,17 @@ impl Default for Dimension {
 }
 
 #[derive(Debug)]
+pub(crate) struct WorkSheetViewSelection {
+    pane: Option<String>,
+    active_cell: Option<String>,
+    active_cell_id: Option<String>,
+    sq_ref: Option<String>,
+}
+
+#[derive(Debug)]
 pub(crate) struct WorkSheetView {
+    selection_collection: Option<Vec<WorkSheetViewSelection>>,
+    workbook_view_id: String,
     tab_color: Option<i16>,
     default_grid_color: Option<bool>,
     view_right_to_left: Option<bool>,
@@ -64,6 +74,46 @@ pub(crate) struct WorkSheetView {
     zoom_scale_sheet_layout: Option<i16>,
 }
 
+impl Default for WorkSheetView {
+    fn default() -> Self {
+        Self {
+            workbook_view_id: "0".to_string(),
+            selection_collection: None,
+            tab_color: None,
+            default_grid_color: None,
+            view_right_to_left: None,
+            show_formula_bar: None,
+            show_grid_line: None,
+            show_outline_symbol: None,
+            show_row_col_header: None,
+            show_ruler: None,
+            show_white_space: None,
+            show_zero: None,
+            tab_selected: None,
+            top_left_cell: None,
+            view: None,
+            window_protection: None,
+            zoom_scale: None,
+            zoom_scale_normal: None,
+            zoom_scale_page_layout: None,
+            zoom_scale_sheet_layout: None,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub(crate) struct WorkSheetViews {
+    view_collection: Vec<WorkSheetView>,
+}
+
+impl Default for WorkSheetViews {
+    fn default() -> Self {
+        Self {
+            view_collection: vec![WorkSheetView::default()],
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct WorkSheet {
     office_document: Weak<RefCell<OfficeDocument>>,
@@ -74,7 +124,7 @@ pub struct WorkSheet {
     sheet_relationship_part: Rc<RefCell<RelationsPart>>,
     dimension: Dimension,
     // sheet_property: Option<_>,
-    sheet_view: Option<WorkSheetView>,
+    sheet_views: WorkSheetViews,
     // sheet_format_property: Option<_>,
     column_collection: Option<VecDeque<ColumnProperties>>,
     sheet_data: Option<BTreeMap<u32, RowData>>,
@@ -188,7 +238,7 @@ impl WorkSheet {
             )
             .context("Creating Relation ship part for workbook failed.")?,
         ));
-        let (column_collection, sheet_data, sheet_view, dimension) = log_elapsed!(
+        let (column_collection, sheet_data, sheet_views, dimension) = log_elapsed!(
             || { Self::initialize_worksheet(&xml_document).context("Failed to open Worksheet") },
             "Worksheet Initialize Time"
         )?;
@@ -199,7 +249,7 @@ impl WorkSheet {
             workbook_relationship_part,
             sheet_relationship_part,
             dimension,
-            sheet_view,
+            sheet_views,
             sheet_collection,
             column_collection,
             sheet_data,
@@ -214,7 +264,7 @@ impl WorkSheet {
         (
             Option<VecDeque<ColumnProperties>>,
             Option<BTreeMap<u32, RowData>>,
-            Option<WorkSheetView>,
+            WorkSheetViews,
             Dimension,
         ),
         AnyError,
@@ -238,16 +288,16 @@ impl WorkSheet {
                 },
                 "Sheet Data Deserialize"
             )?;
-            let worksheet_view = log_elapsed!(
+            let worksheet_views = log_elapsed!(
                 || {
-                    deserialize_worksheet_view(&mut xml_doc_mut)
+                    deserialize_worksheet_views(&mut xml_doc_mut)
                         .context("Failed to deserialize Worksheet View")
                 },
                 "Worksheet View Deserialization"
             )?;
-            Ok((column_collection, sheet_data, worksheet_view, dimension))
+            Ok((column_collection, sheet_data, worksheet_views, dimension))
         } else {
-            Ok((None, None, None, Dimension::default()))
+            Ok((None, None, WorkSheetViews::default(), Dimension::default()))
         }
     }
 
@@ -526,11 +576,150 @@ fn deserialize_cols(
     Ok(None)
 }
 
-fn deserialize_worksheet_view(
+/// DeSerializing Worksheet View
+fn deserialize_worksheet_views(
     xml_doc_mut: &mut XmlDocument,
-) -> AnyResult<Option<WorkSheetView>, AnyError> {
-    Ok(None)
+) -> AnyResult<WorkSheetViews, AnyError> {
+    let mut worksheet_views = WorkSheetViews::default();
+    if let Some(mut sheet_views_elements) = xml_doc_mut.pop_elements_by_tag_mut("sheetViews", None)
+    {
+        if let Some(sheet_views_element) = sheet_views_elements.pop() {
+            loop {
+                if let Some((element_id, element_tag)) = sheet_views_element.pop_child_mut() {
+                    // Validate element that are not accounted
+                    if element_tag != "sheetView" {
+                        return Err(anyhow!("Failed to Process Sheet Views child"));
+                    } else {
+                        let sheet_view_element = xml_doc_mut
+                            .pop_element_mut(&element_id)
+                            .context("Failed to get Sheet View Element")?;
+                        let mut worksheet_view = WorkSheetView::default();
+                        let attributes = sheet_view_element
+                            .get_attribute()
+                            .context("Failed to Get Attributes of Sheet View")?;
+                        worksheet_view.workbook_view_id = attributes
+                            .get("workbookViewId")
+                            .context(
+                                "Mandatory attribute \"workbookViewId\" is missing from sheetView",
+                            )?
+                            .clone();
+                        // Windows protection
+                        if let Some(window_protection) = attributes.get("windowProtection") {
+                            worksheet_view.window_protection = Some(
+                                ConverterUtil::normalize_bool_property_bool(&window_protection),
+                            );
+                        }
+                        // Show formula
+                        if let Some(show_formula_bar) = attributes.get("showFormulas") {
+                            worksheet_view.show_formula_bar = Some(
+                                ConverterUtil::normalize_bool_property_bool(&show_formula_bar),
+                            );
+                        }
+                        // Show Grid Line
+                        if let Some(show_grid_line) = attributes.get("showGridLines") {
+                            worksheet_view.show_grid_line =
+                                Some(ConverterUtil::normalize_bool_property_bool(&show_grid_line));
+                        }
+                        // Show row column header
+                        if let Some(show_row_col_header) = attributes.get("showRowColHeaders") {
+                            worksheet_view.show_row_col_header = Some(
+                                ConverterUtil::normalize_bool_property_bool(&show_row_col_header),
+                            );
+                        }
+                        // Show Zero
+                        if let Some(show_zero) = attributes.get("showZeros") {
+                            worksheet_view.show_zero =
+                                Some(ConverterUtil::normalize_bool_property_bool(&show_zero));
+                        }
+                        // Right to Left
+                        if let Some(view_right_to_left) = attributes.get("rightToLeft") {
+                            worksheet_view.view_right_to_left = Some(
+                                ConverterUtil::normalize_bool_property_bool(&view_right_to_left),
+                            );
+                        }
+                        // Tab Selected
+                        if let Some(tab_selected) = attributes.get("tabSelected") {
+                            worksheet_view.tab_selected =
+                                Some(ConverterUtil::normalize_bool_property_bool(&tab_selected));
+                        }
+                        // show ruler
+                        if let Some(show_ruler) = attributes.get("showRuler") {
+                            worksheet_view.show_ruler =
+                                Some(ConverterUtil::normalize_bool_property_bool(&show_ruler));
+                        }
+                        // Show outlined Symbols
+                        if let Some(show_outline_symbol) = attributes.get("showOutlineSymbols") {
+                            worksheet_view.show_outline_symbol = Some(
+                                ConverterUtil::normalize_bool_property_bool(&show_outline_symbol),
+                            );
+                        }
+                        // Default Grid Color
+                        if let Some(default_grid_color) = attributes.get("defaultGridColor") {
+                            worksheet_view.default_grid_color = Some(
+                                ConverterUtil::normalize_bool_property_bool(&default_grid_color),
+                            );
+                        }
+                        // Top Left Cell
+                        if let Some(top_left_cell) = attributes.get("topLeftCell") {
+                            worksheet_view.top_left_cell = Some(top_left_cell.clone());
+                        }
+                        // View Setting
+                        if let Some(view) = attributes.get("view") {
+                            worksheet_view.view = Some(view.clone());
+                        }
+                        // Color Id
+                        if let Some(tab_color) = attributes.get("view") {
+                            worksheet_view.tab_color =
+                                Some(tab_color.parse().context("Failed to parse the tab color")?);
+                        }
+                        // Zoom Scale
+                        if let Some(zoom_scale) = attributes.get("zoomScaleNormal") {
+                            worksheet_view.zoom_scale = Some(
+                                zoom_scale
+                                    .parse()
+                                    .context("Failed to Convert Zoom Normal to i16")?,
+                            );
+                        }
+                        // Zoom Scale Normal
+                        if let Some(zoom_scale_normal) = attributes.get("zoomScaleNormal") {
+                            worksheet_view.zoom_scale_normal = Some(
+                                zoom_scale_normal
+                                    .parse()
+                                    .context("Failed to Convert Zoom Normal to i16")?,
+                            );
+                        }
+                        // Zoom Scale Sheet Layout View
+                        if let Some(zoom_scale_sheet_layout) =
+                            attributes.get("zoomScaleSheetLayoutView")
+                        {
+                            worksheet_view.zoom_scale_sheet_layout = Some(
+                                zoom_scale_sheet_layout
+                                    .parse()
+                                    .context("Failed to Convert Zoom Normal to i16")?,
+                            );
+                        }
+                        // Zoom Scale Page Layout View
+                        if let Some(zoom_scale_page_layout) =
+                            attributes.get("zoomScalePageLayoutView")
+                        {
+                            worksheet_view.zoom_scale_page_layout = Some(
+                                zoom_scale_page_layout
+                                    .parse()
+                                    .context("Failed to Convert Zoom Normal to i16")?,
+                            );
+                        }
+                        worksheet_views.view_collection.push(worksheet_view);
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+    Ok(worksheet_views)
 }
+
+/// Deserialize Sheet Data
 fn deserialize_sheet_data(
     xml_doc_mut: &mut XmlDocument,
 ) -> AnyResult<(Option<BTreeMap<u32, RowData>>, Dimension), AnyError> {
