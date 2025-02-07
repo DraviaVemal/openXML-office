@@ -49,6 +49,14 @@ impl ConverterUtil {
             _ => 0,
         }
     }
+    /// convert bool to open-xml flag property
+    pub(crate) fn bool_xml_flag(value: &bool) -> String {
+        if *value {
+            "1".to_string()
+        } else {
+            "0".to_string()
+        }
+    }
     /// convert open-xml bool flag property
     pub(crate) fn normalize_bool_property_bool(value: &str) -> bool {
         match value.trim() {

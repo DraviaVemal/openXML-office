@@ -54,7 +54,6 @@ pub(crate) struct WorkSheetViewSelection {
 pub(crate) struct WorkSheetView {
     selection_collection: Option<Vec<WorkSheetViewSelection>>,
     workbook_view_id: String,
-    tab_color: Option<i16>,
     default_grid_color: Option<bool>,
     view_right_to_left: Option<bool>,
     show_formula_bar: Option<bool>,
@@ -79,7 +78,6 @@ impl Default for WorkSheetView {
         Self {
             workbook_view_id: "0".to_string(),
             selection_collection: None,
-            tab_color: None,
             default_grid_color: None,
             view_right_to_left: None,
             show_formula_bar: None,
@@ -181,6 +179,8 @@ impl XmlDocumentPartCommon for WorkSheet {
                         log_elapsed!(self.serialize_dimension(&mut xml_doc_mut))?;
                         // Add Cols Record to Document
                         log_elapsed!(self.serialize_cols(&mut xml_doc_mut))?;
+                        // Add Sheet Views to Document
+                        log_elapsed!(self.serialize_sheet_views(&mut xml_doc_mut))?;
                         // Add Sheet Data to Document
                         log_elapsed!(self.serialize_sheet_data(&mut xml_doc_mut))?;
                         if let Some(root_element) = xml_doc_mut.get_root_mut() {
@@ -346,43 +346,153 @@ impl WorkSheet {
     }
 
     fn serialize_cols(&mut self, xml_doc_mut: &mut XmlDocument) -> AnyResult<(), AnyError> {
-        Ok(
-            if let Some(mut column_collection) = self.column_collection.take() {
-                if column_collection.len() > 0 {
-                    let cols_id = xml_doc_mut
-                        .insert_children_after_tag_mut("cols", "sheetViews", None)
-                        .context("Failed to Insert Cols Element")?
-                        .get_id();
-                    loop {
-                        if let Some(item) = column_collection.pop_front() {
-                            let mut attribute = HashMap::new();
-                            attribute.insert("min".to_string(), item.min.to_string());
-                            attribute.insert("max".to_string(), item.max.to_string());
-                            if let Some(width) = item.width {
-                                attribute.insert("customWidth".to_string(), "1".to_string());
-                                attribute.insert("width".to_string(), width.to_string());
-                            }
-                            if let Some(style_id) = item.style_id {
-                                attribute.insert("style".to_string(), style_id.id.to_string());
-                            }
-                            if let Some(_) = item.hidden {
-                                attribute.insert("hidden".to_string(), "1".to_string());
-                            }
-                            if let Some(_) = item.best_fit {
-                                attribute.insert("bestFit".to_string(), "1".to_string());
-                            }
-                            xml_doc_mut
-                                .append_child_mut("col", Some(&cols_id))
-                                .context("Failed to insert col record")?
-                                .set_attribute_mut(attribute)
-                                .context("Failed to Add Attribute to col element")?;
-                        } else {
-                            break;
+        if let Some(mut column_collection) = self.column_collection.take() {
+            if column_collection.len() > 0 {
+                let cols_id = xml_doc_mut
+                    .insert_children_after_tag_mut("cols", "sheetFormatPr", None)
+                    .context("Failed to Insert Cols Element")?
+                    .get_id();
+                loop {
+                    if let Some(item) = column_collection.pop_front() {
+                        let mut attribute = HashMap::new();
+                        attribute.insert("min".to_string(), item.min.to_string());
+                        attribute.insert("max".to_string(), item.max.to_string());
+                        if let Some(width) = item.width {
+                            attribute.insert("customWidth".to_string(), "1".to_string());
+                            attribute.insert("width".to_string(), width.to_string());
                         }
+                        if let Some(style_id) = item.style_id {
+                            attribute.insert("style".to_string(), style_id.id.to_string());
+                        }
+                        if let Some(_) = item.hidden {
+                            attribute.insert("hidden".to_string(), "1".to_string());
+                        }
+                        if let Some(_) = item.best_fit {
+                            attribute.insert("bestFit".to_string(), "1".to_string());
+                        }
+                        xml_doc_mut
+                            .append_child_mut("col", Some(&cols_id))
+                            .context("Failed to insert col record")?
+                            .set_attribute_mut(attribute)
+                            .context("Failed to Add Attribute to col element")?;
+                    } else {
+                        break;
                     }
                 }
-            },
-        )
+            }
+        }
+        Ok(())
+    }
+
+    fn serialize_sheet_views(&mut self, xml_doc_mut: &mut XmlDocument) -> AnyResult<(), AnyError> {
+        let sheet_views_id = xml_doc_mut
+            .insert_children_after_tag_mut("sheetViews", "dimension", None)
+            .context("Failed to Insert Sheet Views Element")?
+            .get_id();
+        loop {
+            if let Some(sheet_view) = self.sheet_views.view_collection.pop() {
+                let mut attribute: HashMap<String, String> = HashMap::new();
+                attribute.insert("workbookViewId".to_string(), sheet_view.workbook_view_id);
+                if let Some(window_protection) = sheet_view.window_protection {
+                    attribute.insert(
+                        "windowProtection".to_string(),
+                        ConverterUtil::bool_xml_flag(&window_protection),
+                    );
+                }
+                if let Some(show_formula_bar) = sheet_view.show_formula_bar {
+                    attribute.insert(
+                        "showFormulas".to_string(),
+                        ConverterUtil::bool_xml_flag(&show_formula_bar),
+                    );
+                }
+                if let Some(show_grid_line) = sheet_view.show_grid_line {
+                    attribute.insert(
+                        "showGridLines".to_string(),
+                        ConverterUtil::bool_xml_flag(&show_grid_line),
+                    );
+                }
+                if let Some(show_row_col_header) = sheet_view.show_row_col_header {
+                    attribute.insert(
+                        "showRowColHeaders".to_string(),
+                        ConverterUtil::bool_xml_flag(&show_row_col_header),
+                    );
+                }
+                if let Some(show_zero) = sheet_view.show_zero {
+                    attribute.insert(
+                        "showZeros".to_string(),
+                        ConverterUtil::bool_xml_flag(&show_zero),
+                    );
+                }
+                if let Some(view_right_to_left) = sheet_view.view_right_to_left {
+                    attribute.insert(
+                        "rightToLeft".to_string(),
+                        ConverterUtil::bool_xml_flag(&view_right_to_left),
+                    );
+                }
+                if let Some(tab_selected) = sheet_view.tab_selected {
+                    attribute.insert(
+                        "tabSelected".to_string(),
+                        ConverterUtil::bool_xml_flag(&tab_selected),
+                    );
+                }
+                if let Some(show_ruler) = sheet_view.show_ruler {
+                    attribute.insert(
+                        "showRuler".to_string(),
+                        ConverterUtil::bool_xml_flag(&show_ruler),
+                    );
+                }
+                if let Some(show_white_space) = sheet_view.show_white_space {
+                    attribute.insert(
+                        "showWhiteSpace".to_string(),
+                        ConverterUtil::bool_xml_flag(&show_white_space),
+                    );
+                }
+                if let Some(show_outline_symbol) = sheet_view.show_outline_symbol {
+                    attribute.insert(
+                        "showOutlineSymbols".to_string(),
+                        ConverterUtil::bool_xml_flag(&show_outline_symbol),
+                    );
+                }
+                if let Some(default_grid_color) = sheet_view.default_grid_color {
+                    attribute.insert(
+                        "defaultGridColor".to_string(),
+                        ConverterUtil::bool_xml_flag(&default_grid_color),
+                    );
+                }
+                if let Some(top_left_cell) = sheet_view.top_left_cell {
+                    attribute.insert("topLeftCell".to_string(), top_left_cell);
+                }
+                if let Some(view) = sheet_view.view {
+                    attribute.insert("view".to_string(), view);
+                }
+                if let Some(zoom_scale) = sheet_view.zoom_scale {
+                    attribute.insert("zoomScale".to_string(), zoom_scale.to_string());
+                }
+                if let Some(zoom_scale_normal) = sheet_view.zoom_scale_normal {
+                    attribute.insert("zoomScaleNormal".to_string(), zoom_scale_normal.to_string());
+                }
+                if let Some(zoom_scale_sheet_layout) = sheet_view.zoom_scale_sheet_layout {
+                    attribute.insert(
+                        "zoomScaleSheetLayoutView".to_string(),
+                        zoom_scale_sheet_layout.to_string(),
+                    );
+                }
+                if let Some(zoom_scale_page_layout) = sheet_view.zoom_scale_page_layout {
+                    attribute.insert(
+                        "zoomScalePageLayoutView".to_string(),
+                        zoom_scale_page_layout.to_string(),
+                    );
+                }
+                xml_doc_mut
+                    .append_child_mut("sheetView", Some(&sheet_views_id))
+                    .context("Failed to insert sheetView record")?
+                    .set_attribute_mut(attribute)
+                    .context("Failed to Add Attribute to sheetView element")?;
+            } else {
+                break;
+            }
+        }
+        Ok(())
     }
 
     fn serialize_sheet_data(&mut self, xml_doc_mut: &mut XmlDocument) -> AnyResult<(), AnyError> {
@@ -647,6 +757,11 @@ fn deserialize_worksheet_views(
                             worksheet_view.show_ruler =
                                 Some(ConverterUtil::normalize_bool_property_bool(&show_ruler));
                         }
+                        // show white space
+                        if let Some(show_white_space) = attributes.get("showWhiteSpace") {
+                            worksheet_view.show_white_space =
+                                Some(ConverterUtil::normalize_bool_property_bool(&show_white_space));
+                        }
                         // Show outlined Symbols
                         if let Some(show_outline_symbol) = attributes.get("showOutlineSymbols") {
                             worksheet_view.show_outline_symbol = Some(
@@ -667,13 +782,8 @@ fn deserialize_worksheet_views(
                         if let Some(view) = attributes.get("view") {
                             worksheet_view.view = Some(view.clone());
                         }
-                        // Color Id
-                        if let Some(tab_color) = attributes.get("view") {
-                            worksheet_view.tab_color =
-                                Some(tab_color.parse().context("Failed to parse the tab color")?);
-                        }
                         // Zoom Scale
-                        if let Some(zoom_scale) = attributes.get("zoomScaleNormal") {
+                        if let Some(zoom_scale) = attributes.get("zoomScale") {
                             worksheet_view.zoom_scale = Some(
                                 zoom_scale
                                     .parse()
