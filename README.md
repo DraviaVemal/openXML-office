@@ -1,3 +1,5 @@
+## Info : Due to busy schedule V4 delelopment is moving in slow phase. Rust Excel is almost comepleted now moving on to Global chart support that will lead to Powerpoint module. Will update release note info or this Readme once I'm back on regular schedule.
+
 # Effortless Creation of Excel, PowerPoint, and Word Documents
 
 This project aims to provide a streamlined, efficient way to create and manipulate Excel, PowerPoint, and Word documents using the OpenXML format. By leveraging the power of modern programming languages, this library simplifies the process of document creation, enabling developers to focus on functionality rather than the intricacies of the OpenXML standard.
